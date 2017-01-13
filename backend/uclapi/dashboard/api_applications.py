@@ -8,10 +8,10 @@ def get_user_by_id(user_id):
 
 
 def create_app(request):
-    if request.type != "POST":
+    if request.method != "POST":
         response = JsonResponse({
             "success": False,
-            "message": "Request is not of type POST"
+            "message": "Request is not of method POST"
         })
         response.status_code = 400
         return response
@@ -43,8 +43,8 @@ def create_app(request):
 
 
 def rename_app(request):
-    if request.type != "POST":
-        return HttpResponseBadRequest("Error: Request is not of type POST")
+    if request.method != "POST":
+        return HttpResponseBadRequest("Error: Request is not of method POST")
 
     try:
         app_id = request.POST["app_id"]
@@ -80,8 +80,8 @@ def rename_app(request):
 
 
 def regenerate_app_token(request):
-    if request.type != "POST":
-        return HttpResponseBadRequest("Error: Request is not of type POST")
+    if request.method != "POST":
+        return HttpResponseBadRequest("Error: Request is not of method POST")
 
     try:
         app_id = request.POST["app_id"]
@@ -120,8 +120,8 @@ def regenerate_app_token(request):
 
 
 def delete_app(request):
-    if request.type != "POST":
-        return HttpResponseBadRequest("Error: Request is not of type POST")
+    if request.method != "POST":
+        return HttpResponseBadRequest("Error: Request is not of method POST")
 
     try:
         app_id = request.POST["app_id"]
