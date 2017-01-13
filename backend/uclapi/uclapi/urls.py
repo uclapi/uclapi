@@ -18,6 +18,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^dashboard/', include('devconsole.urls')),
+    url(r'^dashboard/', include('dashboard.urls')),
     url(r'^roombookings/', include('roombookings.urls')),
 ]
