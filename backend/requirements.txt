@@ -1,4 +1,0 @@
-Django==1.10.5
-django-dotenv==1.4.1
-djangorestframework==3.5.3
-psycopg2==2.6.2
