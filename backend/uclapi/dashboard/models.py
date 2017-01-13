@@ -26,5 +26,3 @@ class APICall(models.Model):
     app = models.ForeignKey(App, related_name='api_call')
     user = models.ForeignKey(User, related_name='api_call')
     raw_request = models.TextField(max_length=10000000)
-
-
