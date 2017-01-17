@@ -20,7 +20,7 @@ def signup(request):
             employee_id = request.META['EMPLOYEE_ID']
         except KeyError:
             return JsonResponse({
-                "error": "Didn't recieve any Shibboleth data"
+                "error": "Didn't receive any Shibboleth data"
             })
 
         # create a new user
@@ -45,7 +45,7 @@ def login(request):
         eppn = request.META['HTTP_EPPN']
     except KeyError:
         return JsonResponse({
-            "error": "Didn't recieve any shibboleth data"
+            "error": "Didn't receive any shibboleth data"
         })
 
     #  get the user and set session for the user
