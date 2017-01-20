@@ -1,0 +1,10 @@
+@import '../includes/helpers.scss';
+
+.navbar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  background-color: white;
+  @include boxShadow(1);
+}

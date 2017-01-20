@@ -90,3 +90,12 @@ ENV/
 
 # PyCharm & IntelliJ
 .idea/
+
+#vim files
+*~
+*.swp
+
+#js stuff
+node_modules
+
+.DS_STORE
