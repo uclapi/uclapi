@@ -92,3 +92,6 @@ ENV/
 .idea/
 
 *.sqlite3
+
+# Oracle configuration files
+*.ora
