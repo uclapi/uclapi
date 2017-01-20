@@ -90,3 +90,5 @@ ENV/
 
 # PyCharm & IntelliJ
 .idea/
+
+*.sqlite3

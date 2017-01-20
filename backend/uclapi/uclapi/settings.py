@@ -51,6 +51,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+if DEBUG:
+    MIDDLEWARE.append(
+        'dashboard.middleware.fake_shibboleth_middleware'
+        '.FakeShibbolethMiddleWare'
+    )
+
 ROOT_URLCONF = 'uclapi.urls'
 
 TEMPLATES = [
