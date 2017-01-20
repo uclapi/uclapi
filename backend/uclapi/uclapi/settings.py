@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'dashboard',
+    'roombookings',
 ]
 
 MIDDLEWARE = [
@@ -81,6 +83,14 @@ DATABASES = {
         'PASSWORD': os.environ.get("DB_UCLAPI_PASSWORD"),
         'HOST': os.environ.get("DB_UCLAPI_HOST"),
         'PORT': os.environ.get("DB_UCLAPI_PORT")
+    },
+    'roombookings': {
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': os.environ.get("DB_ROOMS_NAME"),
+        'USER': os.environ.get("DB_ROOMS_USERNAME"),
+        'PASSWORD': os.environ.get("DB_ROOMS_PASSWORD"),
+        'HOST': '',
+        'PORT': ''
     }
 }
 

@@ -99,3 +99,6 @@ ENV/
 node_modules
 
 .DS_STORE
+
+# Oracle configuration files
+*.ora
