@@ -90,3 +90,6 @@ ENV/
 
 # PyCharm & IntelliJ
 .idea/
+
+# Oracle configuration files
+*.ora
