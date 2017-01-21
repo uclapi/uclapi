@@ -1,14 +1,16 @@
-from django.shortcuts import render
-
-# Create your views here.
-from django.shortcuts import render
-from django.http import JsonResponse
-from .models import User
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
+from .models import User, App
+from django.core.exceptions import ObjectDoesNotExist
+import os
+from django.views.decorators.csrf import csrf_exempt
 
 
-# Create your views here.
-def signup(request):
+@csrf_exempt
+def shibboleth_callback(request):
+    # this view is user facing, so should return html error page
+    # should auth user login or signup
+    # then redirect to dashboard homepage
+
     if request.method == 'POST':
         try:
             eppn = request.META['HTTP_EPPN']
@@ -17,65 +19,78 @@ def signup(request):
             department = request.META['HTTP_DEPARTMENT']
             given_name = request.META['HTTP_GIVENNAME']
             display_name = request.META['HTTP_DISPLAYNAME']
-            employee_id = request.META['EMPLOYEE_ID']
-        except KeyError:
-            return JsonResponse({
-                "error": "Didn't receive any Shibboleth data"
-            })
+            employee_id = request.META['HTTP_EMPLOYEE_ID']
+        except KeyError as e:
+            context = {
+                "error": "Didn't receive all required Shibboleth data."
+            }
+            print(e)
+            return render(
+                request,
+                'shibboleth_error.html',
+                context=context,
+                status=400
+            )
 
-        # create a new user
-        new_user = User(
-            email=eppn,
-            full_name=display_name,
-            given_name=given_name,
-            department=department,
-            cn=cn,
-            raw_intranet_groups=groups,
-            employee_id=employee_id
+        try:
+            user = User.objects.get(email=eppn)
+        except ObjectDoesNotExist:
+            # create a new user
+            new_user = User(
+                email=eppn,
+                full_name=display_name,
+                given_name=given_name,
+                department=department,
+                cn=cn,
+                raw_intranet_groups=groups,
+                employee_id=employee_id
+            )
+
+            new_user.save()
+            request.session["user_id"] = new_user.id
+        else:
+            request.session["user_id"] = user.id
+
+        return redirect(index)
+    else:
+        context = {
+            "error": "Request is not of type POST."
+        }
+        return render(
+            request,
+            'shibboleth_error.html',
+            context=context,
+            status=400
         )
 
-        new_user.save()
 
-        # sends the user back to login page
-        return redirect('login')
+def index(request):
 
+    if "user_id" in request.session:
+        # user signed in
 
-def login(request):
-    try:
-        eppn = request.META['HTTP_EPPN']
-    except KeyError:
-        return JsonResponse({
-            "error": "Didn't receive any shibboleth data"
-        })
+        user_id = request.session["user_id"]
+        user = User.objects.get(id=user_id)
 
-    #  get the user and set session for the user
-    try:
-        user = User.objects.get(email=eppn)
-    except:
-        return render(request, 'login.html', context={
-            "error": "User hasn't registered."
-        })
+        user_meta = {
+            "name": user.given_name,
+            "cn": user.cn,
+            "department": user.department,
+            "intranet_groups": user.raw_intranet_groups,
+            "apps": []
+        }
 
-    # set the session for the current logged in user
-    reuqest.session["user_id"] = user.id
+        user_apps = App.objects.filter(user=user)
 
-    # serialise apps and keys
+        for app in user_apps:
+            user_meta["apps"].append({
+                "name": app.name,
+                "api_token": app.api_token,
+                "created": app.created
+            })
 
-    user_meta = {
-        "name": user.given_name,
-        "cn": user.cn,
-        "department": user.department,
-        "intranet_groups": user.raw_intranet_groups,
-        "apps": []
-    }
+        return render(request, 'index.html', context=user_meta)
+    else:
+        # user not signed in
 
-    user_apps = Apps.objects.filter(user=user)
-
-    for app in user_apps:
-        user_meta["apps"].append({
-            "name": app.name,
-            "api_token": app.api_token,
-            "created": app.created
-        })
-
-    return render(request, 'login.html', context=user_meta)
+        return redirect(os.environ["SHIBBOLETH_URL"])
