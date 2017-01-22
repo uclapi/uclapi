@@ -6,6 +6,9 @@ from django.http import JsonResponse
 from .models import User
 from django.shortcuts import redirect
 
+from django.core.serializers.json import DjangoJSONEncoder
+import json
+
 
 # Create your views here.
 def signup(request):
@@ -79,3 +82,19 @@ def login(request):
         })
 
     return render(request, 'login.html', context=user_meta)
+
+def dashboard(request):
+    initial_data = json.dumps({
+        'userName': 'hennersz',
+        'email': 'henry@morti.net',
+        'apps':[
+          {
+            'name': 'My Cool App',
+            'api_token': 'oijewoo23i40cn1no1i2nd',
+            'created': '20170120T000000'
+          }
+        ]
+      }, cls=DjangoJSONEncoder)
+    return render(request, 'dashboard.html', {
+	'initial_data': initial_data
+    }) 
