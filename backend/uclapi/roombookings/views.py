@@ -3,6 +3,7 @@ from functools import reduce
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+import datetime
 
 # Create your views here.
 from .models import Booking, Room
@@ -49,10 +50,24 @@ def get_booking(request):
     request_params['site_id'] = request.GET.get('site_id')
     request_params['description'] = request.GET.get('description')
     request_params['contact'] = request.GET.get('contact')
+    request_params['date'] = request.GET.get('date')
 
     # functional filters
     start_time = request.GET.get('start_time')
     end_time = request.GET.get('end_time')
+
+    if any([start_time, end_time, request_params['date']]):
+        start_time, end_time, request_params['date'], is_parsed =
+        _parse_datetime(
+            start_time,
+            end_time,
+            request_params['date']
+        )
+
+    if not is_parsed:
+        return Response({
+            "error": "date/time isn't formatted according to the docs"
+        })
 
     """
     filter by non-time params first
@@ -61,12 +76,29 @@ def get_booking(request):
     bookings = Booking.objects.filter(**request_params)
 
     if start_time:
-        booking.filter(start_time_gte=start_time)
+        bookings.filter(start_time_gte=start_time)
 
     if end_time:
-        booking.filter(end_time_lte=end_time)
+        bookings.filter(end_time_lte=end_time)
 
-    return Response(_serialize_bookings(booking))
+    return Response(_serialize_bookings(bookings))
+
+
+def _parse_datetime(start_time, end_time, date):
+    try:
+        if start_time:
+            start_time = datetime.datetime.strptime(timestring, '%H:%M').time()
+
+        if end_time:
+            end_time = datetime.datetime.strptime(timestring, '%H:%M').time()
+
+        if date:
+            date = datetime.datetime.strptime(dateString, "%Y%m%d").date()
+    except Exception as e:
+        print(e)
+        return -1, -1, -1, False
+
+    return start_time, end_time, date, True
 
 
 def _serialize_rooms(room_set):
@@ -93,7 +125,8 @@ def _serialize_bookings(bookings):
             "description": bk.description,
             "start_time": bk.start_time,
             "end_time": bk.end_time,
-            "contact": bk.contact
+            "contact": bk.contact,
+            "booking_id": bk.id
         })
 
     return Response(ret_bookings)
