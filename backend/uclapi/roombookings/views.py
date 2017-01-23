@@ -38,6 +38,37 @@ def get_rooms(request):
     return Response(_serialize_rooms(filtered_rooms))
 
 
+@api_view(['GET'])
+def get_booking(request):
+    # query params
+    request_params = {}
+
+    # non functional filters
+    request_params['room_id'] = request.GET.get('room_id')
+    # TODO: building?
+    request_params['site_id'] = request.GET.get('site_id')
+    request_params['description'] = request.GET.get('description')
+    request_params['contact'] = request.GET.get('contact')
+
+    # functional filters
+    start_time = request.GET.get('start_time')
+    end_time = request.GET.get('end_time')
+
+    """
+    filter by non-time params first
+    then start_time_gte and end_time_lte
+    """
+    bookings = Booking.objects.filter(**request_params)
+
+    if start_time:
+        booking.filter(start_time_gte=start_time)
+
+    if end_time:
+        booking.filter(end_time_lte=end_time)
+
+    return Response(_serialize_bookings(booking))
+
+
 def _serialize_rooms(room_set):
     rooms = []
     for room in room_set:
@@ -50,3 +81,19 @@ def _serialize_rooms(room_set):
             "campus_id": room.CAMPUSID
         })
     return rooms
+
+
+def _serialize_bookings(bookings):
+    ret_bookings = []
+
+    for bk in bookings:
+        ret_bookings.append({
+            "room": bk.room.NAME,
+            "site_id": bk.room.site_id,
+            "description": bk.description,
+            "start_time": bk.start_time,
+            "end_time": bk.end_time,
+            "contact": bk.contact
+        })
+
+    return Response(ret_bookings)
