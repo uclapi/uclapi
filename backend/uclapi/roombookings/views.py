@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 import datetime
 
-# Create your views here.
 from .models import Booking, Room
 
 
@@ -76,10 +75,10 @@ def get_booking(request):
     bookings = Booking.objects.filter(**request_params)
 
     if start_time:
-        bookings.filter(start_time_gte=start_time)
+        bookings.filter(start_time__gte=start_time)
 
     if end_time:
-        bookings.filter(end_time_lte=end_time)
+        bookings.filter(end_time__lte=end_time)
 
     return Response(_serialize_bookings(bookings))
 
