@@ -79,12 +79,11 @@ def get_bookings(request):
         })
 
     if any([start_time, end_time, request_params['date']]):
-        start_time, end_time, request_params['date'], is_parsed = (
-            _parse_datetime(
-                start_time,
-                end_time,
-                request_params['date']
-            )
+        start_time, end_time, request_params['date'], is_parsed =
+        _parse_datetime(
+            start_time,
+            end_time,
+            request_params['date']
         )
 
     if not is_parsed:
@@ -173,6 +172,7 @@ def _construct_next_url(page_number, query, pagination):
     return base_url + params
 
 
+<<<<<<< 0f94c90472ca07f13d665ebcd49797d7878675f7
 def _parse_datetime(start_time, end_time, search_date):
     try:
         if start_time:
@@ -189,6 +189,7 @@ def _parse_datetime(start_time, end_time, search_date):
         return -1, -1, -1, False
 
     return start_time, end_time, search_date, True
+
 
 
 def _serialize_rooms(room_set):
