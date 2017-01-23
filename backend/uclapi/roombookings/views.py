@@ -88,7 +88,7 @@ def get_bookings(request):
 
     if not is_parsed:
         return Response({
-            "error": "date/time isn't formatted according to the docs"
+            "error": "date/time isn't formatted as suggested in the docs"
         })
 
     """
