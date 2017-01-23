@@ -130,4 +130,4 @@ def _serialize_bookings(bookings):
             "booking_id": bk.id
         })
 
-    return Response(ret_bookings)
+    return ret_bookings
