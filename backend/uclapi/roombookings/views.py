@@ -66,7 +66,7 @@ def get_booking(request):
 
     if not is_parsed:
         return Response({
-            "error": "date/time isn't formatted according to the docs"
+            "error": "date/time isn't formatted as suggested in the docs"
         })
 
     """
@@ -84,21 +84,22 @@ def get_booking(request):
     return Response(_serialize_bookings(bookings))
 
 
-def _parse_datetime(start_time, end_time, date):
+def _parse_datetime(start_time, end_time, search_date):
     try:
         if start_time:
-            start_time = datetime.datetime.strptime(timestring, '%H:%M').time()
+            start_time = datetime.datetime.strptime(start_time, '%H:%M').time()
 
         if end_time:
-            end_time = datetime.datetime.strptime(timestring, '%H:%M').time()
+            end_time = datetime.datetime.strptime(end_time, '%H:%M').time()
 
-        if date:
-            date = datetime.datetime.strptime(dateString, "%Y%m%d").date()
+        if search_date:
+            search_date = datetime.datetime.strptime(
+                                        search_date, "%Y%m%d").date()
     except Exception as e:
         print(e)
         return -1, -1, -1, False
 
-    return start_time, end_time, date, True
+    return start_time, end_time, search_date, True
 
 
 def _serialize_rooms(room_set):
