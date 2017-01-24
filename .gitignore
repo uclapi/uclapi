@@ -91,5 +91,7 @@ ENV/
 # PyCharm & IntelliJ
 .idea/
 
+*.sqlite3
+
 # Oracle configuration files
 *.ora
