@@ -13,25 +13,25 @@ def get_rooms(request):
     # add them to iterables so can be filtered without if-else
     request_params = {}
 
-    request_params['room_id'] = request.GET.get('room_id')
-    request_params['site_id'] = request.GET.get('site_id')
+    request_params['roomid'] = request.GET.get('roomid')
+    request_params['siteid'] = request.GET.get('siteid')
     request_params['name'] = request.GET.get('name')
     request_params['category'] = request.GET.get('category')
-    request_params['room_type'] = request.GET.get('type')
     request_params['classification'] = request.GET.get('classification')
-    request_params['campus_id'] = request.GET.get('campus_id')
+    request_params['campusid'] = request.GET.get('campusid')
     request_params['capacity'] = request.GET.get('capacity')
 
     # webview available rooms
-    all_rooms = Room.objects.filter(
-            setid='LIVE16-17',
-            centrally_bookable=True,
-            webview=True
+    all_rooms = Room.objects.using("roombookings").filter(
+            setid='LIVE-16-17',
+            type='CB'
         )
-
+    print(all_rooms)
     # no filters provided, return all rooms serialised
     if not reduce(lambda x, y: x or y, request_params.values()):
         return Response(_serialize_rooms(all_rooms))
+
+    print(request_params)
 
     filtered_rooms = all_rooms.filter(**request_params)
 
@@ -56,11 +56,12 @@ def get_booking(request):
     end_time = request.GET.get('end_time')
 
     if any([start_time, end_time, request_params['date']]):
-        start_time, end_time, request_params['date'], is_parsed =
-        _parse_datetime(
-            start_time,
-            end_time,
-            request_params['date']
+        start_time, end_time, request_params['date'], is_parsed = (
+            _parse_datetime(
+                start_time,
+                end_time,
+                request_params['date']
+            )
         )
 
     if not is_parsed:
@@ -105,12 +106,12 @@ def _serialize_rooms(room_set):
     rooms = []
     for room in room_set:
         rooms.append({
-            "name": room.NAME,
-            "room_id": room.ROOMID,
-            "site_id": room.SITEID,
-            "type": room.TYPE,
-            "capacity": room.CAPACITY,
-            "campus_id": room.CAMPUSID
+            "name": room.name,
+            "room_id": room.roomid,
+            "site_id": room.siteid,
+            "capacity": room.capacity,
+            "category": room.category,
+            "classification": room.classification
         })
     return rooms
 
