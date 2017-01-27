@@ -6,9 +6,10 @@ from rest_framework.decorators import api_view
 import datetime
 
 from .models import Booking, Room
-
+from auth_token import does_token_exist
 
 @api_view(['GET'])
+@does_token_exist
 def get_rooms(request):
     # add them to iterables so can be filtered without if-else
     request_params = {}
@@ -39,6 +40,7 @@ def get_rooms(request):
 
 
 @api_view(['GET'])
+@does_token_exist
 def get_booking(request):
     # query params
     request_params = {}
