@@ -19,11 +19,5 @@ def does_token_exist(view_func):
                 "error": "Token does not exist"
             })
 
-        # Token doesn't belong to this app
-        if app.service != "roombookings":
-            return Response({
-                "error": "Use tokens created for roombookings app"
-            })
-
         return view_func(request, *args, **kwargs)
     return wrapped
