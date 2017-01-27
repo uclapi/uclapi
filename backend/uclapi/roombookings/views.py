@@ -67,8 +67,8 @@ def get_bookings(request):
     if any([start_time, end_time, request_params['date']]):
         start_time, end_time, request_params['date'], is_parsed = (
             _parse_datetime(
-                start_time,
-                end_time,
+                request_params['start_time__gte'],
+                request_params['end_time__lte'],
                 request_params['date']
             )
         )
