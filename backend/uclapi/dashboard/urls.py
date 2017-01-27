@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index),
-    url(r'^api/user.login.callback', views.shibboleth_callback)
+    url(r'^user/login.callback', views.shibboleth_callback)
 ]

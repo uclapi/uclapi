@@ -3,7 +3,7 @@ from .models import User, App
 from django.core.exceptions import ObjectDoesNotExist
 import os
 from django.views.decorators.csrf import csrf_exempt
-
+from django.utils.http import quote
 
 @csrf_exempt
 def shibboleth_callback(request):
@@ -91,6 +91,21 @@ def index(request):
 
         return render(request, 'index.html', context=user_meta)
     else:
-        # user not signed in
-
-        return redirect(os.environ["SHIBBOLETH_URL"])
+        # User not signed in
+        # Build a sign in URL in the following format: SHIBBOLETH_ROOT + /Login?target=
+        # + urlencode(full URI(current URL) + /user/login.callback)
+        # This might look like the following:
+        # - SHIBBOLETH_ROOT: https://uclapi.com/Shibboleth.sso
+        # - /Login?target=
+        # - quote (basically a url encode, but this is Python not PHP according to
+        #       http://stackoverflow.com/a/7774038/5297057)
+        # -- full URI
+        # --- /dashboard
+        # -- /user/login.callback
+        # Result (example):
+        # https://uclapi.com/Shibboleth.sso/Login?target=https%3A%2F%2Fuclapi.com%2Fdashboard%2Fuser%2Flogin.callback
+        url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
+        param = request.build_absolute_uri(request.path) + "user/login.callback"
+        param = quote(param)
+        url = url + param
+        return redirect(url)
