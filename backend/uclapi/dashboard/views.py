@@ -19,7 +19,7 @@ def shibboleth_callback(request):
             department = request.META['HTTP_DEPARTMENT']
             given_name = request.META['HTTP_GIVENNAME']
             display_name = request.META['HTTP_DISPLAYNAME']
-            employee_id = request.META['HTTP_EMPLOYEE_ID']
+            employee_id = request.META['HTTP_EMPLOYEEID']
         except KeyError as e:
             context = {
                 "error": "Didn't receive all required Shibboleth data."
