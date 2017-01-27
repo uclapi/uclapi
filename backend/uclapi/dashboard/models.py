@@ -22,7 +22,6 @@ class App(models.Model):
     )
     user = models.ForeignKey(User, related_name='user')
     name = models.CharField(max_length=1000)
-    service = models.CharField(max_length=1000)
     api_token = models.CharField(
         max_length=1000,
         unique=True,

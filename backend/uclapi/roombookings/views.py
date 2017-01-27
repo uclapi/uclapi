@@ -78,24 +78,6 @@ def get_bookings(request):
             "error": "date/time isn't formatted as suggested in the docs"
         })
 
-    if any([start_time, end_time, request_params['date']]):
-        start_time, end_time, request_params['date'], is_parsed = (
-            _parse_datetime(
-                start_time,
-                end_time,
-                request_params['date']
-            )
-        )
-
-    if not is_parsed:
-        return Response({
-            "error": "date/time isn't formatted as suggested in the docs"
-        })
-
-    """
-    filter by non-time params first
-    then start_time_gte and end_time_lte
-    """
     # first page
     bookings = _paginated_result(request_params, 1, pagination)
 
