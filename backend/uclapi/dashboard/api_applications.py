@@ -18,7 +18,6 @@ def create_app(request):
 
     try:
         name = request.POST["name"]
-        service = request.POST["service"]
         user_id = request.session["user_id"]
     except KeyError:
         response = JsonResponse({
@@ -30,7 +29,7 @@ def create_app(request):
 
     user = get_user_by_id(user_id)
 
-    new_app = App(name=name, user=user, service=service)
+    new_app = App(name=name, user=user)
     new_app.save()
 
     return JsonResponse({
