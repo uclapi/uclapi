@@ -3,65 +3,53 @@ from .models import User, App
 from django.core.exceptions import ObjectDoesNotExist
 import os
 from django.views.decorators.csrf import csrf_exempt
-
+from django.utils.http import quote
 
 @csrf_exempt
 def shibboleth_callback(request):
     # this view is user facing, so should return html error page
     # should auth user login or signup
     # then redirect to dashboard homepage
-
-    if request.method == 'POST':
-        try:
-            eppn = request.META['HTTP_EPPN']
-            groups = request.META['HTTP_UCLINTRANETGROUPS']
-            cn = request.META['HTTP_CN']
-            department = request.META['HTTP_DEPARTMENT']
-            given_name = request.META['HTTP_GIVENNAME']
-            display_name = request.META['HTTP_DISPLAYNAME']
-            employee_id = request.META['HTTP_EMPLOYEE_ID']
-        except KeyError as e:
-            context = {
-                "error": "Didn't receive all required Shibboleth data."
-            }
-            print(e)
-            return render(
-                request,
-                'shibboleth_error.html',
-                context=context,
-                status=400
-            )
-
-        try:
-            user = User.objects.get(email=eppn)
-        except ObjectDoesNotExist:
-            # create a new user
-            new_user = User(
-                email=eppn,
-                full_name=display_name,
-                given_name=given_name,
-                department=department,
-                cn=cn,
-                raw_intranet_groups=groups,
-                employee_id=employee_id
-            )
-
-            new_user.save()
-            request.session["user_id"] = new_user.id
-        else:
-            request.session["user_id"] = user.id
-
-        return redirect(index)
-    else:
+    try:
+        eppn = request.META['HTTP_EPPN']
+        groups = request.META['HTTP_UCLINTRANETGROUPS']
+        cn = request.META['HTTP_CN']
+        department = request.META['HTTP_DEPARTMENT']
+        given_name = request.META['HTTP_GIVENNAME']
+        display_name = request.META['HTTP_DISPLAYNAME']
+        employee_id = request.META['HTTP_EMPLOYEEID']
+    except KeyError as e:
         context = {
-            "error": "Request is not of type POST."
+            "error": "Didn't receive all required Shibboleth data."
         }
+        print(e)
         return render(
             request,
             'shibboleth_error.html',
             context=context,
             status=400
         )
+
+    try:
+        user = User.objects.get(email=eppn)
+    except ObjectDoesNotExist:
+        # create a new user
+        new_user = User(
+            email=eppn,
+            full_name=display_name,
+            given_name=given_name,
+            department=department,
+            cn=cn,
+            raw_intranet_groups=groups,
+            employee_id=employee_id
+        )
+
+        new_user.save()
+        request.session["user_id"] = new_user.id
+    else:
+        request.session["user_id"] = user.id
+
+    return redirect(index)
 
 
 def index(request):
@@ -91,6 +79,21 @@ def index(request):
 
         return render(request, 'index.html', context=user_meta)
     else:
-        # user not signed in
-
-        return redirect(os.environ["SHIBBOLETH_URL"])
+        # User not signed in
+        # Build a sign in URL in the following format: SHIBBOLETH_ROOT + /Login?target=
+        # + urlencode(full URI(current URL) + /user/login.callback)
+        # This might look like the following:
+        # - SHIBBOLETH_ROOT: https://uclapi.com/Shibboleth.sso
+        # - /Login?target=
+        # - quote (basically a url encode, but this is Python not PHP according to
+        #       http://stackoverflow.com/a/7774038/5297057)
+        # -- full URI
+        # --- /dashboard
+        # -- /user/login.callback
+        # Result (example):
+        # https://uclapi.com/Shibboleth.sso/Login?target=https%3A%2F%2Fuclapi.com%2Fdashboard%2Fuser%2Flogin.callback
+        url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
+        param = request.build_absolute_uri(request.path) + "user/login.callback"
+        param = quote(param)
+        url = url + param
+        return redirect(url)
