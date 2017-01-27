@@ -19,7 +19,8 @@ App.propTypes = {
 
 class AppForm extends React.Component {
   render () {
-    return <div className="appForm card pure-u-1 pure-u-md-1-2">
+    return <div className="appForm card pure-u-1">
+      <h2>Create App</h2>
       <form className="pure-form pure-form-stacked">
         <fieldset>
           <div className="pure-g">
@@ -45,12 +46,37 @@ class AppList extends React.Component {
   constructor (props) {
     super(props);
     this.state = {apps: props.apps};
+    this.addApp = this.addApp.bind(this);
+    this.editApp = this.editApp.bind(this);
+    this.getAppIndex = this.getAppIndex.bind(this);
+    this.clickHandler = this.clickHandler.bind(this);
+    this.deleteApp = this.deleteApp.bind(this);
   }
 
   addApp(app){
     this.setState( (state) => 
       update(state, {apps: {$push: [app]}})
     );
+  }
+
+  editApp(oldName, newName){
+    this.setState( (state) => {
+      let appIndex = this.getAppIndex(oldName);
+      if(appIndex !== undefined){
+        let obj = {};
+        obj[appIndex] = {name: {$set: newName}};
+        return update(state, {apps: obj});          
+      }
+    });
+  }
+
+  deleteApp(appName){
+    this.setState((state) => {
+      let appIndex = this.getAppIndex(appName);
+      if(appIndex !== undefined){
+        return update(state, {apps: {$splice: [[appIndex, 1]]}});
+      }
+    });
   }
 
   getAppIndex(appName){
@@ -61,12 +87,19 @@ class AppList extends React.Component {
     }
   }
 
+  clickHandler(e){
+    e.preventDefault();
+    this.deleteApp('My Cool App');
+  }
+
   render () {
-    return <div className="appList pure-g">
-      {this.state.apps.map((app, i) => {
-        return <App name={app.name} appKey={app.api_token} created={app.created} key={i} />;
-      })}
-      <AppForm />
+    return <div className="appList pure-u-1">
+      <div className="pure-g">
+        {this.state.apps.map((app, i) => {
+          return <App name={app.name} appKey={app.api_token} created={app.created} key={i} />;
+        })}
+        <AppForm />
+      </div>
     </div>;
   }
 }
