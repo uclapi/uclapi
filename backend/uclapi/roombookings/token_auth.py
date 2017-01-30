@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from dashboard.models import App
-from django.contrib.auth.models import DoesNotExist
+from django.contrib.auth.models import ObjectDoesNotExist
 
 
 def does_token_exist(view_func):

@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 import datetime
 from django.core.exceptions import FieldError
 from .models import Booking, Room
-from auth_token import does_token_exist
+from token_auth import does_token_exist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import json
@@ -59,6 +59,7 @@ def get_bookings(request):
     request_params['date'] = request.GET.get('date')
     # 20 is the default number of bookings per page
     pagination = request.GET.get('pagination') or 20
+    pagination = pagination if pagination < 100 else 100
 
     # functional filters
     request_params['start_time__gte'] = request.GET.get('start_time')
