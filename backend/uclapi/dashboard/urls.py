@@ -4,7 +4,7 @@ from dashboard.api_applications import create_app, rename_app, regenerate_app_to
 from . import views
 
 urlpatterns = [
-    url(r'$', views.index),
+    url(r'^$', views.dashboard),
     url(r'api/create/$', create_app),
     url(r'api/rename/$', rename_app),
     url(r'api/regen/$', regenerate_app_token),

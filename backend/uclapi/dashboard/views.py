@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import User, App
 from django.core.exceptions import ObjectDoesNotExist
 import os
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.utils.http import quote
 
 from django.core.serializers.json import DjangoJSONEncoder
@@ -56,7 +56,8 @@ def shibboleth_callback(request):
         print(2)
         request.session["user_id"] = user.id
 
-@csrf_exempt
+    return redirect(dashboard)
+
 def index(request):
 
     if "user_id" in request.session:
@@ -102,7 +103,7 @@ def index(request):
         url = url + param
         return redirect(url)
 
-@csrf_exempt
+@ensure_csrf_cookie
 def dashboard(request):
     try:
         user_id = request.session["user_id"]
@@ -122,6 +123,8 @@ def dashboard(request):
         "intranet_groups": user.raw_intranet_groups,
         "apps": []
     }
+
+    user_apps = App.objects.filter(user=user)
 
     for app in user_apps:
         user_meta["apps"].append({

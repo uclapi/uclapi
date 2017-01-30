@@ -12,7 +12,7 @@ class Dashboard extends React.Component {
   render () {
     return <div>
       <Layout>
-        <Profile username={this.state.data.userName} email={this.state.data.email} />
+        <Profile name={this.state.data.name} cn={this.state.data.cn} />
         <AppList apps={this.state.data.apps} />
       </Layout>
     </div>;

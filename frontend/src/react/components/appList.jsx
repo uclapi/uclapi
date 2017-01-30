@@ -1,6 +1,7 @@
 import React from 'react';
 import update from 'immutability-helper';
 import 'whatwg-fetch';
+import Cookies from 'js-cookie';
 
 class App extends React.Component {
   constructor(props){
@@ -17,14 +18,15 @@ class App extends React.Component {
   changeName(e){
     e.preventDefault();
     let that = this;
-    fetch('/dashboard/api/rename', {
+    fetch('/dashboard/api/rename/', {
       method: 'POST',
       credentials: 'include',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken':Cookies.get('csrftoken') 
       },
       body: 'new_name=' + this.refs.name.value +
-        'app_id=' + this.props.appId
+        '&app_id=' + this.props.appId
     }).then((res)=>{
       if(res.ok){
         return res.json();
@@ -55,11 +57,12 @@ class App extends React.Component {
 
   regenToken(){
     let that = this;
-    fetch('/dashboard/api/regen', {
+    fetch('/dashboard/api/regen/', {
       method: 'POST',
       credentials: 'include',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken':Cookies.get('csrftoken') 
       },
       body: 'app_id=' + this.props.appId
     }).then((res)=>{
@@ -70,12 +73,13 @@ class App extends React.Component {
       }
     }).then((json)=>{
       if(json.success){
+        console.log(json);
         let newApp = {
           name: that.props.name,
           id: that.props.appId,
-          token: json.token,
+          token: json.app.token,
           created: that.props.created,
-          updated: json.date
+          updated: json.app.date
         };
         that.props.update(that.props.name, newApp);
       }else{
@@ -156,11 +160,12 @@ class AppForm extends React.Component {
   submitForm(e){
     e.preventDefault();
     let that = this;
-    fetch('/dashboard/api/create', {
+    fetch('/dashboard/api/create/', {
       method: 'POST',
       credentials: 'include',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken':Cookies.get('csrftoken') 
       },
       body: 'name=' + this.refs.name.value
     }).then((res)=>{
