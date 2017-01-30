@@ -84,17 +84,31 @@ def login(request):
     return render(request, 'login.html', context=user_meta)
 
 def dashboard(request):
-    initial_data = json.dumps({
-        'userName': 'hennersz',
-        'email': 'henry@morti.net',
-        'apps':[
-          {
-            'name': 'My Cool App',
-            'api_token': 'oijewoo23i40cn1no1i2nd',
-            'created': '20170120T000000'
-          }
-        ]
-      }, cls=DjangoJSONEncoder)
+    try:
+        user_id = request.session["user_id"]
+    except KeyError:
+        return render(request, 'login.html')
+
+    user = User.objects.get(id=user_id)
+
+    user_meta = {
+        "name": user.given_name,
+        "cn": user.cn,
+        "department": user.department,
+        "intranet_groups": user.raw_intranet_groups,
+        "apps": []
+    }
+
+    for app in user_apps:
+        user_meta["apps"].append({
+            "name": app.name,
+            "id": app.id,
+            "token": app.api_token,
+            "created": app.created,
+            "updated": app.last_updated
+        })
+
+    initial_data = json.dumps(user_meta, cls=DjangoJSONEncoder)
     return render(request, 'dashboard.html', {
 	'initial_data': initial_data
     }) 
