@@ -11,6 +11,7 @@ import json
 
 @csrf_exempt
 def shibboleth_callback(request):
+    print(0)
     # this view is user facing, so should return html error page
     # should auth user login or signup
     # then redirect to dashboard homepage
@@ -37,6 +38,7 @@ def shibboleth_callback(request):
     try:
         user = User.objects.get(email=eppn)
     except ObjectDoesNotExist:
+        print(1)
         # create a new user
         new_user = User(
             email=eppn,
@@ -51,11 +53,10 @@ def shibboleth_callback(request):
         new_user.save()
         request.session["user_id"] = new_user.id
     else:
+        print(2)
         request.session["user_id"] = user.id
 
-    return redirect(index)
-
-
+@csrf_exempt
 def index(request):
 
     if "user_id" in request.session:
@@ -95,17 +96,18 @@ def index(request):
         # -- /user/login.callback
         # Result (example):
         # https://uclapi.com/Shibboleth.sso/Login?target=https%3A%2F%2Fuclapi.com%2Fdashboard%2Fuser%2Flogin.callback
-        url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
+        url = os.environ["SHIBBOLETH_ROOT"] + "/?target="
         param = request.build_absolute_uri(request.path) + "user/login.callback"
         param = quote(param)
         url = url + param
         return redirect(url)
 
+@csrf_exempt
 def dashboard(request):
     try:
         user_id = request.session["user_id"]
     except KeyError:
-        url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
+        url = os.environ["SHIBBOLETH_ROOT"] + "/?target="
         param = request.build_absolute_uri(request.path) + "user/login.callback"
         param = quote(param)
         url = url + param
