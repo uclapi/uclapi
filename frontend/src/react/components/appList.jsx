@@ -115,7 +115,7 @@ class App extends React.Component {
             <div className="pure-u-1-2">
               <h2>{this.props.name}</h2>
             </div>
-            <div className="pure-u-1-2">
+            <div className="pure-u-1-2 flexCentre">
               <button className="pure-button pure-button-primary" onClick={this.editName}>Edit</button>
             </div>
           </div>
@@ -124,10 +124,10 @@ class App extends React.Component {
           <div className="pure-u-1-2">
             <p>API Token: </p>
             <form className="pure-form">
-              <input type="text" value={this.props.appKey} readOnly/>
+              <input type="text" style={{width:'90%'}}value={this.props.appKey} readOnly/>
             </form>
           </div>
-          <div className="pure-u-1-2">
+          <div className="pure-u-1-2 flexCentre">
             <button className="pure-button pure-button-primary" onClick={this.regenConfirm}>Regenerate</button>
           </div>
         </div>
@@ -181,25 +181,31 @@ class AppForm extends React.Component {
     });
   }
   render () {
-    return <div className="appForm card pure-u-1">
-      <h2>Create App</h2>
-      <form className="pure-form pure-form-stacked" onSubmit={this.submitForm}>
-        <fieldset>
-          <div className="pure-g">
-            <div className="pure-u-1">
-              <label htmlFor="name">App Name</label>
-              <input id="name" ref="name" className="pure-u-1" type="text"/>
-            </div>
-          </div>
-          <div className="pure-g">
-            <div className="pure-u-1-24"></div>
-            <button type="submit" className="pure-button pure-button-primary pure-u-10-24">Submit</button>
-            <div className="pure-u-2-24"></div>
-            <button className="pure-button button-error pure-u-10-24">Cancel</button>
-            <div className="pure-u-1-24>"></div>
-          </div>
-        </fieldset>
-      </form>
+    return <div className="appForm pure-g">
+      <div className="pure-u-xl-1-4"></div>
+      <div className="pure-u-1 pure-u-xl-1-2">
+        <div className="card">
+          <h2>Create App</h2>
+          <form className="pure-form pure-form-stacked" onSubmit={this.submitForm}>
+            <fieldset>
+              <div className="pure-g">
+                <div className="pure-u-1">
+                  <label htmlFor="name">App Name</label>
+                  <input id="name" ref="name" className="pure-u-1" type="text"/>
+                </div>
+              </div>
+              <div className="pure-g">
+                <div className="pure-u-1-24"></div>
+                <button type="submit" className="pure-button pure-button-primary pure-u-10-24">Submit</button>
+                <div className="pure-u-2-24"></div>
+                <button className="pure-button button-error pure-u-10-24">Cancel</button>
+                <div className="pure-u-1-24>"></div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+      <div className="pure-u-xl-1-4"></div>
     </div>;
   }
 }
@@ -273,8 +279,8 @@ class AppList extends React.Component {
             remove={this.deleteApp}
           />;
         })}
-        <AppForm add={this.addApp}/>
       </div>
+      <AppForm add={this.addApp}/>
     </div>;
   }
 }
