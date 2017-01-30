@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Fake Shibboleth</title>
+  </head>
+  <body>
+    <form action="{{callback}}" method="post">
+      <input type="hidden" name="convert-post-headers" value="1">
+      <label for="eppn">eppn: </label>
+      <input id="eppn" type="text" name="HTTP_EPPN">
+      <br />
+      <label for="uclintranetgroups">uclintranetgroups: </label>
+      <input id="uclintranetgroups" type="text" name="HTTP_UCLINTRANETGROUPS">
+      <br />
+      <label for="cn">cn: </label>
+      <input id="cn" type="text" name="HTTP_CN">
+      <br />
+      <label for="department">department: </label>
+      <input id="department" type="text" name="HTTP_DEPARTMENT">
+      <br />
+      <label for="givenname">givenname: </label>
+      <input id="givenname" type="text" name="HTTP_GIVENNAME">
+      <br />
+      <label for="displayname">displayname: </label>
+      <input id="displayname" type="text" name="HTTP_DISPLAYNAME">
+      <br />
+      <label for="employee_id">employee_id: </label>
+      <input id="employee_id" type="text" name="HTTP_EMPLOYEE_ID">
+      <br />
+      <input type="submit" value="Login (Send shibboleth data)">
+  </form>
+  </body>
+</html>
