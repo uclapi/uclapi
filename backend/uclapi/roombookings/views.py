@@ -2,6 +2,7 @@ from functools import reduce
 
 from django.shortcuts import render
 from rest_framework.response import Response
+from django.http import JsonResponse
 from rest_framework.decorators import api_view
 import datetime
 from django.core.exceptions import FieldError
@@ -35,13 +36,13 @@ def get_rooms(request):
     print(all_rooms)
     # no filters provided, return all rooms serialised
     if not reduce(lambda x, y: x or y, request_params.values()):
-        return Response(_serialize_rooms(all_rooms))
+        return JsonResponse(_serialize_rooms(all_rooms))
 
     print(request_params)
 
     filtered_rooms = all_rooms.filter(**request_params)
 
-    return Response(_serialize_rooms(filtered_rooms))
+    return JsonResponse(_serialize_rooms(filtered_rooms))
 
 
 @api_view(['GET'])
@@ -75,14 +76,14 @@ def get_bookings(request):
         )
 
     if not is_parsed:
-        return Response({
+        return JsonResponse({
             "error": "date/time isn't formatted as suggested in the docs"
         })
 
     # first page
     bookings = _paginated_result(request_params, 1, pagination)
 
-    return Response(bookings)
+    return JsonResponse(bookings)
 
 
 @api_view(['GET'])
@@ -93,11 +94,11 @@ def paginated_result(request):
         page_number = int(request.GET.get("page_number"))
         pagination = int(request.GET.get("paginations"))
     except KeyError:
-        return Response({
+        return JsonResponse({
             "error": "paginated view didn't get required parameters"
         })
     except TypeError:
-        return Response({
+        return JsonResponse({
             "error": "pagination and page number should be an int"
         })
 
@@ -105,13 +106,13 @@ def paginated_result(request):
         query = json.loads(base64.b64decode(query).decode())
     except Exception as e:
         print(e)
-        return Response({
+        return JsonResponse({
             "error": "couldn't decode the query"
         })
 
     bookings = _paginated_result(query, page_number=, pagination)
 
-    return Response(bookings)
+    return JsonResponse(bookings)
 
 
 def _paginated_result(query, page_number, pagination):
@@ -154,7 +155,7 @@ def _construct_next_url(page_number, query, pagination):
     query = base64.b64encode(query.encode('utf-8'))
 
     params = "query=" + query + "&page_number=" + str(page_number) +
-        "&pagination=" + str(pagination)
+    "&pagination=" + str(pagination)
 
     return base_url + params
 
