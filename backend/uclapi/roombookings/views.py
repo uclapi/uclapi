@@ -96,6 +96,10 @@ def paginated_result(request):
         return Response({
             "error": "paginated view didn't get required parameters"
         })
+    except TypeError:
+        return Response({
+            "error": "pagination and page number should be an int"
+        })
 
     try:
         query = json.loads(base64.b64decode(query).decode())
@@ -114,7 +118,6 @@ def _paginated_result(query, page_number, pagination):
     try:
         all_bookings = Booking.objects.using('roombookings').filter(**query)
     except FieldError:
-        print(e)
         return {
             "error": "something wrong with encoded query params"
         }
@@ -193,7 +196,7 @@ def _serialize_bookings(bookings):
 
     for bk in bookings:
         ret_bookings.append({
-            "room": bk.room.NAME,
+            "room": bk.room.name,
             "site_id": bk.room.site_id,
             "description": bk.description,
             "start_time": bk.start_time,
