@@ -54,24 +54,30 @@ def get_bookings(request):
     # non functional filters
     request_params['room_id'] = request.GET.get('room_id')
     # TODO: building?
-    request_params['site_id'] = request.GET.get('site_id')
+    request_params['siteid'] = request.GET.get('site_id')
     request_params['description'] = request.GET.get('description')
     request_params['contact'] = request.GET.get('contact')
-    request_params['date'] = request.GET.get('date')
+    request_params['startdatetime'] = request.GET.get('date')
     # 20 is the default number of bookings per page
     pagination = request.GET.get('pagination') or 20
     pagination = pagination if pagination < 100 else 100
 
     # functional filters
-    request_params['start_time__gte'] = request.GET.get('start_time')
-    request_params['end_time__lte'] = request.GET.get('end_time')
+    request_params['starttime__gte'] = request.GET.get('start_time')
+    request_params['finishtime__lte'] = request.GET.get('end_time')
 
-    if any([start_time, end_time, request_params['date']]):
+    is_parsed = True
+
+    if any([
+            request_params['starttime__gte'],
+            request_params['finishtime__lte'],
+            request_params['startdatetime']
+            ]):
         start_time, end_time, request_params['date'], is_parsed = (
             _parse_datetime(
-                request_params['start_time__gte'],
-                request_params['end_time__lte'],
-                request_params['date']
+                request_params['starttime__gte'],
+                request_params['finishtime__lte'],
+                request_params['startdatetime']
             )
         )
 
@@ -116,9 +122,11 @@ def paginated_result(request):
 
 
 def _paginated_result(query, page_number, pagination):
+    print(query)
     try:
         all_bookings = Booking.objects.using('roombookings').filter(**query)
-    except FieldError:
+    except FieldError as e:
+        print(e)
         return {
             "error": "something wrong with encoded query params"
         }
@@ -153,9 +161,9 @@ def _construct_next_url(page_number, query, pagination):
     # base64 encode the query and send it with url
     query = json.dumps(query)
     query = base64.b64encode(query.encode('utf-8'))
-
+    print(page_number, query, pagination)
     params = (
-        "query=" + query + "&page_number=" + str(page_number) +
+        "query=" + str(query) + "&page_number=" + str(page_number) +
         "&pagination=" + str(pagination)
     )
 
@@ -199,13 +207,13 @@ def _serialize_bookings(bookings):
 
     for bk in bookings:
         ret_bookings.append({
-            "room": bk.room.name,
-            "site_id": bk.room.site_id,
-            "description": bk.description,
-            "start_time": bk.start_time,
-            "end_time": bk.end_time,
-            "contact": bk.contact,
-            "booking_id": bk.id
+            "room": bk.roomname,
+            "site_id": bk.roomid,
+            "description": bk.descrip,
+            "start_time": bk.starttime,
+            "end_time": bk.finishtime,
+            "contact": bk.contactname,
+            "booking_id": bk.slotid
         })
 
     return ret_bookings
