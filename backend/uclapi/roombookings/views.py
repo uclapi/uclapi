@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 import datetime
 from django.core.exceptions import FieldError
 from .models import Booking, Room
-from token_auth import does_token_exist
+from .token_auth import does_token_exist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import json
@@ -110,7 +110,7 @@ def paginated_result(request):
             "error": "couldn't decode the query"
         })
 
-    bookings = _paginated_result(query, page_number=, pagination)
+    bookings = _paginated_result(query, page_number, pagination)
 
     return JsonResponse(bookings)
 
@@ -154,8 +154,10 @@ def _construct_next_url(page_number, query, pagination):
     query = json.dumps(query)
     query = base64.b64encode(query.encode('utf-8'))
 
-    params = "query=" + query + "&page_number=" + str(page_number) +
-    "&pagination=" + str(pagination)
+    params = (
+        "query=" + query + "&page_number=" + str(page_number) +
+        "&pagination=" + str(pagination)
+    )
 
     return base_url + params
 

@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from dashboard.models import App
-from django.contrib.auth.models import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 
 
