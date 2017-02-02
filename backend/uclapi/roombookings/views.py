@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 import datetime
 from django.core.exceptions import FieldError
-from .models import Booking, Room
+from .models import Booking, Room, PageToken
 from .token_auth import does_token_exist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -46,8 +46,15 @@ def get_rooms(request):
 
 
 @api_view(['GET'])
-@does_token_exist
+# @does_token_exist
 def get_bookings(request):
+
+    # if page_token exists, dont look for query
+    page_token = request.POST.get('page_token')
+    if page_token:
+        bookings = _get_paginated_bookings(page_token)
+        return JsonResponse(bookings)
+
     # query params
     request_params = {}
 
@@ -86,43 +93,50 @@ def get_bookings(request):
             "error": "date/time isn't formatted as suggested in the docs"
         })
 
+    # filter the query dict
+    request_params = dict((k, v) for k, v in request_params.items() if v)
+
+    # create a database entry for token
+    page_token = _create_page_token(request_params, pagination)
+
     # first page
-    bookings = _paginated_result(request_params, 1, pagination)
+    bookings = _get_paginated_bookings(page_token)
 
     return JsonResponse(bookings)
 
 
-@api_view(['GET'])
-@does_token_exist
-def paginated_result(request):
+def _create_page_token(query, pagination):
+    page = PageToken(
+        pagination=pagination,
+        query=json.dumps(query)
+    )
+    page.save()
+    return page.page_token
+
+
+def _get_paginated_bookings(page_token):
     try:
-        query = request.GET.get("query")
-        page_number = int(request.GET.get("page_number"))
-        pagination = int(request.GET.get("paginations"))
-    except KeyError:
-        return JsonResponse({
-            "error": "paginated view didn't get required parameters"
-        })
-    except TypeError:
-        return JsonResponse({
-            "error": "pagination and page number should be an int"
-        })
+        page = PageToken.objects.get(page_token=page_token)
+    except ObjectDoesNotExist:
+        return {
+            "error": "Page token does not exist"
+        }
 
-    try:
-        query = json.loads(base64.b64decode(query).decode())
-    except Exception as e:
-        print(e)
-        return JsonResponse({
-            "error": "couldn't decode the query"
-        })
+    curr_page = page.curr_page
+    page.curr_page += 1
+    page.save()
 
-    bookings = _paginated_result(query, page_number, pagination)
+    pagination = page.pagination
+    query = json.loads(page.query)
+    bookings = _paginated_result(query, curr_page + 1, pagination)
 
-    return JsonResponse(bookings)
+    # append the page_token to return json
+    bookings["page_token"] = page_token
+
+    return bookings
 
 
 def _paginated_result(query, page_number, pagination):
-    print(query)
     try:
         all_bookings = Booking.objects.using('roombookings').filter(**query)
     except FieldError as e:
@@ -144,30 +158,9 @@ def _paginated_result(query, page_number, pagination):
 
     serialized_bookings = _serialize_bookings(bookings)
 
-    next_url = ""
-
-    if page_number < paginator.num_pages:
-        next_url = _construct_next_url(page_number + 1, query, pagination)
-
     return {
         "bookings": serialized_bookings,
-        "next_page": next_url
     }
-
-
-def _construct_next_url(page_number, query, pagination):
-    base_url = "https://uclapi.com/v0/roombookings/bookings.pagination?"
-
-    # base64 encode the query and send it with url
-    query = json.dumps(query)
-    query = base64.b64encode(query.encode('utf-8'))
-    print(page_number, query, pagination)
-    params = (
-        "query=" + str(query) + "&page_number=" + str(page_number) +
-        "&pagination=" + str(pagination)
-    )
-
-    return base_url + params
 
 
 def _parse_datetime(start_time, end_time, search_date):
