@@ -153,8 +153,9 @@ def _paginated_result(query, page_number, pagination):
         # give first page
         bookings = paginator.page(1)
     except EmptyPage:
-        # return last page
-        bookings = paginator.page(paginator.num_pages)
+        # return empty page
+        # bookings = paginator.page(paginator.num_pages)
+        bookings = {}
 
     serialized_bookings = _serialize_bookings(bookings)
 
