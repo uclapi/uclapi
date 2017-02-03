@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'dashboard',
     'roombookings',
+    'opbeat.contrib.django'
 ]
 
 MIDDLEWARE = [
+    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -101,6 +103,8 @@ DATABASES = {
     }
 }
 
+# analytics & rate-limiting
+
 REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_CLASSES': (
         'rest_framework.throttling.AnonRateThrottle',
@@ -110,6 +114,12 @@ REST_FRAMEWORK = {
         'anon': '100/day',
         'user': '1000/day'
     }
+}
+
+OPBEAT = {
+    'ORGANIZATION_ID': os.environ.get("OPBEAT_ORG_ID"),
+    'APP_ID': os.environ.get("OPBEAT_APP_ID"),
+    'SECRET_TOKEN': os.environ.get("OPBEAT_SECRET_TOKEN")
 }
 
 
