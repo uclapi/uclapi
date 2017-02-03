@@ -1,7 +1,5 @@
 from functools import reduce
 
-from django.shortcuts import render
-from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 import datetime
@@ -9,13 +7,14 @@ from django.core.exceptions import FieldError
 from .models import Booking, Room
 from .token_auth import does_token_exist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .helpers import _serialize_rooms
 
 import json
 import base64
 
 
 @api_view(['GET'])
-@does_token_exist
+#@does_token_exist
 def get_rooms(request):
     # add them to iterables so can be filtered without if-else
     request_params = {}
@@ -33,16 +32,21 @@ def get_rooms(request):
             setid='LIVE-16-17',
             type='CB'
         )
-    print(all_rooms)
+
     # no filters provided, return all rooms serialised
     if not reduce(lambda x, y: x or y, request_params.values()):
-        return JsonResponse(_serialize_rooms(all_rooms))
+        return JsonResponse({
+            "ok": True,
+            "rooms": _serialize_rooms(all_rooms)
 
-    print(request_params)
+        })
 
     filtered_rooms = all_rooms.filter(**request_params)
 
-    return JsonResponse(_serialize_rooms(filtered_rooms))
+    return JsonResponse({
+        "ok": True,
+        "rooms": _serialize_rooms(filtered_rooms)
+    })
 
 
 @api_view(['GET'])
@@ -178,20 +182,6 @@ def _parse_datetime(start_time, end_time, search_date):
         return -1, -1, -1, False
 
     return start_time, end_time, search_date, True
-
-
-def _serialize_rooms(room_set):
-    rooms = []
-    for room in room_set:
-        rooms.append({
-            "name": room.name,
-            "room_id": room.roomid,
-            "site_id": room.siteid,
-            "capacity": room.capacity,
-            "category": room.category,
-            "classification": room.classification
-        })
-    return rooms
 
 
 def _serialize_bookings(bookings):
