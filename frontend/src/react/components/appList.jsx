@@ -15,6 +15,7 @@ class App extends React.Component {
     this.regenConfirm = this.regenConfirm.bind(this);
     this.deleteApp = this.deleteApp.bind(this);
     this.deleteConfirm = this.deleteConfirm.bind(this);
+    this.stopEditing = this.stopEditing.bind(this);
   }
 
   changeName(e){
@@ -136,6 +137,13 @@ class App extends React.Component {
     });
   }
 
+  stopEditing(e){
+    e.preventDefault();
+    this.setState({
+      editing: false
+    });
+  }
+
   render () {
     return <div className="app pure-u-1 pure-u-xl-1-2">
       <div className="card">
@@ -144,6 +152,7 @@ class App extends React.Component {
             <fieldset>
               <input type="text" placeholder={this.props.name} ref="name"/>
               <button type="submit" className="pure-button pure-button-primary" onClick={this.changeName}>Submit</button>
+              <button className="pure-button button-error" onClick={this.stopEditing}>Cancel</button>
             </fieldset>
           </form> 
         ):(
