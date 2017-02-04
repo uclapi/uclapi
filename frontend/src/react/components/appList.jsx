@@ -177,7 +177,7 @@ class App extends React.Component {
             <button className="pure-button pure-button-primary" onClick={this.regenConfirm}>Regenerate</button>
           </div>
         </div>
-        <p>Created: {moment(this.props.created).fromNow()}</p>
+        <p title={this.props.created}>Created: {moment(this.props.created).fromNow()}</p>
         <div className="flexCentre">
           <button className="pure-button button-error" onClick={this.deleteConfirm}>Delete app</button>
         </div>
