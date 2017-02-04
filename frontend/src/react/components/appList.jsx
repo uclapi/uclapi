@@ -13,6 +13,8 @@ class App extends React.Component {
     this.editName = this.editName.bind(this);
     this.regenToken = this.regenToken.bind(this);
     this.regenConfirm = this.regenConfirm.bind(this);
+    this.deleteApp = this.deleteApp.bind(this);
+    this.deleteConfirm = this.deleteConfirm.bind(this);
   }
 
   changeName(e){
@@ -73,7 +75,6 @@ class App extends React.Component {
       }
     }).then((json)=>{
       if(json.success){
-        console.log(json);
         let newApp = {
           name: that.props.name,
           id: that.props.appId,
@@ -90,6 +91,37 @@ class App extends React.Component {
     });
   }
 
+  deleteApp(){
+    let that = this;
+    fetch('/dashboard/api/delete/', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': Cookies.get('csrftoken')
+      },
+      body: 'app_id=' + this.props.appId
+    }).then((res)=>{
+      if(res.ok){
+        return res.json();
+      }else{
+        throw new Error('An error occured');
+      }
+    }).then((json)=>{
+      if(json.success){
+        that.props.remove(that.props.name);
+      }
+    }).catch((err)=>{
+      console.error(err);
+    });
+  }
+
+  deleteConfirm(e){
+    e.preventDefault();
+    if(confirm('Are you sure you want to delete this app?')){
+      this.deleteApp();
+    }
+  }
   regenConfirm(e){
     e.preventDefault();
     if(confirm('Are you sure you want to regenerate your api token?')){
@@ -136,6 +168,9 @@ class App extends React.Component {
           </div>
         </div>
         <p>Created: {this.props.created}</p>
+        <div className="flexCentre">
+          <button className="pure-button button-error" onClick={this.deleteConfirm}>Delete app</button>
+        </div>
         </div>
     </div>;
   }
