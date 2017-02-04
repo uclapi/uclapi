@@ -2,6 +2,7 @@ import React from 'react';
 import update from 'immutability-helper';
 import 'whatwg-fetch';
 import Cookies from 'js-cookie';
+import moment from 'moment';
 
 class App extends React.Component {
   constructor(props){
@@ -176,7 +177,7 @@ class App extends React.Component {
             <button className="pure-button pure-button-primary" onClick={this.regenConfirm}>Regenerate</button>
           </div>
         </div>
-        <p>Created: {this.props.created}</p>
+        <p>Created: {moment(this.props.created).fromNow()}</p>
         <div className="flexCentre">
           <button className="pure-button button-error" onClick={this.deleteConfirm}>Delete app</button>
         </div>
