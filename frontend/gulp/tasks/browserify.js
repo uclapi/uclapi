@@ -5,6 +5,8 @@ var gutil = require('gulp-util');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var glob = require('glob');
+var path = require('path');
+var filePath = require('./filePath.js');
 
 function removeExtentionAndPath(file, extension){
   var extStart = file.indexOf('.' + extension);
@@ -14,11 +16,12 @@ function removeExtentionAndPath(file, extension){
 function browserified(filename) {
   var b = browserify(filename,{debug: true});
   var fileNoExt = removeExtentionAndPath(filename, 'jsx');
+  var p = filePath(fileNoExt);
   b.bundle()
     .on('error', gutil.log)
     .pipe(source(fileNoExt + '.js'))
     .pipe(buffer())
-    .pipe(gulp.dest('./build/js'));
+    .pipe(gulp.dest(path.join(p, 'js')));
 }
 
 module.exports = function() {
