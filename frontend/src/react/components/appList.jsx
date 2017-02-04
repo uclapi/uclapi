@@ -45,7 +45,7 @@ class App extends React.Component {
           created: that.props.created,
           updated: json.date
         };
-        that.props.update(that.props.name, newApp);
+        that.props.update(that.props.appId, newApp);
         that.refs.name.value = '';
         that.setState({
           editing: false
@@ -83,7 +83,7 @@ class App extends React.Component {
           created: that.props.created,
           updated: json.app.date
         };
-        that.props.update(that.props.name, newApp);
+        that.props.update(that.props.appId, newApp);
       }else{
         throw new Error(json.message);
       }
@@ -110,7 +110,7 @@ class App extends React.Component {
       }
     }).then((json)=>{
       if(json.success){
-        that.props.remove(that.props.name);
+        that.props.remove(that.props.appId);
       }
     }).catch((err)=>{
       console.error(err);
@@ -283,27 +283,27 @@ class AppList extends React.Component {
     );
   }
 
-  updateApp(name, app){
+  updateApp(id, app){
     this.setState( (state) => {
-      let appIndex = this.getAppIndex(name);
+      let appIndex = this.getAppIndex(id);
       if(appIndex !== undefined){
         return update(state, {apps: {[appIndex]: {$set: app}}});          
       }
     });
   }
 
-  deleteApp(appName){
+  deleteApp(appId){
     this.setState((state) => {
-      let appIndex = this.getAppIndex(appName);
+      let appIndex = this.getAppIndex(appId);
       if(appIndex !== undefined){
         return update(state, {apps: {$splice: [[appIndex, 1]]}});
       }
     });
   }
 
-  getAppIndex(appName){
+  getAppIndex(appId){
     for(let app of this.state.apps){
-      if(app.name === appName){
+      if(app.id === appId){
         return this.state.apps.indexOf(app);
       }
     }
