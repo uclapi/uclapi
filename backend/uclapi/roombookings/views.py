@@ -12,7 +12,7 @@ from .private_methods import _parse_datetime, _serialize_rooms, \
 
 
 @api_view(['GET'])
-# @does_token_exist
+@does_token_exist
 def get_rooms(request):
     # add them to iterables so can be filtered without if-else
     request_params = {}
