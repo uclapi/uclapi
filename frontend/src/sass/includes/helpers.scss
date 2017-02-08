@@ -29,6 +29,7 @@
 
 .button-error {
   background: rgb(202, 60, 60); /* this is a maroon */
+  color: white;
 }
 
 .flexCentre{
@@ -36,3 +37,15 @@
   align-items: center;
   justify-content: center;
 }
+
+.flexTopRight{
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.padded{
+  margin: 5px;
+}
+
+

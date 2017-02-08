@@ -17,6 +17,7 @@ class App extends React.Component {
     this.deleteApp = this.deleteApp.bind(this);
     this.deleteConfirm = this.deleteConfirm.bind(this);
     this.stopEditing = this.stopEditing.bind(this);
+    this.copyToken = this.copyToken.bind(this);
   }
 
   changeName(e){
@@ -145,6 +146,21 @@ class App extends React.Component {
     });
   }
 
+  copyToken(e){
+    e.preventDefault();
+
+    let tokenElement = this.refs.apiToken;
+    tokenElement.select();
+
+    try {
+			// copy text
+      document.execCommand('copy');
+      tokenElement.blur();
+    }catch (err) {
+      alert('please press Ctrl/Cmd+C to copy');
+    }
+  }
+
   render () {
     return <div className="app pure-u-1 pure-u-xl-1-2">
       <div className="card">
@@ -152,8 +168,8 @@ class App extends React.Component {
           <form className="pure-form" onSubmit={this.changeName}>
             <fieldset>
               <input type="text" placeholder={this.props.name} ref="name"/>
-              <button type="submit" className="pure-button pure-button-primary" onClick={this.changeName}>Submit</button>
-              <button className="pure-button button-error" onClick={this.stopEditing}>Cancel</button>
+              <button type="submit" className="pure-button pure-button-primary padded" onClick={this.changeName}>Submit</button>
+              <button className="pure-button button-error padded" onClick={this.stopEditing}>Cancel</button>
             </fieldset>
           </form> 
         ):(
@@ -161,26 +177,47 @@ class App extends React.Component {
             <div className="pure-u-1-2">
               <h2>{this.props.name}</h2>
             </div>
-            <div className="pure-u-1-2 flexCentre">
-              <button className="pure-button pure-button-primary" onClick={this.editName}>Edit</button>
+            <div className="pure-u-1-2 flexTopRight">
+              <button className="pure-button pure-button-primary padded" onClick={this.editName}>
+                <i className="fa fa-pencil" aria-hidden="true"></i>
+              </button>
+              <button className="pure-button button-error padded" onClick={this.deleteConfirm}>
+                <i className="fa fa-trash-o" aria-hidden="true"></i>
+              </button>
             </div>
           </div>
         )}
         <div className="pure-g">
-          <div className="pure-u-1-2">
-            <p>API Token: </p>
+          <div className="pure-u-1">
+            API Token
             <form className="pure-form">
-              <input type="text" style={{width:'90%'}}value={this.props.appKey} readOnly/>
+              <input 
+                type="text"
+                ref="apiToken"
+                className="pure-u-3-4"
+                value={this.props.appKey}
+                readOnly
+                style={{ 'borderRadius': '4px 0px 0px 4px'}}
+              />
+              <button 
+                className="pure-button pure-button-primary pure-u-3-24"
+                onClick={this.copyToken}
+                style={{ 'border': '1px solid #ccc', 'borderRadius': '0px'}}
+              >
+                <i className="fa fa-clipboard" aria-hidden="true"></i>
+              </button>
+              <button 
+                className="pure-button pure-button-primary pure-u-3-24" 
+                onClick={this.regenConfirm}
+                style={{ 'border': '1px solid #ccc', 'borderRadius': '0px 4px 4px 0px'}}
+              >
+                <i className="fa fa-refresh" aria-hidden="true"></i>
+              </button>
             </form>
           </div>
-          <div className="pure-u-1-2 flexCentre">
-            <button className="pure-button pure-button-primary" onClick={this.regenConfirm}>Regenerate</button>
-          </div>
         </div>
-        <p title={this.props.created}>Created: {moment(this.props.created).fromNow()}</p>
-        <div className="flexCentre">
-          <button className="pure-button button-error" onClick={this.deleteConfirm}>Delete app</button>
-        </div>
+        <p title={moment(this.props.created).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Created: {moment(this.props.created).fromNow()}</p>
+        <p title={moment(this.props.updated).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Updated: {moment(this.props.updated).fromNow()}</p>
         </div>
     </div>;
   }
