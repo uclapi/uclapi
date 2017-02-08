@@ -45,7 +45,7 @@ def _paginated_result(query, page_number, pagination):
         print(e)
         return {
             "error": "something wrong with encoded query params"
-        }
+        }, False
 
     paginator = Paginator(all_bookings, pagination)
 
@@ -61,9 +61,10 @@ def _paginated_result(query, page_number, pagination):
 
     serialized_bookings = _serialize_bookings(bookings)
 
-    return {
-        "bookings": serialized_bookings,
-    }, (page_number == paginator.num_pages)
+    return (
+        {"bookings": serialized_bookings},
+        (page_number == paginator.num_pages)
+    )
 
 
 def _parse_datetime(start_time, end_time, search_date):

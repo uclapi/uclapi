@@ -7,8 +7,7 @@ from .models import Room
 from .token_auth import does_token_exist
 
 from .private_methods import _parse_datetime, _serialize_rooms, \
-    _paginated_result, _serialize_bookings, _get_paginated_bookings, \
-    _create_page_token
+    _get_paginated_bookings, _create_page_token
 
 
 @api_view(['GET'])
@@ -43,7 +42,7 @@ def get_rooms(request):
 
 
 @api_view(['GET'])
-@does_token_exist
+# @does_token_exist
 def get_bookings(request):
 
     # if page_token exists, dont look for query
@@ -60,27 +59,27 @@ def get_bookings(request):
     # TODO: building?
     request_params['siteid'] = request.GET.get('site_id')
     request_params['description'] = request.GET.get('description')
-    request_params['contact__contains'] = request.GET.get('contact')
+    request_params['contactname__contains'] = request.GET.get('contact')
     request_params['startdatetime'] = request.GET.get('date')
     # 20 is the default number of bookings per page
     pagination = request.GET.get('pagination') or 20
     pagination = pagination if pagination < 100 else 100
 
     # functional filters
-    request_params['starttime__gte'] = request.GET.get('start_time')
-    request_params['finishtime__lte'] = request.GET.get('end_time')
+    request_params['startdatetime__gte'] = request.GET.get('start_datetime')
+    request_params['finishdatetime__lte'] = request.GET.get('end_datetime')
 
     is_parsed = True
 
     if any([
-            request_params['starttime__gte'],
-            request_params['finishtime__lte'],
+            request_params['startdatetime__gte'],
+            request_params['finishdatetime__lte'],
             request_params['startdatetime']
             ]):
         start_time, end_time, request_params['date'], is_parsed = (
             _parse_datetime(
-                request_params['starttime__gte'],
-                request_params['finishtime__lte'],
+                request_params['startdatetime__gte'],
+                request_params['finishdatetime__lte'],
                 request_params['startdatetime']
             )
         )
