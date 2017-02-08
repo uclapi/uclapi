@@ -6,11 +6,10 @@ import datetime
 from .models import Room
 from .token_auth import does_token_exist
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .helpers import _serialize_rooms
 
 
-from .private_methods import _parse_datetime, _serialize_rooms, \
+from .helpers import _parse_datetime, _serialize_rooms, \
     _get_paginated_bookings, _create_page_token
 
 
@@ -39,9 +38,8 @@ def get_rooms(request):
         return JsonResponse({
             "ok": True,
             "rooms": _serialize_rooms(all_rooms)
-
         })
-    
+
     request_params = dict((k, v) for k, v in request_params.items() if v)
 
     filtered_rooms = all_rooms.filter(**request_params)
@@ -73,7 +71,17 @@ def get_bookings(request):
     request_params['contactname__contains'] = request.GET.get('contact')
     request_params['startdatetime'] = request.GET.get('date')
     # 20 is the default number of bookings per page
+
     pagination = request.GET.get('pagination') or 20
+
+    try:
+        pagination = int(pagination)
+    except ValueError:
+        return JsonResponse({
+            "ok": False,
+            "error": "Pagination should be an integer"
+        })
+
     pagination = pagination if pagination < 100 else 100
 
     # functional filters
@@ -97,6 +105,7 @@ def get_bookings(request):
 
     if not is_parsed:
         return JsonResponse({
+            "ok": False,
             "error": "date/time isn't formatted as suggested in the docs"
         })
 
@@ -109,4 +118,7 @@ def get_bookings(request):
     # first page
     bookings = _get_paginated_bookings(page_token)
 
-    return JsonResponse(bookings)
+    return JsonResponse({
+        "ok": True,
+        "bookings": bookings
+    })
