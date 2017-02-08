@@ -63,16 +63,16 @@ class SerializationTestCase(SimpleTestCase):
             serialised_rooms, [
                 {
                     "name": "South Quad Pop Up Learning Hub 101",
-                    "room_id": 118,
-                    "site_id": "X402",
+                    "roomid": 118,
+                    "siteid": "X402",
                     "capacity": 25,
                     "classification": "CR",
                     "zone": "NN"
                 },
                 {
                     "name": "Provost's Private Room",
-                    "room_id": 123123,
-                    "site_id": "X234324",
+                    "roomid": 123123,
+                    "siteid": "X234324",
                     "capacity": 500,
                     "classification": "CR",
                     "zone": "YY"
