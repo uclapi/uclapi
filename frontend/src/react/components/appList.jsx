@@ -8,7 +8,8 @@ class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      editing: false
+      editing: false,
+      copied: false
     };
     this.changeName = this.changeName.bind(this);
     this.editName = this.editName.bind(this);
@@ -18,6 +19,7 @@ class App extends React.Component {
     this.deleteConfirm = this.deleteConfirm.bind(this);
     this.stopEditing = this.stopEditing.bind(this);
     this.copyToken = this.copyToken.bind(this);
+    this.setCopyText = this.setCopyText.bind(this);
   }
 
   changeName(e){
@@ -155,11 +157,21 @@ class App extends React.Component {
     try {
 			// copy text
       document.execCommand('copy');
+      this.setState({
+        copied: true
+      });
       tokenElement.blur();
     }catch (err) {
       alert('please press Ctrl/Cmd+C to copy');
     }
   }
+
+  setCopyText(){
+    this.setState({
+      copied: false
+    });
+  }
+
 
   render () {
     return <div className="app pure-u-1 pure-u-xl-1-2">
@@ -190,29 +202,37 @@ class App extends React.Component {
         <div className="pure-g">
           <div className="pure-u-1">
             API Token
-            <form className="pure-form">
-              <input 
-                type="text"
-                ref="apiToken"
-                className="pure-u-3-4"
-                value={this.props.appKey}
-                readOnly
-                style={{ 'borderRadius': '4px 0px 0px 4px'}}
-              />
-              <button 
-                className="pure-button pure-button-primary pure-u-3-24"
-                onClick={this.copyToken}
-                style={{ 'border': '1px solid #ccc', 'borderRadius': '0px'}}
-              >
-                <i className="fa fa-clipboard" aria-hidden="true"></i>
-              </button>
-              <button 
-                className="pure-button pure-button-primary pure-u-3-24" 
-                onClick={this.regenConfirm}
-                style={{ 'border': '1px solid #ccc', 'borderRadius': '0px 4px 4px 0px'}}
-              >
-                <i className="fa fa-refresh" aria-hidden="true"></i>
-              </button>
+            <form className="pure-form pure-g">
+              <div className="pure-u-2-3">
+                <input 
+                  type="text"
+                  ref="apiToken"
+                  className="pure-input-1"
+                  value={this.props.appKey}
+                  readOnly
+                  style={{ 'borderRadius': '4px 0px 0px 4px'}}
+                />
+              </div>
+              <div className="pure-u-1-6">
+                <button 
+                  className="pure-button pure-button-primary pure-input-1 tooltip"
+                  onClick={this.copyToken}
+                  onMouseEnter={this.setCopyText}
+                  style={{ 'border': '1px solid #ccc', 'borderRadius': '0px'}}
+                >
+                  <i className="fa fa-clipboard" aria-hidden="true"></i>
+                  <span>{this.state.copied?'Copied!':'Click to copy to clipboard'}</span>
+                </button>
+              </div>
+              <div className="pure-u-1-6">
+                <button 
+                  className="pure-button pure-button-primary pure-input-1" 
+                  onClick={this.regenConfirm}
+                  style={{ 'border': '1px solid #ccc', 'borderRadius': '0px 4px 4px 0px'}}
+                >
+                  <i className="fa fa-refresh" aria-hidden="true"></i>
+                </button>
+              </div>
             </form>
           </div>
         </div>
