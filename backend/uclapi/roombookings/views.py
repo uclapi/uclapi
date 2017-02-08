@@ -6,6 +6,10 @@ import datetime
 from .models import Room
 from .token_auth import does_token_exist
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .helpers import _serialize_rooms
+
+
 from .private_methods import _parse_datetime, _serialize_rooms, \
     _get_paginated_bookings, _create_page_token
 
@@ -29,16 +33,23 @@ def get_rooms(request):
             setid='LIVE-16-17',
             type='CB'
         )
-    print(all_rooms)
+
     # no filters provided, return all rooms serialised
     if not reduce(lambda x, y: x or y, request_params.values()):
-        return JsonResponse(_serialize_rooms(all_rooms), safe=False)
+        return JsonResponse({
+            "ok": True,
+            "rooms": _serialize_rooms(all_rooms)
 
+        })
+    
     request_params = dict((k, v) for k, v in request_params.items() if v)
 
     filtered_rooms = all_rooms.filter(**request_params)
 
-    return JsonResponse(_serialize_rooms(filtered_rooms), safe=False)
+    return JsonResponse({
+        "ok": True,
+        "rooms": _serialize_rooms(filtered_rooms)
+    })
 
 
 @api_view(['GET'])
