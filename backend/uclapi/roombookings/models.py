@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 from .api_helpers import generate_token
+import json
+
 
 class Booking(models.Model):
     setid = models.CharField(max_length=40, blank=True, null=True)
@@ -92,3 +94,6 @@ class PageToken(models.Model):
     query = models.CharField(max_length=100000)
     curr_page = models.IntegerField(default=0)
     last_updated = models.DateTimeField(auto_now=True)
+
+    def get_query(self):
+        return json.loads(self.query)

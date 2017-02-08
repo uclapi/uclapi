@@ -27,11 +27,13 @@ def _get_paginated_bookings(page_token):
     page.save()
 
     pagination = page.pagination
-    query = json.loads(page.query)
-    bookings = _paginated_result(query, page.curr_page, pagination)
+    query = page.get_query()
+    bookings, is_last_page = _paginated_result(query, page.curr_page, pagination)
 
     # append the page_token to return json
     bookings["page_token"] = page_token
+    # if there is a next page
+    bookings["next_page_exists"] = not is_last_page
 
     return bookings
 
@@ -55,13 +57,13 @@ def _paginated_result(query, page_number, pagination):
     except EmptyPage:
         # return empty page
         # bookings = paginator.page(paginator.num_pages)
-        bookings = {}
+        bookings = []
 
     serialized_bookings = _serialize_bookings(bookings)
 
     return {
         "bookings": serialized_bookings,
-    }
+    }, (page_number == paginator.num_pages)
 
 
 def _parse_datetime(start_time, end_time, search_date):

@@ -3,5 +3,5 @@ import roombookings.views
 
 urlpatterns = [
     url(r'^rooms$', roombookings.views.get_rooms),
-    url(r'^booking$', roombookings.views.get_bookings),
+    url(r'^bookings$', roombookings.views.get_bookings),
 ]
