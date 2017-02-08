@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-
+from .api_helpers import generate_token
 
 class Booking(models.Model):
     setid = models.CharField(max_length=40, blank=True, null=True)
@@ -81,3 +81,14 @@ class Room(models.Model):
     class Meta:
         managed = False
         db_table = 'rooms'
+
+
+class PageToken(models.Model):
+    page_token = models.CharField(
+                    max_length=2000,
+                    unique=True,
+                    default=generate_token)
+    pagination = models.IntegerField(default=20)
+    query = models.CharField(max_length=100000)
+    curr_page = models.IntegerField(default=0)
+    last_updated = models.DateTimeField(auto_now=True)
