@@ -6,9 +6,6 @@ import datetime
 from .models import Room
 from .token_auth import does_token_exist
 
-from .helpers import _serialize_rooms
-
-
 from .helpers import _parse_datetime, _serialize_rooms, \
     _get_paginated_bookings, _create_page_token
 
@@ -58,7 +55,10 @@ def get_bookings(request):
     page_token = request.GET.get('page_token')
     if page_token:
         bookings = _get_paginated_bookings(page_token)
-        return JsonResponse(bookings)
+        return JsonResponse({
+            "ok": "error" not in bookings,
+            "bookings": bookings
+        })
 
     # query params
     request_params = {}
@@ -95,14 +95,16 @@ def get_bookings(request):
             request_params['finishdatetime__lte'],
             request_params['startdatetime']
             ]):
-        start_time, end_time, request_params['date'], is_parsed = (
-            _parse_datetime(
+        start, end, is_parsed = _parse_datetime(                    # returned
                 request_params['startdatetime__gte'],
                 request_params['finishdatetime__lte'],
                 request_params['startdatetime']
             )
-        )
-
+        request_params["startdatetime__gte"] = start
+        request_params["finishdatetime__lte"] = end
+    # ignore the date since its already parsed
+    request_params.pop("startdatetime")
+    print(request_params)
     if not is_parsed:
         return JsonResponse({
             "ok": False,
@@ -111,14 +113,13 @@ def get_bookings(request):
 
     # filter the query dict
     request_params = dict((k, v) for k, v in request_params.items() if v)
-
     # create a database entry for token
     page_token = _create_page_token(request_params, pagination)
 
     # first page
     bookings = _get_paginated_bookings(page_token)
-
+    print(request_params)
     return JsonResponse({
-        "ok": True,
+        "ok": "error" not in bookings,
         "bookings": bookings
     })

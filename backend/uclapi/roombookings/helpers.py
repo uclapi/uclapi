@@ -8,7 +8,7 @@ import json
 def _create_page_token(query, pagination):
     page = PageToken(
         pagination=pagination,
-        query=json.dumps(query)
+        query=json.dumps(query, default=str)
     )
     page.save()
     return page.page_token
@@ -27,7 +27,8 @@ def _get_paginated_bookings(page_token):
 
     pagination = page.pagination
     query = page.get_query()
-    bookings, is_last_page = _paginated_result(query, page.curr_page, pagination)
+    bookings, is_last_page = _paginated_result(
+                                    query, page.curr_page, pagination)
 
     # if there is a next page
     bookings["next_page_exists"] = not is_last_page
@@ -43,7 +44,6 @@ def _paginated_result(query, page_number, pagination):
     try:
         all_bookings = Booking.objects.using('roombookings').filter(**query)
     except FieldError as e:
-        print(e)
         return {
             "error": "something wrong with encoded query params"
         }, False
@@ -76,14 +76,19 @@ def _parse_datetime(start_time, end_time, search_date):
         if end_time:
             end_time = datetime.datetime.strptime(end_time, '%H:%M').time()
 
-        if search_date:
-            search_date = datetime.datetime.strptime(
-                                        search_date, "%Y%m%d").date()
+        if not end_time and not start_time:
+            if search_date:
+                print(search_date)
+                search_date = datetime.datetime.strptime(
+                                            search_date, "%Y%m%d").date()
+                day_start = datetime.time(0, 0, 1)  # start of the day
+                day_end = datetime.time(23, 59, 59)  # end of the day
+                start_time = datetime.datetime.combine(search_date, day_start)
+                end_time = datetime.datetime.combine(search_date, day_end)
     except Exception as e:
         print(e)
-        return -1, -1, -1, False
-
-    return start_time, end_time, search_date, True
+        return -1, -1, False
+    return start_time, end_time, True
 
 
 def _serialize_rooms(room_set):
