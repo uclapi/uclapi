@@ -48,7 +48,7 @@ def get_rooms(request):
 
 
 @api_view(['GET'])
-# @does_token_exist
+@does_token_exist
 def get_bookings(request):
 
     # if page_token exists, dont look for query
