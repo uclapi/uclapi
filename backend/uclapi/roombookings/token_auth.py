@@ -14,7 +14,7 @@ def does_token_exist(view_func):
             })
 
         try:
-            app = App.objects.get(api_token=token)
+            App.objects.get(api_token=token)
         except ObjectDoesNotExist:
             return JsonResponse({
                 "error": "Token does not exist"
