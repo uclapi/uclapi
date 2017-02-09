@@ -7,7 +7,7 @@ from .models import Room
 from .token_auth import does_token_exist
 
 from .helpers import _parse_datetime, _serialize_rooms, \
-    _get_paginated_bookings, _create_page_token
+    _get_paginated_bookings, _create_page_token, _return_json_bookings
 
 
 @api_view(['GET'])
@@ -55,10 +55,7 @@ def get_bookings(request):
     page_token = request.GET.get('page_token')
     if page_token:
         bookings = _get_paginated_bookings(page_token)
-        return JsonResponse({
-            "ok": "error" not in bookings,
-            "bookings": bookings
-        })
+        return _return_json_bookings(bookings)
 
     # query params
     request_params = {}
@@ -72,17 +69,17 @@ def get_bookings(request):
     request_params['startdatetime'] = request.GET.get('date')
     # 20 is the default number of bookings per page
 
-    pagination = request.GET.get('pagination') or 20
+    results_per_page = request.GET.get('results_per_page') or 20
 
     try:
-        pagination = int(pagination)
+        results_per_page = int(results_per_page)
     except ValueError:
         return JsonResponse({
             "ok": False,
-            "error": "Pagination should be an integer"
+            "error": "results_per_page should be an integer"
         })
 
-    pagination = pagination if pagination < 100 else 100
+    results_per_page = results_per_page if results_per_page < 100 else 100
 
     # functional filters
     request_params['startdatetime__gte'] = request.GET.get('start_datetime')
@@ -104,7 +101,7 @@ def get_bookings(request):
         request_params["finishdatetime__lte"] = end
     # ignore the date since its already parsed
     request_params.pop("startdatetime")
-    print(request_params)
+
     if not is_parsed:
         return JsonResponse({
             "ok": False,
@@ -114,12 +111,12 @@ def get_bookings(request):
     # filter the query dict
     request_params = dict((k, v) for k, v in request_params.items() if v)
     # create a database entry for token
-    page_token = _create_page_token(request_params, pagination)
+    page_token = _create_page_token(request_params, results_per_page)
 
     # first page
     bookings = _get_paginated_bookings(page_token)
-    print(request_params)
-    return JsonResponse({
-        "ok": "error" not in bookings,
-        "bookings": bookings
-    })
+
+    bookings["count"] = Booking.objects.using(
+        'roombookings').filter(**request_params).count()
+
+    return _return_json_bookings(bookings)

@@ -1,9 +1,10 @@
-import datetime
 from django.core.exceptions import FieldError
 from .models import Booking, PageToken
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import json
+import datetime
+
 
 def _create_page_token(query, pagination):
     page = PageToken(
@@ -85,9 +86,9 @@ def _parse_datetime(start_time, end_time, search_date):
                 day_end = datetime.time(23, 59, 59)  # end of the day
                 start_time = datetime.datetime.combine(search_date, day_start)
                 end_time = datetime.datetime.combine(search_date, day_end)
-    except Exception as e:
-        print(e)
+    except (TypeError, NameError, ValueError) as e:
         return -1, -1, False
+
     return start_time, end_time, True
 
 
@@ -115,9 +116,9 @@ def _serialize_bookings(bookings):
             "siteid": bk.siteid,
             "roomid": bk.roomid,
             "description": bk.descrip,
-            "start_time": kloppify(datetime.datetime.strftime(
+            "start_time": _kloppify(datetime.datetime.strftime(
                 bk.startdatetime, "%Y-%m-%dT%H:%M:%S%z")),
-            "end_time": kloppify(datetime.datetime.strftime(
+            "end_time": _kloppify(datetime.datetime.strftime(
                 bk.finishdatetime, "%Y-%m-%dT%H:%M:%S%z")),
             "contact": bk.contactname,
             "slotid": bk.slotid,
@@ -128,5 +129,18 @@ def _serialize_bookings(bookings):
     return ret_bookings
 
 
-def kloppify(date_string):
+def _kloppify(date_string):
     return date_string[:-2] + ":" + date_string[-2:]
+
+
+def _return_json_bookings(bookings):
+    if "error" in bookings:
+        return JsonRespons({
+            "ok": False,
+            "error": bookings["error"]
+        })
+
+    return JsonResponse({
+        "ok": True,
+        "bookings": bookings
+    })
