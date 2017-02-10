@@ -1,6 +1,7 @@
-from django.core.exceptions import FieldError
+from django.core.exceptions import FieldError, ObjectDoesNotExist
 from .models import Booking, PageToken
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import JsonResponse
 
 import json
 import datetime
@@ -29,7 +30,10 @@ def _get_paginated_bookings(page_token):
     pagination = page.pagination
     query = page.get_query()
     bookings, is_last_page = _paginated_result(
-                                    query, page.curr_page, pagination)
+        query,
+        page.curr_page,
+        pagination
+    )
 
     # if there is a next page
     bookings["next_page_exists"] = not is_last_page
@@ -44,7 +48,7 @@ def _get_paginated_bookings(page_token):
 def _paginated_result(query, page_number, pagination):
     try:
         all_bookings = Booking.objects.using('roombookings').filter(**query)
-    except FieldError as e:
+    except FieldError:
         return {
             "error": "something wrong with encoded query params"
         }, False
@@ -86,7 +90,7 @@ def _parse_datetime(start_time, end_time, search_date):
                 day_end = datetime.time(23, 59, 59)  # end of the day
                 start_time = datetime.datetime.combine(search_date, day_start)
                 end_time = datetime.datetime.combine(search_date, day_end)
-    except (TypeError, NameError, ValueError) as e:
+    except (TypeError, NameError, ValueError):
         return -1, -1, False
 
     return start_time, end_time, True
@@ -135,7 +139,7 @@ def _kloppify(date_string):
 
 def _return_json_bookings(bookings):
     if "error" in bookings:
-        return JsonRespons({
+        return JsonResponse({
             "ok": False,
             "error": bookings["error"]
         })
