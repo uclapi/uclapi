@@ -3,7 +3,7 @@ from functools import reduce
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 import datetime
-from .models import Room
+from .models import Room, Booking
 from .token_auth import does_token_exist
 
 from .helpers import _parse_datetime, _serialize_rooms, \
@@ -110,6 +110,11 @@ def get_bookings(request):
 
     # filter the query dict
     request_params = dict((k, v) for k, v in request_params.items() if v)
+
+    # global filters
+    request_params["setid"] = "LIVE-16-17"
+    request_params["bookabletype"] = "CB"
+
     # create a database entry for token
     page_token = _create_page_token(request_params, results_per_page)
 
