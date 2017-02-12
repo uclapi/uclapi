@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'dashboard',
     'roombookings',
-    'opbeat.contrib.django'
+    'opbeat.contrib.django',
+    'raven.contrib.django.raven_compat'
 ]
 
 MIDDLEWARE = [

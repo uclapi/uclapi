@@ -5,3 +5,4 @@ psycopg2==2.6.2
 cx-oracle==5.2.1
 opbeat==3.5.2
 certifi==2017.1.23
+raven==5.32.0
