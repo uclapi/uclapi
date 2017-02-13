@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import raven
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -40,9 +41,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'dashboard',
     'roombookings',
+    'opbeat.contrib.django',
+    'raven.contrib.django.raven_compat'
 ]
 
 MIDDLEWARE = [
+    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -99,6 +103,30 @@ DATABASES = {
         'HOST': '',
         'PORT': ''
     }
+}
+
+# analytics & rate-limiting
+
+REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '1000/day'
+    }
+}
+
+OPBEAT = {
+    'ORGANIZATION_ID': os.environ.get("OPBEAT_ORG_ID"),
+    'APP_ID': os.environ.get("OPBEAT_APP_ID"),
+    'SECRET_TOKEN': os.environ.get("OPBEAT_SECRET_TOKEN")
+}
+
+RAVEN_CONFIG = {
+    'dsn': os.environ.get("SENTRY_DSN"),
+    # 'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
 }
 
 
