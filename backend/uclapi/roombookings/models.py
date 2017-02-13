@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from .api_helpers import generate_token
+import json
 
 
 class Booking(models.Model):
@@ -19,8 +21,8 @@ class Booking(models.Model):
     bookingid = models.CharField(max_length=80, blank=True, null=True)
     starttime = models.CharField(max_length=20, blank=True, null=True)
     finishtime = models.CharField(max_length=20, blank=True, null=True)
-    startdatetime = models.DateField(blank=True, null=True)
-    finishdatetime = models.DateField(blank=True, null=True)
+    startdatetime = models.DateTimeField(blank=True, null=True)
+    finishdatetime = models.DateTimeField(blank=True, null=True)
     weekday = models.BigIntegerField(blank=True, null=True)
     dayname = models.CharField(max_length=144, blank=True, null=True)
     weekid = models.BigIntegerField(blank=True, null=True)
@@ -81,3 +83,17 @@ class Room(models.Model):
     class Meta:
         managed = False
         db_table = 'rooms'
+
+
+class PageToken(models.Model):
+    page_token = models.CharField(
+                    max_length=2000,
+                    unique=True,
+                    default=generate_token)
+    pagination = models.IntegerField(default=20)
+    query = models.CharField(max_length=100000)
+    curr_page = models.IntegerField(default=0)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def get_query(self):
+        return json.loads(self.query)

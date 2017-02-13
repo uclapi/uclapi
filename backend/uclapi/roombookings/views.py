@@ -1,17 +1,13 @@
 from functools import reduce
 
-from django.shortcuts import render
-from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 import datetime
-from django.core.exceptions import FieldError
-from .models import Booking, Room
+from .models import Room, Booking
 from .token_auth import does_token_exist
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-import json
-import base64
+from .helpers import _parse_datetime, _serialize_rooms, \
+    _get_paginated_bookings, _create_page_token, _return_json_bookings
 
 
 @api_view(['GET'])
@@ -33,179 +29,99 @@ def get_rooms(request):
             setid='LIVE-16-17',
             type='CB'
         )
-    print(all_rooms)
+
     # no filters provided, return all rooms serialised
     if not reduce(lambda x, y: x or y, request_params.values()):
-        return JsonResponse(_serialize_rooms(all_rooms))
+        return JsonResponse({
+            "ok": True,
+            "rooms": _serialize_rooms(all_rooms)
+        })
 
-    print(request_params)
+    request_params = dict((k, v) for k, v in request_params.items() if v)
 
     filtered_rooms = all_rooms.filter(**request_params)
 
-    return JsonResponse(_serialize_rooms(filtered_rooms))
+    return JsonResponse({
+        "ok": True,
+        "rooms": _serialize_rooms(filtered_rooms)
+    })
 
 
 @api_view(['GET'])
 @does_token_exist
 def get_bookings(request):
+
+    # if page_token exists, dont look for query
+    page_token = request.GET.get('page_token')
+    if page_token:
+        bookings = _get_paginated_bookings(page_token)
+        return _return_json_bookings(bookings)
+
     # query params
     request_params = {}
 
     # non functional filters
     request_params['room_id'] = request.GET.get('room_id')
     # TODO: building?
-    request_params['site_id'] = request.GET.get('site_id')
+    request_params['siteid'] = request.GET.get('site_id')
     request_params['description'] = request.GET.get('description')
-    request_params['contact'] = request.GET.get('contact')
-    request_params['date'] = request.GET.get('date')
+    request_params['contactname__contains'] = request.GET.get('contact')
+    request_params['startdatetime'] = request.GET.get('date')
     # 20 is the default number of bookings per page
-    pagination = request.GET.get('pagination') or 20
-    pagination = pagination if pagination < 100 else 100
+
+    results_per_page = request.GET.get('results_per_page') or 20
+
+    try:
+        results_per_page = int(results_per_page)
+    except ValueError:
+        return JsonResponse({
+            "ok": False,
+            "error": "results_per_page should be an integer"
+        })
+
+    results_per_page = results_per_page if results_per_page < 100 else 100
 
     # functional filters
-    request_params['start_time__gte'] = request.GET.get('start_time')
-    request_params['end_time__lte'] = request.GET.get('end_time')
+    request_params['startdatetime__gte'] = request.GET.get('start_datetime')
+    request_params['finishdatetime__lte'] = request.GET.get('end_datetime')
 
-    if any([start_time, end_time, request_params['date']]):
-        start_time, end_time, request_params['date'], is_parsed = (
-            _parse_datetime(
-                request_params['start_time__gte'],
-                request_params['end_time__lte'],
-                request_params['date']
+    is_parsed = True
+
+    if any([
+            request_params['startdatetime__gte'],
+            request_params['finishdatetime__lte'],
+            request_params['startdatetime']
+            ]):
+        start, end, is_parsed = _parse_datetime(                    # returned
+                request_params['startdatetime__gte'],
+                request_params['finishdatetime__lte'],
+                request_params['startdatetime']
             )
-        )
+        request_params["startdatetime__gte"] = start
+        request_params["finishdatetime__lte"] = end
+    # ignore the date since its already parsed
+    request_params.pop("startdatetime")
 
     if not is_parsed:
         return JsonResponse({
+            "ok": False,
             "error": "date/time isn't formatted as suggested in the docs"
         })
 
+    # filter the query dict
+    request_params = dict((k, v) for k, v in request_params.items() if v)
+
+    # global filters
+    request_params["setid"] = "LIVE-16-17"
+    request_params["bookabletype"] = "CB"
+
+    # create a database entry for token
+    page_token = _create_page_token(request_params, results_per_page)
+
     # first page
-    bookings = _paginated_result(request_params, 1, pagination)
+    bookings = _get_paginated_bookings(page_token)
 
-    return JsonResponse(bookings)
+    bookings["count"] = Booking.objects.using(
+        'roombookings').filter(**request_params).count()
 
-
-@api_view(['GET'])
-@does_token_exist
-def paginated_result(request):
-    try:
-        query = request.GET.get("query")
-        page_number = int(request.GET.get("page_number"))
-        pagination = int(request.GET.get("paginations"))
-    except KeyError:
-        return JsonResponse({
-            "error": "paginated view didn't get required parameters"
-        })
-    except TypeError:
-        return JsonResponse({
-            "error": "pagination and page number should be an int"
-        })
-
-    try:
-        query = json.loads(base64.b64decode(query).decode())
-    except Exception as e:
-        print(e)
-        return JsonResponse({
-            "error": "couldn't decode the query"
-        })
-
-    bookings = _paginated_result(query, page_number, pagination)
-
-    return JsonResponse(bookings)
-
-
-def _paginated_result(query, page_number, pagination):
-    try:
-        all_bookings = Booking.objects.using('roombookings').filter(**query)
-    except FieldError:
-        return {
-            "error": "something wrong with encoded query params"
-        }
-
-    paginator = Paginator(all_bookings, pagination)
-
-    try:
-        bookings = paginator.page(page_number)
-    except PageNotAnInteger:
-        # give first page
-        bookings = paginator.page(1)
-    except EmptyPage:
-        # return last page
-        bookings = paginator.page(paginator.num_pages)
-
-    serialized_bookings = _serialize_bookings(bookings)
-
-    next_url = ""
-
-    if page_number < paginator.num_pages:
-        next_url = _construct_next_url(page_number + 1, query, pagination)
-
-    return {
-        "bookings": serialized_bookings,
-        "next_page": next_url
-    }
-
-
-def _construct_next_url(page_number, query, pagination):
-    base_url = "https://uclapi.com/v0/roombookings/bookings.pagination?"
-
-    # base64 encode the query and send it with url
-    query = json.dumps(query)
-    query = base64.b64encode(query.encode('utf-8'))
-
-    params = (
-        "query=" + query + "&page_number=" + str(page_number) +
-        "&pagination=" + str(pagination)
-    )
-
-    return base_url + params
-
-
-def _parse_datetime(start_time, end_time, search_date):
-    try:
-        if start_time:
-            start_time = datetime.datetime.strptime(start_time, '%H:%M').time()
-
-        if end_time:
-            end_time = datetime.datetime.strptime(end_time, '%H:%M').time()
-
-        if search_date:
-            search_date = datetime.datetime.strptime(
-                                        search_date, "%Y%m%d").date()
-    except Exception as e:
-        print(e)
-        return -1, -1, -1, False
-
-    return start_time, end_time, search_date, True
-
-
-def _serialize_rooms(room_set):
-    rooms = []
-    for room in room_set:
-        rooms.append({
-            "name": room.name,
-            "room_id": room.roomid,
-            "site_id": room.siteid,
-            "capacity": room.capacity,
-            "category": room.category,
-            "classification": room.classification
-        })
-    return rooms
-
-
-def _serialize_bookings(bookings):
-    ret_bookings = []
-
-    for bk in bookings:
-        ret_bookings.append({
-            "room": bk.room.name,
-            "site_id": bk.room.site_id,
-            "description": bk.description,
-            "start_time": bk.start_time,
-            "end_time": bk.end_time,
-            "contact": bk.contact,
-            "booking_id": bk.id
-        })
-
-    return ret_bookings
+    return _return_json_bookings(bookings)
