@@ -37,7 +37,9 @@ def create_app(request):
         "message": "App sucessfully created",
         "app": {
             "id": new_app.id,
-            "token": new_app.api_token
+            "token": new_app.api_token,
+            "created": new_app.created,
+            "updated": new_app.last_updated
         }
     })
 
@@ -76,6 +78,7 @@ def rename_app(request):
         return JsonResponse({
             "success": True,
             "message": "App sucessfully renamed.",
+            "date": app.last_updated
         })
 
 
@@ -114,7 +117,8 @@ def regenerate_app_token(request):
             "message": "App sucessfully renamed.",
             "app": {
                 "id": app.id,
-                "token": new_api_token
+                "token": new_api_token,
+                "date": app.last_updated
             }
         })
 
