@@ -11,7 +11,6 @@ import json
 
 @csrf_exempt
 def shibboleth_callback(request):
-    print(0)
     # this view is user facing, so should return html error page
     # should auth user login or signup
     # then redirect to dashboard homepage
@@ -38,7 +37,6 @@ def shibboleth_callback(request):
     try:
         user = User.objects.get(email=eppn)
     except ObjectDoesNotExist:
-        print(1)
         # create a new user
         new_user = User(
             email=eppn,
@@ -53,7 +51,6 @@ def shibboleth_callback(request):
         new_user.save()
         request.session["user_id"] = new_user.id
     else:
-        print(2)
         request.session["user_id"] = user.id
 
     return redirect(dashboard)
