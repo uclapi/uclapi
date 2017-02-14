@@ -5,6 +5,7 @@ from django.http import JsonResponse
 
 import json
 import datetime
+import time
 
 
 def _create_page_token(query, pagination):
@@ -76,10 +77,12 @@ def _paginated_result(query, page_number, pagination):
 def _parse_datetime(start_time, end_time, search_date):
     try:
         if start_time:
-            start_time = datetime.datetime.strptime(start_time, '%H:%M').time()
+            start_time = datetime.datetime.strptime(
+                start_time, '%Y-%m-%dT%H:%M:%S+00:00')
 
         if end_time:
-            end_time = datetime.datetime.strptime(end_time, '%H:%M').time()
+            end_time = datetime.datetime.strptime(
+                end_time, '%Y-%m-%dT%H:%M:%S+00:00')
 
         if not end_time and not start_time:
             if search_date:
