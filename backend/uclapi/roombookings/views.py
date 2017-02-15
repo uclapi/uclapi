@@ -2,12 +2,12 @@ from functools import reduce
 
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
-import datetime
-from .models import Room, Booking
+from .models import Room, Booking, Equipment
 from .token_auth import does_token_exist
 
 from .helpers import _parse_datetime, _serialize_rooms, \
-    _get_paginated_bookings, _create_page_token, _return_json_bookings
+    _get_paginated_bookings, _create_page_token, _return_json_bookings, \
+    _serialize_equipment
 
 
 @api_view(['GET'])
@@ -125,3 +125,36 @@ def get_bookings(request):
         'roombookings').filter(**request_params).count()
 
     return _return_json_bookings(bookings)
+
+
+@api_view(['GET'])
+#@does_token_exist
+def get_equipment(request):
+    roomid = request.GET.get("roomid")
+    siteid = request.GET.get("siteid")
+
+    if not roomid:
+        response = JsonResponse({
+            "ok": False,
+            "error": "No roomid supplied"
+        })
+        response.status_code = 400
+        return response
+
+    if not siteid:
+        response = JsonResponse({
+            "ok": False,
+            "error": "No siteid supplied"
+        })
+        response.status_code = 400
+        return response
+
+    equipment = Equipment.objects.filter(
+        setid="LIVE-16-17",
+        roomid=roomid,
+        siteid=siteid
+    )
+    return JsonResponse({
+        "ok": True,
+        "equipment": _serialize_equipment(equipment)
+    })

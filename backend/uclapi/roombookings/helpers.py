@@ -133,6 +133,19 @@ def _serialize_bookings(bookings):
     return ret_bookings
 
 
+def _serialize_equipment(equipment):
+    ret_equipment = []
+
+    for item in equipment:
+        ret_equipment.append({
+            "type": item.type,
+            "description": item.description,
+            "units": item.units
+        })
+
+    return ret_equipment
+
+
 def _kloppify(date_string):
     return date_string[:-2] + ":" + date_string[-2:]
 

@@ -85,6 +85,19 @@ class Room(models.Model):
         db_table = 'rooms'
 
 
+class Equipment(models.Model):
+    setid = models.CharField(max_length=40, blank=True, null=True)
+    roomid = models.CharField(max_length=40, blank=True, null=True)
+    units = models.FloatField(blank=True, null=True)
+    description = models.CharField(max_length=320, blank=True, null=True)
+    siteid = models.CharField(max_length=40, blank=True, null=True)
+    type = models.CharField(max_length=8, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'CMIS_UCLAPI_V_EQUIP_FEATURES'
+
+
 class PageToken(models.Model):
     page_token = models.CharField(
                     max_length=2000,
