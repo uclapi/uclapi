@@ -75,6 +75,9 @@ target/
 # celery beat schedule file
 celerybeat-schedule
 
+# macOS binary files
+.DS_Store
+
 # dotenv
 .env
 
