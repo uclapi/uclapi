@@ -5,7 +5,6 @@ from django.http import JsonResponse
 
 import json
 import datetime
-import time
 
 
 def _create_page_token(query, pagination):
