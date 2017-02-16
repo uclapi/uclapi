@@ -108,10 +108,12 @@ def _serialize_rooms(room_set):
             "classification": room.roomclass,
             "automated": room.automated,
             "location": {
-                "address1": room.address1,
-                "address2": room.address2,
-                "address3": room.address3,
-                "address4": room.address4
+                "address": [
+                    room.address1,
+                    room.address2,
+                    room.address3,
+                    room.address4
+                ]
             }
         })
     return rooms
