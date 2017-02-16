@@ -124,7 +124,7 @@ def _serialize_bookings(bookings):
                 bk.startdatetime, "%Y-%m-%dT%H:%M:%S%z")),
             "end_time": _kloppify(datetime.datetime.strftime(
                 bk.finishdatetime, "%Y-%m-%dT%H:%M:%S%z")),
-            "contact": bk.contactname,
+            "contact": bk.condisplayname,
             "slotid": bk.slotid,
             "weeknumber": bk.weeknumber,
             "phone": bk.phone
