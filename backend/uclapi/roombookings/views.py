@@ -18,11 +18,12 @@ def get_rooms(request):
 
     request_params['roomid'] = request.GET.get('roomid')
     request_params['siteid'] = request.GET.get('siteid')
-    request_params['name'] = request.GET.get('name')
+    request_params['roomname__contains'] = request.GET.get('name')
+    request_params['sitename__contains'] = request.GET.get('sitename')
     request_params['category'] = request.GET.get('category')
-    request_params['classification'] = request.GET.get('classification')
-    request_params['campusid'] = request.GET.get('campusid')
-    request_params['capacity'] = request.GET.get('capacity')
+    request_params['roomclass'] = request.GET.get('classification')
+    request_params['capacity__gte'] = request.GET.get('capacity')
+    request_params['automated'] = request.GET.get('automated')
 
     # webview available rooms
     all_rooms = Room.objects.using("roombookings").filter(
