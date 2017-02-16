@@ -103,10 +103,16 @@ def _serialize_rooms(room_set):
             "name": room.roomname,
             "roomid": room.roomid,
             "siteid": room.siteid,
+            "sitename": room.sitename,
             "capacity": room.capacity,
-            "category": room.category,
             "classification": room.roomclass,
-            "zone": room.zone
+            "automated": room.automated,
+            "location": {
+                "address1": room.address1,
+                "address2": room.address2,
+                "address3": room.address3,
+                "address4": room.address4
+            }
         })
     return rooms
 
