@@ -27,7 +27,7 @@ def get_rooms(request):
     # webview available rooms
     all_rooms = Room.objects.using("roombookings").filter(
             setid='LIVE-16-17',
-            type='CB'
+            bookabletype='CB'
         )
 
     # no filters provided, return all rooms serialised
@@ -65,7 +65,7 @@ def get_bookings(request):
     # TODO: building?
     request_params['siteid'] = request.GET.get('site_id')
     request_params['description'] = request.GET.get('description')
-    request_params['contactname__contains'] = request.GET.get('contact')
+    request_params['condisplayname__contains'] = request.GET.get('contact')
     request_params['startdatetime'] = request.GET.get('date')
     # 20 is the default number of bookings per page
 
