@@ -100,12 +100,12 @@ def _serialize_rooms(room_set):
     rooms = []
     for room in room_set:
         rooms.append({
-            "name": room.name,
+            "name": room.roomname,
             "roomid": room.roomid,
             "siteid": room.siteid,
             "capacity": room.capacity,
             "category": room.category,
-            "classification": room.classification,
+            "classification": room.roomclass,
             "zone": room.zone
         })
     return rooms
