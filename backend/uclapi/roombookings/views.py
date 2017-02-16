@@ -11,7 +11,7 @@ from .helpers import _parse_datetime, _serialize_rooms, \
 
 
 @api_view(['GET'])
-@does_token_exist
+#@does_token_exist
 def get_rooms(request):
     # add them to iterables so can be filtered without if-else
     request_params = {}
@@ -48,7 +48,7 @@ def get_rooms(request):
 
 
 @api_view(['GET'])
-@does_token_exist
+#@does_token_exist
 def get_bookings(request):
 
     # if page_token exists, dont look for query
@@ -149,7 +149,7 @@ def get_equipment(request):
         response.status_code = 400
         return response
 
-    equipment = Equipment.objects.filter(
+    equipment = Equipment.objects.using("roombookings").filter(
         setid="LIVE-16-17",
         roomid=roomid,
         siteid=siteid
