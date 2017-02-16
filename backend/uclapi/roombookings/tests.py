@@ -1,7 +1,7 @@
 from django.test import SimpleTestCase
 from itertools import chain
 
-from .helpers import _serialize_rooms
+from .helpers import _serialize_rooms, _serialize_equipment
 from .models import Room
 
 
@@ -11,49 +11,47 @@ class FakeModelClass:
             setattr(self, key, value)
 
 
-class SerializationTestCase(SimpleTestCase):
+class RoomSerializationTestCase(SimpleTestCase):
 
     def test_serialize_rooms(self):
         room_list = [
             FakeModelClass(
+                sitename="South Quad Pop Up Learning Hub",
+                address1="Gower St",
+                address2="London",
+                address3=None,
+                address4=None,
+                webview="Y",
+                automated="N",
                 roomid=118,
                 siteid="X402",
-                name="South Quad Pop Up Learning Hub 101",
+                roomname="South Quad Pop Up Learning Hub 101",
                 category="REC",
-                type="CB",
-                classification="CR",
-                roomgrpcode="",
+                bookabletype="CB",
+                roomclass="CR",
                 zone="NN",
                 capacity=25,
-                prefmin="",
-                prefmax="",
-                deptid="ESTDV_ADM",
-                roomarea=-1,
-                dynafill="N",
+                roomdeptid="ESTDV_ADM",
                 setid="LIVE-17-18",
-                uniquefield="",
-                linkcode="",
-                campusid="X01"
             ),
             FakeModelClass(
+                sitename="Institute of Advanced Legal Studies",
+                address1="Charles Clore House,17 Russell Square",
+                address2="London",
+                address3="WC1B 5DR",
+                address4=None,
+                webview="Y",
+                automated="P",
                 roomid=123123,
                 siteid="X234324",
-                name="Provost's Private Room",
+                roomname="Provost's Private Room",
                 category="REC",
-                type="CB",
-                classification="CR",
-                roomgrpcode="",
+                bookabletype="CB",
+                roomclass="CR",
                 zone="YY",
                 capacity=500,
-                prefmin="",
-                prefmax="",
-                deptid="ESTDV_ADM",
-                roomarea=-1,
-                dynafill="N",
+                roomdeptid="ESTDV_ADM",
                 setid="LIVE-16-17",
-                uniquefield="",
-                linkcode="",
-                campusid="X50"
             )
         ]
         none_qs = Room.objects.none()
@@ -65,17 +63,74 @@ class SerializationTestCase(SimpleTestCase):
                     "name": "South Quad Pop Up Learning Hub 101",
                     "roomid": 118,
                     "siteid": "X402",
+                    "sitename": "South Quad Pop Up Learning Hub",
                     "capacity": 25,
                     "classification": "CR",
-                    "zone": "NN"
+                    "automated": "N",
+                    "location": {
+                        "address1": "Gower St",
+                        "address2": "London",
+                        "address3": None,
+                        "address4": None
+                    }
                 },
                 {
                     "name": "Provost's Private Room",
                     "roomid": 123123,
                     "siteid": "X234324",
+                    "sitename": "Institute of Advanced Legal Studies",
                     "capacity": 500,
                     "classification": "CR",
-                    "zone": "YY"
+                    "automated": "P",
+                    "location": {
+                        "address1": "Charles Clore House,17 Russell Square",
+                        "address2": "London",
+                        "address3": "WC1B 5DR",
+                        "address4": None
+                    }
                 }
             ]
         )
+
+
+class EquipmentSerializationTestCase(SimpleTestCase):
+
+        def test_serialize_equipment(self):
+            equipment_list = [
+                FakeModelClass(
+                    setid="LIVE-16-17",
+                    roomid="016",
+                    units=1,
+                    description="Chairs with Tables",
+                    siteid="267",
+                    type="FF"
+                ),
+                FakeModelClass(
+                    setid="LIVE-16-17",
+                    roomid="105",
+                    units=1,
+                    description="Software - Earth Sciences - self learning",
+                    siteid="002",
+                    type="FF"
+                )
+            ]
+            none_qs = Room.objects.none()
+            equipment_qs = list(chain(none_qs, equipment_list))
+            serialised_equipment = _serialize_equipment(equipment_qs)
+            self.assertEqual(
+                serialised_equipment, [
+                    {
+                        "type": "FF",
+                        "description": "Chairs with Tables",
+                        "units": 1
+                    },
+                    {
+                        "type": "FF",
+                        "description": (
+                            "Software - Earth Sciences"
+                            " - self learning"
+                        ),
+                        "units": 1
+                    }
+                ]
+            )

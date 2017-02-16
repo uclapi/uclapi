@@ -2,12 +2,12 @@ from functools import reduce
 
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
-import datetime
-from .models import Room, Booking
+from .models import Room, Booking, Equipment
 from .token_auth import does_token_exist
 
 from .helpers import _parse_datetime, _serialize_rooms, \
-    _get_paginated_bookings, _create_page_token, _return_json_bookings
+    _get_paginated_bookings, _create_page_token, _return_json_bookings, \
+    _serialize_equipment
 
 
 @api_view(['GET'])
@@ -18,16 +18,18 @@ def get_rooms(request):
 
     request_params['roomid'] = request.GET.get('roomid')
     request_params['siteid'] = request.GET.get('siteid')
-    request_params['name__contains'] = request.GET.get('name')
+    request_params['roomname__contains'] = request.GET.get('name')
+    request_params['sitename__contains'] = request.GET.get('sitename')
     request_params['category'] = request.GET.get('category')
-    request_params['classification'] = request.GET.get('classification')
-    request_params['campusid'] = request.GET.get('campusid')
+    request_params['roomclass'] = request.GET.get('classification')
     request_params['capacity__gte'] = request.GET.get('capacity')
+    request_params['automated'] = request.GET.get('automated')
+
 
     # webview available rooms
     all_rooms = Room.objects.using("roombookings").filter(
             setid='LIVE-16-17',
-            type='CB'
+            bookabletype='CB'
         )
 
     # no filters provided, return all rooms serialised
@@ -65,7 +67,7 @@ def get_bookings(request):
     # TODO: building?
     request_params['siteid'] = request.GET.get('site_id')
     request_params['description'] = request.GET.get('description')
-    request_params['contactname__contains'] = request.GET.get('contact')
+    request_params['condisplayname__contains'] = request.GET.get('contact')
     request_params['startdatetime'] = request.GET.get('date')
     # 20 is the default number of bookings per page
 
@@ -125,3 +127,36 @@ def get_bookings(request):
         'roombookings').filter(**request_params).count()
 
     return _return_json_bookings(bookings)
+
+
+@api_view(['GET'])
+@does_token_exist
+def get_equipment(request):
+    roomid = request.GET.get("roomid")
+    siteid = request.GET.get("siteid")
+
+    if not roomid:
+        response = JsonResponse({
+            "ok": False,
+            "error": "No roomid supplied"
+        })
+        response.status_code = 400
+        return response
+
+    if not siteid:
+        response = JsonResponse({
+            "ok": False,
+            "error": "No siteid supplied"
+        })
+        response.status_code = 400
+        return response
+
+    equipment = Equipment.objects.using("roombookings").filter(
+        setid="LIVE-16-17",
+        roomid=roomid,
+        siteid=siteid
+    )
+    return JsonResponse({
+        "ok": True,
+        "equipment": _serialize_equipment(equipment)
+    })

@@ -102,13 +102,21 @@ def _serialize_rooms(room_set):
     rooms = []
     for room in room_set:
         rooms.append({
-            "name": room.name,
+            "name": room.roomname,
             "roomid": room.roomid,
             "siteid": room.siteid,
+            "sitename": room.sitename,
             "capacity": room.capacity,
-            "category": room.category,
-            "classification": room.classification,
-            "zone": room.zone
+            "classification": room.roomclass,
+            "automated": room.automated,
+            "location": {
+                "address": [
+                    room.address1,
+                    room.address2,
+                    room.address3,
+                    room.address4
+                ]
+            }
         })
     return rooms
 
@@ -126,13 +134,26 @@ def _serialize_bookings(bookings):
                 bk.startdatetime, "%Y-%m-%dT%H:%M:%S%z")),
             "end_time": _kloppify(datetime.datetime.strftime(
                 bk.finishdatetime, "%Y-%m-%dT%H:%M:%S%z")),
-            "contact": bk.contactname,
+            "contact": bk.condisplayname,
             "slotid": bk.slotid,
             "weeknumber": bk.weeknumber,
             "phone": bk.phone
         })
 
     return ret_bookings
+
+
+def _serialize_equipment(equipment):
+    ret_equipment = []
+
+    for item in equipment:
+        ret_equipment.append({
+            "type": item.type,
+            "description": item.description,
+            "units": item.units
+        })
+
+    return ret_equipment
 
 
 def _kloppify(date_string):
