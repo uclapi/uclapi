@@ -70,7 +70,7 @@ def dashboard(request):
     user = User.objects.get(id=user_id)
 
     user_meta = {
-        "name": user.given_name,
+        "name": user.display_name,
         "cn": user.cn,
         "department": user.department,
         "intranet_groups": user.raw_intranet_groups,
