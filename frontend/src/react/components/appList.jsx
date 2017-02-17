@@ -20,6 +20,21 @@ class App extends React.Component {
     this.stopEditing = this.stopEditing.bind(this);
     this.copyToken = this.copyToken.bind(this);
     this.setCopyText = this.setCopyText.bind(this);
+
+    /*
+      Make moment.js say 'just now' if the time difference is less
+      than five seconds either way to get round non-sync'd server and
+      client time.
+      This may make 'a few seconds ago' somewhat redundant, but it's
+      worth it.
+    */
+    moment.fn.fromNowOrNow = function(a) {
+      if (Math.abs(moment().diff(this)) < 5000) {
+        return 'just now';
+      }
+      return this.fromNow(a);
+    };
+
   }
 
   changeName(e){
@@ -155,7 +170,7 @@ class App extends React.Component {
     tokenElement.select();
 
     try {
-			// copy text
+      // copy text
       document.execCommand('copy');
       this.setState({
         copied: true
@@ -236,8 +251,8 @@ class App extends React.Component {
             </form>
           </div>
         </div>
-        <p title={moment(this.props.created).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Created: {moment(this.props.created).fromNow()}</p>
-        <p title={moment(this.props.updated).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Updated: {moment(this.props.updated).fromNow()}</p>
+        <p title={moment(this.props.created).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Created: {moment(this.props.created).fromNowOrNow()}</p>
+        <p title={moment(this.props.updated).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Updated: {moment(this.props.updated).fromNowOrNow()}</p>
         </div>
     </div>;
   }
