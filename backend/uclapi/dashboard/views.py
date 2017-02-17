@@ -55,8 +55,8 @@ def shibboleth_callback(request):
 
     return redirect(dashboard)
 
-def index(request):
 
+def index(request):
     if "user_id" in request.session:
         # user signed in
 
@@ -100,12 +100,13 @@ def index(request):
         url = url + param
         return redirect(url)
 
+
 @ensure_csrf_cookie
 def dashboard(request):
     try:
         user_id = request.session["user_id"]
     except KeyError:
-        url = os.environ["SHIBBOLETH_ROOT"] + "/?target="
+        url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
         param = request.build_absolute_uri(request.path) + "user/login.callback"
         param = quote(param)
         url = url + param
@@ -134,5 +135,5 @@ def dashboard(request):
 
     initial_data = json.dumps(user_meta, cls=DjangoJSONEncoder)
     return render(request, 'dashboard.html', {
-	'initial_data': initial_data
-    }) 
+        'initial_data': initial_data
+    })
