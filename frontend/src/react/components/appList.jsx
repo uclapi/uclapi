@@ -33,7 +33,7 @@ class App extends React.Component {
         return 'just now';
       }
       return this.fromNow(a);
-    }
+    };
 
   }
 
@@ -251,8 +251,8 @@ class App extends React.Component {
             </form>
           </div>
         </div>
-        <p title={moment(this.props.created).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Created: {moment(this.props.created).fromNow()}</p>
-        <p title={moment(this.props.updated).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Updated: {moment(this.props.updated).fromNow()}</p>
+        <p title={moment(this.props.created).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Created: {moment(this.props.created).fromNowOrNow()}</p>
+        <p title={moment(this.props.updated).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Updated: {moment(this.props.updated).fromNowOrNow()}</p>
         </div>
     </div>;
   }
