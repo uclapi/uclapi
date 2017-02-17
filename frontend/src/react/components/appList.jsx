@@ -29,7 +29,7 @@ class App extends React.Component {
       worth it.
     */
     moment.fn.fromNowOrNow = function(a) {
-      if (Math.abs(moment().diff(a)) < 5000) {
+      if (Math.abs(moment().diff(this)) < 5000) {
         return 'just now';
       }
       return this.fromNow(a);
