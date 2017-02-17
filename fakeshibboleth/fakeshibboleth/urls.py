@@ -17,5 +17,5 @@ from django.conf.urls import url
 from core.views import shibboleth
 
 urlpatterns = [
-    url(r'^$', shibboleth),
+    url(r'^login$', shibboleth),
 ]
