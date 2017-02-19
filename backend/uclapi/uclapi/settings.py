@@ -43,13 +43,15 @@ INSTALLED_APPS = [
     'dashboard',
     'roombookings',
     'opbeat.contrib.django',
-    'raven.contrib.django.raven_compat'
+    'raven.contrib.django.raven_compat',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
     'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -172,3 +174,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "images"),
 ]
+
+# Cross Origin settings
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r'^/roombookings/.*$'
