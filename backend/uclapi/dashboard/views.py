@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from .models import User, App
+from django.shortcuts import render, redirect, HttpResponse
+from .models import User, App, WhiteList
 from django.core.exceptions import ObjectDoesNotExist
 import os
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
@@ -33,6 +33,9 @@ def shibboleth_callback(request):
             context=context,
             status=400
         )
+
+    if not WhiteList.objects.filter(email=eppn).exists():
+        return HttpResponse("not so fast buddy")
 
     try:
         user = User.objects.get(email=eppn)
