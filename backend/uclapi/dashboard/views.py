@@ -34,7 +34,7 @@ def shibboleth_callback(request):
             status=400
         )
 
-    if not WhiteList.objects.filter(email=eppn).exists():
+    if not WhiteList.objects.filter(eppn=eppn).exists():
         return HttpResponse("not so fast buddy")
 
     try:
