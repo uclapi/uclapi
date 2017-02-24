@@ -102,7 +102,7 @@ def _serialize_rooms(room_set):
     rooms = []
     for room in room_set:
         rooms.append({
-            "name": room.roomname,
+            "roomname": room.roomname,
             "roomid": room.roomid,
             "siteid": room.siteid,
             "sitename": room.sitename,
@@ -126,7 +126,7 @@ def _serialize_bookings(bookings):
 
     for bk in bookings:
         ret_bookings.append({
-            "room": bk.roomname,
+            "roomname": bk.roomname,
             "siteid": bk.siteid,
             "roomid": bk.roomid,
             "description": bk.descrip,
@@ -167,7 +167,6 @@ def _return_json_bookings(bookings):
             "error": bookings["error"]
         })
 
-    return JsonResponse({
-        "ok": True,
-        "bookings": bookings
-    })
+    bookings["ok"] = True
+
+    return JsonResponse(bookings)
