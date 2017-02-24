@@ -18,7 +18,7 @@ def get_rooms(request):
 
     request_params['roomid'] = request.GET.get('roomid')
     request_params['siteid'] = request.GET.get('siteid')
-    request_params['roomname__contains'] = request.GET.get('name')
+    request_params['roomname__contains'] = request.GET.get('roomname')
     request_params['sitename__contains'] = request.GET.get('sitename')
     request_params['category'] = request.GET.get('category')
     request_params['roomclass'] = request.GET.get('classification')

@@ -167,7 +167,6 @@ def _return_json_bookings(bookings):
             "error": bookings["error"]
         })
 
-    return JsonResponse({
-        "ok": True,
-        "bookings": bookings
-    })
+    bookings["ok"] = True
+
+    return JsonResponse(bookings)
