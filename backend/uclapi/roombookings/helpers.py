@@ -126,7 +126,7 @@ def _serialize_bookings(bookings):
 
     for bk in bookings:
         ret_bookings.append({
-            "room": bk.roomname,
+            "roomname": bk.roomname,
             "siteid": bk.siteid,
             "roomid": bk.roomid,
             "description": bk.descrip,

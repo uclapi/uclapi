@@ -66,6 +66,7 @@ def get_bookings(request):
     request_params['room_id'] = request.GET.get('room_id')
     # TODO: building?
     request_params['siteid'] = request.GET.get('site_id')
+    request_params['roomanme'] = request.GET.get('roomname')
     request_params['description'] = request.GET.get('description')
     request_params['condisplayname__contains'] = request.GET.get('contact')
     request_params['startdatetime'] = request.GET.get('date')
