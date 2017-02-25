@@ -8,4 +8,5 @@ djangorestframework==3.5.3
 opbeat==3.5.2
 psycopg2==2.6.2
 raven==5.32.0
+requests==2.13.0
 urllib3==1.20
