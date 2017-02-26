@@ -8,7 +8,7 @@ workers = multiprocessing.cpu_count() * 4 + 1
 threads = multiprocessing.cpu_count() * 4
 
 # Using gaiohttp because of the long blocking calls to the Oracle database
-worker_class = gaiohttp
+worker_class = "gaiohttp"
 
 daemon = True
 
