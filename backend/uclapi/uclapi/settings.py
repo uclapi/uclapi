@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 import raven
 import requests
+from .utils import strtobool
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,13 +28,18 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # This value should be set by the UCLAPI_PRODUCTION environment variable anyway.
-DEBUG = os.environ.get("UCLAPI_PRODUCTION")
+# If in production, debug should be false
+DEBUG = not strtobool(os.environ.get("UCLAPI_PRODUCTION"))
 
-ALLOWED_HOSTS = ["localhost", os.environ.get("UCLAPI_DOMAIN")]
+ALLOWED_HOSTS = ["localhost"]
+
+# If a domain is specified then make this an allowed host
+if os.environ.get("UCLAPI_DOMAIN"):
+    ALLOWED_HOSTS.append(os.environ.get("UCLAPI_DOMAIN"))
 
 # If we are running under the AWS Elastic Load Balancer then enable internal
 # requests so that the ELB and Health Checks work
-if os.environ.get("UCLAPI_RUNNING_ON_AWS_ELB"):
+if strtobool(os.environ.get("UCLAPI_RUNNING_ON_AWS_ELB")):
     EC2_PRIVATE_IP = None
     try:
         EC2_PRIVATE_IP = requests.get("http://169.254.169.254/latest/meta-data/local-ipv4", timeout=0.01).text
