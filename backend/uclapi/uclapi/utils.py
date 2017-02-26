@@ -4,5 +4,5 @@ def strtobool(x):
         return b
     except AttributeError:
         return False
-    except NameError
+    except NameError:
         return False
