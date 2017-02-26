@@ -76,10 +76,13 @@ def _paginated_result(query, page_number, pagination):
 def _parse_datetime(start_time, end_time, search_date):
     try:
         if start_time:
+            # + gets decoded into a space in params
+            start_time.replace(" ", "+")
             start_time = datetime.datetime.strptime(
                 start_time, '%Y-%m-%dT%H:%M:%S+00:00')
 
         if end_time:
+            end_time.replace(" ", "+")
             end_time = datetime.datetime.strptime(
                 end_time, '%Y-%m-%dT%H:%M:%S+00:00')
 
