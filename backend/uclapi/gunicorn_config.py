@@ -10,6 +10,6 @@ threads = multiprocessing.cpu_count() * 4
 # Using gaiohttp because of the long blocking calls to the Oracle database
 worker_class = "gaiohttp"
 
-daemon = True
+daemon = False
 
 proc_name = "uclapi_gunicorn"
