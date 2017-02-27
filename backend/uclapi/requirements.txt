@@ -6,6 +6,7 @@ Django==1.10.5
 django-cors-headers==2.0.2
 django-dotenv==1.4.1
 djangorestframework==3.5.3
+gunicorn==19.6.0
 opbeat==3.5.2
 psycopg2==2.6.2
 raven==5.32.0
