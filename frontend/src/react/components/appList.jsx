@@ -3,6 +3,7 @@ import update from 'immutability-helper';
 import 'whatwg-fetch';
 import Cookies from 'js-cookie';
 import moment from 'moment';
+import Modal from 'react-modal';
 
 class App extends React.Component {
   constructor(props){
@@ -303,37 +304,32 @@ class AppForm extends React.Component {
     });
   }
   render () {
-    return <div className="appForm pure-g">
-      <div className="pure-u-xl-1-4"></div>
-      <div className="pure-u-1 pure-u-xl-1-2">
-        <div className="card">
-          <h2>Create App</h2>
-          <form className="pure-form pure-form-stacked" onSubmit={this.submitForm}>
-            <fieldset>
-              <div className="pure-g">
-                <div className="pure-u-1">
-                  <label htmlFor="name">App Name</label>
-                  <input id="name" ref="name" className="pure-u-1" type="text"/>
-                </div>
-              </div>
-              <div className="pure-g">
-                <div className="pure-u-1-24"></div>
-                <button type="submit" className="pure-button pure-button-primary pure-u-10-24">Submit</button>
-                <div className="pure-u-2-24"></div>
-                <button className="pure-button button-error pure-u-10-24">Cancel</button>
-                <div className="pure-u-1-24>"></div>
-              </div>
-            </fieldset>
-          </form>
-        </div>
-      </div>
-      <div className="pure-u-xl-1-4"></div>
+    return <div className="appForm">
+      <h2>Create App</h2>
+      <form className="pure-form pure-form-stacked" onSubmit={this.submitForm}>
+        <fieldset>
+          <div className="pure-g">
+            <div className="pure-u-1">
+              <label htmlFor="name">App Name</label>
+              <input id="name" ref="name" className="pure-u-1" type="text"/>
+            </div>
+          </div>
+          <div className="pure-g">
+            <div className="pure-u-1-24"></div>
+            <button type="submit" className="pure-button pure-button-primary pure-u-10-24">Submit</button>
+            <div className="pure-u-2-24"></div>
+            <button type="button" className="pure-button button-error pure-u-10-24" onClick={this.props.close}>Cancel</button>
+            <div className="pure-u-1-24>"></div>
+          </div>
+        </fieldset>
+      </form>
     </div>;
   }
 }
 
 AppForm.propTypes = {
-  add: React.PropTypes.func.isRequired
+  add: React.PropTypes.func.isRequired,
+  close: React.PropTypes.func.isRequired
 };
 
 class AppList extends React.Component {
@@ -348,6 +344,9 @@ class AppList extends React.Component {
     this.getAppIndex = this.getAppIndex.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
     this.deleteApp = this.deleteApp.bind(this);
+
+    this.showForm = this.showForm.bind(this);
+    this.hideForm = this.hideForm.bind(this);
   }
 
   addApp(app){
@@ -387,6 +386,14 @@ class AppList extends React.Component {
     this.deleteApp('My Cool App');
   }
 
+  showForm(){
+    this.setState({showCreate: true});
+  }
+
+  hideForm(){
+    this.setState({showCreate: false});
+  }
+
   render () {
     return <div className="appList pure-u-1">
       <div className="pure-g">
@@ -402,7 +409,18 @@ class AppList extends React.Component {
           />;
         })}
       </div>
-      <AppForm add={this.addApp}/>
+      <Modal
+        isOpen={this.state.showCreate}
+        contentLabel="Create app form"
+        onRequestClose={this.hideForm}
+				className="Modal"
+				overlayClassName="Overlay"
+      >
+        <AppForm add={this.addApp} close={this.hideForm}/>
+      </Modal>
+      <div className="flexCentre">
+        <button className="roundButton" onClick={this.showForm}>+</button>
+      </div>
     </div>;
   }
 }
