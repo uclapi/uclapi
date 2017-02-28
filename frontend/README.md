@@ -4,41 +4,41 @@ This is the frontend for the uclapi.com dashboard. It is built using react and s
 
 ## Instalation
 
-### Prerequisits 
+### Prerequisites 
 To build the frontend you need Node.js and npm installed. 
 
 OSX:
-```
-brew install node
+``` Bash
+$ brew install node
 ```
 
 Ubuntu/Debian:
-```
-sudo apt-get install nodejs
-sudo apt-get install npm
-sudo ln -s /usr/bin/nodejs /usr/bin/node # create symlink as most nodejs tools use the name node to execute
+``` Bash
+$ sudo apt-get install nodejs
+$ sudo apt-get install npm
+$ sudo ln -s /usr/bin/nodejs /usr/bin/node # create symlink as most nodejs tools use the name node to execute
 ```
 
 ### Install
 
 ```
-npm install
+$ npm install
 ```
 
 ## Build
 Build:
-``` shell
-$npm run build
+``` Bash
+$ npm run build
 ```
 
 Build and watch (doesn't work on windows):
-``` shell
-$npm start
+``` Bash
+$ npm start
 ```
 
 Build for production:
-``` shell
-$npm run production
+``` Bash
+$ npm run production
 ```
 
 ## View
