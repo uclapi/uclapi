@@ -13,3 +13,5 @@ worker_class = "gaiohttp"
 daemon = False
 
 proc_name = "uclapi_gunicorn"
+
+timeout = 600
