@@ -2,7 +2,7 @@
 
 This is the frontend for the uclapi.com dashboard. It is built using react and sass.
 
-## Instalation
+## Installation
 
 ### Prerequisites 
 To build the frontend you need Node.js and npm installed. 
