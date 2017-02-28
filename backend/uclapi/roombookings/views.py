@@ -76,6 +76,7 @@ def get_bookings(request):
 
     try:
         results_per_page = int(results_per_page)
+        results_per_page = results_per_page if results_per_page > 0 else 20
     except ValueError:
         return JsonResponse({
             "ok": False,
