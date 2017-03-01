@@ -13,6 +13,7 @@ function removeExtentionAndPath(file, extension){
   var fileStart = file.lastIndexOf('/');
   return file.slice(fileStart + 1, extStart);
 }
+
 function browserified(filename) {
   var b = browserify(filename,{debug: true});
   var fileNoExt = removeExtentionAndPath(filename, 'jsx');
