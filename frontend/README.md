@@ -42,4 +42,15 @@ $ npm run production
 ```
 
 ## View
-To see the dashboard you must start the django server (see backend readme) then navigate to localhost:8000/dashboard. 
+To see the dashboard you must start the django server and fake shibboleth app (see backend readme) then navigate to localhost:8000/dashboard. 
+
+## Things to note
+
+### Django templates
+Because we are serving the django templates there are certain things you need to consider. To pass data from django into the react app we serialise 
+the data into a json string then assign it as the global variable `window.initialData` so react can acess it. To gain access to static files 
+we also create the `window.staticURL` global which stores the django static file base url.
+
+### Creating new pages
+When you create a new page for the app you must specify which django app it is associated with. This is done in `gulp/tasks/fileModules.json`.
+This file tells gulp which file goes in which django app i.e key = file name without extension, value = name of django app.
