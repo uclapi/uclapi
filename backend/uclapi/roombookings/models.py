@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from .api_helpers import generate_token
 import json
+import datetime
 
 
 class Booking(models.Model):
@@ -76,4 +77,12 @@ class PageToken(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
 
     def get_query(self):
-        return json.loads(self.query)
+        def date_hook(json_dict):
+            for (key, value) in json_dict.items():
+                try:
+                    json_dict[key] = datetime.datetime.strptime(
+                        value, "%Y-%m-%d %H:%M:%S")
+                except:
+                    pass
+            return json_dict
+        return json.loads(self.query, object_hook=date_hook)

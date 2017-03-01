@@ -25,7 +25,6 @@ def get_rooms(request):
     request_params['capacity__gte'] = request.GET.get('capacity')
     request_params['automated'] = request.GET.get('automated')
 
-
     # webview available rooms
     all_rooms = Room.objects.using("roombookings").filter(
             setid='LIVE-16-17',
