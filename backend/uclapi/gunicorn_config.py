@@ -15,3 +15,4 @@ daemon = False
 proc_name = "uclapi_gunicorn"
 
 timeout = 600
+greaceful_timeout = 600
