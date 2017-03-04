@@ -10,6 +10,7 @@ def does_token_exist(view_func):
 
         if not token:
             return JsonResponse({
+                "ok": False,
                 "error": "No token provided"
             })
 
@@ -17,6 +18,7 @@ def does_token_exist(view_func):
             App.objects.get(api_token=token)
         except ObjectDoesNotExist:
             return JsonResponse({
+                "ok": False,
                 "error": "Token does not exist"
             })
 
