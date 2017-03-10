@@ -7,6 +7,7 @@ from django.utils.http import quote
 
 from django.core.serializers.json import DjangoJSONEncoder
 import json
+import keen
 
 
 @csrf_exempt
@@ -26,7 +27,6 @@ def shibboleth_callback(request):
         context = {
             "error": "Didn't receive all required Shibboleth data."
         }
-        print(e)
         return render(
             request,
             'shibboleth_error.html',
@@ -50,6 +50,11 @@ def shibboleth_callback(request):
 
         new_user.save()
         request.session["user_id"] = new_user.id
+        keen.add_event("signup", {
+            "id": new_user.id,
+            "email": eppn,
+            "name": display_name
+        })
     else:
         request.session["user_id"] = user.id
 
