@@ -114,7 +114,7 @@ def regenerate_app_token(request):
 
         return JsonResponse({
             "success": True,
-            "message": "App sucessfully renamed.",
+            "message": "App token sucessfully regenerated.",
             "app": {
                 "id": app.id,
                 "token": new_api_token,
