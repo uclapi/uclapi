@@ -49,12 +49,9 @@ def log_api_call(view_func):
             "name": user.given_name,
             "service": service,
             "method": method,
-            "version-headers": {},
+            "version-headers": version_headers,
             "queryparams": queryparams
         }
-
-        if len(version_headers) > 0:
-            parameters["version-headers"] = version_headers
 
         keen.add_event("apicall", parameters)
 
