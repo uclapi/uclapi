@@ -56,7 +56,6 @@ def log_api_call(view_func):
         if len(version_headers) > 0:
             parameters["version-headers"] = version_headers
 
-        # import pdb; pdb.set_trace()
         keen.add_event("apicall", parameters)
 
         return view_func(request, *args, **kwargs)
