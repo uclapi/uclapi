@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.core.exceptions import FieldError, ObjectDoesNotExist
 from .models import Booking, PageToken
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -77,14 +79,14 @@ def _parse_datetime(start_time, end_time, search_date):
     try:
         if start_time:
             # + gets decoded into a space in params
-            start_time.replace(" ", "+")
-            start_time = datetime.datetime.strptime(
-                start_time, '%Y-%m-%dT%H:%M:%S+00:00')
+            final_start_time = start_time.replace(" ", "+")
+            parsed_start_time = datetime.datetime.strptime(
+                final_start_time, '%Y-%m-%dT%H:%M:%S+00:00')
 
         if end_time:
-            end_time.replace(" ", "+")
-            end_time = datetime.datetime.strptime(
-                end_time, '%Y-%m-%dT%H:%M:%S+00:00')
+            final_end_time = end_time.replace(" ", "+")
+            parsed_end_time = datetime.datetime.strptime(
+                final_end_time, '%Y-%m-%dT%H:%M:%S+00:00')
 
         if not end_time and not start_time:
             if search_date:
@@ -93,12 +95,18 @@ def _parse_datetime(start_time, end_time, search_date):
                                             search_date, "%Y%m%d").date()
                 day_start = datetime.time(0, 0, 1)  # start of the day
                 day_end = datetime.time(23, 59, 59)  # end of the day
-                start_time = datetime.datetime.combine(search_date, day_start)
-                end_time = datetime.datetime.combine(search_date, day_end)
+                parsed_start_time = datetime.datetime.combine(
+                    search_date,
+                    day_start
+                )
+                parsed_end_time = datetime.datetime.combine(
+                    search_date,
+                    day_end
+                )
     except (TypeError, NameError, ValueError):
         return -1, -1, False
 
-    return start_time, end_time, True
+    return parsed_start_time, parsed_end_time, True
 
 
 def _serialize_rooms(room_set):
