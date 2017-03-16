@@ -67,7 +67,7 @@ def get_bookings(request):
     # TODO: building?
     request_params['siteid'] = request.GET.get('siteid')
     request_params['roomname'] = request.GET.get('roomname')
-    request_params['description'] = request.GET.get('description')
+    request_params['descrip'] = request.GET.get('description')
     request_params['condisplayname__contains'] = request.GET.get('contact')
     request_params['startdatetime'] = request.GET.get('date')
     # 20 is the default number of bookings per page
