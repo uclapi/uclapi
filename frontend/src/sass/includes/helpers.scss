@@ -66,3 +66,56 @@
     display:block;
   }  
 }
+
+.Modal {
+  position: absolute;
+  top: 70px;
+  left: 5vw;
+  right: 5vw;
+  height: 200px;
+	background-color: #fff;
+  outline: none;
+  padding: 20px;
+  border: solid rgb(204, 204, 204) 1px;
+  @include border-radius(5px);
+
+  @media screen and (min-width: 35.5em){
+    left: 15vw;
+    right: 15vw;
+  }
+
+  @media screen and (min-width: 55em){
+    left: 25vw;
+    right: 25vw;
+  }
+
+  @media screen and (min-width: 65em){
+    left: 35vw;
+    right: 35vw;
+  }
+
+}
+
+.Overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(255, 255, 255, 0.75);
+}
+
+.pure-form button[type=button]{
+  margin: .7em 0 0;
+}
+
+.roundButton{
+  color: white;
+  @include border-radius(50%);
+  @include boxShadow(3);
+  margin: 10px;
+  width: 100px;
+  height: 100px;
+  background-color: #0078e7;
+  border: none;
+}
