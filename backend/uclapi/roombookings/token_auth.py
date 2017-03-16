@@ -1,4 +1,3 @@
-from rest_framework.response import Response
 from dashboard.models import App
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
@@ -9,16 +8,22 @@ def does_token_exist(view_func):
         token = request.GET.get("token")
 
         if not token:
-            return JsonResponse({
+            response = JsonResponse({
+                "ok": False,
                 "error": "No token provided"
             })
+            response.status_code = 400
+            return response
 
         try:
             App.objects.get(api_token=token)
         except ObjectDoesNotExist:
-            return JsonResponse({
+            response = JsonResponse({
+                "ok": False,
                 "error": "Token does not exist"
             })
+            response.status_code = 400
+            return response
 
         return view_func(request, *args, **kwargs)
     return wrapped
