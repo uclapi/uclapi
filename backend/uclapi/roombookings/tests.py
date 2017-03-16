@@ -60,7 +60,7 @@ class RoomSerializationTestCase(SimpleTestCase):
         self.assertEqual(
             serialised_rooms, [
                 {
-                    "name": "South Quad Pop Up Learning Hub 101",
+                    "roomname": "South Quad Pop Up Learning Hub 101",
                     "roomid": 118,
                     "siteid": "X402",
                     "sitename": "South Quad Pop Up Learning Hub",
@@ -68,14 +68,11 @@ class RoomSerializationTestCase(SimpleTestCase):
                     "classification": "CR",
                     "automated": "N",
                     "location": {
-                        "address1": "Gower St",
-                        "address2": "London",
-                        "address3": None,
-                        "address4": None
+                        "address": ["Gower St", "London", None, None],
                     }
                 },
                 {
-                    "name": "Provost's Private Room",
+                    "roomname": "Provost's Private Room",
                     "roomid": 123123,
                     "siteid": "X234324",
                     "sitename": "Institute of Advanced Legal Studies",
@@ -83,10 +80,12 @@ class RoomSerializationTestCase(SimpleTestCase):
                     "classification": "CR",
                     "automated": "P",
                     "location": {
-                        "address1": "Charles Clore House,17 Russell Square",
-                        "address2": "London",
-                        "address3": "WC1B 5DR",
-                        "address4": None
+                        "address": [
+                            "Charles Clore House,17 Russell Square",
+                            "London",
+                            "WC1B 5DR",
+                            None
+                        ]
                     }
                 }
             ]
