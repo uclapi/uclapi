@@ -32,4 +32,4 @@ script:
   - echo "$(tail -n 2 pylint.log | head -n 1 | egrep '([0-9]*\.[0-9]+|[0-9]+)' -ho | head -n 1) <= 7" | bc
   - sudo pip install prospector pylint-django
   - cd ./backend/uclapi/
-  - echo "$(prospector --uses django | grep 'Messages Found':'' .*' | egrep -ho '[[:digit:]]+') > 50" | bc || (($? == 0))
+  - echo "$(prospector --uses django | grep 'Messages Found.*' | egrep -ho '[[:digit:]]+') > 50" | bc || (($? == 0))
