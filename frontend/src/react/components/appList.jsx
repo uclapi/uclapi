@@ -334,7 +334,7 @@ class AppForm extends React.Component {
           </div>
           <div className="pure-g">
             <div className="pure-u-1-24"></div>
-            <button type="submit" className="pure-button pure-button-primary pure-u-10-24">Submit</button>
+            <button type="submit" className="pure-button pure-button-primary pure-u-10-24">Create</button>
             <div className="pure-u-2-24"></div>
             <button className="pure-button button-error pure-u-10-24" onClick={this.props.close}>Cancel</button>
             <div className="pure-u-1-24>"></div>
