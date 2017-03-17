@@ -58,7 +58,7 @@ class App extends React.Component {
         throw new Error('An error occured');
       }
     }).then((json)=>{
-      if(json.success){
+      if(json.ok){
         let newApp = {
           name: that.refs.name.value,
           id: that.props.appId,
@@ -73,7 +73,7 @@ class App extends React.Component {
           error: ''
         });
       }else{
-        throw new Error(json.message);
+        throw new Error(json.error);
       }
     }).catch((err)=>{
       that.setState({
@@ -99,7 +99,7 @@ class App extends React.Component {
         throw new Error('An error occured');
       }
     }).then((json)=>{
-      if(json.success){
+      if(json.ok){
         let newApp = {
           name: that.props.name,
           id: that.props.appId,
@@ -112,7 +112,7 @@ class App extends React.Component {
           error:''
         });
       }else{
-        throw new Error(json.message);
+        throw new Error(json.error);
       }
     }).catch((err)=>{
       that.setState({
@@ -138,8 +138,10 @@ class App extends React.Component {
         throw new Error('An error occured');
       }
     }).then((json)=>{
-      if(json.success){
+      if(json.ok){
         that.props.remove(that.props.appId);
+      }else{
+        throw new Error(json.error);
       }
     }).catch((err)=>{
       that.setState({
@@ -308,12 +310,14 @@ class AppForm extends React.Component {
         throw new Error('An error occured');
       }
     }).then((json)=>{
-      if(json.success){
+      if(json.ok){
         let newApp = json.app;
         newApp['name'] = that.refs.name.value;
         that.refs.name.value = '';
         that.props.add(newApp);
         that.props.close();
+      }else{
+        throw new Error(json.error);
       }
     }).catch((err)=>{
       that.setState({
