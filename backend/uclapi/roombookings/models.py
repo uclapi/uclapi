@@ -137,3 +137,9 @@ class PageToken(models.Model):
 
     class Meta:
         _DATABASE = 'default'
+
+
+class Location(models.Model):
+    siteid = models.CharField(max_length=40, primary_key=True)
+    lat = models.CharField(max_length=30)
+    lng = models.CharField(max_length=30)

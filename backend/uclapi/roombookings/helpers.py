@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.core.exceptions import FieldError, ObjectDoesNotExist
-from .models import PageToken, BookingA, BookingB, Lock
+from .models import PageToken, BookingA, BookingB, Lock, Location
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 
@@ -115,23 +115,48 @@ def _parse_datetime(start_time, end_time, search_date):
 def _serialize_rooms(room_set):
     rooms = []
     for room in room_set:
-        rooms.append({
-            "roomname": room.roomname,
-            "roomid": room.roomid,
-            "siteid": room.siteid,
-            "sitename": room.sitename,
-            "capacity": room.capacity,
-            "classification": room.roomclass,
-            "automated": room.automated,
-            "location": {
-                "address": [
-                    room.address1,
-                    room.address2,
-                    room.address3,
-                    room.address4
-                ]
-            }
-        })
+        try:
+            location = Location.objects.get(siteid=room.siteid)
+        except ObjectDoesNotExist:
+            rooms.append({
+                "roomname": room.roomname,
+                "roomid": room.roomid,
+                "siteid": room.siteid,
+                "sitename": room.sitename,
+                "capacity": room.capacity,
+                "classification": room.roomclass,
+                "automated": room.automated,
+                "location": {
+                    "address": [
+                        room.address1,
+                        room.address2,
+                        room.address3,
+                        room.address4
+                    ]
+                }
+            })
+        else:
+            rooms.append({
+                "roomname": room.roomname,
+                "roomid": room.roomid,
+                "siteid": room.siteid,
+                "sitename": room.sitename,
+                "capacity": room.capacity,
+                "classification": room.roomclass,
+                "automated": room.automated,
+                "location": {
+                    "address": [
+                        room.address1,
+                        room.address2,
+                        room.address3,
+                        room.address4
+                    ],
+                    "coordinates": {
+                        "lat": location.lat,
+                        "lng": location.lng
+                    }
+                }
+            })
     return rooms
 
 
