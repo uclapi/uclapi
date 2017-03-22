@@ -10,7 +10,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       editing: false,
-      copied: false
+      copied: false,
+      error: ''
     };
     this.changeName = this.changeName.bind(this);
     this.editName = this.editName.bind(this);
@@ -57,7 +58,7 @@ class App extends React.Component {
         throw new Error('An error occured');
       }
     }).then((json)=>{
-      if(json.success){
+      if(json.ok){
         let newApp = {
           name: that.refs.name.value,
           id: that.props.appId,
@@ -68,13 +69,16 @@ class App extends React.Component {
         that.props.update(that.props.appId, newApp);
         that.refs.name.value = '';
         that.setState({
-          editing: false
+          editing: false,
+          error: ''
         });
       }else{
-        throw new Error(json.message);
+        throw new Error(json.error);
       }
     }).catch((err)=>{
-      console.error(err);
+      that.setState({
+        error: err.message
+      });
     });
   }
 
@@ -95,7 +99,7 @@ class App extends React.Component {
         throw new Error('An error occured');
       }
     }).then((json)=>{
-      if(json.success){
+      if(json.ok){
         let newApp = {
           name: that.props.name,
           id: that.props.appId,
@@ -104,11 +108,16 @@ class App extends React.Component {
           updated: json.app.date
         };
         that.props.update(that.props.appId, newApp);
+        that.setState({
+          error:''
+        });
       }else{
-        throw new Error(json.message);
+        throw new Error(json.error);
       }
     }).catch((err)=>{
-      console.error(err);
+      that.setState({
+        error: err.message
+      });
     });
   }
 
@@ -129,11 +138,15 @@ class App extends React.Component {
         throw new Error('An error occured');
       }
     }).then((json)=>{
-      if(json.success){
+      if(json.ok){
         that.props.remove(that.props.appId);
+      }else{
+        throw new Error(json.error);
       }
     }).catch((err)=>{
-      console.error(err);
+      that.setState({
+        error: err.message
+      });
     });
   }
 
@@ -254,6 +267,7 @@ class App extends React.Component {
         </div>
         <p title={moment(this.props.created).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Created: {moment(this.props.created).fromNowOrNow()}</p>
         <p title={moment(this.props.updated).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Updated: {moment(this.props.updated).fromNowOrNow()}</p>
+        <label className="error">{this.state.error}</label>
         </div>
     </div>;
   }
@@ -272,6 +286,9 @@ App.propTypes = {
 class AppForm extends React.Component {
   constructor(props){
     super(props);
+    this.state = {
+      error: ''
+    };
     this.submitForm = this.submitForm.bind(this);
   }
 
@@ -293,14 +310,19 @@ class AppForm extends React.Component {
         throw new Error('An error occured');
       }
     }).then((json)=>{
-      if(json.success){
+      if(json.ok){
         let newApp = json.app;
         newApp['name'] = that.refs.name.value;
         that.refs.name.value = '';
         that.props.add(newApp);
+        that.props.close();
+      }else{
+        throw new Error(json.error);
       }
     }).catch((err)=>{
-      console.error(err);
+      that.setState({
+        error: err.message
+      });
     });
   }
   render () {
@@ -316,11 +338,12 @@ class AppForm extends React.Component {
           </div>
           <div className="pure-g">
             <div className="pure-u-1-24"></div>
-            <button type="submit" className="pure-button pure-button-primary pure-u-10-24">Submit</button>
+            <button type="submit" className="pure-button pure-button-primary pure-u-10-24">Create</button>
             <div className="pure-u-2-24"></div>
-            <button type="button" className="pure-button button-error pure-u-10-24" onClick={this.props.close}>Cancel</button>
+            <button className="pure-button button-error pure-u-10-24" onClick={this.props.close}>Cancel</button>
             <div className="pure-u-1-24>"></div>
           </div>
+          <label className="error">{this.state.error}</label>
         </fieldset>
       </form>
     </div>;
