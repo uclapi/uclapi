@@ -11,6 +11,7 @@ class User(models.Model):
     department = models.CharField(max_length=1000)
     employee_id = models.CharField(max_length=100, unique=True)
     raw_intranet_groups = models.CharField(max_length=2000)
+    agreement = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
 
 
