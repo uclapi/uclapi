@@ -2,7 +2,7 @@ from functools import reduce
 
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
-from .models import Room, Booking, Equipment
+from .models import Room, Equipment, BookingA, BookingB, Lock
 from .token_auth import does_token_exist
 
 from .helpers import _parse_datetime, _serialize_rooms, \
@@ -24,7 +24,6 @@ def get_rooms(request):
     request_params['roomclass'] = request.GET.get('classification')
     request_params['capacity__gte'] = request.GET.get('capacity')
     request_params['automated'] = request.GET.get('automated')
-
 
     # webview available rooms
     all_rooms = Room.objects.using("roombookings").filter(
@@ -67,7 +66,7 @@ def get_bookings(request):
     # TODO: building?
     request_params['siteid'] = request.GET.get('siteid')
     request_params['roomname'] = request.GET.get('roomname')
-    request_params['description'] = request.GET.get('description')
+    request_params['descrip'] = request.GET.get('description')
     request_params['condisplayname__contains'] = request.GET.get('contact')
     request_params['startdatetime'] = request.GET.get('date')
     # 20 is the default number of bookings per page
@@ -125,7 +124,10 @@ def get_bookings(request):
     # first page
     bookings = _get_paginated_bookings(page_token)
 
-    bookings["count"] = Booking.objects.using(
+    lock = Lock.objects.all()[0]
+    curr = BookingA if not lock.bookingA else BookingB
+
+    bookings["count"] = curr.objects.using(
         'roombookings').filter(**request_params).count()
 
     return _return_json_bookings(bookings)

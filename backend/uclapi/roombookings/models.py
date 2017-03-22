@@ -28,6 +28,44 @@ class Booking(models.Model):
         db_table = 'CMIS_UCLAPI_V_BOOKINGS'
 
 
+class BookingA(models.Model):
+    setid = models.CharField(max_length=40, blank=True, null=True)
+    siteid = models.CharField(max_length=40, blank=True, null=True)
+    roomid = models.CharField(max_length=160, blank=True, null=True)
+    sitename = models.CharField(max_length=320, blank=True, null=True)
+    roomname = models.CharField(max_length=320, blank=True, null=True)
+    bookabletype = models.CharField(max_length=40, blank=True, null=True)
+    slotid = models.BigIntegerField(primary_key=True)
+    bookingid = models.CharField(max_length=80, blank=True, null=True)
+    starttime = models.CharField(max_length=80, blank=True, null=True)
+    finishtime = models.CharField(max_length=20, blank=True, null=True)
+    startdatetime = models.DateTimeField(blank=True, null=True)
+    finishdatetime = models.DateTimeField(blank=True, null=True)
+    weeknumber = models.FloatField(blank=True, null=True)
+    condisplayname = models.CharField(max_length=4000, blank=True, null=True)
+    phone = models.CharField(max_length=160, blank=True, null=True)
+    descrip = models.CharField(max_length=400, blank=True, null=True)
+
+
+class BookingB(models.Model):
+    setid = models.CharField(max_length=40, blank=True, null=True)
+    siteid = models.CharField(max_length=40, blank=True, null=True)
+    roomid = models.CharField(max_length=160, blank=True, null=True)
+    sitename = models.CharField(max_length=320, blank=True, null=True)
+    roomname = models.CharField(max_length=320, blank=True, null=True)
+    bookabletype = models.CharField(max_length=40, blank=True, null=True)
+    slotid = models.BigIntegerField(primary_key=True)
+    bookingid = models.CharField(max_length=80, blank=True, null=True)
+    starttime = models.CharField(max_length=80, blank=True, null=True)
+    finishtime = models.CharField(max_length=20, blank=True, null=True)
+    startdatetime = models.DateTimeField(blank=True, null=True)
+    finishdatetime = models.DateTimeField(blank=True, null=True)
+    weeknumber = models.FloatField(blank=True, null=True)
+    condisplayname = models.CharField(max_length=4000, blank=True, null=True)
+    phone = models.CharField(max_length=160, blank=True, null=True)
+    descrip = models.CharField(max_length=400, blank=True, null=True)
+
+
 class Room(models.Model):
     setid = models.CharField(max_length=40, blank=True, null=True)
     siteid = models.CharField(max_length=40, blank=True, null=True)
@@ -50,6 +88,11 @@ class Room(models.Model):
     class Meta:
         managed = False
         db_table = 'CMIS_UCLAPI_V_ROOMS'
+
+
+class Lock(models.Model):
+    bookingA = models.BooleanField()
+    bookingB = models.BooleanField()
 
 
 class Equipment(models.Model):

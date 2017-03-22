@@ -1,5 +1,5 @@
 from django.core.exceptions import FieldError, ObjectDoesNotExist
-from .models import Booking, PageToken
+from .models import PageToken, BookingA, BookingB, Lock
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 
@@ -47,7 +47,10 @@ def _get_paginated_bookings(page_token):
 
 def _paginated_result(query, page_number, pagination):
     try:
-        all_bookings = Booking.objects.using('roombookings').filter(**query)
+        lock = Lock.objects.all()[0]
+        curr = BookingA if not lock.bookingA else BookingB
+
+        all_bookings = curr.objects.using('roombookings').filter(**query)
     except FieldError:
         return {
             "error": "something wrong with encoded query params"
@@ -77,12 +80,12 @@ def _parse_datetime(start_time, end_time, search_date):
     try:
         if start_time:
             # + gets decoded into a space in params
-            start_time.replace(" ", "+")
+            start_time = start_time.replace(" ", "+")
             start_time = datetime.datetime.strptime(
                 start_time, '%Y-%m-%dT%H:%M:%S+00:00')
 
         if end_time:
-            end_time.replace(" ", "+")
+            end_time = end_time.replace(" ", "+")
             end_time = datetime.datetime.strptime(
                 end_time, '%Y-%m-%dT%H:%M:%S+00:00')
 
