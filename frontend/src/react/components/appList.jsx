@@ -58,7 +58,7 @@ class App extends React.Component {
         throw new Error('An error occured');
       }
     }).then((json)=>{
-      if(json.ok){
+      if(json.success){
         let newApp = {
           name: that.refs.name.value,
           id: that.props.appId,
@@ -73,7 +73,7 @@ class App extends React.Component {
           error: ''
         });
       }else{
-        throw new Error(json.error);
+        throw new Error(json.message);
       }
     }).catch((err)=>{
       that.setState({
