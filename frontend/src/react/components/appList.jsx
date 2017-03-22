@@ -58,7 +58,7 @@ class App extends React.Component {
         throw new Error('An error occured');
       }
     }).then((json)=>{
-      if(json.ok){
+      if(json.success){
         let newApp = {
           name: that.refs.name.value,
           id: that.props.appId,
@@ -73,7 +73,7 @@ class App extends React.Component {
           error: ''
         });
       }else{
-        throw new Error(json.error);
+        throw new Error(json.message);
       }
     }).catch((err)=>{
       that.setState({
@@ -208,7 +208,7 @@ class App extends React.Component {
         {this.state.editing ? (
           <form className="pure-form" onSubmit={this.changeName}>
             <fieldset>
-              <input type="text" placeholder={this.props.name} ref="name"/>
+              <input type="text" autoFocus placeholder={this.props.name} ref="name"/>
               <button type="submit" className="pure-button pure-button-primary padded" onClick={this.changeName}>Submit</button>
               <button className="pure-button button-error padded" onClick={this.stopEditing}>Cancel</button>
             </fieldset>
@@ -333,14 +333,14 @@ class AppForm extends React.Component {
           <div className="pure-g">
             <div className="pure-u-1">
               <label htmlFor="name">App Name</label>
-              <input id="name" ref="name" className="pure-u-1" type="text"/>
+              <input autoFocus id="name" ref="name" className="pure-u-1" type="text"/>
             </div>
           </div>
           <div className="pure-g">
             <div className="pure-u-1-24"></div>
             <button type="submit" className="pure-button pure-button-primary pure-u-10-24">Create</button>
             <div className="pure-u-2-24"></div>
-            <button className="pure-button button-error pure-u-10-24" onClick={this.props.close}>Cancel</button>
+            <button type="button" className="pure-button button-error pure-u-10-24" onClick={this.props.close}>Cancel</button>
             <div className="pure-u-1-24>"></div>
           </div>
           <label className="error">{this.state.error}</label>
