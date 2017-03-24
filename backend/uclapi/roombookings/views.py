@@ -3,13 +3,14 @@ from functools import reduce
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from .models import Room, Equipment, BookingA, BookingB, Lock
-from .token_auth import does_token_exist
+from .decorators import does_token_exist, log_api_call
 
 from .helpers import _parse_datetime, _serialize_rooms, \
     _get_paginated_bookings, _create_page_token, _return_json_bookings, \
     _serialize_equipment
 
 
+@log_api_call
 @api_view(['GET'])
 @does_token_exist
 def get_rooms(request):
@@ -48,6 +49,7 @@ def get_rooms(request):
     })
 
 
+@log_api_call
 @api_view(['GET'])
 @does_token_exist
 def get_bookings(request):
@@ -127,12 +129,12 @@ def get_bookings(request):
     lock = Lock.objects.all()[0]
     curr = BookingA if not lock.bookingA else BookingB
 
-    bookings["count"] = curr.objects.using(
-        'roombookings').filter(**request_params).count()
+    bookings["count"] = curr.objects.filter(**request_params).count()
 
     return _return_json_bookings(bookings)
 
 
+@log_api_call
 @api_view(['GET'])
 @does_token_exist
 def get_equipment(request):
