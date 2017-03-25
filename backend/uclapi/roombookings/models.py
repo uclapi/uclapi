@@ -4,7 +4,7 @@ from django.db import models
 from .api_helpers import generate_token
 import json
 
-models.options.DEFAULT_NAMES += ('_DATABASE')
+models.options.DEFAULT_NAMES += '_DATABASE'
 
 
 class Booking(models.Model):
