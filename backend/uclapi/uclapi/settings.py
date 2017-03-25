@@ -126,7 +126,7 @@ DATABASES = {
         'PORT': ''
     },
     'gencache': {
-        'ENGINE': 'django.db.backends.oracle',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get("DB_CACHE_NAME"),
         'USER': os.environ.get("DB_CACHE_USERNAME"),
         'PASSWORD': os.environ.get("DB_CACHE_PASSWORD"),
