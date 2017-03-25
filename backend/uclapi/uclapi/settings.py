@@ -135,7 +135,7 @@ DATABASES = {
     }
 }
 
-DATABASE_ROUTERS = ['ModelRouter']
+DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
 
 # analytics & rate-limiting
 
