@@ -77,7 +77,7 @@ def dashboard(request):
         try:
             agreement = strtobool(request.POST["agreement"])
         except (KeyError, ValueError):
-            return render(request, "agreement", {
+            return render(request, "agreement.html", {
                 "error": "You must agree to the fair use policy"
             })
 
@@ -85,10 +85,10 @@ def dashboard(request):
             user.agreement = True
             user.save()
         else:
-            return render(request, "agreement", {
+            return render(request, "agreement.html", {
                 "error": "You must agree to the fair use policy"
             })
-
+    
     user_meta = {
         "name": user.full_name,
         "cn": user.cn,
