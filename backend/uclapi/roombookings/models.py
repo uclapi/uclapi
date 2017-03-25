@@ -4,6 +4,8 @@ from django.db import models
 from .api_helpers import generate_token
 import json
 
+models.options.DEFAULT_NAMES += ('_DATABASE')
+
 
 class Booking(models.Model):
     setid = models.CharField(max_length=40, blank=True, null=True)
@@ -26,6 +28,7 @@ class Booking(models.Model):
     class Meta:
         managed = False
         db_table = 'CMIS_UCLAPI_V_BOOKINGS'
+        _DATABASE = 'roombookings'
 
 
 class BookingA(models.Model):
@@ -46,6 +49,9 @@ class BookingA(models.Model):
     phone = models.CharField(max_length=160, blank=True, null=True)
     descrip = models.CharField(max_length=400, blank=True, null=True)
 
+    class Meta:
+        _DATABASE = 'gencache'
+
 
 class BookingB(models.Model):
     setid = models.CharField(max_length=40, blank=True, null=True)
@@ -65,6 +71,8 @@ class BookingB(models.Model):
     phone = models.CharField(max_length=160, blank=True, null=True)
     descrip = models.CharField(max_length=400, blank=True, null=True)
 
+    class Meta:
+        _DATABASE = 'gencache'
 
 class Room(models.Model):
     setid = models.CharField(max_length=40, blank=True, null=True)
@@ -88,11 +96,15 @@ class Room(models.Model):
     class Meta:
         managed = False
         db_table = 'CMIS_UCLAPI_V_ROOMS'
+        _DATABASE = 'roombookings'
 
 
 class Lock(models.Model):
     bookingA = models.BooleanField()
     bookingB = models.BooleanField()
+
+    class Meta:
+        _DATABASE = 'gencache'
 
 
 class Equipment(models.Model):
@@ -106,6 +118,7 @@ class Equipment(models.Model):
     class Meta:
         managed = False
         db_table = 'CMIS_UCLAPI_V_EQUIP_FEATURES'
+        _DATABASE = 'roombookings'
 
 
 class PageToken(models.Model):
@@ -120,3 +133,6 @@ class PageToken(models.Model):
 
     def get_query(self):
         return json.loads(self.query)
+
+    class Meta:
+        _DATABASE = 'default'

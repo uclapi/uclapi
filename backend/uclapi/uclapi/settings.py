@@ -123,8 +123,18 @@ DATABASES = {
         'PASSWORD': os.environ.get("DB_ROOMS_PASSWORD"),
         'HOST': '',
         'PORT': ''
+    },
+    'gencache': {
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': os.environ.get("DB_CACHE_NAME"),
+        'USER': os.environ.get("DB_CACHE_USERNAME"),
+        'PASSWORD': os.environ.get("DB_CACHE_PASSWORD"),
+        'HOST': os.environ.get("DB_CACHE_HOST"),
+        'PORT': os.environ.get("DB_CACHE_PORT")
     }
 }
+
+DATABASE_ROUTERS = ['dbrouters.ModelRouter']
 
 # analytics & rate-limiting
 
