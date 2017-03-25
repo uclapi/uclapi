@@ -14,6 +14,7 @@ import os
 import raven
 import requests
 from .utils import strtobool
+from .dbrouters import ModelRouter
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -134,7 +135,7 @@ DATABASES = {
     }
 }
 
-DATABASE_ROUTERS = ['dbrouters.ModelRouter']
+DATABASE_ROUTERS = ['ModelRouter']
 
 # analytics & rate-limiting
 
