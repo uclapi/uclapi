@@ -22,4 +22,4 @@ class ModelRouter(object):
                 return True
             else:
                 return False
-        return None
+        return False
