@@ -7,9 +7,11 @@ from django.core.management.base import BaseCommand
 
 class Command(BaseCommand):
 
-    help = 'clone oracle db to one of the two buckets'
+    help = 'Clone Oracle DB to one of the two buckets'
 
     def handle(self, *args, **options):
+        self.stdout.write("Connecting to Oracle...")
+
         # global connection variable for the database
         con = cx_Oracle.connect(
                 user=os.environ.get("DB_ROOMS_USERNAME"),
@@ -26,14 +28,19 @@ class Command(BaseCommand):
 
         cur.execute(select_query)
 
+        self.stdout.write("Selecting a clone table...")
         lock = Lock.objects.all()[0]
         curr = BookingA if lock.bookingA else BookingB
 
+        self.stdout.write("Flushing the clone table...")
         # flush the table
         curr.objects.all().delete()
 
+        self.stdout.write("Dumping all the data from Oracle into a new list...")
+        data_objects = []
+
         for row in cur:
-            bk = curr(
+            data_objects.append(
                 setid=row[0],
                 siteid=row[1],
                 roomid=row[2],
@@ -51,10 +58,13 @@ class Command(BaseCommand):
                 phone=row[14],
                 descrip=row[15]
             )
-            bk.save()
 
+        self.stdout.write("Bulk creating this in PostgreSQL...")
+        curr.objects.bulk_create(data_objects)       
+
+        self.stdout.write("Updating the lock...")
         lock.bookingA = not lock.bookingA
         lock.bookingB = not lock.bookingB
         lock.save()
 
-        self.stdout.write("updated one of the bucket")
+        self.stdout.write("Updated a bucket!")
