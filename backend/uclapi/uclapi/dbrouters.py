@@ -12,5 +12,5 @@ class ModelRouter(object):
         return obj1._state.db in self.managed_db_list and obj2._state.db in self.managed_db_list
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
-        #return getattr(model_name, "_DATABASE") in self.managed_db_list
-        return True
+        # Router should have no opinion on whether to allow a migration
+        return None
