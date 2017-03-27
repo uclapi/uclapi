@@ -59,8 +59,10 @@ class Command(BaseCommand):
                 descrip=row[15]
             ))
 
+        self.stdout.write("There are " + len(data_objects) + " records.")
+
         self.stdout.write("Bulk creating this in PostgreSQL...")
-        curr.objects.bulk_create(data_objects)
+        curr.objects.bulk_create(data_objects, batch_size=5000)
 
         self.stdout.write("Updating the lock...")
         lock.bookingA = not lock.bookingA
