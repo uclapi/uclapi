@@ -106,7 +106,7 @@ class Lock(models.Model):
     bookingB = models.BooleanField()
 
     class Meta:
-        _DATABASE = 'gencache'
+        _DATABASE = 'default'
 
 
 class Equipment(models.Model):
