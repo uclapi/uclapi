@@ -15,13 +15,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='bookinga',
             name='id',
-            field=models.AutoField(default=999999999999, primary_key=True, serialize=False),
+            field=models.AutoField(primary_key=True, serialize=False),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='bookingb',
             name='id',
-            field=models.AutoField(default=999999999999, primary_key=True, serialize=False),
+            field=models.AutoField(primary_key=True, serialize=False),
             preserve_default=False,
         ),
         migrations.AlterField(
