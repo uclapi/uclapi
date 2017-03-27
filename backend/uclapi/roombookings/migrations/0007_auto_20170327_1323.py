@@ -12,6 +12,16 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.AlterField(
+            model_name='bookinga',
+            name='slotid',
+            field=models.BigIntegerField(null=True, primary_key=False),
+        ),
+        migrations.AlterField(
+            model_name='bookingb',
+            name='slotid',
+            field=models.BigIntegerField(null=True, primary_key=False),
+        ),
         migrations.AddField(
             model_name='bookinga',
             name='id',
@@ -23,15 +33,5 @@ class Migration(migrations.Migration):
             name='id',
             field=models.AutoField(primary_key=True, serialize=False),
             preserve_default=False,
-        ),
-        migrations.AlterField(
-            model_name='bookinga',
-            name='slotid',
-            field=models.BigIntegerField(),
-        ),
-        migrations.AlterField(
-            model_name='bookingb',
-            name='slotid',
-            field=models.BigIntegerField(),
         ),
     ]
