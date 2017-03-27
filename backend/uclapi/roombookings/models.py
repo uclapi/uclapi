@@ -39,7 +39,7 @@ class BookingA(models.Model):
     sitename = models.CharField(max_length=320, blank=True, null=True)
     roomname = models.CharField(max_length=320, blank=True, null=True)
     bookabletype = models.CharField(max_length=40, blank=True, null=True)
-    slotid = models.BigIntegerField()
+    slotid = models.BigIntegerField(null=True)
     bookingid = models.CharField(max_length=80, blank=True, null=True)
     starttime = models.CharField(max_length=80, blank=True, null=True)
     finishtime = models.CharField(max_length=20, blank=True, null=True)
@@ -62,7 +62,7 @@ class BookingB(models.Model):
     sitename = models.CharField(max_length=320, blank=True, null=True)
     roomname = models.CharField(max_length=320, blank=True, null=True)
     bookabletype = models.CharField(max_length=40, blank=True, null=True)
-    slotid = models.BigIntegerField()
+    slotid = models.BigIntegerField(null=True)
     bookingid = models.CharField(max_length=80, blank=True, null=True)
     starttime = models.CharField(max_length=80, blank=True, null=True)
     finishtime = models.CharField(max_length=20, blank=True, null=True)
@@ -75,6 +75,7 @@ class BookingB(models.Model):
 
     class Meta:
         _DATABASE = 'gencache'
+
 
 class Room(models.Model):
     setid = models.CharField(max_length=40, blank=True, null=True)
