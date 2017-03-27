@@ -40,7 +40,7 @@ class Command(BaseCommand):
         data_objects = []
 
         for row in cur:
-            data_objects.append(
+            data_objects.append(curr(
                 setid=row[0],
                 siteid=row[1],
                 roomid=row[2],
@@ -57,10 +57,10 @@ class Command(BaseCommand):
                 condisplayname=row[13],
                 phone=row[14],
                 descrip=row[15]
-            )
+            ))
 
         self.stdout.write("Bulk creating this in PostgreSQL...")
-        curr.objects.bulk_create(data_objects)       
+        curr.objects.bulk_create(data_objects)
 
         self.stdout.write("Updating the lock...")
         lock.bookingA = not lock.bookingA
