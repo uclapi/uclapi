@@ -59,7 +59,7 @@ class Command(BaseCommand):
                 descrip=row[15]
             ))
 
-        self.stdout.write("There are " + len(data_objects) + " records.")
+        self.stdout.write("There are " + str(len(data_objects)) + " records.")
 
         self.stdout.write("Bulk creating this in PostgreSQL...")
         curr.objects.bulk_create(data_objects, batch_size=5000)
