@@ -34,7 +34,7 @@ class Command(BaseCommand):
 
         self.stdout.write("Flushing the clone table...")
         # flush the table
-        curr.objects.all().delete()
+        curr.objects.using("gencache").all().delete()
 
         self.stdout.write("Dumping all the data from Oracle into a new list...")
         data_objects = []
@@ -62,7 +62,7 @@ class Command(BaseCommand):
         self.stdout.write("There are " + str(len(data_objects)) + " records.")
 
         self.stdout.write("Bulk creating this in PostgreSQL...")
-        curr.objects.bulk_create(data_objects, batch_size=5000)
+        curr.objects.using("gencache").bulk_create(data_objects, batch_size=5000)
 
         self.stdout.write("Updating the lock...")
         lock.bookingA = not lock.bookingA
