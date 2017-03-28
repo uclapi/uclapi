@@ -72,18 +72,18 @@ def get_bookings(request):
     request_params['startdatetime'] = request.GET.get('date')
     # 20 is the default number of bookings per page
 
-    results_per_page = request.GET.get('results_per_page') or 20
+    results_per_page = request.GET.get('results_per_page') or 1000
 
     try:
         results_per_page = int(results_per_page)
-        results_per_page = results_per_page if results_per_page > 0 else 20
+        results_per_page = results_per_page if results_per_page > 0 else 1000
     except ValueError:
         return JsonResponse({
             "ok": False,
             "error": "results_per_page should be an integer"
         })
 
-    results_per_page = results_per_page if results_per_page < 100 else 100
+    results_per_page = results_per_page if results_per_page < 1000 else 1000
 
     # functional filters
     request_params['startdatetime__gte'] = request.GET.get('start_datetime')
