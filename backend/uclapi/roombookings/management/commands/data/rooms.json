@@ -1,0 +1,5588 @@
+{
+    "Medawar Building G02 Watson LT": {
+        "sitename": "Medawar Building",
+        "roomname": "Medawar Building G02 Watson LT",
+        "classification": "LT",
+        "siteid": "037",
+        "roomid": "G02",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1323",
+                "latitude": "51.5235"
+            }
+        },
+        "capacity": 54
+    },
+    "IOE - Bedford Way (20) - 777": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 777",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "777",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 30
+    },
+    "Cruciform Building B.3.07": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building B.3.07",
+        "classification": "CR",
+        "siteid": "212",
+        "roomid": "B307",
+        "automated": "A",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 6
+    },
+    "Taviton (16) 535": {
+        "sitename": "Taviton Street 14-16",
+        "roomname": "Taviton (16) 535",
+        "classification": "CR",
+        "siteid": "126",
+        "roomid": "535",
+        "automated": "P",
+        "location": {
+            "address": [
+                "15 Taviton Street",
+                "London",
+                "WC1H 0BW",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131761",
+                "latitude": "51.525342"
+            }
+        },
+        "capacity": 16
+    },
+    "Pearson Building (North East Entrance) G22 LT": {
+        "sitename": "Pearson Building",
+        "roomname": "Pearson Building (North East Entrance) G22 LT",
+        "classification": "LT",
+        "siteid": "003",
+        "roomid": "G22",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.134835",
+                "latitude": "51.524742"
+            }
+        },
+        "capacity": 84
+    },
+    "Rockefeller Building 338": {
+        "sitename": "Medical School Building",
+        "roomname": "Rockefeller Building 338",
+        "classification": "CR",
+        "siteid": "374",
+        "roomid": "338",
+        "automated": "A",
+        "location": {
+            "address": [
+                "74 Huntley Street",
+                "London",
+                "WC1E 6AU",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.134937",
+                "latitude": "51.523504"
+            }
+        },
+        "capacity": 8
+    },
+    "Wilkins Building (Main Building) South Cloisters": {
+        "sitename": "Main Building",
+        "roomname": "Wilkins Building (Main Building) South Cloisters",
+        "classification": "SS",
+        "siteid": "005",
+        "roomid": "G08",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13366",
+                "latitude": "51.524699"
+            }
+        },
+        "capacity": 240
+    },
+    "Taviton (16) 432": {
+        "sitename": "Taviton Street 14-16",
+        "roomname": "Taviton (16) 432",
+        "classification": "CR",
+        "siteid": "126",
+        "roomid": "432",
+        "automated": "P",
+        "location": {
+            "address": [
+                "15 Taviton Street",
+                "London",
+                "WC1H 0BW",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131761",
+                "latitude": "51.525342"
+            }
+        },
+        "capacity": 44
+    },
+    "IOE - Woburn Square (18) - SSRU Seminar Room": {
+        "sitename": "IOE - Woburn Square, 18",
+        "roomname": "IOE - Woburn Square (18) - SSRU Seminar Room",
+        "classification": "MR",
+        "siteid": "171",
+        "roomid": "SSRU",
+        "automated": "N",
+        "location": {
+            "address": [
+                "18 Woburn Square",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1292690",
+                "latitude": "51.5235102"
+            }
+        },
+        "capacity": 12
+    },
+    "Gordon Street (25) E28 Harrie Massey LT": {
+        "sitename": "Gordon Street, 25",
+        "roomname": "Gordon Street (25) E28 Harrie Massey LT",
+        "classification": "LT",
+        "siteid": "002",
+        "roomid": "E28",
+        "automated": "P",
+        "location": {
+            "address": [
+                "25 Gordon Street",
+                "London",
+                "WC1H 0AY",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133317",
+                "latitude": "51.5257"
+            }
+        },
+        "capacity": 150
+    },
+    "Drayton House B05": {
+        "sitename": "Drayton House",
+        "roomname": "Drayton House B05",
+        "classification": "LT",
+        "siteid": "107",
+        "roomid": "B05",
+        "automated": "P",
+        "location": {
+            "address": [
+                "30 Gordon St",
+                "London",
+                "WC1H 0BE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133196",
+                "latitude": "51.526109"
+            }
+        },
+        "capacity": 20
+    },
+    "Cruciform Building B.3.01": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building B.3.01",
+        "classification": "CR",
+        "siteid": "212",
+        "roomid": "B301",
+        "automated": "A",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 10
+    },
+    "Gordon Square (16-18) G01": {
+        "sitename": "Gordon Square, 16-18",
+        "roomname": "Gordon Square (16-18) G01",
+        "classification": "CR",
+        "siteid": "035",
+        "roomid": "G01",
+        "automated": "P",
+        "location": {
+            "address": [
+                "16-18 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131769",
+                "latitude": "51.524183"
+            }
+        },
+        "capacity": 12
+    },
+    "IOE - Bedford Way (20) - 803": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 803",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "803",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 20
+    },
+    "IOE - Bedford Way (20) - 427 - PC Lab 3": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 427 - PC Lab 3",
+        "classification": "PC1",
+        "siteid": "162",
+        "roomid": "PC3",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 16
+    },
+    "IOE - Bedford Way (20) - 805": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 805",
+        "classification": "MR",
+        "siteid": "162",
+        "roomid": "805",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 12
+    },
+    "Roberts Building 105a": {
+        "sitename": "Roberts Building",
+        "roomname": "Roberts Building 105a",
+        "classification": "CR",
+        "siteid": "045",
+        "roomid": "105A",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Torrington Place",
+                "London",
+                "WC1E 7JE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1321",
+                "latitude": "51.5229"
+            }
+        },
+        "capacity": 16
+    },
+    "Cruciform Building Foyer 201 Seminar Room 3": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building Foyer 201 Seminar Room 3",
+        "classification": "CR",
+        "siteid": "212",
+        "roomid": "201",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 20
+    },
+    "Birkbeck Malet Street B35": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street B35",
+        "classification": "LT",
+        "siteid": "180",
+        "roomid": "B35",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 125
+    },
+    "Gordon Square (16-18) G06": {
+        "sitename": "Gordon Square, 16-18",
+        "roomname": "Gordon Square (16-18) G06",
+        "classification": "CR",
+        "siteid": "035",
+        "roomid": "G06",
+        "automated": "P",
+        "location": {
+            "address": [
+                "16-18 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131769",
+                "latitude": "51.524183"
+            }
+        },
+        "capacity": 12
+    },
+    "Archaeology G6 LT": {
+        "sitename": "Institute of Archaeology",
+        "roomname": "Archaeology G6 LT",
+        "classification": "LT",
+        "siteid": "090",
+        "roomid": "G6",
+        "automated": "P",
+        "location": {
+            "address": [
+                "31-34 Gordon Square",
+                "London,",
+                "WC1H 0PY",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131632",
+                "latitude": "51.524973"
+            }
+        },
+        "capacity": 136
+    },
+    "Taviton (16) 534": {
+        "sitename": "Taviton Street 14-16",
+        "roomname": "Taviton (16) 534",
+        "classification": "CR",
+        "siteid": "126",
+        "roomid": "534",
+        "automated": "P",
+        "location": {
+            "address": [
+                "15 Taviton Street",
+                "London",
+                "WC1H 0BW",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131761",
+                "latitude": "51.525342"
+            }
+        },
+        "capacity": 16
+    },
+    "South Quad Pop Up Learning Hub 101": {
+        "sitename": "South Quad Pop Up Learning Hub",
+        "roomname": "South Quad Pop Up Learning Hub 101",
+        "classification": "CR",
+        "siteid": "X402",
+        "roomid": "118",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower St",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133098",
+                "latitude": "51.523892"
+            }
+        },
+        "capacity": 25
+    },
+    "Bedford Way (26) G11 - Public Cluster": {
+        "sitename": "Bedford Way, 26",
+        "roomname": "Bedford Way (26) G11 - Public Cluster",
+        "classification": "PC1",
+        "siteid": "085",
+        "roomid": "G11",
+        "automated": "N",
+        "location": {
+            "address": [
+                "26 Bedford Way",
+                "London",
+                "WC1H 0DS",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.128371",
+                "latitude": "51.523411"
+            }
+        },
+        "capacity": 22
+    },
+    "Anatomy G04 Gavin de Beer LT": {
+        "sitename": "Medical Sciences and Anatomy",
+        "roomname": "Anatomy G04 Gavin de Beer LT",
+        "classification": "LT",
+        "siteid": "016",
+        "roomid": "G04",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133306",
+                "latitude": "51.523755"
+            }
+        },
+        "capacity": 82
+    },
+    "Chandler House G10": {
+        "sitename": "Chandler House",
+        "roomname": "Chandler House G10",
+        "classification": "LT",
+        "siteid": "235",
+        "roomid": "G10",
+        "automated": "P",
+        "location": {
+            "address": [
+                "2 Wakefield Street",
+                "London",
+                "WC1N 1PG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1228",
+                "latitude": "51.5259"
+            }
+        },
+        "capacity": 96
+    },
+    "Chadwick Building B05 LT": {
+        "sitename": "Chadwick Building",
+        "roomname": "Chadwick Building B05 LT",
+        "classification": "LT",
+        "siteid": "013",
+        "roomid": "B05",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.134127",
+                "latitude": "51.524128"
+            }
+        },
+        "capacity": 94
+    },
+    "Taviton (14) 131": {
+        "sitename": "Taviton Street 14-16",
+        "roomname": "Taviton (14) 131",
+        "classification": "CR",
+        "siteid": "126",
+        "roomid": "131",
+        "automated": "P",
+        "location": {
+            "address": [
+                "15 Taviton Street",
+                "London",
+                "WC1H 0BW",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131761",
+                "latitude": "51.525342"
+            }
+        },
+        "capacity": 16
+    },
+    "Gordon Square (16-18) G09": {
+        "sitename": "Gordon Square, 16-18",
+        "roomname": "Gordon Square (16-18) G09",
+        "classification": "CR",
+        "siteid": "035",
+        "roomid": "G09",
+        "automated": "P",
+        "location": {
+            "address": [
+                "16-18 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131769",
+                "latitude": "51.524183"
+            }
+        },
+        "capacity": 12
+    },
+    "Birkbeck Malet Street 351": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street 351",
+        "classification": "CR",
+        "siteid": "180",
+        "roomid": "351",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 25
+    },
+    "IOE - Emerald Street (23-29) - UCL Knowledge Lab Small": {
+        "sitename": "IOE - Emerald St, 23-29",
+        "roomname": "IOE - Emerald Street (23-29) - UCL Knowledge Lab Small",
+        "classification": "MR",
+        "siteid": "176",
+        "roomid": "KLS",
+        "automated": "N",
+        "location": {
+            "address": [
+                "23-29 Emerald St",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1178012",
+                "latitude": "51.5216001"
+            }
+        },
+        "capacity": 10
+    },
+    "Foster Court 112": {
+        "sitename": "Foster Court",
+        "roomname": "Foster Court 112",
+        "classification": "CR",
+        "siteid": "040",
+        "roomid": "112",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1326",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 18
+    },
+    "IOE - Bedford Way (20) - 836": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 836",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "836",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 25
+    },
+    "Birkbeck Gordon Square (43) G01": {
+        "sitename": "Birkbeck Gordon Square, 43",
+        "roomname": "Birkbeck Gordon Square (43) G01",
+        "classification": "CR",
+        "siteid": "181",
+        "roomid": "G01",
+        "automated": "N",
+        "location": {
+            "address": [
+                "39-41 Gordon Square",
+                "London",
+                "WC1H 0PD",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 28
+    },
+    "IOE - Bedford Way (20) - 822": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 822",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "822",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 70
+    },
+    "Drayton House B06": {
+        "sitename": "Drayton House",
+        "roomname": "Drayton House B06",
+        "classification": "CR",
+        "siteid": "107",
+        "roomid": "B06",
+        "automated": "P",
+        "location": {
+            "address": [
+                "30 Gordon St",
+                "London",
+                "WC1H 0BE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133196",
+                "latitude": "51.526109"
+            }
+        },
+        "capacity": 35
+    },
+    "IOE - Bedford Way (20) - 728": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 728",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "728",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 80
+    },
+    "IOE - Bedford Way (20) - 901": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 901",
+        "classification": "CR",
+        "siteid": "162",
+        "roomid": "901",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 25
+    },
+    "Malet Place Engineering Building 1.20": {
+        "sitename": "Malet Place Engineering Building",
+        "roomname": "Malet Place Engineering Building 1.20",
+        "classification": "CR",
+        "siteid": "350",
+        "roomid": "120",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1323",
+                "latitude": "51.5231"
+            }
+        },
+        "capacity": 40
+    },
+    "IOE - Bedford Way (20) - 421 - Nunn Hall": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 421 - Nunn Hall",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "421",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 100
+    },
+    "South Wing 9 Garwood LT": {
+        "sitename": "South Wing",
+        "roomname": "South Wing 9 Garwood LT",
+        "classification": "LT",
+        "siteid": "012",
+        "roomid": "9",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13352",
+                "latitude": "51.524135"
+            }
+        },
+        "capacity": 48
+    },
+    "Christopher Ingold Building G20 - Public Cluster": {
+        "sitename": "Christopher Ingold Building",
+        "roomname": "Christopher Ingold Building G20 - Public Cluster",
+        "classification": "PC1",
+        "siteid": "067",
+        "roomid": "G20",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Gordon Street",
+                "London",
+                "WC1H 0AJ",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.132244",
+                "latitude": "51.525417"
+            }
+        },
+        "capacity": 61
+    },
+    "Malet Place Engineering Building 1.04": {
+        "sitename": "Malet Place Engineering Building",
+        "roomname": "Malet Place Engineering Building 1.04",
+        "classification": "CR",
+        "siteid": "350",
+        "roomid": "104",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1323",
+                "latitude": "51.5231"
+            }
+        },
+        "capacity": 22
+    },
+    "Birkbeck Malet Street 353": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street 353",
+        "classification": "CR",
+        "siteid": "180",
+        "roomid": "353",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 25
+    },
+    "IOE - Bedford Way (20) - 675": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 675",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "675",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 45
+    },
+    "Gordon Street (25) D103": {
+        "sitename": "Gordon Street, 25",
+        "roomname": "Gordon Street (25) D103",
+        "classification": "LT",
+        "siteid": "002",
+        "roomid": "103",
+        "automated": "P",
+        "location": {
+            "address": [
+                "25 Gordon Street",
+                "London",
+                "WC1H 0AY",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133317",
+                "latitude": "51.5257"
+            }
+        },
+        "capacity": 71
+    },
+    "Wilkins Building (Main Building) Haldane Room": {
+        "sitename": "Main Building",
+        "roomname": "Wilkins Building (Main Building) Haldane Room",
+        "classification": "SS",
+        "siteid": "005",
+        "roomid": "G18",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13366",
+                "latitude": "51.524699"
+            }
+        },
+        "capacity": 55
+    },
+    "Birkbeck Gordon Square (43) G02": {
+        "sitename": "Birkbeck Gordon Square, 43",
+        "roomname": "Birkbeck Gordon Square (43) G02",
+        "classification": "CR",
+        "siteid": "181",
+        "roomid": "G02",
+        "automated": "N",
+        "location": {
+            "address": [
+                "39-41 Gordon Square",
+                "London",
+                "WC1H 0PD",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 30
+    },
+    "Gordon Square (24) 105": {
+        "sitename": "Gordon Square, 24",
+        "roomname": "Gordon Square (24) 105",
+        "classification": "LT",
+        "siteid": "026",
+        "roomid": "105",
+        "automated": "P",
+        "location": {
+            "address": [
+                "24 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.132171",
+                "latitude": "51.524544"
+            }
+        },
+        "capacity": 39
+    },
+    "Foster Court B29 - Public Cluster": {
+        "sitename": "Foster Court",
+        "roomname": "Foster Court B29 - Public Cluster",
+        "classification": "PC1",
+        "siteid": "040",
+        "roomid": "B29",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1326",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 58
+    },
+    "Birkbeck Gordon Square (43) Cinema": {
+        "sitename": "Birkbeck Gordon Square, 43",
+        "roomname": "Birkbeck Gordon Square (43) Cinema",
+        "classification": "LT",
+        "siteid": "181",
+        "roomid": "011",
+        "automated": "N",
+        "location": {
+            "address": [
+                "39-41 Gordon Square",
+                "London",
+                "WC1H 0PD",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 70
+    },
+    "IOE - Bedford Way (20) - 790": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 790",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "790",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 30
+    },
+    "Christopher Ingold Building XLG2 Auditorium": {
+        "sitename": "Christopher Ingold Building",
+        "roomname": "Christopher Ingold Building XLG2 Auditorium",
+        "classification": "LT",
+        "siteid": "067",
+        "roomid": "XLG2",
+        "automated": "P",
+        "location": {
+            "address": [
+                "20 Gordon Street",
+                "London",
+                "WC1H 0AJ",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.132244",
+                "latitude": "51.525417"
+            }
+        },
+        "capacity": 325
+    },
+    "Birkbeck Malet Street B36": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street B36",
+        "classification": "LT",
+        "siteid": "180",
+        "roomid": "B36",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 123
+    },
+    "Gordon Square (16-18) 101": {
+        "sitename": "Gordon Square, 16-18",
+        "roomname": "Gordon Square (16-18) 101",
+        "classification": "CR",
+        "siteid": "035",
+        "roomid": "101",
+        "automated": "P",
+        "location": {
+            "address": [
+                "16-18 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131769",
+                "latitude": "51.524183"
+            }
+        },
+        "capacity": 35
+    },
+    "Rockefeller Building 333": {
+        "sitename": "Medical School Building",
+        "roomname": "Rockefeller Building 333",
+        "classification": "CR",
+        "siteid": "374",
+        "roomid": "333",
+        "automated": "P",
+        "location": {
+            "address": [
+                "74 Huntley Street",
+                "London",
+                "WC1E 6AU",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.134937",
+                "latitude": "51.523504"
+            }
+        },
+        "capacity": 20
+    },
+    "DMS Watson Building G15 - Public Cluster": {
+        "sitename": "DMS Watson Building",
+        "roomname": "DMS Watson Building G15 - Public Cluster",
+        "classification": "PC1",
+        "siteid": "042",
+        "roomid": "G15",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1324",
+                "latitude": "51.5233"
+            }
+        },
+        "capacity": 35
+    },
+    "Birkbeck Gordon Square (43) B01": {
+        "sitename": "Birkbeck Gordon Square, 43",
+        "roomname": "Birkbeck Gordon Square (43) B01",
+        "classification": "CR",
+        "siteid": "181",
+        "roomid": "B01",
+        "automated": "N",
+        "location": {
+            "address": [
+                "39-41 Gordon Square",
+                "London",
+                "WC1H 0PD",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 20
+    },
+    "Rockefeller Building 335": {
+        "sitename": "Medical School Building",
+        "roomname": "Rockefeller Building 335",
+        "classification": "CR",
+        "siteid": "374",
+        "roomid": "335",
+        "automated": "P",
+        "location": {
+            "address": [
+                "74 Huntley Street",
+                "London",
+                "WC1E 6AU",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.134937",
+                "latitude": "51.523504"
+            }
+        },
+        "capacity": 20
+    },
+    "IOE - Bedford Way (20) - 804": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 804",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "804",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 60
+    },
+    "Foster Court 130": {
+        "sitename": "Foster Court",
+        "roomname": "Foster Court 130",
+        "classification": "CR",
+        "siteid": "040",
+        "roomid": "130",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1326",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 22
+    },
+    "Taviton (16) 532": {
+        "sitename": "Taviton Street 14-16",
+        "roomname": "Taviton (16) 532",
+        "classification": "CR",
+        "siteid": "126",
+        "roomid": "532",
+        "automated": "A",
+        "location": {
+            "address": [
+                "15 Taviton Street",
+                "London",
+                "WC1H 0BW",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131761",
+                "latitude": "51.525342"
+            }
+        },
+        "capacity": 10
+    },
+    "School of Pharmacy 104 John Hanbury LT": {
+        "sitename": "School of Pharmacy",
+        "roomname": "School of Pharmacy 104 John Hanbury LT",
+        "classification": "LT",
+        "siteid": "131",
+        "roomid": "104",
+        "automated": "P",
+        "location": {
+            "address": [
+                "29-39 Brunswick Square",
+                "London",
+                "WC1N 1AX",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.122954",
+                "latitude": "51.524771"
+            }
+        },
+        "capacity": 196
+    },
+    "Chadwick Building G08": {
+        "sitename": "Chadwick Building",
+        "roomname": "Chadwick Building G08",
+        "classification": "CR",
+        "siteid": "013",
+        "roomid": "G08",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.134127",
+                "latitude": "51.524128"
+            }
+        },
+        "capacity": 80
+    },
+    "School of Pharmacy B42": {
+        "sitename": "School of Pharmacy",
+        "roomname": "School of Pharmacy B42",
+        "classification": "CR",
+        "siteid": "131",
+        "roomid": "B42",
+        "automated": "P",
+        "location": {
+            "address": [
+                "29-39 Brunswick Square",
+                "London",
+                "WC1N 1AX",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.122954",
+                "latitude": "51.524771"
+            }
+        },
+        "capacity": 35
+    },
+    "Rockefeller Building B14": {
+        "sitename": "Rockefeller Building",
+        "roomname": "Rockefeller Building B14",
+        "classification": "CR",
+        "siteid": "201",
+        "roomid": "B14",
+        "automated": "P",
+        "location": {
+            "address": [
+                "21 University Street",
+                "London",
+                "WC1E 6JJ",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1347",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 12
+    },
+    "Foster Court 132": {
+        "sitename": "Foster Court",
+        "roomname": "Foster Court 132",
+        "classification": "CR",
+        "siteid": "040",
+        "roomid": "132",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1326",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 22
+    },
+    "IOE - Bedford Way (20) - 603": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 603",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "603",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 15
+    },
+    "Wilkins Building (Main Building) North Cloisters": {
+        "sitename": "Main Building",
+        "roomname": "Wilkins Building (Main Building) North Cloisters",
+        "classification": "SS",
+        "siteid": "005",
+        "roomid": "G19",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13366",
+                "latitude": "51.524699"
+            }
+        },
+        "capacity": 310
+    },
+    "Taviton (16) 433": {
+        "sitename": "Taviton Street 14-16",
+        "roomname": "Taviton (16) 433",
+        "classification": "CR",
+        "siteid": "126",
+        "roomid": "433",
+        "automated": "P",
+        "location": {
+            "address": [
+                "15 Taviton Street",
+                "London",
+                "WC1H 0BW",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131761",
+                "latitude": "51.525342"
+            }
+        },
+        "capacity": 48
+    },
+    "Wilkins Building (Main Building) Gustave Tuck LT": {
+        "sitename": "Main Building",
+        "roomname": "Wilkins Building (Main Building) Gustave Tuck LT",
+        "classification": "LT",
+        "siteid": "005",
+        "roomid": "302",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13366",
+                "latitude": "51.524699"
+            }
+        },
+        "capacity": 150
+    },
+    "Drayton House B16 Edgeworth Room": {
+        "sitename": "Drayton House",
+        "roomname": "Drayton House B16 Edgeworth Room",
+        "classification": "CR",
+        "siteid": "107",
+        "roomid": "B16",
+        "automated": "P",
+        "location": {
+            "address": [
+                "30 Gordon St",
+                "London",
+                "WC1H 0BE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133196",
+                "latitude": "51.526109"
+            }
+        },
+        "capacity": 16
+    },
+    "IOE - Bedford Way (20) - 654": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 654",
+        "classification": "MR",
+        "siteid": "162",
+        "roomid": "654",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 8
+    },
+    "Gordon Square (16-18) B03": {
+        "sitename": "Gordon Square, 16-18",
+        "roomname": "Gordon Square (16-18) B03",
+        "classification": "CR",
+        "siteid": "035",
+        "roomid": "B03",
+        "automated": "P",
+        "location": {
+            "address": [
+                "16-18 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131769",
+                "latitude": "51.524183"
+            }
+        },
+        "capacity": 10
+    },
+    "Cruciform Building B.3.08": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building B.3.08",
+        "classification": "CR",
+        "siteid": "212",
+        "roomid": "B308",
+        "automated": "A",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 6
+    },
+    "Roberts Building 421": {
+        "sitename": "Roberts Building",
+        "roomname": "Roberts Building 421",
+        "classification": "LT",
+        "siteid": "045",
+        "roomid": "421",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Torrington Place",
+                "London",
+                "WC1E 7JE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1321",
+                "latitude": "51.5229"
+            }
+        },
+        "capacity": 94
+    },
+    "Gordon Square (26) B32": {
+        "sitename": "Gordon Square, 26",
+        "roomname": "Gordon Square (26) B32",
+        "classification": "CR",
+        "siteid": "024",
+        "roomid": "B32",
+        "automated": "P",
+        "location": {
+            "address": [
+                "26 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.132287",
+                "latitude": "51.524652"
+            }
+        },
+        "capacity": 32
+    },
+    "Chadwick Building 2.18": {
+        "sitename": "Chadwick Building",
+        "roomname": "Chadwick Building 2.18",
+        "classification": "CR",
+        "siteid": "013",
+        "roomid": "218",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.134127",
+                "latitude": "51.524128"
+            }
+        },
+        "capacity": 40
+    },
+    "Christopher Ingold Building  G21 Ramsay LT": {
+        "sitename": "Christopher Ingold Building",
+        "roomname": "Christopher Ingold Building  G21 Ramsay LT",
+        "classification": "LT",
+        "siteid": "067",
+        "roomid": "G21",
+        "automated": "P",
+        "location": {
+            "address": [
+                "20 Gordon Street",
+                "London",
+                "WC1H 0AJ",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.132244",
+                "latitude": "51.525417"
+            }
+        },
+        "capacity": 70
+    },
+    "Foster Court 123": {
+        "sitename": "Foster Court",
+        "roomname": "Foster Court 123",
+        "classification": "CR",
+        "siteid": "040",
+        "roomid": "123",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1326",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 15
+    },
+    "Wilkins Building (Main Building) Main Quad Events Venue - North Side": {
+        "sitename": "Main Building",
+        "roomname": "Wilkins Building (Main Building) Main Quad Events Venue - North Side",
+        "classification": "SS",
+        "siteid": "005",
+        "roomid": "1111",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13366",
+                "latitude": "51.524699"
+            }
+        },
+        "capacity": 180
+    },
+    "Anatomy G29 J Z Young LT": {
+        "sitename": "Medical Sciences and Anatomy",
+        "roomname": "Anatomy G29 J Z Young LT",
+        "classification": "LT",
+        "siteid": "016",
+        "roomid": "G29",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133306",
+                "latitude": "51.523755"
+            }
+        },
+        "capacity": 186
+    },
+    "Wilkins Building (Main Building) Whistler Room": {
+        "sitename": "Main Building",
+        "roomname": "Wilkins Building (Main Building) Whistler Room",
+        "classification": "CF",
+        "siteid": "005",
+        "roomid": "G09D",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13366",
+                "latitude": "51.524699"
+            }
+        },
+        "capacity": 10
+    },
+    "Rockefeller Building B15": {
+        "sitename": "Rockefeller Building",
+        "roomname": "Rockefeller Building B15",
+        "classification": "CR",
+        "siteid": "201",
+        "roomid": "B15",
+        "automated": "P",
+        "location": {
+            "address": [
+                "21 University Street",
+                "London",
+                "WC1E 6JJ",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1347",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 12
+    },
+    "South Quad Pop Up Learning Hub G01 LT": {
+        "sitename": "South Quad Pop Up Learning Hub",
+        "roomname": "South Quad Pop Up Learning Hub G01 LT",
+        "classification": "CR",
+        "siteid": "X402",
+        "roomid": "115",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower St",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133098",
+                "latitude": "51.523892"
+            }
+        },
+        "capacity": 100
+    },
+    "Rockefeller Building G02": {
+        "sitename": "Rockefeller Building",
+        "roomname": "Rockefeller Building G02",
+        "classification": "CR",
+        "siteid": "201",
+        "roomid": "G02",
+        "automated": "P",
+        "location": {
+            "address": [
+                "21 University Street",
+                "London",
+                "WC1E 6JJ",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1347",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 20
+    },
+    "Torrington (1-19) 113 - Public Cluster": {
+        "sitename": "Torrington Place, 1-19",
+        "roomname": "Torrington (1-19) 113 - Public Cluster",
+        "classification": "PC1",
+        "siteid": "086",
+        "roomid": "113",
+        "automated": "N",
+        "location": {
+            "address": [
+                "1-19 Torrington Place",
+                "London",
+                "WC1E 7HB",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.521735"
+            }
+        },
+        "capacity": 65
+    },
+    "Medawar Building G01 Lankester LT": {
+        "sitename": "Medawar Building",
+        "roomname": "Medawar Building G01 Lankester LT",
+        "classification": "LT",
+        "siteid": "037",
+        "roomid": "G01",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1323",
+                "latitude": "51.5235"
+            }
+        },
+        "capacity": 96
+    },
+    "Birkbeck Malet Street 404/405": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street 404/405",
+        "classification": "PC1",
+        "siteid": "180",
+        "roomid": "404",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 70
+    },
+    "Gordon Square (16-18) B02": {
+        "sitename": "Gordon Square, 16-18",
+        "roomname": "Gordon Square (16-18) B02",
+        "classification": "CR",
+        "siteid": "035",
+        "roomid": "B02",
+        "automated": "P",
+        "location": {
+            "address": [
+                "16-18 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131769",
+                "latitude": "51.524183"
+            }
+        },
+        "capacity": 10
+    },
+    "Anatomy B15": {
+        "sitename": "Medical Sciences and Anatomy",
+        "roomname": "Anatomy B15",
+        "classification": "CR",
+        "siteid": "016",
+        "roomid": "B15B",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133306",
+                "latitude": "51.523755"
+            }
+        },
+        "capacity": 45
+    },
+    "IOE - Bedford Way (20) - 417 - Committee Room 1": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 417 - Committee Room 1",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "417",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 60
+    },
+    "Gordon Square (25) B30": {
+        "sitename": "Gordon Square, 25",
+        "roomname": "Gordon Square (25) B30",
+        "classification": "CR",
+        "siteid": "025",
+        "roomid": "B30",
+        "automated": "P",
+        "location": {
+            "address": [
+                "25 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13223",
+                "latitude": "51.524597"
+            }
+        },
+        "capacity": 18
+    },
+    "Torrington (1-19) 115 Galton LT": {
+        "sitename": "Torrington Place, 1-19",
+        "roomname": "Torrington (1-19) 115 Galton LT",
+        "classification": "LT",
+        "siteid": "086",
+        "roomid": "115",
+        "automated": "P",
+        "location": {
+            "address": [
+                "1-19 Torrington Place",
+                "London",
+                "WC1E 7HB",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.521735"
+            }
+        },
+        "capacity": 77
+    },
+    "Malet Place Engineering Building 1.03": {
+        "sitename": "Malet Place Engineering Building",
+        "roomname": "Malet Place Engineering Building 1.03",
+        "classification": "LT",
+        "siteid": "350",
+        "roomid": "103",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1323",
+                "latitude": "51.5231"
+            }
+        },
+        "capacity": 84
+    },
+    "Cruciform Building B.4.01": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building B.4.01",
+        "classification": "CR",
+        "siteid": "212",
+        "roomid": "B401",
+        "automated": "A",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 8
+    },
+    "Tottenham Court Road (188) Room 04": {
+        "sitename": "Tottenham Court Road, 188",
+        "roomname": "Tottenham Court Road (188) Room 04",
+        "classification": "CR",
+        "siteid": "363",
+        "roomid": "SB4",
+        "automated": "N",
+        "location": {
+            "address": [
+                "188 Tottenham Court Road",
+                "London",
+                "W1T 7PH",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1354",
+                "latitude": "51.5219"
+            }
+        },
+        "capacity": 44
+    },
+    "Gordon Square (26) G10": {
+        "sitename": "Gordon Square, 26",
+        "roomname": "Gordon Square (26) G10",
+        "classification": "CR",
+        "siteid": "024",
+        "roomid": "G10",
+        "automated": "P",
+        "location": {
+            "address": [
+                "26 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.132287",
+                "latitude": "51.524652"
+            }
+        },
+        "capacity": 12
+    },
+    "Cruciform Building B304 - LT1": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building B304 - LT1",
+        "classification": "LT",
+        "siteid": "212",
+        "roomid": "B304",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 346
+    },
+    "Engineering Front Suite 104": {
+        "sitename": "Engineering Front Building",
+        "roomname": "Engineering Front Suite 104",
+        "classification": "CR",
+        "siteid": "365",
+        "roomid": "104",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Torrington Place",
+                "London",
+                "WC1E 7JE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1323",
+                "latitude": "51.5226"
+            }
+        },
+        "capacity": 25
+    },
+    "Taviton (14) 132": {
+        "sitename": "Taviton Street 14-16",
+        "roomname": "Taviton (14) 132",
+        "classification": "CR",
+        "siteid": "126",
+        "roomid": "132",
+        "automated": "P",
+        "location": {
+            "address": [
+                "15 Taviton Street",
+                "London",
+                "WC1H 0BW",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131761",
+                "latitude": "51.525342"
+            }
+        },
+        "capacity": 16
+    },
+    "Darwin Building B15": {
+        "sitename": "Darwin Building",
+        "roomname": "Darwin Building B15",
+        "classification": "CR",
+        "siteid": "044",
+        "roomid": "B15",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1328",
+                "latitude": "51.5232"
+            }
+        },
+        "capacity": 40
+    },
+    "Birkbeck Malet Street 355": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street 355",
+        "classification": "CR",
+        "siteid": "180",
+        "roomid": "355",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 25
+    },
+    "Roberts Building 103": {
+        "sitename": "Roberts Building",
+        "roomname": "Roberts Building 103",
+        "classification": "CR",
+        "siteid": "045",
+        "roomid": "103",
+        "automated": "A",
+        "location": {
+            "address": [
+                "Torrington Place",
+                "London",
+                "WC1E 7JE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1321",
+                "latitude": "51.5229"
+            }
+        },
+        "capacity": 6
+    },
+    "Wilkins Building (Main Building) Main Quad - South Side": {
+        "sitename": "Main Building",
+        "roomname": "Wilkins Building (Main Building) Main Quad - South Side",
+        "classification": "SS",
+        "siteid": "005",
+        "roomid": "Z3",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13366",
+                "latitude": "51.524699"
+            }
+        },
+        "capacity": 400
+    },
+    "South Quad Pop Up Learning Hub 102": {
+        "sitename": "South Quad Pop Up Learning Hub",
+        "roomname": "South Quad Pop Up Learning Hub 102",
+        "classification": "CR",
+        "siteid": "X402",
+        "roomid": "117",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower St",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133098",
+                "latitude": "51.523892"
+            }
+        },
+        "capacity": 25
+    },
+    "Roberts Building 309": {
+        "sitename": "Roberts Building",
+        "roomname": "Roberts Building 309",
+        "classification": "LT",
+        "siteid": "045",
+        "roomid": "309",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Torrington Place",
+                "London",
+                "WC1E 7JE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1321",
+                "latitude": "51.5229"
+            }
+        },
+        "capacity": 63
+    },
+    "IOE - Bedford Way (20) - 418 - Committee Room 2": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 418 - Committee Room 2",
+        "classification": "CFE",
+        "siteid": "162",
+        "roomid": "418",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 25
+    },
+    "Taviton (14) 128": {
+        "sitename": "Taviton Street 14-16",
+        "roomname": "Taviton (14) 128",
+        "classification": "CR",
+        "siteid": "126",
+        "roomid": "128",
+        "automated": "P",
+        "location": {
+            "address": [
+                "15 Taviton Street",
+                "London",
+                "WC1H 0BW",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131761",
+                "latitude": "51.525342"
+            }
+        },
+        "capacity": 16
+    },
+    "Gordon Square (26) G09": {
+        "sitename": "Gordon Square, 26",
+        "roomname": "Gordon Square (26) G09",
+        "classification": "CR",
+        "siteid": "024",
+        "roomid": "G09",
+        "automated": "P",
+        "location": {
+            "address": [
+                "26 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.132287",
+                "latitude": "51.524652"
+            }
+        },
+        "capacity": 16
+    },
+    "Gordon House 106": {
+        "sitename": "Gordon House",
+        "roomname": "Gordon House 106",
+        "classification": "CR",
+        "siteid": "088",
+        "roomid": "106",
+        "automated": "P",
+        "location": {
+            "address": [
+                "29 Gordon Sq",
+                "London",
+                "WC1H 0PP",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.132013",
+                "latitude": "51.525004"
+            }
+        },
+        "capacity": 50
+    },
+    "Rockefeller Building B14A": {
+        "sitename": "Rockefeller Building",
+        "roomname": "Rockefeller Building B14A",
+        "classification": "CR",
+        "siteid": "201",
+        "roomid": "B14A",
+        "automated": "P",
+        "location": {
+            "address": [
+                "21 University Street",
+                "London",
+                "WC1E 6JJ",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1347",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 12
+    },
+    "IOE - Bedford Way (20) - 604": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 604",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "604",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 60
+    },
+    "Chandler House B02": {
+        "sitename": "Chandler House",
+        "roomname": "Chandler House B02",
+        "classification": "CR",
+        "siteid": "235",
+        "roomid": "B02",
+        "automated": "P",
+        "location": {
+            "address": [
+                "2 Wakefield Street",
+                "London",
+                "WC1N 1PG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1228",
+                "latitude": "51.5259"
+            }
+        },
+        "capacity": 60
+    },
+    "IOE - Bedford Way (20) - 539": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 539",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "539",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 20
+    },
+    "Taviton (16) 347": {
+        "sitename": "Taviton Street 14-16",
+        "roomname": "Taviton (16) 347",
+        "classification": "CR",
+        "siteid": "126",
+        "roomid": "347",
+        "automated": "P",
+        "location": {
+            "address": [
+                "15 Taviton Street",
+                "London",
+                "WC1H 0BW",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131761",
+                "latitude": "51.525342"
+            }
+        },
+        "capacity": 78
+    },
+    "IOE - Bedford Way (20) - 915": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 915",
+        "classification": "PC1",
+        "siteid": "162",
+        "roomid": "915",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 20
+    },
+    "Cruciform Building B.3.06": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building B.3.06",
+        "classification": "CR",
+        "siteid": "212",
+        "roomid": "B306",
+        "automated": "A",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 6
+    },
+    "Foster Court 235": {
+        "sitename": "Foster Court",
+        "roomname": "Foster Court 235",
+        "classification": "CR",
+        "siteid": "040",
+        "roomid": "235",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1326",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 20
+    },
+    "IOE - Bedford Way (20) - 101 - Logan Hall": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 101 - Logan Hall",
+        "classification": "LT",
+        "siteid": "162",
+        "roomid": "101",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 933
+    },
+    "Roberts Building G08 Sir David Davies LT": {
+        "sitename": "Roberts Building",
+        "roomname": "Roberts Building G08 Sir David Davies LT",
+        "classification": "LT",
+        "siteid": "045",
+        "roomid": "G08",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Torrington Place",
+                "London",
+                "WC1E 7JE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1321",
+                "latitude": "51.5229"
+            }
+        },
+        "capacity": 99
+    },
+    "IOE - Bedford Way (20) - 425 - PC Lab 2": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 425 - PC Lab 2",
+        "classification": "PC1",
+        "siteid": "162",
+        "roomid": "PC2",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 25
+    },
+    "Birkbeck Malet Street 253": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street 253",
+        "classification": "CR",
+        "siteid": "180",
+        "roomid": "253",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 25
+    },
+    "Foster Court 114": {
+        "sitename": "Foster Court",
+        "roomname": "Foster Court 114",
+        "classification": "CR",
+        "siteid": "040",
+        "roomid": "114",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1326",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 40
+    },
+    "Tottenham Court Road (188) Room 02": {
+        "sitename": "Tottenham Court Road, 188",
+        "roomname": "Tottenham Court Road (188) Room 02",
+        "classification": "CR",
+        "siteid": "363",
+        "roomid": "SB2",
+        "automated": "N",
+        "location": {
+            "address": [
+                "188 Tottenham Court Road",
+                "London",
+                "W1T 7PH",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1354",
+                "latitude": "51.5219"
+            }
+        },
+        "capacity": 28
+    },
+    "IOE - Bedford Way (20) - 770": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 770",
+        "classification": "MR",
+        "siteid": "162",
+        "roomid": "770",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 12
+    },
+    "Rockefeller Building B16": {
+        "sitename": "Rockefeller Building",
+        "roomname": "Rockefeller Building B16",
+        "classification": "CR",
+        "siteid": "201",
+        "roomid": "B16",
+        "automated": "A",
+        "location": {
+            "address": [
+                "21 University Street",
+                "London",
+                "WC1E 6JJ",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1347",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 10
+    },
+    "Pearson Building (North East Entrance) G23": {
+        "sitename": "Pearson Building",
+        "roomname": "Pearson Building (North East Entrance) G23",
+        "classification": "CR",
+        "siteid": "003",
+        "roomid": "G23",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.134835",
+                "latitude": "51.524742"
+            }
+        },
+        "capacity": 18
+    },
+    "Wilkins Building (Main Building) JBR": {
+        "sitename": "Main Building",
+        "roomname": "Wilkins Building (Main Building) JBR",
+        "classification": "SS",
+        "siteid": "005",
+        "roomid": "G09",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13366",
+                "latitude": "51.524699"
+            }
+        },
+        "capacity": 160
+    },
+    "Bedford Way (26) LG04": {
+        "sitename": "Bedford Way, 26",
+        "roomname": "Bedford Way (26) LG04",
+        "classification": "LT",
+        "siteid": "085",
+        "roomid": "LG04",
+        "automated": "P",
+        "location": {
+            "address": [
+                "26 Bedford Way",
+                "London",
+                "WC1H 0DS",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.128371",
+                "latitude": "51.523411"
+            }
+        },
+        "capacity": 130
+    },
+    "Birkbeck Malet Street 252": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street 252",
+        "classification": "CR",
+        "siteid": "180",
+        "roomid": "252",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 25
+    },
+    "Drayton House B04": {
+        "sitename": "Drayton House",
+        "roomname": "Drayton House B04",
+        "classification": "LT",
+        "siteid": "107",
+        "roomid": "B04",
+        "automated": "P",
+        "location": {
+            "address": [
+                "30 Gordon St",
+                "London",
+                "WC1H 0BE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133196",
+                "latitude": "51.526109"
+            }
+        },
+        "capacity": 20
+    },
+    "Roberts Building 110": {
+        "sitename": "Roberts Building",
+        "roomname": "Roberts Building 110",
+        "classification": "CR",
+        "siteid": "045",
+        "roomid": "110",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Torrington Place",
+                "London",
+                "WC1E 7JE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1321",
+                "latitude": "51.5229"
+            }
+        },
+        "capacity": 40
+    },
+    "Tottenham Court Road (188) Room 05": {
+        "sitename": "Tottenham Court Road, 188",
+        "roomname": "Tottenham Court Road (188) Room 05",
+        "classification": "CR",
+        "siteid": "363",
+        "roomid": "SB5",
+        "automated": "N",
+        "location": {
+            "address": [
+                "188 Tottenham Court Road",
+                "London",
+                "W1T 7PH",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1354",
+                "latitude": "51.5219"
+            }
+        },
+        "capacity": 64
+    },
+    "Cruciform Building B1.05": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building B1.05",
+        "classification": "CR",
+        "siteid": "212",
+        "roomid": "B1.05",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 18
+    },
+    "Birkbeck Gordon Square (43) B07": {
+        "sitename": "Birkbeck Gordon Square, 43",
+        "roomname": "Birkbeck Gordon Square (43) B07",
+        "classification": "CR",
+        "siteid": "181",
+        "roomid": "B07",
+        "automated": "N",
+        "location": {
+            "address": [
+                "39-41 Gordon Square",
+                "London",
+                "WC1H 0PD",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 24
+    },
+    "Cruciform Building B1.06": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building B1.06",
+        "classification": "CR",
+        "siteid": "212",
+        "roomid": "B1.06",
+        "automated": "A",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 10
+    },
+    "Birkbeck Malet Street 254": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street 254",
+        "classification": "CR",
+        "siteid": "180",
+        "roomid": "254",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 25
+    },
+    "Foster Court 215": {
+        "sitename": "Foster Court",
+        "roomname": "Foster Court 215",
+        "classification": "CR",
+        "siteid": "040",
+        "roomid": "215",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1326",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 15
+    },
+    "Bedford Way (26) 316 - Public Cluster": {
+        "sitename": "Bedford Way, 26",
+        "roomname": "Bedford Way (26) 316 - Public Cluster",
+        "classification": "PC1",
+        "siteid": "085",
+        "roomid": "316",
+        "automated": "N",
+        "location": {
+            "address": [
+                "26 Bedford Way",
+                "London",
+                "WC1H 0DS",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.128371",
+                "latitude": "51.523411"
+            }
+        },
+        "capacity": 23
+    },
+    "Drayton House B20 Jevons LT": {
+        "sitename": "Drayton House",
+        "roomname": "Drayton House B20 Jevons LT",
+        "classification": "LT",
+        "siteid": "107",
+        "roomid": "B20",
+        "automated": "P",
+        "location": {
+            "address": [
+                "30 Gordon St",
+                "London",
+                "WC1H 0BE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133196",
+                "latitude": "51.526109"
+            }
+        },
+        "capacity": 90
+    },
+    "Birkbeck Gordon Square (43) B06": {
+        "sitename": "Birkbeck Gordon Square, 43",
+        "roomname": "Birkbeck Gordon Square (43) B06",
+        "classification": "CR",
+        "siteid": "181",
+        "roomid": "B06",
+        "automated": "N",
+        "location": {
+            "address": [
+                "39-41 Gordon Square",
+                "London",
+                "WC1H 0PD",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 24
+    },
+    "Chandler House 118": {
+        "sitename": "Chandler House",
+        "roomname": "Chandler House 118",
+        "classification": "LT",
+        "siteid": "235",
+        "roomid": "118",
+        "automated": "P",
+        "location": {
+            "address": [
+                "2 Wakefield Street",
+                "London",
+                "WC1N 1PG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1228",
+                "latitude": "51.5259"
+            }
+        },
+        "capacity": 97
+    },
+    "Christopher Ingold Building XLG1 Chemistry LT": {
+        "sitename": "Christopher Ingold Building",
+        "roomname": "Christopher Ingold Building XLG1 Chemistry LT",
+        "classification": "LT",
+        "siteid": "067",
+        "roomid": "XLG1",
+        "automated": "P",
+        "location": {
+            "address": [
+                "20 Gordon Street",
+                "London",
+                "WC1H 0AJ",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.132244",
+                "latitude": "51.525417"
+            }
+        },
+        "capacity": 187
+    },
+    "Birkbeck Malet Street 255": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street 255",
+        "classification": "CR",
+        "siteid": "180",
+        "roomid": "255",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 25
+    },
+    "Foster Court 233": {
+        "sitename": "Foster Court",
+        "roomname": "Foster Court 233",
+        "classification": "CR",
+        "siteid": "040",
+        "roomid": "233",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1326",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 22
+    },
+    "Chandler House B01": {
+        "sitename": "Chandler House",
+        "roomname": "Chandler House B01",
+        "classification": "CR",
+        "siteid": "235",
+        "roomid": "B01",
+        "automated": "P",
+        "location": {
+            "address": [
+                "2 Wakefield Street",
+                "London",
+                "WC1N 1PG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1228",
+                "latitude": "51.5259"
+            }
+        },
+        "capacity": 63
+    },
+    "Wilkins Building (Main Building) Portico": {
+        "sitename": "Main Building",
+        "roomname": "Wilkins Building (Main Building) Portico",
+        "classification": "SS",
+        "siteid": "005",
+        "roomid": "Z4",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13366",
+                "latitude": "51.524699"
+            }
+        },
+        "capacity": 50
+    },
+    "Darwin Building B05": {
+        "sitename": "Darwin Building",
+        "roomname": "Darwin Building B05",
+        "classification": "CR",
+        "siteid": "044",
+        "roomid": "B05A",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1328",
+                "latitude": "51.5232"
+            }
+        },
+        "capacity": 40
+    },
+    "Foster Court 219": {
+        "sitename": "Foster Court",
+        "roomname": "Foster Court 219",
+        "classification": "CR",
+        "siteid": "040",
+        "roomid": "219",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1326",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 15
+    },
+    "IOE - Bedford Way (20) - 429 - PC Lab 1": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 429 - PC Lab 1",
+        "classification": "PC1",
+        "siteid": "162",
+        "roomid": "429",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 25
+    },
+    "Roberts Building 105b": {
+        "sitename": "Roberts Building",
+        "roomname": "Roberts Building 105b",
+        "classification": "CR",
+        "siteid": "045",
+        "roomid": "105B",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Torrington Place",
+                "London",
+                "WC1E 7JE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1321",
+                "latitude": "51.5229"
+            }
+        },
+        "capacity": 16
+    },
+    "School of Pharmacy M2": {
+        "sitename": "School of Pharmacy",
+        "roomname": "School of Pharmacy M2",
+        "classification": "CR",
+        "siteid": "131",
+        "roomid": "M2",
+        "automated": "P",
+        "location": {
+            "address": [
+                "29-39 Brunswick Square",
+                "London",
+                "WC1N 1AX",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.122954",
+                "latitude": "51.524771"
+            }
+        },
+        "capacity": 50
+    },
+    "School of Pharmacy 225": {
+        "sitename": "School of Pharmacy",
+        "roomname": "School of Pharmacy 225",
+        "classification": "LT",
+        "siteid": "131",
+        "roomid": "225",
+        "automated": "P",
+        "location": {
+            "address": [
+                "29-39 Brunswick Square",
+                "London",
+                "WC1N 1AX",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.122954",
+                "latitude": "51.524771"
+            }
+        },
+        "capacity": 66
+    },
+    "Birkbeck Gordon Square (43) 122": {
+        "sitename": "Birkbeck Gordon Square, 43",
+        "roomname": "Birkbeck Gordon Square (43) 122",
+        "classification": "CR",
+        "siteid": "181",
+        "roomid": "122",
+        "automated": "N",
+        "location": {
+            "address": [
+                "39-41 Gordon Square",
+                "London",
+                "WC1H 0PD",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 27
+    },
+    "Foster Court 113": {
+        "sitename": "Foster Court",
+        "roomname": "Foster Court 113",
+        "classification": "CR",
+        "siteid": "040",
+        "roomid": "113",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1326",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 18
+    },
+    "Birkbeck Malet Street B30": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street B30",
+        "classification": "CR",
+        "siteid": "180",
+        "roomid": "B30",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 40
+    },
+    "Chadwick Building 2.23 - Public Cluster": {
+        "sitename": "Chadwick Building",
+        "roomname": "Chadwick Building 2.23 - Public Cluster",
+        "classification": "PC1",
+        "siteid": "013",
+        "roomid": "223",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.134127",
+                "latitude": "51.524128"
+            }
+        },
+        "capacity": 20
+    },
+    "IOE - Bedford Way (20) - 834": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 834",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "834",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 25
+    },
+    "Pearson Building (North East Entrance) G17": {
+        "sitename": "Pearson Building",
+        "roomname": "Pearson Building (North East Entrance) G17",
+        "classification": "CR",
+        "siteid": "003",
+        "roomid": "G17",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.134835",
+                "latitude": "51.524742"
+            }
+        },
+        "capacity": 20
+    },
+    "Wilkins Building (Main Building) North Observatory": {
+        "sitename": "Main Building",
+        "roomname": "Wilkins Building (Main Building) North Observatory",
+        "classification": "ER",
+        "siteid": "005",
+        "roomid": "XG1",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13366",
+                "latitude": "51.524699"
+            }
+        },
+        "capacity": 6
+    },
+    "Medical Sciences 131 A V Hill LT": {
+        "sitename": "Medical Sciences and Anatomy",
+        "roomname": "Medical Sciences 131 A V Hill LT",
+        "classification": "LT",
+        "siteid": "016",
+        "roomid": "131",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133306",
+                "latitude": "51.523755"
+            }
+        },
+        "capacity": 176
+    },
+    "Birkbeck Gordon Square (43) G03": {
+        "sitename": "Birkbeck Gordon Square, 43",
+        "roomname": "Birkbeck Gordon Square (43) G03",
+        "classification": "CR",
+        "siteid": "181",
+        "roomid": "G03",
+        "automated": "N",
+        "location": {
+            "address": [
+                "39-41 Gordon Square",
+                "London",
+                "WC1H 0PD",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 28
+    },
+    "North Lodge 001": {
+        "sitename": "Front Lodges",
+        "roomname": "North Lodge 001",
+        "classification": "ER",
+        "siteid": "014",
+        "roomid": "001",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.134465",
+                "latitude": "51.524335"
+            }
+        },
+        "capacity": 10
+    },
+    "Rockefeller Building 337 David Sacks": {
+        "sitename": "Medical School Building",
+        "roomname": "Rockefeller Building 337 David Sacks",
+        "classification": "CR",
+        "siteid": "374",
+        "roomid": "337",
+        "automated": "P",
+        "location": {
+            "address": [
+                "74 Huntley Street",
+                "London",
+                "WC1E 6AU",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.134937",
+                "latitude": "51.523504"
+            }
+        },
+        "capacity": 38
+    },
+    "IOE - Bedford Way (20) - 784": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 784",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "784",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 40
+    },
+    "Taviton (16) 431": {
+        "sitename": "Taviton Street 14-16",
+        "roomname": "Taviton (16) 431",
+        "classification": "CR",
+        "siteid": "126",
+        "roomid": "431",
+        "automated": "P",
+        "location": {
+            "address": [
+                "15 Taviton Street",
+                "London",
+                "WC1H 0BW",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131761",
+                "latitude": "51.525342"
+            }
+        },
+        "capacity": 32
+    },
+    "Roberts Building 508": {
+        "sitename": "Roberts Building",
+        "roomname": "Roberts Building 508",
+        "classification": "LT",
+        "siteid": "045",
+        "roomid": "508",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Torrington Place",
+                "London",
+                "WC1E 7JE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1321",
+                "latitude": "51.5229"
+            }
+        },
+        "capacity": 91
+    },
+    "Birkbeck Gordon Square (43) 324": {
+        "sitename": "Birkbeck Gordon Square, 43",
+        "roomname": "Birkbeck Gordon Square (43) 324",
+        "classification": "CR",
+        "siteid": "181",
+        "roomid": "322",
+        "automated": "N",
+        "location": {
+            "address": [
+                "39-41 Gordon Square",
+                "London",
+                "WC1H 0PD",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 24
+    },
+    "Rockefeller Building 339": {
+        "sitename": "Medical School Building",
+        "roomname": "Rockefeller Building 339",
+        "classification": "CR",
+        "siteid": "374",
+        "roomid": "339",
+        "automated": "P",
+        "location": {
+            "address": [
+                "74 Huntley Street",
+                "London",
+                "WC1E 6AU",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.134937",
+                "latitude": "51.523504"
+            }
+        },
+        "capacity": 24
+    },
+    "Cruciform Building B1.03": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building B1.03",
+        "classification": "CR",
+        "siteid": "212",
+        "roomid": "B1.03",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 18
+    },
+    "Taviton (14) 129": {
+        "sitename": "Taviton Street 14-16",
+        "roomname": "Taviton (14) 129",
+        "classification": "CR",
+        "siteid": "126",
+        "roomid": "129",
+        "automated": "P",
+        "location": {
+            "address": [
+                "15 Taviton Street",
+                "London",
+                "WC1H 0BW",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131761",
+                "latitude": "51.525342"
+            }
+        },
+        "capacity": 16
+    },
+    "Gordon Square (22) B15": {
+        "sitename": "Gordon Square, 22",
+        "roomname": "Gordon Square (22) B15",
+        "classification": "CR",
+        "siteid": "029",
+        "roomid": "B15",
+        "automated": "P",
+        "location": {
+            "address": [
+                "22 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.132056",
+                "latitude": "51.524445"
+            }
+        },
+        "capacity": 12
+    },
+    "Rockefeller Building 336": {
+        "sitename": "Medical School Building",
+        "roomname": "Rockefeller Building 336",
+        "classification": "CR",
+        "siteid": "374",
+        "roomid": "336",
+        "automated": "P",
+        "location": {
+            "address": [
+                "74 Huntley Street",
+                "London",
+                "WC1E 6AU",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.134937",
+                "latitude": "51.523504"
+            }
+        },
+        "capacity": 12
+    },
+    "Gordon Square (16-18) B10": {
+        "sitename": "Gordon Square, 16-18",
+        "roomname": "Gordon Square (16-18) B10",
+        "classification": "CR",
+        "siteid": "035",
+        "roomid": "B10",
+        "automated": "P",
+        "location": {
+            "address": [
+                "16-18 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131769",
+                "latitude": "51.524183"
+            }
+        },
+        "capacity": 16
+    },
+    "Bedford Way (26) G03": {
+        "sitename": "Bedford Way, 26",
+        "roomname": "Bedford Way (26) G03",
+        "classification": "LT",
+        "siteid": "085",
+        "roomid": "G03",
+        "automated": "P",
+        "location": {
+            "address": [
+                "26 Bedford Way",
+                "London",
+                "WC1H 0DS",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.128371",
+                "latitude": "51.523411"
+            }
+        },
+        "capacity": 124
+    },
+    "Gordon Square (23) 203 - Public Cluster": {
+        "sitename": "Gordon Square, 23",
+        "roomname": "Gordon Square (23) 203 - Public Cluster",
+        "classification": "PC1",
+        "siteid": "028",
+        "roomid": "203",
+        "automated": "N",
+        "location": {
+            "address": [
+                "23 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.132115",
+                "latitude": "51.524497"
+            }
+        },
+        "capacity": 11
+    },
+    "Archaeology 501 - Public Cluster": {
+        "sitename": "Institute of Archaeology",
+        "roomname": "Archaeology 501 - Public Cluster",
+        "classification": "PC1",
+        "siteid": "090",
+        "roomid": "501",
+        "automated": "N",
+        "location": {
+            "address": [
+                "31-34 Gordon Square",
+                "London,",
+                "WC1H 0PY",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131632",
+                "latitude": "51.524973"
+            }
+        },
+        "capacity": 11
+    },
+    "Pearson Building (North East Entrance) G26": {
+        "sitename": "Pearson Building",
+        "roomname": "Pearson Building (North East Entrance) G26",
+        "classification": "CR",
+        "siteid": "003",
+        "roomid": "G26",
+        "automated": "A",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.134835",
+                "latitude": "51.524742"
+            }
+        },
+        "capacity": 10
+    },
+    "IOE - Bedford Way (20) - 935": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 935",
+        "classification": "MR",
+        "siteid": "162",
+        "roomid": "935",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 12
+    },
+    "Rockefeller Building G15": {
+        "sitename": "Rockefeller Building",
+        "roomname": "Rockefeller Building G15",
+        "classification": "CR",
+        "siteid": "201",
+        "roomid": "G15",
+        "automated": "P",
+        "location": {
+            "address": [
+                "21 University Street",
+                "London",
+                "WC1E 6JJ",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1347",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 12
+    },
+    "Birkbeck Malet Street 423": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street 423",
+        "classification": "PC1",
+        "siteid": "180",
+        "roomid": "423",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 39
+    },
+    "Birkbeck Gordon Square (43) 321": {
+        "sitename": "Birkbeck Gordon Square, 43",
+        "roomname": "Birkbeck Gordon Square (43) 321",
+        "classification": "CR",
+        "siteid": "181",
+        "roomid": "321",
+        "automated": "N",
+        "location": {
+            "address": [
+                "39-41 Gordon Square",
+                "London",
+                "WC1H 0PD",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 18
+    },
+    "IOE - Bedford Way (20) - 780": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 780",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "780",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 40
+    },
+    "South Wing G12 Council Room": {
+        "sitename": "South Wing",
+        "roomname": "South Wing G12 Council Room",
+        "classification": "MR",
+        "siteid": "012",
+        "roomid": "G12",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13352",
+                "latitude": "51.524135"
+            }
+        },
+        "capacity": 24
+    },
+    "Cruciform Building B404 - LT2": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building B404 - LT2",
+        "classification": "LT",
+        "siteid": "212",
+        "roomid": "B404",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 112
+    },
+    "Gordon Square (25) B26": {
+        "sitename": "Gordon Square, 25",
+        "roomname": "Gordon Square (25) B26",
+        "classification": "CR",
+        "siteid": "025",
+        "roomid": "B26",
+        "automated": "A",
+        "location": {
+            "address": [
+                "25 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13223",
+                "latitude": "51.524597"
+            }
+        },
+        "capacity": 8
+    },
+    "Birkbeck Malet Street 251": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street 251",
+        "classification": "CR",
+        "siteid": "180",
+        "roomid": "251",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 25
+    },
+    "Cruciform Building B115A - Public Cluster": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building B115A - Public Cluster",
+        "classification": "PC1",
+        "siteid": "212",
+        "roomid": "B115A",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 50
+    },
+    "IOE - Bedford Way (20) - 419": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 419",
+        "classification": "MR",
+        "siteid": "162",
+        "roomid": "419",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 2
+    },
+    "Gordon Square (23) 101": {
+        "sitename": "Gordon Square, 23",
+        "roomname": "Gordon Square (23) 101",
+        "classification": "CR",
+        "siteid": "028",
+        "roomid": "101",
+        "automated": "P",
+        "location": {
+            "address": [
+                "23 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.132115",
+                "latitude": "51.524497"
+            }
+        },
+        "capacity": 18
+    },
+    "IOE - Bedford Way (20) - 435 - The Space Observation Suite": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 435 - The Space Observation Suite",
+        "classification": "CR",
+        "siteid": "162",
+        "roomid": "SPC",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 20
+    },
+    "IOE - Bedford Way (20) - 802": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 802",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "802",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 70
+    },
+    "Wilkins Garden Room": {
+        "sitename": "Bernard Katz Building",
+        "roomname": "Wilkins Garden Room",
+        "classification": "MR",
+        "siteid": "050",
+        "roomid": "34",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1334268",
+                "latitude": "51.5247725"
+            }
+        },
+        "capacity": 20
+    },
+    "Wilkins Building (Main Building) Lower South Hall": {
+        "sitename": "Main Building",
+        "roomname": "Wilkins Building (Main Building) Lower South Hall",
+        "classification": "SS",
+        "siteid": "005",
+        "roomid": "B82",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13366",
+                "latitude": "51.524699"
+            }
+        },
+        "capacity": 5
+    },
+    "School of Pharmacy 228": {
+        "sitename": "School of Pharmacy",
+        "roomname": "School of Pharmacy 228",
+        "classification": "CR",
+        "siteid": "131",
+        "roomid": "228",
+        "automated": "P",
+        "location": {
+            "address": [
+                "29-39 Brunswick Square",
+                "London",
+                "WC1N 1AX",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.122954",
+                "latitude": "51.524771"
+            }
+        },
+        "capacity": 60
+    },
+    "Taviton (16) 346": {
+        "sitename": "Taviton Street 14-16",
+        "roomname": "Taviton (16) 346",
+        "classification": "CR",
+        "siteid": "126",
+        "roomid": "346",
+        "automated": "P",
+        "location": {
+            "address": [
+                "15 Taviton Street",
+                "London",
+                "WC1H 0BW",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131761",
+                "latitude": "51.525342"
+            }
+        },
+        "capacity": 16
+    },
+    "Chadwick Building G07": {
+        "sitename": "Chadwick Building",
+        "roomname": "Chadwick Building G07",
+        "classification": "CR",
+        "siteid": "013",
+        "roomid": "G07",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.134127",
+                "latitude": "51.524128"
+            }
+        },
+        "capacity": 58
+    },
+    "IOE - Bedford Way (20) - 420 - Committee Room 3": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 420 - Committee Room 3",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "420",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 20
+    },
+    "Gordon Square (25) 107": {
+        "sitename": "Gordon Square, 25",
+        "roomname": "Gordon Square (25) 107",
+        "classification": "LT",
+        "siteid": "025",
+        "roomid": "107",
+        "automated": "P",
+        "location": {
+            "address": [
+                "25 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13223",
+                "latitude": "51.524597"
+            }
+        },
+        "capacity": 39
+    },
+    "IOE - Bedford Way (20) - 826": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 826",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "826",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 30
+    },
+    "Archaeology 117 - Public Cluster": {
+        "sitename": "Institute of Archaeology",
+        "roomname": "Archaeology 117 - Public Cluster",
+        "classification": "PC1",
+        "siteid": "090",
+        "roomid": "117",
+        "automated": "N",
+        "location": {
+            "address": [
+                "31-34 Gordon Square",
+                "London,",
+                "WC1H 0PY",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131632",
+                "latitude": "51.524973"
+            }
+        },
+        "capacity": 11
+    },
+    "Rockefeller Building G16": {
+        "sitename": "Rockefeller Building",
+        "roomname": "Rockefeller Building G16",
+        "classification": "CR",
+        "siteid": "201",
+        "roomid": "G16",
+        "automated": "A",
+        "location": {
+            "address": [
+                "21 University Street",
+                "London",
+                "WC1E 6JJ",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1347",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 8
+    },
+    "Birkbeck Malet Street 354": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street 354",
+        "classification": "CR",
+        "siteid": "180",
+        "roomid": "354",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 25
+    },
+    "Medical Sciences G46 H O Schild Pharmacology LT": {
+        "sitename": "Medical Sciences and Anatomy",
+        "roomname": "Medical Sciences G46 H O Schild Pharmacology LT",
+        "classification": "LT",
+        "siteid": "016",
+        "roomid": "G46",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133306",
+                "latitude": "51.523755"
+            }
+        },
+        "capacity": 73
+    },
+    "IOE - Bedford Way (20) - 639": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 639",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "639",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 30
+    },
+    "Roberts Building 422": {
+        "sitename": "Roberts Building",
+        "roomname": "Roberts Building 422",
+        "classification": "CR",
+        "siteid": "045",
+        "roomid": "422",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Torrington Place",
+                "London",
+                "WC1E 7JE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1321",
+                "latitude": "51.5229"
+            }
+        },
+        "capacity": 60
+    },
+    "Birkbeck Malet Street 109": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street 109",
+        "classification": "PC1",
+        "siteid": "180",
+        "roomid": "109",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 94
+    },
+    "Gordon Street (25) Maths 500": {
+        "sitename": "Gordon Street, 25",
+        "roomname": "Gordon Street (25) Maths 500",
+        "classification": "LT",
+        "siteid": "002",
+        "roomid": "500",
+        "automated": "P",
+        "location": {
+            "address": [
+                "25 Gordon Street",
+                "London",
+                "WC1H 0AY",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133317",
+                "latitude": "51.5257"
+            }
+        },
+        "capacity": 70
+    },
+    "IOE - Bedford Way (20) - 828": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 828",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "828",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 60
+    },
+    "IOE - Bedford Way (20) - 746": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 746",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "746",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 25
+    },
+    "Drayton House B03 Ricardo LT": {
+        "sitename": "Drayton House",
+        "roomname": "Drayton House B03 Ricardo LT",
+        "classification": "LT",
+        "siteid": "107",
+        "roomid": "B03",
+        "automated": "P",
+        "location": {
+            "address": [
+                "30 Gordon St",
+                "London",
+                "WC1H 0BE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133196",
+                "latitude": "51.526109"
+            }
+        },
+        "capacity": 64
+    },
+    "Cruciform Building B1.07": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building B1.07",
+        "classification": "CR",
+        "siteid": "212",
+        "roomid": "B1.07",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 18
+    },
+    "IOE - Bedford Way (20) - 102 - Drama Studio": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 102 - Drama Studio",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "102",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 120
+    },
+    "IOE - Bedford Way (20) - 731": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 731",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "731",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 60
+    },
+    "IOE - Bedford Way (20) - 936": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 936",
+        "classification": "MR",
+        "siteid": "162",
+        "roomid": "936",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 12
+    },
+    "Cruciform Building B1.04": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building B1.04",
+        "classification": "CR",
+        "siteid": "212",
+        "roomid": "B1.04",
+        "automated": "A",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 6
+    },
+    "Gordon Square (16-18) B09": {
+        "sitename": "Gordon Square, 16-18",
+        "roomname": "Gordon Square (16-18) B09",
+        "classification": "CR",
+        "siteid": "035",
+        "roomid": "B09",
+        "automated": "P",
+        "location": {
+            "address": [
+                "16-18 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131769",
+                "latitude": "51.524183"
+            }
+        },
+        "capacity": 16
+    },
+    "Gordon Square (23) 102": {
+        "sitename": "Gordon Square, 23",
+        "roomname": "Gordon Square (23) 102",
+        "classification": "CR",
+        "siteid": "028",
+        "roomid": "102",
+        "automated": "P",
+        "location": {
+            "address": [
+                "23 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.132115",
+                "latitude": "51.524497"
+            }
+        },
+        "capacity": 14
+    },
+    "Physics Building A1/3": {
+        "sitename": "Physics Building",
+        "roomname": "Physics Building A1/3",
+        "classification": "LT",
+        "siteid": "006",
+        "roomid": "A1",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133585",
+                "latitude": "51.525345"
+            }
+        },
+        "capacity": 53
+    },
+    "Roberts Building 102": {
+        "sitename": "Roberts Building",
+        "roomname": "Roberts Building 102",
+        "classification": "CR",
+        "siteid": "045",
+        "roomid": "102",
+        "automated": "A",
+        "location": {
+            "address": [
+                "Torrington Place",
+                "London",
+                "WC1E 7JE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1321",
+                "latitude": "51.5229"
+            }
+        },
+        "capacity": 5
+    },
+    "IOE - Bedford Way (20) - 305 - Clarke Hall": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 305 - Clarke Hall",
+        "classification": "CR",
+        "siteid": "162",
+        "roomid": "305",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 50
+    },
+    "IOE - Bedford Way (20) - 416 - Committee Room 4": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 416 - Committee Room 4",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "416",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 15
+    },
+    "Malet Place Engineering Building 1.02": {
+        "sitename": "Malet Place Engineering Building",
+        "roomname": "Malet Place Engineering Building 1.02",
+        "classification": "LT",
+        "siteid": "350",
+        "roomid": "102",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1323",
+                "latitude": "51.5231"
+            }
+        },
+        "capacity": 84
+    },
+    "IOE - Bedford Way (20) - 541": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 541",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "541",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 20
+    },
+    "Gordon Street (25) Maths 505": {
+        "sitename": "Gordon Street, 25",
+        "roomname": "Gordon Street (25) Maths 505",
+        "classification": "LT",
+        "siteid": "002",
+        "roomid": "505",
+        "automated": "P",
+        "location": {
+            "address": [
+                "25 Gordon Street",
+                "London",
+                "WC1H 0AY",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133317",
+                "latitude": "51.5257"
+            }
+        },
+        "capacity": 86
+    },
+    "Drayton House B19": {
+        "sitename": "Drayton House",
+        "roomname": "Drayton House B19",
+        "classification": "LT",
+        "siteid": "107",
+        "roomid": "B19",
+        "automated": "P",
+        "location": {
+            "address": [
+                "30 Gordon St",
+                "London",
+                "WC1H 0BE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133196",
+                "latitude": "51.526109"
+            }
+        },
+        "capacity": 20
+    },
+    "IOE - Bedford Way (20) - 736": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 736",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "736",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 30
+    },
+    "IOE - Bedford Way (20) - 103 - Jeffery Hall": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 103 - Jeffery Hall",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "103",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 300
+    },
+    "Birkbeck Malet Street 352": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street 352",
+        "classification": "CR",
+        "siteid": "180",
+        "roomid": "352",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 25
+    },
+    "IOE - Bedford Way (20) - 709a": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 709a",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "709a",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 25
+    },
+    "Birkbeck Malet Street B29": {
+        "sitename": "Birkbeck Malet Street",
+        "roomname": "Birkbeck Malet Street B29",
+        "classification": "CR",
+        "siteid": "180",
+        "roomid": "B29",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Malet Street",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 30
+    },
+    "Roberts Building Foyer G02": {
+        "sitename": "Roberts Building",
+        "roomname": "Roberts Building Foyer G02",
+        "classification": "SS",
+        "siteid": "045",
+        "roomid": "G02",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Torrington Place",
+                "London",
+                "WC1E 7JE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1321",
+                "latitude": "51.5229"
+            }
+        },
+        "capacity": 150
+    },
+    "IOE - Bedford Way (20) - 739": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 739",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "739",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 60
+    },
+    "South Wing G14 Committee Room": {
+        "sitename": "South Wing",
+        "roomname": "South Wing G14 Committee Room",
+        "classification": "MR",
+        "siteid": "012",
+        "roomid": "G14",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13352",
+                "latitude": "51.524135"
+            }
+        },
+        "capacity": 16
+    },
+    "Torrington (1-19) 433": {
+        "sitename": "Torrington Place, 1-19",
+        "roomname": "Torrington (1-19) 433",
+        "classification": "CR",
+        "siteid": "086",
+        "roomid": "433",
+        "automated": "P",
+        "location": {
+            "address": [
+                "1-19 Torrington Place",
+                "London",
+                "WC1E 7HB",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.521735"
+            }
+        },
+        "capacity": 55
+    },
+    "IOE - Bedford Way (20) - 642": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 642",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "642",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 100
+    },
+    "Birkbeck Gordon Square (43) 120": {
+        "sitename": "Birkbeck Gordon Square, 43",
+        "roomname": "Birkbeck Gordon Square (43) 120",
+        "classification": "CR",
+        "siteid": "181",
+        "roomid": "120",
+        "automated": "N",
+        "location": {
+            "address": [
+                "39-41 Gordon Square",
+                "London",
+                "WC1H 0PD",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 22
+    },
+    "IOE - Bedford Way (20) - 537": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 537",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "537",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 50
+    },
+    "Birkbeck Gordon Square (43) 327": {
+        "sitename": "Birkbeck Gordon Square, 43",
+        "roomname": "Birkbeck Gordon Square (43) 327",
+        "classification": "CR",
+        "siteid": "181",
+        "roomid": "324",
+        "automated": "N",
+        "location": {
+            "address": [
+                "39-41 Gordon Square",
+                "London",
+                "WC1H 0PD",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 20
+    },
+    "Tottenham Court Road (188) Room 03": {
+        "sitename": "Tottenham Court Road, 188",
+        "roomname": "Tottenham Court Road (188) Room 03",
+        "classification": "CR",
+        "siteid": "363",
+        "roomid": "SB3",
+        "automated": "N",
+        "location": {
+            "address": [
+                "188 Tottenham Court Road",
+                "London",
+                "W1T 7PH",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1354",
+                "latitude": "51.5219"
+            }
+        },
+        "capacity": 28
+    },
+    "IOE - Bedford Way (20) - 944": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 944",
+        "classification": "CR",
+        "siteid": "162",
+        "roomid": "944",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 25
+    },
+    "Taviton (16) 345": {
+        "sitename": "Taviton Street 14-16",
+        "roomname": "Taviton (16) 345",
+        "classification": "CR",
+        "siteid": "126",
+        "roomid": "345",
+        "automated": "P",
+        "location": {
+            "address": [
+                "15 Taviton Street",
+                "London",
+                "WC1H 0BW",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131761",
+                "latitude": "51.525342"
+            }
+        },
+        "capacity": 16
+    },
+    "Engineering Front Executive Suite 103": {
+        "sitename": "Engineering Front Building",
+        "roomname": "Engineering Front Executive Suite 103",
+        "classification": "LT",
+        "siteid": "365",
+        "roomid": "103",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Torrington Place",
+                "London",
+                "WC1E 7JE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1323",
+                "latitude": "51.5226"
+            }
+        },
+        "capacity": 34
+    },
+    "Roberts Building G06 Sir Ambrose Fleming LT": {
+        "sitename": "Roberts Building",
+        "roomname": "Roberts Building G06 Sir Ambrose Fleming LT",
+        "classification": "LT",
+        "siteid": "045",
+        "roomid": "G06",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Torrington Place",
+                "London",
+                "WC1E 7JE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1321",
+                "latitude": "51.5229"
+            }
+        },
+        "capacity": 181
+    },
+    "Tottenham Court Road (188) Room 01": {
+        "sitename": "Tottenham Court Road, 188",
+        "roomname": "Tottenham Court Road (188) Room 01",
+        "classification": "CR",
+        "siteid": "363",
+        "roomid": "SB1",
+        "automated": "N",
+        "location": {
+            "address": [
+                "188 Tottenham Court Road",
+                "London",
+                "W1T 7PH",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1354",
+                "latitude": "51.5219"
+            }
+        },
+        "capacity": 34
+    },
+    "Torrington (1-19) B17 Basement LT": {
+        "sitename": "Torrington Place, 1-19",
+        "roomname": "Torrington (1-19) B17 Basement LT",
+        "classification": "LT",
+        "siteid": "086",
+        "roomid": "B17",
+        "automated": "P",
+        "location": {
+            "address": [
+                "1-19 Torrington Place",
+                "London",
+                "WC1E 7HB",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.521735"
+            }
+        },
+        "capacity": 92
+    },
+    "Taviton (14) 130": {
+        "sitename": "Taviton Street 14-16",
+        "roomname": "Taviton (14) 130",
+        "classification": "CR",
+        "siteid": "126",
+        "roomid": "130",
+        "automated": "P",
+        "location": {
+            "address": [
+                "15 Taviton Street",
+                "London",
+                "WC1H 0BW",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131761",
+                "latitude": "51.525342"
+            }
+        },
+        "capacity": 16
+    },
+    "Cruciform Building Foyer 102 Seminar Room 2": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building Foyer 102 Seminar Room 2",
+        "classification": "CR",
+        "siteid": "212",
+        "roomid": "102",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 20
+    },
+    "Cruciform Building Foyer 101 Seminar Room 1": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building Foyer 101 Seminar Room 1",
+        "classification": "CR",
+        "siteid": "212",
+        "roomid": "101",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 20
+    },
+    "School of Pharmacy G02 Maplethorpe LT": {
+        "sitename": "School of Pharmacy",
+        "roomname": "School of Pharmacy G02 Maplethorpe LT",
+        "classification": "LT",
+        "siteid": "131",
+        "roomid": "G02",
+        "automated": "P",
+        "location": {
+            "address": [
+                "29-39 Brunswick Square",
+                "London",
+                "WC1N 1AX",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.122954",
+                "latitude": "51.524771"
+            }
+        },
+        "capacity": 80
+    },
+    "IOE - Bedford Way (20) - 104 - Elvin Hall": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 104 - Elvin Hall",
+        "classification": "CR",
+        "siteid": "162",
+        "roomid": "104",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 80
+    },
+    "Wilkins Building (Main Building) Roof Garden Student Social Hub": {
+        "sitename": "Main Building",
+        "roomname": "Wilkins Building (Main Building) Roof Garden Student Social Hub",
+        "classification": "SS",
+        "siteid": "005",
+        "roomid": "Z5",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower Street",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.13366",
+                "latitude": "51.524699"
+            }
+        },
+        "capacity": 100
+    },
+    "Foster Court 243": {
+        "sitename": "Foster Court",
+        "roomname": "Foster Court 243",
+        "classification": "CR",
+        "siteid": "040",
+        "roomid": "243",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1326",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 20
+    },
+    "Darwin Building B40 LT": {
+        "sitename": "Darwin Building",
+        "roomname": "Darwin Building B40 LT",
+        "classification": "LT",
+        "siteid": "044",
+        "roomid": "B40",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1328",
+                "latitude": "51.5232"
+            }
+        },
+        "capacity": 270
+    },
+    "Cruciform Building B.3.05": {
+        "sitename": "Cruciform Building",
+        "roomname": "Cruciform Building B.3.05",
+        "classification": "CR",
+        "siteid": "212",
+        "roomid": "B305",
+        "automated": "A",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1346",
+                "latitude": "51.5241"
+            }
+        },
+        "capacity": 6
+    },
+    "Foster Court 217": {
+        "sitename": "Foster Court",
+        "roomname": "Foster Court 217",
+        "classification": "CR",
+        "siteid": "040",
+        "roomid": "217",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Gower Street,",
+                "London",
+                "WC1E 6BT",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1326",
+                "latitude": "51.5237"
+            }
+        },
+        "capacity": 15
+    },
+    "South Quad Pop Up Learning Hub 103": {
+        "sitename": "South Quad Pop Up Learning Hub",
+        "roomname": "South Quad Pop Up Learning Hub 103",
+        "classification": "CR",
+        "siteid": "X402",
+        "roomid": "116",
+        "automated": "N",
+        "location": {
+            "address": [
+                "Gower St",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133098",
+                "latitude": "51.523892"
+            }
+        },
+        "capacity": 25
+    },
+    "Gordon Street (25) 105 - Public Cluster": {
+        "sitename": "Gordon Street, 25",
+        "roomname": "Gordon Street (25) 105 - Public Cluster",
+        "classification": "PC1",
+        "siteid": "002",
+        "roomid": "105",
+        "automated": "N",
+        "location": {
+            "address": [
+                "25 Gordon Street",
+                "London",
+                "WC1H 0AY",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.133317",
+                "latitude": "51.5257"
+            }
+        },
+        "capacity": 45
+    },
+    "School of Pharmacy B37": {
+        "sitename": "School of Pharmacy",
+        "roomname": "School of Pharmacy B37",
+        "classification": "CR",
+        "siteid": "131",
+        "roomid": "B37",
+        "automated": "P",
+        "location": {
+            "address": [
+                "29-39 Brunswick Square",
+                "London",
+                "WC1N 1AX",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.122954",
+                "latitude": "51.524771"
+            }
+        },
+        "capacity": 27
+    },
+    "Gordon Square (20) B03 Sem 1": {
+        "sitename": "Gordon Square, 20",
+        "roomname": "Gordon Square (20) B03 Sem 1",
+        "classification": "CR",
+        "siteid": "032",
+        "roomid": "B03",
+        "automated": "P",
+        "location": {
+            "address": [
+                "20 Gordon Square",
+                "London",
+                "WC1H 0AG",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.131946",
+                "latitude": "51.524339"
+            }
+        },
+        "capacity": 14
+    },
+    "IOE - Emerald Street (23-29) - UCL Knowledge Lab Large": {
+        "sitename": "IOE - Emerald St, 23-29",
+        "roomname": "IOE - Emerald Street (23-29) - UCL Knowledge Lab Large",
+        "classification": "LA",
+        "siteid": "176",
+        "roomid": "KLL",
+        "automated": "N",
+        "location": {
+            "address": [
+                "23-29 Emerald St",
+                "London",
+                "",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1178012",
+                "latitude": "51.5216001"
+            }
+        },
+        "capacity": 50
+    },
+    "Roberts Building 106": {
+        "sitename": "Roberts Building",
+        "roomname": "Roberts Building 106",
+        "classification": "LT",
+        "siteid": "045",
+        "roomid": "106",
+        "automated": "P",
+        "location": {
+            "address": [
+                "Torrington Place",
+                "London",
+                "WC1E 7JE",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1321",
+                "latitude": "51.5229"
+            }
+        },
+        "capacity": 150
+    },
+    "IOE - Bedford Way (20) - 744": {
+        "sitename": "IOE - Bedford Way, 20",
+        "roomname": "IOE - Bedford Way (20) - 744",
+        "classification": "TH",
+        "siteid": "162",
+        "roomid": "744",
+        "automated": "N",
+        "location": {
+            "address": [
+                "20 Bedford Way",
+                "London",
+                "WC1H 0AL",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1285067",
+                "latitude": "51.523471"
+            }
+        },
+        "capacity": 25
+    },
+    "School of Pharmacy M3": {
+        "sitename": "School of Pharmacy",
+        "roomname": "School of Pharmacy M3",
+        "classification": "CR",
+        "siteid": "131",
+        "roomid": "M3",
+        "automated": "P",
+        "location": {
+            "address": [
+                "29-39 Brunswick Square",
+                "London",
+                "WC1N 1AX",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.122954",
+                "latitude": "51.524771"
+            }
+        },
+        "capacity": 45
+    },
+    "Birkbeck Gordon Square (43) 104": {
+        "sitename": "Birkbeck Gordon Square, 43",
+        "roomname": "Birkbeck Gordon Square (43) 104",
+        "classification": "CR",
+        "siteid": "181",
+        "roomid": "110",
+        "automated": "N",
+        "location": {
+            "address": [
+                "39-41 Gordon Square",
+                "London",
+                "WC1H 0PD",
+                ""
+            ],
+            "coordinates": {
+                "longitude": "-0.1305394",
+                "latitude": "51.5218725"
+            }
+        },
+        "capacity": 24
+    }
+}

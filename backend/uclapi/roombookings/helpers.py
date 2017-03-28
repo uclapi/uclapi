@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.core.exceptions import FieldError, ObjectDoesNotExist
-from .models import PageToken, BookingA, BookingB, Lock
+from .models import PageToken, BookingA, BookingB, Lock, Location
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 
@@ -115,7 +115,7 @@ def _parse_datetime(start_time, end_time, search_date):
 def _serialize_rooms(room_set):
     rooms = []
     for room in room_set:
-        rooms.append({
+        room_to_add = {
             "roomname": room.roomname,
             "roomid": room.roomid,
             "siteid": room.siteid,
@@ -131,7 +131,21 @@ def _serialize_rooms(room_set):
                     room.address4
                 ]
             }
-        })
+        }
+        try:
+            location = Location.objects.get(
+                siteid=room.siteid,
+                roomid=room.roomid
+            )
+            room_to_add['location']['coordinates'] = {
+                "lat": location.lat,
+                "lng": location.lng
+            }
+        except ObjectDoesNotExist:
+            # no location for this room, leave out
+            pass
+
+        rooms.append(room_to_add)
     return rooms
 
 

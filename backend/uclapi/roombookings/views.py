@@ -53,7 +53,6 @@ def get_rooms(request):
 @does_token_exist
 @log_api_call
 def get_bookings(request):
-
     # if page_token exists, dont look for query
     page_token = request.GET.get('page_token')
     if page_token:
