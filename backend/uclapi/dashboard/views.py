@@ -88,7 +88,7 @@ def dashboard(request):
             return render(request, "agreement.html", {
                 "error": "You must agree to the fair use policy"
             })
-    
+
     user_meta = {
         "name": user.full_name,
         "cn": user.cn,

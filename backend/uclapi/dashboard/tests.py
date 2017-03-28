@@ -1,6 +1,6 @@
 from django.test import TestCase
 from unittest.mock import patch
-from .models import User
+from .models import User, App
 
 
 class DashboardTestCase(TestCase):
@@ -13,6 +13,8 @@ class DashboardTestCase(TestCase):
                                 raw_intranet_groups="none",
                                 employee_id=12345
                                 )
+        App.objects.create(user=u,
+                           name="An App")
         session = self.client.session
         session["user_id"] = u.id
         session.save()
@@ -45,3 +47,5 @@ class DashboardTestCase(TestCase):
 
         res = self.client.post('/dashboard/', {'agreement': 'True'})
         self.assertTemplateUsed(res, "dashboard.html")
+        self.assertContains(res, "An App")
+        self.assertContains(res, "Test testington")
