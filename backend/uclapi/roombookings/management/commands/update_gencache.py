@@ -1,6 +1,5 @@
 import os
 import cx_Oracle
-import datetime
 from roombookings.models import BookingA, BookingB, Lock
 from django.core.management.base import BaseCommand
 
@@ -36,7 +35,9 @@ class Command(BaseCommand):
         # flush the table
         curr.objects.using("gencache").all().delete()
 
-        self.stdout.write("Dumping all the data from Oracle into a new list...")
+        self.stdout.write(
+            "Dumping all the data from Oracle into a new list..."
+        )
         data_objects = []
 
         for row in cur:
@@ -62,7 +63,10 @@ class Command(BaseCommand):
         self.stdout.write("There are " + str(len(data_objects)) + " records.")
 
         self.stdout.write("Bulk creating this in PostgreSQL...")
-        curr.objects.using("gencache").bulk_create(data_objects, batch_size=5000)
+        curr.objects.using("gencache").bulk_create(
+            data_objects,
+            batch_size=5000
+        )
 
         self.stdout.write("Updating the lock...")
         lock.bookingA = not lock.bookingA

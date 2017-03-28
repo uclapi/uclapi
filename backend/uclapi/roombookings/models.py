@@ -32,7 +32,6 @@ class Booking(models.Model):
 
 
 class BookingA(models.Model):
-    id = models.AutoField(primary_key=True)
     setid = models.CharField(max_length=40, blank=True, null=True)
     siteid = models.CharField(max_length=40, blank=True, null=True)
     roomid = models.CharField(max_length=160, blank=True, null=True)
@@ -55,7 +54,6 @@ class BookingA(models.Model):
 
 
 class BookingB(models.Model):
-    id = models.AutoField(primary_key=True)
     setid = models.CharField(max_length=40, blank=True, null=True)
     siteid = models.CharField(max_length=40, blank=True, null=True)
     roomid = models.CharField(max_length=160, blank=True, null=True)
