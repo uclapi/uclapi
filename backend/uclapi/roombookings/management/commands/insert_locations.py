@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand
 from roombookings.models import Location
 import json
-from django.core.exceptions import ObjectDoesNotExist
 
 
 class Command(BaseCommand):
@@ -15,20 +14,18 @@ class Command(BaseCommand):
 
         for room in room_data:
             siteid = room_data[room]["siteid"]
+            roomid = room_data[room]["roomid"]
             lat = room_data[room][
-                "location"]["coordinates"]["latitute"]
+                "location"]["coordinates"]["latitude"]
             lng = room_data[room][
                 "location"]["coordinates"]["longitude"]
-            try:
-                loc = Location.objects.get(siteid=siteid)
-                loc.lat = lat
-                loc.lng = lng
-                loc.save()
-            except ObjectDoesNotExist:
-                loc = Location(
-                    siteid=siteid,
-                    lat=lat,
-                    lng=lng
-                )
-                loc.save()
+
+            new_location = Location(
+                siteid=siteid,
+                roomid=roomid,
+                lat=lat,
+                lng=lng
+            )
+            new_location.save()
+
         self.stdout.write("All done")

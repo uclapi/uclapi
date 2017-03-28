@@ -140,9 +140,11 @@ class PageToken(models.Model):
 
 
 class Location(models.Model):
-    siteid = models.CharField(max_length=40, primary_key=True)
+    siteid = models.CharField(max_length=40)
+    roomid = models.CharField(max_length=40)
     lat = models.CharField(max_length=30)
     lng = models.CharField(max_length=30)
 
     class Meta:
         _DATABASE = 'default'
+        unique_together = ('siteid', 'roomid')
