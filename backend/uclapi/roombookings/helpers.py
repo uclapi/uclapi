@@ -77,7 +77,6 @@ def _paginated_result(query, page_number, pagination):
 
 def _parse_datetime(start_time, end_time, search_date):
     parsed_start_time, parsed_end_time = None, None
-    print(start_time, end_time)
     try:
         if start_time:
             # + gets decoded into a space in params
