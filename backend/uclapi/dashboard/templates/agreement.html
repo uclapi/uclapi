@@ -20,7 +20,7 @@
       <div class="card flexCentre">
         <form class="pure-form pure-form-stacked" action="/dashboard/" method="post">{% csrf_token %}
 					<fieldset>
-            <div class="well">The fairuse policy</div>
+            <div class="well">{{fair_use}}</div>
             <label for="remember" class="pure-checkbox">
                 <input id="remember" name="agreement" type="checkbox" value="True">I agree</input>
             </label>

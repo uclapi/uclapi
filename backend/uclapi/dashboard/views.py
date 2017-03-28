@@ -5,6 +5,7 @@ import os
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.utils.http import quote
 from distutils.util import strtobool
+from uclapi.settings import FAIR_USE_POLICY
 
 from django.core.serializers.json import DjangoJSONEncoder
 import json
@@ -72,12 +73,15 @@ def dashboard(request):
 
     if not user.agreement:
         if request.method != "POST":
-            return render(request, "agreement.html")
+            return render(request, "agreement.html", {
+                'fair_use': FAIR_USE_POLICY
+                })
 
         try:
             agreement = strtobool(request.POST["agreement"])
         except (KeyError, ValueError):
             return render(request, "agreement.html", {
+                'fair_use': FAIR_USE_POLICY,
                 "error": "You must agree to the fair use policy"
             })
 
@@ -86,6 +90,7 @@ def dashboard(request):
             user.save()
         else:
             return render(request, "agreement.html", {
+                'fair_use': FAIR_USE_POLICY,
                 "error": "You must agree to the fair use policy"
             })
 

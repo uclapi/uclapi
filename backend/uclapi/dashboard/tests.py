@@ -1,5 +1,6 @@
 from django.test import TestCase
 from unittest.mock import patch
+from uclapi.settings import FAIR_USE_POLICY
 from .models import User, App
 
 
@@ -33,16 +34,18 @@ class DashboardTestCase(TestCase):
 
     def test_get_agreement(self):
         res = self.client.get('/dashboard/')
-        assert len(res.templates) == 1
-        assert res.templates[0].name == "agreement.html"
+        self.assertTemplateUsed(res, "agreement.html")
+        self.assertContains(res, FAIR_USE_POLICY)
 
     def test_post_agreement(self):
         res = self.client.post('/dashboard/')
         self.assertTemplateUsed(res, "agreement.html")
+        self.assertContains(res, FAIR_USE_POLICY)
         self.assertContains(res, "You must agree to the fair use policy")
 
         res = self.client.post('/dashboard/', {'agreement': 'some rubbish'})
         self.assertTemplateUsed(res, "agreement.html")
+        self.assertContains(res, FAIR_USE_POLICY)
         self.assertContains(res, "You must agree to the fair use policy")
 
         res = self.client.post('/dashboard/', {'agreement': 'True'})

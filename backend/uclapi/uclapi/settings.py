@@ -195,3 +195,6 @@ STATICFILES_DIRS = [
 # Cross Origin settings
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/roombookings/.*$'
+
+# Fair use policy
+FAIR_USE_POLICY = 'Fair use policy goes here'
