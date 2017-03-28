@@ -2,7 +2,7 @@ from functools import reduce
 
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
-from .models import Room, Booking, Equipment
+from .models import Room, Equipment, BookingA, BookingB, Lock
 from .decorators import does_token_exist, log_api_call
 
 from .helpers import _parse_datetime, _serialize_rooms, \
@@ -126,8 +126,10 @@ def get_bookings(request):
     # first page
     bookings = _get_paginated_bookings(page_token)
 
-    bookings["count"] = Booking.objects.using(
-        'roombookings').filter(**request_params).count()
+    lock = Lock.objects.all()[0]
+    curr = BookingA if not lock.bookingA else BookingB
+
+    bookings["count"] = curr.objects.filter(**request_params).count()
 
     return _return_json_bookings(bookings)
 
