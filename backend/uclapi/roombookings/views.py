@@ -10,9 +10,9 @@ from .helpers import _parse_datetime, _serialize_rooms, \
     _serialize_equipment
 
 
-@log_api_call
 @api_view(['GET'])
 @does_token_exist
+@log_api_call
 def get_rooms(request):
     # add them to iterables so can be filtered without if-else
     request_params = {}
@@ -49,9 +49,9 @@ def get_rooms(request):
     })
 
 
-@log_api_call
 @api_view(['GET'])
 @does_token_exist
+@log_api_call
 def get_bookings(request):
 
     # if page_token exists, dont look for query
@@ -132,9 +132,9 @@ def get_bookings(request):
     return _return_json_bookings(bookings)
 
 
-@log_api_call
 @api_view(['GET'])
 @does_token_exist
+@log_api_call
 def get_equipment(request):
     roomid = request.GET.get("roomid")
     siteid = request.GET.get("siteid")
