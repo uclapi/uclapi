@@ -114,6 +114,8 @@ def dashboard(request):
             "name": app.name,
             "id": app.id,
             "token": app.api_token,
+            "oauth_client_id": app.client_id,
+            "oauth_client_secret": app.client_secret,
             "created": app.created,
             "updated": app.last_updated
         })
