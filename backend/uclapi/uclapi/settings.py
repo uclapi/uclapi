@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'dashboard',
     'roombookings',
+    'oauth',
     'opbeat.contrib.django',
     'raven.contrib.django.raven_compat',
     'corsheaders'
