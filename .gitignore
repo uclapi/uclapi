@@ -106,3 +106,12 @@ node_modules
 
 # Oracle configuration files
 *.ora
+
+# Visual Studio Code Configuration
+.vscode/
+
+# Visual Studio Configuration
+.vs/
+
+# Django static files
+static/
