@@ -47,6 +47,8 @@ class App(models.Model):
         default=generate_app_client_secret
     )
 
+    callback_url = models.CharField(max_length=500, default="")
+
     def regenerate_token(self):
         new_token = generate_api_token()
         self.api_token = new_token
