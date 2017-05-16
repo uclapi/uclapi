@@ -1,7 +1,8 @@
 from django.test import SimpleTestCase
 from itertools import chain
+import datetime
 
-from .helpers import _serialize_rooms, _serialize_equipment
+from .helpers import _serialize_rooms, _serialize_equipment, _parse_datetime
 from .models import Room
 
 
@@ -9,88 +10,6 @@ class FakeModelClass:
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
-
-
-class RoomSerializationTestCase(SimpleTestCase):
-
-    def test_serialize_rooms(self):
-        room_list = [
-            FakeModelClass(
-                sitename="South Quad Pop Up Learning Hub",
-                address1="Gower St",
-                address2="London",
-                address3=None,
-                address4=None,
-                webview="Y",
-                automated="N",
-                roomid=118,
-                siteid="X402",
-                roomname="South Quad Pop Up Learning Hub 101",
-                category="REC",
-                bookabletype="CB",
-                roomclass="CR",
-                zone="NN",
-                capacity=25,
-                roomdeptid="ESTDV_ADM",
-                setid="LIVE-17-18",
-            ),
-            FakeModelClass(
-                sitename="Institute of Advanced Legal Studies",
-                address1="Charles Clore House,17 Russell Square",
-                address2="London",
-                address3="WC1B 5DR",
-                address4=None,
-                webview="Y",
-                automated="P",
-                roomid=123123,
-                siteid="X234324",
-                roomname="Provost's Private Room",
-                category="REC",
-                bookabletype="CB",
-                roomclass="CR",
-                zone="YY",
-                capacity=500,
-                roomdeptid="ESTDV_ADM",
-                setid="LIVE-16-17",
-            )
-        ]
-        none_qs = Room.objects.none()
-        rooms_qs = list(chain(none_qs, room_list))
-        serialised_rooms = _serialize_rooms(rooms_qs)
-        self.assertEqual(
-            serialised_rooms, [
-                {
-                    "roomname": "South Quad Pop Up Learning Hub 101",
-                    "roomid": 118,
-                    "siteid": "X402",
-                    "sitename": "South Quad Pop Up Learning Hub",
-                    "capacity": 25,
-                    "classification": "CR",
-                    "automated": "N",
-                    "location": {
-                        "address": ["Gower St", "London", None, None],
-                    }
-                },
-                {
-                    "roomname": "Provost's Private Room",
-                    "roomid": 123123,
-                    "siteid": "X234324",
-                    "sitename": "Institute of Advanced Legal Studies",
-                    "capacity": 500,
-                    "classification": "CR",
-                    "automated": "P",
-                    "location": {
-                        "address": [
-                            "Charles Clore House,17 Russell Square",
-                            "London",
-                            "WC1B 5DR",
-                            None
-                        ]
-                    }
-                }
-            ]
-        )
-
 
 class EquipmentSerializationTestCase(SimpleTestCase):
 
@@ -132,4 +51,69 @@ class EquipmentSerializationTestCase(SimpleTestCase):
                         "units": 1
                     }
                 ]
+            )
+
+
+class ParseDateTimeTestCase(SimpleTestCase):
+    def test_parse_datetime(self):
+        arg_list = [
+            # valid dates
+            [None, None, "20160219"],
+            [None, None, "20170320"],
+            [None, None, "20171214"],
+            [None, None, "20171008"],
+            [None, None, "20170101"],
+            [None, None, "20180101"],
+            # invalid dates
+            [None, None, "31001312"],
+            [None, None, "20170229"],
+            [None, None, "20172323"],
+            [None, None, "20198989"],
+            # only start time
+            ["2017-05-16T11:34:39+00:00", None, "342453"],
+            ["2017-01-16T23:34:39+00:00", None, "334533"],
+            ["2017-02-16T11:34:39+00:00", None, "334533"],
+            # only end time
+            [None, "2017-01-16T23:34:39+00:00", "334533"],
+            # invalid start and end
+            ["2012-16T11:34:39+00:00", None, "334533"],
+            [None, "23424", "324254"],
+            # both end and start time
+            ["2017-05-16T11:34:39+00:00", "2018-05-16T11:34:39+00:00", "3423"],
+            ["2017-12-16T10:00:00+00:00", "2018-06-16T10:00:00+00:00", "3"],
+        ]
+
+        expected = [
+            (datetime.datetime(2016, 2, 19, 0, 0, 1),
+                datetime.datetime(2016, 2, 19, 23, 59, 59), True),
+            (datetime.datetime(2017, 3, 20, 0, 0, 1),
+                datetime.datetime(2017, 3, 20, 23, 59, 59), True),
+            (datetime.datetime(2017, 12, 14, 0, 0, 1),
+                datetime.datetime(2017, 12, 14, 23, 59, 59), True),
+            (datetime.datetime(2017, 10, 8, 0, 0, 1),
+                datetime.datetime(2017, 10, 8, 23, 59, 59), True),
+            (datetime.datetime(2017, 1, 1, 0, 0, 1),
+                datetime.datetime(2017, 1, 1, 23, 59, 59), True),
+            (datetime.datetime(2018, 1, 1, 0, 0, 1),
+                datetime.datetime(2018, 1, 1, 23, 59, 59), True),
+            (-1, -1, False),
+            (-1, -1, False),
+            (-1, -1, False),
+            (-1, -1, False),
+            (datetime.datetime(2017, 5, 16, 12, 34, 39), None, True),
+            (datetime.datetime(2017, 1, 16, 23, 34, 39), None, True),
+            (datetime.datetime(2017, 2, 16, 11, 34, 39), None, True),
+            (None, datetime.datetime(2017, 1, 16, 23, 34, 39), True),
+            (-1, -1, False),
+            (-1, -1, False),
+            (datetime.datetime(2017, 5, 16, 12, 34, 39),
+                datetime.datetime(2018, 5, 16, 12, 34, 39), True),
+            (datetime.datetime(2017, 12, 16, 10, 0, 0),
+                datetime.datetime(2018, 6, 16, 11, 0, 0), True)
+        ]
+
+        for index, args in enumerate(arg_list):
+            self.assertEqual(
+                expected[index],
+                _parse_datetime(args[0], args[1], args[2])
             )

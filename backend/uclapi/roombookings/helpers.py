@@ -1,12 +1,15 @@
 from __future__ import unicode_literals
 
 from django.core.exceptions import FieldError, ObjectDoesNotExist
-from .models import Booking, PageToken
+from .models import PageToken, BookingA, BookingB, Lock, Location
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 
 import json
 import datetime
+import pytz
+from datetime import timedelta
+import ciso8601
 
 
 def _create_page_token(query, pagination):
@@ -49,7 +52,9 @@ def _get_paginated_bookings(page_token):
 
 def _paginated_result(query, page_number, pagination):
     try:
-        all_bookings = Booking.objects.using('roombookings').filter(**query)
+        lock = Lock.objects.all()[0]
+        curr = BookingA if not lock.bookingA else BookingB
+        all_bookings = curr.objects.filter(**query)
     except FieldError:
         return {
             "error": "something wrong with encoded query params"
@@ -75,23 +80,27 @@ def _paginated_result(query, page_number, pagination):
     )
 
 
+def _localize_time(time_string):
+    london_time = pytz.timezone("Europe/London")
+    ret_time = time_string.replace(" ", "+")
+    ret_time = ciso8601.parse_datetime(ret_time)
+    ret_time = ret_time.astimezone(london_time)
+    return ret_time.replace(tzinfo=None)
+
+
+
 def _parse_datetime(start_time, end_time, search_date):
     parsed_start_time, parsed_end_time = None, None
     try:
         if start_time:
             # + gets decoded into a space in params
-            final_start_time = start_time.replace(" ", "+")
-            parsed_start_time = datetime.datetime.strptime(
-                final_start_time, '%Y-%m-%dT%H:%M:%S+00:00')
+            parsed_start_time = _localize_time(start_time)
 
         if end_time:
-            final_end_time = end_time.replace(" ", "+")
-            parsed_end_time = datetime.datetime.strptime(
-                final_end_time, '%Y-%m-%dT%H:%M:%S+00:00')
+            parsed_end_time = _localize_time(end_time)
 
         if not end_time and not start_time:
             if search_date:
-                print(search_date)
                 search_date = datetime.datetime.strptime(
                                             search_date, "%Y%m%d").date()
                 day_start = datetime.time(0, 0, 1)  # start of the day
@@ -104,7 +113,7 @@ def _parse_datetime(start_time, end_time, search_date):
                     search_date,
                     day_end
                 )
-    except (TypeError, NameError, ValueError):
+    except (TypeError, NameError, ValueError, AttributeError):
         return -1, -1, False
 
     return parsed_start_time, parsed_end_time, True
@@ -113,7 +122,7 @@ def _parse_datetime(start_time, end_time, search_date):
 def _serialize_rooms(room_set):
     rooms = []
     for room in room_set:
-        rooms.append({
+        room_to_add = {
             "roomname": room.roomname,
             "roomid": room.roomid,
             "siteid": room.siteid,
@@ -129,13 +138,26 @@ def _serialize_rooms(room_set):
                     room.address4
                 ]
             }
-        })
+        }
+        try:
+            location = Location.objects.get(
+                siteid=room.siteid,
+                roomid=room.roomid
+            )
+            room_to_add['location']['coordinates'] = {
+                "lat": location.lat,
+                "lng": location.lng
+            }
+        except ObjectDoesNotExist:
+            # no location for this room, leave out
+            pass
+
+        rooms.append(room_to_add)
     return rooms
 
 
 def _serialize_bookings(bookings):
     ret_bookings = []
-
     for bk in bookings:
         ret_bookings.append({
             "roomname": bk.roomname,
@@ -143,9 +165,9 @@ def _serialize_bookings(bookings):
             "roomid": bk.roomid,
             "description": bk.descrip,
             "start_time": _kloppify(datetime.datetime.strftime(
-                bk.startdatetime, "%Y-%m-%dT%H:%M:%S%z")),
+                bk.startdatetime, "%Y-%m-%dT%H:%M:%S"), bk.startdatetime),
             "end_time": _kloppify(datetime.datetime.strftime(
-                bk.finishdatetime, "%Y-%m-%dT%H:%M:%S%z")),
+                bk.finishdatetime, "%Y-%m-%dT%H:%M:%S"), bk.finishdatetime),
             "contact": bk.condisplayname,
             "slotid": bk.slotid,
             "weeknumber": bk.weeknumber,
@@ -168,8 +190,13 @@ def _serialize_equipment(equipment):
     return ret_equipment
 
 
-def _kloppify(date_string):
-    return date_string[:-2] + ":" + date_string[-2:]
+def _kloppify(date_string, date):
+    local_time = pytz.timezone('Europe/London')
+
+    if (local_time.localize(date).dst() > timedelta(0)):
+        return date_string + "+01:00"
+    else:
+        return date_string + "+00:00"
 
 
 def _return_json_bookings(bookings):

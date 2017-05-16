@@ -2,7 +2,7 @@ from functools import reduce
 
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
-from .models import Room, Booking, Equipment
+from .models import Room, Equipment, BookingA, BookingB, Lock
 from .decorators import does_token_exist, log_api_call
 
 from .helpers import _parse_datetime, _serialize_rooms, \
@@ -10,9 +10,9 @@ from .helpers import _parse_datetime, _serialize_rooms, \
     _serialize_equipment
 
 
-@log_api_call
 @api_view(['GET'])
 @does_token_exist
+@log_api_call
 def get_rooms(request):
     # add them to iterables so can be filtered without if-else
     request_params = {}
@@ -49,11 +49,10 @@ def get_rooms(request):
     })
 
 
-@log_api_call
 @api_view(['GET'])
-@does_token_exist
+# @does_token_exist
+# @log_api_call
 def get_bookings(request):
-
     # if page_token exists, dont look for query
     page_token = request.GET.get('page_token')
     if page_token:
@@ -73,18 +72,18 @@ def get_bookings(request):
     request_params['startdatetime'] = request.GET.get('date')
     # 20 is the default number of bookings per page
 
-    results_per_page = request.GET.get('results_per_page') or 20
+    results_per_page = request.GET.get('results_per_page') or 1000
 
     try:
         results_per_page = int(results_per_page)
-        results_per_page = results_per_page if results_per_page > 0 else 20
+        results_per_page = results_per_page if results_per_page > 0 else 1000
     except ValueError:
         return JsonResponse({
             "ok": False,
             "error": "results_per_page should be an integer"
         })
 
-    results_per_page = results_per_page if results_per_page < 100 else 100
+    results_per_page = results_per_page if results_per_page < 1000 else 1000
 
     # functional filters
     request_params['startdatetime__gte'] = request.GET.get('start_datetime')
@@ -126,15 +125,17 @@ def get_bookings(request):
     # first page
     bookings = _get_paginated_bookings(page_token)
 
-    bookings["count"] = Booking.objects.using(
-        'roombookings').filter(**request_params).count()
+    lock = Lock.objects.all()[0]
+    curr = BookingA if not lock.bookingA else BookingB
+
+    bookings["count"] = curr.objects.filter(**request_params).count()
 
     return _return_json_bookings(bookings)
 
 
-@log_api_call
 @api_view(['GET'])
 @does_token_exist
+@log_api_call
 def get_equipment(request):
     roomid = request.GET.get("roomid")
     siteid = request.GET.get("siteid")
