@@ -80,17 +80,24 @@ def _paginated_result(query, page_number, pagination):
     )
 
 
+def _localize_time(time_string):
+    london_time = pytz.timezone("Europe/London")
+    ret_time = time_string.replace(" ", "+")
+    ret_time = ciso8601.parse_datetime(ret_time)
+    ret_time = ret_time.astimezone(london_time)
+    return ret_time.replace(tzinfo=None)
+
+
+
 def _parse_datetime(start_time, end_time, search_date):
     parsed_start_time, parsed_end_time = None, None
     try:
         if start_time:
             # + gets decoded into a space in params
-            final_start_time = start_time.replace(" ", "+")
-            parsed_start_time = ciso8601.parse_datetime(start_time)
+            parsed_start_time = _localize_time(start_time)
 
         if end_time:
-            final_end_time = end_time.replace(" ", "+")
-            parsed_end_time = ciso8601.parse_datetime(end_time)
+            parsed_end_time = _localize_time(end_time)
 
         if not end_time and not start_time:
             if search_date:
@@ -106,7 +113,7 @@ def _parse_datetime(start_time, end_time, search_date):
                     search_date,
                     day_end
                 )
-    except (TypeError, NameError, ValueError):
+    except (TypeError, NameError, ValueError, AttributeError):
         return -1, -1, False
 
     return parsed_start_time, parsed_end_time, True
