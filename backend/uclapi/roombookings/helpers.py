@@ -9,6 +9,7 @@ import json
 import datetime
 import pytz
 from datetime import timedelta
+import ciso8601
 
 
 def _create_page_token(query, pagination):
@@ -80,17 +81,16 @@ def _paginated_result(query, page_number, pagination):
 
 
 def _parse_datetime(start_time, end_time, search_date):
+    parsed_start_time, parsed_end_time = None, None
     try:
         if start_time:
             # + gets decoded into a space in params
             final_start_time = start_time.replace(" ", "+")
-            parsed_start_time = datetime.datetime.strptime(
-                final_start_time, '%Y-%m-%dT%H:%M:%S+00:00')
+            parsed_start_time = ciso8601.parse_datetime(start_time)
 
         if end_time:
             final_end_time = end_time.replace(" ", "+")
-            parsed_end_time = datetime.datetime.strptime(
-                final_end_time, '%Y-%m-%dT%H:%M:%S+00:00')
+            parsed_end_time = ciso8601.parse_datetime(end_time)
 
         if not end_time and not start_time:
             if search_date:

@@ -69,6 +69,9 @@ class ParseDateTimeTestCase(SimpleTestCase):
             [None, None, "20172323"],
             [None, None, "20198989"],
             # only start time
+            ["2017-05-16T11:34:39+00:00", None, "342453"],
+            ["2017-01-16T11:34:39+00:00", None, "334533"],
+            ["2017-02-16T11:34:39+00:00", None, "334533"],
         ]
 
         expected = [
