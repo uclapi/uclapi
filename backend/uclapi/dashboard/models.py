@@ -1,5 +1,5 @@
 from django.db import models
-from .app_helpers import generate_api_token, generate_app_id
+from .app_helpers import generate_api_token, generate_app_id, generate_app_client_id, generate_app_client_secret
 
 models.options.DEFAULT_NAMES += ('_DATABASE',)
 
@@ -34,6 +34,18 @@ class App(models.Model):
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
+    client_id = models.CharField(
+        max_length=33,
+        unique=True,
+        default=generate_app_client_id
+    )
+
+    client_secret = models.CharField(
+        max_length=64,
+        unique=True,
+        default=generate_app_client_secret
+    )
+
     def regenerate_token(self):
         new_token = generate_api_token()
         self.api_token = new_token
@@ -42,7 +54,6 @@ class App(models.Model):
 
     class Meta:
         _DATABASE = 'default'
-
 
 class APICall(models.Model):
     ts = models.DateTimeField(auto_now_add=True)
