@@ -5,6 +5,8 @@ cache: pip
 install:
   - (sed '/cx.*/d' ./backend/uclapi/requirements.txt) | xargs -n 1 pip3 install
   - pip3 install pylint
+services:
+  - postgresql
 script:
   # Install Oracle Instant Client
   - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
@@ -26,6 +28,7 @@ script:
   # Let's test this baby
   - cd ./backend/uclapi
   - touch .env
+  - python ./manage.py migrate
   - python ./manage.py test --testrunner 'roombookings.custom_test_runner.NoDbTestRunner'
   # Linting
   - pip3 install pylint
