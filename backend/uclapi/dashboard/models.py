@@ -1,6 +1,7 @@
 from django.db import models
 from .app_helpers import generate_api_token, generate_app_id
 
+models.options.DEFAULT_NAMES += ('_DATABASE',)
 
 # Create your models here.
 class User(models.Model):
@@ -13,6 +14,9 @@ class User(models.Model):
     raw_intranet_groups = models.CharField(max_length=2000)
     agreement = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+    class Meta:
+        _DATABASE = 'default'
 
 
 class App(models.Model):
@@ -37,9 +41,15 @@ class App(models.Model):
         self.save()
         return self.api_token
 
+    class Meta:
+        _DATABASE = 'default'
+
 
 class APICall(models.Model):
     ts = models.DateTimeField(auto_now_add=True)
     app = models.ForeignKey(App, related_name='api_call')
     user = models.ForeignKey(User, related_name='api_call')
     raw_request = models.TextField(max_length=10000000)
+
+    class Meta:
+        _DATABASE = 'default'

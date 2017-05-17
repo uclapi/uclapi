@@ -1,5 +1,6 @@
 from django.http import HttpResponseBadRequest, JsonResponse
 from .models import App, User
+import keen
 
 
 def get_user_by_id(user_id):
@@ -31,6 +32,12 @@ def create_app(request):
 
     new_app = App(name=name, user=user)
     new_app.save()
+
+    keen.add_event("App created", {
+        "appid": new_app.id,
+        "name": new_app.name,
+        "userid": user.id
+    })
 
     return JsonResponse({
         "success": True,
@@ -75,6 +82,12 @@ def rename_app(request):
         app.name = new_name
         app.save()
 
+        keen.add_event("App renamed", {
+            "appid": app.id,
+            "new_name": app.name,
+            "userid": user.id
+        })
+
         return JsonResponse({
             "success": True,
             "message": "App sucessfully renamed.",
@@ -112,9 +125,14 @@ def regenerate_app_token(request):
         app.regenerate_token()
         new_api_token = app.api_token
 
+        keen.add_event("App token regenerated", {
+            "appid": app.id,
+            "userid": user.id
+        })
+
         return JsonResponse({
             "success": True,
-            "message": "App sucessfully renamed.",
+            "message": "App token sucessfully regenerated.",
             "app": {
                 "id": app.id,
                 "token": new_api_token,
@@ -151,6 +169,11 @@ def delete_app(request):
     else:
         app = apps[0]
         app.delete()
+
+        keen.add_event("App deleted", {
+            "appid": app_id,
+            "userid": user.id
+        })
 
         return JsonResponse({
             "success": True,

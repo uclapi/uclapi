@@ -1,0 +1,39 @@
+language: python
+python:
+  - "3.5"
+cache: pip
+install:
+  - (sed '/cx.*/d' ./backend/uclapi/requirements.txt) | xargs -n 1 pip3 install
+  - pip3 install pylint
+script:
+  # Install Oracle Instant Client
+  - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
+  - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
+  - sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip
+  - sudo unzip instantclient-sdk-linux.x64-12.2.0.1.0.zip
+  - cd instantclient_12_2
+  - sudo ln -s libclntsh.so.12.1 libclntsh.so
+  - sudo ln -s libocci.so.12.1 libocci.so
+  - sudo apt-get install libaio-dev
+  - cd ..
+  - export ORACLE_HOME=$(pwd)/instantclient_12_2
+  - export DYLD_LIBRARY_PATH=$ORACLE_HOME
+  - export LD_LIBRARY_PATH=$ORACLE_HOME
+  - env ARCHFLAGS="-arch x86_64"
+  # Install cx_Oracle (which depends on Oracle IC)
+  - ls $ORACLE_HOME
+  - pip3 install cx_Oracle==5.2.1
+  # Let's test this baby
+  - cd ./backend/uclapi
+  - touch .env
+  - python ./manage.py test --testrunner 'roombookings.custom_test_runner.NoDbTestRunner'
+  # Linting
+  - pip3 install pylint
+  - pylint $(find . -name "*.py" -print) > pylint.log || (($? != 1))
+  # Succeeds as long as score > 7
+  - echo "$(tail -n 2 pylint.log | head -n 1 | egrep '([0-9]*\.[0-9]+|[0-9]+)' -ho | head -n 1) <= 7" | bc
+  - pip3 install prospector pylint-django
+  - echo "$(prospector --uses django | grep 'Messages Found.*' | egrep -ho '[[:digit:]]+') > 50" | bc || (($? == 0))
+  # codecov.io
+  - pip3 install codecov
+  - codecov

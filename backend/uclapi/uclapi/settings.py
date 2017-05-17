@@ -14,6 +14,7 @@ import os
 import raven
 import requests
 from .utils import strtobool
+from .dbrouters import ModelRouter
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -123,8 +124,18 @@ DATABASES = {
         'PASSWORD': os.environ.get("DB_ROOMS_PASSWORD"),
         'HOST': '',
         'PORT': ''
+    },
+    'gencache': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get("DB_CACHE_NAME"),
+        'USER': os.environ.get("DB_CACHE_USERNAME"),
+        'PASSWORD': os.environ.get("DB_CACHE_PASSWORD"),
+        'HOST': os.environ.get("DB_CACHE_HOST"),
+        'PORT': os.environ.get("DB_CACHE_PORT")
     }
 }
+
+DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
 
 # analytics & rate-limiting
 
@@ -180,7 +191,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
