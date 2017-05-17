@@ -1,7 +1,8 @@
 from django.test import SimpleTestCase
 from itertools import chain
+import datetime
 
-from .helpers import _serialize_rooms, _serialize_equipment
+from .helpers import _serialize_rooms, _serialize_equipment, _parse_datetime
 from .models import Room
 
 
@@ -50,4 +51,69 @@ class EquipmentSerializationTestCase(SimpleTestCase):
                         "units": 1
                     }
                 ]
+            )
+
+
+class ParseDateTimeTestCase(SimpleTestCase):
+    def test_parse_datetime(self):
+        arg_list = [
+            # valid dates
+            [None, None, "20160219"],
+            [None, None, "20170320"],
+            [None, None, "20171214"],
+            [None, None, "20171008"],
+            [None, None, "20170101"],
+            [None, None, "20180101"],
+            # invalid dates
+            [None, None, "31001312"],
+            [None, None, "20170229"],
+            [None, None, "20172323"],
+            [None, None, "20198989"],
+            # only start time
+            ["2017-05-16T11:34:39+00:00", None, "342453"],
+            ["2017-01-16T23:34:39+00:00", None, "334533"],
+            ["2017-02-16T11:34:39+00:00", None, "334533"],
+            # only end time
+            [None, "2017-01-16T23:34:39+00:00", "334533"],
+            # invalid start and end
+            ["2012-16T11:34:39+00:00", None, "334533"],
+            [None, "23424", "324254"],
+            # both end and start time
+            ["2017-05-16T11:34:39+00:00", "2018-05-16T11:34:39+00:00", "3423"],
+            ["2017-12-16T10:00:00+00:00", "2018-06-16T10:00:00+00:00", "3"],
+        ]
+
+        expected = [
+            (datetime.datetime(2016, 2, 19, 0, 0, 1),
+                datetime.datetime(2016, 2, 19, 23, 59, 59), True),
+            (datetime.datetime(2017, 3, 20, 0, 0, 1),
+                datetime.datetime(2017, 3, 20, 23, 59, 59), True),
+            (datetime.datetime(2017, 12, 14, 0, 0, 1),
+                datetime.datetime(2017, 12, 14, 23, 59, 59), True),
+            (datetime.datetime(2017, 10, 8, 0, 0, 1),
+                datetime.datetime(2017, 10, 8, 23, 59, 59), True),
+            (datetime.datetime(2017, 1, 1, 0, 0, 1),
+                datetime.datetime(2017, 1, 1, 23, 59, 59), True),
+            (datetime.datetime(2018, 1, 1, 0, 0, 1),
+                datetime.datetime(2018, 1, 1, 23, 59, 59), True),
+            (-1, -1, False),
+            (-1, -1, False),
+            (-1, -1, False),
+            (-1, -1, False),
+            (datetime.datetime(2017, 5, 16, 12, 34, 39), None, True),
+            (datetime.datetime(2017, 1, 16, 23, 34, 39), None, True),
+            (datetime.datetime(2017, 2, 16, 11, 34, 39), None, True),
+            (None, datetime.datetime(2017, 1, 16, 23, 34, 39), True),
+            (-1, -1, False),
+            (-1, -1, False),
+            (datetime.datetime(2017, 5, 16, 12, 34, 39),
+                datetime.datetime(2018, 5, 16, 12, 34, 39), True),
+            (datetime.datetime(2017, 12, 16, 10, 0, 0),
+                datetime.datetime(2018, 6, 16, 11, 0, 0), True)
+        ]
+
+        for index, args in enumerate(arg_list):
+            self.assertEqual(
+                expected[index],
+                _parse_datetime(args[0], args[1], args[2])
             )
