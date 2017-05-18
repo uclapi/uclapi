@@ -89,11 +89,18 @@ def dashboard(request):
             "name": app.name,
             "id": app.id,
             "token": app.api_token,
-            "oauth_client_id": app.client_id,
-            "oauth_client_secret": app.client_secret,
-            "oauth_callback_url": app.callback_url,
             "created": app.created,
-            "updated": app.last_updated
+            "updated": app.last_updated,
+            "oauth": {
+                "client_id": app.client_id,
+                "client_secret": app.client_secret,
+                "callback_url": app.callback_url,
+                "scope": {
+                    "private_roombookings": app.scope.private_roombookings,
+                    "private_timetable": app.scope.private_timetable,
+                    "private_uclu": app.scope.private_uclu
+                }
+            }
         })
 
     initial_data = json.dumps(user_meta, cls=DjangoJSONEncoder)

@@ -1,5 +1,5 @@
 from binascii import hexlify
-from random import choice
+from random import SystemRandom
 
 import os
 import string
@@ -26,13 +26,14 @@ def generate_app_id():
     return final
 
 def generate_app_client_id():
-    client_id = ''.join(random.choice(string.digits, k=16))
+    sr = SystemRandom()
+
+    client_id = ''.join(str(sr.randint(0, 9)) for _ in range(16))
     client_id += "."
-    client_id += ''.join(random.choice(string.digits, k=16))
+    client_id += ''.join(str(sr.randint(0, 9)) for _ in range(16))
 
     return client_id
 
 def generate_app_client_secret():
-    client_secret = ''.join(random.choice(string.ascii_lowercase + string.digits, k=64))
-
+    client_secret = hexlify(os.urandom(32)).decode()
     return client_secret
