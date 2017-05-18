@@ -1,0 +1,145 @@
+<h1>UCL API Acceptable Use Policy</h1>
+<h2>Acceptance of Terms</h2>
+<p>This UCL API Terms of Service document (the “API Terms of Service”) is an agreement you must accept in order to use the UCL API (as described below). This document describes both your rights and your obligations as part of using the UCL API. It is important that you read it carefully because you will be legally bound to these terms. UCL API (“UCL API” “we” “us”) only provide the UCL API to you subject to this API Terms of Service. By accepting the API Terms of Service or by accessing or using the UCL API, you agree to be bound by this API Terms of Service.<p>
+<p>
+If you are entering into the API Terms of Service on behalf of a company or other legal entity, you represent that you have the authority to bind such entity to this API Terms of Service. In that case, the terms “you” or “your” shall also refer to such entity. If you do not have such authority, or if you do not agree with the API Terms of Service, you may not use the UCL API. You acknowledge that the API Terms of Service is a contract between you and UCL API, even though it is electronic and is not physically signed by you and UCL API, and it governs your use of the UCL API.
+</p>
+<h2>
+Rate Limits. 
+</h2>
+<p>
+You will not attempt to exceed or circumvent limitations on access, calls and use of the UCL API ("Rate Limits"), or otherwise use the UCL API in a manner that exceeds reasonable request volume, constitutes excessive or abusive usage, or otherwise fails to comply or is inconsistent with any part of this Agreement. If you exceed or UCL API reasonably believes that you have attempted to circumvent Rate Limits, controls to limit use of the UCL APIs or the terms and conditions of this Agreement, then your ability to use the Licensed Materials may be temporarily suspended or permanently blocked. UCL API may monitor your use of the UCL API to improve the UCL API Service and to ensure your compliance with this Agreement.
+</p>
+
+<h2>
+Use of APIs and UCL Data
+</h2>
+<p>
+The following identifies limitations on use related to the UCL API:
+</p>
+
+<h3>
+Reliance on API
+</h3>
+<p>
+The API is still evolving, and we need the flexibility to occasionally make changes to our APIs, including backwards incompatible ones. We will try to give notice of these changes, but you should follow the @uclapi Twitter account for updates. Also, parts of our API are undocumented, including certain methods, events, and properties. Given that these undocumented aspects of our API may change at any time, you should not rely on these behaviors.
+</p>
+<h3>
+Applicable laws or agreements
+</h3>
+<p>
+You may not use the UCL API in violation of any law or regulation, or rights of any person, including but not limited to intellectual property rights, rights of privacy, or rights of personality, or in any manner inconsistent with this API Terms of Service or UCL API’s other agreements to which you are subject.
+</p>
+<h3>
+Scope of acceptable use
+</h3>
+<p>
+You may not use the UCL API or any other technology in a manner that accesses or uses any information beyond what UCL API allows under this API Terms of Service or the Documentation; that changes the UCL API Service; that breaks or circumvents any of UCL API’s technical, administrative, process or security measures; that disrupts or degrades the performance of the UCL API Service; or that tests the vulnerability of UCL API’s systems or networks.
+</p>
+<h3>
+Malware
+</h3>
+<p>
+You may not transmit any viruses or other computer programming that may damage, detrimentally interfere with, surreptitiously intercept, or expropriate any system or data.
+</p>
+<h3>
+Commercial Use
+</h3>
+<p>
+You may charge for your Application. However, you may not sell, rent, lease, sublicense, redistribute, or syndicate access to the UCL API.
+</p>
+<h3>
+Distribution of your application
+</h3>
+<p>
+You may not distribute or allow access to the UCL APIs to anyone other than yourself. Anyone who wants to access the UCL API must agree to be bound by this policy.
+</p>
+<h3>
+Storage of Data
+</h3>
+<p>
+1.  Caching Data. Where Data is cached, you should refresh the cache at least every 24 hours.
+</p>
+<p>
+2.  Secure Storage Measures. All Data should be stored and served using strong encryption.
+</p>
+<p>
+3.  Deletion at Termination. If we terminate your use of the UCL APIs for any reason, then you must permanently delete all Data and any other information that you stored pursuant to your use of the UCL APIs, except when doing so would cause you to violate any law or obligation imposed by a governmental authority.
+</p>
+<h3>
+Security Measures
+</h3>
+<p>
+1.  Protections. The network, operating system and software of your web servers, databases, and computer systems (collectively, “Your Systems”) must be properly configured to securely operate your Application and store Data. Your Application must use reasonable security measures to protect your users’ information. You must not architect or select Your Systems in a manner to avoid the foregoing obligation.
+</p>
+<p>
+2.  Reporting. You must promptly report any security deficiencies in, or intrusions to, your Systems to UCL in writing via email to isd.apiteam@ucl.ac.uk. This includes any unauthorized access, use, disclosure or destruction of Data. You will work with UCL API to immediately correct any security deficiency, and will immediately disconnect any intrusions or intruder. In the event of any security deficiency or intrusion involving the Application, UCL APIs or Data, you will make no public statements regarding such deficiencies or intrusions (e.g., press, blogs, social media, bulletin boards, etc.) without prior written and express permission from UCL API in each instance.
+</p>
+<h3>
+Government Access. You will not knowingly:
+</h3>
+<p>
+1.  Display, distribute or otherwise make available Data or any Application to any person or entity that you reasonably believe will use Data to violate the Universal Declaration of Human Rights (located at <a href="http://www.un.org/en/documents/udhr/">
+  http://www.un.org/en/documents/udhr/
+</a>), including without limitation Articles 12, 18, or 19. You will not conduct and your Application will not provide analyses or research that isolates a small group of individuals or any single individual for any unlawful or discriminatory purposes. Exemptions to these restrictions may be requested for exigent circumstances and are subject to prior written approval from UCL API.
+</p>
+<h3>
+Term and Termination
+</h3>
+<p>
+1.  <b>Duration of Terms</b>. This API Terms of Service will go into effect on the date upon which you agree to them, by accessing or using the UCL API, and will continue until terminated as set forth herein.
+</p>
+<p>
+2.  <b>Your Right to Terminate</b>. You may terminate this API Terms of Service by discontinuing use of our APIs.
+</p>
+<p>
+3.  <b>Suspension; Termination</b>. We may change, suspend or discontinue the UCL API and suspend or terminate your use of the UCL API, and/or the UCL API Service, at any time and for any reason, without notice. Without limiting the foregoing, we may limit your Application's access to the UCL API if it, in our sole discretion, may negatively affect our Service or our ability to provide our Service.
+</p>
+<p>
+4.  <b>Effect of Termination</b>. Upon termination of this API Terms of Service:
+</p>
+<p>
+i. All rights and licenses granted to you will terminate immediately;
+</p>
+<p>
+ii. You will promptly destroy Documentation and any other UCL API information in your possession or control that was received under this policy;
+</p>
+<p>
+iii. Unless we agree otherwise in writing or as stated in this policy, you must permanently delete all Data and other information that you stored pursuant to your use of the UCL APIs. UCL API may request that you certify in writing your compliance with this section; and
+</p>
+<p>
+iv. UCL will make commercially reasonable efforts to remove all references and links to your Application from its Services (UCL API has no other obligation to delete copies of, references to, or links to your Application).
+</p>
+<h2>
+Other Important Terms.
+</h2>
+ <p>
+ 1.  Modification of the API Terms of Service. We may change, add to or delete this API Terms of Service or any portion thereof from time to time in our sole discretion. If we make a material change to this API Terms of Service, we will provide you with reasonable notice prior to the changes by emailing you. You acknowledge that these updates and modifications may adversely impact how you access, use, and communicate with the UCL API. If any change in unacceptable to you, then your only recourse is to cease all use of the UCL API. Your continued access or use of the UCL API will mean that you agree to the updates and modifications.
+ </p>
+ <h2>
+ Disclaimer of Warranties; Limitation of Liability; Indemnity
+ </h2>
+ <p>
+ 1.  NO WARRANTIES. THE UCL API AND ALL RELATED COMPONENTS AND INFORMATION ARE PROVIDED ON AN “AS IS” AND “AS AVAILABLE” BASIS WITHOUT ANY WARRANTIES OF ANY KIND, AND UCL API EXPRESSLY DISCLAIMS ANY AND ALL WARRANTIES, WHETHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, TITLE, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. YOU ACKNOWLEDGE THAT UCL DOES NOT WARRANT THAT THE UCL API WILL BE UNINTERRUPTED, TIMELY, SECURE, ERROR-FREE OR VIRUS-FREE, NOR DOES IT MAKE ANY WARRANTY AS TO THE RESULTS THAT MAY BE OBTAINED FROM USE OF THE UCL API, AND NO INFORMATION, ADVICE OR SERVICES OBTAINED BY YOU FROM UCL OR THROUGH THE DEVELOPER SITE SHALL CREATE ANY WARRANTY NOT EXPRESSLY STATED IN THIS API Terms of Service.
+ </p>
+ <p>
+ 2.  LIMITATION ON LIABILITY. UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY (WHETHER IN CONTRACT, TORT, OR OTHERWISE) SHALL UCL API BE LIABLE TO YOU OR ANY THIRD PARTY FOR (A) ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, CONSEQUENTIAL OR PUNITIVE DAMAGES, INCLUDING LOST PROFITS, LOST SALES OR BUSINESS, LOST DATA, OR (B) FOR ANY AMOUNT IN THE AGGREGATE IN EXCESS OF THE FEES ACTUALLY PAID BY YOU IN THE SIX (6) MONTHS PRECEDING THE EVENT GIVING RISE TO YOUR CLAIM OR (C) ANY MATTER BEYOND OUR REASONABLE CONTROL. THE PROVISIONS OF THIS SECTION ALLOCATE THE RISKS UNDER THIS POLICY BETWEEN THE PARTIES, AND THE PARTIES HAVE RELIED ON THESE LIMITATIONS IN DETERMINING WHETHER TO ENTER INTO THIS POLICY. Some jurisdictions do not allow the exclusion of implied warranties or limitation of liability for incidental or consequential damages, which means that some of the above limitations may not apply to you. IN THESE JURISDICTIONS, UCL API’S LIABILITY WILL BE LIMITED TO THE GREATEST EXTENT PERMITTED BY LAW.
+ </p>
+ <h2>
+ General Legal Terms
+ </h2>
+ <p>
+ 1.  <b>Severability</b>. If any provision of this policy  is found to be illegal, void, or unenforceable, the unenforceable provision will be modified so as to render it enforceable to the maximum extent possible in order to effect the intention of the provision; if a term cannot be so modified, it will be severed and the remaining provisions of this policy will not be affected in any way.
+ </p>
+ <p>
+ 2.  <b>Entire Agreement</b>. This policy and any documents incorporated into this policy by reference, constitute the entire agreement between you and UCL API regarding the UCL APIs and supersedes all prior agreements and understandings, whether written or oral, or whether established by custom, practice, policy or precedent, with respect to the subject matter of this policy.
+ </p>
+ <p>
+ 3.  <b>No Informal Waivers, Agreements, or Representations</b>. Our failure to act with respect to a breach of this policy by you or others does not waive our right to act with respect to that breach or subsequent similar or other breaches. No representations, statements, consents, waivers or other acts or omissions by any UCL API affiliate shall be deemed legally binding on any UCL API affiliate, unless documented in a physical writing hand signed by a duly appointed officer of UCL API.
+ </p>
+ <p>
+ 4.  <b>Injunctive Relief</b>. In no event shall you seek or be entitled to rescission, injunctive or other equitable relief, or to enjoin or restrain the operation of UCL APIs, or other material used or displayed through the UCL API.
+ </p>
+ <p>
+ 5.  <b>Assignment and Delegation</b>. You may not assign or delegate any rights or obligations under this policy, including in connection with a change of control. Any purported assignment and delegation shall be ineffective. We may freely assign or delegate all rights and obligations under this policy, fully or partially without notice to you. We may also substitute, by way of unilateral novation, effective upon notice to you, for any third party that assumes our rights and obligations under this policy.
+ </p>

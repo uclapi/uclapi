@@ -106,3 +106,10 @@ node_modules
 
 # Oracle configuration files
 *.ora
+
+# Ignore VS files
+.vscode/
+.vs/
+
+# Static files
+static/
