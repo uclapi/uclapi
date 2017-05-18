@@ -4,7 +4,7 @@ import Layout from '../components/layout.jsx';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import GetStartedComponent from '../components/getStarted.jsx';
+import GetStartedComponent from '../components/getStarted/getStarted.jsx';
 
 
 // Needed for onTouchTap

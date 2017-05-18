@@ -1,3 +1,25 @@
 body {
 	margin: 0px;
 }
+
+.demo {
+	display: flex;
+	flex-wrap: wrap;
+
+	.text {
+		background: #F2F2F2;
+    flex: 1 200px;
+    height: 300px
+	}
+
+	.code {
+		background: #282A36;
+    flex: 1 200px;
+    height: 300px
+	}
+}
+
+code {
+	font-family: 'Source Code Pro', monospace;
+	font-size: 
+}
