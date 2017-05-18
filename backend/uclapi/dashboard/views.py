@@ -101,4 +101,6 @@ def dashboard(request):
 
 @ensure_csrf_cookie
 def get_started(request):
-    return render(request, 'getStarted.html')
+    return render(request, 'getStarted.html', {
+        'initial_data': {}
+    })
