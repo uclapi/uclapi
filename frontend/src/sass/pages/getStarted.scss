@@ -4,6 +4,40 @@
 body {
 	margin: 0px;
 	font-family: 'Roboto', sans-serif;
+	color: #333333;
+	background: #F4F4F4;
+}
+
+h1 {
+	font-size: 42px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+h2 {
+	font-size: 28px;
+}
+
+h3 {
+	font-size: 25px;
+	margin-top: 0px;
+	font-weight: lighter;
+}
+
+.navbar {
+	padding-left: 60px !important;
+
+	img {
+		width: 45px;
+		padding-right: 10px;
+	}
+}
+
+.jumbotron {
+	background-color: #0B3954;
+	padding-top: 100px;
+	padding-bottom: 100px;
+	color: white;
 }
 
 .demo {
@@ -11,7 +45,7 @@ body {
 	flex-wrap: wrap;
 
 	.text {
-		background: #0B3954;
+		background: white;
     flex: 1 200px;
 		padding-right: 15px;
 	  padding-left: 60px;
