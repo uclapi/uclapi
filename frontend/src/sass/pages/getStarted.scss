@@ -1,5 +1,9 @@
+@import '../includes/helpers';
+
+
 body {
 	margin: 0px;
+	font-family: 'Roboto', sans-serif;
 }
 
 .demo {
@@ -7,19 +11,35 @@ body {
 	flex-wrap: wrap;
 
 	.text {
-		background: #F2F2F2;
+		background: #0B3954;
     flex: 1 200px;
-    height: 300px
+		padding-right: 15px;
+	  padding-left: 60px;
+	  margin-right: auto;
+	  margin-left: auto;
 	}
 
 	.code {
 		background: #282A36;
     flex: 1 200px;
-    height: 300px
+    height: 100%;
+		overflow-y: auto;
 	}
+}
+
+.examples {
+	display: flex;
+	flex-wrap: wrap;
+
+	.example {
+		flex: 1 200px;
+		width: 100%;
+		margin: 10px;
+	}
+
 }
 
 code {
 	font-family: 'Source Code Pro', monospace;
-	font-size: 
+	font-size: 12px;
 }
