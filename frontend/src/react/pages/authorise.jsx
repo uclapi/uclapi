@@ -22,9 +22,15 @@ class AuthoriseApp extends React.Component {
               private_roombookings={this.state.data.scope.private_roombookings}
               private_timetable={this.state.data.scope.private_timetable}
               private_uclu={this.state.data.scope.private_uclu}
+              user_full_name={this.state.data.user.full_name}
+              user_email={this.state.data.user.email}
+              user_department={this.state.data.user.department}
+              user_upi={this.state.data.user.upi}
               />
             <hr/>
             <h3>Would you like to allow {this.state.data.app_name} access to the data shown above?</h3>
+            <button className="pure-button pure-button-primary padded" onClick={this.authoriseApp}>Allow</button>
+            <button className="pure-button button-error padded" onClick={this.denyApp}>Deny</button>
             <hr/>
             <em>
               Apps you connect to UCL via the API (<a href="https://uclapi.com/">uclapi.com</a>) cannot access any data that is not shown above. Your personal details such as your home address, date of birth, UCL password and phone number are kept private and cannot be accessed even with these permissions. If you have any further questions please do not hesitate to contact us by email: <a href="mailto:isd.apiteam@ucl.ac.uk">isd.apiteam@ucl.ac.uk</a>.

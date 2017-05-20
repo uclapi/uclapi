@@ -129,8 +129,11 @@ def shibcallback(request):
             "private_uclu": app.scope.private_uclu
         },
         "user": {
-            "full_name": given_name,
-            "eppn": eppn
+            "full_name": user.full_name,
+            "cn": user.cn,
+            "email": user.email,
+            "department": user.department,
+            "upi": user.employee_id
         }
     }
 
