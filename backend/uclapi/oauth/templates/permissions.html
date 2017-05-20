@@ -20,6 +20,10 @@
     window.staticURL = {% static "" %}
   </script>
 	<div class="app"></div>
+  <div class="csrfDiv">
+    <form id="csrfTokenForm">
+      {% csrf_token %}
+    </form>
   <script src="{% static "js/authorise.js" %}"></script>
   <script src="https://use.fontawesome.com/c70d56d6fc.js"></script>
 

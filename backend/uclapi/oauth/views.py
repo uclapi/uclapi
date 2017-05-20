@@ -4,7 +4,7 @@ from django.core import signing
 from django.core.signing import TimestampSigner
 from django.utils.http import quote
 from django.core.serializers.json import DjangoJSONEncoder
-from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, csrf_protect
 
 from dashboard.models import App, User
 
@@ -47,6 +47,7 @@ def authorise(request):
     return redirect(url)
 
 @csrf_exempt
+@ensure_csrf_cookie
 def shibcallback(request):
     # Callback from Shib login. Get ALL the meta!
     appdata_signed = request.GET.get("appdata", None)
@@ -117,6 +118,16 @@ def shibcallback(request):
             "email": eppn,
             "name": display_name
         })
+    
+    signer = TimestampSigner()
+    response_data = {
+        "client_id": app.client_id,
+        "state": state,
+        "user_upi": user.employee_id
+    }
+
+    response_data_str = json.dumps(response_data, cls=DjangoJSONEncoder)
+    response_data_signed = signer.sign(response_data_str)
 
     page_data = {
         "app_name": app.name,
@@ -134,7 +145,8 @@ def shibcallback(request):
             "email": user.email,
             "department": user.department,
             "upi": user.employee_id
-        }
+        },
+        "signed_data": response_data_signed
     }
 
     initial_data = json.dumps(page_data, cls=DjangoJSONEncoder)
@@ -142,4 +154,12 @@ def shibcallback(request):
     {
         'initial_data': initial_data
     })
-    # return JsonResponse(page_data)
+
+
+@csrf_protect
+def userdeny(request):
+    signer = TimestampSigner()
+    
+@csrf_protect
+def userallow(request):
+    signer = TimestampSigner()
