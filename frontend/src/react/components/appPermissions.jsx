@@ -2,7 +2,7 @@ import React from 'react';
 
 class AppPermissions extends React.Component {
     render() {
-        return <div className="card pure-u-4">
+        return <div className="pure-u-4">
             <h2>{this.props.app_name}</h2>
             <h4><em>Written by {this.props.creator}</em></h4>
             <hr/>
@@ -10,7 +10,7 @@ class AppPermissions extends React.Component {
             {
                 (!(this.props.private_roombookings || this.props.private_timetable || this.props.private_uclu)) &&
                 <em>
-                    This app has not requested access to any of your personal UCL data.
+                    This app has not requested access to any of your personal UCL data. It will only be able to see public data, such as the public timetable and room bookings information. If you are expecting this app to show you any personal data, please contact the vendor.
                 </em>
             }
             <ul>
