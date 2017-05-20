@@ -4,14 +4,25 @@ from rest_framework.decorators import api_view
 from .models import Room, Equipment, BookingA, BookingB, Lock
 from .decorators import does_token_exist, log_api_call
 
+from dashboard.models import App
+from ratelimit.decorators import ratelimit
+
 from .helpers import _parse_datetime, _serialize_rooms, \
     _get_paginated_bookings, _create_page_token, _return_json_bookings, \
     _serialize_equipment, PrettyJsonResponse as JsonResponse
 
 
+def myHelperFunction(group, request):
+    token = request.GET.get("token")
+    userid = App.objects.get(api_token=token).user.email
+
+    return userid
+
+
 @api_view(['GET'])
 @does_token_exist
 @log_api_call
+@ratelimit(key=myHelperFunction)
 def get_rooms(request):
     # add them to iterables so can be filtered without if-else
     request_params = {}
