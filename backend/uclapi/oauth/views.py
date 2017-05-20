@@ -134,9 +134,9 @@ def shibcallback(request):
         }
     }
 
-    # initial_data = json.dumps(page_data, cls=DjangoJSONEncoder)
-    # return render(request, 'permissions.html',
-    # {
-    #     'initial_data': initial_data
-    # })
-    return JsonResponse(page_data)
+    initial_data = json.dumps(page_data, cls=DjangoJSONEncoder)
+    return render(request, 'permissions.html',
+    {
+        'initial_data': initial_data
+    })
+    # return JsonResponse(page_data)

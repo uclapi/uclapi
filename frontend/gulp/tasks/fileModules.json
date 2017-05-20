@@ -1,4 +1,5 @@
 {
   "dashboard": "dashboard" , 
-  "agreement": "dashboard"
+  "agreement": "dashboard",
+  "authorise": "oauth"
 }
