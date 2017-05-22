@@ -32,10 +32,12 @@ class AuthoriseApp extends React.Component {
             <h3>Would you like to allow {this.state.data.app_name} access to the data shown above?</h3>
             <form method="post" action="/oauth/user/allow" style={{display: 'inline'}}>
               <button type="submit" className="pure-button pure-button-primary padded">Allow</button>
+              <input type="hidden" name="csrfmiddlewaretoken" value={Cookies.get('csrftoken')}/>
             </form>
             
             <form method="post" action="/oauth/user/deny" style={{display: 'inline'}}>
               <button className="pure-button button-error padded">Deny</button>
+              <input type="hidden" name="csrfmiddlewaretoken" value={Cookies.get('csrftoken')}/>
             </form>
             <hr/>
             <em>
