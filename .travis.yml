@@ -29,7 +29,7 @@ script:
   - touch .env
   - python ./manage.py migrate
   # codecov.io
-  - coverage run --source='.' manage.py test --testrunner 'roombookings.custom_test_runner.NoDbTestRunner'
+  - coverage run --source='.' --omit='*migrations*' manage.py test --testrunner 'roombookings.custom_test_runner.NoDbTestRunner'
   # Linting
   - pylint $(find . -name "*.py" -print) > pylint.log || (($? != 1))
   # Succeeds as long as score > 7
