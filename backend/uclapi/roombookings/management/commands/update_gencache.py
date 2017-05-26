@@ -29,6 +29,12 @@ class Command(BaseCommand):
             ' = \'{}\')'.format(settings.ROOMBOOKINGS_SETID)
         )
 
+        select_query2 = (
+            'SELECT * FROM "CMIS_UCLAPI_V_BOOKINGS"'
+            ' WHERE (bookabletype = \'CB\' AND setid'
+            ' = \'LIVE-16-17\')'
+        )
+
         cur.execute(select_query)
 
         self.stdout.write("Selecting a clone table...")
