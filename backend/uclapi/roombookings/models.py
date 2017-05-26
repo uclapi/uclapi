@@ -24,6 +24,7 @@ class Booking(models.Model):
     condisplayname = models.CharField(max_length=4000, blank=True, null=True)
     phone = models.CharField(max_length=160, blank=True, null=True)
     descrip = models.CharField(max_length=400, blank=True, null=True)
+    title = models.CharField(max_length=523, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -48,6 +49,7 @@ class BookingA(models.Model):
     condisplayname = models.CharField(max_length=4000, blank=True, null=True)
     phone = models.CharField(max_length=160, blank=True, null=True)
     descrip = models.CharField(max_length=400, blank=True, null=True)
+    title = models.CharField(max_length=523, blank=True, null=True)
 
     class Meta:
         _DATABASE = 'gencache'
@@ -70,6 +72,7 @@ class BookingB(models.Model):
     condisplayname = models.CharField(max_length=4000, blank=True, null=True)
     phone = models.CharField(max_length=160, blank=True, null=True)
     descrip = models.CharField(max_length=400, blank=True, null=True)
+    title = models.CharField(max_length=523, blank=True, null=True)
 
     class Meta:
         _DATABASE = 'gencache'
