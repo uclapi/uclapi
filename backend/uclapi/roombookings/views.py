@@ -1,29 +1,39 @@
 from functools import reduce
 
-from rest_framework.decorators import api_view
+from django.http import JsonResponse
+from rest_framework.decorators import api_view, throttle_classes
+from rest_framework.throttling import SimpleRateThrottle
 from .models import Room, Equipment, BookingA, BookingB, Lock
 from .decorators import does_token_exist, log_api_call
 
 from dashboard.models import App
-from ratelimit.decorators import ratelimit
 
 from .helpers import _parse_datetime, _serialize_rooms, \
     _get_paginated_bookings, _create_page_token, _return_json_bookings, \
     _serialize_equipment, PrettyJsonResponse as JsonResponse
 
 
-def myHelperFunction(group, request):
-    token = request.GET.get("token")
-    userid = App.objects.get(api_token=token).user.email
+class APIThrottle(SimpleRateThrottle):
+    scope = 'uclapi'
+    THROTTLE_RATES = {'uclapi': '1/day'}
 
-    return userid
+    def get_cache_key(self, request, view):
+        token = request.GET.get("token")
+        return token
+        userid = App.objects.get(api_token=token).user.email
+        return userid
 
+    def wait(self):
+        return 0
+	
+		
 
 @api_view(['GET'])
-@does_token_exist
-@log_api_call
-@ratelimit(key=myHelperFunction)
+@throttle_classes([APIThrottle])
+#@does_token_exist
+#@log_api_call
 def get_rooms(request):
+    return JsonResponse({"a":"1"})
     # add them to iterables so can be filtered without if-else
     request_params = {}
 
