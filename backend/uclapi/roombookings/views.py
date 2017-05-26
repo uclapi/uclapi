@@ -20,7 +20,7 @@ class APIThrottle(SimpleRateThrottle):
     def get_cache_key(self, request, view):
         token = request.GET.get("token")
         userid = App.objects.get(api_token=token).user.email
-        return userid	
+        return userid
 
 @api_view(['GET'])
 @does_token_exist
