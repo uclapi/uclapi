@@ -1,13 +1,12 @@
 from functools import reduce
 
+from dashboard.models import App
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, throttle_classes
 from rest_framework.throttling import SimpleRateThrottle
-from .models import Room, Equipment, BookingA, BookingB, Lock
+
 from .decorators import does_token_exist, log_api_call
-
-from dashboard.models import App
-
+from .models import Room, Equipment, BookingA, BookingB, Lock
 from .helpers import _parse_datetime, _serialize_rooms, \
     _get_paginated_bookings, _create_page_token, _return_json_bookings, \
     _serialize_equipment, PrettyJsonResponse as JsonResponse
