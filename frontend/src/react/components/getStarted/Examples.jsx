@@ -4,40 +4,53 @@ import FlatButton from 'material-ui/FlatButton';
 
 
 const Example = (title, imageLink, description, link, key) => (
-  <Card className="example" key={ key }>
-    <CardMedia>
-      <img src={ imageLink } />
-    </CardMedia>
-    <CardTitle title={ title } />
-    <CardText>
-      { description }
-    </CardText>
-    <CardActions>
-      <a href={ link }>
-        <FlatButton label="View" />
-      </a>
-    </CardActions>
-  </Card>
+  <div className="exampleContainer" key={ key }>
+    <Card className="example" zDepth={2}>
+      <CardMedia>
+        <img src={ imageLink } />
+      </CardMedia>
+      <CardTitle title={ title } />
+      <CardText>
+        { description }
+      </CardText>
+      <CardActions>
+        <a href={ link }>
+          <FlatButton label="View" />
+        </a>
+      </CardActions>
+    </Card>
+  </div>
 )
 
 let examples = [
   {
-    title: "Techsoc",
-    imageLink: "https://avatars2.githubusercontent.com/u/3532459?v=3&s=400",
-    description: "Used to build an amazing room bookings platform",
-    link: "https://enghub.io"
+    title: "Veruto",
+    imageLink: "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png",
+    description: "A mobile app that finds the closest free room in UCL",
+    link: "https://github.com/uclapi/veruto"
   },
   {
-    title: "Techsoc",
-    imageLink: "https://avatars2.githubusercontent.com/u/3532459?v=3&s=400",
-    description: "Used to build an amazing room bookings platform",
-    link: "https://enghub.io"
+    title: "Society Visualisation",
+    imageLink: "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png",
+    description: "A calendar visualisation of Society Room Bookings at UCL",
+    link: "https://github.com/uclapi/society-visualisation"
   },
   {
-    title: "Techsoc",
-    imageLink: "https://avatars2.githubusercontent.com/u/3532459?v=3&s=400",
-    description: "Used to build an amazing room bookings platform",
-    link: "https://enghub.io"
+    title: "RB Calendar",
+    imageLink: "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png",
+    description: "Turn UCL API room bookings into ics calendar events.",
+    link: "http://rbcalendar.uclapi.com"
+  },
+  {
+    title: "RB Calendar",
+    imageLink: "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png",
+    description: "Turn UCL API room bookings into ics calendar events.",
+    link: "http://rbcalendar.uclapi.com"
+  },{
+    title: "RB Calendar",
+    imageLink: "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png",
+    description: "Turn UCL API room bookings into ics calendar events.",
+    link: "http://rbcalendar.uclapi.com"
   }
 ]
 

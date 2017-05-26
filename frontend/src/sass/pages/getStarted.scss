@@ -5,7 +5,7 @@ body {
 	margin: 0px;
 	font-family: 'Roboto', sans-serif;
 	color: #333333;
-	background: #F4F4F4;
+	background: #FFFFFF;
 }
 
 h1 {
@@ -43,37 +43,44 @@ h3 {
 .demo {
 	display: flex;
 	flex-wrap: wrap;
+}
 
-	.text {
-		background: white;
-    flex: 1 200px;
-		padding-right: 15px;
-	  padding-left: 60px;
-	  margin-right: auto;
-	  margin-left: auto;
-	}
+.text {
+	background: white;
+	flex: 1 200px;
+	padding-right: 15px;
+	padding-left: 60px;
+	margin-right: auto;
+	margin-left: auto;
+}
 
-	.code {
-		background: #282A36;
-    flex: 1 200px;
-    height: 100%;
-		overflow-y: auto;
-	}
+.code {
+	background: #282A36;
+	flex: 1 200px;
+	overflow-y: auto;
+}
+
+.code hr {
+	margin: 0px;
+	border: 2px solid white;
 }
 
 .examples {
 	display: flex;
 	flex-wrap: wrap;
+}
 
-	.example {
-		flex: 1 200px;
-		width: 100%;
-		margin: 10px;
-	}
+.exampleContainer {
+	min-width: 200px;
+	width: 25%;
+}
 
+.example {
+	// flex: 1 300px;
+	margin: 10px;
 }
 
 code {
 	font-family: 'Source Code Pro', monospace;
-	font-size: 12px;
+	font-size: 14px;
 }

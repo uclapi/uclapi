@@ -3,85 +3,38 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import AutoComplete from 'material-ui/AutoComplete';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/styles';
+import RaisedButton from 'material-ui/RaisedButton';
+import { API_TOKEN } from '../config.jsx';
+import 'whatwg-fetch';
 
 
 let languages = [
   {
     "name": "python",
-    "code": `from twilio.rest import TwilioRestClient
+    "code": `import requests
 
-# put your own credentials here
-AUTH_TOKEN = "[something]"
+params = {
+  "token": "YOUR-API-KEY"
+}
 
-client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
-
-client.messages.create(
-  to="+16518675309",
-  from_="+14158141829",
-  body="Tomorrow forecast in Financial District, San Francisco is Clear.",
-  media_url="https://climacons.herokuapp.com/clear.png",
-)`
+r = requests.get("https://uclapi.com/roombookings/bookings", params=params)
+print(r.json())`
   },
 
   {
     "name": "javascript",
-    "code": `// Twilio
-//require the Twilio module and create a REST client
-var client = require('twilio')(accountSid, authToken);
-
-client.messages.create({
-  to: "+16518675309",
-  from: "+14158141829",
-  body: "Tomorrow's forecast in Financial District, San Francisco is Clear.",
-  mediaUrl: "https://climacons.herokuapp.com/clear.png",
-}, function(err, message) {
-  console.log(message.sid);
-});`
-  },
-
-  {
-    name: "java",
-    code: `// You may want to be more specific in your imports
-import java.util.*;
-import com.twilio.sdk.*;
-import com.twilio.sdk.resource.factory.*;
-import com.twilio.sdk.resource.instance.*;
-import com.twilio.sdk.resource.list.*;
-
-public class TwilioTest {
-
- // Find your Account Sid and Token at twilio.com/user/account
- public static final String AUTH_TOKEN = "[something]";
- public static void main(String[]args) throws TwilioRestException {
-  TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN);
-   // Build the parameters
-   List<NameValuePair> params = new ArrayList<NameValuePair>();
-   params.add(new BasicNameValuePair("To", "+16518675309"));
-   params.add(new BasicNameValuePair("From", "+14158141829"));
-   params.add(new BasicNameValuePair("Body", "Tomorrow's forecast is clear"));
-   MessageFactory messageFactory = client.getAccount().getMessageFactory();
-   Message message = messageFactory.create(params);
-   System.out.println(message.getSid());
- }
-}`
-  },
-
-  {
-    name: "ruby",
-    code: `require 'rubygems' # not necessary with ruby 1.9 but included for completeness
-require 'twilio-ruby'
-
-# put your own credentials here
-auth_token = '[AuthToken]'
-
-# set up a client to talk to the Twilio REST API
-@client = Twilio::REST::Client.new account_sid, auth_token
-@client.account.messages.create({
-  :from => '+14158141829',
-  :to => '+16518675309',
-  :body => 'Tomorrow\'s forecast in Financial District, San Francisco is Clear.',
-  :media_url => 'https://climacons.herokuapp.com/clear.png'
+    "code": `fetch("https://uclapi.com/roombookings/bookings?token=YOUR-API-KEY")
+.then((response) => {
+  return response.json()
+})
+.then((json) => {
+  console.log(json);
 })`
+  },
+
+  {
+    name: "bash",
+    code: `curl https://uclapi.com/roombookings/bookings?token=YOUR-API-KEY`
   }
 ]
 
@@ -171,16 +124,62 @@ let rooms = [
 
 export default class Demo extends React.Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      schedule: "",
+      roomName: ""
+    };
+
+    this.getSchedule = this.getSchedule.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(roomName) {
+    this.setState({roomName: roomName});
+  }
+
+  getSchedule() {
+    let now = new Date();
+    let url = "https://uclapi.com/roombookings/bookings?token=" + API_TOKEN
+      + "&roomname=" + this.state.roomName
+      + "&date=" + now.toISOString().substring(0, 10).replace(/-/g, "");
+
+    fetch(url)
+    .then(response => {
+       return response.json();
+    })
+    .then((data) => {
+       this.setState({schedule: JSON.stringify(data, null, 4)});
+    })
+  }
+
   render () {
+    let response = <div></div>;
+
+    if (this.state.schedule) {
+      response = <div>
+        <SyntaxHighlighter language={"javascript"}
+          style={dracula}>
+          {this.state.schedule}
+        </SyntaxHighlighter>
+      </div>;
+    }
+
     return (
       <div className="demo">
 
         <div className="text">
-          <h2>Enter Room Name</h2>
+          <h2>Get Today's Bookings for a Room</h2>
           <AutoComplete fullWidth={true}
             floatingLabelText="Room Name"
+            filter={AutoComplete.caseInsensitiveFilter}
             openOnFocus={true}
-            dataSource={rooms} />
+            dataSource={rooms}
+            onNewRequest={this.handleChange} />
+          <RaisedButton label="Get Schedule" primary={true}
+            onClick={this.getSchedule} />
         </div>
 
         <div className="code">
@@ -196,6 +195,10 @@ export default class Demo extends React.Component {
               ))
             }
           </Tabs>
+
+          <hr />
+
+          { response }
         </div>
 
       </div>
