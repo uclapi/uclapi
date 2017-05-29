@@ -39,8 +39,6 @@ class Command(BaseCommand):
         )
 
         ddiff = DeepDiff(old_bookings, new_bookings, ignore_order=True)
-        bookings_added = ddiff["iterable_item_added"].values()
-        bookings_removed = ddiff["iterable_item_removed"].values()
 
         webhooks = WebHook.objects.all()
         #  assumption: list of webhooks will be longer than ddiff
@@ -62,26 +60,40 @@ class Command(BaseCommand):
                         webhook.contact in booking["contact"]
                     )
                 )
-            return {
+            output = {
                 "webhook_in_db": webhook,
-                "url": webhook.url,
-                "bookings_added": list(filter(webhook_filter, bookings_added)),
-                "bookings_removed": list(
-                    filter(webhook_filter, bookings_removed)
-                ),
+                "url": webhook.url
             }
+            if "iterable_item_added" in ddiff:
+                output["bookings_added"] = list(filter(
+                    webhook_filter, ddiff["iterable_item_added"].values()
+                ))
+            if "iterable_item_removed" in ddiff:
+                output["bookings_removed"] = list(filter(
+                    webhook_filter, ddiff["iterable_item_removed"].values()
+                ))
+
+            return output
 
         webhooks_to_enact = list(map(webhook_map, webhooks))
 
-        unsent_requests = [grequests.post(
-            webhook["url"], json={
-                "bookings_added": webhook["bookings_added"],
-                "bookings_removed": webhook["bookings_removed"],
-            },
-            headers={
-                "User-Agent": "uclapi-bot/1.0"
-            }
-        ) for webhook in webhooks_to_enact]
+        unsent_requests = []
+        for webhook in webhooks_to_enact:
+            payload = {}
+
+            if "bookings_added" in webhook:
+                payload["bookings_added"] = webhook["bookings_added"]
+            if "bookings_removed" in webhook:
+                payload["bookings_removed"] = webhook["bookings_removed"]
+
+            if payload != {}:
+                unsent_requests.append(
+                    grequests.post(
+                        webhook["url"], json=payload, headers={
+                            "User-Agent": "uclapi-bot/1.0"
+                        }
+                    )
+                )
         grequests.map(unsent_requests)
 
         for webhook in webhooks_to_enact:
