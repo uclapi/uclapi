@@ -96,3 +96,17 @@ class APICall(models.Model):
 
     class Meta:
         _DATABASE = 'default'
+
+
+class WebHook(models.Model):
+    user = models.ForeignKey(User)
+    url = models.URLField(max_length=1000)
+
+    siteid = models.CharField(max_length=40, blank=True)
+    roomid = models.CharField(max_length=160, blank=True)
+    contact = models.CharField(max_length=4000, blank=True)
+
+    last_fired = models.DateTimeField(blank=True, null=True)
+
+    created = models.DateTimeField(auto_now=False, auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
