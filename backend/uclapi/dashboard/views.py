@@ -124,7 +124,7 @@ def dashboard(request):
                     "private_roombookings": app.scope.private_roombookings,
                     "private_timetable": app.scope.private_timetable,
                     "private_uclu": app.scope.private_uclu
-                }          
+                }
             }
         })
 

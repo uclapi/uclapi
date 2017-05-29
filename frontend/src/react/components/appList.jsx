@@ -4,14 +4,19 @@ import 'whatwg-fetch';
 import Cookies from 'js-cookie';
 import moment from 'moment';
 import Modal from 'react-modal';
+import Collapse, { Panel } from 'rc-collapse';
 
 class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       editing: false,
-      copied: false,
-      error: ''
+      tokenCopied: false,
+      clientIdCopied: false,
+      clientSecretCopied: false,
+      callbackUrlSaved: false,
+      error: '',
+      callbackUrl: this.props.callbackUrl == null ? '' : this.props.callbackUrl
     };
     this.changeName = this.changeName.bind(this);
     this.editName = this.editName.bind(this);
@@ -21,7 +26,17 @@ class App extends React.Component {
     this.deleteConfirm = this.deleteConfirm.bind(this);
     this.stopEditing = this.stopEditing.bind(this);
     this.copyToken = this.copyToken.bind(this);
-    this.setCopyText = this.setCopyText.bind(this);
+    this.copyClientId = this.copyClientId.bind(this);
+    this.copyClientSecret = this.copyClientSecret.bind(this);
+    this.setCopyTextToken = this.setCopyTextToken.bind(this);
+    this.setCopyTextClientId = this.setCopyTextClientId.bind(this);
+    this.setCopyTextClientSecret = this.setCopyTextClientSecret.bind(this);
+    this.setSaveCallbackUrl = this.setSaveCallbackUrl.bind(this);
+    this.updateCallbackUrl = this.updateCallbackUrl.bind(this);
+    this.saveCallbackUrl = this.saveCallbackUrl.bind(this);
+    this.updateRoomBookingsScope = this.updateRoomBookingsScope.bind(this);
+    this.updateTimetableScope = this.updateTimetableScope.bind(this);
+    this.updateUcluScope = this.updateUcluScope.bind(this);
 
     /*
       Make moment.js say 'just now' if the time difference is less
@@ -177,6 +192,12 @@ class App extends React.Component {
     });
   }
 
+  updateCallbackUrl(e){
+    this.setState({
+      callbackUrl: e.target.value
+    });
+  }
+
   copyToken(e){
     e.preventDefault();
 
@@ -187,7 +208,7 @@ class App extends React.Component {
       // copy text
       document.execCommand('copy');
       this.setState({
-        copied: true
+        tokenCopied: true
       });
       tokenElement.blur();
     }catch (err) {
@@ -195,12 +216,189 @@ class App extends React.Component {
     }
   }
 
-  setCopyText(){
-    this.setState({
-      copied: false
+  copyClientId(e){
+    e.preventDefault();
+
+    let clientIdElement = this.refs.clientId;
+    clientIdElement.select();
+
+    try {
+      // copy text
+      document.execCommand('copy');
+      this.setState({
+        clientIdCopied: true
+      });
+      clientIdElement.blur();
+    }catch (err) {
+      alert('please press Ctrl/Cmd+C to copy');
+    }
+  }
+
+  copyClientSecret(e){
+    e.preventDefault();
+
+    let clientSecretElement = this.refs.clientSecret;
+    clientSecretElement.select();
+
+    try {
+      // copy text
+      document.execCommand('copy');
+      this.setState({
+        clientSecretCopied: true
+      });
+      clientSecretElement.blur();
+    }catch (err) {
+      alert('please press Ctrl/Cmd+C to copy');
+    }
+  }
+
+  saveCallbackUrl(e){
+    e.preventDefault();
+
+    let that = this;
+
+    fetch('/dashboard/api/setcallbackurl/', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': Cookies.get('csrftoken')
+      },
+      body: 'app_id=' + this.props.appId + '&callback_url=' + encodeURIComponent(this.state.callbackUrl)
+    }).then((res)=>{
+      if(res.ok){
+        return res.json();
+      }else{
+        throw new Error('An error occured');
+      }
+    }).then((json)=>{
+      if(json.success){
+        that.setState({
+          callbackUrlSaved: true
+        })
+      }else{
+        throw new Error(json.message);
+      }
+    }).catch((err)=>{
+      that.setState({
+        error: err.message
+      });
     });
   }
 
+  setCopyTextToken(){
+    this.setState({
+      tokenCopied: false
+    });
+  }
+
+  setCopyTextClientId(){
+    this.setState({
+      clientIdCopied: false
+    });
+  }
+
+  setCopyTextClientSecret(){
+    this.setState({
+      clientSecret: false
+    });
+  }
+
+  setSaveCallbackUrl() {
+    this.setState({
+      callbackUrlSaved: false
+    })
+  }
+
+  updateRoomBookingsScope(e){
+    let that = this;
+
+    fetch('/dashboard/api/setscope/roombookings/', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': Cookies.get('csrftoken')
+      },
+      body: 'app_id=' + this.props.appId + '&scope_status=' + e.target.checked
+    }).then((res)=>{
+      if(res.ok){
+        return res.json();
+      }else{
+        throw new Error('An error occured');
+      }
+    }).then((json)=>{
+      if(json.success){
+        // State Set OK
+      }else{
+        throw new Error(json.message);
+      }
+    }).catch((err)=>{
+      that.setState({
+        error: err.message
+      });
+    });
+  }
+
+  updateTimetableScope(e){
+    let that = this;
+
+    fetch('/dashboard/api/setscope/timetable/', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': Cookies.get('csrftoken')
+      },
+      body: 'app_id=' + this.props.appId + '&scope_status=' + e.target.checked
+    }).then((res)=>{
+      if(res.ok){
+        return res.json();
+      }else{
+        throw new Error('An error occured');
+      }
+    }).then((json)=>{
+      if(json.success){
+        // State Set OK
+      }else{
+        throw new Error(json.message);
+      }
+    }).catch((err)=>{
+      that.setState({
+        error: err.message
+      });
+    });
+  }
+
+  updateUcluScope(e){
+    let that = this;
+
+    fetch('/dashboard/api/setscope/uclu/', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': Cookies.get('csrftoken')
+      },
+      body: 'app_id=' + this.props.appId + '&scope_status=' + e.target.checked
+    }).then((res)=>{
+      if(res.ok){
+        return res.json();
+      }else{
+        throw new Error('An error occured');
+      }
+    }).then((json)=>{
+      if(json.success){
+        // State Set OK
+      }else{
+        throw new Error(json.message);
+      }
+    }).catch((err)=>{
+      that.setState({
+        error: err.message
+      });
+    });
+  }
 
   render () {
     return <div className="app pure-u-1 pure-u-xl-1-2">
@@ -246,11 +444,11 @@ class App extends React.Component {
                 <button 
                   className="pure-button pure-button-primary pure-input-1 tooltip"
                   onClick={this.copyToken}
-                  onMouseEnter={this.setCopyText}
+                  onMouseEnter={this.setCopyTextToken}
                   style={{ 'border': '1px solid #ccc', 'borderRadius': '0px'}}
                 >
                   <i className="fa fa-clipboard" aria-hidden="true"></i>
-                  <span>{this.state.copied?'Copied!':'Click to copy to clipboard'}</span>
+                  <span>{this.state.tokenCopied?'Copied!':'Click to copy to clipboard'}</span>
                 </button>
               </div>
               <div className="pure-u-1-6">
@@ -267,6 +465,100 @@ class App extends React.Component {
         </div>
         <p title={moment(this.props.created).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Created: {moment(this.props.created).fromNowOrNow()}</p>
         <p title={moment(this.props.updated).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Updated: {moment(this.props.updated).fromNowOrNow()}</p>
+        <Collapse>
+          <Panel header="OAuth Settings"
+                 showArrow={true}>
+            <div>
+              OAuth allows you to create apps that provide users with personal data.
+              More information can be found in the <a href="https://docs.uclapi.com">docs</a>.<br/><br/>
+              Client ID
+              <form className="pure-form pure-g">
+                <div className="pure-u-3-4">
+                  <input 
+                    type="text"
+                    ref="clientId"
+                    className="pure-input-1"
+                    value={this.props.clientId}
+                    readOnly
+                    style={{ 'borderRadius': '4px 0px 0px 4px'}}
+                  />
+                </div>
+                <div className="pure-u-1-4">
+                  <button 
+                    className="pure-button pure-button-primary pure-input-1 tooltip"
+                    onClick={this.copyClientId}
+                    onMouseEnter={this.setCopyTextClientId}
+                    style={{ 'border': '1px solid #ccc', 'borderRadius': '0px'}}
+                  >
+                    <i className="fa fa-clipboard" aria-hidden="true"></i>
+                    <span>{this.state.clientIdCopied?'Copied!':'Click to copy to clipboard'}</span>
+                  </button>
+                </div>
+              </form>
+
+              Client Secret
+              <form className="pure-form pure-g">
+                <div className="pure-u-3-4">
+                  <input 
+                    type="text"
+                    ref="clientSecret"
+                    className="pure-input-1"
+                    value={this.props.clientSecret}
+                    readOnly
+                    style={{ 'borderRadius': '4px 0px 0px 4px'}}
+                  />
+                </div>
+                <div className="pure-u-1-4">
+                  <button 
+                    className="pure-button pure-button-primary pure-input-1 tooltip"
+                    onClick={this.copyClientSecret}
+                    onMouseEnter={this.setCopyTextClientSecret}
+                    style={{ 'border': '1px solid #ccc', 'borderRadius': '0px'}}
+                  >
+                    <i className="fa fa-clipboard" aria-hidden="true"></i>
+                    <span>{this.state.clientSecretCopied?'Copied!':'Click to copy to clipboard'}</span>
+                  </button>
+                </div>
+              </form>
+
+              Callback URL
+              <form className="pure-form pure-g">
+                <div className="pure-u-3-4">
+                  <input 
+                    type="text"
+                    ref="callbackUrl"
+                    className="pure-input-1"
+                    value={this.state.callbackUrl}
+                    style={{ 'borderRadius': '4px 0px 0px 4px'}}
+                    onChange={this.updateCallbackUrl}
+                  />
+                </div>
+                <div className="pure-u-1-4">
+                  <button 
+                    className="pure-button pure-button-primary pure-input-1 tooltip"
+                    onClick={this.saveCallbackUrl}
+                    onMouseEnter={this.setSaveCallbackUrl}
+                    style={{ 'border': '1px solid #ccc', 'borderRadius': '0px'}}
+                  >
+                    <i className="fa fa-save" aria-hidden="true"></i>
+                    <span>{this.state.callbackUrlSaved?'Saved!':'Click to save the Callback URL'}</span>
+                  </button>
+                </div>
+              </form>
+              <br/>
+              <br/>
+              <h4>OAuth Scope</h4>
+              <em>
+                The scope defines which personal data your application will be able to access.
+                For more information, please consult the <a href="https://uclapi.com/docs">docs</a> for more details on scope.
+              </em><br/><br/>
+              <input type="checkbox" onChange={this.updateRoomBookingsScope} defaultChecked={this.props.privateRoomBookings} /> Personal Room Bookings<br/>
+              <input type="checkbox" onChange={this.updateTimetableScope} defaultChecked={this.props.privateTimetable} /> Personal Timetable<br/>
+              <input type="checkbox" onChange={this.updateUcluScope} defaultChecked={this.props.privateUclu} /> Personal UCLU Data<br/>
+            </div>
+          </Panel>
+        </Collapse>
+
         <label className="error">{this.state.error}</label>
         </div>
     </div>;
@@ -280,7 +572,13 @@ App.propTypes = {
   created: React.PropTypes.string.isRequired,
   updated: React.PropTypes.string.isRequired,
   update: React.PropTypes.func.isRequired,
-  remove: React.PropTypes.func.isRequired
+  remove: React.PropTypes.func.isRequired,
+  clientId: React.PropTypes.string.isRequired,
+  clientSecret: React.PropTypes.string.isRequired,
+  callbackUrl: React.PropTypes.string.isRequired,
+  privateRoomBookings: React.PropTypes.bool.isRequired,
+  privateTimetable: React.PropTypes.bool.isRequired,
+  privateUclu: React.PropTypes.bool.isRequired
 };
 
 class AppForm extends React.Component {
@@ -429,6 +727,12 @@ class AppList extends React.Component {
             key={i}
             update={this.updateApp}
             remove={this.deleteApp}
+            clientId={app.oauth.client_id}
+            clientSecret={app.oauth.client_secret}
+            callbackUrl={app.oauth.callback_url}
+            privateRoomBookings={app.oauth.scope.private_roombookings}
+            privateTimetable={app.oauth.scope.private_timetable}
+            privateUclu={app.oauth.scope.private_uclu}
           />;
         })}
       </div>
