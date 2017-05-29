@@ -9,7 +9,8 @@ from .decorators import does_token_exist, log_api_call
 from .models import Room, Equipment, BookingA, BookingB, Lock
 from .helpers import _parse_datetime, _serialize_rooms, \
     _get_paginated_bookings, _create_page_token, _return_json_bookings, \
-    _serialize_equipment, PrettyJsonResponse as JsonResponse
+    _serialize_equipment, how_many_seconds_until_midnight, \
+    PrettyJsonResponse as JsonResponse
 
 
 class APIThrottle(SimpleRateThrottle):
@@ -20,6 +21,14 @@ class APIThrottle(SimpleRateThrottle):
         token = request.GET.get("token")
         userid = App.objects.get(api_token=token).user.email
         return userid
+
+    def throttle_success(self):
+        self.history.insert(0, self.now)
+        self.cache.set(self.key, self.history, how_many_seconds_until_midnight())
+        return True
+
+    def wait(self):
+        return how_many_seconds_until_midnight()
 
 @api_view(['GET'])
 @does_token_exist

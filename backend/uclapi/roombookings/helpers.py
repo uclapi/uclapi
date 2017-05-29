@@ -15,7 +15,6 @@ class PrettyJsonResponse(JsonResponse):
     def __init__(self, data):
         super().__init__(data, json_dumps_params={'indent': 4})
 
-
 def _create_page_token(query, pagination):
     page = PageToken(
         pagination=pagination,
@@ -213,3 +212,10 @@ def _return_json_bookings(bookings):
     bookings["ok"] = True
 
     return JsonResponse(bookings)
+
+def how_many_seconds_until_midnight():
+    """Returns the number of seconds until midnight."""
+    tomorrow = datetime.datetime.now() + timedelta(days=1)
+    midnight = datetime.datetime(year=tomorrow.year, month=tomorrow.month, 
+                        day=tomorrow.day, hour=0, minute=0, second=0)
+    return (midnight - datetime.datetime.now()).seconds
