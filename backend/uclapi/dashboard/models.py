@@ -99,7 +99,7 @@ class APICall(models.Model):
 
 
 class WebHook(models.Model):
-    app = models.ForeignKey(App)
+    app = models.OneToOneField(App)
     url = models.URLField(max_length=1000)
 
     siteid = models.CharField(max_length=40, blank=True)
