@@ -128,22 +128,16 @@ export default class Demo extends React.Component {
     super(props);
 
     this.state = {
-      schedule: "",
-      roomName: ""
+      schedule: ""
     };
 
     this.getSchedule = this.getSchedule.bind(this);
-    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(roomName) {
-    this.setState({roomName: roomName});
-  }
-
-  getSchedule() {
+  getSchedule(roomName) {
     let now = new Date();
     let url = "https://uclapi.com/roombookings/bookings?token=" + API_TOKEN
-      + "&roomname=" + this.state.roomName
+      + "&roomname=" + roomName
       + "&date=" + now.toISOString().substring(0, 10).replace(/-/g, "");
 
     fetch(url)
@@ -177,9 +171,7 @@ export default class Demo extends React.Component {
             filter={AutoComplete.caseInsensitiveFilter}
             openOnFocus={true}
             dataSource={rooms}
-            onNewRequest={this.handleChange} />
-          <RaisedButton label="Get Schedule" primary={true}
-            onClick={this.getSchedule} />
+            onNewRequest={this.getSchedule} />
         </div>
 
         <div className="code">

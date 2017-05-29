@@ -16,6 +16,8 @@ h1 {
 
 h2 {
 	font-size: 28px;
+	font-family: 'Source Sans Pro', sans-serif;
+	font-weight: lighter;
 }
 
 h3 {
@@ -31,6 +33,11 @@ h3 {
 		width: 45px;
 		padding-right: 10px;
 	}
+
+  .active span {
+    font-weight: bold !important;
+    text-decoration: underline;
+  }
 }
 
 .jumbotron {

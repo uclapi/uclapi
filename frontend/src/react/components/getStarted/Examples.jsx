@@ -40,17 +40,6 @@ let examples = [
     imageLink: "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png",
     description: "Turn UCL API room bookings into ics calendar events.",
     link: "http://rbcalendar.uclapi.com"
-  },
-  {
-    title: "RB Calendar",
-    imageLink: "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png",
-    description: "Turn UCL API room bookings into ics calendar events.",
-    link: "http://rbcalendar.uclapi.com"
-  },{
-    title: "RB Calendar",
-    imageLink: "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png",
-    description: "Turn UCL API room bookings into ics calendar events.",
-    link: "http://rbcalendar.uclapi.com"
   }
 ]
 
