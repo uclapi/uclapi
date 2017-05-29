@@ -32,8 +32,8 @@ class APIThrottle(SimpleRateThrottle):
 
 @api_view(['GET'])
 @does_token_exist
-@log_api_call
 @throttle_classes([APIThrottle])
+@log_api_call
 def get_rooms(request):
     # add them to iterables so can be filtered without if-else
     request_params = {}
@@ -72,8 +72,8 @@ def get_rooms(request):
 
 @api_view(['GET'])
 @does_token_exist
-@log_api_call
 @throttle_classes([APIThrottle])
+@log_api_call
 def get_bookings(request):
     # if page_token exists, dont look for query
     page_token = request.GET.get('page_token')
@@ -157,8 +157,8 @@ def get_bookings(request):
 
 @api_view(['GET'])
 @does_token_exist
-@log_api_call
 @throttle_classes([APIThrottle])
+@log_api_call
 def get_equipment(request):
     roomid = request.GET.get("roomid")
     siteid = request.GET.get("siteid")
