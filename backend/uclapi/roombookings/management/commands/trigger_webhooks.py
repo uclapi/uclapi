@@ -77,6 +77,9 @@ class Command(BaseCommand):
             webhook["url"], json={
                 "bookings_added": webhook["bookings_added"],
                 "bookings_removed": webhook["bookings_removed"],
+            },
+            headers={
+                "User-Agent": "uclapi-bot/1.0"
             }
         ) for webhook in webhooks_to_enact]
         grequests.map(unsent_requests)
