@@ -44,6 +44,24 @@ class App(models.Model):
         _DATABASE = 'default'
 
 
+class TemporaryToken(models.Model):
+    id = models.CharField(
+        max_length=20,
+        primary_key=True,
+        default=generate_app_id
+    )
+    api_token = models.CharField(
+        max_length=1000,
+        unique=True,
+        default=generate_api_token
+    )
+    created = models.DateTimeField(auto_now=False, auto_now_add=True)
+    uses = models.IntegerField(default=0)
+
+    class Meta:
+        _DATABASE = 'default'
+
+
 class APICall(models.Model):
     ts = models.DateTimeField(auto_now_add=True)
     app = models.ForeignKey(App, related_name='api_call')

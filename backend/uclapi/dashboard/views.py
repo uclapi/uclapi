@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse
-from .models import User, App
+from .models import User, App, TemporaryToken
 from django.core.exceptions import ObjectDoesNotExist
 import os
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
@@ -101,6 +101,9 @@ def dashboard(request):
 
 @ensure_csrf_cookie
 def get_started(request):
+    temp_token = TemporaryToken.objects.create()
     return render(request, 'getStarted.html', {
-        'initial_data': {}
+        'initial_data': {
+            'temp_token': temp_token.api_token
+        }
     })
