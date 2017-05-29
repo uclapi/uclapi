@@ -1,7 +1,7 @@
 import React from 'react';
 
 import AppBar from 'material-ui/AppBar';
-import { getStyles }     from 'material-ui/AppBar/AppBar';
+import { getStyles } from 'material-ui/AppBar/AppBar';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -20,11 +20,11 @@ export default class Navbar extends React.Component {
     this.handleToggle = this.handleToggle.bind(this);
   }
 
-  handleToggle () {
+  handleToggle() {
     this.setState({open: !this.state.open});
   }
 
-  resize () {
+  resize() {
     console.log(window.innerWidth);
     this.forceUpdate()
   }

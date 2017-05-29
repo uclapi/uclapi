@@ -4,7 +4,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/styles';
 import RaisedButton from 'material-ui/RaisedButton';
-import { API_TOKEN } from '../config.jsx';
+// import { API_TOKEN } from '../config.jsx';
 import 'whatwg-fetch';
 
 
@@ -136,7 +136,11 @@ export default class Demo extends React.Component {
 
   getSchedule(roomName) {
     let now = new Date();
-    let url = "https://uclapi.com/roombookings/bookings?token=" + API_TOKEN
+
+    // TODO:
+    // Need to create development environment in package.json
+    let url = "http://localhost:8000/roombookings/bookings?temp_token="
+      + window.initialData.temp_token
       + "&roomname=" + roomName
       + "&date=" + now.toISOString().substring(0, 10).replace(/-/g, "");
 
