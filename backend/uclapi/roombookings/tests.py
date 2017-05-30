@@ -2,7 +2,7 @@ from django.test import SimpleTestCase
 from itertools import chain
 import datetime
 
-from .helpers import _serialize_rooms, _serialize_equipment, _parse_datetime
+from .helpers import _serialize_rooms, _serialize_equipment, _parse_datetime, PrettyJsonResponse
 from .models import Room
 
 
@@ -117,3 +117,8 @@ class ParseDateTimeTestCase(SimpleTestCase):
                 expected[index],
                 _parse_datetime(args[0], args[1], args[2])
             )
+
+class PrettyPrintJsonTestCase(SimpleTestCase):
+    def test_pretty_print(self):
+        response = PrettyJsonResponse({"foo":"bar"})
+        self.assertEqual(response.content.decode(), '{\n    "foo": "bar"\n}')
