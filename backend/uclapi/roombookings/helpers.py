@@ -11,6 +11,10 @@ import pytz
 from datetime import timedelta
 import ciso8601
 
+class PrettyJsonResponse(JsonResponse):
+    def __init__(self, data):
+        super().__init__(data, json_dumps_params={'indent': 4})
+
 
 def _create_page_token(query, pagination):
     page = PageToken(
