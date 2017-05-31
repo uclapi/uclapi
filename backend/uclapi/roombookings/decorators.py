@@ -1,6 +1,6 @@
 from dashboard.models import App
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse
+from .helpers import PrettyJsonResponse as JsonResponse
 import keen
 import re
 
