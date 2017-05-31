@@ -1,16 +1,38 @@
 from functools import reduce
 
-from rest_framework.decorators import api_view
-from .models import Room, Equipment, BookingA, BookingB, Lock
-from .decorators import does_token_exist, log_api_call
+from dashboard.models import App
+from django.http import JsonResponse
+from rest_framework.decorators import api_view, throttle_classes
+from rest_framework.throttling import SimpleRateThrottle
 
+from .decorators import does_token_exist, log_api_call
+from .models import Room, Equipment, BookingA, BookingB, Lock
 from .helpers import _parse_datetime, _serialize_rooms, \
     _get_paginated_bookings, _create_page_token, _return_json_bookings, \
-    _serialize_equipment, PrettyJsonResponse as JsonResponse
+    _serialize_equipment, how_many_seconds_until_midnight, \
+    PrettyJsonResponse as JsonResponse
 
+
+class APIThrottle(SimpleRateThrottle):
+    scope = 'uclapi'
+    THROTTLE_RATES = {'uclapi': '10000/day'}
+
+    def get_cache_key(self, request, view):
+        token = request.GET.get("token")
+        userid = App.objects.get(api_token=token).user.email
+        return userid
+
+    def throttle_success(self):
+        self.history.insert(0, self.now)
+        self.cache.set(self.key, self.history, how_many_seconds_until_midnight())
+        return True
+
+    def wait(self):
+        return how_many_seconds_until_midnight()
 
 @api_view(['GET'])
 @does_token_exist
+@throttle_classes([APIThrottle])
 @log_api_call
 def get_rooms(request):
     # add them to iterables so can be filtered without if-else
@@ -50,6 +72,7 @@ def get_rooms(request):
 
 @api_view(['GET'])
 @does_token_exist
+@throttle_classes([APIThrottle])
 @log_api_call
 def get_bookings(request):
     # if page_token exists, dont look for query
@@ -134,6 +157,7 @@ def get_bookings(request):
 
 @api_view(['GET'])
 @does_token_exist
+@throttle_classes([APIThrottle])
 @log_api_call
 def get_equipment(request):
     roomid = request.GET.get("roomid")
