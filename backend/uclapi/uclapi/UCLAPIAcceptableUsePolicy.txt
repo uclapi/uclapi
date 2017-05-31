@@ -119,7 +119,7 @@ iv. UCL will make commercially reasonable efforts to remove all references and l
 Other Important Terms.
 </h2>
  <p>
- 1.  Modification of the API Terms of Service. We may change, add to or delete this API Terms of Service or any portion thereof from time to time in our sole discretion. If we make a material change to this API Terms of Service, we will provide you with reasonable notice prior to the changes by emailing you. You acknowledge that these updates and modifications may adversely impact how you access, use, and communicate with the UCL API. If any change in unacceptable to you, then your only recourse is to cease all use of the UCL API. Your continued access or use of the UCL API will mean that you agree to the updates and modifications.
+ 1.  Modification of the API Terms of Service. We may change, add to or delete this API Terms of Service or any portion thereof from time to time in our sole discretion. If we make a material change to this API Terms of Service, we will provide you with reasonable notice prior to the changes by emailing you. You acknowledge that these updates and modifications may adversely impact how you access, use, and communicate with the UCL API. If any change is unacceptable to you, then your only recourse is to cease all use of the UCL API. Your continued access or use of the UCL API will mean that you agree to the updates and modifications.
  </p>
  <h2>
  Disclaimer of Warranties; Limitation of Liability; Indemnity
