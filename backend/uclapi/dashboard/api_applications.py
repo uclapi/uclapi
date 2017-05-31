@@ -1,7 +1,8 @@
 from django.http import HttpResponseBadRequest, JsonResponse
 from .models import App, User
 import keen
-
+import os
+import tldextract
 
 def get_user_by_id(user_id):
     user = User.objects.get(id=user_id)
@@ -206,6 +207,30 @@ def set_callback_url(request):
         })
         response.status_code = 400
         return response
+
+    
+    # Check if the new callback URL uses an acceptable protocol (e.g. HTTP or HTTPS)
+    # The list comprehension will explode the UCLAPI_OAUTH_CALLBACK_ALLOWED_PROTOCOLS environment
+    # variable, split by semicolons, append each one with :// then check if the URL starts with it.
+    # If none of them work then bail out.
+    if not any([new_callback_url.startswith(p + "://") for p in os.environ.get("UCLAPI_OAUTH_CALLBACK_ALLOWED_PROTOCOLS").split(';')]):
+        response = JsonResponse({
+            "success": False,
+            "message": "The requested callback URL does not use an acceptable protocol."
+        })
+        response.status_code = 400
+        return response
+
+    url_data = tldextract.extract(new_callback_url)
+
+    if any([p == (url_data.domain + "." + url_data.suffix) for p in os.environ.get("UCLAPI_OAUTH_CALLBACK_DENIED_URLS").split(';')]):
+        response = JsonResponse({
+            "success": False,
+            "message": "The requested callback URL is hosted on a banned domain."
+        })
+        response.status_code = 400
+        return response
+
     user = get_user_by_id(user_id)
 
     apps = App.objects.filter(id=app_id, user=user)
@@ -216,21 +241,21 @@ def set_callback_url(request):
         })
         response.status_code = 400
         return response
-    else:
-        app = apps[0]
-        app.callback_url = new_callback_url
-        app.save()
 
-        keen.add_event("App callback URL changed", {
-            "appid": app_id,
-            "userid": user.id,
-            "newcallbackurl": new_callback_url
-        })
+    app = apps[0]
+    app.callback_url = new_callback_url
+    app.save()
 
-        return JsonResponse({
-            "success": True,
-            "message": "Callback URL successfully changed.",
-        })
+    keen.add_event("App callback URL changed", {
+        "appid": app_id,
+        "userid": user.id,
+        "newcallbackurl": new_callback_url
+    })
+
+    return JsonResponse({
+        "success": True,
+        "message": "Callback URL successfully changed.",
+    })
 
 def set_rb_scope(request):
     if request.method != "POST":

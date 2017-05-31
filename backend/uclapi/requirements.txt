@@ -23,5 +23,6 @@ raven==6.0.0
 requests==2.14.2
 setproctitle==1.1.10
 six==1.10.0
+tldextract==2.1.0
 urllib3==1.21.1
 yarl==0.10.2
