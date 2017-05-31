@@ -10,7 +10,12 @@ Rate Limits.
 <p>
 You will not attempt to exceed or circumvent limitations on access, calls and use of the UCL API ("Rate Limits"), or otherwise use the UCL API in a manner that exceeds reasonable request volume, constitutes excessive or abusive usage, or otherwise fails to comply or is inconsistent with any part of this Agreement. If you exceed or UCL API reasonably believes that you have attempted to circumvent Rate Limits, controls to limit use of the UCL APIs or the terms and conditions of this Agreement, then your ability to use the Licensed Materials may be temporarily suspended or permanently blocked. UCL API may monitor your use of the UCL API to improve the UCL API Service and to ensure your compliance with this Agreement.
 </p>
-
+<h2>
+Communication
+</h2>
+<p>
+You agree to periodical service, update and/or maintenance emails being sent to your UCL email address. These are essential to keeping you informed about the API, updates to it, breaking changes and security action points that must be communicated in a timely manner. If you do not agree to these service emails, you should not agree to using this API.
+</p>
 <h2>
 Use of APIs and UCL Data
 </h2>
@@ -114,7 +119,7 @@ iv. UCL will make commercially reasonable efforts to remove all references and l
 Other Important Terms.
 </h2>
  <p>
- 1.  Modification of the API Terms of Service. We may change, add to or delete this API Terms of Service or any portion thereof from time to time in our sole discretion. If we make a material change to this API Terms of Service, we will provide you with reasonable notice prior to the changes by emailing you. You acknowledge that these updates and modifications may adversely impact how you access, use, and communicate with the UCL API. If any change in unacceptable to you, then your only recourse is to cease all use of the UCL API. Your continued access or use of the UCL API will mean that you agree to the updates and modifications.
+ 1.  Modification of the API Terms of Service. We may change, add to or delete this API Terms of Service or any portion thereof from time to time in our sole discretion. If we make a material change to this API Terms of Service, we will provide you with reasonable notice prior to the changes by emailing you. You acknowledge that these updates and modifications may adversely impact how you access, use, and communicate with the UCL API. If any change is unacceptable to you, then your only recourse is to cease all use of the UCL API. Your continued access or use of the UCL API will mean that you agree to the updates and modifications.
  </p>
  <h2>
  Disclaimer of Warranties; Limitation of Liability; Indemnity
