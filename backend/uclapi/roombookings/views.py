@@ -1,13 +1,12 @@
 from functools import reduce
 
-from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from .models import Room, Equipment, BookingA, BookingB, Lock
 from .decorators import does_token_exist, log_api_call
 
 from .helpers import _parse_datetime, _serialize_rooms, \
     _get_paginated_bookings, _create_page_token, _return_json_bookings, \
-    _serialize_equipment
+    _serialize_equipment, PrettyJsonResponse as JsonResponse
 
 
 @api_view(['GET'])
