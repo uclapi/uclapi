@@ -159,7 +159,53 @@ def shibcallback(request):
 @csrf_protect
 def userdeny(request):
     signer = TimestampSigner()
+
+    try:
+        signed_data = request.POST.get("signed_app_data")
+        raw_data_str = signer.unsign(signed_data, max_age=300)
+    except:
+        return JsonResponse({
+            "ok": False,
+            "error": "The signed data received was invalid. Please try the login process again. If this issue persists, please contact support."
+        })
+    
+    try:
+        data = json.loads(raw_data_str)
+    except:
+        return JsonResponse({
+            "ok": False,
+            "error": "The JSON data was not in the expected format. Please contact support."
+        })
+
+    app = App.objects.get(client_id=data["client_id"])
+    state = data["state"]
+
+    redir = app.callback_url + "?denied&state=" + state
+    
+    return redirect(redir)
     
 @csrf_protect
 def userallow(request):
     signer = TimestampSigner()
+
+    try:
+        raw_data_str = signer.unsign(request.POST.get("signed_app_data"), max_age=300)
+    except:
+         return JsonResponse({
+            "ok": False,
+            "error": "The signed data received was invalid. Please try the login process again. If this issue persists, please contact support."
+        })
+    
+    try:
+        data = json.loads(raw_data_str)
+    except:
+        return JsonResponse({
+            "ok": False,
+            "error": "The JSON data was not in the expected format. Please contact support."
+        })
+
+    user = User.objects.get(employee_id=data["user_upi"])
+    app = App.objects.get(client_id=data["client_id"])
+    state = data["state"]
+
+    
