@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.core.exceptions import FieldError, ObjectDoesNotExist
 from .models import PageToken, BookingA, BookingB, Lock, Location
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import JsonResponse
+import django.http
 
 import json
 import datetime
@@ -11,9 +11,11 @@ import pytz
 from datetime import timedelta
 import ciso8601
 
-class PrettyJsonResponse(JsonResponse):
+class PrettyJsonResponse(django.http.JsonResponse):
     def __init__(self, data):
         super().__init__(data, json_dumps_params={'indent': 4})
+        
+JsonResponse = PrettyJsonResponse
 
 def _create_page_token(query, pagination):
     page = PageToken(
