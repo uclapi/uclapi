@@ -2,6 +2,7 @@ from functools import reduce
 
 from dashboard.models import App
 from django.http import JsonResponse
+from django.core.cache import caches
 from rest_framework.decorators import api_view, throttle_classes
 from rest_framework.throttling import SimpleRateThrottle
 
@@ -15,6 +16,7 @@ from .helpers import _parse_datetime, _serialize_rooms, \
 
 class APIThrottle(SimpleRateThrottle):
     scope = 'uclapi'
+    cache = caches[scope]
     THROTTLE_RATES = {'uclapi': '10000/day'}
 
     def get_cache_key(self, request, view):

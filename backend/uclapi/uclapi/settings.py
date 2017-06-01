@@ -137,7 +137,7 @@ DATABASES = {
 
 DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
 
-# analytics & rate-limiting
+# analytics
 OPBEAT = {
     'ORGANIZATION_ID': os.environ.get("OPBEAT_ORG_ID"),
     'APP_ID': os.environ.get("OPBEAT_APP_ID"),
@@ -198,3 +198,17 @@ CORS_URLS_REGEX = r'^/roombookings/.*$'
 # Fair use policy
 with open(os.path.join(BASE_DIR, 'uclapi/UCLAPIAcceptableUsePolicy.txt'), 'r', encoding='utf-8') as fp:
     FAIR_USE_POLICY = list(fp)
+
+# throttling
+CACHES = {
+    "default": {
+         "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+    },
+    "uclapi": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.environ.get("REDIS_UCLAPI_HOST"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
