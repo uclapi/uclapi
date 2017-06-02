@@ -228,7 +228,8 @@ def userallow(request):
     full_verification_data = {
         "data": verification_data_str,
         "client_id": app.client_id,
-        "signed_data": verification_data_str_enc
+        "state": state,
+        "verification_data": verification_data_str_enc
     }
 
     try:
@@ -255,7 +256,7 @@ def userallow(request):
 
     # Only trust that the data was properly returned if the signature was 60 seconds ago
     try:
-        data_check = signer.unsign(verification_response["signed_data"], 60)
+        data_check = signer.unsign(verification_response["verification_data"], 60)
     except:
         return JsonResponse({
             "ok": False,
