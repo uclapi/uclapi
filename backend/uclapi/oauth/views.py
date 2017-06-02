@@ -183,7 +183,7 @@ def userdeny(request):
     app = App.objects.get(client_id=data["client_id"])
     state = data["state"]
 
-    redir = app.callback_url + "?denied&state=" + state
+    redir = app.callback_url + "/denied?state=" + state
     
     return redirect(redir)
     
@@ -231,7 +231,7 @@ def userallow(request):
     }
 
     try:
-        vr = requests.post(app.callback_url + "?verify", data=full_verification_data)
+        vr = requests.post(app.callback_url + "/verify", data=full_verification_data)
         verification_response = vr.json()
 
     except:
@@ -319,7 +319,7 @@ def userallow(request):
 
     # Now forward them the OAuth token for the user. If they're not happy with that then
     # that's their fault after the final redirect!
-    oauth_req = requests.post(app.callback_url + "?token", data=oauth_data)
+    oauth_req = requests.post(app.callback_url + "/token", data=oauth_data)
 
     # Now redirect the user back to the app, at long last.
     # Just in case they've tried to be super clever and host multiple apps with the same
