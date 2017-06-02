@@ -14,6 +14,28 @@ class OAuthScope(models.Model):
     # Can the key be used to access private UCLU data?
     private_uclu = models.BooleanField(default=False)
 
+    def scopeIsEqual(other):
+        if not isinstance(other, self.__class__):
+            return False
+        
+        if not self.private_roombookings == other.private_roombookings:
+            return False
+
+        if not self.private_timetable == other.private_timetable:
+            return False
+
+        if not self.private_uclu == other.private_uclu:
+            return False
+
+        return True
+
+    def scopeDict():
+        return {
+            "private_roombookings": self.private_roombookings,
+            "private_timetable": self.private_timetable,
+            "private_uclu": self.private_uclu
+        }
+
 class OAuthToken(models.Model):
     # Use an incrementing ID that we can always rely on (assume a token could regenerate or be invalidated)
     id = models.AutoField(primary_key=True)

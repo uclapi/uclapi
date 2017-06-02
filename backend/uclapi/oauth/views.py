@@ -5,11 +5,14 @@ from django.core.signing import TimestampSigner
 from django.utils.http import quote
 from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, csrf_protect
-
-from dashboard.models import App, User
+import requests
 
 import os
 import json
+
+from dashboard.models import App, User
+from .app_helpers import generate_random_verification_code
+from .models import OAuthScope, OAuthToken
 
 # The endpoint that creates a Shibboleth login and redirects the user to it
 def authorise(request):
@@ -208,4 +211,117 @@ def userallow(request):
     app = App.objects.get(client_id=data["client_id"])
     state = data["state"]
 
-    
+    # Now we have the data we need to generate a random code and send this to the backend along
+    # with the state and request the app's client secret. If this matches we can generate OAuth
+    # keys and pass them to the backend
+
+    code = generate_random_verification_code()
+    verification_data = {
+        "verification_code": code,
+        "client_id": client_id,
+        "state": state
+    }
+
+    verification_data_str = json.dumps(verification_data, cls=DjangoJSONEncoder)
+    verification_data_str_enc = signer.sign(verification_data_str)
+
+    full_verification_data = {
+        "data": verification_data_str,
+        "signed_data": verification_data_str_enc
+    }
+
+    try:
+        vr = requests.post(app.callback_url + "?verify", data=full_verification_data)
+        verification_response = vr.json()
+
+    except:
+        return JsonResponse({
+            "ok": False,
+            "error": "The client did not respond with valid JSON. Please contact the application vendor."
+        })
+
+    try:
+        if not verification_response["client_secret"] == app.client_secret:
+            return JsonResponse({
+                "ok": False,
+                "error": "The secret the client returned was invalid. Please contact the application vendor."
+            })
+    except:
+        return JsonResponse({
+            "ok": False,
+            "error": "The data the client returned was invalid. Please contact the application vendor."
+        })
+
+    # Only trust that the data was properly returned if the signature was 60 seconds ago
+    try:
+        data_check = signer.unsign(verification_response["signed_data"], 60)
+    except:
+        return JsonResponse({
+            "ok": False,
+            "error": "The signed data received failed the signature check. Either the server did not respond in a timely manner, or the data was tampered with."
+        })
+
+    # Since the data has passed verification at this point, and we have checked the validity of the client secret, we can
+    # now generate an OAuth access token for the user.
+    # But first, we should check if a token has been generated already.
+    # If a token does already exist then we should not add yet another one to the database. We can just pass those keys to the app
+    # again (in case it has lost them).
+
+    try:
+        token = OAuthToken.objects.get(app=app, user=user)
+
+        # If the code gets here then the user has used this app before, so let's check that the scope does
+        # not need changing
+        if not token.scopeIsEqual(app.scope):
+            # Remove the current scope from the token
+            token.scope.delete()
+
+            # Clone the scope of the app
+            app_scope = app.scope
+            app_scope.id = None
+            app_scope.save()
+
+            # Assign the new scope to the token
+            token.scope = app_scope
+
+            # Save the token with the new scope
+            token.save()
+
+    except OAuthToken.DoesNotExist:
+        # The user has never logged in before so let's clone the scope and create a brand new
+        # OAuth token
+
+        # Clone the scope defined in the app model
+        app_scope = app.scope
+        app_scope.id = None
+        app_scope.save()
+
+        # Now set up a new token with that scope
+        token = Token(
+            app=app,
+            user=user,
+            scope=app_scope
+        )
+        token.save()
+
+    # Now that we have a token we can pass one back to the app
+    # We'll make a final HTTP request to the app and provide the state and the OAuth token.
+    # We sincerely hope they'll save this token!
+    # The app can use the token to pull in any personal data (name, UPI, etc.) later on, so
+    # we won't bother to give it to them just yet.
+
+    oauth_data = {
+        "state": state,
+        "client_id": app.client_id,
+        "token": token.token,
+        "scope": token.scope.scopeDict()
+    }
+
+    # Now forward them the OAuth token for the user. If they're not happy with that then
+    # that's their fault after the final redirect!
+    oauth_req = requests.post(app.callback_url + "?token", data=oauth_data)
+
+    # Now redirect the user back to the app, at long last.
+    # Just in case they've tried to be super clever and host multiple apps with the same
+    # callback URL, we'll provide the client ID along with the state
+    return redirect(app.callback_url + "?client_id=" + app.client_id + "&state=" + state)

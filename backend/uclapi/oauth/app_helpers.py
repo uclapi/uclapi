@@ -13,3 +13,8 @@ def generate_user_token():
     final = "uclapi-user" + dashes_key
 
     return final
+
+def generate_random_verification_code():
+    key = hexlify(os.urandom(40)).decode()
+    final = "verify" + key
+    return final
