@@ -227,6 +227,7 @@ def userallow(request):
 
     full_verification_data = {
         "data": verification_data_str,
+        "client_id": app.client_id,
         "signed_data": verification_data_str_enc
     }
 
