@@ -168,7 +168,7 @@ def _serialize_bookings(bookings):
             "roomname": bk.roomname,
             "siteid": bk.siteid,
             "roomid": bk.roomid,
-            "description": bk.descrip,
+            "description": bk.title,
             "start_time": _kloppify(datetime.datetime.strftime(
                 bk.startdatetime, "%Y-%m-%dT%H:%M:%S"), bk.startdatetime),
             "end_time": _kloppify(datetime.datetime.strftime(
