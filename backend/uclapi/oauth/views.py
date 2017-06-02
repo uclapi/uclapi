@@ -218,7 +218,7 @@ def userallow(request):
     code = generate_random_verification_code()
     verification_data = {
         "verification_code": code,
-        "client_id": client_id,
+        "client_id": app.client_id,
         "state": state
     }
 
