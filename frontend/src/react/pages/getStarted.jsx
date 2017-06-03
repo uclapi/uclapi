@@ -12,14 +12,30 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import GetStartedComponent from '../components/getStarted/getStarted.jsx';
 
 
-// This replaces the textColor value on the palette
-// and then update the keys for each component that depends on it.
-// More on Colors: http://www.material-ui.com/#/customization/colors
+// const muiTheme = getMuiTheme({
+//   fontFamily: 'Roboto, sans-serif',
+//   palette: {
+//     primary1Color: cyan500,
+//     primary2Color: cyan700,
+//     primary3Color: grey400,
+//     accent1Color: pinkA200,
+//     accent2Color: grey100,
+//     accent3Color: grey500,
+//     textColor: darkBlack,
+//     alternateTextColor: white,
+//     canvasColor: white,
+//     borderColor: grey300,
+//     pickerHeaderColor: cyan500,
+//     shadowColor: fullBlack,
+//   },
+// });
+
+
 const muiTheme = getMuiTheme({
   fontFamily: 'Roboto, sans-serif',
   palette: {
-    primary1Color: cyan500,
-    primary2Color: cyan700,
+    primary1Color: "#434343",
+    primary2Color: "#434343",
     primary3Color: grey400,
     accent1Color: pinkA200,
     accent2Color: grey100,
@@ -32,6 +48,7 @@ const muiTheme = getMuiTheme({
     shadowColor: fullBlack,
   },
 });
+
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941

@@ -8,7 +8,7 @@ export default class Jumbotron extends React.Component {
     return (
       <div className="jumbotron"
         style={{
-          "backgroundColor": this.props.bgcolor,
+          "background": this.props.bgcolor,
           "color": this.props.color
         }}>
         <div className="container center">

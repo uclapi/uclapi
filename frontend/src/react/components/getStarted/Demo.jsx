@@ -4,7 +4,6 @@ import AutoComplete from 'material-ui/AutoComplete';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/styles';
 import RaisedButton from 'material-ui/RaisedButton';
-// import { API_TOKEN } from '../config.jsx';
 import 'whatwg-fetch';
 
 
@@ -23,7 +22,9 @@ print(r.json())`
 
   {
     "name": "javascript",
-    "code": `fetch("https://uclapi.com/roombookings/bookings?token=${window.initialData.temp_token}")
+    "code": `let token = "${window.initialData.temp_token}";
+
+fetch("https://uclapi.com/roombookings/bookings?token=" + token)
 .then((response) => {
   return response.json()
 })
@@ -34,7 +35,8 @@ print(r.json())`
 
   {
     name: "bash",
-    code: `curl https://uclapi.com/roombookings/bookings?token=${window.initialData.temp_token}`
+    code: `curl https://uclapi.com/roombookings/bookings \\
+     -d token=${window.initialData.temp_token}`
   }
 ]
 
@@ -158,6 +160,7 @@ export default class Demo extends React.Component {
 
     if (this.state.schedule) {
       response = <div>
+        <hr />
         <SyntaxHighlighter language={"javascript"}
           style={dracula}>
           {this.state.schedule}
@@ -191,8 +194,6 @@ export default class Demo extends React.Component {
               ))
             }
           </Tabs>
-
-          <hr />
 
           { response }
         </div>

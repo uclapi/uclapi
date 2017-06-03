@@ -1,11 +1,11 @@
 import React from 'react';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {Card, CardActions, CardHeader,
+  CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 
 
 const Example = (title, imageLink, description, link, key) => (
-  <div className="exampleContainer" key={ key }>
-    <Card className="example" zDepth={2}>
+    <Card className="example" zDepth={2} key={ key }>
       <CardMedia>
         <img src={ imageLink } />
       </CardMedia>
@@ -19,7 +19,6 @@ const Example = (title, imageLink, description, link, key) => (
         </a>
       </CardActions>
     </Card>
-  </div>
 )
 
 let examples = [
@@ -40,6 +39,18 @@ let examples = [
     imageLink: "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png",
     description: "Turn UCL API room bookings into ics calendar events.",
     link: "http://rbcalendar.uclapi.com"
+  },
+  {
+    title: "UCLKit",
+    imageLink: "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png",
+    description: "UCL API wrapper in Swift",
+    link: "https://github.com/tiferrei/UCLKit"
+  },
+  {
+    title: "uclapi-go",
+    imageLink: "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png",
+    description: "A wrapper library in Go for uclapi",
+    link: "https://github.com/Maaarcocr/uclapi-go"
   }
 ]
 

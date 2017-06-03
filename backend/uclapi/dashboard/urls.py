@@ -5,7 +5,6 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.dashboard),
-    url(r'get_started/$', get_started),
     url(r'api/create/$', create_app),
     url(r'api/rename/$', rename_app),
     url(r'api/regen/$', regenerate_app_token),

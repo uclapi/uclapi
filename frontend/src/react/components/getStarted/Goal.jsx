@@ -7,7 +7,11 @@ export default class Goal extends React.Component {
 
   render() {
     return (
-      <Jumbotron bgcolor={"#F4F4F4"} color={"#333"}>
+      <Jumbotron
+        // bgcolor={"#F4F4F4"}
+        // color={"#333"}>
+        bgcolor={"#0B3954"}
+        color={"#fff"}>
         <h1>Our Goal</h1>
         <h3>Create a ridiculously simple, documentation first, and comprehensive
           API around UCL's digital services and establish an ecosystem of
