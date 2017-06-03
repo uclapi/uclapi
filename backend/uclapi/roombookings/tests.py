@@ -1,8 +1,11 @@
 from django.test import SimpleTestCase
 from itertools import chain
+from freezegun import freeze_time
 import datetime
 
-from .helpers import _serialize_rooms, _serialize_equipment, _parse_datetime
+from .helpers import _serialize_rooms, _serialize_equipment, \
+    _parse_datetime, how_many_seconds_until_midnight, \
+    PrettyJsonResponse
 from .models import Room
 
 
@@ -117,3 +120,28 @@ class ParseDateTimeTestCase(SimpleTestCase):
                 expected[index],
                 _parse_datetime(args[0], args[1], args[2])
             )
+
+
+class PrettyPrintJsonTestCase(SimpleTestCase):
+    def test_pretty_print(self):
+        response = PrettyJsonResponse({"foo":"bar"})
+        self.assertEqual(response.content.decode(), '{\n    "foo": "bar"\n}')
+
+
+class SecondsUntilMidnightTestCase(SimpleTestCase):
+    def test_seconds_until_midnight(self):
+        arg_list = [
+            "2017-05-29 23:59:59",
+            "2017-05-29 00:00:00",
+            "2017-05-29 00:00:01"
+        ]
+
+        expected = [
+            1,
+            0,
+            86399
+        ]
+
+        for idx, arg in enumerate(arg_list):
+            with freeze_time(arg):
+                self.assertEqual(how_many_seconds_until_midnight(), expected[idx])

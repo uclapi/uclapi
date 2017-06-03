@@ -139,17 +139,6 @@ DATABASES = {
 DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
 
 # analytics & rate-limiting
-
-# TODO: make it work with tokens
-REST_FRAMEWORK = {
-    'DEFAULT_THROTTLE_CLASSES': (
-        'rest_framework.throttling.AnonRateThrottle',
-    ),
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '5000/day',
-    }
-}
-
 OPBEAT = {
     'ORGANIZATION_ID': os.environ.get("OPBEAT_ORG_ID"),
     'APP_ID': os.environ.get("OPBEAT_APP_ID"),
@@ -158,7 +147,6 @@ OPBEAT = {
 
 RAVEN_CONFIG = {
     'dsn': os.environ.get("SENTRY_DSN"),
-    # 'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
 }
 
 

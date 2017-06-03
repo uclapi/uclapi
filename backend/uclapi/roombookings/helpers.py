@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.core.exceptions import FieldError, ObjectDoesNotExist
 from .models import PageToken, BookingA, BookingB, Lock, Location
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import JsonResponse
+import django.http
 
 import json
 import datetime
@@ -11,6 +11,11 @@ import pytz
 from datetime import timedelta
 import ciso8601
 
+class PrettyJsonResponse(django.http.JsonResponse):
+    def __init__(self, data):
+        super().__init__(data, json_dumps_params={'indent': 4})
+        
+JsonResponse = PrettyJsonResponse
 
 def _create_page_token(query, pagination):
     page = PageToken(
@@ -163,7 +168,7 @@ def _serialize_bookings(bookings):
             "roomname": bk.roomname,
             "siteid": bk.siteid,
             "roomid": bk.roomid,
-            "description": bk.descrip,
+            "description": bk.title,
             "start_time": _kloppify(datetime.datetime.strftime(
                 bk.startdatetime, "%Y-%m-%dT%H:%M:%S"), bk.startdatetime),
             "end_time": _kloppify(datetime.datetime.strftime(
@@ -209,3 +214,10 @@ def _return_json_bookings(bookings):
     bookings["ok"] = True
 
     return JsonResponse(bookings)
+
+def how_many_seconds_until_midnight():
+    """Returns the number of seconds until midnight."""
+    tomorrow = datetime.datetime.now() + timedelta(days=1)
+    midnight = datetime.datetime(year=tomorrow.year, month=tomorrow.month, 
+                        day=tomorrow.day, hour=0, minute=0, second=0)
+    return (midnight - datetime.datetime.now()).seconds
