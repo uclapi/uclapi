@@ -14,7 +14,16 @@ export default class Navbar extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {open: false};
+    let loggedIn = false;
+
+    if (window.initialData.logged_in === "True") {
+      loggedIn = true;
+    }
+
+    this.state = {
+      open: false,
+      loggedIn: loggedIn
+    };
 
     this.resize = this.resize.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
@@ -55,17 +64,30 @@ export default class Navbar extends React.Component {
         <a href={"/"}>
           <FlatButton label="Get Started" className="active" style={styles.flatButton} />
         </a>
-        <a href={"/dashboard"}>
-          <FlatButton label="Dashboard" style={styles.flatButton} />
-        </a>
-        <a href={"/docs"}>
+        <a href={"https://docs.uclapi.com"}>
           <FlatButton label="Documentation" style={styles.flatButton} />
         </a>
-        <a href={"/login"}>
+        <a href={"/dashboard"}>
           <RaisedButton label="Login" style={styles.raisedButton} />
         </a>
       </div>
     )
+
+    if (this.state.loggedIn) {
+      rightButtons = (
+        <div>
+          <a href={"/"}>
+            <FlatButton label="Get Started" className="active" style={styles.flatButton} />
+          </a>
+          <a href={"https://docs.uclapi.com"}>
+            <FlatButton label="Documentation" style={styles.flatButton} />
+          </a>
+          <a href={"/dashboard"}>
+            <FlatButton label="Dashboard" style={styles.flatButton} />
+          </a>
+        </div>
+      )
+    }
 
     if (window.innerWidth < 700) {
       rightButtons = (
@@ -77,18 +99,36 @@ export default class Navbar extends React.Component {
             <a href={"/"}>
               <MenuItem onTouchTap={this.handleToggle}>Get Started</MenuItem>
             </a>
-            <a href={"/dashboard"}>
-              <MenuItem onTouchTap={this.handleToggle}>Dashboard</MenuItem>
-            </a>
-            <a href={"/docs"}>
+            <a href={"https://docs.uclapi.com"}>
               <MenuItem onTouchTap={this.handleToggle}>Documentation</MenuItem>
             </a>
-            <a href={"/login"}>
+            <a href={"/dashboard"}>
               <MenuItem onTouchTap={this.handleToggle}>Login</MenuItem>
             </a>
           </Drawer>
         </div>
       )
+
+      if (this.state.loggedIn) {
+        rightButtons = (
+          <div>
+            <IconButton>
+              <ActionMenu style={styles.iconButton} onTouchTap={this.handleToggle} />
+            </IconButton>
+            <Drawer open={this.state.open} openSecondary={true} docked={false}>
+              <a href={"/"}>
+                <MenuItem onTouchTap={this.handleToggle}>Get Started</MenuItem>
+              </a>
+              <a href={"https://docs.uclapi.com"}>
+                <MenuItem onTouchTap={this.handleToggle}>Documentation</MenuItem>
+              </a>
+              <a href={"/dashboard"}>
+                <MenuItem onTouchTap={this.handleToggle}>Dashboard</MenuItem>
+              </a>
+            </Drawer>
+          </div>
+        )
+      }
     }
 
     return (

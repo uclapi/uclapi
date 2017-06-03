@@ -101,9 +101,17 @@ def dashboard(request):
 
 @ensure_csrf_cookie
 def get_started(request):
+    logged_in = True
+
+    try:
+        user_id = request.session["user_id"]
+    except KeyError:
+        logged_in = False
+
     temp_token = TemporaryToken.objects.create()
     return render(request, 'getStarted.html', {
         'initial_data': {
-            'temp_token': temp_token.api_token
+            'temp_token': temp_token.api_token,
+            'logged_in': str(logged_in)
         }
     })

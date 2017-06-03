@@ -22,7 +22,7 @@ print(r.json())`
 
   {
     "name": "javascript",
-    "code": `let token = "${window.initialData.temp_token}";
+    "code": `const token = "${window.initialData.temp_token}";
 
 fetch("https://uclapi.com/roombookings/bookings?token=" + token)
 .then((response) => {
