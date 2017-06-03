@@ -226,7 +226,6 @@ def userallow(request):
     verification_data_str_enc = signer.sign(verification_data_str)
 
     full_verification_data = {
-        "data": verification_data_str,
         "client_id": app.client_id,
         "state": state,
         "verification_data": verification_data_str_enc
