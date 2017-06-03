@@ -1,10 +1,9 @@
 from dashboard.models import App
 from django.core.exceptions import ObjectDoesNotExist
-from settings import REDIS_UCLAPI_HOST
-from .helpers import PrettyJsonResponse as JsonResponse
+from uclapi.settings import REDIS_UCLAPI_HOST
+from .helpers import PrettyJsonResponse as JsonResponse, how_many_seconds_until_midnight
 
 import keen
-import os
 import re
 import redis
 
@@ -72,21 +71,25 @@ def throttle(view_func):
         token = request.GET.get("token")
         cache_key = App.objects.get(api_token=token).user.email
 
-        r = redis.StrictRedis(host=REDIS_UCLAPI_HOST, port=REDIS_UCLAPI_PORT, db=REDIS_UCLAPI_DB)
+        r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
         count = r.get(cache_key)
 
         if count is None:
             # set the value to 1 & expiry
             r.incr(cache_key)
-            r.setex(cache_key, how_many_seconds_until_midnight())
+            r.expire(cache_key, how_many_seconds_until_midnight())
+            
             return view_func(request, *args, **kwargs)
         else:
             count = int(count)
             if count > 10000:
-                return JsonResponse({
+                response = JsonResponse({
                     "ok": False,
                     "error": "You have been throttled. Please try again in {} seconds.".format(how_many_seconds_until_midnight())
                 })
+                response.status_code = 429
+                response['Retry-After'] = how_many_seconds_until_midnight()
+                return response
             else:
                 r.incr(cache_key)
                 return view_func(request, *args, **kwargs)
