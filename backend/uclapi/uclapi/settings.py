@@ -11,10 +11,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-import raven
 import requests
 from .utils import strtobool
-from .dbrouters import ModelRouter
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -137,7 +135,7 @@ DATABASES = {
 
 DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
 
-# analytics & rate-limiting
+# analytics
 OPBEAT = {
     'ORGANIZATION_ID': os.environ.get("OPBEAT_ORG_ID"),
     'APP_ID': os.environ.get("OPBEAT_APP_ID"),
@@ -198,3 +196,5 @@ CORS_URLS_REGEX = r'^/roombookings/.*$'
 # Fair use policy
 with open(os.path.join(BASE_DIR, 'uclapi/UCLAPIAcceptableUsePolicy.txt'), 'r', encoding='utf-8') as fp:
     FAIR_USE_POLICY = list(fp)
+
+REDIS_UCLAPI_HOST = os.environ.get("REDIS_UCLAPI_HOST")
