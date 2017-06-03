@@ -10,8 +10,16 @@ def does_token_exist(view_func):
 
     def wrapped(request, *args, **kwargs):
         # First check if using a TemporaryToken
-        temp_token_param = request.GET.get("temp_token")
-        if temp_token_param:
+        token = request.GET.get("token")
+        is_temp_token = None
+
+        try:
+            if token.split("-")[1] == "temp":
+                is_temp_token = True
+        except:
+            is_temp_token = False
+
+        if is_temp_token:
             try:
                 temp_token = TemporaryToken.objects.get(
                     api_token=temp_token_param
@@ -20,6 +28,26 @@ def does_token_exist(view_func):
                 response = JsonResponse({
                     "ok": False,
                     "error": "Invalid temporary token"
+                })
+                response.status_code = 400
+                return response
+
+            if request.path != "roombookings/bookings":
+                temp_token.uses += 1
+                temp_token.save()
+                response = JsonResponse({
+                    "ok": False,
+                    "error": "Temporary token can only be used for /bookings"
+                })
+                response.status_code = 400
+                return response
+
+            if request.GET.get('page_token'):
+                temp_token.uses += 1
+                temp_token.save()
+                response = JsonResponse({
+                    "ok": False,
+                    "error": "Temporary token can only return one booking"
                 })
                 response.status_code = 400
                 return response
@@ -36,12 +64,12 @@ def does_token_exist(view_func):
                 response.status_code = 400
                 return response
 
+            request.GET = request.GET.copy()
+            request.GET['results_per_page'] = 1
+
             temp_token.uses += 1
             temp_token.save()
             return view_func(request, *args, **kwargs)
-
-        # Else verify normal token
-        token = request.GET.get("token")
 
         if not token:
             response = JsonResponse({

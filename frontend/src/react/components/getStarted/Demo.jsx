@@ -141,7 +141,7 @@ export default class Demo extends React.Component {
 
     // TODO:
     // Need to create development environment in package.json
-    let url = "http://localhost:8000/roombookings/bookings?temp_token="
+    let url = "http://localhost:8000/roombookings/bookings?token="
       + window.initialData.temp_token
       + "&roomname=" + roomName
       + "&date=" + now.toISOString().substring(0, 10).replace(/-/g, "");

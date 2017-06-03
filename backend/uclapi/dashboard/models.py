@@ -1,9 +1,10 @@
 from django.db import models
-from .app_helpers import generate_api_token, generate_app_id
+from .app_helpers import generate_temp_api_token, generate_api_token, \
+    generate_app_id
 
 models.options.DEFAULT_NAMES += ('_DATABASE',)
 
-# Create your models here.
+
 class User(models.Model):
     email = models.CharField(max_length=100)
     full_name = models.CharField(max_length=1000)
@@ -19,6 +20,7 @@ class User(models.Model):
 
 
 class App(models.Model):
+
     id = models.CharField(
         max_length=20,
         primary_key=True,
@@ -35,7 +37,7 @@ class App(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
 
     def regenerate_token(self):
-        new_token = generate_api_token()
+        new_token = generate_temp_api_token()
         self.api_token = new_token
         self.save()
         return self.api_token
@@ -53,7 +55,7 @@ class TemporaryToken(models.Model):
     api_token = models.CharField(
         max_length=1000,
         unique=True,
-        default=generate_api_token
+        default=generate_temp_api_token
     )
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
     uses = models.IntegerField(default=0)
