@@ -76,8 +76,7 @@ def throttle(view_func):
 
         if count is None:
             # set the value to 1 & expiry
-            r.incr(cache_key)
-            r.expire(cache_key, how_many_seconds_until_midnight())
+            r.set(cache_key, 1, how_many_seconds_until_midnight())
             
             return view_func(request, *args, **kwargs)
         else:
