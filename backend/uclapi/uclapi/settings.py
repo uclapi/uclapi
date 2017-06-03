@@ -197,17 +197,4 @@ CORS_URLS_REGEX = r'^/roombookings/.*$'
 with open(os.path.join(BASE_DIR, 'uclapi/UCLAPIAcceptableUsePolicy.txt'), 'r', encoding='utf-8') as fp:
     FAIR_USE_POLICY = list(fp)
 
-# throttling
-CACHES = {
-    "default": {
-         "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
-    },
-    "uclapi": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.environ.get("REDIS_UCLAPI_HOST"),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "REDIS_CLIENT_CLASS": os.environ.get("REDIS_UCLAPI_CLIENT_CLASS")
-        }
-    }
-}
+REDIS_UCLAPI_HOST = os.environ.get("REDIS_UCLAPI_HOST")

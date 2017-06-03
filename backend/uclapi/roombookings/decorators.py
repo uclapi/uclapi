@@ -1,9 +1,12 @@
 from dashboard.models import App
 from django.core.exceptions import ObjectDoesNotExist
+from settings import REDIS_UCLAPI_HOST
 from .helpers import PrettyJsonResponse as JsonResponse
-import keen
-import re
 
+import keen
+import os
+import re
+import redis
 
 def does_token_exist(view_func):
     def wrapped(request, *args, **kwargs):
@@ -62,4 +65,30 @@ def log_api_call(view_func):
         keen.add_event("apicall", parameters)
 
         return view_func(request, *args, **kwargs)
+    return wrapped
+
+def throttle(view_func):
+    def wrapped(request, *args, **kwargs):
+        token = request.GET.get("token")
+        cache_key = App.objects.get(api_token=token).user.email
+
+        r = redis.StrictRedis(host=REDIS_UCLAPI_HOST, port=REDIS_UCLAPI_PORT, db=REDIS_UCLAPI_DB)
+        count = r.get(cache_key)
+
+        if count is None:
+            # set the value to 1 & expiry
+            r.incr(cache_key)
+            r.setex(cache_key, how_many_seconds_until_midnight())
+            return view_func(request, *args, **kwargs)
+        else:
+            count = int(count)
+            if count > 10000:
+                return JsonResponse({
+                    "ok": False,
+                    "error": "You have been throttled. Please try again in {} seconds.".format(how_many_seconds_until_midnight())
+                })
+            else:
+                r.incr(cache_key)
+                return view_func(request, *args, **kwargs)
+
     return wrapped
