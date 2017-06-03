@@ -251,7 +251,8 @@ def userallow(request):
     except:
         return JsonResponse({
             "ok": False,
-            "error": "The data the client returned was invalid. Please contact the application vendor."
+            "error": "The data the client returned was invalid. Please contact the application vendor.",
+            "errorcontents": verification_response["error"]
         })
 
     # Only trust that the data was properly returned if the signature was 60 seconds ago
@@ -274,7 +275,7 @@ def userallow(request):
 
         # If the code gets here then the user has used this app before, so let's check that the scope does
         # not need changing
-        if not token.scopeIsEqual(app.scope):
+        if not token.scope.scopeIsEqual(app.scope):
             # Remove the current scope from the token
             token.scope.delete()
 
@@ -299,7 +300,7 @@ def userallow(request):
         app_scope.save()
 
         # Now set up a new token with that scope
-        token = Token(
+        token = OAuthToken(
             app=app,
             user=user,
             scope=app_scope
@@ -316,7 +317,7 @@ def userallow(request):
         "state": state,
         "client_id": app.client_id,
         "token": token.token,
-        "scope": token.scope.scopeDict()
+        "scope": json.dumps(token.scope.scopeDict())
     }
 
     # Now forward them the OAuth token for the user. If they're not happy with that then
@@ -327,3 +328,21 @@ def userallow(request):
     # Just in case they've tried to be super clever and host multiple apps with the same
     # callback URL, we'll provide the client ID along with the state
     return redirect(app.callback_url + "?client_id=" + app.client_id + "&state=" + state)
+
+def userdata(request):
+    try:
+        token_code = request.GET.get("token")
+        token = OAuthToken.objects.get(token=token_code)
+    except:
+        return JsonResponse({
+            "error": "Invalid token given"
+        })
+
+    return JsonResponse({
+        "full_name": token.user.full_name,
+        "email": token.user.email,
+        "given_name": token.user.given_name,
+        "cn": token.user.cn,
+        "department": token.user.department,
+        "upi": token.user.employee_id
+    })

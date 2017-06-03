@@ -14,7 +14,7 @@ class OAuthScope(models.Model):
     # Can the key be used to access private UCLU data?
     private_uclu = models.BooleanField(default=False)
 
-    def scopeIsEqual(other):
+    def scopeIsEqual(self, other):
         if not isinstance(other, self.__class__):
             return False
         
@@ -29,7 +29,7 @@ class OAuthScope(models.Model):
 
         return True
 
-    def scopeDict():
+    def scopeDict(self):
         return {
             "private_roombookings": self.private_roombookings,
             "private_timetable": self.private_timetable,
@@ -48,7 +48,7 @@ class OAuthToken(models.Model):
 
     # The actual token that can be used by an app to act on behalf of the user
     token = models.CharField(
-        max_length=70,
+        max_length=75,
         unique=True,
         default=generate_user_token
     )
