@@ -41,7 +41,6 @@ h3 {
 }
 
 .jumbotron {
-	background-color: #0B3954;
 	padding-top: 100px;
 	padding-bottom: 100px;
 	color: white;
@@ -54,7 +53,7 @@ h3 {
 
 .text {
 	background: white;
-	flex: 1 200px;
+	flex: 2 200px;
 	padding-right: 15px;
 	padding-left: 60px;
 	margin-right: auto;
@@ -63,7 +62,7 @@ h3 {
 
 .code {
 	background: #282A36;
-	flex: 1 200px;
+	flex: 3 200px;
 	overflow-y: auto;
 }
 
@@ -90,4 +89,47 @@ h3 {
 code {
 	font-family: 'Source Code Pro', monospace;
 	font-size: 14px;
+}
+
+.footer {
+  background-color: #0D112B;
+	padding-top: 60px;
+	padding-bottom: 40px;
+	color: white;
+
+  .container {
+    max-width: 800px;
+  }
+
+  h1 {
+  	font-family: 'Source Sans Pro', sans-serif;
+    font-weight: lighter;
+    text-align: center;
+    color: #555A72;
+    margin-top: 0px;
+    margin-bottom: 60px;
+  }
+
+  h3 {
+    color: #555a72;
+    letter-spacing: .15em;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-bottom: 10px;
+  }
+
+  a {
+    color: rgba(255,255,255,.65);
+    font-size: 18px;
+    font-family: 'Source Sans Pro', sans-serif;
+    display: block;
+    text-decoration: none;
+    margin-bottom: 14px;
+  }
+
+  a:hover {
+    color: white;
+    text-decoration: underline;
+  }
 }

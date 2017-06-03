@@ -1,9 +1,11 @@
 import React from 'react';
 
 import Navbar from './Navbar.jsx';
-import Jumbotron from './Jumbotron.jsx';
+import Intro from './Intro.jsx';
+import Goal from './Goal.jsx';
 import Demo from './Demo.jsx';
 import Examples from './Examples.jsx';
+import Footer from './Footer.jsx';
 
 
 export default class GetStartedComponent extends React.Component {
@@ -12,9 +14,11 @@ export default class GetStartedComponent extends React.Component {
       return (
         <div>
           <Navbar />
-          <Jumbotron />
+          <Intro />
+          <Goal />
           <Demo />
           <Examples />
+          <Footer />
         </div>
       )
     }

@@ -21,6 +21,16 @@
   }
 }
 
+.row {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.col {
+  flex: 1 200px;
+}
+
+
 .center {
   text-align: center;
 }

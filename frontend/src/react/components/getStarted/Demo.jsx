@@ -1,5 +1,5 @@
 import React from 'react';
-import {Tabs, Tab} from 'material-ui/Tabs';
+import { Tabs, Tab } from 'material-ui/Tabs';
 import AutoComplete from 'material-ui/AutoComplete';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/styles';
@@ -14,7 +14,7 @@ let languages = [
     "code": `import requests
 
 params = {
-  "token": "YOUR-API-KEY"
+  "token": "${window.initialData.temp_token}"
 }
 
 r = requests.get("https://uclapi.com/roombookings/bookings", params=params)
@@ -23,7 +23,7 @@ print(r.json())`
 
   {
     "name": "javascript",
-    "code": `fetch("https://uclapi.com/roombookings/bookings?token=YOUR-API-KEY")
+    "code": `fetch("https://uclapi.com/roombookings/bookings?token=${window.initialData.temp_token}")
 .then((response) => {
   return response.json()
 })
@@ -34,7 +34,7 @@ print(r.json())`
 
   {
     name: "bash",
-    code: `curl https://uclapi.com/roombookings/bookings?token=YOUR-API-KEY`
+    code: `curl https://uclapi.com/roombookings/bookings?token=${window.initialData.temp_token}`
   }
 ]
 
