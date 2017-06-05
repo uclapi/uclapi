@@ -7,6 +7,7 @@ install:
   - pip3 install codecov coverage prospector pylint pylint-django
 services:
   - postgresql
+  - redis-server
 script:
   # Install Oracle Instant Client
   - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip

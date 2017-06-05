@@ -21,6 +21,7 @@ pycryptodome==3.4.6
 pyparsing==2.2.0
 pytz==2017.2
 raven==6.0.0
+redis==2.10.5
 requests==2.14.2
 setproctitle==1.1.10
 six==1.10.0
