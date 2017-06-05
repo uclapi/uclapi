@@ -1,17 +1,21 @@
 from functools import reduce
 
+from dashboard.models import App
 from django.http import JsonResponse
-from rest_framework.decorators import api_view
-from .models import Room, Equipment, BookingA, BookingB, Lock
-from .decorators import does_token_exist, log_api_call
+from django.core.cache import caches
+from rest_framework.decorators import api_view, throttle_classes
+from rest_framework.throttling import SimpleRateThrottle
 
+from .decorators import does_token_exist, log_api_call, throttle
+from .models import Room, Equipment, BookingA, BookingB, Lock
 from .helpers import _parse_datetime, _serialize_rooms, \
     _get_paginated_bookings, _create_page_token, _return_json_bookings, \
-    _serialize_equipment
-
+    _serialize_equipment, how_many_seconds_until_midnight, \
+    PrettyJsonResponse as JsonResponse
 
 @api_view(['GET'])
 @does_token_exist
+@throttle
 @log_api_call
 def get_rooms(request):
     # add them to iterables so can be filtered without if-else
@@ -51,6 +55,7 @@ def get_rooms(request):
 
 @api_view(['GET'])
 @does_token_exist
+@throttle
 @log_api_call
 def get_bookings(request):
     # if page_token exists, dont look for query
@@ -135,6 +140,7 @@ def get_bookings(request):
 
 @api_view(['GET'])
 @does_token_exist
+@throttle
 @log_api_call
 def get_equipment(request):
     roomid = request.GET.get("roomid")

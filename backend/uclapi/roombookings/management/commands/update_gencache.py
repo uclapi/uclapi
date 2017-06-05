@@ -57,7 +57,8 @@ class Command(BaseCommand):
                 weeknumber=row[12],
                 condisplayname=row[13],
                 phone=row[14],
-                descrip=row[15]
+                descrip=row[15],
+                title=row[16]
             ))
 
         self.stdout.write("There are " + str(len(data_objects)) + " records.")
