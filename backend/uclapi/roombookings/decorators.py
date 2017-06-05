@@ -2,8 +2,10 @@ from dashboard.models import App
 from django.core.exceptions import ObjectDoesNotExist
 from uclapi.settings import REDIS_UCLAPI_HOST
 from .helpers import PrettyJsonResponse as JsonResponse, how_many_seconds_until_midnight
+from uclapi.utils import strtobool
 
 import keen
+import os
 import re
 import redis
 
@@ -61,7 +63,8 @@ def log_api_call(view_func):
             "queryparams": queryparams
         }
 
-        keen.add_event("apicall", parameters)
+        if strtobool(os.environ.get("UCLAPI_PRODUCTION")):
+            keen.add_event("apicall", parameters)
 
         return view_func(request, *args, **kwargs)
     return wrapped
