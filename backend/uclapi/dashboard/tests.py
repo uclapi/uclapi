@@ -21,14 +21,17 @@ class DashboardTestCase(TestCase):
         session.save()
 
     def test_id_not_set(self):
-        with patch.dict('os.environ', {'SHIBBOLETH_ROOT': "http://rooturl.com"}):
+        with patch.dict('os.environ', {
+            'SHIBBOLETH_ROOT': "http://rooturl.com"
+        }):
             session = self.client.session
             session.pop("user_id")
             session.save()
 
             res = self.client.get('/dashboard/')
             self.assertRedirects(res,
-                                 "http://rooturl.com/Login?target=http%3A//testserver/dashboard/user/login.callback",
+                                 ("http://rooturl.com/Login?target=http%3A//"
+                                  "testserver/dashboard/user/login.callback"),
                                  fetch_redirect_response=False,
                                  )
 

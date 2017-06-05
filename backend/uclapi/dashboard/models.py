@@ -1,8 +1,10 @@
 from django.db import models
-from .app_helpers import generate_api_token, generate_app_id, generate_app_client_id, generate_app_client_secret
+from .app_helpers import generate_api_token, generate_app_id, \
+    generate_app_client_id, generate_app_client_secret
 from oauth.models import OAuthScope
 
 models.options.DEFAULT_NAMES += ('_DATABASE',)
+
 
 # Create your models here.
 class User(models.Model):
@@ -68,6 +70,7 @@ class App(models.Model):
 
     class Meta:
         _DATABASE = 'default'
+
 
 class APICall(models.Model):
     ts = models.DateTimeField(auto_now_add=True)

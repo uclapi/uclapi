@@ -14,6 +14,7 @@ class FakeModelClass:
         for key, value in kwargs.items():
             setattr(self, key, value)
 
+
 class EquipmentSerializationTestCase(SimpleTestCase):
 
         def test_serialize_equipment(self):
@@ -124,7 +125,7 @@ class ParseDateTimeTestCase(SimpleTestCase):
 
 class PrettyPrintJsonTestCase(SimpleTestCase):
     def test_pretty_print(self):
-        response = PrettyJsonResponse({"foo":"bar"})
+        response = PrettyJsonResponse({"foo": "bar"})
         self.assertEqual(response.content.decode(), '{\n    "foo": "bar"\n}')
 
 
@@ -144,4 +145,5 @@ class SecondsUntilMidnightTestCase(SimpleTestCase):
 
         for idx, arg in enumerate(arg_list):
             with freeze_time(arg):
-                self.assertEqual(how_many_seconds_until_midnight(), expected[idx])
+                self.assertEqual(
+                    how_many_seconds_until_midnight(), expected[idx])

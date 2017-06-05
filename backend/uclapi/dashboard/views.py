@@ -69,7 +69,8 @@ def dashboard(request):
         user_id = request.session["user_id"]
     except KeyError:
         url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
-        param = request.build_absolute_uri(request.path) + "user/login.callback"
+        param = (request.build_absolute_uri(request.path) +
+                 "user/login.callback")
         param = quote(param)
         url = url + param
         return redirect(url)

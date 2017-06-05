@@ -25,6 +25,7 @@ def generate_app_id():
 
     return final
 
+
 def generate_app_client_id():
     sr = SystemRandom()
 
@@ -33,6 +34,7 @@ def generate_app_client_id():
     client_id += ''.join(str(sr.randint(0, 9)) for _ in range(16))
 
     return client_id
+
 
 def generate_app_client_secret():
     client_secret = hexlify(os.urandom(32)).decode()

@@ -4,6 +4,7 @@ import keen
 import os
 import tldextract
 
+
 def get_user_by_id(user_id):
     user = User.objects.get(id=user_id)
     return user
@@ -192,10 +193,11 @@ def delete_app(request):
             "message": "App sucessfully deleted.",
         })
 
+
 def set_callback_url(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Error: Request is not of method POST")
-    
+
     try:
         app_id = request.POST["app_id"]
         new_callback_url = request.POST["callback_url"]
@@ -208,25 +210,33 @@ def set_callback_url(request):
         response.status_code = 400
         return response
 
-    
-    # Check if the new callback URL uses an acceptable protocol (e.g. HTTP or HTTPS)
-    # The list comprehension will explode the UCLAPI_OAUTH_CALLBACK_ALLOWED_PROTOCOLS environment
-    # variable, split by semicolons, append each one with :// then check if the URL starts with it.
+    # Check if the new callback URL uses an acceptable protocol
+    # (e.g. HTTP or HTTPS)
+    # The list comprehension will explode the
+    # UCLAPI_OAUTH_CALLBACK_ALLOWED_PROTOCOLS environment
+    # variable, split by semicolons, append each one with :// then
+    # check if the URL starts with it.
     # If none of them work then bail out.
-    if not any([new_callback_url.startswith(p + "://") for p in os.environ.get("UCLAPI_OAUTH_CALLBACK_ALLOWED_PROTOCOLS").split(';')]):
+    if not any([new_callback_url.startswith(p + "://") for p in os.environ.get(
+            "UCLAPI_OAUTH_CALLBACK_ALLOWED_PROTOCOLS").split(';')]):
         response = JsonResponse({
             "success": False,
-            "message": "The requested callback URL does not use an acceptable protocol."
+            "message": ("The requested callback URL"
+                        " does not use an acceptable protocol.")
         })
         response.status_code = 400
         return response
 
     url_data = tldextract.extract(new_callback_url)
 
-    if any([p == (url_data.domain + "." + url_data.suffix) for p in os.environ.get("UCLAPI_OAUTH_CALLBACK_DENIED_URLS").split(';')]):
+    if any(
+        [p == (url_data.domain + "." + url_data.suffix)
+            for p in os.environ.get(
+            "UCLAPI_OAUTH_CALLBACK_DENIED_URLS").split(';')]):
         response = JsonResponse({
             "success": False,
-            "message": "The requested callback URL is hosted on a banned domain."
+            "message": ("The requested callback URL"
+                        " is hosted on a banned domain.")
         })
         response.status_code = 400
         return response
@@ -257,10 +267,11 @@ def set_callback_url(request):
         "message": "Callback URL successfully changed.",
     })
 
+
 def set_rb_scope(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Error: Request is not of method POST")
-    
+
     try:
         app_id = request.POST["app_id"]
         scope_status = request.POST["scope_status"] == "true"
@@ -298,10 +309,11 @@ def set_rb_scope(request):
             "message": "Scope successfully changed",
         })
 
+
 def set_timetable_scope(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Error: Request is not of method POST")
-    
+
     try:
         app_id = request.POST["app_id"]
         scope_status = request.POST["scope_status"] == "true"
@@ -339,10 +351,11 @@ def set_timetable_scope(request):
             "message": "Scope successfully changed",
         })
 
+
 def set_uclu_scope(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Error: Request is not of method POST")
-    
+
     try:
         app_id = request.POST["app_id"]
         scope_status = request.POST["scope_status"] == "true"

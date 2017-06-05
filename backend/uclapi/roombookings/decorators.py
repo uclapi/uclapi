@@ -1,11 +1,13 @@
 from dashboard.models import App
 from django.core.exceptions import ObjectDoesNotExist
 from uclapi.settings import REDIS_UCLAPI_HOST
-from .helpers import PrettyJsonResponse as JsonResponse, how_many_seconds_until_midnight
+from .helpers import PrettyJsonResponse as JsonResponse, \
+    how_many_seconds_until_midnight
 
 import keen
 import re
 import redis
+
 
 def does_token_exist(view_func):
     def wrapped(request, *args, **kwargs):
@@ -66,6 +68,7 @@ def log_api_call(view_func):
         return view_func(request, *args, **kwargs)
     return wrapped
 
+
 def throttle(view_func):
     def wrapped(request, *args, **kwargs):
         token = request.GET.get("token")
@@ -77,14 +80,16 @@ def throttle(view_func):
         if count is None:
             # set the value to 1 & expiry
             r.set(cache_key, 1, how_many_seconds_until_midnight())
-            
+
             return view_func(request, *args, **kwargs)
         else:
             count = int(count)
             if count > 10000:
                 response = JsonResponse({
                     "ok": False,
-                    "error": "You have been throttled. Please try again in {} seconds.".format(how_many_seconds_until_midnight())
+                    "error": ("You have been throttled. "
+                              "Please try again in {} seconds."
+                              ).format(how_many_seconds_until_midnight())
                 })
                 response.status_code = 429
                 response['Retry-After'] = how_many_seconds_until_midnight()
