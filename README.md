@@ -7,7 +7,6 @@ Make sure you have the requirements installed in your virtual environment, and t
 `python manage.py test --testrunner 'roombookings.custom_test_runner.NoDbTestRunner'`
 
 ## Setting Up and Building
-**Note that these instructions can only ever work if you are within the UCL network and have database access credentials**
 This will walk you through setting yourself up a local development environment. This is different to if you want to deploy this into production, but luckily we have an internal set of installation scripts for this. Therefore, this guide will not walk you through, for example, getting Gunicorn or Nginx running. This is simply getting an environment up that can be used to develop the API. Testing with Nginx and Gunicorn is done in staging prior to a production deployment.
 
 ### Requirements
@@ -149,7 +148,8 @@ SENTRY_DSN=
 REDIS_UCLAPI_HOST=localhost
 ```
 
-### Run Database Migrations and Create Lock
+### Run Database Migrations, Create Lock and Populate Cache
+**Note that the cache filling can only ever work if you are within the UCL network and have database access credentials.**
 ```
 pushd uclapi/backend/uclapi
 . venv/bin/activate
@@ -162,7 +162,8 @@ popd
 ```
 
 ## Running the API Locally
-Running the API locally requires two shells open: one for Fake Shibboleth and one for the API
+Running the API locally requires two shells open: one for Fake Shibboleth and one for the API.
+**Note that API requests can only ever work if you are within the UCL network and have database access credentials.**
 
 ### Start Dependencies
 1. Ensure Postgres is running
