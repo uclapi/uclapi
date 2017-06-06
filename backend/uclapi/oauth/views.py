@@ -235,7 +235,7 @@ def userallow(request):
     code = generate_random_verification_code()
 
     r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
-    
+
     verification_data = {
         "client_id": app.client_id,
         "state": state,
@@ -250,7 +250,7 @@ def userallow(request):
     # The code will only be valid for 90 seconds after which redis will just
     # drop it and the process will be invalidated.
     r.set(code, verification_data_str, ex=90)
-    
+
     # Now redirect the user back to the app, at long last.
     # Just in case they've tried to be super clever and host multiple apps with
     # the same callback URL, we'll provide the client ID along with the state
@@ -268,26 +268,29 @@ def token(request):
     except KeyError:
         return JsonResponse({
             "ok": False,
-            "error": "The client did not provide the requisite data to get a token."
+            "error": ("The client did not provide"
+                      " the requisite data to get a token.")
         })
 
     r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
-    
+
     try:
         data = json.loads(r.get(code))
     except:
         return JsonResponse({
             "ok": False,
-            "error": "The code received was invalid, or has expired. Please try again."
+            "error": ("The code received was invalid, or has expired."
+                      " Please try again.")
         })
-   
+
     client_id = data["client_id"]
     state = data["state"]
     upi = data["upi"]
 
     app = App.objects.get(client_id=client_id)
     try:
-        hmac_digest = hmac.new(app.client_secret, msg=code, digestmod=hashlib.sha256).digest()
+        hmac_digest = hmac.new(
+            app.client_secret, msg=code, digestmod=hashlib.sha256).digest()
         hmac_b64 = base64.b64encode(hmac_digest).decode()
     except:
         return JsonResponse({
@@ -296,15 +299,18 @@ def token(request):
         })
 
     if hmac_b64 != validation_hmac:
-         return JsonResponse({
+        return JsonResponse({
             "ok": False,
-            "error": "The HMAC check returned a different hash to the proof that was supplied. "
-                "Please ensure that the client secret is correct and that the digest is base64 encoded."
+            "error": ("The HMAC check returned a different hash to"
+                      " the proof that was supplied. "
+                      "Please ensure that the client secret is correct"
+                      " and that the digest is base64 encoded.")
         })
 
-    # Assume now that the digest was correct, and therefore the client secret is correct.
+    # Assume now that the digest was correct,
+    # and therefore the client secret is correct.
     # Carry on and assign a token
-    
+
     user = User.objects.get(employee_id=upi)
 
     # Since the data has passed verification at this point, and we have
