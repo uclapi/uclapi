@@ -7,13 +7,18 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, \
     csrf_protect
 import requests
+import redis
 
 import os
 import json
+import hmac
+import hashlib
+import base64
 
 from dashboard.models import App, User
 from .app_helpers import generate_random_verification_code
 from .models import OAuthScope, OAuthToken
+from uclapi.settings import REDIS_UCLAPI_HOST
 
 
 # The endpoint that creates a Shibboleth login and redirects the user to it
@@ -188,7 +193,7 @@ def userdeny(request):
     app = App.objects.get(client_id=data["client_id"])
     state = data["state"]
 
-    redir = app.callback_url + "/denied?state=" + state
+    redir = app.callback_url + "?result=denied?state=" + state
 
     return redirect(redir)
 
@@ -222,65 +227,85 @@ def userallow(request):
     state = data["state"]
 
     # Now we have the data we need to generate a random code and
-    # send this to the backend along with the state and request the app's
-    # client secret. If this matches we can generate OAuth
-    # keys and pass them to the backend
+    # store it in redis along with the request properties.
+    # Once the client is redirected to they can make a request
+    # with that code to obtain an OAuth token. This can then
+    # be used to obtain User Data.
 
     code = generate_random_verification_code()
+
+    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    
     verification_data = {
-        "verification_code": code,
         "client_id": app.client_id,
-        "state": state
+        "state": state,
+        "upi": data["user_upi"]
     }
 
     verification_data_str = json.dumps(
         verification_data, cls=DjangoJSONEncoder)
-    verification_data_str_enc = signer.sign(verification_data_str)
 
-    full_verification_data = {
-        "client_id": app.client_id,
-        "state": state,
-        "verification_data": verification_data_str_enc
-    }
+    # Store this verification data in redis so that it can be obtained later
+    # when the client wants to swap the code for a token.
+    # The code will only be valid for 90 seconds after which redis will just
+    # drop it and the process will be invalidated.
+    r.set(code, verification_data_str, ex=90)
+    
+    # Now redirect the user back to the app, at long last.
+    # Just in case they've tried to be super clever and host multiple apps with
+    # the same callback URL, we'll provide the client ID along with the state
+    return redirect(
+            app.callback_url + "?result=allow&code=" + code + "&client_id=" +
+            app.client_id + "&state=" + state
+        )
 
+
+def token(request):
     try:
-        vr = requests.post(
-            app.callback_url + "/verify", data=full_verification_data)
-        verification_response = vr.json()
-    except requests.exceptions.RequestException:
-        return JsonResponse({
-            "ok": False,
-            "error": ("The client did not respond with valid JSON."
-                      " Please contact the application vendor.")
-        })
-
-    try:
-        if not verification_response["client_secret"] == app.client_secret:
-            return JsonResponse({
-                "ok": False,
-                "error": ("The secret the client returned was invalid."
-                          " Please contact the application vendor.")
-            })
+        code = request.POST.get("code")
+        client_id = request.POST.get("client_id")
+        validation_hmac = request.POST.get("appsecret_proof")
     except KeyError:
         return JsonResponse({
             "ok": False,
-            "error": ("The data the client returned was invalid."
-                      " Please contact the application vendor."),
-            "errorcontents": verification_response["error"]
+            "error": "The client did not provide the requisite data to get a token."
         })
 
-    # Only trust that the data was properly returned if the signature was 60
-    # seconds ago
+    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    
     try:
-        data_check = signer.unsign(
-            verification_response["verification_data"], 60)
-    except (signing.BadSignature, KeyError):
+        data = json.loads(r.get(code))
+    except:
         return JsonResponse({
             "ok": False,
-            "error": ("The signed data received failed the signature check. "
-                      "Either the server did not respond in a timely manner, "
-                      "or the data was tampered with.")
+            "error": "The code received was invalid, or has expired. Please try again."
         })
+   
+    client_id = data["client_id"]
+    state = data["state"]
+    upi = data["upi"]
+
+    app = App.objects.get(client_id=client_id)
+    try:
+        hmac_digest = hmac.new(app.client_secret, msg=code, digestmod=hashlib.sha256).digest()
+        hmac_b64 = base64.b64encode(hmac_digest).decode()
+    except:
+        return JsonResponse({
+            "ok": False,
+            "error": "HMAC failed. Please contact support."
+        })
+
+    if hmac_b64 != validation_hmac:
+         return JsonResponse({
+            "ok": False,
+            "error": "The HMAC check returned a different hash to the proof that was supplied. "
+                "Please ensure that the client secret is correct and that the digest is base64 encoded."
+        })
+
+    # Assume now that the digest was correct, and therefore the client secret is correct.
+    # Carry on and assign a token
+    
+    user = User.objects.get(employee_id=upi)
 
     # Since the data has passed verification at this point, and we have
     # checked the validity of the client secret, we can
@@ -329,8 +354,7 @@ def userallow(request):
         token.save()
 
     # Now that we have a token we can pass one back to the app
-    # We'll make a final HTTP request to the app and provide the state and the
-    # OAuth token. We sincerely hope they'll save this token!
+    # We sincerely hope they'll save this token!
     # The app can use the token to pull in any personal data (name, UPI, etc.)
     # later on, so we won't bother to give it to them just yet.
 
@@ -341,18 +365,10 @@ def userallow(request):
         "scope": json.dumps(token.scope.scopeDict())
     }
 
-    # Now forward them the OAuth token for the user.
-    # If they're not happy with that then that's their fault after the final
-    # redirect!
-    oauth_req = requests.post(app.callback_url + "/token", data=oauth_data)
-
-    # Now redirect the user back to the app, at long last.
-    # Just in case they've tried to be super clever and host multiple apps with
-    # the same callback URL, we'll provide the client ID along with the state
-    return redirect(
-        app.callback_url + "?client_id=" + app.client_id + "&state=" + state)
+    return JsonResponse(oauth_data)
 
 
+# TODO: upgrade this to use HMAC checking with a Decorator
 def userdata(request):
     try:
         token_code = request.GET.get("token")
