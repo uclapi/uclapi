@@ -1,4 +1,6 @@
 from .models import OAuthToken
+from django.core.exceptions import ObjectDoesNotExist
+from roombookings.helpers import PrettyJsonResponse as JsonResponse
 
 
 def oauth_token_check(scope_name):
