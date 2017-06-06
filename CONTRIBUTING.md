@@ -34,6 +34,8 @@ Our codebase consists out of multiple languages (JavaScript for front-end, Pytho
 * JavaScript - it should adhere to [JavaScript Standard Style](http://standardjs.com/).
 * Python - we (try to) adhere to [PEP8](https://www.python.org/dev/peps/pep-0008/), using 4 spaces per indentation level.
 
+We use [Hound CI](https://houndci.com) to automatically check PR's for style-guide violuations. Unless all faults detected are removed, HoundCI will mark the commit as failing to build.
+
 ### Git commit messages
 * Use present tense ("Improve description field" or "changing X to work with Y")
 * Try to limit the commit message to 50 characters or less. You can always use multiple lines.
