@@ -19,6 +19,7 @@ from dashboard.models import App, User
 from .app_helpers import generate_random_verification_code
 from .models import OAuthScope, OAuthToken
 from uclapi.settings import REDIS_UCLAPI_HOST
+from .decorators import oauth_token_check
 
 
 # The endpoint that creates a Shibboleth login and redirects the user to it
@@ -375,6 +376,7 @@ def token(request):
 
 
 # TODO: upgrade this to use HMAC checking with a Decorator
+@oauth_token_check('uclu')
 def userdata(request):
     try:
         token_code = request.GET.get("token")
