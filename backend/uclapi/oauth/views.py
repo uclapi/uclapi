@@ -256,7 +256,7 @@ def userallow(request):
     # Just in case they've tried to be super clever and host multiple apps with
     # the same callback URL, we'll provide the client ID along with the state
     return redirect(
-            app.callback_url + "?result=allow&code=" + code + "&client_id=" +
+            app.callback_url + "?result=allowed&code=" + code + "&client_id=" +
             app.client_id + "&state=" + state
         )
 
