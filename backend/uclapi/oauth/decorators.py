@@ -42,4 +42,4 @@ def oauth_token_check(scope_name):
 
             return view_func(request, *args, **kwargs)
         return wrapped
-    return oauth_token_check
+    return oauth_token_and_scope
