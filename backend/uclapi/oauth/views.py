@@ -37,7 +37,7 @@ def authorise(request):
     # Sign the app and state pair before heading to Shibboleth to help protect
     # against CSRF and XSS attacks
     signer = TimestampSigner()
-    data = app.client_id + "|" + state
+    data = app.client_id + state
     signed_data = signer.sign(data)
 
     # Build Shibboleth callback URL
@@ -79,9 +79,8 @@ def shibcallback(request):
             "error": "Signature has expired. Please try login again."
         })
 
-    parts = appdata.split("|")
-    client_id = parts[0]
-    state = parts[1]
+    client_id = appdata[:33]
+    state = appdata[33:]
 
     app = App.objects.get(client_id=client_id)
 
