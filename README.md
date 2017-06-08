@@ -1,11 +1,6 @@
 # uclapi [![Build Status](https://travis-ci.org/uclapi/uclapi.svg?branch=master)](https://travis-ci.org/uclapi/uclapi) [![codecov](https://codecov.io/gh/uclapi/uclapi/branch/master/graph/badge.svg)](https://codecov.io/gh/uclapi/uclapi)
 UCL API Main Repository
 
-## Testing
-We're an amazing project, so obviously we have tests :sparkles:  
-Make sure you have the requirements installed in your virtual environment, and then run:  
-`python manage.py test --testrunner 'roombookings.custom_test_runner.NoDbTestRunner'`
-
 ## Setting Up and Building
 This will walk you through setting yourself up a local development environment. This is different to if you want to deploy this into production, but luckily we have an internal set of installation scripts for this. Therefore, this guide will not walk you through, for example, getting Gunicorn or Nginx running. This is for simply getting an environment up that can be used to develop the API. Testing with Nginx and Gunicorn is done in staging prior to a production deployment.
 
@@ -232,3 +227,8 @@ cd uclapi/backend/uclapi
 
 ### Give it a go!
 If those commands work you should be able to navigate to `http://localhost:8000/dashboard` in your browser, which will let you log in via Fake Shibboleth running on `http://localhost:8001`. If so, then you're up and running!
+
+## Testing
+We're an amazing project, so obviously we have tests :sparkles:  
+Make sure you have the requirements installed in your virtual environment, and then run:  
+`python manage.py test --testrunner 'roombookings.custom_test_runner.NoDbTestRunner'`
