@@ -9,7 +9,6 @@ import re
 def does_token_exist(view_func):
 
     def wrapped(request, *args, **kwargs):
-        # First check if using a TemporaryToken
         token = request.GET.get("token")
         is_temp_token = None
 
@@ -22,7 +21,7 @@ def does_token_exist(view_func):
         if is_temp_token:
             try:
                 temp_token = TemporaryToken.objects.get(
-                    api_token=temp_token_param
+                    api_token=token
                 )
             except ObjectDoesNotExist:
                 response = JsonResponse({
@@ -32,7 +31,7 @@ def does_token_exist(view_func):
                 response.status_code = 400
                 return response
 
-            if request.path != "roombookings/bookings":
+            if request.path != "/roombookings/bookings":
                 temp_token.uses += 1
                 temp_token.save()
                 response = JsonResponse({
@@ -64,7 +63,9 @@ def does_token_exist(view_func):
                 response.status_code = 400
                 return response
 
-            request.GET = request.GET.copy()
+            if not request.GET._mutable:
+                request.GET._mutable = True
+
             request.GET['results_per_page'] = 1
 
             temp_token.uses += 1
@@ -108,10 +109,19 @@ def log_api_call(view_func):
 
         queryparams = dict(request.GET)
 
-        # Check if temp token
-        temp_token_param = request.GET.get("temp_token")
+        token = request.GET["token"]
 
-        if temp_token_param:
+        is_temp_token = None
+
+        try:
+            if token.split("-")[1] == "temp":
+                is_temp_token = True
+        except:
+            is_temp_token = False
+
+        user = None
+
+        if is_temp_token:
             parameters = {
                 "service": service,
                 "method": method,
@@ -123,8 +133,6 @@ def log_api_call(view_func):
             keen.add_event("apicall", parameters)
 
             return view_func(request, *args, **kwargs)
-
-        token = request.GET["token"]
 
         user = App.objects.get(api_token=token).user
 

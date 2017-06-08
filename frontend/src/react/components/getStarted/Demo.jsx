@@ -7,39 +7,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import 'whatwg-fetch';
 
 
-let languages = [
-  {
-    "name": "python",
-    "code": `import requests
-
-params = {
-  "token": "${window.initialData.temp_token}"
-}
-
-r = requests.get("https://uclapi.com/roombookings/bookings", params=params)
-print(r.json())`
-  },
-
-  {
-    "name": "javascript",
-    "code": `const token = "${window.initialData.temp_token}";
-
-fetch("https://uclapi.com/roombookings/bookings?token=" + token)
-.then((response) => {
-  return response.json()
-})
-.then((json) => {
-  console.log(json);
-})`
-  },
-
-  {
-    name: "bash",
-    code: `curl https://uclapi.com/roombookings/bookings \\
-     -d token=${window.initialData.temp_token}`
-  }
-]
-
 let rooms = [
   'Wilkins Building (Main Building) Portico', 'Torrington (1-19) 433', 'Darwin Building B05',
   'Darwin Building B15', 'Darwin Building B40 LT', 'Cruciform Building B.3.01', 'Cruciform Building B.3.05',
@@ -130,13 +97,70 @@ export default class Demo extends React.Component {
     super(props);
 
     this.state = {
-      schedule: ""
+      schedule: "",
+      roomNameMap: {
+      	'python': ``,
+        'javascript': ``,
+        'bash': ``,
+      }
     };
 
+    this.getLanguages = this.getLanguages.bind(this);
     this.getSchedule = this.getSchedule.bind(this);
   }
 
+  getLanguages() {
+    let now = new Date();
+
+    return [
+      {
+        "name": "python",
+        "code": `import requests
+
+params = {
+  "token": "${window.initialData.temp_token}",
+  "results_per_page": 1,
+  "date": ${now.toISOString().substring(0, 10).replace(/-/g, "")}, ${this.state.roomNameMap.python}
+}
+
+r = requests.get("https://uclapi.com/roombookings/bookings", params=params)
+print(r.json())`
+      },
+
+      {
+        "name": "javascript",
+        "code": `const token = "${window.initialData.temp_token}";
+
+fetch(
+  "https://uclapi.com/roombookings/bookings?token=",
+  token,
+  "&results_per_page=1", ${this.state.roomNameMap.javascript}
+  "&date=" + ${now.toISOString().substring(0, 10).replace(/-/g, "")}
+).then((response) => {
+  return response.json()
+})
+.then((json) => {
+  console.log(json);
+})`
+      },
+
+      {
+        name: "bash",
+        code: `curl https://uclapi.com/roombookings/bookings \\
+-d token=${window.initialData.temp_token} \\
+-d results_per_page=1 ${this.state.roomNameMap.bash} \\
+-d date="${now.toISOString().substring(0, 10).replace(/-/g, "")}`
+      }
+    ]
+  }
+
   getSchedule(roomName) {
+    this.state.roomNameMap = {
+      'python': `\n  "roomname": "${roomName}",`,
+      'javascript': `\n  "&roomname=${roomName}",`,
+      'bash': `\\ \n-d roomname='${roomName}'`,
+    }
+
     let now = new Date();
 
     // TODO:
@@ -184,7 +208,7 @@ export default class Demo extends React.Component {
         <div className="code">
           <Tabs>
             {
-              languages.map((language, index) => (
+              this.getLanguages().map((language, index) => (
                 <Tab key={index} label={language.name}>
                   <div>
                     <SyntaxHighlighter language={language.name}

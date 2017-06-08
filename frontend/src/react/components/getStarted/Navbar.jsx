@@ -34,7 +34,6 @@ export default class Navbar extends React.Component {
   }
 
   resize() {
-    console.log(window.innerWidth);
     this.forceUpdate()
   }
 
@@ -67,7 +66,7 @@ export default class Navbar extends React.Component {
         <a href={"https://docs.uclapi.com"}>
           <FlatButton label="Documentation" style={styles.flatButton} />
         </a>
-        <a href={"/dashboard"}>
+        <a href={"/dashboard/"}>
           <RaisedButton label="Login" style={styles.raisedButton} />
         </a>
       </div>
@@ -82,7 +81,7 @@ export default class Navbar extends React.Component {
           <a href={"https://docs.uclapi.com"}>
             <FlatButton label="Documentation" style={styles.flatButton} />
           </a>
-          <a href={"/dashboard"}>
+          <a href={"/dashboard/"}>
             <FlatButton label="Dashboard" style={styles.flatButton} />
           </a>
         </div>
@@ -102,7 +101,7 @@ export default class Navbar extends React.Component {
             <a href={"https://docs.uclapi.com"}>
               <MenuItem onTouchTap={this.handleToggle}>Documentation</MenuItem>
             </a>
-            <a href={"/dashboard"}>
+            <a href={"/dashboard/"}>
               <MenuItem onTouchTap={this.handleToggle}>Login</MenuItem>
             </a>
           </Drawer>
@@ -122,7 +121,7 @@ export default class Navbar extends React.Component {
               <a href={"https://docs.uclapi.com"}>
                 <MenuItem onTouchTap={this.handleToggle}>Documentation</MenuItem>
               </a>
-              <a href={"/dashboard"}>
+              <a href={"/dashboard/"}>
                 <MenuItem onTouchTap={this.handleToggle}>Dashboard</MenuItem>
               </a>
             </Drawer>
