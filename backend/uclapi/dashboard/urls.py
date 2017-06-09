@@ -1,6 +1,8 @@
-from django.conf.urls import url, include
-from dashboard.views import dashboard 
-from dashboard.api_applications import create_app, rename_app, regenerate_app_token, delete_app
+from django.conf.urls import url
+
+from dashboard.api_applications import (create_app, delete_app,
+                                        regenerate_app_token, rename_app)
+
 from . import views
 
 urlpatterns = [

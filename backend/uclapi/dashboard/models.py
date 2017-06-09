@@ -1,9 +1,10 @@
 from django.db import models
+
 from .app_helpers import generate_api_token, generate_app_id
 
 models.options.DEFAULT_NAMES += ('_DATABASE',)
 
-# Create your models here.
+
 class User(models.Model):
     email = models.CharField(max_length=100)
     full_name = models.CharField(max_length=1000)

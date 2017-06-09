@@ -1,6 +1,7 @@
-from django.http import HttpResponseBadRequest, JsonResponse
-from .models import App, User
 import keen
+from django.http import HttpResponseBadRequest, JsonResponse
+
+from .models import App, User
 
 
 def get_user_by_id(user_id):
