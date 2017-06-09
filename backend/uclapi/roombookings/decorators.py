@@ -1,11 +1,15 @@
-from dashboard.models import App
-from django.core.exceptions import ObjectDoesNotExist
-from uclapi.settings import REDIS_UCLAPI_HOST
-from .helpers import PrettyJsonResponse as JsonResponse, how_many_seconds_until_midnight
+import re
 
 import keen
-import re
 import redis
+from django.core.exceptions import ObjectDoesNotExist
+
+from dashboard.models import App
+from uclapi.settings import REDIS_UCLAPI_HOST
+
+from .helpers import PrettyJsonResponse as JsonResponse
+from .helpers import how_many_seconds_until_midnight
+
 
 def does_token_exist(view_func):
     def wrapped(request, *args, **kwargs):

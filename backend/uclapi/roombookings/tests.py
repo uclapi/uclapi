@@ -1,11 +1,12 @@
-from django.test import SimpleTestCase
-from itertools import chain
-from freezegun import freeze_time
 import datetime
+from itertools import chain
 
-from .helpers import _serialize_rooms, _serialize_equipment, \
-    _parse_datetime, how_many_seconds_until_midnight, \
-    PrettyJsonResponse
+from django.test import SimpleTestCase
+from freezegun import freeze_time
+
+from .helpers import (PrettyJsonResponse, _parse_datetime,
+                      _serialize_equipment, _serialize_rooms,
+                      how_many_seconds_until_midnight)
 from .models import Room
 
 

@@ -1,15 +1,18 @@
 from __future__ import unicode_literals
 
-from django.core.exceptions import FieldError, ObjectDoesNotExist
-from .models import PageToken, BookingA, BookingB, Lock, Location
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-import django.http
-
-import json
 import datetime
-import pytz
+import json
 from datetime import timedelta
+
+import django.http
+import pytz
+from django.core.exceptions import FieldError, ObjectDoesNotExist
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+
 import ciso8601
+
+from .models import BookingA, BookingB, Location, Lock, PageToken
+
 
 class PrettyJsonResponse(django.http.JsonResponse):
     def __init__(self, data):

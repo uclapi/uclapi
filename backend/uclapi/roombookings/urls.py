@@ -1,4 +1,5 @@
-from django.conf.urls import url, include
+from django.conf.urls import include, url
+
 import roombookings.views
 
 urlpatterns = [
