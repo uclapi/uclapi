@@ -27,6 +27,6 @@ before_script:
 script:
   - python ./manage.py migrate
   # codecov.io
-  - coverage run --source='.' --omit='*migrations*' manage.py test --testrunner 'roombookings.custom_test_runner.NoDbTestRunner'
+  - coverage run --source='.' --omit='*migrations*' manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner'
 after_success:
   - codecov
