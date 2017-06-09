@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from dashboard.models import App
 from uclapi.settings import REDIS_UCLAPI_HOST
 
-from .helpers import PrettyJsonResponse as JsonResponse
+from .helpers import PrettyJsonResponse
 from .helpers import how_many_seconds_until_midnight
 
 
@@ -16,7 +16,7 @@ def does_token_exist(view_func):
         token = request.GET.get("token")
 
         if not token:
-            response = JsonResponse({
+            response = PrettyJsonResponse({
                 "ok": False,
                 "error": "No token provided"
             })
@@ -26,7 +26,7 @@ def does_token_exist(view_func):
         try:
             App.objects.get(api_token=token)
         except ObjectDoesNotExist:
-            response = JsonResponse({
+            response = PrettyJsonResponse({
                 "ok": False,
                 "error": "Token does not exist"
             })
@@ -87,7 +87,7 @@ def throttle(view_func):
         else:
             count = int(count)
             if count > 10000:
-                response = JsonResponse({
+                response = PrettyJsonResponse({
                     "ok": False,
                     "error": "You have been throttled. "
                              "Please try again in {} seconds."

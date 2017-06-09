@@ -1,5 +1,7 @@
 import keen
-from django.http import HttpResponseBadRequest, JsonResponse
+from django.http import HttpResponseBadRequest
+
+from roombookings.helpers import PrettyJsonResponse
 
 from .models import App, User
 
@@ -11,7 +13,7 @@ def get_user_by_id(user_id):
 
 def create_app(request):
     if request.method != "POST":
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "Request is not of method POST"
         })
@@ -22,7 +24,7 @@ def create_app(request):
         name = request.POST["name"]
         user_id = request.session["user_id"]
     except KeyError:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have name or user."
         })
@@ -40,7 +42,7 @@ def create_app(request):
         "userid": user.id
     })
 
-    return JsonResponse({
+    return PrettyJsonResponse({
         "success": True,
         "message": "App sucessfully created",
         "app": {
@@ -61,7 +63,7 @@ def rename_app(request):
         new_name = request.POST["new_name"]
         user_id = request.session["user_id"]
     except KeyError:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have app_id/new_name"
         })
@@ -72,7 +74,7 @@ def rename_app(request):
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "App does not exist."
         })
@@ -89,7 +91,7 @@ def rename_app(request):
             "userid": user.id
         })
 
-        return JsonResponse({
+        return PrettyJsonResponse({
             "success": True,
             "message": "App sucessfully renamed.",
             "date": app.last_updated
@@ -104,7 +106,7 @@ def regenerate_app_token(request):
         app_id = request.POST["app_id"]
         user_id = request.session["user_id"]
     except KeyError:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have app_id."
         })
@@ -115,7 +117,7 @@ def regenerate_app_token(request):
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "App does not exist."
         })
@@ -131,7 +133,7 @@ def regenerate_app_token(request):
             "userid": user.id
         })
 
-        return JsonResponse({
+        return PrettyJsonResponse({
             "success": True,
             "message": "App token sucessfully regenerated.",
             "app": {
@@ -150,7 +152,7 @@ def delete_app(request):
         app_id = request.POST["app_id"]
         user_id = request.session["user_id"]
     except KeyError:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have app_id."
         })
@@ -161,7 +163,7 @@ def delete_app(request):
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "App does not exist."
         })
@@ -176,7 +178,7 @@ def delete_app(request):
             "userid": user.id
         })
 
-        return JsonResponse({
+        return PrettyJsonResponse({
             "success": True,
             "message": "App sucessfully deleted.",
         })
