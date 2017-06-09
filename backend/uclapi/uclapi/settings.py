@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 # This value should be set by the UCLAPI_PRODUCTION environment variable anyway.
 # If in production, debug should be false
-DEBUG = not strtobool(os.environ.get("UCLAPI_PRODUCTION", ""))
+DEBUG = not strtobool(os.environ.get("UCLAPI_PRODUCTION", "False"))
 
 ALLOWED_HOSTS = ["localhost"]
 
@@ -37,7 +37,7 @@ if os.environ.get("UCLAPI_DOMAIN"):
 
 # If we are running under the AWS Elastic Load Balancer then enable internal
 # requests so that the ELB and Health Checks work
-if strtobool(os.environ.get("UCLAPI_RUNNING_ON_AWS_ELB", "")):
+if strtobool(os.environ.get("UCLAPI_RUNNING_ON_AWS_ELB", "False")):
     EC2_PRIVATE_IP = None
     try:
         EC2_PRIVATE_IP = requests.get("http://169.254.169.254/latest/meta-data/local-ipv4", timeout=0.01).text
