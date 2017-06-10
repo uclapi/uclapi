@@ -33,7 +33,8 @@ class DashboardTestCase(TestCase):
             res = self.client.get('/dashboard/')
             self.assertRedirects(
                 res,
-                "http://rooturl.com/Login?target=http%3A//testserver/dashboard/user/login.callback",
+                "http://rooturl.com/Login?target="
+                "http%3A//testserver/dashboard/user/login.callback",
                 fetch_redirect_response=False,
             )
 
