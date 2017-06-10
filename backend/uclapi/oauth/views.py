@@ -366,6 +366,7 @@ def token(request):
     # later on, so we won't bother to give it to them just yet.
 
     oauth_data = {
+        "ok": True,
         "state": state,
         "client_id": app.client_id,
         "token": token.token,
@@ -383,10 +384,12 @@ def userdata(request):
         token = OAuthToken.objects.get(token=token_code)
     except ObjectDoesNotExist:
         return JsonResponse({
+            "ok": False,
             "error": "Invalid token given"
         })
 
     return JsonResponse({
+        "ok": True,
         "full_name": token.user.full_name,
         "email": token.user.email,
         "given_name": token.user.given_name,
