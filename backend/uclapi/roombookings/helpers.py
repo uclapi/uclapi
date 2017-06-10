@@ -3,13 +3,19 @@ from __future__ import unicode_literals
 from django.core.exceptions import FieldError, ObjectDoesNotExist
 from .models import PageToken, BookingA, BookingB, Lock, Location
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import JsonResponse
+import django.http
 
 import json
 import datetime
 import pytz
 from datetime import timedelta
+import ciso8601
 
+class PrettyJsonResponse(django.http.JsonResponse):
+    def __init__(self, data):
+        super().__init__(data, json_dumps_params={'indent': 4})
+        
+JsonResponse = PrettyJsonResponse
 
 def _create_page_token(query, pagination):
     page = PageToken(
@@ -79,18 +85,24 @@ def _paginated_result(query, page_number, pagination):
     )
 
 
+def _localize_time(time_string):
+    london_time = pytz.timezone("Europe/London")
+    ret_time = time_string.replace(" ", "+")
+    ret_time = ciso8601.parse_datetime(ret_time)
+    ret_time = ret_time.astimezone(london_time)
+    return ret_time.replace(tzinfo=None)
+
+
+
 def _parse_datetime(start_time, end_time, search_date):
+    parsed_start_time, parsed_end_time = None, None
     try:
         if start_time:
             # + gets decoded into a space in params
-            final_start_time = start_time.replace(" ", "+")
-            parsed_start_time = datetime.datetime.strptime(
-                final_start_time, '%Y-%m-%dT%H:%M:%S+00:00')
+            parsed_start_time = _localize_time(start_time)
 
         if end_time:
-            final_end_time = end_time.replace(" ", "+")
-            parsed_end_time = datetime.datetime.strptime(
-                final_end_time, '%Y-%m-%dT%H:%M:%S+00:00')
+            parsed_end_time = _localize_time(end_time)
 
         if not end_time and not start_time:
             if search_date:
@@ -106,7 +118,7 @@ def _parse_datetime(start_time, end_time, search_date):
                     search_date,
                     day_end
                 )
-    except (TypeError, NameError, ValueError):
+    except (TypeError, NameError, ValueError, AttributeError):
         return -1, -1, False
 
     return parsed_start_time, parsed_end_time, True
@@ -156,7 +168,7 @@ def _serialize_bookings(bookings):
             "roomname": bk.roomname,
             "siteid": bk.siteid,
             "roomid": bk.roomid,
-            "description": bk.descrip,
+            "description": bk.title,
             "start_time": _kloppify(datetime.datetime.strftime(
                 bk.startdatetime, "%Y-%m-%dT%H:%M:%S"), bk.startdatetime),
             "end_time": _kloppify(datetime.datetime.strftime(
@@ -202,3 +214,10 @@ def _return_json_bookings(bookings):
     bookings["ok"] = True
 
     return JsonResponse(bookings)
+
+def how_many_seconds_until_midnight():
+    """Returns the number of seconds until midnight."""
+    tomorrow = datetime.datetime.now() + timedelta(days=1)
+    midnight = datetime.datetime(year=tomorrow.year, month=tomorrow.month, 
+                        day=tomorrow.day, hour=0, minute=0, second=0)
+    return (midnight - datetime.datetime.now()).seconds
