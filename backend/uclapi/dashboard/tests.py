@@ -1,7 +1,8 @@
-from django.test import TestCase
+from django.test import RequestFactory, TestCase
 from unittest.mock import patch
 from uclapi.settings import FAIR_USE_POLICY
-from .models import User, App
+from .middleware.fake_shibboleth_middleware import FakeShibbolethMiddleWare
+from .models import App, User
 
 
 class DashboardTestCase(TestCase):
@@ -49,3 +50,49 @@ class DashboardTestCase(TestCase):
         self.assertTemplateUsed(res, "dashboard.html")
         self.assertContains(res, "An App")
         self.assertContains(res, "Test testington")
+
+
+class FakeShibbolethMiddleWareTestCase(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.middleware = FakeShibbolethMiddleWare()
+
+    def test_process_request_GET_with_header(self):
+        request = self.factory.get(
+            '/',
+            {"convert-get-headers": "1", "key1": "value1", "key2": "value2"}
+        )
+        self.middleware.process_request(request)
+
+        self.assertEqual(request.META.get("HTTP_CONVERT-GET-HEADERS"), "1")
+        self.assertEqual(request.META.get("HTTP_KEY1"), "value1")
+        self.assertEqual(request.META.get("HTTP_KEY2"), "value2")
+
+    def test_process_request_GET_without_header(self):
+        request = self.factory.get(
+            '/',
+            {"key1": "value1", "key2": "value2"}
+        )
+        self.middleware.process_request(request)
+
+        self.assertIsNone(request.META.get("key1"))
+        self.assertIsNone(request.META.get("key2"))
+
+    def test_process_request_POST_with_header(self):
+        request = self.factory.post(
+            '/',
+            {"convert-post-headers": "1", "key1": "value1", "key2": "value2"}
+        )
+        self.middleware.process_request(request)
+
+        self.assertEqual(request.META.get("key1"), "value1")
+        self.assertEqual(request.META.get("key2"), "value2")
+
+    def test_process_request_POST_without_header(self):
+        request = self.factory.post(
+            '/',
+            {"key1": "value1", "key2": "value2"}
+        )
+
+        self.assertIsNone(request.META.get("key1"))
+        self.assertIsNone(request.META.get("key2"))
