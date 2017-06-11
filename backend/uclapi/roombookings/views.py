@@ -1,17 +1,14 @@
 from functools import reduce
 
-from dashboard.models import App
-from django.http import JsonResponse
-from django.core.cache import caches
-from rest_framework.decorators import api_view, throttle_classes
-from rest_framework.throttling import SimpleRateThrottle
+from rest_framework.decorators import api_view
 
 from .decorators import does_token_exist, log_api_call, throttle
-from .models import Room, Equipment, BookingA, BookingB, Lock
-from .helpers import _parse_datetime, _serialize_rooms, \
-    _get_paginated_bookings, _create_page_token, _return_json_bookings, \
-    _serialize_equipment, how_many_seconds_until_midnight, \
-    PrettyJsonResponse as JsonResponse
+from .helpers import (PrettyJsonResponse, _create_page_token,
+                      _get_paginated_bookings, _parse_datetime,
+                      _return_json_bookings, _serialize_equipment,
+                      _serialize_rooms)
+from .models import BookingA, BookingB, Equipment, Lock, Room
+
 
 @api_view(['GET'])
 @does_token_exist
@@ -38,7 +35,7 @@ def get_rooms(request):
 
     # no filters provided, return all rooms serialised
     if not reduce(lambda x, y: x or y, request_params.values()):
-        return JsonResponse({
+        return PrettyJsonResponse({
             "ok": True,
             "rooms": _serialize_rooms(all_rooms)
         })
@@ -47,7 +44,7 @@ def get_rooms(request):
 
     filtered_rooms = all_rooms.filter(**request_params)
 
-    return JsonResponse({
+    return PrettyJsonResponse({
         "ok": True,
         "rooms": _serialize_rooms(filtered_rooms)
     })
@@ -83,7 +80,7 @@ def get_bookings(request):
         results_per_page = int(results_per_page)
         results_per_page = results_per_page if results_per_page > 0 else 1000
     except ValueError:
-        return JsonResponse({
+        return PrettyJsonResponse({
             "ok": False,
             "error": "results_per_page should be an integer"
         })
@@ -112,7 +109,7 @@ def get_bookings(request):
     request_params.pop("startdatetime")
 
     if not is_parsed:
-        return JsonResponse({
+        return PrettyJsonResponse({
             "ok": False,
             "error": "date/time isn't formatted as suggested in the docs"
         })
@@ -147,7 +144,7 @@ def get_equipment(request):
     siteid = request.GET.get("siteid")
 
     if not roomid:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": "No roomid supplied"
         })
@@ -155,7 +152,7 @@ def get_equipment(request):
         return response
 
     if not siteid:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": "No siteid supplied"
         })
@@ -167,7 +164,7 @@ def get_equipment(request):
         roomid=roomid,
         siteid=siteid
     )
-    return JsonResponse({
+    return PrettyJsonResponse({
         "ok": True,
         "equipment": _serialize_equipment(equipment)
     })

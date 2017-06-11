@@ -1,7 +1,9 @@
 import os
+
+from django.core.management.base import BaseCommand
+
 import cx_Oracle
 from roombookings.models import BookingA, BookingB, Lock
-from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
