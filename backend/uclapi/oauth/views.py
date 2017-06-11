@@ -282,7 +282,7 @@ def token(request):
             "error": ("The code received was invalid, or has expired."
                       " Please try again.")
         })
-    
+
     data = json.loads(data_json)
 
     client_id = data["client_id"]

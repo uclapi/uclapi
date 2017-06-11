@@ -19,7 +19,7 @@ def oauth_token_check(required_scopes=None):
                 })
                 response.status_code = 400
                 return response
-                
+
             try:
                 token_code = request.GET.get("token")
             except KeyError:
@@ -29,7 +29,7 @@ def oauth_token_check(required_scopes=None):
                 })
                 response.status_code = 400
                 return response
-            
+
             try:
                 token = OAuthToken.objects.get(token=token_code)
             except ObjectDoesNotExist:
