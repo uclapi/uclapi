@@ -31,7 +31,7 @@ def oauth_token_check(required_scopes=None):
                 return response
             
             try:
-                token = OAuthToken.objects.get(api_token=token_code)
+                token = OAuthToken.objects.get(token=token_code)
             except ObjectDoesNotExist:
                 response = JsonResponse({
                     "ok": False,
@@ -41,10 +41,12 @@ def oauth_token_check(required_scopes=None):
                 return response
 
             app = token.app
-            hmac_digest = hmac.new(app.client_secret, msg=token_code, digestmod=hashlib.sha256).digest()
+            hmac_digest = hmac.new(bytes(app.client_secret, 'ascii'),
+                                   msg=token_code.encode('ascii'),
+                                   digestmod=hashlib.sha256).digest()
             hmac_b64 = base64.b64encode(hmac_digest).decode()
             if client_secret_proof != hmac_b64:
-                 response = JsonResponse({
+                response = JsonResponse({
                     "ok": False,
                     "error": "Client secret HMAC verification failed."
                 })
@@ -67,16 +69,6 @@ def oauth_token_check(required_scopes=None):
                     })
                     response.status_code = 400
                     return response
-
-            if not scope_map[scope_name]:
-                response = JsonResponse({
-                    "ok": False,
-                    "error": "No permission to access this data"
-                })
-                response.status_code = 400
-                return response
-
-            kwargs['user'] = token.user
 
             return view_func(request, *args, **kwargs)
         return wrapped
