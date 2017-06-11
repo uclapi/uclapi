@@ -4,15 +4,14 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 export default class Jumbotron extends React.Component {
 
-  render () {
+  render() {
     return (
-      <div className="jumbotron"
-        style={{
-          "background": this.props.bgcolor,
-          "color": this.props.color
-        }}>
+      <div className="jumbotron" style={{
+        "background": this.props.bgcolor,
+        "color": this.props.color
+      }}>
         <div className="container center">
-          { this.props.children }
+          {this.props.children}
         </div>
       </div>
     )
