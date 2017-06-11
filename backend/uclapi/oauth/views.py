@@ -265,7 +265,7 @@ def token(request):
     try:
         code = request.POST.get("code")
         client_id = request.POST.get("client_id")
-        validation_hmac = request.POST.get("appsecret_proof")
+        validation_hmac = request.POST.get("client_secret_proof")
     except KeyError:
         return JsonResponse({
             "ok": False,
