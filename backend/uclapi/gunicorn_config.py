@@ -1,3 +1,5 @@
+from psycogreen.gevent import patch_psycopg
+
 import multiprocessing
 
 bind = "127.0.0.1:9000"
@@ -17,3 +19,7 @@ proc_name = "uclapi_gunicorn"
 
 timeout = 600
 greaceful_timeout = 600
+
+def post_fork(server, worker):
+    patch_psycopg()
+    worker.log.info("Made Psycopg2 Green")

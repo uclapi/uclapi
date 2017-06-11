@@ -108,12 +108,16 @@ WSGI_APPLICATION = 'uclapi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django_db_geventpool.backends.postgresql_psycopg2',
         'NAME': os.environ.get("DB_UCLAPI_NAME"),
         'USER': os.environ.get("DB_UCLAPI_USERNAME"),
         'PASSWORD': os.environ.get("DB_UCLAPI_PASSWORD"),
         'HOST': os.environ.get("DB_UCLAPI_HOST"),
-        'PORT': os.environ.get("DB_UCLAPI_PORT")
+        'PORT': os.environ.get("DB_UCLAPI_PORT"),
+        'CONN_MAX_AGE': 0,
+        'OPTIONS': {
+            'MAX_CONNS': int(os.environ.get("DB_UCLAPI_POOL_SIZE"))
+        }
     },
     'roombookings': {
         'ENGINE': 'django.db.backends.oracle',
@@ -124,12 +128,16 @@ DATABASES = {
         'PORT': ''
     },
     'gencache': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django_db_geventpool.backends.postgresql_psycopg2',
         'NAME': os.environ.get("DB_CACHE_NAME"),
         'USER': os.environ.get("DB_CACHE_USERNAME"),
         'PASSWORD': os.environ.get("DB_CACHE_PASSWORD"),
         'HOST': os.environ.get("DB_CACHE_HOST"),
-        'PORT': os.environ.get("DB_CACHE_PORT")
+        'PORT': os.environ.get("DB_CACHE_PORT"),
+        'CONN_MAX_AGE': 0,
+        'OPTIONS': {
+            'MAX_CONNS': int(os.environ.get("DB_CACHE_POOL_SIZE"))
+        }
     }
 }
 
