@@ -1,5 +1,7 @@
-from django.test import RequestFactory, TestCase
 from unittest.mock import patch
+
+from django.test import RequestFactory, TestCase
+
 from uclapi.settings import FAIR_USE_POLICY
 from .middleware.fake_shibboleth_middleware import FakeShibbolethMiddleWare
 from .models import App, User
@@ -22,16 +24,21 @@ class DashboardTestCase(TestCase):
         session.save()
 
     def test_id_not_set(self):
-        with patch.dict('os.environ', {'SHIBBOLETH_ROOT': "http://rooturl.com"}):
+        with patch.dict(
+            'os.environ',
+            {'SHIBBOLETH_ROOT': "http://rooturl.com"}
+        ):
             session = self.client.session
             session.pop("user_id")
             session.save()
 
             res = self.client.get('/dashboard/')
-            self.assertRedirects(res,
-                                 "http://rooturl.com/Login?target=http%3A//testserver/dashboard/user/login.callback",
-                                 fetch_redirect_response=False,
-                                 )
+            self.assertRedirects(
+                res,
+                "http://rooturl.com/Login?target="
+                "http%3A//testserver/dashboard/user/login.callback",
+                fetch_redirect_response=False,
+            )
 
     def test_get_agreement(self):
         res = self.client.get('/dashboard/')

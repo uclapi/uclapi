@@ -1,8 +1,7 @@
 from django.test.runner import DiscoverRunner
 
+
 # http://stackoverflow.com/questions/5917587/django-unit-tests-without-a-db
-
-
 class NoDbTestRunner(DiscoverRunner):
     """ A test runner to test without database creation """
 

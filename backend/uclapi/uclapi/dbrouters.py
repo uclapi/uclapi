@@ -13,13 +13,8 @@ class ModelRouter(object):
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
         if db == "default":
-            if (model_name == "bookinga") or (model_name == "bookingb"):
-                return False
-            else:
-                return True
+            return model_name not in {"bookinga", "bookingb"}
         elif db == "gencache":
-            if (model_name == "bookinga") or (model_name == "bookingb"):
-                return True
-            else:
-                return False
+            return model_name in {"bookinga", "bookingb"}
+
         return False

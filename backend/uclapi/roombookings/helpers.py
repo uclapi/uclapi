@@ -1,21 +1,23 @@
 from __future__ import unicode_literals
 
-from django.core.exceptions import FieldError, ObjectDoesNotExist
-from .models import PageToken, BookingA, BookingB, Lock, Location
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-import django.http
-
-import json
 import datetime
-import pytz
+import json
 from datetime import timedelta
+
+import django.http
+import pytz
+from django.core.exceptions import FieldError, ObjectDoesNotExist
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+
 import ciso8601
+
+from .models import BookingA, BookingB, Location, Lock, PageToken
+
 
 class PrettyJsonResponse(django.http.JsonResponse):
     def __init__(self, data):
         super().__init__(data, json_dumps_params={'indent': 4})
-        
-JsonResponse = PrettyJsonResponse
+
 
 def _create_page_token(query, pagination):
     page = PageToken(
@@ -91,7 +93,6 @@ def _localize_time(time_string):
     ret_time = ciso8601.parse_datetime(ret_time)
     ret_time = ret_time.astimezone(london_time)
     return ret_time.replace(tzinfo=None)
-
 
 
 def _parse_datetime(start_time, end_time, search_date):
@@ -206,18 +207,21 @@ def _kloppify(date_string, date):
 
 def _return_json_bookings(bookings):
     if "error" in bookings:
-        return JsonResponse({
+        return PrettyJsonResponse({
             "ok": False,
             "error": bookings["error"]
         })
 
     bookings["ok"] = True
 
-    return JsonResponse(bookings)
+    return PrettyJsonResponse(bookings)
+
 
 def how_many_seconds_until_midnight():
     """Returns the number of seconds until midnight."""
     tomorrow = datetime.datetime.now() + timedelta(days=1)
-    midnight = datetime.datetime(year=tomorrow.year, month=tomorrow.month, 
-                        day=tomorrow.day, hour=0, minute=0, second=0)
+    midnight = datetime.datetime(
+        year=tomorrow.year, month=tomorrow.month,
+        day=tomorrow.day, hour=0, minute=0, second=0
+    )
     return (midnight - datetime.datetime.now()).seconds
