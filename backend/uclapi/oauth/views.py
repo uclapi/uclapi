@@ -263,9 +263,9 @@ def userallow(request):
 
 def token(request):
     try:
-        code = request.POST.get("code")
-        client_id = request.POST.get("client_id")
-        validation_hmac = request.POST.get("client_secret_proof")
+        code = request.GET.get("code")
+        client_id = request.GET.get("client_id")
+        validation_hmac = request.GET.get("client_secret_proof")
     except KeyError:
         return JsonResponse({
             "ok": False,
@@ -274,15 +274,16 @@ def token(request):
         })
 
     r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
-
     try:
-        data = json.loads(r.get(code))
+        data_json = r.get(code).decode('ascii')
     except:
         return JsonResponse({
             "ok": False,
             "error": ("The code received was invalid, or has expired."
                       " Please try again.")
         })
+    
+    data = json.loads(data_json)
 
     client_id = data["client_id"]
     state = data["state"]
@@ -291,7 +292,9 @@ def token(request):
     app = App.objects.get(client_id=client_id)
     try:
         hmac_digest = hmac.new(
-            app.client_secret, msg=code, digestmod=hashlib.sha256).digest()
+            bytes(app.client_secret, 'ascii'),
+            msg=code.encode('ascii'),
+            digestmod=hashlib.sha256).digest()
         hmac_b64 = base64.b64encode(hmac_digest).decode()
     except:
         return JsonResponse({
@@ -376,8 +379,7 @@ def token(request):
     return JsonResponse(oauth_data)
 
 
-# TODO: upgrade this to use HMAC checking with a Decorator
-@oauth_token_check('uclu')
+@oauth_token_check([])
 def userdata(request):
     try:
         token_code = request.GET.get("token")
