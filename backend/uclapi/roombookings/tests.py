@@ -1,18 +1,21 @@
-from django.test import SimpleTestCase
-from itertools import chain
-from freezegun import freeze_time
 import datetime
+from itertools import chain
 
-from .helpers import _serialize_rooms, _serialize_equipment, \
-    _parse_datetime, how_many_seconds_until_midnight, \
-    PrettyJsonResponse
-from .models import Room
+from django.core.management import call_command
+from django.test import SimpleTestCase, TestCase
+from freezegun import freeze_time
+
+from .helpers import (PrettyJsonResponse, _parse_datetime,
+                      _serialize_equipment,
+                      how_many_seconds_until_midnight)
+from .models import Lock, Room
 
 
 class FakeModelClass:
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
+
 
 class EquipmentSerializationTestCase(SimpleTestCase):
 
@@ -124,7 +127,7 @@ class ParseDateTimeTestCase(SimpleTestCase):
 
 class PrettyPrintJsonTestCase(SimpleTestCase):
     def test_pretty_print(self):
-        response = PrettyJsonResponse({"foo":"bar"})
+        response = PrettyJsonResponse({"foo": "bar"})
         self.assertEqual(response.content.decode(), '{\n    "foo": "bar"\n}')
 
 
@@ -144,4 +147,22 @@ class SecondsUntilMidnightTestCase(SimpleTestCase):
 
         for idx, arg in enumerate(arg_list):
             with freeze_time(arg):
-                self.assertEqual(how_many_seconds_until_midnight(), expected[idx])
+                self.assertEqual(
+                    how_many_seconds_until_midnight(),
+                    expected[idx]
+                )
+
+
+class ManagementCommandsTestCase(TestCase):
+    def test_create_lock(self):
+        L = len(Lock.objects.all())
+
+        self.assertGreaterEqual(L, 0)
+        self.assertLessEqual(L, 1)
+
+        call_command('create_lock')
+
+        self.assertEqual(
+            len(Lock.objects.all()),
+            1
+        )

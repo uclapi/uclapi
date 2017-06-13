@@ -2,13 +2,13 @@ language: python
 python:
   - "3.5"
 cache: pip
-install:
-  - (sed '/cx.*/d' ./backend/uclapi/requirements.txt) | xargs -n 1 pip3 install
-  - pip3 install codecov coverage prospector pylint pylint-django
 services:
   - postgresql
   - redis-server
-script:
+install:
+  - (sed '/cx.*/d' ./backend/uclapi/requirements.txt) | xargs -n 1 pip3 install
+  - pip3 install codecov
+before_script:
   # Install Oracle Instant Client
   - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
   - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
@@ -18,23 +18,15 @@ script:
   - sudo ln -s libclntsh.so.12.1 libclntsh.so
   - sudo ln -s libocci.so.12.1 libocci.so
   - sudo apt-get install libaio-dev
-  - cd ..
-  - export ORACLE_HOME=$(pwd)/instantclient_12_2
-  - export DYLD_LIBRARY_PATH=$ORACLE_HOME
-  - export LD_LIBRARY_PATH=$ORACLE_HOME
-  - env ARCHFLAGS="-arch x86_64"
+  - export ORACLE_HOME=$(pwd)
+  - export DYLD_LIBRARY_PATH=DYLD_LIBRARY_PATH:$ORACLE_HOME
+  - export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME
   # Install cx_Oracle (which depends on Oracle IC)
-  - cd ./backend/uclapi
+  - cd ./../backend/uclapi
   - pip3 install $(cat requirements.txt | grep "cx-Oracle")
-  # Let's test this baby
-  - touch .env
+script:
   - python ./manage.py migrate
   # codecov.io
-  - coverage run --source='.' --omit='*migrations*' manage.py test --testrunner 'roombookings.custom_test_runner.NoDbTestRunner'
-  # Linting
-  - pylint $(find . -name "*.py" -print) > pylint.log || (($? != 1))
-  # Succeeds as long as score > 7
-  - echo "$(tail -n 2 pylint.log | head -n 1 | egrep '([0-9]*\.[0-9]+|[0-9]+)' -ho | head -n 1) <= 7" | bc
-  - echo "$(prospector --uses django | grep 'Messages Found.*' | egrep -ho '[[:digit:]]+') > 50" | bc || (($? == 0))
+  - coverage run --source='.' --omit='*migrations*' manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner'
 after_success:
   - codecov

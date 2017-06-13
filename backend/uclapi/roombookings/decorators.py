@@ -1,14 +1,15 @@
-from dashboard.models import App, TemporaryToken
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse
-from uclapi.settings import REDIS_UCLAPI_HOST
-from .helpers import PrettyJsonResponse as JsonResponse, \
-    how_many_seconds_until_midnight
+import re
 
 import datetime
 import keen
-import re
 import redis
+from django.core.exceptions import ObjectDoesNotExist
+
+from dashboard.models import App, TemporaryToken
+from uclapi.settings import REDIS_UCLAPI_HOST
+
+from .helpers import PrettyJsonResponse
+from .helpers import how_many_seconds_until_midnight
 
 
 def does_token_exist(view_func):
@@ -29,7 +30,7 @@ def does_token_exist(view_func):
                     api_token=token
                 )
             except ObjectDoesNotExist:
-                response = JsonResponse({
+                response = PrettyJsonResponse({
                     "ok": False,
                     "error": "Invalid temporary token"
                 })
@@ -39,7 +40,7 @@ def does_token_exist(view_func):
             if request.path != "/roombookings/bookings":
                 temp_token.uses += 1
                 temp_token.save()
-                response = JsonResponse({
+                response = PrettyJsonResponse({
                     "ok": False,
                     "error": "Temporary token can only be used for /bookings"
                 })
@@ -49,7 +50,7 @@ def does_token_exist(view_func):
             if request.GET.get('page_token'):
                 temp_token.uses += 1
                 temp_token.save()
-                response = JsonResponse({
+                response = PrettyJsonResponse({
                     "ok": False,
                     "error": "Temporary token can only return one booking"
                 })
@@ -61,7 +62,7 @@ def does_token_exist(view_func):
 
             if temp_token.uses > 10 or existed.seconds > 300:
                 temp_token.delete()  # Delete expired token
-                response = JsonResponse({
+                response = PrettyJsonResponse({
                     "ok": False,
                     "error": "Temporary token expired"
                 })
@@ -78,7 +79,7 @@ def does_token_exist(view_func):
             return view_func(request, *args, **kwargs)
 
         if not token:
-            response = JsonResponse({
+            response = PrettyJsonResponse({
                 "ok": False,
                 "error": "No token provided"
             })
@@ -88,7 +89,7 @@ def does_token_exist(view_func):
         try:
             App.objects.get(api_token=token)
         except ObjectDoesNotExist:
-            response = JsonResponse({
+            response = PrettyJsonResponse({
                 "ok": False,
                 "error": "Token does not exist"
             })
@@ -186,9 +187,11 @@ def throttle(view_func):
         else:
             count = int(count)
             if count > 10000:
-                response = JsonResponse({
+                response = PrettyJsonResponse({
                     "ok": False,
-                    "error": "You have been throttled. Please try again in {} seconds.".format(how_many_seconds_until_midnight())
+                    "error": "You have been throttled. "
+                             "Please try again in {} seconds."
+                             .format(how_many_seconds_until_midnight())
                 })
                 response.status_code = 429
                 response['Retry-After'] = how_many_seconds_until_midnight()

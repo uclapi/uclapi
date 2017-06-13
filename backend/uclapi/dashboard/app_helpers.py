@@ -1,5 +1,5 @@
-from binascii import hexlify
 import os
+from binascii import hexlify
 
 
 def generate_api_token(temp=False):

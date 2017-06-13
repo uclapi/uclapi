@@ -1,8 +1,10 @@
 from __future__ import unicode_literals
 
-from django.db import models
-from .api_helpers import generate_token
 import json
+
+from django.db import models
+
+from .api_helpers import generate_token
 
 models.options.DEFAULT_NAMES += ('_DATABASE',)
 

@@ -1,15 +1,17 @@
-from django.shortcuts import render, redirect, HttpResponse
-from .models import User, App, TemporaryToken
-from django.core.exceptions import ObjectDoesNotExist
+import json
 import os
-from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
-from django.utils.http import quote
 from distutils.util import strtobool
+
+import keen
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.serializers.json import DjangoJSONEncoder
+from django.shortcuts import redirect, render
+from django.utils.http import quote
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+
 from uclapi.settings import FAIR_USE_POLICY
 
-from django.core.serializers.json import DjangoJSONEncoder
-import json
-import keen
+from .models import App, User, TemporaryToken
 
 
 @csrf_exempt
