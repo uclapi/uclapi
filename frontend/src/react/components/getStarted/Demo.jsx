@@ -6,6 +6,7 @@ import {dracula} from 'react-syntax-highlighter/dist/styles';
 import RaisedButton from 'material-ui/RaisedButton';
 import 'whatwg-fetch';
 
+
 let rooms = [
   'Wilkins Building (Main Building) Portico',
   'Torrington (1-19) 433',
@@ -360,13 +361,20 @@ export default class Demo extends React.Component {
   constructor(props) {
     super(props);
 
+    let rootURL = 'http://localhost:8000';
+
+    if (process.env.NODE_ENV === 'production') {
+      rootURL = 'https://uclapi.com';
+    }
+
     this.state = {
       schedule: "",
       roomNameMap: {
         'python': ``,
         'javascript': ``,
         'bash': ``
-      }
+      },
+      rootURL: rootURL
     };
 
     this.getLanguages = this.getLanguages.bind(this);
@@ -409,7 +417,7 @@ fetch(
         code: `curl https://uclapi.com/roombookings/bookings \\
 -d token=${window.initialData.temp_token} \\
 -d results_per_page=1 ${this.state.roomNameMap.bash} \\
--d date="${now.toISOString().substring(0, 10).replace(/-/g, "")}`
+-d date='${now.toISOString().substring(0, 10).replace(/-/g, "")}'`
       }
     ]
   }
@@ -425,7 +433,7 @@ fetch(
 
     // TODO:
     // Need to create development environment in package.json
-    let url = "http://localhost:8000/roombookings/bookings?token=" + window.initialData.temp_token + "&roomname=" + roomName + "&date=" + now.toISOString().substring(0, 10).replace(/-/g, "");
+    let url = `${this.state.rootURL}/roombookings/bookings?token=` + window.initialData.temp_token + "&roomname=" + roomName + "&date=" + now.toISOString().substring(0, 10).replace(/-/g, "");
 
     fetch(url).then(response => {
       return response.json();

@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Dashboard for the UCL API",
   "scripts": {
-    "start": "gulp",
-    "build": "gulp build",
-    "production": "gulp production",
+    "start": "NODE_ENV=development gulp",
+    "build": "NODE_ENV=production gulp build ",
+    "production": "NODE_ENV=production gulp production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +19,7 @@
   },
   "homepage": "https://uclapi.com",
   "dependencies": {
+    "envify": "^4.0.0",
     "immutability-helper": "^2.1.1",
     "js-cookie": "^2.1.3",
     "material-ui": "^0.18.1",
@@ -57,7 +58,8 @@
   },
   "browserify": {
     "transform": [
-      "babelify"
+      "babelify",
+      "envify"
     ]
   }
 }
