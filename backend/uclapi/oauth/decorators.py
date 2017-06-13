@@ -1,10 +1,12 @@
-from .models import OAuthToken
-from django.core.exceptions import ObjectDoesNotExist
-from roombookings.helpers import PrettyJsonResponse as JsonResponse
-
 import base64
 import hashlib
 import hmac
+
+from django.core.exceptions import ObjectDoesNotExist
+
+from roombookings.helpers import PrettyJsonResponse as JsonResponse
+
+from .models import OAuthToken
 
 
 def oauth_token_check(required_scopes=None):

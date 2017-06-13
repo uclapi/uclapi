@@ -1,6 +1,6 @@
-from binascii import hexlify
 import os
 import textwrap
+from binascii import hexlify
 
 
 def generate_user_token():

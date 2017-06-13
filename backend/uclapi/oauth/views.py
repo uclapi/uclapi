@@ -1,25 +1,27 @@
-from django.shortcuts import render, HttpResponse, redirect
-from django.http import JsonResponse
-from django.core import signing
-from django.core.signing import TimestampSigner
-from django.utils.http import quote
-from django.core.serializers.json import DjangoJSONEncoder
-from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie, \
-    csrf_protect
-import requests
-import redis
-
-import os
-import json
-import hmac
-import hashlib
 import base64
+import hashlib
+import hmac
+import json
+import os
+
+import keen
+import redis
+from django.core import signing
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.serializers.json import DjangoJSONEncoder
+from django.core.signing import TimestampSigner
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
+from django.utils.http import quote
+from django.views.decorators.csrf import (csrf_exempt, csrf_protect,
+                                          ensure_csrf_cookie)
 
 from dashboard.models import App, User
-from .app_helpers import generate_random_verification_code
-from .models import OAuthScope, OAuthToken
 from uclapi.settings import REDIS_UCLAPI_HOST
+
+from .app_helpers import generate_random_verification_code
 from .decorators import oauth_token_check
+from .models import OAuthToken
 
 
 # The endpoint that creates a Shibboleth login and redirects the user to it
