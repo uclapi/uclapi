@@ -16,12 +16,11 @@ def does_token_exist(view_func):
 
     def wrapped(request, *args, **kwargs):
         token = request.GET.get("token")
-        is_temp_token = None
 
         try:
             if token.split("-")[1] == "temp":
                 is_temp_token = True
-        except:
+        except IndexError:
             is_temp_token = False
 
         if is_temp_token:
@@ -117,12 +116,10 @@ def log_api_call(view_func):
 
         token = request.GET["token"]
 
-        is_temp_token = None
-
         try:
             if token.split("-")[1] == "temp":
                 is_temp_token = True
-        except:
+        except IndexError:
             is_temp_token = False
 
         user = None
@@ -163,12 +160,10 @@ def throttle(view_func):
     def wrapped(request, *args, **kwargs):
         token = request.GET.get("token")
 
-        is_temp_token = None
-
         try:
             if token.split("-")[1] == "temp":
                 is_temp_token = True
-        except:
+        except IndexError:
             is_temp_token = False
 
         if is_temp_token:

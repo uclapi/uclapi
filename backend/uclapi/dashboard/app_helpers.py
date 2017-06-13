@@ -2,7 +2,7 @@ import os
 from binascii import hexlify
 
 
-def generate_api_token(temp=False):
+def generate_api_token():
     key = hexlify(os.urandom(30)).decode()
     dashes_key = ""
     for idx, char in enumerate(key):
@@ -16,7 +16,7 @@ def generate_api_token(temp=False):
     return final
 
 
-def generate_temp_api_token(temp=False):
+def generate_temp_api_token():
     key = hexlify(os.urandom(30)).decode()
     dashes_key = ""
     for idx, char in enumerate(key):
