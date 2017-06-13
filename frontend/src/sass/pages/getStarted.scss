@@ -2,38 +2,38 @@
 
 
 body {
-	margin: 0px;
-	font-family: 'Roboto', sans-serif;
-	color: #333333;
-	background: #F4F4F4;
+  margin: 0px;
+  font-family: 'Roboto', sans-serif;
+  color: #333333;
+  background: #F4F4F4;
 }
 
 h1 {
-	font-size: 36px;
-	font-weight: lighter;
+  font-size: 36px;
+  font-weight: lighter;
   margin-top: 0px;
-	margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 h2 {
-	font-size: 28px;
-	font-family: 'Source Sans Pro', sans-serif;
-	font-weight: lighter;
+  font-size: 28px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: lighter;
 }
 
 h3 {
-	font-size: 20px;
-	margin-top: 0px;
-	font-weight: lighter;
+  font-size: 20px;
+  margin-top: 0px;
+  font-weight: lighter;
 }
 
 .navbar {
-	padding-left: 60px !important;
+  padding-left: 60px !important;
 
-	img {
-		width: 45px;
-		padding-right: 10px;
-	}
+  img {
+    width: 45px;
+    padding-right: 10px;
+  }
 
   .active span {
     font-weight: bold !important;
@@ -42,9 +42,9 @@ h3 {
 }
 
 .jumbotron {
-	padding-top: 120px;
-	padding-bottom: 120px;
-	color: white;
+  padding-top: 120px;
+  padding-bottom: 120px;
+  color: white;
   background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("/static/logoCover.png");
   background-size: cover;
   background-position: 50%;
@@ -63,60 +63,60 @@ h3 {
 }
 
 .demo {
-	display: flex;
-	flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
   min-height: 300px;
 
   .text {
     background: white;
-  	flex: 2 200px;
-  	padding-right: 15px;
-  	padding-left: 60px;
-  	margin-right: auto;
-  	margin-left: auto;
+    flex: 2 200px;
+    padding-right: 15px;
+    padding-left: 60px;
+    margin-right: auto;
+    margin-left: auto;
   }
 
   .code {
-  	background: #282A36;
-  	flex: 3 200px;
-  	overflow-y: auto;
+    background: #282A36;
+    flex: 3 200px;
+    overflow-y: auto;
   }
 }
 
 .code hr {
-	margin: 0px;
-	border: 2px solid white;
+  margin: 0px;
+  border: 2px solid white;
 }
 
 .examples {
-	display: flex;
-	flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
 }
 
 .example {
-	margin: 10px;
+  margin: 10px;
   min-width: 200px;
-	width: 25%;
+  width: 25%;
 }
 
 code {
-	font-family: 'Source Code Pro', monospace;
-	font-size: 14px;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 14px;
 }
 
 .footer {
   background-color: #0B3954;
-	padding-top: 60px;
-	padding-bottom: 40px;
-	color: white;
+  padding-top: 60px;
+  padding-bottom: 40px;
+  color: white;
 
   .container {
     max-width: 800px;
   }
 
   h1 {
-  	font-family: 'Source Sans Pro', sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
     font-weight: lighter;
     text-align: center;
     // color: #555A72;

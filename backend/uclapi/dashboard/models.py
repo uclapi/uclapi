@@ -39,7 +39,7 @@ class App(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
 
     def regenerate_token(self):
-        new_token = generate_temp_api_token()
+        new_token = generate_api_token()
         self.api_token = new_token
         self.save()
         return self.api_token
