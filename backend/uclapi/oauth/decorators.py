@@ -13,7 +13,7 @@ def oauth_token_check(required_scopes=None):
     def oauth_token_and_scope(view_func):
         def wrapped(request, *args, **kwargs):
             try:
-                client_secret_proof = request.GET.get('client_secret_proof')
+                client_secret_proof = request.GET['client_secret_proof']
             except KeyError:
                 response = JsonResponse({
                     "ok": False,
@@ -23,7 +23,7 @@ def oauth_token_check(required_scopes=None):
                 return response
 
             try:
-                token_code = request.GET.get("token")
+                token_code = request.GET["token"]
             except KeyError:
                 response = JsonResponse({
                     "ok": False,
@@ -64,7 +64,7 @@ def oauth_token_check(required_scopes=None):
             }
 
             for s in required_scopes:
-                if not scope_map[s]:
+                if s not in scope_map:
                     response = JsonResponse({
                         "ok": False,
                         "error": "No permission to access this data"

@@ -10,7 +10,7 @@ from django.core import signing
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.signing import TimestampSigner
-from django.http import JsonResponse
+from roombookings.helpers import PrettyJsonResponse as JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.http import quote
 from django.views.decorators.csrf import (csrf_exempt, csrf_protect,
