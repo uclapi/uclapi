@@ -225,7 +225,6 @@ def userallow(request):
                       " Please contact support.")
         })
 
-    user = User.objects.get(employee_id=data["user_upi"])
     app = App.objects.get(client_id=data["client_id"])
     state = data["state"]
 
