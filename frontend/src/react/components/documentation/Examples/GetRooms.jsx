@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Topic from './Topic.jsx';
+import Topic from './../Topic.jsx';
 
 
 let codeExamples = {
@@ -14,7 +14,7 @@ print(r.json())`,
 
   shell: `curl https://uclapi.com/roombookings/rooms?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb`,
 
-  javascript: `etch("https://uclapi.com/roombookings/rooms?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
+  javascript: `fetch("https://uclapi.com/roombookings/rooms?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
 .then((response) => {
   return response.json()
 })
@@ -23,7 +23,7 @@ print(r.json())`,
 })`
 }
 
-export default class DocumentationComponent extends React.Component {
+export default class GetRooms extends React.Component {
 
     render () {
       return (
