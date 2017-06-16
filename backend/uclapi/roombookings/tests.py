@@ -8,7 +8,7 @@ from django.test import RequestFactory, SimpleTestCase, TestCase
 from freezegun import freeze_time
 from rest_framework.test import APIRequestFactory
 
-from dashboard.models import App, TemporaryToken
+from dashboard.models import App, TemporaryToken, User
 from .decorators import does_token_exist
 from .helpers import (PrettyJsonResponse, _parse_datetime,
                       _serialize_equipment,
@@ -198,7 +198,16 @@ class DoesTokenExistTestCase(TestCase):
         self.assertEqual(content["error"], "Token does not exist")
 
     def test_valid_token_provided(self):
-        user_ = User.objets.create()
+        u = User.objects.create(
+            mail="test@test.com",
+            full_name="Test testington",
+            given_name="test",
+            department="CS",
+            cn="test",
+            raw_intranet_groups="none",
+            employee_id=12345
+        )
+
         app = App.objects.create(
             user=user_,
             name="Test App 1"
