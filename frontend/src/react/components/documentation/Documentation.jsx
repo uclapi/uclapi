@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SideNav from './SideNav.jsx';
+import ExampleRoute from './ExampleRoute.jsx';
 
 export default class DocumentationComponent extends React.Component {
 
@@ -8,6 +8,7 @@ export default class DocumentationComponent extends React.Component {
       return (
         <div>
           <h1>Docs</h1>
+          <ExampleRoute />
         </div>
       )
     }

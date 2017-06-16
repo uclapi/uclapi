@@ -5,5 +5,34 @@ body {
   margin: 0px;
   font-family: 'Roboto', sans-serif;
   color: #333333;
-  background: #F4F4F4;
+  // background: #F4F4F4;
+  background: #FFFFFF;
+}
+
+h1 {
+  font-size: 36px;
+  font-weight: lighter;
+  margin-top: 0px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 28px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: lighter;
+}
+
+h3 {
+  font-size: 20px;
+  margin-top: 0px;
+  font-weight: lighter;
+}
+
+.text {
+  padding: 20px;
+}
+
+.code {
+  background: #282A36;
+  padding: 20px;
 }
