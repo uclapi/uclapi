@@ -199,7 +199,7 @@ class DoesTokenExistTestCase(TestCase):
 
     def test_valid_token_provided(self):
         u = User.objects.create(
-            mail="test@test.com",
+            email="test@test.com",
             full_name="Test testington",
             given_name="test",
             department="CS",
