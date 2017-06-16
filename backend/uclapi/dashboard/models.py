@@ -49,11 +49,7 @@ class App(models.Model):
 
 
 class TemporaryToken(models.Model):
-    id = models.CharField(
-        max_length=20,
-        primary_key=True,
-        default=generate_app_id
-    )
+    id = models.AutoField(primary_key=True)
     api_token = models.CharField(
         max_length=1000,
         unique=True,
