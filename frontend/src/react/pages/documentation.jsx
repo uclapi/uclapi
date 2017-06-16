@@ -8,7 +8,7 @@ import {cyan500, cyan700,
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import DocumentationComponent from '../components/documentation/documentation.jsx';
+import DocumentationComponent from '../components/documentation/Documentation.jsx';
 
 
 // const muiTheme = getMuiTheme({
