@@ -17,6 +17,14 @@ def does_token_exist(view_func):
     def wrapped(request, *args, **kwargs):
         token = request.GET.get("token")
 
+        if not token:
+            response = PrettyJsonResponse({
+                "ok": False,
+                "error": "No token provided"
+            })
+            response.status_code = 400
+            return response
+
         try:
             if token.split("-")[1] == "temp":
                 is_temp_token = True
@@ -76,14 +84,6 @@ def does_token_exist(view_func):
             temp_token.uses += 1
             temp_token.save()
             return view_func(request, *args, **kwargs)
-
-        if not token:
-            response = PrettyJsonResponse({
-                "ok": False,
-                "error": "No token provided"
-            })
-            response.status_code = 400
-            return response
 
         try:
             App.objects.get(api_token=token)

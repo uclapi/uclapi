@@ -1,10 +1,15 @@
+import json
 import datetime
 from itertools import chain
 
+import mock
 from django.core.management import call_command
-from django.test import SimpleTestCase, TestCase
+from django.test import RequestFactory, SimpleTestCase, TestCase
 from freezegun import freeze_time
+from rest_framework.test import APIRequestFactory
 
+from dashboard.models import App, TemporaryToken
+from .decorators import does_token_exist
 from .helpers import (PrettyJsonResponse, _parse_datetime,
                       _serialize_equipment,
                       how_many_seconds_until_midnight)
@@ -166,3 +171,40 @@ class ManagementCommandsTestCase(TestCase):
             len(Lock.objects.all()),
             1
         )
+
+
+class DoesTokenExistTestCase(TestCase):
+    def setUp(self):
+        self.dec_view = does_token_exist(mock.MagicMock())
+        self.factory  = APIRequestFactory()
+
+    def test_no_token_provided(self):
+        request = self.factory.get('/a/random/path')
+        response = self.dec_view(request)
+
+        content = json.loads(response.content.decode())
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["ok"])
+        self.assertEqual(content["error"], "No token provided")
+
+    def test_invalid_token_provided(self):
+        request = self.factory.get('/a/random/path', {'token': 'uclapi'})
+        response = self.dec_view(request)
+
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["ok"])
+        self.assertEqual(content["error"], "Token does not exist")
+
+    def test_valid_token_provided(self):
+        user_ = User.objets.create()
+        app = App.objects.create(
+            user=user_,
+            name="Test App 1"
+        )
+        
+        request = self.factory.get('/a/random/path', {'token': app.api_token})
+        response = self.dec_view(request)
+
+        self.assertEqual(response.status_code, 200)
