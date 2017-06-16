@@ -25,6 +25,7 @@ def does_token_exist(view_func):
             response.status_code = 400
             return response
 
+        is_temp_token = False
         try:
             if token.split("-")[1] == "temp":
                 is_temp_token = True

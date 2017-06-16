@@ -198,7 +198,7 @@ class DoesTokenExistTestCase(TestCase):
         self.assertEqual(content["error"], "Token does not exist")
 
     def test_valid_token_provided(self):
-        u = User.objects.create(
+        user_ = User.objects.create(
             email="test@test.com",
             full_name="Test testington",
             given_name="test",
