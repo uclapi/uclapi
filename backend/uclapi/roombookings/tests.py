@@ -197,23 +197,24 @@ class DoesTokenExistTestCase(TestCase):
         self.assertFalse(content["ok"])
         self.assertEqual(content["error"], "Token does not exist")
 
-    def test_valid_token_provided(self):
-        user_ = User.objects.create(
-            email="test@test.com",
-            full_name="Test testington",
-            given_name="test",
-            department="CS",
-            cn="test",
-            raw_intranet_groups="none",
-            employee_id=12345
-        )
-
-        app = App.objects.create(
-            user=user_,
-            name="Test App 1"
-        )
-        
-        request = self.factory.get('/a/random/path', {'token': app.api_token})
+    def test_invalid_temp_token_provided(self):
+        request = self.factory.get('/a/random/path', {'token': 'uclapi-temp-bollocks'})
         response = self.dec_view(request)
 
-        self.assertEqual(response.status_code, 200)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["ok"])
+        self.assertEqual(content["error"], "Invalid temporary token")
+
+    def test_temp_token_wrong_path(self):
+        token = TemporaryToken.objects.create()
+
+        request = self.factory.get('/a/random/path', {'token': token.api_token})
+        response = self.dec_view(request)
+        
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["ok"])
+        self.assertEqual(
+            content["error"],
+            "Temporary token can only be used for /bookings"
+        )
