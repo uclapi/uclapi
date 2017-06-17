@@ -275,3 +275,14 @@ class DoesTokenExistTestCase(TestCase):
             content["error"],
             "Temporary token expired"
         )
+
+    def test_temp_token_valid(self):
+        token = TemporaryToken.objects.create()
+
+        request = self.factory.get(
+            '/roombookings/bookings', {'token': token.api_token}
+        )
+        response = self.dec_view(request)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(request.GET['results_per_age'], 1)
