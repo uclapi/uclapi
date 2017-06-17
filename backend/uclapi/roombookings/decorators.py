@@ -117,6 +117,7 @@ def log_api_call(view_func):
         queryparams = dict(request.GET)
 
         token = request.GET["token"]
+        is_temp_token = False
 
         try:
             if token.split("-")[1] == "temp":
@@ -161,6 +162,7 @@ def log_api_call(view_func):
 def throttle(view_func):
     def wrapped(request, *args, **kwargs):
         token = request.GET.get("token")
+        is_temp_token = False
 
         try:
             if token.split("-")[1] == "temp":
