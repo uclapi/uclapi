@@ -198,7 +198,10 @@ class DoesTokenExistTestCase(TestCase):
         self.assertEqual(content["error"], "Token does not exist")
 
     def test_invalid_temp_token_provided(self):
-        request = self.factory.get('/a/random/path', {'token': 'uclapi-temp-bollocks'})
+        request = self.factory.get(
+            '/a/random/path',
+            {'token': 'uclapi-temp-invalid-token'}
+        )
         response = self.dec_view(request)
 
         content = json.loads(response.content.decode())
@@ -209,9 +212,9 @@ class DoesTokenExistTestCase(TestCase):
     def test_temp_token_wrong_path(self):
         token = TemporaryToken.objects.create()
 
-        request = self.factory.get('/a/random/path', {'token': token.api_token})
+        request = self.factory.get('/a/path', {'token': token.api_token})
         response = self.dec_view(request)
-        
+
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
         self.assertFalse(content["ok"])
