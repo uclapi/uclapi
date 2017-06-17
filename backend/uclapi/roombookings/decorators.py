@@ -77,9 +77,10 @@ def does_token_exist(view_func):
                 response.status_code = 400
                 return response
 
-            if not request.GET._mutable:
-                request.GET._mutable = True
-
+            # This is a horrible hack to force the temporary token always
+            # return only 1 booking
+            # courtesy: https://stackoverflow.com/a/38372217/825916
+            request.GET._mutable = True
             request.GET['results_per_page'] = 1
 
             temp_token.uses += 1
