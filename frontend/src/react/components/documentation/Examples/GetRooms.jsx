@@ -29,7 +29,9 @@ export default class GetRooms extends React.Component {
 
     render () {
       return (
-        <Topic codeExamples={codeExamples}>
+        <Topic
+          activeLanguage={this.props.activeLanguage}
+          codeExamples={codeExamples}>
           <h1>Get Rooms</h1>
           <p>
             This endpoint returns rooms and information about them.

@@ -30,7 +30,9 @@ export default class GetBookings extends React.Component {
 
     render () {
       return (
-        <Topic codeExamples={codeExamples}>
+        <Topic
+          activeLanguage={this.props.activeLanguage}
+          codeExamples={codeExamples}>
           <h1>Get Bookings</h1>
           <p>
             This endpoint shows the results to a bookings or space availability query.

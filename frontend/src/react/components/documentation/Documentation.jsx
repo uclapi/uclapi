@@ -1,7 +1,8 @@
 import React from 'react';
 
 import GetRooms from './Examples/GetRooms.jsx';
-import GetBookings from './Examples/GetBookings.jsx'
+import GetBookings from './Examples/GetBookings.jsx';
+import LanguageTabs from './LanguageTabs.jsx';
 
 export default class DocumentationComponent extends React.Component {
 
@@ -9,8 +10,10 @@ export default class DocumentationComponent extends React.Component {
       return (
         <div>
           <h1 className="center">Docs</h1>
-          <GetRooms />
-          <GetBookings />
+          <LanguageTabs>
+            <GetRooms />
+            <GetBookings />
+          </LanguageTabs>
         </div>
       )
     }
