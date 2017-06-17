@@ -17,6 +17,15 @@ h1 {
   color: #333333;
 }
 
+h2 {
+  font-size: 18px;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
+  margin-top: 0px;
+  margin-bottom: 20px;
+  color: #333333;
+}
+
 p {
   font-size: 14px;
 }
@@ -50,13 +59,17 @@ p {
     padding-top: 8px;
     padding-bottom: 8px;
 
-    .col {
-      padding: 5px;
+    .col, .col8, .col4 {
+      padding: 10px;
+    }
+
+    p {
+      margin: 0px;
     }
 
     .attribute {
+      text-align: right;
       p {
-        margin: 0px;
         margin-bottom: 2px;
       }
     }
