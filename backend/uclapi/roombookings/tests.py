@@ -182,6 +182,9 @@ class DoesTokenExistTestCase(TestCase):
         )
         self.factory = APIRequestFactory()
 
+        # this fixes a bug when the `test_temp_token_valid` test would fail
+        TemporaryToken.objects.all().delete()
+
     def test_no_token_provided(self):
         request = self.factory.get('/a/random/path')
         response = self.dec_view(request)
@@ -282,6 +285,7 @@ class DoesTokenExistTestCase(TestCase):
 
     def test_temp_token_valid(self):
         token = TemporaryToken.objects.create()
+        token.save()
 
         request = self.factory.get(
             '/roombookings/bookings', {'token': token.api_token}
