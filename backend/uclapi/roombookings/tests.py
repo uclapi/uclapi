@@ -2,7 +2,7 @@ import json
 import datetime
 from itertools import chain
 
-import mock
+import unittest.mock
 from django.core.management import call_command
 from django.test import SimpleTestCase, TestCase
 from freezegun import freeze_time
@@ -175,7 +175,13 @@ class ManagementCommandsTestCase(TestCase):
 
 class DoesTokenExistTestCase(TestCase):
     def setUp(self):
-        self.dec_view = does_token_exist(mock.MagicMock(status_code=200))
+        mock_request = unittest.mock.MagicMock()
+        type(mock_request).status_code = unittest.mock.PropertyMock(
+            return_value=200
+        )
+        self.dec_view = does_token_exist(
+            mock_request
+        )
         self.factory = APIRequestFactory()
 
     def test_no_token_provided(self):
@@ -256,7 +262,7 @@ class DoesTokenExistTestCase(TestCase):
             "Temporary token expired"
         )
 
-    @mock.patch(
+    @unittest.mock.patch(
         'django.utils.timezone.now',
         lambda: datetime.datetime(2010, 10, 10, 10, 10, 10)
     )
@@ -286,3 +292,4 @@ class DoesTokenExistTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(request.GET['results_per_age'], 1)
+        self.assertEqual(token.uses, 1)
