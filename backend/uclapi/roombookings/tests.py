@@ -344,7 +344,7 @@ class LogApiCallTestCase(TestCase):
         )
 
     @unittest.mock.patch('keen.add_event')
-    def test_log_api_call_normal_voken(self, keen_instance):
+    def test_log_api_call_normal_token(self, keen_instance):
         user_ = User.objects.create(
             email="test@ucl.ac.uk", cn="test",
             given_name="Test Test"
@@ -352,7 +352,11 @@ class LogApiCallTestCase(TestCase):
         app = App.objects.create(user=user_, name="An App")
 
         request = self.factory.get(
-            '/roombookings/bookings', {'token': app.api_token}
+            '/roombookings/bookings',
+            # GET args
+            {'token': app.api_token},
+            # headers
+            **{'HTTP_UCLAPI_ROOMBOOKINGS_VERSION': 1}
         )
         response = self.dec_view(request)
 
@@ -364,6 +368,10 @@ class LogApiCallTestCase(TestCase):
         self.assertEqual(args['email'], "test@ucl.ac.uk")
         self.assertEqual(args['method'], "bookings")
         self.assertEqual(args['service'], "roombookings")
+        self.assertEqual(
+            args['version-headers']['HTTP_UCLAPI_ROOMBOOKINGS_VERSION'],
+            1
+        )
         self.assertEqual(
             args['queryparams']['token'][0],
             app.api_token
