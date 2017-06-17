@@ -13,6 +13,7 @@ freezegun==0.3.9
 gevent==1.2.1
 gunicorn==19.7.1
 keen==0.3.31
+mock==2.0.0
 multidict==2.1.5
 opbeat==3.5.2
 packaging==16.8
