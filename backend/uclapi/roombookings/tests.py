@@ -175,7 +175,7 @@ class ManagementCommandsTestCase(TestCase):
 
 class DoesTokenExistTestCase(TestCase):
     def setUp(self):
-        self.dec_view = does_token_exist(mock.MagicMock())
+        self.dec_view = does_token_exist(mock.MagicMock(status_code=200))
         self.factory  = APIRequestFactory()
 
     def test_no_token_provided(self):
@@ -221,19 +221,52 @@ class DoesTokenExistTestCase(TestCase):
         )
 
     def test_temp_token_page_token_provided(self):
-        def test_temp_token_wrong_path(self):
-            token = TemporaryToken.objects.create()
+        token = TemporaryToken.objects.create()
 
-            request = self.factory.get(
-                '/roombookings/bookings',
-                {'token': token.api_token, 'page_token': 'next_page_comes_here'}
-            )
-            response = self.dec_view(request)
-            
-            content = json.loads(response.content.decode())
-            self.assertEqual(response.status_code, 400)
-            self.assertFalse(content["ok"])
-            self.assertEqual(
-                content["error"],
-                "Temporary token can only be used for /bookings"
-            )
+        request = self.factory.get(
+            '/roombookings/bookings',
+            {'token': token.api_token, 'page_token': 'next_page_comes_here'}
+        )
+        response = self.dec_view(request)
+        
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["ok"])
+        self.assertEqual(
+            content["error"],
+            "Temporary token can only be used for /bookings"
+        )
+
+    def test_temp_token_overused(self):
+        token = TemporaryToken.objects.create(uses=300)
+
+        request = self.factory.get(
+            '/roombookings/bookings', {'token': token.api_token}
+        )
+        response = self.dec_view(request)
+        
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["ok"])
+        self.assertEqual(
+            content["error"],
+            "Temporary token expired"
+        )
+
+    def test_temp_token_expired(self):
+        token = TemporaryToken.objects.create(
+            created=datetime.datetime(2010, 10, 10, 10, 10, 10)
+        )
+
+        request = self.factory.get(
+            '/roombookings/bookings', {'token': token.api_token}
+        )
+        response = self.dec_view(request)
+        
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["ok"])
+        self.assertEqual(
+            content["error"],
+            "Temporary token expired"
+        )
