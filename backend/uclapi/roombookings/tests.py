@@ -256,9 +256,12 @@ class DoesTokenExistTestCase(TestCase):
             "Temporary token expired"
         )
 
+    @mock.patch(
+        'django.utils.timezone.now',
+        lambda: datetime.datetime(2010, 10, 10, 10, 10, 10)
+    )
     def test_temp_token_expired(self):
         token = TemporaryToken.objects.create()
-        token.created = datetime.datetime(2010, 10, 10, 10, 10, 10)
 
         request = self.factory.get(
             '/roombookings/bookings', {'token': token.api_token}
