@@ -1,18 +1,18 @@
-import json
 import datetime
+import json
+import unittest.mock
 from itertools import chain
 
-import unittest.mock
 from django.core.management import call_command
 from django.test import SimpleTestCase, TestCase
 from freezegun import freeze_time
 from rest_framework.test import APIRequestFactory
 
 from dashboard.models import App, TemporaryToken, User
+
 from .decorators import does_token_exist
 from .helpers import (PrettyJsonResponse, _parse_datetime,
-                      _serialize_equipment,
-                      how_many_seconds_until_midnight)
+                      _serialize_equipment, how_many_seconds_until_midnight)
 from .models import Lock, Room
 
 
@@ -298,3 +298,14 @@ class DoesTokenExistTestCase(TestCase):
             TemporaryToken.objects.all()[0].uses,
             1
         )
+
+    def test_normal_token_valid(self):
+        user_ = User.objects.create(cn="test", employee_id=7357)
+        app = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.get(
+            '/roombookings/bookings', {'token': app.api_token}
+        )
+        response = self.dec_view(request)
+
+        self.assertEqual(response.status_code, 200)
