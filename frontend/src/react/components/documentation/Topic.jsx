@@ -13,7 +13,7 @@ import { dracula } from 'react-syntax-highlighter/dist/styles';
 
 let customStyle = {
   'background': "#272B2D",
-  'border-radius': "8px",
+  'borderRadius': "8px",
   'padding': "12px"
 }
 

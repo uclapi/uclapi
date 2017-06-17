@@ -44,9 +44,17 @@ p {
 }
 
 .tab {
+  position: fixed;
+  top: 0;
+  width: 100%;
+
   h1 {
     margin-bottom: 0px;
   }
+}
+
+.main {
+  margin-top: 48px;
 }
 
 code {
