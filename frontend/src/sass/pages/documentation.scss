@@ -28,6 +28,7 @@ h2 {
 
 p {
   font-size: 14px;
+  line-height: 26px;
 }
 
 .text {
@@ -35,10 +36,22 @@ p {
 }
 
 .code {
-  background: #282A36;
+  // background: #282A36;
+  background: #2D3134;
   padding: 20px;
   overflow-x: auto;
   font-size: 12px;
+}
+
+.tab {
+  h1 {
+    margin-bottom: 0px;
+  }
+}
+
+code {
+  font-family: 'Source Code Pro', monospace;
+  background-color: rgba(0,0,0,0.05);
 }
 
 .table {
@@ -64,6 +77,8 @@ p {
     }
 
     p {
+      line-height: 21px;
+      font-size: 14px;
       margin: 0px;
     }
 
@@ -87,13 +102,10 @@ p {
 
     .extra {
       color: #939da3;
-      font-size: 10px;
     }
 
     code {
-      font-family: 'Source Code Pro', monospace;
       font-size: 10px;
-      background-color: rgba(0,0,0,0.05);
     }
   }
 }

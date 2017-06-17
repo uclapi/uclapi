@@ -9,7 +9,6 @@ export default class DocumentationComponent extends React.Component {
     render () {
       return (
         <div>
-          <h1 className="center">Docs 2</h1>
           <LanguageTabs>
             <GetRooms />
             <GetBookings />
