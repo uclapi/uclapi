@@ -4,7 +4,7 @@ from itertools import chain
 
 import mock
 from django.core.management import call_command
-from django.test import RequestFactory, SimpleTestCase, TestCase
+from django.test import SimpleTestCase, TestCase
 from freezegun import freeze_time
 from rest_framework.test import APIRequestFactory
 
@@ -176,7 +176,7 @@ class ManagementCommandsTestCase(TestCase):
 class DoesTokenExistTestCase(TestCase):
     def setUp(self):
         self.dec_view = does_token_exist(mock.MagicMock(status_code=200))
-        self.factory  = APIRequestFactory()
+        self.factory = APIRequestFactory()
 
     def test_no_token_provided(self):
         request = self.factory.get('/a/random/path')
@@ -228,13 +228,13 @@ class DoesTokenExistTestCase(TestCase):
             {'token': token.api_token, 'page_token': 'next_page_comes_here'}
         )
         response = self.dec_view(request)
-        
+
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
         self.assertFalse(content["ok"])
         self.assertEqual(
             content["error"],
-            "Temporary token can only be used for /bookings"
+            "Temporary token can only return one booking"
         )
 
     def test_temp_token_overused(self):
@@ -244,7 +244,7 @@ class DoesTokenExistTestCase(TestCase):
             '/roombookings/bookings', {'token': token.api_token}
         )
         response = self.dec_view(request)
-        
+
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
         self.assertFalse(content["ok"])
@@ -262,7 +262,7 @@ class DoesTokenExistTestCase(TestCase):
             '/roombookings/bookings', {'token': token.api_token}
         )
         response = self.dec_view(request)
-        
+
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
         self.assertFalse(content["ok"])
