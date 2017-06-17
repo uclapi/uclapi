@@ -257,9 +257,8 @@ class DoesTokenExistTestCase(TestCase):
         )
 
     def test_temp_token_expired(self):
-        token = TemporaryToken.objects.create(
-            created=datetime.datetime(2010, 10, 10, 10, 10, 10)
-        )
+        token = TemporaryToken.objects.create()
+        token.created = datetime.datetime(2010, 10, 10, 10, 10, 10)
 
         request = self.factory.get(
             '/roombookings/bookings', {'token': token.api_token}
