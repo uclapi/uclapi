@@ -175,12 +175,10 @@ class ManagementCommandsTestCase(TestCase):
 
 class DoesTokenExistTestCase(TestCase):
     def setUp(self):
-        mock_request = unittest.mock.MagicMock()
-        type(mock_request).status_code = unittest.mock.PropertyMock(
-            return_value=200
-        )
+        mock = unittest.mock.Mock()
+        mock.status_code = 200
         self.dec_view = does_token_exist(
-            mock_request
+            unittest.mock.Mock(return_value=mock)
         )
         self.factory = APIRequestFactory()
 
@@ -291,5 +289,8 @@ class DoesTokenExistTestCase(TestCase):
         response = self.dec_view(request)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(request.GET['results_per_age'], 1)
-        self.assertEqual(token.uses, 1)
+        self.assertEqual(request.GET['results_per_page'], 1)
+        self.assertEqual(
+            TemporaryToken.objects.all()[0].uses,
+            1
+        )
