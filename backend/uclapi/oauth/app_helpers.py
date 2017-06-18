@@ -5,10 +5,8 @@ from binascii import hexlify
 
 def generate_user_token():
     key = hexlify(os.urandom(30)).decode()
-    dashes_key = ""
-    '-'.join(textwrap.wrap(key, 15))
-
-    final = "uclapi-user" + dashes_key
+    dashes_key = '-'.join(textwrap.wrap(key, 15))
+    final = "uclapi-user-" + dashes_key
 
     return final
 
