@@ -7,12 +7,15 @@ import MenuItem from 'material-ui/MenuItem';
 import {spacing, typography, zIndex} from 'material-ui/styles';
 
 /*
-  Anirudh:
-  I was thinking we'll have to access the child elements and look at the way
-  they are nested to figure out how the topics in the Sidebar are to be arranged
+  Got this entire thing from
+  https://github.com/callemall/material-ui/blob/master/docs/src/app/components/AppNavDrawer.js
+  as our side bar just needs to be similar to the material-ui docs sidebar here:
+  http://www.material-ui.com/#/components/drawer
 
-  After that just need to do CSS for the sidebar to stack up on the left
-  and the rest of the content on the right
+  Didn't get the time to look into how the links will work
+  but I think we can have an href inside each Topic component
+  and when you click on the link in the sidebar, you get routed to
+  the href in the Topic component
 */
 
 const SelectableList = makeSelectable(List);
@@ -35,7 +38,7 @@ const styles = {
 };
 
 
-export default class SideNav extends React.Component {
+export default class Sidebar extends React.Component {
 
   constructor(props) {
     super(props);
