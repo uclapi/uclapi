@@ -12,6 +12,7 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from uclapi.settings import FAIR_USE_POLICY
 
 from .models import App, User
+from oauth.scoping import Scopes
 
 
 @csrf_exempt
@@ -112,6 +113,8 @@ def dashboard(request):
 
     user_apps = App.objects.filter(user=user)
 
+    s = Scopes()
+
     for app in user_apps:
         user_meta["apps"].append({
             "name": app.name,
@@ -123,11 +126,7 @@ def dashboard(request):
                 "client_id": app.client_id,
                 "client_secret": app.client_secret,
                 "callback_url": app.callback_url,
-                "scope": {
-                    "private_roombookings": app.scope.private_roombookings,
-                    "private_timetable": app.scope.private_timetable,
-                    "private_uclu": app.scope.private_uclu
-                }
+                "scope": s.scope_dict(app.scope.scope_number)
             }
         })
 

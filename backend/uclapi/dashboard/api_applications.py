@@ -3,6 +3,7 @@ import os
 import tldextract
 from django.http import HttpResponseBadRequest
 
+from oauth.scoping import Scopes
 from roombookings.helpers import PrettyJsonResponse
 
 from .models import App, User
@@ -395,3 +396,14 @@ def set_uclu_scope(request):
             "success": True,
             "message": "Scope successfully changed",
         })
+
+def add_scope(request):
+    if request.method != "POST":
+        return HttpResponseBadRequest("Error: Request is not of method POST")
+    
+def remove_scope(request):
+    if request.method != "POST":
+        return HttpResponseBadRequest("Error: Request is not of method POST")
+
+def get_scopes(request):
+    return ""

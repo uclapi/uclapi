@@ -1,36 +1,18 @@
 from django.db import models
 
 from .app_helpers import generate_user_token
+from .scoping import Scopes
 
 
 class OAuthScope(models.Model):
     # We should really have a primary key for the OneToOneField
     id = models.AutoField(primary_key=True)
 
-    # Can the key be used to show all rooms booked by the user?
-    private_roombookings = models.BooleanField(default=False)
-
-    # Can the key be used to access private timetable data?
-    private_timetable = models.BooleanField(default=False)
-
-    # Can the key be used to access private UCLU data?
-    private_uclu = models.BooleanField(default=False)
+    # A big integer to store up to 64 types of scope. Avoids lots of boolean comparisons.
+    scope_number = models.BigIntegerField(default=0)
 
     def scopeIsEqual(self, other):
-        if (not isinstance(other, self.__class__) or
-                self.private_roombookings != other.private_roombookings or
-                self.private_timetable != other.private_timetable or
-                self.private_uclu != other.private_uclu):
-            return False
-        return True
-
-    def scopeDict(self):
-        return {
-            "private_roombookings": self.private_roombookings,
-            "private_timetable": self.private_timetable,
-            "private_uclu": self.private_uclu
-        }
-
+        return self.scope_number == other.scope_number
 
 class OAuthToken(models.Model):
     # Use an incrementing ID that we can always rely on

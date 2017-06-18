@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from roombookings.helpers import PrettyJsonResponse as JsonResponse
 
 from .models import OAuthToken
+from .scoping import Scopes
 
 
 def oauth_token_check(required_scopes=None):
@@ -55,16 +56,9 @@ def oauth_token_check(required_scopes=None):
                 response.status_code = 400
                 return response
 
-            scope = token.scope
-
-            scope_map = {
-                "roombookings": scope.private_roombookings,
-                "timetable": scope.private_timetable,
-                "uclu": scope.private_uclu
-            }
-
+            s = Scopes()
             for s in required_scopes:
-                if s not in scope_map:
+                if not s.check_scope(token.scope.scope_number):
                     response = JsonResponse({
                         "ok": False,
                         "error": "No permission to access this data"

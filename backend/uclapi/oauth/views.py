@@ -4,7 +4,6 @@ import hmac
 import json
 import os
 
-import keen
 import redis
 from django.core import signing
 from django.core.exceptions import ObjectDoesNotExist
@@ -22,6 +21,7 @@ from uclapi.settings import REDIS_UCLAPI_HOST
 from .app_helpers import generate_random_verification_code
 from .decorators import oauth_token_check
 from .models import OAuthToken
+from .scoping import Scopes
 
 
 # The endpoint that creates a Shibboleth login and redirects the user to it
@@ -143,16 +143,14 @@ def shibcallback(request):
     response_data_str = json.dumps(response_data, cls=DjangoJSONEncoder)
     response_data_signed = signer.sign(response_data_str)
 
+    s = Scopes()
+
     page_data = {
         "app_name": app.name,
         "creator": app.user.full_name,
         "client_id": app.client_id,
         "state": state,
-        "scope": {
-            "private_roombookings": app.scope.private_roombookings,
-            "private_timetable": app.scope.private_timetable,
-            "private_uclu": app.scope.private_uclu
-        },
+        "scope": s.scope_dict(app.scope.scope_number),
         "user": {
             "full_name": user.full_name,
             "cn": user.cn,
@@ -369,12 +367,14 @@ def token(request):
     # The app can use the token to pull in any personal data (name, UPI, etc.)
     # later on, so we won't bother to give it to them just yet.
 
+    s = Scopes()
+
     oauth_data = {
         "ok": True,
         "state": state,
         "client_id": app.client_id,
         "token": token.token,
-        "scope": json.dumps(token.scope.scopeDict())
+        "scope": json.dumps(s.scope_dict(token.scope.scope_number))
     }
 
     return JsonResponse(oauth_data)

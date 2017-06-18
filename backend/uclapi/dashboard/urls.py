@@ -2,8 +2,8 @@ from django.conf.urls import url
 
 from dashboard.api_applications import (create_app, delete_app,
                                         regenerate_app_token, rename_app,
-                                        set_callback_url, set_rb_scope,
-                                        set_timetable_scope, set_uclu_scope)
+                                        set_callback_url, add_scope,
+                                        remove_scope, get_scopes)
 
 from . import views
 
@@ -14,8 +14,8 @@ urlpatterns = [
     url(r'api/regen/$', regenerate_app_token),
     url(r'api/delete/$', delete_app),
     url(r'api/setcallbackurl/$', set_callback_url),
-    url(r'api/setscope/roombookings/$', set_rb_scope),
-    url(r'api/setscope/timetable/$', set_timetable_scope),
-    url(r'api/setscope/uclu/$', set_uclu_scope),
+    url(r'api/getscopes/$', get_scopes),
+    url(r'api/setscope/add/$', add_scope),
+    url(r'apt/setscope/remove/$', remove_scope),
     url(r'^user/login.callback', views.shibboleth_callback)
 ]
