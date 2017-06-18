@@ -77,9 +77,10 @@ def does_token_exist(view_func):
                 response.status_code = 400
                 return response
 
-            if not request.GET._mutable:
-                request.GET._mutable = True
-
+            # This is a horrible hack to force the temporary token always
+            # return only 1 booking
+            # courtesy: https://stackoverflow.com/a/38372217/825916
+            request.GET._mutable = True
             request.GET['results_per_page'] = 1
 
             temp_token.uses += 1
@@ -116,6 +117,7 @@ def log_api_call(view_func):
         queryparams = dict(request.GET)
 
         token = request.GET["token"]
+        is_temp_token = False
 
         try:
             if token.split("-")[1] == "temp":
@@ -160,6 +162,7 @@ def log_api_call(view_func):
 def throttle(view_func):
     def wrapped(request, *args, **kwargs):
         token = request.GET.get("token")
+        is_temp_token = False
 
         try:
             if token.split("-")[1] == "temp":

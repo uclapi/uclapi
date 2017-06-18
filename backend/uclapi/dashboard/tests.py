@@ -2,7 +2,6 @@ from unittest.mock import patch
 
 from django.test import RequestFactory, TestCase
 
-from uclapi.settings import FAIR_USE_POLICY
 from .middleware.fake_shibboleth_middleware import FakeShibbolethMiddleWare
 from .models import App, User
 
