@@ -1,6 +1,16 @@
 import React from 'react';
 
 
+/*
+  Each cell has the folling props:
+  name: name of the attribute
+  requirement: whether the attribute is required or optional
+  extra: extra info about the attribute like type
+
+  description: description of the attribute
+  example: example which is rendered below the description
+*/
+
 export default class Cell extends React.Component {
 
   render() {

@@ -4,6 +4,15 @@ import { dracula } from 'react-syntax-highlighter/dist/styles';
 
 
 /*
+  This is the main component that contains content for the documentation.
+  The docs page is comprised of multiple Topic components.
+  Each Topic component has containing html as child components which are rendered
+  on the left side.
+  Topic component also takes in a codeExamples prop which are the code examples
+  that are show on the right side
+*/
+
+/*
   Maybe we can create the sidebar manually?
   by creating and ordering React Components according to the structure of
   the page and we can

@@ -4,6 +4,7 @@ import Topic from './../Topic.jsx';
 import Table from './../Table.jsx';
 import Cell from './../Cell.jsx';
 
+
 let codeExamples = {
   python: `import requests
 
@@ -25,6 +26,7 @@ print(r.json())`,
 })
 `
 }
+
 
 export default class GetBookings extends React.Component {
 

@@ -2,6 +2,13 @@ import React from 'react';
 import {Tabs, Tab} from 'material-ui/Tabs';
 
 
+/*
+  This Component is the top nav bar which also controls the language of
+  the code examples.
+
+  It passes the selected language to all of its children
+*/
+
 export default class LanguageTabs extends React.Component {
 
   constructor(props) {
@@ -33,7 +40,7 @@ export default class LanguageTabs extends React.Component {
         <div className="tab">
           <div className="row">
             <div className="col">
-              <h1 className="center">Docs</h1>
+
             </div>
             <div className="col">
               <Tabs
@@ -55,7 +62,7 @@ export default class LanguageTabs extends React.Component {
             </div>
           </div>
         </div>
-        
+
         <div className="main">
           {this.renderChildren(this.props)}
         </div>
