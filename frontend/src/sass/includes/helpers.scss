@@ -1,3 +1,47 @@
+// New Classes for use with material-ui
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.col {
+  flex: 1 200px;
+}
+
+
+.center {
+  text-align: center;
+}
+
+.pad {
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+// Old helper classes
+
 @mixin border-radius($radius) {
   -webkit-border-radius: $radius;
      -moz-border-radius: $radius;
@@ -78,7 +122,7 @@
 
   &:hover span{
     display:block;
-  }  
+  }
 }
 
 .Modal {

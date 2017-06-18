@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
 from uclapi.settings import FAIR_USE_POLICY
 
-from .models import App, User
+from .models import App, User, TemporaryToken
 
 
 @csrf_exempt
@@ -123,4 +123,22 @@ def dashboard(request):
     initial_data = json.dumps(user_meta, cls=DjangoJSONEncoder)
     return render(request, 'dashboard.html', {
         'initial_data': initial_data
+    })
+
+
+@ensure_csrf_cookie
+def get_started(request):
+    logged_in = True
+
+    try:
+        user_id = request.session["user_id"]
+    except KeyError:
+        logged_in = False
+
+    temp_token = TemporaryToken.objects.create()
+    return render(request, 'getStarted.html', {
+        'initial_data': {
+            'temp_token': temp_token.api_token,
+            'logged_in': str(logged_in)
+        }
     })

@@ -1,4 +1,5 @@
 {
-  "dashboard": "dashboard" , 
+  "dashboard": "dashboard",
+  "getStarted": "dashboard",
   "agreement": "dashboard"
 }

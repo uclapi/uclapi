@@ -15,9 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from dashboard.views import get_started
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^dashboard/', include('dashboard.urls')),
     url(r'^roombookings/', include('roombookings.urls')),
+    url(r'^', get_started),
 ]
