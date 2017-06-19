@@ -4,18 +4,19 @@ import hmac
 import json
 import os
 
+import keen
 import redis
 from django.core import signing
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.signing import TimestampSigner
-from roombookings.helpers import PrettyJsonResponse as JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.http import quote
 from django.views.decorators.csrf import (csrf_exempt, csrf_protect,
                                           ensure_csrf_cookie)
 
 from dashboard.models import App, User
+from roombookings.helpers import PrettyJsonResponse as JsonResponse
 from uclapi.settings import REDIS_UCLAPI_HOST
 
 from .app_helpers import generate_random_verification_code
@@ -194,7 +195,7 @@ def userdeny(request):
     app = App.objects.get(client_id=data["client_id"])
     state = data["state"]
 
-    redir = app.callback_url + "?result=denied?state=" + state
+    redir = app.callback_url + "?result=denied&state=" + state
 
     return redirect(redir)
 
