@@ -1,0 +1,149 @@
+@import '../includes/helpers';
+
+
+body {
+  margin: 0px;
+  font-family: 'Roboto', sans-serif;
+  color: #333333;
+  background: #F4F4F4;
+}
+
+h1 {
+  font-size: 36px;
+  font-weight: lighter;
+  margin-top: 0px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 28px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: lighter;
+}
+
+h3 {
+  font-size: 20px;
+  margin-top: 0px;
+  font-weight: lighter;
+}
+
+.navbar {
+  padding-left: 60px !important;
+
+  img {
+    width: 45px;
+    padding-right: 10px;
+  }
+
+  .active span {
+    font-weight: bold !important;
+    text-decoration: underline;
+  }
+}
+
+.jumbotron {
+  padding-top: 120px;
+  padding-bottom: 120px;
+  color: white;
+  background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("/static/logoCover.png");
+  background-size: cover;
+  background-position: 50%;
+
+  h1 {
+    font-weight: bold;
+  }
+
+  .container {
+    max-width: 970px;
+  }
+
+  a {
+    color: white;
+  }
+}
+
+.demo {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 300px;
+
+  .text {
+    background: white;
+    flex: 2 200px;
+    padding-right: 15px;
+    padding-left: 60px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .code {
+    background: #282A36;
+    flex: 3 200px;
+    overflow-y: auto;
+  }
+}
+
+.code hr {
+  margin: 0px;
+  border: 2px solid white;
+}
+
+.examples {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.example {
+  margin: 10px;
+  min-width: 200px;
+  width: 25%;
+}
+
+code {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 14px;
+}
+
+.footer {
+  background-color: #0B3954;
+  padding-top: 60px;
+  padding-bottom: 40px;
+  color: white;
+
+  .container {
+    max-width: 800px;
+  }
+
+  h1 {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: lighter;
+    text-align: center;
+    // color: #555A72;
+    margin-top: 0px;
+    margin-bottom: 60px;
+  }
+
+  h3 {
+    color: #555a72;
+    letter-spacing: .15em;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-bottom: 10px;
+  }
+
+  a {
+    color: rgba(255,255,255,.65);
+    font-size: 18px;
+    font-family: 'Source Sans Pro', sans-serif;
+    display: block;
+    text-decoration: none;
+    margin-bottom: 14px;
+  }
+
+  a:hover {
+    color: white;
+    text-decoration: underline;
+  }
+}

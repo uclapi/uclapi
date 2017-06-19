@@ -3,6 +3,7 @@ from random import SystemRandom
 
 import os
 import string
+import textwrap
 
 
 def generate_api_token():
@@ -15,6 +16,14 @@ def generate_api_token():
             dashes_key += char
 
     final = "uclapi" + dashes_key
+
+    return final
+
+
+def generate_temp_api_token():
+    key = hexlify(os.urandom(30)).decode()
+    dashed = '-'.join(textwrap.wrap(key, 15))
+    final = "uclapi-temp-" + dashed
 
     return final
 

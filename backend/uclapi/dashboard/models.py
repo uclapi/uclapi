@@ -1,6 +1,8 @@
 from django.db import models
 from .app_helpers import generate_api_token, generate_app_id, \
-    generate_app_client_id, generate_app_client_secret
+    generate_app_client_id, generate_app_client_secret, \
+    generate_temp_api_token
+
 from oauth.models import OAuthScope
 
 models.options.DEFAULT_NAMES += ('_DATABASE',)
@@ -22,6 +24,7 @@ class User(models.Model):
 
 
 class App(models.Model):
+
     id = models.CharField(
         max_length=20,
         primary_key=True,
@@ -66,6 +69,20 @@ class App(models.Model):
         self.api_token = new_token
         self.save()
         return self.api_token
+
+    class Meta:
+        _DATABASE = 'default'
+
+
+class TemporaryToken(models.Model):
+    id = models.AutoField(primary_key=True)
+    api_token = models.CharField(
+        max_length=1000,
+        unique=True,
+        default=generate_temp_api_token
+    )
+    created = models.DateTimeField(auto_now=False, auto_now_add=True)
+    uses = models.IntegerField(default=0)
 
     class Meta:
         _DATABASE = 'default'

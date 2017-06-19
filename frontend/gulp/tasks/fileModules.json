@@ -1,5 +1,6 @@
 {
   "dashboard": "dashboard" , 
   "agreement": "dashboard",
+  "getStarted": "dashboard",
   "authorise": "oauth"
 }
