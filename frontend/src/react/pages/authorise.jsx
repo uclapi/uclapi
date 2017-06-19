@@ -20,9 +20,7 @@ class AuthoriseApp extends React.Component {
             <AppPermissions
               app_name={this.state.data.app_name}
               creator={this.state.data.creator}
-              private_roombookings={this.state.data.scope.private_roombookings}
-              private_timetable={this.state.data.scope.private_timetable}
-              private_uclu={this.state.data.scope.private_uclu}
+              scopes={this.state.data.scopes}
               user_full_name={this.state.data.user.full_name}
               user_email={this.state.data.user.email}
               user_department={this.state.data.user.department}

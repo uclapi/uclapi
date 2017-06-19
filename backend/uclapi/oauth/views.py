@@ -151,7 +151,7 @@ def shibcallback(request):
         "creator": app.user.full_name,
         "client_id": app.client_id,
         "state": state,
-        "scope": s.scope_dict(app.scope.scope_number),
+        "scopes": s.scope_dict(app.scope.scope_number),
         "user": {
             "full_name": user.full_name,
             "cn": user.cn,

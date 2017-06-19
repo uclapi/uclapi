@@ -47,23 +47,42 @@ class Scopes:
 
     # Produce a dictionary with the scope information. Example:
     # {
-    #    "private_roombookings": True,
-    #    "private_timetable": False,
+    #    "roombookings": True,
+    #    "timetable": False,
     #    ...
     # }
-    def scope_dict(self, current):
-        output = {}
+    def scope_dict(self, current, pretty_print=True):
+        scopes = []
         for x in self.SCOPE_MAP.keys():
-            output["private_" + x[0]] = self.check_scope(current, x)
-        
-        return output
+            if self.check_scope(current, x):
+                if pretty_print:
+                    scope = {
+                        "name": x,
+                        "description": self.SCOPE_MAP[x][1]
+                    }
+                else:
+                    scope = {
+                        "name": x,
+                        "description": self.SCOPE_MAP[x][0]
+                    }
+
+                scopes.append(scope)
+        return scopes
 
     # Get available scopes for showing to the user
-    def get_scopes(self, pretty_print=True):
-        scopes = {}
-        for x in this.SCOPE_MAP.keys():
+    def get_all_scopes(self, pretty_print=True):
+        scopes = []
+        for x in self.SCOPE_MAP.keys():
             if pretty_print:
-               scopes[x] = x[1]
+                scope = {
+                    "name": x,
+                    "description": self.SCOPE_MAP[x][1]
+                }
             else:
-                scopes[x] = x
+                scope = {
+                    "name": x,
+                    "description": self.SCOPE_MAP[x][0]
+                }
+
+            scopes.append(scope)
         return scopes

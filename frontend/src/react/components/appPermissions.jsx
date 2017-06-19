@@ -20,45 +20,26 @@ class AppPermissions extends React.Component {
 
             <h4>Personal Data Permissions</h4>
              {
-                (!(this.props.private_roombookings || this.props.private_timetable || this.props.private_uclu)) &&
+                (this.props.scopes.length == 0) &&
                 <em>
                     This app has not requested access to any of your personal UCL data. It will only be able to see public data, such as the public timetable and room bookings information. If you are expecting this app to show you any personal data, please contact the vendor.
                 </em>
             }
             <ul>
                 {
-                    this.props.private_roombookings && 
-                    <li>
-                        Information on which <strong>rooms you have booked</strong>
-                    </li>
-                }
-
-                {
-                    this.props.private_timetable &&
-                    <li>
-                        Your <strong>personal timetable</strong>
-                    </li>
-                }
-
-                {
-                    this.props.private_uclu &&
-                    <li>
-                        Your <strong>personal UCL Union (UCLU)</strong> data, including information on which societies you are part of.
-                        If you are a president or treasurer of a society, the app will be able to submit receipts, fetch member data and more, all on your behalf.
-                    </li>
+                    this.props.scopes.map(function(scope) {
+                        return <li key={scope.name}>{scope.description}</li>
+                    })
                 }
             </ul>
-
-            </div>;
+        </div>;
     }
 }
 
 AppPermissions.propTypes = {
     app_name: React.PropTypes.string.isRequired,
     creator: React.PropTypes.string.isRequired,
-    private_roombookings: React.PropTypes.bool.isRequired,
-    private_timetable: React.PropTypes.bool.isRequired,
-    private_uclu: React.PropTypes.bool.isRequired,
+    scopes: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
     user_full_name: React.PropTypes.string.isRequired,
     user_email: React.PropTypes.string.isRequired,
     user_department: React.PropTypes.string.isRequired,
