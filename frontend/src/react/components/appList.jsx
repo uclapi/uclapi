@@ -34,9 +34,7 @@ class App extends React.Component {
     this.setSaveCallbackUrl = this.setSaveCallbackUrl.bind(this);
     this.updateCallbackUrl = this.updateCallbackUrl.bind(this);
     this.saveCallbackUrl = this.saveCallbackUrl.bind(this);
-    this.updateRoomBookingsScope = this.updateRoomBookingsScope.bind(this);
-    this.updateTimetableScope = this.updateTimetableScope.bind(this);
-    this.updateUcluScope = this.updateUcluScope.bind(this);
+    this.updateScopes = this.updateScopes.bind(this);
 
     /*
       Make moment.js say 'just now' if the time difference is less
@@ -310,6 +308,23 @@ class App extends React.Component {
     })
   }
 
+  updateScopes(e) {
+    let that = this;
+
+    scopes_data = []
+
+
+    fetch('/dashboard/api/updatescopes/'), {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': Cookies.get('csrftoken')
+      },
+      body: 'app_id=' + this.props.appId + '&scopes='
+    }
+  }
+
   updateRoomBookingsScope(e){
     let that = this;
 
@@ -552,10 +567,12 @@ class App extends React.Component {
                 The scope defines which personal data your application will be able to access.
                 For more information, please consult the <a href="https://uclapi.com/docs">docs</a> for more details on scope.
               </em><br/><br/>
-              <input type="checkbox" onChange={this.updateRoomBookingsScope} defaultChecked={this.props.privateRoomBookings} /> Personal Room Bookings<br/>
-              <input type="checkbox" onChange={this.updateTimetableScope} defaultChecked={this.props.privateTimetable} /> Personal Timetable<br/>
-              <input type="checkbox" onChange={this.updateUcluScope} defaultChecked={this.props.privateUclu} /> Personal UCLU Data<br/>
-            </div>
+              {
+                this.props.scopes.map(function(scope) {
+                        return <div><input type="checkbox" onChange={this.updateScopes} defaultChecked={scope.enabled} key={scope.name} className="scope-checkbox" />{scope.description}</div>
+                })
+              }
+              </div>
           </Panel>
         </Collapse>
 
@@ -576,9 +593,7 @@ App.propTypes = {
   clientId: React.PropTypes.string.isRequired,
   clientSecret: React.PropTypes.string.isRequired,
   callbackUrl: React.PropTypes.string.isRequired,
-  privateRoomBookings: React.PropTypes.bool.isRequired,
-  privateTimetable: React.PropTypes.bool.isRequired,
-  privateUclu: React.PropTypes.bool.isRequired
+  scopes: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
 };
 
 class AppForm extends React.Component {
@@ -730,9 +745,7 @@ class AppList extends React.Component {
             clientId={app.oauth.client_id}
             clientSecret={app.oauth.client_secret}
             callbackUrl={app.oauth.callback_url}
-            privateRoomBookings={app.oauth.scope.private_roombookings}
-            privateTimetable={app.oauth.scope.private_timetable}
-            privateUclu={app.oauth.scope.private_uclu}
+            scopes={app.oauth.scopes}
           />;
         })}
       </div>
