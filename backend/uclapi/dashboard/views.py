@@ -126,7 +126,7 @@ def dashboard(request):
                 "client_id": app.client_id,
                 "client_secret": app.client_secret,
                 "callback_url": app.callback_url,
-                "scope": s.scope_dict(app.scope.scope_number)
+                "scopes": s.scope_dict_all(app.scope.scope_number)
             }
         })
 

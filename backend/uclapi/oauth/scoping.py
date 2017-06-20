@@ -63,11 +63,34 @@ class Scopes:
                 else:
                     scope = {
                         "name": x,
-                        "description": self.SCOPE_MAP[x][0]
+                        "id": self.SCOPE_MAP[x][0]
                     }
 
                 scopes.append(scope)
         return scopes
+
+    # Same as above, but list all possible scopes along with whether they are
+    # included in the current state given.
+    # This is used by the dashboard.
+    def scope_dict_all(self, current, pretty_print=True):
+        scopes = []
+        for x in self.SCOPE_MAP.keys():
+            if pretty_print:
+                scope = {
+                    "name": x,
+                    "description": self.SCOPE_MAP[x][1],
+                    "enabled": self.check_scope(current, x)
+                }
+            else:
+                scope = {
+                    "name": x,
+                    "id": self.SCOPE_MAP[x][0],
+                    "enabled": self.check_scope(current, x)
+                }
+
+            scopes.append(scope)
+        return scopes
+
 
     # Get available scopes for showing to the user
     def get_all_scopes(self, pretty_print=True):
@@ -81,7 +104,7 @@ class Scopes:
             else:
                 scope = {
                     "name": x,
-                    "description": self.SCOPE_MAP[x][0]
+                    "id": self.SCOPE_MAP[x][0]
                 }
 
             scopes.append(scope)

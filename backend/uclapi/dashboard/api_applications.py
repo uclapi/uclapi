@@ -1,3 +1,4 @@
+import json
 import keen
 import os
 import tldextract
@@ -271,91 +272,6 @@ def set_callback_url(request):
         "message": "Callback URL successfully changed.",
     })
 
-
-def set_rb_scope(request):
-    if request.method != "POST":
-        return HttpResponseBadRequest("Error: Request is not of method POST")
-
-    try:
-        app_id = request.POST["app_id"]
-        scope_status = request.POST["scope_status"] == "true"
-        user_id = request.session["user_id"]
-    except KeyError:
-        response = JsonResponse({
-            "success": False,
-            "message": "Request does not have app_id."
-        })
-        response.status_code = 400
-        return response
-    user = get_user_by_id(user_id)
-
-    apps = App.objects.filter(id=app_id, user=user)
-    if len(apps) == 0:
-        response = JsonResponse({
-            "success": False,
-            "message": "App does not exist."
-        })
-        response.status_code = 400
-        return response
-    else:
-        app = apps[0]
-        app.scope.private_roombookings = scope_status
-        app.scope.save()
-
-        keen.add_event("App room bookings scope changed", {
-            "appid": app_id,
-            "userid": user.id,
-            "rbscope": scope_status
-        })
-
-        return JsonResponse({
-            "success": True,
-            "message": "Scope successfully changed",
-        })
-
-
-def set_timetable_scope(request):
-    if request.method != "POST":
-        return HttpResponseBadRequest("Error: Request is not of method POST")
-
-    try:
-        app_id = request.POST["app_id"]
-        scope_status = request.POST["scope_status"] == "true"
-        user_id = request.session["user_id"]
-    except KeyError:
-        response = JsonResponse({
-            "success": False,
-            "message": "Request does not have app_id."
-        })
-        response.status_code = 400
-        return response
-    user = get_user_by_id(user_id)
-
-    apps = App.objects.filter(id=app_id, user=user)
-    if len(apps) == 0:
-        response = JsonResponse({
-            "success": False,
-            "message": "App does not exist."
-        })
-        response.status_code = 400
-        return response
-    else:
-        app = apps[0]
-        app.scope.private_timetable = scope_status
-        app.scope.save()
-
-        keen.add_event("App timetable scope changed", {
-            "appid": app_id,
-            "userid": user.id,
-            "timetablescope": scope_status
-        })
-
-        return JsonResponse({
-            "success": True,
-            "message": "Scope successfully changed",
-        })
-
-
 def set_uclu_scope(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Error: Request is not of method POST")
@@ -397,13 +313,71 @@ def set_uclu_scope(request):
             "message": "Scope successfully changed",
         })
 
-def add_scope(request):
+def update_scopes(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Error: Request is not of method POST")
     
-def remove_scope(request):
-    if request.method != "POST":
-        return HttpResponseBadRequest("Error: Request is not of method POST")
+    try:
+        app_id = request.POST["app_id"]
+        scopes_json = request.POST["scopes"]
+        user_id = request.session["user_id"]
+    except KeyError:
+        response = JsonResponse({
+            "success": False,
+            "message": "Request does not have app_id."
+        })
+        response.status_code = 400
+        return response
 
-def get_scopes(request):
-    return ""
+    try:
+        scopes = json.loads(scopes_json)
+    except:
+        response = JsonResponse({
+            "success": False,
+            "message": "Invalid scope data that could not be parsed."
+        })
+        response.status_code = 400
+        return response
+
+    user = get_user_by_id(user_id)
+
+    apps = App.objects.filter(id=app_id, user=user)
+    if len(apps) == 0:
+        response = JsonResponse({
+            "success": False,
+            "message": "App does not exist."
+        })
+        response.status_code = 400
+        return response
+    else:
+        app = apps[0]
+        current = app.scope.scope_number
+        s = Scopes()
+        try:
+            for scope in scopes:
+                if scope["checked"]:
+                    current = s.add_scope(current, scope["name"])
+                else:
+                    current = s.remove_scope(current, scope["name"])
+
+            app.scope.scope_number = current
+            app.scope.save()
+            app.save()
+        except:
+            response = JsonResponse({
+                "success": False,
+                "message": "Invalid scope data that could not be iterated."
+            })
+            response.status_code = 400
+            return response
+
+        keen.add_event("App scopes changed", {
+            "appid": app_id,
+            "userid": user.id,
+            "scopes": scopes
+        })
+
+        return JsonResponse({
+            "success": True,
+            "message": "Scope successfully changed",
+        })
