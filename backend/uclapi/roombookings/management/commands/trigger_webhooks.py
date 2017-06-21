@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from roombookings.models import Lock, BookingA, BookingB
 from roombookings.helpers import _serialize_bookings
-from dashboard.models import WebHook
+from dashboard.models import Webhook, WebhookTriggerHistory
 from datetime import datetime
 from deepdiff import DeepDiff
 import grequests
@@ -40,7 +40,7 @@ class Command(BaseCommand):
 
         ddiff = DeepDiff(old_bookings, new_bookings, ignore_order=True)
 
-        webhooks = WebHook.objects.all()
+        webhooks = Webhook.objects.all()
         #  assumption: list of webhooks will be longer than ddiff
 
         def webhook_map(webhook):
@@ -78,13 +78,15 @@ class Command(BaseCommand):
         webhooks_to_enact = list(map(webhook_map, webhooks))
 
         unsent_requests = []
-        for webhook in webhooks_to_enact:
+        for idx, webhook in enumerate(webhooks_to_enact):
             payload = {}
 
             if "bookings_added" in webhook:
                 payload["bookings_added"] = webhook["bookings_added"]
             if "bookings_removed" in webhook:
                 payload["bookings_removed"] = webhook["bookings_removed"]
+
+            webhooks_to_enact[idx]["payload"] = payload
 
             if payload != {}:
                 unsent_requests.append(
@@ -97,8 +99,15 @@ class Command(BaseCommand):
         grequests.map(unsent_requests)
 
         for webhook in webhooks_to_enact:
-            webhook_in_db = webhook["webhook_in_db"]
-            webhook_in_db.last_fired = timezone.now()
-            webhook_in_db.save()
+            if webhook["payload"] != {}:
+                webhook_in_db = webhook["webhook_in_db"]
+                webhook_in_db.last_fired = timezone.now()
+                webhook_in_db.save()
+
+                new_webhook_history_entry = WebhookTriggerHistory(
+                    webhook=webhook_in_db,
+                    payload=webhook["payload"]
+                )
+                new_webhook_history_entry.save()
 
         self.stdout.write("Webhooks triggered.")
