@@ -1,6 +1,8 @@
 language: python
 python:
   - "3.5"
+dist: trusty
+sudo: required
 cache: pip
 services:
   - postgresql
@@ -10,6 +12,7 @@ install:
   - pip3 install codecov
 before_script:
   # Install Oracle Instant Client
+  - sudo apt-get install libaio-dev libaio1 unzip wget build-essential libpq-dev libpq5
   - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
   - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
   - sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip
@@ -17,7 +20,6 @@ before_script:
   - cd instantclient_12_2
   - sudo ln -s libclntsh.so.12.1 libclntsh.so
   - sudo ln -s libocci.so.12.1 libocci.so
-  - sudo apt-get install libaio-dev
   - export ORACLE_HOME=$(pwd)
   - export DYLD_LIBRARY_PATH=DYLD_LIBRARY_PATH:$ORACLE_HOME
   - export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME
