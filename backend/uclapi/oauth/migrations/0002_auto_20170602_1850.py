@@ -16,6 +16,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='oauthtoken',
             name='token',
-            field=models.CharField(default=oauth.app_helpers.generate_user_token, max_length=75, unique=True),
+            field=models.CharField(
+                      default=oauth.app_helpers.generate_user_token,
+                      max_length=75,
+                      unique=True),
         ),
     ]

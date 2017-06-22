@@ -1,11 +1,14 @@
 # Storage of the scope map
-# The purpose of this setup is that the OAuth scope of any app can be stored in a single field,
-# and it can be added to in the future.
-# We have a BigIntegerField to work with, which means 64 bits of storage. This translates into
-# 64 types of scope, each of which can be checked with a bit mask.
-# E.g. roombookings has scope 0, which is 0000000000000000000000000000000000000000000000000000000000000001b.
+# The purpose of this setup is that the OAuth scope of any app can be stored
+# in a single field. This way, we can easily add more scopes later.
+# We have a BigIntegerField to work with, which means 64 bits of storage.
+# This translates into 64 types of scope, each of which can be checked with a
+# bit mask.
+# E.g. roombookings has scope 0, which is
+# 0000000000000000000000000000000000000000000000000000000000000001b.
 # This is because the 0th bit (LSB) is set to 1.
 # Room bookings + UCLU = 1001b, or a scope number of 11
+
 
 class Scopes:
     SCOPE_MAP = {
@@ -90,7 +93,6 @@ class Scopes:
 
             scopes.append(scope)
         return scopes
-
 
     # Get available scopes for showing to the user
     def get_all_scopes(self, pretty_print=True):

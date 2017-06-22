@@ -1,18 +1,20 @@
 from django.db import models
 
 from .app_helpers import generate_user_token
-from .scoping import Scopes
 
 
 class OAuthScope(models.Model):
     # We should really have a primary key for the OneToOneField
     id = models.AutoField(primary_key=True)
 
-    # A big integer to store up to 64 types of scope. Avoids lots of boolean comparisons.
+    # A big integer to store up to 64 types of scope.
+    # This avoids lots of boolean comparisons.
+    # The complexity of this is handled by scoping.py.
     scope_number = models.BigIntegerField(default=0)
 
     def scopeIsEqual(self, other):
         return self.scope_number == other.scope_number
+
 
 class OAuthToken(models.Model):
     # Use an incrementing ID that we can always rely on

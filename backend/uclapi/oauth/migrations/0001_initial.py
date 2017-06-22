@@ -29,10 +29,19 @@ class Migration(migrations.Migration):
             name='OAuthToken',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('token', models.CharField(default=oauth.app_helpers.generate_user_token, max_length=70, unique=True)),
-                ('app', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dashboard.App')),
-                ('scope', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='oauth.OAuthScope')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dashboard.User')),
+                ('token', models.CharField(
+                              default=oauth.app_helpers.generate_user_token,
+                              max_length=70,
+                              unique=True)),
+                ('app', models.ForeignKey(
+                            on_delete=django.db.models.deletion.CASCADE,
+                            to='dashboard.App')),
+                ('scope', models.OneToOneField(
+                              on_delete=django.db.models.deletion.CASCADE,
+                              to='oauth.OAuthScope')),
+                ('user', models.ForeignKey(
+                             on_delete=django.db.models.deletion.CASCADE,
+                             to='dashboard.User')),
             ],
         ),
     ]
