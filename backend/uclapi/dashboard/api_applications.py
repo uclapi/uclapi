@@ -208,7 +208,7 @@ def set_callback_url(request):
         new_callback_url = request.POST["callback_url"]
         user_id = request.session["user_id"]
     except KeyError:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have app_id."
         })
@@ -224,7 +224,7 @@ def set_callback_url(request):
     # If none of them work then bail out.
     if not any([new_callback_url.startswith(p + "://") for p in os.environ.get(
             "UCLAPI_OAUTH_CALLBACK_ALLOWED_PROTOCOLS").split(';')]):
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": ("The requested callback URL"
                         " does not use an acceptable protocol.")
@@ -238,7 +238,7 @@ def set_callback_url(request):
         [p == (url_data.domain + "." + url_data.suffix)
             for p in os.environ.get(
             "UCLAPI_OAUTH_CALLBACK_DENIED_URLS").split(';')]):
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": ("The requested callback URL"
                         " is hosted on a banned domain.")
@@ -250,7 +250,7 @@ def set_callback_url(request):
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "App does not exist."
         })
@@ -267,7 +267,7 @@ def set_callback_url(request):
         "newcallbackurl": new_callback_url
     })
 
-    return JsonResponse({
+    return PrettyJsonResponse({
         "success": True,
         "message": "Callback URL successfully changed.",
     })
@@ -281,7 +281,7 @@ def set_uclu_scope(request):
         scope_status = request.POST["scope_status"] == "true"
         user_id = request.session["user_id"]
     except KeyError:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have app_id."
         })
@@ -291,7 +291,7 @@ def set_uclu_scope(request):
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "App does not exist."
         })
@@ -308,7 +308,7 @@ def set_uclu_scope(request):
             "ucluscope": scope_status
         })
 
-        return JsonResponse({
+        return PrettyJsonResponse({
             "success": True,
             "message": "Scope successfully changed",
         })
@@ -322,7 +322,7 @@ def update_scopes(request):
         scopes_json = request.POST["scopes"]
         user_id = request.session["user_id"]
     except KeyError:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have app_id."
         })
@@ -332,7 +332,7 @@ def update_scopes(request):
     try:
         scopes = json.loads(scopes_json)
     except:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "Invalid scope data that could not be parsed."
         })
@@ -343,7 +343,7 @@ def update_scopes(request):
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "App does not exist."
         })
@@ -364,7 +364,7 @@ def update_scopes(request):
             app.scope.save()
             app.save()
         except:
-            response = JsonResponse({
+            response = PrettyJsonResponse({
                 "success": False,
                 "message": "Invalid scope data that could not be iterated."
             })
@@ -377,7 +377,7 @@ def update_scopes(request):
             "scopes": scopes
         })
 
-        return JsonResponse({
+        return PrettyJsonResponse({
             "success": True,
             "message": "Scope successfully changed",
         })

@@ -16,7 +16,9 @@ class App extends React.Component {
       clientSecretCopied: false,
       callbackUrlSaved: false,
       error: '',
-      callbackUrl: this.props.callbackUrl == null ? '' : this.props.callbackUrl
+      callbackUrl: this.props.callbackUrl == null ? '' : this.props.callbackUrl,
+      scopes: [],
+      scopesSaved: false
     };
     this.changeName = this.changeName.bind(this);
     this.editName = this.editName.bind(this);
@@ -34,7 +36,9 @@ class App extends React.Component {
     this.setSaveCallbackUrl = this.setSaveCallbackUrl.bind(this);
     this.updateCallbackUrl = this.updateCallbackUrl.bind(this);
     this.saveCallbackUrl = this.saveCallbackUrl.bind(this);
-    this.updateScopes = this.updateScopes.bind(this);
+    this.setSaveScopes = this.setSaveScopes.bind(this);
+    this.handleScopeCheckChange = this.handleScopeCheckChange.bind(this);
+    this.saveScopes = this.saveScopes.bind(this);
 
     /*
       Make moment.js say 'just now' if the time difference is less
@@ -308,87 +312,75 @@ class App extends React.Component {
     })
   }
 
-  updateScopes(e) {
+  setSaveScopes() {
+    this.setState({
+      scopesSaved: false
+    })
+  }
+
+  saveScopes(e) {
     let that = this;
 
-    scopes_data = []
+    var scopesData = [];
 
+    for (var i = 0; i < this.state.scopes.length; i++) {
+      scopesData.push(
+        {
+          "name": this.state.scopes[i].name,
+          "checked": this.state.scopes[i].enabled
+        }
+      )
+    }
 
-    fetch('/dashboard/api/updatescopes/'), {
+    var json = JSON.stringify(scopesData);
+
+    fetch('/dashboard/api/updatescopes/', {
       method: 'POST',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'X-CSRFToken': Cookies.get('csrftoken')
       },
-      body: 'app_id=' + this.props.appId + '&scopes='
+      body: 'app_id=' + this.props.appId + '&scopes=' + encodeURIComponent(json)
+    }).then((res)=>{
+      if (res.ok) {
+        return res.json()
+      } else {
+        throw new Error('An error occured');
+      }
+    }).then((json)=> {
+      if (json.success) {
+        this.setState({
+          scopesSaved: true
+        })
+      } else {
+        throw new Error(json.message);
+      }
+    }).catch((err)=>{
+      that.setState({
+        error: err.message
+      });
+    });
+  }
+
+  handleScopeCheckChange(e) {
+    let that = this;
+
+    var s = e.target.name.split('~')[1];
+    var index = -1;
+    for (var i = 0; i < this.state.scopes.length; i++) {
+      if (this.state.scopes[i].name == s) {
+        index = i;
+        break;
+      }
     }
+    this.state.scopes[i].enabled = e.target.checked;
   }
 
   updateRoomBookingsScope(e){
     let that = this;
 
     fetch('/dashboard/api/setscope/roombookings/', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-CSRFToken': Cookies.get('csrftoken')
-      },
-      body: 'app_id=' + this.props.appId + '&scope_status=' + e.target.checked
-    }).then((res)=>{
-      if(res.ok){
-        return res.json();
-      }else{
-        throw new Error('An error occured');
-      }
-    }).then((json)=>{
-      if(json.success){
-        // State Set OK
-      }else{
-        throw new Error(json.message);
-      }
-    }).catch((err)=>{
-      that.setState({
-        error: err.message
-      });
-    });
-  }
-
-  updateTimetableScope(e){
-    let that = this;
-
-    fetch('/dashboard/api/setscope/timetable/', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-CSRFToken': Cookies.get('csrftoken')
-      },
-      body: 'app_id=' + this.props.appId + '&scope_status=' + e.target.checked
-    }).then((res)=>{
-      if(res.ok){
-        return res.json();
-      }else{
-        throw new Error('An error occured');
-      }
-    }).then((json)=>{
-      if(json.success){
-        // State Set OK
-      }else{
-        throw new Error(json.message);
-      }
-    }).catch((err)=>{
-      that.setState({
-        error: err.message
-      });
-    });
-  }
-
-  updateUcluScope(e){
-    let that = this;
-
-    fetch('/dashboard/api/setscope/uclu/', {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -567,12 +559,28 @@ class App extends React.Component {
                 The scope defines which personal data your application will be able to access.
                 For more information, please consult the <a href="https://uclapi.com/docs">docs</a> for more details on scope.
               </em><br/><br/>
-              {
-                this.props.scopes.map(function(scope) {
-                        return <div><input type="checkbox" onChange={this.updateScopes} defaultChecked={scope.enabled} key={scope.name} className="scope-checkbox" />{scope.description}</div>
-                })
-              }
+              <div>
+                {
+                  this.props.scopes.map((scope) => {
+                    this.state.scopes.length < this.props.scopes.length && this.state.scopes.push({
+                      "name": scope.name,
+                      "enabled": scope.enabled,
+                      "description": scope.description
+                    });
+                    return <div><input type="checkbox" onChange={this.handleScopeCheckChange} defaultChecked={scope.enabled} name={"scope~" + scope.name} className="scope-checkbox" />{scope.description}</div>;
+                  })
+                }
               </div>
+              <button
+                className="pure-button pure-button-primary pure-input-1 tooltip"
+                onClick={this.saveScopes}
+                onMouseEnter={this.setSaveScopes}
+                style={{ 'border': '1px solid #ccc', 'borderRadius': '0px' }}
+              >
+                <i className="fa fa-save" aria-hidden="true"></i>
+                <span>{this.state.scopesSaved?'Saved!':'Click to save changes to the requested permissions.'}</span>
+              </button>
+            </div>
           </Panel>
         </Collapse>
 
