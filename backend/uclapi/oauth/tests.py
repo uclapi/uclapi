@@ -3,18 +3,28 @@ from django.test import TestCase
 from .models import OAuthScope
 from .scoping import Scopes
 
+
 class ScopingTestCase(TestCase):
     def setUp(self):
         self.s = Scopes()
         self.scope_a = OAuthScope.objects.create()
         self.scope_b = OAuthScope.objects.create()
-    
+
     def test_add_scope(self):
-        self.scope_a.scope_number = self.s.add_scope(self.scope_a.scope_number, "roombookings")
-        self.scope_a.scope_number = self.s.add_scope(self.scope_a.scope_number, "timetable")
+        self.scope_a.scope_number = self.s.add_scope(
+                                        self.scope_a.scope_number,
+                                        "roombookings"
+                                    )
+        self.scope_a.scope_number = self.s.add_scope(
+                                        self.scope_a.scope_number,
+                                        "timetable"
+                                    )
         self.scope_a.save()
 
-        self.scope_b.scope_number = self.s.add_scope(self.scope_b.scope_number, "timetable")
+        self.scope_b.scope_number = self.s.add_scope(
+                                        self.scope_b.scope_number,
+                                        "timetable"
+                                    )
         self.scope_b.save()
 
         self.assertEqual(self.scope_a.scope_number, 3)
@@ -22,7 +32,10 @@ class ScopingTestCase(TestCase):
 
     def test_remove_scope(self):
         self.scope_a.scope_number = 3
-        self.scope_a.scope_number = self.s.remove_scope(self.scope_a.scope_number, "roombookings")
+        self.scope_a.scope_number = self.s.remove_scope(
+                                        self.scope_a.scope_number,
+                                        "roombookings"
+                                    )
         self.scope_a.save()
 
         self.assertEqual(self.scope_a.scope_number, 2)
