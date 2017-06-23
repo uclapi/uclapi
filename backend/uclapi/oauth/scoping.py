@@ -65,8 +65,8 @@ class Scopes:
                     }
                 else:
                     scope = {
-                        "name": x,
-                        "id": self.SCOPE_MAP[x][0]
+                        "id": self.SCOPE_MAP[x][0],
+                        "name": x
                     }
 
                 scopes.append(scope)
@@ -86,8 +86,8 @@ class Scopes:
                 }
             else:
                 scope = {
-                    "name": x,
                     "id": self.SCOPE_MAP[x][0],
+                    "name": x,
                     "enabled": self.check_scope(current, x)
                 }
 
@@ -105,8 +105,8 @@ class Scopes:
                 }
             else:
                 scope = {
-                    "name": x,
-                    "id": self.SCOPE_MAP[x][0]
+                    "id": self.SCOPE_MAP[x][0],
+                    "name": x
                 }
 
             scopes.append(scope)
