@@ -7,7 +7,7 @@
 # E.g. roombookings has scope 0, which is
 # 0000000000000000000000000000000000000000000000000000000000000001b.
 # This is because the 0th bit (LSB) is set to 1.
-# Room bookings + UCLU = 1001b, or a scope number of 11
+# roombookings + uclu = 101b, or a scope number of 2^2 + 2^0 = 4 + 1 = 5
 
 
 class Scopes:
