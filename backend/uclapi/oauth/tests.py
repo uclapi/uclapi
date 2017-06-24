@@ -172,8 +172,6 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             app=app_, user=user_, scope=oauth_scope
         )
 
-        # TODO: THIS WILL GET CHANGED
-        # calculate the client_secret_proof
         import hmac, hashlib, base64
         hmac_digest = hmac.new(
             bytes(app_.client_secret, 'ascii'),
