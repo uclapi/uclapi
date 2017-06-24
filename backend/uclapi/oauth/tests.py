@@ -50,28 +50,28 @@ class ScopingTestCase(TestCase):
     def test_scopes_equal(self):
         equal = self.scope_a.scopeIsEqual(self.scope_b)
 
-        self.assertEqual(equal, True)
+        self.assertTrue(equal)
 
     def test_check_scope(self):
-        self.assertEqual(self.s.check_scope(12, "roombookings"), False)
-        self.assertEqual(self.s.check_scope(12, "uclu"), True)
+        self.assertFalse(self.s.check_scope(12, "roombookings"))
+        self.assertTrue(self.s.check_scope(12, "uclu"))
 
     def test_get_all_scopes(self):
         scopes_bare = self.s.get_all_scopes(pretty_print=False)
-        self.assertEqual({
+        self.assertTrue({
             "name": "roombookings",
             "id": 0
-        } in scopes_bare, True)
+        } in scopes_bare)
 
         scopes_pretty = self.s.get_all_scopes(pretty_print=True)
-        self.assertEqual({
+        self.assertTrue({
             "name": "roombookings",
             "description": "Private room bookings data"
-        } in scopes_pretty, True)
+        } in scopes_pretty)
 
     def test_scopes_dict(self):
         scopes_dict = self.s.scope_dict(5, pretty_print=False)
-        self.assertEqual(scopes_dict, [
+        check_dict = [
             {
                 "name": "roombookings",
                 "id": 0
@@ -80,16 +80,20 @@ class ScopingTestCase(TestCase):
                 "name": "uclu",
                 "id": 2
             }
-        ])
+        ]
+
+        scopes_dict.sort(key=lambda x: x["id"])
+        check_dict.sort(key=lambda x:x["id"])
+        self.assertEqual(scopes_dict, check_dict)
 
 
 class OAuthTokenCheckDecoratorTestCase(TestCase):
     def setUp(self):
         mock_status_code = unittest.mock.Mock()
         mock_status_code.status_code = 200
-        mock_view_func = unittest.mock.Mock(return_value=mock_status_code)
+        self.mock_view_func = unittest.mock.Mock(return_value=mock_status_code)
 
-        self.dec_view = oauth_token_check(required_scopes=[])(mock_view_func)
+        self.dec_view = oauth_token_check(required_scopes=[])(self.mock_view_func)
         self.factory = APIRequestFactory()
 
     def test_decorator_no_client_secret_proof_provided(self):
@@ -118,7 +122,10 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
     def test_decorator_nonexistent_token_provided(self):
         request = self.factory.get(
             '/',
-            {'client_secret_proof': 'not_a_real_secret_proof', 'token': 'fake'}
+            {
+                'client_secret_proof': 'not_a_real_secret_proof',
+                'token': 'fake'
+            }
         )
         response = self.dec_view(request)
 
@@ -131,13 +138,16 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
     def test_decorator_client_secret_verification_failed(self):
         # create User, App, and OAuth it
         user_ = User.objects.create(
-            email="test@ucl.ac.uk", cn="test",
+            email="test@ucl.ac.uk",
+            cn="test",
             given_name="Test Test"
         )
         app_ = App.objects.create(user=user_, name="An App")
         oauth_scope = OAuthScope.objects.create()
         oauth_token = OAuthToken.objects.create(
-            app=app_, user=user_, scope=oauth_scope
+            app=app_,
+            user=user_,
+            scope=oauth_scope
         )
 
         request = self.factory.get(
@@ -159,17 +169,67 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
         )
 
     def test_decorator_no_permission_to_access(self):
-        pass
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        oauth_scope_app = OAuthScope.objects.create(
+            scope_number=1,
+        )
+        app_ = App.objects.create(
+            user=user_,
+            name="An App",
+            scope=oauth_scope_app
+        )
+        oauth_scope_user = OAuthScope.objects.create(
+            scope_number=2
+        )
+        oauth_token = OAuthToken.objects.create(
+            app=app_,
+            user=user_,
+            scope=oauth_scope_user
+        )
+
+        import hmac, hashlib, base64
+        hmac_digest = hmac.new(
+            bytes(app_.client_secret, 'ascii'),
+            msg=oauth_token.token.encode('ascii'),
+            digestmod=hashlib.sha256
+        ).digest()
+        hmac_b64 = base64.b64encode(hmac_digest).decode()
+
+        request = self.factory.get(
+            '/',
+            {
+                'client_secret_proof': hmac_b64,
+                'token': oauth_token.token
+            }
+        )
+        dec_view_rb = oauth_token_check(required_scopes=["roombookings"])(self.mock_view_func)
+        response = dec_view_rb(request)
+
+        content = json.loads(response.content.decode())
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["ok"])
+        self.assertEqual(
+            content["error"],
+            "The token provided does not have permission to access this data."
+        )
 
     def test_decorator_everything_passes(self):
         user_ = User.objects.create(
-            email="test@ucl.ac.uk", cn="test",
+            email="test@ucl.ac.uk",
+            cn="test",
             given_name="Test Test"
         )
         app_ = App.objects.create(user=user_, name="An App")
         oauth_scope = OAuthScope.objects.create()
         oauth_token = OAuthToken.objects.create(
-            app=app_, user=user_, scope=oauth_scope
+            app=app_,
+            user=user_,
+            scope=oauth_scope
         )
 
         import hmac, hashlib, base64
