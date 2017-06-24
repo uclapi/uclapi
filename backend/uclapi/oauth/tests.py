@@ -1,3 +1,6 @@
+import base64
+import hashlib
+import hmac
 import json
 import unittest.mock
 
@@ -83,7 +86,7 @@ class ScopingTestCase(TestCase):
         ]
 
         scopes_dict.sort(key=lambda x: x["id"])
-        check_dict.sort(key=lambda x:x["id"])
+        check_dict.sort(key=lambda x: x["id"])
         self.assertEqual(scopes_dict, check_dict)
 
 
@@ -93,7 +96,10 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
         mock_status_code.status_code = 200
         self.mock_view_func = unittest.mock.Mock(return_value=mock_status_code)
 
-        self.dec_view = oauth_token_check(required_scopes=[])(self.mock_view_func)
+        self.dec_view = oauth_token_check(
+            required_scopes=[]
+        )(self.mock_view_func)
+
         self.factory = APIRequestFactory()
 
     def test_decorator_no_client_secret_proof_provided(self):
@@ -191,7 +197,6 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             scope=oauth_scope_user
         )
 
-        import hmac, hashlib, base64
         hmac_digest = hmac.new(
             bytes(app_.client_secret, 'ascii'),
             msg=oauth_token.token.encode('ascii'),
@@ -206,7 +211,11 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
                 'token': oauth_token.token
             }
         )
-        dec_view_rb = oauth_token_check(required_scopes=["roombookings"])(self.mock_view_func)
+
+        dec_view_rb = oauth_token_check(
+            required_scopes=["roombookings"]
+        )(self.mock_view_func)
+
         response = dec_view_rb(request)
 
         content = json.loads(response.content.decode())
@@ -215,7 +224,8 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
         self.assertFalse(content["ok"])
         self.assertEqual(
             content["error"],
-            "The token provided does not have permission to access this data."
+            "The token provided does not have permission"
+            " to access this data."
         )
 
     def test_decorator_everything_passes(self):
@@ -232,7 +242,6 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             scope=oauth_scope
         )
 
-        import hmac, hashlib, base64
         hmac_digest = hmac.new(
             bytes(app_.client_secret, 'ascii'),
             msg=oauth_token.token.encode('ascii'),
