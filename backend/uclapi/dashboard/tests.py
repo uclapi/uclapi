@@ -9,7 +9,7 @@ from .app_helpers import is_url_safe, generate_api_token, \
     generate_app_id
 from .middleware.fake_shibboleth_middleware import FakeShibbolethMiddleWare
 from .models import App, User
-from .webhook_views import create_webhook, user_owns_app, verify_ownership
+from .webhook_views import create_webhook, user_owns_app
 
 
 class DashboardTestCase(TestCase):
@@ -277,8 +277,13 @@ class WebHookRequestViewTests(TestCase):
         'dashboard.webhook_views.verify_ownership', lambda *args: False
     )
     def test_create_webhook_POST_user_owns_app_ownership_not_verified(self):
-        request = self.factory.post('/', {'app_id': self.app1.id, 'siteid': 1,
-                                      'roomid': 1, 'contact': 1, 'url': 1})
+        request = self.factory.post(
+            '/',
+            {
+                'app_id': self.app1.id, 'siteid': 1,
+                'roomid': 1, 'contact': 1, 'url': 1
+            }
+        )
         request.session = {'user_id': self.user1.id}
         response = create_webhook(request)
 
@@ -288,16 +293,22 @@ class WebHookRequestViewTests(TestCase):
         self.assertFalse(content["success"])
         self.assertEqual(
             content["message"],
-            "Ownership of webhook can't be verified.[Link to relevant docs here]"
+            "Ownership of webhook can't be verified."
+            "[Link to relevant docs here]"
         )
 
     @patch(
-        'dashboard.webhook_views.verify_ownership', lambda *args: False
+        'dashboard.webhook_views.verify_ownership', lambda *args: True
     )
-    @patch('keen.add_event', lambda: None)
-    def test_create_webhook_POST_user_owns_app_ownership_verified(self):
-        request = self.factory.post('/', {'app_id': self.app1.id, 'siteid': 1,
-                                      'roomid': 1, 'contact': 1, 'url': 1})
+    @patch('keen.add_event')
+    def test_create_webhook_POST_user_owns_app_ownership_verified(self, keen):
+        request = self.factory.post(
+            '/',
+            {
+                'app_id': self.app1.id, 'siteid': 1,
+                'roomid': 1, 'contact': 1, 'url': 1
+            }
+        )
         request.session = {'user_id': self.user1.id}
         response = create_webhook(request)
 
@@ -306,3 +317,4 @@ class WebHookRequestViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(content["success"])
         self.assertEqual(content["message"], "Webhook sucessfully created")
+        self.assertIsNotNone(content.get("webhook"))
