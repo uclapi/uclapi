@@ -1,10 +1,12 @@
-from django.http import HttpResponseBadRequest, JsonResponse
-from .models import App, Webhook, User
-import keen
-from django.core.exceptions import ObjectDoesNotExist
-import requests
 import os
 from binascii import hexlify
+
+import keen
+import requests
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseBadRequest, JsonResponse
+
+from .models import App, User, Webhook
 
 
 def user_owns_app(user_id, app_id):
@@ -18,12 +20,7 @@ def user_owns_app(user_id, app_id):
 
 def generate_ownership_verification_secret():
     key = hexlify(os.urandom(30)).decode()
-    dashes_key = ""
-    for idx, char in enumerate(key):
-        if idx % 15 == 0 and idx != len(key)-1:
-            dashes_key += "-"
-        else:
-            dashes_key += char
+    dashes_key = '-'.join(textwrap.wrap(key, 15))
 
     return dashes_key
 

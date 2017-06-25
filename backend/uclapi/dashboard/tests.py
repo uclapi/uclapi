@@ -7,6 +7,7 @@ from .app_helpers import is_url_safe, generate_api_token, \
     generate_app_id
 from .middleware.fake_shibboleth_middleware import FakeShibbolethMiddleWare
 from .models import App, User
+from .webhook_views import user_owns_app
 
 
 class DashboardTestCase(TestCase):
@@ -177,3 +178,39 @@ class URLSafetyTestCase(TestCase):
             is_url_safe("https://staging.ninja/test/test")
         )
     # Testcase for whitelisted URL needed
+
+
+class UserOwnsAppTestCase(TestCase):
+    def setUp(self):
+        self.user1 = User.objects.create(
+            email="test@test.com",
+            full_name="Test testington",
+            given_name="test",
+            department="CS",
+            cn="test",
+            raw_intranet_groups="none",
+            employee_id=0
+        )
+        self.user2 = User.objects.create(
+            email="test@testing.com",
+            full_name="Test Er",
+            given_name="Test",
+            department="CS",
+            cn="tester",
+            raw_intranet_groups="none",
+            employee_id=1
+        )
+        self.app1 = App.objects.create(
+            user=self.user1,
+            name="An App"
+        )
+        self.app2 = App.objects.create(user=self.user2, name="Another App")
+
+    def test_user_owns_nonexistent_app(self):
+        self.assertFalse(user_owns_app(self.user1.id, 123))
+
+    def test_user_owns_app_belonging_to_other_user(self):
+        self.assertFalse(user_owns_app(self.user1.id, self.app2.id))
+
+    def test_user_owns_app_belonging_to_him(self):
+        self.assertTrue(user_owns_app(self.user1.id, self.app1.id))
