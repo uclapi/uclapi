@@ -1,13 +1,15 @@
+import json
 from unittest.mock import patch
 
 from django.test import RequestFactory, TestCase
+from rest_framework.test import APIRequestFactory
 
 from .app_helpers import is_url_safe, generate_api_token, \
     generate_app_client_id, generate_app_client_secret, \
     generate_app_id
 from .middleware.fake_shibboleth_middleware import FakeShibbolethMiddleWare
 from .models import App, User
-from .webhook_views import user_owns_app
+from .webhook_views import create_webhook, user_owns_app, verify_ownership
 
 
 class DashboardTestCase(TestCase):
@@ -214,3 +216,93 @@ class UserOwnsAppTestCase(TestCase):
 
     def test_user_owns_app_belonging_to_him(self):
         self.assertTrue(user_owns_app(self.user1.id, self.app1.id))
+
+
+class WebHookRequestViewTests(TestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+
+        self.user1 = User.objects.create(cn="test1", employee_id=1)
+        self.app1 = App.objects.create(user=self.user1, name="An App")
+
+        self.user2 = User.objects.create(cn="test2", employee_id=2)
+        self.app2 = App.objects.create(user=self.user2, name="Another App")
+
+    def test_create_webhook_GET(self):
+        request = self.factory.get('/')
+        response = create_webhook(request)
+
+        content = json.loads(response.content.decode())
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["success"])
+        self.assertEqual(content["message"], "Request is not of method POST")
+
+    def test_create_webhook_POST_missing_parameters(self):
+        request = self.factory.post('/')
+        response = create_webhook(request)
+
+        content = json.loads(response.content.decode())
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["success"])
+        self.assertEqual(
+            content["message"],
+            "Request is missing parameters."
+            " Should have app_id, url, siteid, roomid, contact"
+            " as well as a sessionid cookie"
+        )
+
+    def test_create_webhook_POST_user_does_not_own_app(self):
+        request = self.factory.post(
+            '/',
+            {
+                'app_id': self.app2.id, 'siteid': 1, 'roomid': 1,
+                'contact': 1, 'url': 1
+            }
+        )
+        request.session = {'user_id': self.user1.id}
+        response = create_webhook(request)
+
+        content = json.loads(response.content.decode())
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["success"])
+        self.assertEqual(
+            content["message"],
+            "App does not exist or user is lacking permission."
+        )
+
+    @patch(
+        'dashboard.webhook_views.verify_ownership', lambda *args: False
+    )
+    def test_create_webhook_POST_user_owns_app_ownership_not_verified(self):
+        request = self.factory.post('/', {'app_id': self.app1.id, 'siteid': 1,
+                                      'roomid': 1, 'contact': 1, 'url': 1})
+        request.session = {'user_id': self.user1.id}
+        response = create_webhook(request)
+
+        content = json.loads(response.content.decode())
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["success"])
+        self.assertEqual(
+            content["message"],
+            "Ownership of webhook can't be verified.[Link to relevant docs here]"
+        )
+
+    @patch(
+        'dashboard.webhook_views.verify_ownership', lambda *args: False
+    )
+    @patch('keen.add_event', lambda: None)
+    def test_create_webhook_POST_user_owns_app_ownership_verified(self):
+        request = self.factory.post('/', {'app_id': self.app1.id, 'siteid': 1,
+                                      'roomid': 1, 'contact': 1, 'url': 1})
+        request.session = {'user_id': self.user1.id}
+        response = create_webhook(request)
+
+        content = json.loads(response.content.decode())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(content["success"])
+        self.assertEqual(content["message"], "Webhook sucessfully created")

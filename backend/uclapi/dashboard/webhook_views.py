@@ -1,4 +1,5 @@
 import os
+import textwrap
 from binascii import hexlify
 
 import keen
@@ -32,7 +33,8 @@ def verify_ownership(webhook_url, ownership_verification_secret):
     req = requests.post(webhook_url, json=payload)
     try:
         resp = req.json()
-    except ValueError:  # check whether this is the right error to except
+    #TODO: check whether this is the right error to except
+    except ValueError:
         return False
     else:
         return (
@@ -83,7 +85,8 @@ def create_webhook(request):
         response = JsonResponse({
             "success": False,
             "message": (
-                "Ownweship of webhook can't be verified."
+                "Ownership of webhook can't be verified."
+                # TODO: change this
                 "[Link to relevant docs here]"
             )
         })
