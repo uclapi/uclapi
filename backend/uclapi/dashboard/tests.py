@@ -364,6 +364,28 @@ class WebHookRequestViewTests(TestCase):
             "App does not exist or user is lacking permission."
         )
 
+    @patch("keen.add_event", lambda *args: None)
+    def test_edit_webhook_POST_user_owns_app_url_is_the_same(self):
+        webhook_ = Webhook.objects.create(
+            app=self.app1, url="http://old", siteid=1, roomid=1, contact=1
+        )
+
+        request = self.factory.post(
+            '/',
+            {
+                'app_id': self.app1.id, 'new_siteid': 2, 'new_roomid': 2,
+                'new_contact': 2, 'new_webhook_url': "http://old"
+            }
+        )
+        request.session = {'user_id': self.user1.id}
+        response = edit_webhook(request)
+
+        content = json.loads(response.content.decode())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(content["success"])
+        self.assertEqual(content["message"], "Webhook sucessfully changed.")
+
     @patch("dashboard.webhook_views.verify_ownership", lambda *args: False)
     def test_edit_webhook_POST_user_owns_app_changing_url_verification_fail(self):
         webhook_ = Webhook.objects.create(
