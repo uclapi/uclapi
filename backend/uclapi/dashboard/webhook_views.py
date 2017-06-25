@@ -33,7 +33,7 @@ def verify_ownership(webhook_url, ownership_verification_secret):
     req = requests.post(webhook_url, json=payload)
     try:
         resp = req.json()
-    #TODO: check whether this is the right error to except
+    # TODO: check whether this is the right error to except
     except ValueError:
         return False
     else:
@@ -165,7 +165,7 @@ def edit_webhook(request):
             response = JsonResponse({
                 "success": False,
                 "message": (
-                    "Ownweship of webhook can't be verified."
+                    "Ownership of webhook can't be verified."
                     "[Link to relevant docs here]"
                 )
             })
