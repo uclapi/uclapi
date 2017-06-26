@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import moment from 'moment';
 import Modal from 'react-modal';
 import Collapse, { Panel } from 'rc-collapse';
+import {CopyField, CopyActionField} from './copyField.jsx';
 
 class App extends React.Component {
   constructor(props){
@@ -17,7 +18,7 @@ class App extends React.Component {
       callbackUrlSaved: false,
       error: '',
       callbackUrl: this.props.callbackUrl == null ? '' : this.props.callbackUrl,
-      scopes: [],
+      scopes: this.props.scopes,
       scopesSaved: false
     };
     this.changeName = this.changeName.bind(this);
@@ -27,12 +28,6 @@ class App extends React.Component {
     this.deleteApp = this.deleteApp.bind(this);
     this.deleteConfirm = this.deleteConfirm.bind(this);
     this.stopEditing = this.stopEditing.bind(this);
-    this.copyToken = this.copyToken.bind(this);
-    this.copyClientId = this.copyClientId.bind(this);
-    this.copyClientSecret = this.copyClientSecret.bind(this);
-    this.setCopyTextToken = this.setCopyTextToken.bind(this);
-    this.setCopyTextClientId = this.setCopyTextClientId.bind(this);
-    this.setCopyTextClientSecret = this.setCopyTextClientSecret.bind(this);
     this.setSaveCallbackUrl = this.setSaveCallbackUrl.bind(this);
     this.updateCallbackUrl = this.updateCallbackUrl.bind(this);
     this.saveCallbackUrl = this.saveCallbackUrl.bind(this);
@@ -76,14 +71,11 @@ class App extends React.Component {
       }
     }).then((json)=>{
       if(json.success){
-        let newApp = {
+        let values = {
           name: that.refs.name.value,
-          id: that.props.appId,
-          token: that.props.appKey,
-          created: that.props.created,
           updated: json.date
         };
-        that.props.update(that.props.appId, newApp);
+        that.props.update(that.props.appId, values);
         that.refs.name.value = '';
         that.setState({
           editing: false,
@@ -117,14 +109,11 @@ class App extends React.Component {
       }
     }).then((json)=>{
       if(json.success){
-        let newApp = {
-          name: that.props.name,
-          id: that.props.appId,
+        let values = {
           token: json.app.token,
-          created: that.props.created,
           updated: json.app.date
         };
-        that.props.update(that.props.appId, newApp);
+        that.props.update(that.props.appId, values);
         that.setState({
           error:''
         });
@@ -153,7 +142,7 @@ class App extends React.Component {
         return res.json();
       }else{
         throw new Error('An error occured');
-      }
+      }e4
     }).then((json)=>{
       if(json.success){
         that.props.remove(that.props.appId);
@@ -200,60 +189,6 @@ class App extends React.Component {
     });
   }
 
-  copyToken(e){
-    e.preventDefault();
-
-    let tokenElement = this.refs.apiToken;
-    tokenElement.select();
-
-    try {
-      // copy text
-      document.execCommand('copy');
-      this.setState({
-        tokenCopied: true
-      });
-      tokenElement.blur();
-    }catch (err) {
-      alert('please press Ctrl/Cmd+C to copy');
-    }
-  }
-
-  copyClientId(e){
-    e.preventDefault();
-
-    let clientIdElement = this.refs.clientId;
-    clientIdElement.select();
-
-    try {
-      // copy text
-      document.execCommand('copy');
-      this.setState({
-        clientIdCopied: true
-      });
-      clientIdElement.blur();
-    }catch (err) {
-      alert('please press Ctrl/Cmd+C to copy');
-    }
-  }
-
-  copyClientSecret(e){
-    e.preventDefault();
-
-    let clientSecretElement = this.refs.clientSecret;
-    clientSecretElement.select();
-
-    try {
-      // copy text
-      document.execCommand('copy');
-      this.setState({
-        clientSecretCopied: true
-      });
-      clientSecretElement.blur();
-    }catch (err) {
-      alert('please press Ctrl/Cmd+C to copy');
-    }
-  }
-
   saveCallbackUrl(e){
     e.preventDefault();
 
@@ -276,7 +211,8 @@ class App extends React.Component {
     }).then((json)=>{
       if(json.success){
         that.setState({
-          callbackUrlSaved: true
+          callbackUrlSaved: true,
+          error:''
         })
       }else{
         throw new Error(json.message);
@@ -285,24 +221,6 @@ class App extends React.Component {
       that.setState({
         error: err.message
       });
-    });
-  }
-
-  setCopyTextToken(){
-    this.setState({
-      tokenCopied: false
-    });
-  }
-
-  setCopyTextClientId(){
-    this.setState({
-      clientIdCopied: false
-    });
-  }
-
-  setCopyTextClientSecret(){
-    this.setState({
-      clientSecret: false
     });
   }
 
@@ -351,7 +269,8 @@ class App extends React.Component {
     }).then((json)=> {
       if (json.success) {
         this.setState({
-          scopesSaved: true
+          scopesSaved: true,
+          error: ''
         })
       } else {
         throw new Error(json.message);
@@ -436,38 +355,7 @@ class App extends React.Component {
         <div className="pure-g">
           <div className="pure-u-1">
             API Token
-            <form className="pure-form pure-g">
-              <div className="pure-u-2-3">
-                <input 
-                  type="text"
-                  ref="apiToken"
-                  className="pure-input-1"
-                  value={this.props.appKey}
-                  readOnly
-                  style={{ 'borderRadius': '4px 0px 0px 4px'}}
-                />
-              </div>
-              <div className="pure-u-1-6">
-                <button 
-                  className="pure-button pure-button-primary pure-input-1 tooltip"
-                  onClick={this.copyToken}
-                  onMouseEnter={this.setCopyTextToken}
-                  style={{ 'border': '1px solid #ccc', 'borderRadius': '0px'}}
-                >
-                  <i className="fa fa-clipboard" aria-hidden="true"></i>
-                  <span>{this.state.tokenCopied?'Copied!':'Click to copy to clipboard'}</span>
-                </button>
-              </div>
-              <div className="pure-u-1-6">
-                <button 
-                  className="pure-button pure-button-primary pure-input-1" 
-                  onClick={this.regenConfirm}
-                  style={{ 'border': '1px solid #ccc', 'borderRadius': '0px 4px 4px 0px'}}
-                >
-                  <i className="fa fa-refresh" aria-hidden="true"></i>
-                </button>
-              </div>
-            </form>
+            <CopyActionField val={this.props.appKey} action={this.regenConfirm} icon="fa fa-refresh" />
           </div>
         </div>
         <p title={moment(this.props.created).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Created: {moment(this.props.created).fromNowOrNow()}</p>
@@ -479,54 +367,9 @@ class App extends React.Component {
               OAuth allows you to create apps that provide users with personal data.
               More information can be found in the <a href="https://docs.uclapi.com">docs</a>.<br/><br/>
               Client ID
-              <form className="pure-form pure-g">
-                <div className="pure-u-3-4">
-                  <input 
-                    type="text"
-                    ref="clientId"
-                    className="pure-input-1"
-                    value={this.props.clientId}
-                    readOnly
-                    style={{ 'borderRadius': '4px 0px 0px 4px'}}
-                  />
-                </div>
-                <div className="pure-u-1-4">
-                  <button 
-                    className="pure-button pure-button-primary pure-input-1 tooltip"
-                    onClick={this.copyClientId}
-                    onMouseEnter={this.setCopyTextClientId}
-                    style={{ 'border': '1px solid #ccc', 'borderRadius': '0px'}}
-                  >
-                    <i className="fa fa-clipboard" aria-hidden="true"></i>
-                    <span>{this.state.clientIdCopied?'Copied!':'Click to copy to clipboard'}</span>
-                  </button>
-                </div>
-              </form>
-
+              <CopyField val={this.props.clientId}/>
               Client Secret
-              <form className="pure-form pure-g">
-                <div className="pure-u-3-4">
-                  <input 
-                    type="text"
-                    ref="clientSecret"
-                    className="pure-input-1"
-                    value={this.props.clientSecret}
-                    readOnly
-                    style={{ 'borderRadius': '4px 0px 0px 4px'}}
-                  />
-                </div>
-                <div className="pure-u-1-4">
-                  <button 
-                    className="pure-button pure-button-primary pure-input-1 tooltip"
-                    onClick={this.copyClientSecret}
-                    onMouseEnter={this.setCopyTextClientSecret}
-                    style={{ 'border': '1px solid #ccc', 'borderRadius': '0px'}}
-                  >
-                    <i className="fa fa-clipboard" aria-hidden="true"></i>
-                    <span>{this.state.clientSecretCopied?'Copied!':'Click to copy to clipboard'}</span>
-                  </button>
-                </div>
-              </form>
+              <CopyField val={this.props.clientSecret}/>
 
               Callback URL
               <form className="pure-form pure-g">
@@ -561,13 +404,17 @@ class App extends React.Component {
               </em><br/><br/>
               <div>
                 {
-                  this.props.scopes.map((scope) => {
-                    this.state.scopes.length < this.props.scopes.length && this.state.scopes.push({
-                      "name": scope.name,
-                      "enabled": scope.enabled,
-                      "description": scope.description
-                    });
-                    return <div><input type="checkbox" onChange={this.handleScopeCheckChange} defaultChecked={scope.enabled} name={"scope~" + scope.name} className="scope-checkbox" />{scope.description}</div>;
+                  this.state.scopes.map((scope, index) => {
+                    return <div key={index}><input 
+                                  type="checkbox"
+                                  onChange={this.handleScopeCheckChange}
+                                  ref={"scope"+index}
+                                  defaultChecked={scope.enabled} 
+                                  name={"scope~" + scope.name} 
+                                  className="scope-checkbox"
+                                />
+                                  {scope.description}
+                                </div>;
                   })
                 }
               </div>
@@ -694,18 +541,18 @@ class AppList extends React.Component {
   }
 
   addApp(app){
-    this.setState( (state) => 
-      update(state, {apps: {$push: [app]}})
-    );
+    this.setState((state) => update(state, {apps: {$push: [app]}}));
   }
 
-  updateApp(id, app){
-    this.setState( (state) => {
-      let appIndex = this.getAppIndex(id);
-      if(appIndex !== undefined){
-        return update(state, {apps: {[appIndex]: {$set: app}}});          
-      }
-    });
+  updateApp(id, values){
+    let appIndex = this.getAppIndex(id);
+    if(appIndex !== undefined){
+      Object.keys(values).forEach((key)=>{
+        this.setState((state) => {
+          return update(state, {apps: {[appIndex]: {[key]:{$set: values[key]}}}});          
+        });
+      });
+    }
   }
 
   deleteApp(appId){
