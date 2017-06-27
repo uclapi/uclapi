@@ -7,6 +7,159 @@ import Modal from 'react-modal';
 import Collapse, { Panel } from 'rc-collapse';
 import {CopyField, CopyActionField} from './copyField.jsx';
 
+const defaultHeaders = {
+  'Content-Type': 'application/x-www-form-urlencoded',
+  'X-CSRFToken':Cookies.get('csrftoken') 
+}
+
+class AppNameField extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      name: '',
+      editing: false
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.updateName = this.updateName.bind(this);
+  }
+
+  handleChange(e){
+    e.preventDefault();
+    this.setState({name: e.target.value});
+  }
+
+  updateName(data){
+    let values = {
+      name: this.state.name,
+      updated: data.date
+    };
+    this.props.update(this.props.appId, values);
+    this.setState({
+      name:'',
+      editing: false,
+    });
+  }
+
+  handleSubmit(e){
+    e.preventDefault();
+    let that = this;
+    fetch('/dashboard/api/rename/', {
+      method: 'POST',
+      credentials: 'include',
+      headers: defaultHeaders,
+      body: 'new_name=' + this.state.name +
+        '&app_id=' + this.props.appId
+    }).then((res)=>{
+      if(res.ok){return res.json();} 
+      throw new Error('An error occured');
+    }).then((json)=>{
+      if(json.success){
+        updateName(json);
+        return;
+      }
+      throw new Error(json.message);
+    }).catch((err)=>{
+      that.setState({
+        error: err.message
+      });
+    });
+  }
+
+  render(){
+    return(<div>
+      {this.state.editing ? (
+        <form className="pure-form" onSubmit={this.changeName}>
+          <fieldset>
+            <input 
+              type="text"
+              autoFocus
+              placeholder={this.props.name}
+              value={this.state.name}
+              onChange={this.handleChange}
+            />
+            <button 
+              type="submit" 
+              className="pure-button pure-button-primary padded" 
+              onClick={this.handleSubmit}
+            >
+              Submit
+            </button>
+            <button 
+              className="pure-button button-error padded"
+              onClick={()=>this.setState({editing:false})}
+            >
+              Cancel
+            </button>
+          </fieldset>
+        </form> 
+      ):(
+        <div>
+          <h2 style={{display:'inline', verticalAlign: 'middle'}}>{this.props.name}</h2>
+          <button
+            className="pure-button pure-button-primary"
+            onClick={()=>this.setState({editing:true})}
+          >
+            <i className="fa fa-pencil" aria-hidden="true"></i>
+          </button>
+        </div>
+      )}
+    </div>);
+  }
+}
+
+class DeleteButton extends React.Component {
+  constructor(props){
+    super(props);
+    this.deleteConfirm = this.deleteConfirm.bind(this);
+  }
+
+  deleteConfirm(e){
+    e.preventDefault();
+    if(confirm('Are you sure you want to delete this app?')){
+      this.deleteApp();
+    }
+  }
+
+  deleteApp(){
+    let that = this;
+    fetch('/dashboard/api/delete/', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': Cookies.get('csrftoken')
+      },
+      body: 'app_id=' + this.props.appId
+    }).then((res)=>{
+      if(res.ok){
+        return res.json();
+      }else{
+        throw new Error('An error occured');
+      }
+    }).then((json)=>{
+      if(json.success){
+        this.props.remove(this.props.appId);
+      }else{
+        throw new Error(json.message);
+      }
+    }).catch((err)=>{
+      that.setState({
+        error: err.message
+      });
+    });
+  }
+
+  render(){
+    return(
+      <button className="pure-button button-error padded" onClick={this.deleteConfirm}>
+        <i className="fa fa-trash-o" aria-hidden="true"></i>
+      </button>
+    );
+  }
+}
+
 class App extends React.Component {
   constructor(props){
     super(props);
@@ -25,8 +178,6 @@ class App extends React.Component {
     this.editName = this.editName.bind(this);
     this.regenToken = this.regenToken.bind(this);
     this.regenConfirm = this.regenConfirm.bind(this);
-    this.deleteApp = this.deleteApp.bind(this);
-    this.deleteConfirm = this.deleteConfirm.bind(this);
     this.stopEditing = this.stopEditing.bind(this);
     this.setSaveCallbackUrl = this.setSaveCallbackUrl.bind(this);
     this.updateCallbackUrl = this.updateCallbackUrl.bind(this);
@@ -127,41 +278,7 @@ class App extends React.Component {
     });
   }
 
-  deleteApp(){
-    let that = this;
-    fetch('/dashboard/api/delete/', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-CSRFToken': Cookies.get('csrftoken')
-      },
-      body: 'app_id=' + this.props.appId
-    }).then((res)=>{
-      if(res.ok){
-        return res.json();
-      }else{
-        throw new Error('An error occured');
-      }e4
-    }).then((json)=>{
-      if(json.success){
-        that.props.remove(that.props.appId);
-      }else{
-        throw new Error(json.message);
-      }
-    }).catch((err)=>{
-      that.setState({
-        error: err.message
-      });
-    });
-  }
 
-  deleteConfirm(e){
-    e.preventDefault();
-    if(confirm('Are you sure you want to delete this app?')){
-      this.deleteApp();
-    }
-  }
   regenConfirm(e){
     e.preventDefault();
     if(confirm('Are you sure you want to regenerate your api token?')){
@@ -329,29 +446,23 @@ class App extends React.Component {
   render () {
     return <div className="app pure-u-1 pure-u-xl-1-2">
       <div className="card">
-        {this.state.editing ? (
-          <form className="pure-form" onSubmit={this.changeName}>
-            <fieldset>
-              <input type="text" autoFocus placeholder={this.props.name} ref="name"/>
-              <button type="submit" className="pure-button pure-button-primary padded" onClick={this.changeName}>Submit</button>
-              <button className="pure-button button-error padded" onClick={this.stopEditing}>Cancel</button>
-            </fieldset>
-          </form> 
-        ):(
-          <div className="pure-g">
-            <div className="pure-u-1-2">
-              <h2>{this.props.name}</h2>
-            </div>
-            <div className="pure-u-1-2 flexTopRight">
-              <button className="pure-button pure-button-primary padded" onClick={this.editName}>
-                <i className="fa fa-pencil" aria-hidden="true"></i>
-              </button>
-              <button className="pure-button button-error padded" onClick={this.deleteConfirm}>
-                <i className="fa fa-trash-o" aria-hidden="true"></i>
-              </button>
+        <div className="pure-g">
+          <div className="pure-u-1-2">
+            <AppNameField
+              name={this.props.name}
+              update={this.props.update}
+              appId={this.props.appId}
+            />
+          </div>
+          <div className="pure-u-1-2">
+            <div style={{float: 'right'}}>
+              <DeleteButton
+                appId={this.props.appId}
+                remove={this.props.remove}
+              />
             </div>
           </div>
-        )}
+        </div>
         <div className="pure-g">
           <div className="pure-u-1">
             API Token
