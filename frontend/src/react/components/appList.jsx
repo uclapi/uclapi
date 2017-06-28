@@ -56,7 +56,7 @@ class AppNameField extends React.Component {
       throw new Error('An error occured');
     }).then((json)=>{
       if(json.success){
-        updateName(json);
+        this.updateName(json);
         return;
       }
       throw new Error(json.message);
@@ -160,6 +160,36 @@ class DeleteButton extends React.Component {
   }
 }
 
+class RelativeDate extends React.Component {
+  constructor(props){
+    super(props);
+
+    /*
+      Make moment.js say 'just now' if the time difference is less
+      than five seconds either way to get round non-sync'd server and
+      client time.
+      This may make 'a few seconds ago' somewhat redundant, but it's
+      worth it.
+    */
+    moment.fn.fromNowOrNow = function(a) {
+      if (Math.abs(moment().diff(this)) < 5000) {
+        return 'just now';
+      }
+      return this.fromNow(a);
+    };
+  }
+
+  render(){
+    return(
+      <div 
+        title={moment.utc(this.props.date).local().format('dddd, Do MMMM YYYY, h:mm:ss a')}
+      >
+        {this.props.label} {moment.utc(this.props.date).local().fromNowOrNow()}
+      </div>
+    )
+  }
+}
+
 class App extends React.Component {
   constructor(props){
     super(props);
@@ -186,19 +216,6 @@ class App extends React.Component {
     this.handleScopeCheckChange = this.handleScopeCheckChange.bind(this);
     this.saveScopes = this.saveScopes.bind(this);
 
-    /*
-      Make moment.js say 'just now' if the time difference is less
-      than five seconds either way to get round non-sync'd server and
-      client time.
-      This may make 'a few seconds ago' somewhat redundant, but it's
-      worth it.
-    */
-    moment.fn.fromNowOrNow = function(a) {
-      if (Math.abs(moment().diff(this)) < 5000) {
-        return 'just now';
-      }
-      return this.fromNow(a);
-    };
 
   }
 
@@ -469,8 +486,8 @@ class App extends React.Component {
             <CopyActionField val={this.props.appKey} action={this.regenConfirm} icon="fa fa-refresh" />
           </div>
         </div>
-        <p title={moment(this.props.created).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Created: {moment(this.props.created).fromNowOrNow()}</p>
-        <p title={moment(this.props.updated).format('dddd, Do MMMM YYYY, h:mm:ss a')}>Updated: {moment(this.props.updated).fromNowOrNow()}</p>
+        <RelativeDate date={this.props.created} label={"Created: "} />
+        <RelativeDate date={this.props.updated} label={"Updated: "} />
         <Collapse>
           <Panel header="OAuth Settings"
                  showArrow={true}>
