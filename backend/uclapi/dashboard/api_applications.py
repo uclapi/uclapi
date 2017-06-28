@@ -272,6 +272,7 @@ def set_callback_url(request):
         "message": "Callback URL successfully changed.",
     })
 
+
 def set_uclu_scope(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Error: Request is not of method POST")
@@ -313,10 +314,11 @@ def set_uclu_scope(request):
             "message": "Scope successfully changed",
         })
 
+
 def update_scopes(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Error: Request is not of method POST")
-    
+
     try:
         app_id = request.POST["app_id"]
         scopes_json = request.POST["scopes"]

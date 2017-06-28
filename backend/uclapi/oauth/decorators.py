@@ -56,12 +56,12 @@ def oauth_token_check(required_scopes=None):
                 response.status_code = 400
                 return response
 
-            s = Scopes()
+            scopes = Scopes()
             for s in required_scopes:
-                if not s.check_scope(token.scope.scope_number):
+                if not scopes.check_scope(token.scope.scope_number, s):
                     response = JsonResponse({
                         "ok": False,
-                        "error": "No permission to access this data"
+                        "error": "The token provided does not have permission to access this data."
                     })
                     response.status_code = 400
                     return response
