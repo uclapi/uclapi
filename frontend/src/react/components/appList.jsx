@@ -12,71 +12,32 @@ const defaultHeaders = {
   'X-CSRFToken':Cookies.get('csrftoken') 
 }
 
-class AppNameField extends React.Component {
+class EditableTextField extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      name: '',
+      value: '',
       editing: false
-    };
+    }
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.updateName = this.updateName.bind(this);
   }
 
   handleChange(e){
     e.preventDefault();
-    this.setState({name: e.target.value});
-  }
-
-  updateName(data){
-    let values = {
-      name: this.state.name,
-      updated: data.date
-    };
-    this.props.update(this.props.appId, values);
-    this.setState({
-      name:'',
-      editing: false,
-    });
-  }
-
-  handleSubmit(e){
-    e.preventDefault();
-    let that = this;
-    fetch('/dashboard/api/rename/', {
-      method: 'POST',
-      credentials: 'include',
-      headers: defaultHeaders,
-      body: 'new_name=' + this.state.name +
-        '&app_id=' + this.props.appId
-    }).then((res)=>{
-      if(res.ok){return res.json();} 
-      throw new Error('An error occured');
-    }).then((json)=>{
-      if(json.success){
-        this.updateName(json);
-        return;
-      }
-      throw new Error(json.message);
-    }).catch((err)=>{
-      that.setState({
-        error: err.message
-      });
-    });
+    this.setState({value: e.target.value});
   }
 
   render(){
     return(<div>
       {this.state.editing ? (
-        <form className="pure-form" onSubmit={this.changeName}>
+        <form className="pure-form" onSubmit={this.handleSubmit}>
           <fieldset>
             <input 
               type="text"
               autoFocus
-              placeholder={this.props.name}
-              value={this.state.name}
+              placeholder={this.props.origValue}
+              value={this.state.value}
               onChange={this.handleChange}
             />
             <button 
@@ -96,9 +57,9 @@ class AppNameField extends React.Component {
         </form> 
       ):(
         <div>
-          <h2 style={{display:'inline', verticalAlign: 'middle'}}>{this.props.name}</h2>
+          <h2 style={{display:'inline', verticalAlign: 'middle'}}>{this.props.origValue}</h2>
           <button
-            className="pure-button pure-button-primary"
+            className="pure-button button-primary-inverted"
             onClick={()=>this.setState({editing:true})}
           >
             <i className="fa fa-pencil" aria-hidden="true"></i>
@@ -107,6 +68,57 @@ class AppNameField extends React.Component {
       )}
     </div>);
   }
+
+}
+
+class AppNameField extends EditableTextField {
+  constructor(props){
+    super(props);
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.updateName = this.updateName.bind(this);
+  }
+
+  updateName(data){
+    let values = {
+      name: this.state.value,
+      updated: data.date
+    };
+    this.props.update(this.props.appId, values);
+    this.setState({
+      value:'',
+      editing: false,
+    });
+  }
+
+  handleSubmit(e){
+    e.preventDefault();
+    let that = this;
+    fetch('/dashboard/api/rename/', {
+      method: 'POST',
+      credentials: 'include',
+      headers: defaultHeaders,
+      body: 'new_name=' + this.state.value +
+        '&app_id=' + this.props.appId
+    }).then((res)=>{
+      if(res.ok){return res.json();} 
+      throw new Error('An error occured');
+    }).then((json)=>{
+      if(json.success){
+        this.updateName(json);
+        return;
+      }
+      throw new Error(json.message);
+    }).catch((err)=>{
+      that.setState({
+        error: err.message
+      });
+    });
+  }
+}
+
+class OAuthCallbackField extends EditableTextField {
+
 }
 
 class DeleteButton extends React.Component {
@@ -188,6 +200,89 @@ class RelativeDate extends React.Component {
       </div>
     )
   }
+}
+
+class OAuthScopesForm extends React.Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
+      scopes: this.props.scopes
+    }
+  }
+
+  handleScopeChange(e){
+    e.preventDefault();
+    
+    this.setState((state)=>{
+      return update(state, {scopes:{[e.target.key]:{$set: e.target.checked}}});
+    });
+  }
+
+  submitScopes(e){
+    e.preventDefault();
+
+    let that = this;
+
+    var scopesData = [];
+
+    for (var i = 0; i < this.state.scopes.length; i++) {
+      scopesData.push(
+        {
+          "name": this.state.scopes[i].name,
+          "checked": this.state.scopes[i].enabled
+        }
+      )
+    }
+
+    var json = JSON.stringify(scopesData);
+
+    fetch('/dashboard/api/updatescopes/', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': Cookies.get('csrftoken')
+      },
+      body: 'app_id=' + this.props.appId + '&scopes=' + encodeURIComponent(json)
+    }).then((res)=>{
+      if (res.ok) {
+        return res.json()
+      } else {
+        throw new Error('An error occured');
+      }
+    }).then((json)=> {
+      if (!json.success) {
+        throw new Error(json.message);
+      }
+    }).catch((err)=>{
+      that.setState({
+        error: err.message
+      });
+    });
+  }
+
+  render(){
+    return(
+      <form onSubmit={this.submitScopes} className="pure-for">
+        {this.state.scopes.map((scope, index)=>{
+          return <input 
+                   key={index}
+                   type="checkbox"
+                   onChange={this.handleScopeChange}
+                   ref={"scope"+index}
+                   defaultChecked={scope.enabled} 
+                   name={"scope~" + scope.name} 
+                   className="scope-checkbox"
+                 >
+                   {scope.description}
+                 </input>;
+        })}
+      </form>
+
+    );
+  }
+
 }
 
 class App extends React.Component {
@@ -466,7 +561,7 @@ class App extends React.Component {
         <div className="pure-g">
           <div className="pure-u-1-2">
             <AppNameField
-              name={this.props.name}
+              origValue={this.props.name}
               update={this.props.update}
               appId={this.props.appId}
             />

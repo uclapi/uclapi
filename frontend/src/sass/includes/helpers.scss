@@ -90,6 +90,15 @@
   color: white;
 }
 
+.button-primary-inverted {
+  background-color: #fff;
+  color: #0078e7;
+
+  &:hover{
+    background-image:none;
+  }
+}
+
 .flexCentre{
   display: flex;
   align-items: center;
