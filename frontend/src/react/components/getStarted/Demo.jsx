@@ -367,7 +367,7 @@ export default class Demo extends React.Component {
     //   rootURL = 'https://uclapi.com';
     // }
 
-    let rootURL = '/';
+    let rootURL = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
 
     this.state = {
       schedule: "",
