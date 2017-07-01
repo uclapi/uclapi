@@ -377,36 +377,6 @@ class App extends React.Component {
     this.state.scopes[i].enabled = e.target.checked;
   }
 
-  updateRoomBookingsScope(e){
-    let that = this;
-
-    fetch('/dashboard/api/setscope/roombookings/', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-CSRFToken': Cookies.get('csrftoken')
-      },
-      body: 'app_id=' + this.props.appId + '&scope_status=' + e.target.checked
-    }).then((res)=>{
-      if(res.ok){
-        return res.json();
-      }else{
-        throw new Error('An error occured');
-      }
-    }).then((json)=>{
-      if(json.success){
-        // State Set OK
-      }else{
-        throw new Error(json.message);
-      }
-    }).catch((err)=>{
-      that.setState({
-        error: err.message
-      });
-    });
-  }
-
   render () {
     return <div className="app pure-u-1 pure-u-xl-1-2">
       <div className="card">
