@@ -46,6 +46,8 @@ def create_app(request):
         "userid": user.id
     })
 
+    s = Scopes()
+
     return PrettyJsonResponse({
         "success": True,
         "message": "App sucessfully created",
@@ -59,11 +61,7 @@ def create_app(request):
                 "client_id": new_app.client_id,
                 "client_secret": new_app.client_secret,
                 "callback_url": new_app.callback_url,
-                "scope": {
-                    "private_roombookings": new_app.scope.private_roombookings,
-                    "private_timetable": new_app.scope.private_timetable,
-                    "private_uclu": new_app.scope.private_uclu
-                }
+                "scopes": s.get_all_scopes()
             }
         }
     })
@@ -273,48 +271,6 @@ def set_callback_url(request):
     })
 
 
-def set_uclu_scope(request):
-    if request.method != "POST":
-        return HttpResponseBadRequest("Error: Request is not of method POST")
-
-    try:
-        app_id = request.POST["app_id"]
-        scope_status = request.POST["scope_status"] == "true"
-        user_id = request.session["user_id"]
-    except KeyError:
-        response = PrettyJsonResponse({
-            "success": False,
-            "message": "Request does not have app_id."
-        })
-        response.status_code = 400
-        return response
-    user = get_user_by_id(user_id)
-
-    apps = App.objects.filter(id=app_id, user=user)
-    if len(apps) == 0:
-        response = PrettyJsonResponse({
-            "success": False,
-            "message": "App does not exist."
-        })
-        response.status_code = 400
-        return response
-    else:
-        app = apps[0]
-        app.scope.private_uclu = scope_status
-        app.scope.save()
-
-        keen.add_event("App UCLU scope changed", {
-            "appid": app_id,
-            "userid": user.id,
-            "ucluscope": scope_status
-        })
-
-        return PrettyJsonResponse({
-            "success": True,
-            "message": "Scope successfully changed",
-        })
-
-
 def update_scopes(request):
     if request.method != "POST":
         return HttpResponseBadRequest("Error: Request is not of method POST")
@@ -357,7 +313,7 @@ def update_scopes(request):
         s = Scopes()
         try:
             for scope in scopes:
-                if scope["checked"]:
+                if "checked" in scope and scope["checked"]:
                     current = s.add_scope(current, scope["name"])
                 else:
                     current = s.remove_scope(current, scope["name"])
