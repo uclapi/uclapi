@@ -22,7 +22,7 @@ class AppPermissions extends React.Component {
              {
                 (this.props.scopes.length == 0) &&
                 <em>
-                    This app has not requested access to any of your personal UCL data. It will only be able to see public data, such as the public timetable and room bookings information. If you are expecting this app to show you any personal data, please contact the vendor.
+                    Apart from the data listed above, this app has not requested access to any of your personal UCL data. It will only be able to see public data, such as room bookings and the public timetable.
                 </em>
             }
             <ul>

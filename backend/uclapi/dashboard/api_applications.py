@@ -69,7 +69,10 @@ def create_app(request):
 
 def rename_app(request):
     if request.method != "POST":
-        return HttpResponseBadRequest("Error: Request is not of method POST")
+        return HttpResponseBadRequest(json.dumps({
+            "success": False,
+            "error": "Request is not of method POST"
+        }))
 
     try:
         app_id = request.POST["app_id"]
@@ -113,7 +116,10 @@ def rename_app(request):
 
 def regenerate_app_token(request):
     if request.method != "POST":
-        return HttpResponseBadRequest("Error: Request is not of method POST")
+        return HttpResponseBadRequest(json.dumps({
+            "success": False,
+            "error": "Request is not of method POST"
+        }))
 
     try:
         app_id = request.POST["app_id"]
@@ -159,7 +165,10 @@ def regenerate_app_token(request):
 
 def delete_app(request):
     if request.method != "POST":
-        return HttpResponseBadRequest("Error: Request is not of method POST")
+        return HttpResponseBadRequest(json.dumps({
+            "success": False,
+            "error": "Request is not of method POST"
+        }))
 
     try:
         app_id = request.POST["app_id"]
@@ -199,8 +208,10 @@ def delete_app(request):
 
 def set_callback_url(request):
     if request.method != "POST":
-        return HttpResponseBadRequest("Error: Request is not of method POST")
-
+        return HttpResponseBadRequest(json.dumps({
+            "success": False,
+            "error": "Request is not of method POST"
+        }))
     try:
         app_id = request.POST["app_id"]
         new_callback_url = request.POST["callback_url"]
@@ -273,7 +284,10 @@ def set_callback_url(request):
 
 def update_scopes(request):
     if request.method != "POST":
-        return HttpResponseBadRequest("Error: Request is not of method POST")
+        return HttpResponseBadRequest(json.dumps({
+            "success": False,
+            "error": "Request is not of method POST"
+        }))
 
     try:
         app_id = request.POST["app_id"]
