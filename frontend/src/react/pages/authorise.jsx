@@ -41,7 +41,7 @@ class AuthoriseApp extends React.Component {
             </form>
             <hr/>
             <em>
-              Apps you connect to UCL via the API (<a href="https://uclapi.com/">uclapi.com</a>) cannot access any data that is not shown above. Your personal details such as your home address, date of birth, UCL password and phone number are kept private and cannot be accessed even with these permissions. If you have any further questions please do not hesitate to contact us by email: <a href="mailto:isd.apiteam@ucl.ac.uk">isd.apiteam@ucl.ac.uk</a>.
+              { this.state.data.app_name } can only access the data shown above. Other personal details that UCL stores about you are kept private and secure. Have a question? Contact us at <a href="mailto:isd.apiteam@ucl.ac.uk">isd.apiteam@ucl.ac.uk</a>.
             </em> 
           </div>
           </div>

@@ -361,11 +361,13 @@ export default class Demo extends React.Component {
   constructor(props) {
     super(props);
 
-    let rootURL = 'http://localhost:8000';
+    // let rootURL = 'http://localhost:8000';
 
-    if (process.env.NODE_ENV === 'production') {
-      rootURL = 'https://uclapi.com';
-    }
+    // if (process.env.NODE_ENV === 'production') {
+    //   rootURL = 'https://uclapi.com';
+    // }
+
+    let rootURL = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
 
     this.state = {
       schedule: "",
