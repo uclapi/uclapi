@@ -60,6 +60,9 @@ def create_app(request):
                 "client_secret": new_app.client_secret,
                 "callback_url": new_app.callback_url,
                 "scopes": s.get_all_scopes()
+            },
+            "webhook": {
+                "verification_secret": new_app.webhook.verification_secret,
             }
         }
     })
