@@ -79,16 +79,24 @@ class Command(BaseCommand):
 
         unsent_requests = []
         for idx, webhook in enumerate(webhooks_to_enact):
-            payload = {}
+            payload = {
+                "service": "roombookings",
+                "type": "event",
+                "content": {}
+            }
 
             if "bookings_added" in webhook:
-                payload["bookings_added"] = webhook["bookings_added"]
+                payload["content"]["bookings_added"] = (
+                    webhook["bookings_added"]
+                )
             if "bookings_removed" in webhook:
-                payload["bookings_removed"] = webhook["bookings_removed"]
+                payload["content"]["bookings_removed"] = (
+                    webhook["bookings_removed"]
+                )
 
             webhooks_to_enact[idx]["payload"] = payload
 
-            if payload != {}:
+            if payload["content"] != {}:
                 unsent_requests.append(
                     grequests.post(
                         webhook["url"], json=payload, headers={
@@ -99,7 +107,7 @@ class Command(BaseCommand):
         grequests.map(unsent_requests)
 
         for webhook in webhooks_to_enact:
-            if webhook["payload"] != {}:
+            if webhook["payload"]["content"] != {}:
                 webhook_in_db = webhook["webhook_in_db"]
                 webhook_in_db.last_fired = timezone.now()
                 webhook_in_db.save()
