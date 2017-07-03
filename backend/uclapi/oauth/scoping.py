@@ -111,3 +111,16 @@ class Scopes:
 
             scopes.append(scope)
         return scopes
+
+    # Dump the scope map so that developers can track scopes with it
+    def get_scope_map(self):
+        scopes = []
+        for x in self.SCOPE_MAP.keys():
+            scope = {
+                "name": x,
+                "id": self.SCOPE_MAP[x][0],
+                "description": self.SCOPE_MAP[x][1]
+            }
+            scopes.append(scope)
+        scopes = sorted(scopes, key=lambda k:k["id"])
+        return scopes

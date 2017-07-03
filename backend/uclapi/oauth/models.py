@@ -41,3 +41,6 @@ class OAuthToken(models.Model):
         OAuthScope,
         on_delete=models.CASCADE
     )
+
+    # Whether the token is active or not
+    active = models.BooleanField(default=True)

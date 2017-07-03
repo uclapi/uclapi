@@ -66,6 +66,8 @@ def oauth_token_check(required_scopes=None):
                     response.status_code = 400
                     return response
 
+            kwargs['token'] = token
+
             return view_func(request, *args, **kwargs)
         return wrapped
     return oauth_token_and_scope

@@ -31,7 +31,7 @@ def authorise(request):
     state = request.GET.get("state", None)
     if not (client_id and state):
         return JsonResponse({
-            "ok": False,
+            "success": False,
             "error": "incorrect parameters supplied"
         })
 
@@ -39,7 +39,7 @@ def authorise(request):
         app = App.objects.get(client_id=client_id)
     except ObjectDoesNotExist:
         return JsonResponse({
-            "ok": False,
+            "success": False,
             "error": "App does not exist for client id"
         })
 
@@ -68,7 +68,7 @@ def shibcallback(request):
     appdata_signed = request.GET.get("appdata", None)
     if not appdata_signed:
         return JsonResponse({
-            "ok": False,
+            "success": False,
             "error": ("No signed app data returned from Shibboleth."
                       " Please use the authorise endpoint.")
         })
@@ -79,12 +79,12 @@ def shibcallback(request):
         appdata = signer.unsign(appdata_signed, max_age=300)
     except signing.BadSignature:
         return JsonResponse({
-            "ok": False,
+            "success": False,
             "error": "Bad signature. Please try login again."
         })
     except signing.SignatureExpired:
         return JsonResponse({
-            "ok": False,
+            "success": False,
             "error": "Signature has expired. Please try login again."
         })
 
@@ -177,7 +177,7 @@ def userdeny(request):
         raw_data_str = signer.unsign(signed_data, max_age=300)
     except:
         return JsonResponse({
-            "ok": False,
+            "success": False,
             "error": ("The signed data received was invalid."
                       " Please try the login process again. "
                       "If this issue persists, please contact support.")
@@ -187,7 +187,7 @@ def userdeny(request):
         data = json.loads(raw_data_str)
     except:
         return JsonResponse({
-            "ok": False,
+            "success": False,
             "error": ("The JSON data was not in the expected format."
                       " Please contact support.")
         })
@@ -209,7 +209,7 @@ def userallow(request):
             request.POST.get("signed_app_data"), max_age=300)
     except (signing.BadSignature, KeyError):
         return JsonResponse({
-            "ok": False,
+            "success": False,
             "error": ("The signed data received was invalid."
                       " Please try the login process again."
                       " If this issue persists, please contact support.")
@@ -219,7 +219,7 @@ def userallow(request):
         data = json.loads(raw_data_str)
     except ValueError:
         return JsonResponse({
-            "ok": False,
+            "success": False,
             "error": ("The JSON data was not in the expected format."
                       " Please contact support.")
         })
@@ -268,7 +268,7 @@ def token(request):
         validation_hmac = request.GET.get("client_secret_proof")
     except KeyError:
         return JsonResponse({
-            "ok": False,
+            "success": False,
             "error": ("The client did not provide"
                       " the requisite data to get a token.")
         })
@@ -278,7 +278,7 @@ def token(request):
         data_json = r.get(code).decode('ascii')
     except:
         return JsonResponse({
-            "ok": False,
+            "success": False,
             "error": ("The code received was invalid, or has expired."
                       " Please try again.")
         })
@@ -298,13 +298,13 @@ def token(request):
         hmac_b64 = base64.b64encode(hmac_digest).decode()
     except:
         return JsonResponse({
-            "ok": False,
+            "success": False,
             "error": "HMAC failed. Please contact support."
         })
 
     if hmac_b64 != validation_hmac:
         return JsonResponse({
-            "ok": False,
+            "success": False,
             "error": ("The HMAC check returned a different hash to"
                       " the proof that was supplied. "
                       "Please ensure that the client secret is correct"
@@ -371,7 +371,7 @@ def token(request):
     s = Scopes()
 
     oauth_data = {
-        "ok": True,
+        "success": True,
         "state": state,
         "client_id": app.client_id,
         "token": token.token,
@@ -382,22 +382,40 @@ def token(request):
 
 
 @oauth_token_check([])
-def userdata(request):
-    try:
-        token_code = request.GET.get("token")
-        token = OAuthToken.objects.get(token=token_code)
-    except ObjectDoesNotExist:
-        return JsonResponse({
-            "ok": False,
-            "error": "Invalid token given"
-        })
+def userdata(request, *args, **kwargs):
+    token = kwargs['token']
 
     return JsonResponse({
-        "ok": True,
+        "success": True,
         "full_name": token.user.full_name,
         "email": token.user.email,
         "given_name": token.user.given_name,
         "cn": token.user.cn,
         "department": token.user.department,
-        "upi": token.user.employee_id
+        "upi": token.user.employee_id,
+        "scope_number": token.scope.scope_number
+    })
+
+def scope_map(request):
+    s = Scopes()
+    scope_map = {
+        "scope_map": s.get_scope_map()
+    }
+    return JsonResponse(scope_map)
+
+@oauth_token_check([])
+def token_test(request, *args, **kwargs):
+    s = Scopes()
+
+    token = kwargs['token']
+
+    return JsonResponse({
+        "success": True,
+        "active": token.active,
+        "user_upi": token.user.employee_id,
+        "scopes": s.scope_dict_all(
+            current=token.scope.scope_number,
+            pretty_print=False
+        ),
+        "scope_number": token.scope.scope_number
     })
