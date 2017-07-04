@@ -12,7 +12,6 @@ class AppForm extends React.Component {
 
   submitForm(e){
     e.preventDefault();
-    let that = this;
     fetch('/dashboard/api/create/', {
       method: 'POST',
       credentials: 'include',
@@ -30,15 +29,15 @@ class AppForm extends React.Component {
     }).then((json)=>{
       if(json.success){
         let newApp = json.app;
-        newApp['name'] = that.refs.name.value;
-        that.refs.name.value = '';
-        that.props.add(newApp);
-        that.props.close();
+        newApp['name'] = this.refs.name.value;
+        this.refs.name.value = '';
+        this.props.add(newApp);
+        this.props.close();
       }else{
         throw new Error(json.message);
       }
     }).catch((err)=>{
-      that.setState({
+      this.setState({
         error: err.message
       });
     });

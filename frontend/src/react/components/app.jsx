@@ -50,13 +50,10 @@ class AppNameField extends EditableTextField {
       }
       throw new Error(json.message);
     }).catch((err)=>{
-      this.setState({
-        error: err.message
-      });
+      this.props.setError(err.message);
     });
   }
 }
-
 
 class DeleteButton extends React.Component {
   constructor(props){
@@ -93,9 +90,7 @@ class DeleteButton extends React.Component {
         throw new Error(json.message);
       }
     }).catch((err)=>{
-      this.setState({
-        error: err.message
-      });
+      this.props.setError(err.message);
     });
   }
 
@@ -110,7 +105,8 @@ class DeleteButton extends React.Component {
 
 DeleteButton.propTypes = {
   appId: React.PropTypes.string.isRequired,
-  remove: React.PropTypes.func.isRequired
+  remove: React.PropTypes.func.isRequired,
+  setError: React.PropTypes.func
 };
 
 class OAuthCallbackField extends React.Component {
@@ -159,9 +155,7 @@ class OAuthCallbackField extends React.Component {
         throw new Error(json.message);
       }
     }).catch((err)=>{
-      this.setState({
-        error: err.message
-      });
+      this.props.setError(err.message);
     });
   }
 
@@ -195,7 +189,8 @@ class OAuthCallbackField extends React.Component {
 
 OAuthCallbackField.propTypes = {
   callbackUrl: React.PropTypes.string,
-  appId: React.PropTypes.string.isRequired
+  appId: React.PropTypes.string.isRequired,
+  setError: React.PropTypes.func
 };
 
 class OAuthScopesForm extends React.Component {
@@ -255,9 +250,7 @@ class OAuthScopesForm extends React.Component {
       });
       setTimeout(()=>{this.setState({scopesSaved: false});}, 5000);
     }).catch((err)=>{
-      this.setState({
-        error: err.message
-      });
+      this.props.setError(err.message);
     });
   }
 
@@ -294,7 +287,8 @@ class OAuthScopesForm extends React.Component {
 
 OAuthScopesForm.propTypes = {
   scopes: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
-  appId: React.PropTypes.string.isRequired
+  appId: React.PropTypes.string.isRequired,
+  setError: React.PropTypes.func
 };
 
 class App extends React.Component {
@@ -305,6 +299,14 @@ class App extends React.Component {
     };
     this.regenToken = this.regenToken.bind(this);
     this.regenConfirm = this.regenConfirm.bind(this);
+    this.setError = this.setError.bind(this);
+  }
+
+  setError(msg){
+    this.setState({
+      error: msg
+    });
+    setTimeout(()=>{this.setState({error:''});}, 5000);
   }
 
   regenToken(){
@@ -321,7 +323,7 @@ class App extends React.Component {
       if(res.ok){
         return res.json();
       } else {
-        throw new Error('An error occured');
+        throw new Error('Unable to regen token');
       }
     }).then((json)=>{
       if(json.success){
@@ -337,9 +339,7 @@ class App extends React.Component {
         throw new Error(json.message);
       }
     }).catch((err)=>{
-      this.setState({
-        error: err.message
-      });
+      this.setError(err.message);
     });
   }
 
@@ -359,6 +359,7 @@ class App extends React.Component {
               origValue={this.props.name}
               update={this.props.update}
               appId={this.props.appId}
+              setError={this.setError}
             />
           </div>
           <div className="pure-u-1-2">
@@ -366,6 +367,7 @@ class App extends React.Component {
               <DeleteButton
                 appId={this.props.appId}
                 remove={this.props.remove}
+                setError={this.setError}
               />
             </div>
           </div>
@@ -373,14 +375,18 @@ class App extends React.Component {
         <div className="pure-g">
           <div className="pure-u-1">
             API Token
-            <CopyActionField val={this.props.appKey} action={this.regenConfirm} icon="fa fa-refresh" />
+            <CopyActionField 
+              setError={this.setError}
+              val={this.props.appKey} 
+              action={this.regenConfirm}
+              icon="fa fa-refresh" 
+            />
           </div>
         </div>
         <RelativeDate date={this.props.created} label={"Created: "} />
         <RelativeDate date={this.props.updated} label={"Updated: "} />
         <Collapse>
-          <Panel header="OAuth Settings"
-                 showArrow={true}>
+          <Panel header="OAuth Settings" showArrow={true}>
             <div>
               OAuth allows you to create apps that provide users with personal data.
               More information can be found in the <a href="https://docs.uclapi.com">docs</a>.<br/><br/>
@@ -393,15 +399,18 @@ class App extends React.Component {
               <OAuthCallbackField
                 callbackUrl={this.props.callbackUrl}
                 appId={this.props.appId}
+                setError={this.setError}
               />
               <h4>OAuth Scope</h4>
               <em>
                 The scope defines which personal data your application will be able to access.
-                For more information, please consult the <a href="https://uclapi.com/docs">docs</a> for more details on scope.
+                For more information, please consult the <a href="https://uclapi.com/docs">docs</a>
+                for more details on scope.
               </em>
               <OAuthScopesForm
                 scopes={this.props.scopes}
                 appId={this.props.appId}
+                setError={this.setError}
               />
             </div>
           </Panel>
