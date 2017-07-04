@@ -37,7 +37,7 @@ sudo mkdir /opt/oracle
 
 rm -rf /opt/oracle/instantclient_$ORACLE_VERSION
 
-wget -O instantclient.zip "$ORACLE_INSTANTCLIENT_BASIC_URL" 
+wget -O instantclient.zip "$ORACLE_INSTANTCLIENT_BASIC_URL"
 wget -O instantclientsdk.zip "$ORACLE_INSTANTCLIENT_SDK_URL"
 
 sudo unzip -d/opt/oracle temp/instantclient.zip
@@ -230,5 +230,5 @@ If those commands work you should be able to navigate to `http://localhost:8000/
 
 ## Testing
 We're an amazing project, so obviously we have tests :sparkles:  
-Make sure you have the requirements installed in your virtual environment, and then run:  
-`python manage.py test --testrunner 'roombookings.custom_test_runner.NoDbTestRunner'`
+Make sure you have the requirements installed in your virtual environment, `cd` into `backend/uclapi` and then run :  
+`python manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner'`
