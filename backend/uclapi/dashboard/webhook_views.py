@@ -141,6 +141,10 @@ def edit_webhook(request):
     return JsonResponse({
         "ok": True,
         "message": "Webhook sucessfully changed.",
+        "url": webhook.url,
+        "roomid": webhook.roomid,
+        "siteid": webhook.siteid,
+        "contact": webhook.contact
     })
 
 
