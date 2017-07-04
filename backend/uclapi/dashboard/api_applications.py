@@ -91,7 +91,7 @@ def rename_app(request):
 
     user = get_user_by_id(user_id)
 
-    apps = App.objects.filter(id=app_id, user=user)
+    apps = App.objects.filter(id=app_id, user=user, deleted=False)
     if len(apps) == 0:
         response = PrettyJsonResponse({
             "success": False,
@@ -200,7 +200,8 @@ def delete_app(request):
         return response
     else:
         app = apps[0]
-        app.delete()
+        app.deleted = True
+        app.save()
 
         keen_add_event.delay("App deleted", {
             "appid": app_id,

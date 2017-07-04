@@ -147,7 +147,7 @@ def dashboard(request):
         "apps": []
     }
 
-    user_apps = App.objects.filter(user=user)
+    user_apps = App.objects.filter(user=user, deleted=False)
 
     s = Scopes()
 
