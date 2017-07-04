@@ -26,7 +26,7 @@ const Example = (title, imageLink, description, link, key) => (
   </Card>
 );
 
-const staticRoot = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}/static/images/`;
+const staticRoot = `${location.protocol}//${location.hostname}${location.port ? ':' + location.port : ''}/static/`;
 
 const examples = [
   {
