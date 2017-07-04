@@ -110,6 +110,3 @@ node_modules
 # Ignore VS files
 .vscode/
 .vs/
-
-# Static files
-static/
