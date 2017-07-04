@@ -22,12 +22,19 @@ def verify_ownership(webhook_url, ownership_challenge, verification_secret):
         "challenge": ownership_challenge,
         "verification_secret": verification_secret,
     }
-    req = requests.post(webhook_url, json=payload)
+
     try:
+        req = requests.post(webhook_url, json=payload, timeout=3)
         resp = req.json()
-    except ValueError:  # check whether this is the right error to except
+    except (
+        ValueError,
+        requests.exceptions.Timeout,
+        requests.exceptions.ConnectionError
+    ):
         return False
     else:
+        if "challenge" not in resp.keys():
+            return False
         return (
             resp["challenge"] ==
             ownership_challenge
@@ -38,9 +45,7 @@ def is_url_safe(url):
     if url[:8] != "https://":
         return False
 
-    try:
-        validators.url(url, public=True)
-    except validators.ValidationFailure:
+    if not validators.url(url, public=True):
         return False
 
     forbidden_urls = ["uclapi.com", "staging.ninja"]
