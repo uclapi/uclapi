@@ -8,12 +8,22 @@ class Webhook extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      savedDbState : {
+        url: this.props.url,
+        siteid: this.props.siteid,
+        roomid: this.props.roomid,
+        contact: this.props.contact,
+      },
       url: this.props.url,
       siteid: this.props.siteid,
       roomid: this.props.roomid,
-      contact: this.props.roomid,
+      contact: this.props.contact,
       verificationSecret: this.props.verification_secret,
-      enabled: this.props.url === '' ? false : true,
+      webhookEnabled: this.props.url === '' ? false : true,
+      loading: false,
+      error: '',
+      webhookUpdateSuccess: '',
+      changesMade: false
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -23,6 +33,7 @@ class Webhook extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    this.setState({ loading: true, error: '' });
 
     fetch('dashboard/api/webhook/edit/', {
       method: 'POST',
@@ -38,19 +49,46 @@ class Webhook extends React.Component {
       `&app_id=${this.props.appId}`
     })
     .then((res) => {
-      console.log(res);
       return res.json();
     })
     .then((json) => {
+      this.setState({ loading: false });
       if (json.ok) {
-        setState({ enabled: true })
+        this.setState({
+          webhookEnabled: true,
+          webhookUpdateSuccess: '  ✅' ,
+          savedDbState: {
+            url: json.url,
+            roomid: json.roomid,
+            siteid: json.siteid,
+            contact: json.contact,
+          },
+          changesMade: false,
+        });
+        setTimeout(() => {
+          this.setState({ webhookUpdateSuccess: '' });
+        }, 3000);
+      } else {
+        this.setState({ error: `Error: ${json.message}` });
       }
+    })
+    .catch(() => {
+      this.setState({ loading: false, error: 'Error: An unexpected error ocurred.'});
     });
   }
 
   handleChange(e) {
+
     this.setState({
       [e.target.id]: e.target.value,
+    }, () => {
+      const changesMade = (
+        this.state.url !== this.state.savedDbState.url ||
+        this.state.siteid !== this.state.savedDbState.siteid ||
+        this.state.roomid !== this.state.savedDbState.roomid ||
+        this.state.contact !== this.state.savedDbState.contact
+      );
+      this.setState({ changesMade });
     });
   }
 
@@ -67,7 +105,6 @@ class Webhook extends React.Component {
       body: `app_id=${this.props.appId}`
     })
     .then((res) => {
-      console.log(res);
       return res.json();
     })
     .then((json) => {
@@ -137,14 +174,30 @@ class Webhook extends React.Component {
                 />
               </div>
             </div>
-            <button type="submit" className="pure-button pure-button-primary">
-              {this.state.enabled ? 'Update Webhook' : 'Create Webhook'}
+            <button
+              type="submit"
+              className="pure-button pure-button-primary"
+              disabled={this.state.loading || !this.state.changesMade}
+            >
+              {this.state.webhookEnabled ? 'Update Webhook' : 'Create Webhook'}
             </button>
+            <label>{this.state.webhookUpdateSuccess}</label>
+            <br />
+            <label>{this.state.error}</label>
           </fieldset>
         </form>
       </div>
     );
   }
 }
+
+Webhook.propTypes = {
+  url: React.PropTypes.string.isRequired,
+  siteid: React.PropTypes.string.isRequired,
+  roomid: React.PropTypes.string.isRequired,
+  contact: React.PropTypes.string.isRequired,
+  verification_secret: React.PropTypes.string.isRequired,
+  appId: React.PropTypes.string.isRequired,
+};
 
 export default Webhook;
