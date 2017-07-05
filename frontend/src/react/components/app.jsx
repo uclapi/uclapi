@@ -45,8 +45,7 @@ class AppNameField extends EditableTextField {
       throw new Error('Unable to change name.');
     }).then((json)=>{
       if(json.success){
-        this.updateName(json);
-        return;
+        return this.updateName(json);
       }
       throw new Error(json.message);
     }).catch((err)=>{
@@ -72,23 +71,14 @@ class DeleteButton extends React.Component {
     fetch('/dashboard/api/delete/', {
       method: 'POST',
       credentials: 'include',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-CSRFToken': Cookies.get('csrftoken')
-      },
+      headers:defaultHeaders,
       body: 'app_id=' + this.props.appId
     }).then((res)=>{
-      if(res.ok){
-        return res.json();
-      }else{
-        throw new Error('Unable to delete app');
-      }
+      if(res.ok){ return res.json(); }
+      throw new Error('Unable to delete app');
     }).then((json)=>{
-      if(json.success){
-        this.props.remove(this.props.appId);
-      }else{
-        throw new Error(json.message);
-      }
+      if(json.success){ return this.props.remove(this.props.appId); }
+      throw new Error(json.message);
     }).catch((err)=>{
       this.props.setError(err.message);
     });
@@ -134,26 +124,18 @@ class OAuthCallbackField extends React.Component {
     fetch('/dashboard/api/setcallbackurl/', {
       method: 'POST',
       credentials: 'include',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-CSRFToken': Cookies.get('csrftoken')
-      },
+      headers: defaultHeaders,
       body: 'app_id=' + this.props.appId + '&callback_url=' + encodeURIComponent(this.state.callbackUrl)
     }).then((res)=>{
-      if(res.ok){
-        return res.json();
-      }else{
-        throw new Error('Unable to save callback URL.');
-      }
+      if(res.ok){ return res.json(); }
+      throw new Error('Unable to save callback URL.');
     }).then((json)=>{
       if(json.success){
-        this.setState({
-          saved: true,
-        });
+        this.setState({saved: true});
         setTimeout(()=>{this.setState({saved:false});}, 5000);
-      }else{
-        throw new Error(json.message);
+        return;
       }
+      throw new Error(json.message);
     }).catch((err)=>{
       this.props.setError(err.message);
     });
@@ -218,12 +200,10 @@ class OAuthScopesForm extends React.Component {
     var scopesData = [];
 
     for (const scope of this.state.scopes) {
-      scopesData.push(
-        {
-          'name': scope.name,
-          'checked': scope.enabled
-        }
-      );
+      scopesData.push({
+        'name': scope.name,
+        'checked': scope.enabled
+      });
     }
 
     var json = JSON.stringify(scopesData);
@@ -231,23 +211,14 @@ class OAuthScopesForm extends React.Component {
     fetch('/dashboard/api/updatescopes/', {
       method: 'POST',
       credentials: 'include',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-CSRFToken': Cookies.get('csrftoken')
-      },
+      headers: defaultHeaders,
       body: 'app_id=' + this.props.appId + '&scopes=' + encodeURIComponent(json)
     }).then((res)=>{
-      if (res.ok) {
-        return res.json();
-      }
+      if (res.ok) { return res.json(); }
       throw new Error('Unable to save scopes.');
     }).then((json)=> {
-      if (!json.success) {
-        throw new Error(json.message);
-      }
-      this.setState({
-        scopesSaved: true
-      });
+      if (!json.success) { throw new Error(json.message); }
+      this.setState({ scopesSaved: true });
       setTimeout(()=>{this.setState({scopesSaved: false});}, 5000);
     }).catch((err)=>{
       this.props.setError(err.message);
@@ -314,17 +285,11 @@ class App extends React.Component {
     fetch('/dashboard/api/regen/', {
       method: 'POST',
       credentials: 'include',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-CSRFToken':Cookies.get('csrftoken') 
-      },
+      headers: defaultHeaders,
       body: 'app_id=' + this.props.appId
     }).then((res)=>{
-      if(res.ok){
-        return res.json();
-      } else {
-        throw new Error('Unable to regen token.');
-      }
+      if(res.ok){ return res.json(); }
+      throw new Error('Unable to regen token.');
     }).then((json)=>{
       if(json.success){
         let values = {
@@ -332,12 +297,9 @@ class App extends React.Component {
           updated: json.app.date
         };
         this.props.update(that.props.appId, values);
-        this.setState({
-          error:''
-        });
-      }else{
-        throw new Error(json.message);
+        return;
       }
+      throw new Error(json.message);
     }).catch((err)=>{
       this.setError(err.message);
     });
