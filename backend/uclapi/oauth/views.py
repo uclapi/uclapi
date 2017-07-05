@@ -396,12 +396,14 @@ def userdata(request, *args, **kwargs):
         "scope_number": token.scope.scope_number
     })
 
+
 def scope_map(request):
     s = Scopes()
     scope_map = {
         "scope_map": s.get_scope_map()
     }
     return JsonResponse(scope_map)
+
 
 @oauth_token_check([])
 def token_test(request, *args, **kwargs):

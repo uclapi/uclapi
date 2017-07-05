@@ -21,11 +21,19 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='app',
             name='client_id',
-            field=models.CharField(default=dashboard.app_helpers.generate_app_client_id, max_length=33, unique=True),
+            field=models.CharField(
+                default=dashboard.app_helpers.generate_app_client_id,
+                max_length=33,
+                unique=True
+            ),
         ),
         migrations.AddField(
             model_name='app',
             name='client_secret',
-            field=models.CharField(default=dashboard.app_helpers.generate_app_client_secret, max_length=64, unique=True),
+            field=models.CharField(
+                default=dashboard.app_helpers.generate_app_client_secret,
+                max_length=64,
+                unique=True
+            ),
         ),
     ]

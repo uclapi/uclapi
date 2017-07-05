@@ -18,6 +18,10 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='app',
             name='scope',
-            field=models.ForeignKey(default=dashboard.models.App.create_scope, on_delete=django.db.models.deletion.CASCADE, to='oauth.OAuthScope'),
+            field=models.ForeignKey(
+                default=dashboard.models.App.create_scope,
+                on_delete=django.db.models.deletion.CASCADE,
+                to='oauth.OAuthScope'
+            ),
         ),
     ]

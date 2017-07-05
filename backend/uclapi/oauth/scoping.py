@@ -122,5 +122,5 @@ class Scopes:
                 "description": self.SCOPE_MAP[x][1]
             }
             scopes.append(scope)
-        scopes = sorted(scopes, key=lambda k:k["id"])
+        scopes = sorted(scopes, key=lambda k: k["id"])
         return scopes
