@@ -24,7 +24,7 @@ class AppForm extends React.Component {
       if(res.ok){
         return res.json();
       } else {
-        throw new Error('An error occured');
+        throw new Error('Unable to create a new app');
       }
     }).then((json)=>{
       if(json.success){

@@ -42,7 +42,7 @@ class AppNameField extends EditableTextField {
         '&app_id=' + this.props.appId
     }).then((res)=>{
       if(res.ok){return res.json();} 
-      throw new Error('An error occured');
+      throw new Error('Unable to change name.');
     }).then((json)=>{
       if(json.success){
         this.updateName(json);
@@ -81,7 +81,7 @@ class DeleteButton extends React.Component {
       if(res.ok){
         return res.json();
       }else{
-        throw new Error('An error occured');
+        throw new Error('Unable to delete app');
       }
     }).then((json)=>{
       if(json.success){
@@ -143,7 +143,7 @@ class OAuthCallbackField extends React.Component {
       if(res.ok){
         return res.json();
       }else{
-        throw new Error('An error occured');
+        throw new Error('Unable to save callback URL.');
       }
     }).then((json)=>{
       if(json.success){
@@ -240,7 +240,7 @@ class OAuthScopesForm extends React.Component {
       if (res.ok) {
         return res.json();
       }
-      throw new Error('An error occured');
+      throw new Error('Unable to save scopes.');
     }).then((json)=> {
       if (!json.success) {
         throw new Error(json.message);
@@ -323,7 +323,7 @@ class App extends React.Component {
       if(res.ok){
         return res.json();
       } else {
-        throw new Error('Unable to regen token');
+        throw new Error('Unable to regen token.');
       }
     }).then((json)=>{
       if(json.success){
@@ -415,7 +415,6 @@ class App extends React.Component {
             </div>
           </Panel>
         </Collapse>
-
         <label className="error">{this.state.error}</label>
         </div>
     </div>;
