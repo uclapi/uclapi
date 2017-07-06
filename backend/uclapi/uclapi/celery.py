@@ -2,7 +2,6 @@ from __future__ import absolute_import, unicode_literals
 
 import os
 from celery import Celery
-from django.conf import settings
 from dotenv import read_dotenv
 
 
@@ -18,6 +17,7 @@ app.config_from_object('django.conf.settings', namespace='CELERY')
 
 # app.conf.broker_url = settings.CELERY_BROKER_URL
 app.autodiscover_tasks()
+
 
 @app.task(bind=True)
 def task(self):

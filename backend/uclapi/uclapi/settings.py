@@ -200,7 +200,7 @@ with open(os.path.join(BASE_DIR, 'uclapi/UCLAPIAcceptableUsePolicy.txt'), 'r', e
 REDIS_UCLAPI_HOST = os.environ.get("REDIS_UCLAPI_HOST")
 
 # Celery Settings
-CELERY_BROKER_URL = 'redis://' + os.environ.get("REDIS_UCLAPI_HOST") + ':6379/0'
+CELERY_BROKER_URL = 'redis://' + REDIS_UCLAPI_HOST + ':6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
