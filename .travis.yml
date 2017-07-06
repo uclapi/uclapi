@@ -24,6 +24,8 @@ before_script:
   # Install cx_Oracle (which depends on Oracle IC)
   - cd ./../backend/uclapi
   - pip3 install $(cat requirements.txt | grep "cx-Oracle")
+  - sudo apt-get -y install redis-server
+  - sudo service redis-server restart
 script:
   - python ./manage.py migrate
   # codecov.io
