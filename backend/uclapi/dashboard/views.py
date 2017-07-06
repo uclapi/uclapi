@@ -2,7 +2,6 @@ import json
 import os
 from distutils.util import strtobool
 
-import keen
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import redirect, render
@@ -12,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from uclapi.settings import FAIR_USE_POLICY
 
 from .models import App, User, TemporaryToken
-
+from .tasks import keen_add_event_task as keen_add_event
 
 @csrf_exempt
 def shibboleth_callback(request):
@@ -54,7 +53,7 @@ def shibboleth_callback(request):
 
         new_user.save()
         request.session["user_id"] = new_user.id
-        keen.add_event("signup", {
+        keen_add_event.delay("signup", {
             "id": new_user.id,
             "email": eppn,
             "name": display_name
