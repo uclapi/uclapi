@@ -152,7 +152,6 @@ def log_api_call(view_func):
             "queryparams": queryparams
         }
 
-        print("Logging apicall")
         keen_add_event.delay("apicall", parameters)
 
         return view_func(request, *args, **kwargs)
