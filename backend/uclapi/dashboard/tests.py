@@ -9,7 +9,13 @@ from .app_helpers import is_url_safe, generate_api_token, \
     generate_app_id
 from .middleware.fake_shibboleth_middleware import FakeShibbolethMiddleWare
 from .models import App, User
-from .webhook_views import edit_webhook, user_owns_app
+from .webhook_views import (
+    edit_webhook,
+    user_owns_app,
+    verify_ownership,
+    is_url_safe,
+    refresh_verification_secret
+)
 
 
 class DashboardTestCase(TestCase):
@@ -321,3 +327,159 @@ class WebHookRequestViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(content["ok"])
         self.assertEqual(content["message"], "Webhook sucessfully changed.")
+
+
+class VerifyOwnershipTestCase(TestCase):
+    def mocked_request_correct_challenge_behaviour(*args, **kwargs):
+        class MockResponse:
+            def __init__(self, json_data, status_code):
+                self.json_data = json_data
+                self.status_code = status_code
+
+            def json(self):
+                return {
+                    "challenge": self.json_data["challenge"]
+                }
+
+        return MockResponse(kwargs['json'], 200)
+
+    def mocked_request_incorrect_challenge_behaviour(*args, **kwargs):
+        class MockResponse:
+            def __init__(self, json_data, status_code):
+                self.json_data = json_data
+                self.status_code = status_code
+
+            def json(self):
+                return {
+                    "challenge": self.json_data["challenge"] + "1"
+                }
+
+        return MockResponse(kwargs['json'], 200)
+
+    @patch(
+        "requests.post",
+        side_effect=mocked_request_correct_challenge_behaviour
+    )
+    def test_verify_ownership_success(self, mock):
+        self.assertTrue(
+            verify_ownership("https://bestapp", "1234", "secret")
+        )
+
+    @patch(
+        "requests.post",
+        side_effect=mocked_request_incorrect_challenge_behaviour
+    )
+    def test_verify_ownership_failure(self, mock):
+        self.assertFalse(
+            verify_ownership("https://bestapp", "1234", "secret")
+        )
+
+
+class URLSafetyTestCase(TestCase):
+    def test_is_url_safe_full_success(self):
+        self.assertTrue(
+            is_url_safe("https://example.com")
+        )
+
+    def test_is_url_safe_https_failure(self):
+        self.assertFalse(
+            is_url_safe("http://example.com")
+        )
+
+    def test_is_url_safe_validators_failure(self):
+        self.assertFalse(
+            is_url_safe("https://asdasd.asd.asd.asd.1234")
+        )
+
+    def test_is_url_safe_validators_failure_private(self):
+        self.assertFalse(
+            is_url_safe("https://127.0.0.1")
+        )
+
+    def test_is_url_safe_validators_failure_private2(self):
+        self.assertFalse(
+            is_url_safe("https://10.0.0.1")
+        )
+
+    def test_is_url_safe_forbidden(self):
+        self.assertFalse(
+            is_url_safe("https://uclapi.com/test/test")
+        )
+
+    def test_is_url_safe_forbidden2(self):
+        self.assertFalse(
+            is_url_safe("https://staging.ninja/test/test")
+        )
+
+
+class RefreshVerifcationSecretViewTests(TestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+
+        self.user1 = User.objects.create(cn="test1", employee_id=1)
+        self.app1 = App.objects.create(user=self.user1, name="An App")
+
+        self.user2 = User.objects.create(cn="test2", employee_id=2)
+        self.app2 = App.objects.create(user=self.user2, name="Another App")
+
+    def test_refresh_verification_secret_GET(self):
+        request = self.factory.get('/')
+        response = refresh_verification_secret(request)
+
+        content = json.loads(response.content.decode())
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["ok"])
+        self.assertEqual(content["message"], "Request is not of method POST")
+
+    def test_refresh_verification_secret_POST_missing_parameters(self):
+        request = self.factory.post('/')
+        response = refresh_verification_secret(request)
+
+        content = json.loads(response.content.decode())
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["ok"])
+        self.assertEqual(
+            content["message"],
+            "Request is missing parameters. Should have app_id"
+            " as well as a sessionid cookie"
+        )
+
+    def test_refresh_verification_secret_POST_user_does_not_own_app(self):
+        request = self.factory.post(
+            '/',
+            {
+                'app_id': self.app2.id
+            }
+        )
+        request.session = {'user_id': self.user1.id}
+        response = refresh_verification_secret(request)
+
+        content = json.loads(response.content.decode())
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["ok"])
+        self.assertEqual(
+            content["message"],
+            "App does not exist or user is lacking permission."
+        )
+
+    def test_refresh_verification_secret_POST_success(
+        self
+    ):
+
+        request = self.factory.post(
+            '/',
+            {
+                'app_id': self.app1.id
+            }
+        )
+        request.session = {'user_id': self.user1.id}
+        response = refresh_verification_secret(request)
+
+        content = json.loads(response.content.decode())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(content["ok"])
+        self.assertTrue("new_secret" in content.keys())
