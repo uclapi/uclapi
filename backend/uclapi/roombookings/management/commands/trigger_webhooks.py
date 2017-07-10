@@ -62,7 +62,8 @@ class Command(BaseCommand):
                 )
             output = {
                 "webhook_in_db": webhook,
-                "url": webhook.url
+                "url": webhook.url,
+                "verification_secret": webhook.verification_secret
             }
             if "iterable_item_added" in ddiff:
                 output["bookings_added"] = list(filter(
@@ -81,7 +82,8 @@ class Command(BaseCommand):
         for idx, webhook in enumerate(webhooks_to_enact):
             payload = {
                 "service": "roombookings",
-                "type": "event",
+                "name": "bookings_changed",
+                "verification_secret": webhook["verification_secret"],
                 "content": {}
             }
 
@@ -100,7 +102,7 @@ class Command(BaseCommand):
                 unsent_requests.append(
                     grequests.post(
                         webhook["url"], json=payload, headers={
-                            "User-Agent": "uclapi-bot/1.0"
+                            "User-Agent": "uclapi-bot/1"
                         }
                     )
                 )

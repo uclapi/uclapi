@@ -18,7 +18,8 @@ def user_owns_app(user_id, app_id):
 
 def verify_ownership(webhook_url, ownership_challenge, verification_secret):
     payload = {
-        "type": "challenge",
+        "service": "webhook",
+        "name": "challenge",
         "challenge": ownership_challenge,
         "verification_secret": verification_secret,
     }
