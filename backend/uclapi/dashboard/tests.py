@@ -302,7 +302,8 @@ class WebHookRequestViewTests(TestCase):
         self.assertEqual(
             content["message"],
             "Ownership of webhook can't be verified."
-            "[Link to relevant docs here]"
+            "Make sure to follow the documentation: "
+            "https://docs.uclapi.com/#challenge-event"
         )
 
     @patch("dashboard.webhook_views.verify_ownership", lambda *args: True)
