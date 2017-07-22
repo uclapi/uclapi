@@ -148,7 +148,6 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
         self.assertFalse(content["ok"])
         self.assertEqual(content["error"], "Token does not exist.")
 
-
     def test_decorator_no_nonce(self):
         # create User, App, and OAuth it
         user_ = User.objects.create(
@@ -181,7 +180,6 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             content["error"],
             "Nonce not supplied."
         )
-
 
     def test_decorator_nonce_incorrect(self):
         # create User, App, and OAuth it
@@ -216,7 +214,6 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             content["error"],
             "Nonce does not exist."
         )
-
 
     def test_decorator_client_secret_verification_failed(self):
         # create User, App, and OAuth it
@@ -255,7 +252,6 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             content["error"],
             "Client secret and nonce HMAC verification failed."
         )
-
 
     def test_decorator_no_permission_to_access(self):
         user_ = User.objects.create(
@@ -317,7 +313,6 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             "The token provided does not have permission"
             " to access this data."
         )
-
 
     def test_decorator_everything_passes(self):
         user_ = User.objects.create(
