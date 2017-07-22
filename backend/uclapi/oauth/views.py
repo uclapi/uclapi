@@ -456,7 +456,7 @@ def nonce(request):
         return response
 
     app = token.app
-    hmac_digest = hmac.new(bytes(app.client_secret, 'ascii'), 
+    hmac_digest = hmac.new(bytes(app.client_secret, 'ascii'),
                            msg=token_code.encode('ascii'),
                            digestmod=hashlib.sha256).digest()
     hmac_b64 = base64.b64encode(hmac_digest).decode()
