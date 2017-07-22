@@ -83,7 +83,8 @@ def oauth_token_check(required_scopes=None):
             if client_secret_proof != hmac_b64:
                 response = JsonResponse({
                     "ok": False,
-                    "error": "Client secret and nonce HMAC verification failed."
+                    "error":
+                        "Client secret and nonce HMAC verification failed."
                 })
                 response.status_code = 400
                 return response

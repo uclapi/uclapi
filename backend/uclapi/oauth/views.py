@@ -423,6 +423,7 @@ def token_test(request, *args, **kwargs):
         "scope_number": token.scope.scope_number
     })
 
+
 def nonce(request):
     try:
         client_secret_proof = request.GET['client_secret_proof']
@@ -455,9 +456,9 @@ def nonce(request):
         return response
 
     app = token.app
-    hmac_digest = hmac.new(bytes(app.client_secret, 'ascii'),
-                            msg=token_code.encode('ascii'),
-                            digestmod=hashlib.sha256).digest()
+    hmac_digest = hmac.new(bytes(app.client_secret, 'ascii'), 
+                           msg=token_code.encode('ascii'),
+                           digestmod=hashlib.sha256).digest()
     hmac_b64 = base64.b64encode(hmac_digest).decode()
     if client_secret_proof != hmac_b64:
         response = JsonResponse({
@@ -476,5 +477,5 @@ def nonce(request):
 
     return JsonResponse({
         "nonce": nonce,
-        "expiry": str(expiry_time)    
+        "expiry": str(expiry_time)
     })
