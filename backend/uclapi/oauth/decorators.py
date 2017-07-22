@@ -56,6 +56,14 @@ def oauth_token_check(required_scopes=None):
                 response.status_code = 400
                 return response
 
+            # Remove nonce from Redis once used to protect against replay attacks.
+            # This is in a try...except to prevent against the edge case when the code has expired
+            # between getting and deleting.
+            try:
+                r.delete(nonce)
+            except:
+                pass
+
             try:
                 token = OAuthToken.objects.get(token=token_code)
             except ObjectDoesNotExist:

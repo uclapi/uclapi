@@ -277,12 +277,21 @@ def token(request):
     r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
     try:
         data_json = r.get(code).decode('ascii')
+       
     except:
         return JsonResponse({
             "ok": False,
             "error": ("The code received was invalid, or has expired."
                       " Please try again.")
         })
+
+    # Remove code from Redis once used to protect against replay attacks.
+    # This is in a try...except to prevent against the edge case when the code has expired
+    # between getting and deleting.
+    try:
+        r.delete(code)
+    except:
+        pass
 
     data = json.loads(data_json)
 
