@@ -1,12 +1,4 @@
-import base64
-import hashlib
-import hmac
-import redis
-
-from django.core.exceptions import ObjectDoesNotExist
-
 from roombookings.helpers import PrettyJsonResponse as JsonResponse
-from uclapi.settings import REDIS_UCLAPI_HOST
 
 from .models import OAuthToken
 from .scoping import Scopes
@@ -37,10 +29,10 @@ def oauth_token_check(required_scopes=None):
 
             try:
                 token = OAuthToken.objects.get(token=token_code)
-            except Token.DoesNotExist:
+            except OAuthToken.DoesNotExist:
                 response = JsonResponse({
                     "ok": False,
-                    "error": "Token does not exist"
+                    "error": "Token does not exist."
                 })
                 response.status_code = 400
                 return response
@@ -48,7 +40,7 @@ def oauth_token_check(required_scopes=None):
             if token.app.client_secret != client_secret:
                 response = JsonResponse({
                     "ok": False,
-                    "error": "Client secret incorrect"
+                    "error": "Client secret incorrect."
                 })
                 response.status_code = 400
                 return response
