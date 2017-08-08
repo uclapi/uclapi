@@ -12,7 +12,7 @@ def oauth_token_check(required_scopes=None):
             except KeyError:
                 response = JsonResponse({
                     "ok": False,
-                    "error": "No Client Secret provided"
+                    "error": "No Client Secret provided."
                 })
                 response.status_code = 400
                 return response

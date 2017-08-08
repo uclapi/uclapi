@@ -1,6 +1,3 @@
-import base64
-import hashlib
-import hmac
 import json
 import redis
 import unittest.mock
@@ -11,7 +8,6 @@ from rest_framework.test import APIRequestFactory
 from dashboard.models import App, User
 from uclapi.settings import REDIS_UCLAPI_HOST
 
-from .app_helpers import generate_nonce
 from .decorators import oauth_token_check
 from .models import OAuthScope, OAuthToken
 from .scoping import Scopes
@@ -105,7 +101,7 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
 
         self.factory = APIRequestFactory()
 
-    def test_decorator_no_client_secret_proof_provided(self):
+    def test_decorator_no_client_secret_provided(self):
         request = self.factory.get('/')
         response = self.dec_view(request)
 
@@ -113,12 +109,12 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertFalse(content["ok"])
-        self.assertEqual(content["error"], "No Client Secret Proof provided")
+        self.assertEqual(content["error"], "No Client Secret provided.")
 
     def test_decorator_no_token_provided(self):
         request = self.factory.get(
             '/',
-            {'client_secret_proof': 'not_a_real_proof'}
+            {'client_secret': 'not_a_real_secret'}
         )
         response = self.dec_view(request)
 
@@ -129,14 +125,11 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
         self.assertEqual(content["error"], "No token provided via GET.")
 
     def test_decorator_nonexistent_token_provided(self):
-        r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
-        nonce = generate_nonce()
-        r.set(nonce, "blah", ex=30)
+
         request = self.factory.get(
             '/',
             {
-                'client_secret_proof': 'not_a_real_secret_proof',
-                'nonce': nonce,
+                'client_secret': 'not_a_real_secret',
                 'token': 'fake'
             }
         )
@@ -147,73 +140,6 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertFalse(content["ok"])
         self.assertEqual(content["error"], "Token does not exist.")
-
-    def test_decorator_no_nonce(self):
-        # create User, App, and OAuth it
-        user_ = User.objects.create(
-            email="test@ucl.ac.uk",
-            cn="test",
-            given_name="Test Test"
-        )
-        app_ = App.objects.create(user=user_, name="An App")
-        oauth_scope = OAuthScope.objects.create()
-        oauth_token = OAuthToken.objects.create(
-            app=app_,
-            user=user_,
-            scope=oauth_scope
-        )
-
-        request = self.factory.get(
-            '/',
-            {
-                'client_secret_proof': 'not_a_real_proof',
-                'token': oauth_token.token
-            }
-        )
-        response = self.dec_view(request)
-
-        content = json.loads(response.content.decode())
-
-        self.assertEqual(response.status_code, 400)
-        self.assertFalse(content["ok"])
-        self.assertEqual(
-            content["error"],
-            "Nonce not supplied."
-        )
-
-    def test_decorator_nonce_incorrect(self):
-        # create User, App, and OAuth it
-        user_ = User.objects.create(
-            email="test@ucl.ac.uk",
-            cn="test",
-            given_name="Test Test"
-        )
-        app_ = App.objects.create(user=user_, name="An App")
-        oauth_scope = OAuthScope.objects.create()
-        oauth_token = OAuthToken.objects.create(
-            app=app_,
-            user=user_,
-            scope=oauth_scope
-        )
-
-        request = self.factory.get(
-            '/',
-            {
-                'client_secret_proof': 'not_a_real_proof',
-                'nonce': 'thisisnotarealnonce',
-                'token': oauth_token.token
-            }
-        )
-        response = self.dec_view(request)
-
-        content = json.loads(response.content.decode())
-
-        self.assertEqual(response.status_code, 400)
-        self.assertFalse(content["ok"])
-        self.assertEqual(
-            content["error"],
-            "Nonce does not exist."
-        )
 
     def test_decorator_client_secret_verification_failed(self):
         # create User, App, and OAuth it
@@ -229,16 +155,10 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             user=user_,
             scope=oauth_scope
         )
-
-        r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
-        nonce = generate_nonce()
-        r.set(nonce, oauth_token.token, ex=30)
-
         request = self.factory.get(
             '/',
             {
-                'client_secret_proof': 'not_a_real_proof',
-                'nonce': nonce,
+                'client_secret': 'not_a_real_secret',
                 'token': oauth_token.token
             }
         )
@@ -250,7 +170,7 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
         self.assertFalse(content["ok"])
         self.assertEqual(
             content["error"],
-            "Client secret and nonce HMAC verification failed."
+            "Client secret incorrect."
         )
 
     def test_decorator_no_permission_to_access(self):
@@ -276,25 +196,11 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             scope=oauth_scope_user
         )
 
-        r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
-        nonce = generate_nonce()
-        r.set(nonce, oauth_token.token, ex=30)
-
-        verification_str = oauth_token.token + "&" + nonce
-
-        hmac_digest = hmac.new(
-            bytes(app_.client_secret, 'ascii'),
-            msg=verification_str.encode('ascii'),
-            digestmod=hashlib.sha256
-        ).digest()
-        hmac_b64 = base64.b64encode(hmac_digest).decode()
-
         request = self.factory.get(
             '/',
             {
                 'token': oauth_token.token,
-                'nonce': nonce,
-                'client_secret_proof': hmac_b64
+                'client_secret': app_.client_secret
             }
         )
 
@@ -328,25 +234,11 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             scope=oauth_scope
         )
 
-        r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
-        nonce = generate_nonce()
-        r.set(nonce, oauth_token.token, ex=30)
-
-        verification_str = oauth_token.token + "&" + nonce
-
-        hmac_digest = hmac.new(
-            bytes(app_.client_secret, 'ascii'),
-            msg=verification_str.encode('ascii'),
-            digestmod=hashlib.sha256
-        ).digest()
-        hmac_b64 = base64.b64encode(hmac_digest).decode()
-
         request = self.factory.get(
             '/',
             {
-                'client_secret_proof': hmac_b64,
-                'token': oauth_token.token,
-                'nonce': nonce
+                'client_secret': app_.client_secret,
+                'token': oauth_token.token
             }
         )
         response = self.dec_view(request)
