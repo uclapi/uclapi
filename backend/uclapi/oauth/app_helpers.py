@@ -15,9 +15,3 @@ def generate_random_verification_code():
     key = hexlify(os.urandom(40)).decode()
     final = "verify" + key
     return final
-
-
-def generate_nonce():
-    key = hexlify(os.urandom(20)).decode()
-    final = "nonce" + key
-    return final

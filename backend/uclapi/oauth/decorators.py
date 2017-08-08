@@ -16,11 +16,11 @@ def oauth_token_check(required_scopes=None):
     def oauth_token_and_scope(view_func):
         def wrapped(request, *args, **kwargs):
             try:
-                client_secret_proof = request.GET['client_secret_proof']
+                client_secret = request.GET['client_secret']
             except KeyError:
                 response = JsonResponse({
                     "ok": False,
-                    "error": "No Client Secret Proof provided"
+                    "error": "No Client Secret provided"
                 })
                 response.status_code = 400
                 return response
@@ -36,63 +36,19 @@ def oauth_token_check(required_scopes=None):
                 return response
 
             try:
-                nonce = request.GET["nonce"]
-            except KeyError:
-                response = JsonResponse({
-                    "ok": False,
-                    "error": "Nonce not supplied."
-                })
-                response.status_code = 400
-                return response
-
-            r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
-            try:
-                nonce_token = r.get(nonce).decode('ascii')
-            except:
-                response = JsonResponse({
-                    "ok": False,
-                    "error": "Nonce does not exist."
-                })
-                response.status_code = 400
-                return response
-
-            # Remove nonce from Redis once used to protect against replay attacks.
-            # This is in a try...except to prevent against the edge case when the code has expired
-            # between getting and deleting.
-            try:
-                r.delete(nonce)
-            except:
-                pass
-
-            try:
                 token = OAuthToken.objects.get(token=token_code)
-            except ObjectDoesNotExist:
+            except Token.DoesNotExist:
                 response = JsonResponse({
                     "ok": False,
-                    "error": "Token does not exist."
+                    "error": "Token does not exist"
                 })
                 response.status_code = 400
                 return response
 
-            if nonce_token != token_code:
+            if token.app.client_secret != client_secret:
                 response = JsonResponse({
                     "ok": False,
-                    "error": "Nonce supplied is not for the correct token."
-                })
-                response.status_code = 400
-                return response
-
-            app = token.app
-            verification_str = token_code + "&" + nonce
-            hmac_digest = hmac.new(bytes(app.client_secret, 'ascii'),
-                                   msg=verification_str.encode('ascii'),
-                                   digestmod=hashlib.sha256).digest()
-            hmac_b64 = base64.b64encode(hmac_digest).decode()
-            if client_secret_proof != hmac_b64:
-                response = JsonResponse({
-                    "ok": False,
-                    "error":
-                        "Client secret and nonce HMAC verification failed."
+                    "error": "Client secret incorrect"
                 })
                 response.status_code = 400
                 return response

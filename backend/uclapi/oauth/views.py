@@ -1,7 +1,4 @@
-import base64
 import datetime
-import hashlib
-import hmac
 import json
 import os
 
@@ -20,7 +17,7 @@ from dashboard.models import App, User
 from roombookings.helpers import PrettyJsonResponse as JsonResponse
 from uclapi.settings import REDIS_UCLAPI_HOST
 
-from .app_helpers import generate_random_verification_code, generate_nonce
+from .app_helpers import generate_random_verification_code
 from .decorators import oauth_token_check
 from .models import OAuthToken
 from .scoping import Scopes
@@ -266,7 +263,7 @@ def token(request):
     try:
         code = request.GET.get("code")
         client_id = request.GET.get("client_id")
-        validation_hmac = request.GET.get("client_secret_proof")
+        client_secret = request.GET.get("client_secret")
     except KeyError:
         return JsonResponse({
             "ok": False,
@@ -300,30 +297,13 @@ def token(request):
     upi = data["upi"]
 
     app = App.objects.get(client_id=client_id)
-    try:
-        hmac_digest = hmac.new(
-            bytes(app.client_secret, 'ascii'),
-            msg=code.encode('ascii'),
-            digestmod=hashlib.sha256).digest()
-        hmac_b64 = base64.b64encode(hmac_digest).decode()
-    except:
-        return JsonResponse({
+    if app.client_secret != client_secret:
+        response = JsonResponse({
             "ok": False,
-            "error": "HMAC failed. Please contact support."
+            "error": "Client secret incorrect"
         })
-
-    if hmac_b64 != validation_hmac:
-        return JsonResponse({
-            "ok": False,
-            "error": ("The HMAC check returned a different hash to"
-                      " the proof that was supplied. "
-                      "Please ensure that the client secret is correct"
-                      " and that the digest is base64 encoded.")
-        })
-
-    # Assume now that the digest was correct,
-    # and therefore the client secret is correct.
-    # Carry on and assign a token
+        response.status_code = 400
+        return response
 
     user = User.objects.get(employee_id=upi)
 
@@ -430,61 +410,4 @@ def token_test(request, *args, **kwargs):
             pretty_print=False
         ),
         "scope_number": token.scope.scope_number
-    })
-
-
-def nonce(request):
-    try:
-        client_secret_proof = request.GET['client_secret_proof']
-    except KeyError:
-        response = JsonResponse({
-            "ok": False,
-            "error": "No Client Secret Proof provided"
-        })
-        response.status_code = 400
-        return response
-
-    try:
-        token_code = request.GET["token"]
-    except KeyError:
-        response = JsonResponse({
-            "ok": False,
-            "error": "No token provided via GET."
-        })
-        response.status_code = 400
-        return response
-
-    try:
-        token = OAuthToken.objects.get(token=token_code)
-    except ObjectDoesNotExist:
-        response = JsonResponse({
-            "ok": False,
-            "error": "Token does not exist"
-        })
-        response.status_code = 400
-        return response
-
-    app = token.app
-    hmac_digest = hmac.new(bytes(app.client_secret, 'ascii'),
-                           msg=token_code.encode('ascii'),
-                           digestmod=hashlib.sha256).digest()
-    hmac_b64 = base64.b64encode(hmac_digest).decode()
-    if client_secret_proof != hmac_b64:
-        response = JsonResponse({
-            "ok": False,
-            "error": "Client secret HMAC verification failed."
-        })
-        response.status_code = 400
-        return response
-
-    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
-    nonce = generate_nonce()
-    r.set(nonce, token_code, ex=30)
-
-    expiry_time = datetime.datetime.now()
-    expiry_time = expiry_time + datetime.timedelta(0, 30)
-
-    return JsonResponse({
-        "nonce": nonce,
-        "expiry": str(expiry_time)
     })
