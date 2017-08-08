@@ -14,7 +14,7 @@ from .models import BookingA, BookingB, Equipment, Lock, Room
 @does_token_exist
 @throttle
 @log_api_call
-def get_rooms(request):
+def get_rooms(request, *args, **kwargs):
     # add them to iterables so can be filtered without if-else
     request_params = {}
 
@@ -54,7 +54,7 @@ def get_rooms(request):
 @does_token_exist
 @throttle
 @log_api_call
-def get_bookings(request):
+def get_bookings(request, *args, **kwargs):
     # if page_token exists, dont look for query
     page_token = request.GET.get('page_token')
     if page_token:
@@ -139,7 +139,7 @@ def get_bookings(request):
 @does_token_exist
 @throttle
 @log_api_call
-def get_equipment(request):
+def get_equipment(request, *args, **kwargs):
     roomid = request.GET.get("roomid")
     siteid = request.GET.get("siteid")
 
