@@ -1,12 +1,10 @@
 import json
-import redis
 import unittest.mock
 
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 
 from dashboard.models import App, User
-from uclapi.settings import REDIS_UCLAPI_HOST
 
 from .decorators import oauth_token_check
 from .models import OAuthScope, OAuthToken
