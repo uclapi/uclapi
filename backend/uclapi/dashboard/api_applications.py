@@ -19,7 +19,7 @@ def create_app(request):
     if request.method != "POST":
         response = PrettyJsonResponse({
             "success": False,
-            "message": "Request is not of method POST"
+            "error": "Request is not of method POST"
         })
         response.status_code = 400
         return response
