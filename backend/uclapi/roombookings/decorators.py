@@ -13,7 +13,6 @@ from .helpers import how_many_seconds_until_midnight
 
 
 def does_token_exist(view_func):
-
     def wrapped(request, *args, **kwargs):
         token = request.GET.get("token")
 
