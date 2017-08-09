@@ -1,11 +1,11 @@
 import re
 
 import datetime
-import keen
 import redis
 from django.core.exceptions import ObjectDoesNotExist
 
 from dashboard.models import App, TemporaryToken
+from dashboard.tasks import keen_add_event_task as keen_add_event
 from uclapi.settings import REDIS_UCLAPI_HOST
 
 from .helpers import PrettyJsonResponse
@@ -13,7 +13,6 @@ from .helpers import how_many_seconds_until_midnight
 
 
 def does_token_exist(view_func):
-
     def wrapped(request, *args, **kwargs):
         token = request.GET.get("token")
 
@@ -136,7 +135,7 @@ def log_api_call(view_func):
                 "temp_token": True
             }
 
-            keen.add_event("apicall", parameters)
+            keen_add_event.delay("apicall", parameters)
 
             return view_func(request, *args, **kwargs)
 
@@ -152,7 +151,7 @@ def log_api_call(view_func):
             "queryparams": queryparams
         }
 
-        keen.add_event("apicall", parameters)
+        keen_add_event.delay("apicall", parameters)
 
         return view_func(request, *args, **kwargs)
 
