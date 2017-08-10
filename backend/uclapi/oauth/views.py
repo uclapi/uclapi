@@ -125,7 +125,7 @@ def shibcallback(request):
         )
 
         user.save()
-        keen.add_event("signup", {
+        keen_add_event.delay("signup", {
             "id": user.id,
             "email": eppn,
             "name": display_name
