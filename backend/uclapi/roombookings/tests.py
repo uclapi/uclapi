@@ -324,7 +324,7 @@ class LogApiCallTestCase(TestCase):
         App.objects.all().delete()
         User.objects.all().delete()
 
-    @unittest.mock.patch('keen.add_event')
+    @unittest.mock.patch('dashboard.tasks.keen_add_event_task.delay')
     def test_log_api_call_temp_token(self, keen_instance):
         request = self.factory.get(
             '/roombookings/bookings', {'token': 'uclapi-temp-not-real'}
@@ -343,7 +343,7 @@ class LogApiCallTestCase(TestCase):
             'uclapi-temp-not-real'
         )
 
-    @unittest.mock.patch('keen.add_event')
+    @unittest.mock.patch('dashboard.tasks.keen_add_event_task.delay')
     def test_log_api_call_normal_token(self, keen_instance):
         user_ = User.objects.create(
             email="test@ucl.ac.uk", cn="test",

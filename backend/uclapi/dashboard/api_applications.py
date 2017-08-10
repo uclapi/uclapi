@@ -1,10 +1,13 @@
 import json
-import keen
 import os
 import tldextract
 from django.http import HttpResponseBadRequest
 
 from oauth.scoping import Scopes
+from django.http import HttpResponseBadRequest
+
+from dashboard.tasks import keen_add_event_task as keen_add_event
+
 from roombookings.helpers import PrettyJsonResponse
 
 from .models import App, User
@@ -40,7 +43,7 @@ def create_app(request):
     new_app = App(name=name, user=user)
     new_app.save()
 
-    keen.add_event("App created", {
+    keen_add_event.delay("App created", {
         "appid": new_app.id,
         "name": new_app.name,
         "userid": user.id
@@ -101,7 +104,7 @@ def rename_app(request):
         app.name = new_name
         app.save()
 
-        keen.add_event("App renamed", {
+        keen_add_event.delay("App renamed", {
             "appid": app.id,
             "new_name": app.name,
             "userid": user.id
@@ -147,7 +150,7 @@ def regenerate_app_token(request):
         app.regenerate_token()
         new_api_token = app.api_token
 
-        keen.add_event("App token regenerated", {
+        keen_add_event.delay("App token regenerated", {
             "appid": app.id,
             "userid": user.id
         })
@@ -195,7 +198,7 @@ def delete_app(request):
         app = apps[0]
         app.delete()
 
-        keen.add_event("App deleted", {
+        keen_add_event.delay("App deleted", {
             "appid": app_id,
             "userid": user.id
         })
@@ -270,7 +273,7 @@ def set_callback_url(request):
     app.callback_url = new_callback_url
     app.save()
 
-    keen.add_event("App callback URL changed", {
+    keen_add_event.delay("App callback URL changed", {
         "appid": app_id,
         "userid": user.id,
         "newcallbackurl": new_callback_url
@@ -343,7 +346,7 @@ def update_scopes(request):
             response.status_code = 400
             return response
 
-        keen.add_event("App scopes changed", {
+        keen_add_event.delay("App scopes changed", {
             "appid": app_id,
             "userid": user.id,
             "scopes": scopes
