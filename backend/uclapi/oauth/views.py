@@ -1,7 +1,6 @@
 import json
 import os
 
-import keen
 import redis
 from django.core import signing
 from django.core.exceptions import ObjectDoesNotExist
@@ -13,6 +12,7 @@ from django.views.decorators.csrf import (csrf_exempt, csrf_protect,
                                           ensure_csrf_cookie)
 
 from dashboard.models import App, User
+from dashboard.tasks import keen_add_event_task as keen_add_event
 from roombookings.helpers import PrettyJsonResponse as JsonResponse
 from uclapi.settings import REDIS_UCLAPI_HOST
 
