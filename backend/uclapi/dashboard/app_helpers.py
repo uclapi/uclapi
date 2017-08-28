@@ -1,5 +1,8 @@
-import os
 from binascii import hexlify
+from random import SystemRandom
+
+import os
+import string
 import textwrap
 
 
@@ -30,3 +33,18 @@ def generate_app_id():
     final = "A" + key
 
     return final
+
+
+def generate_app_client_id():
+    sr = SystemRandom()
+
+    client_id = ''.join(str(sr.randint(0, 9)) for _ in range(16))
+    client_id += "."
+    client_id += ''.join(str(sr.randint(0, 9)) for _ in range(16))
+
+    return client_id
+
+
+def generate_app_client_secret():
+    client_secret = hexlify(os.urandom(32)).decode()
+    return client_secret

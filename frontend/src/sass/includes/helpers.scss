@@ -90,6 +90,15 @@
   color: white;
 }
 
+.button-primary-inverted {
+  background-color: #fff;
+  color: #0078e7;
+
+  &:hover{
+    background-image:none;
+  }
+}
+
 .flexCentre{
   display: flex;
   align-items: center;
@@ -102,9 +111,6 @@
   justify-content: flex-end;
 }
 
-.padded {
-  margin: 5px;
-}
 
 .tooltip {
   span {
@@ -186,4 +192,8 @@
   border: 1px solid #e3e3e3;
   border-radius: 4px;
   @include inShadow(1)
+}
+
+.padded {
+  margin: 5px !important;
 }
