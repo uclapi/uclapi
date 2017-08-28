@@ -9,8 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dashboard', '0009_app_scope'),
-        ('dashboard', '0008_set_client_defaults'),
+        ('dashboard', '0008_populate_existing_secrets'),
     ]
 
     operations = [
@@ -19,8 +18,7 @@ class Migration(migrations.Migration):
             name='client_id',
             field=models.CharField(
                 default=dashboard.app_helpers.generate_app_client_id,
-                max_length=33,
-                unique=True
+                max_length=33
             ),
         ),
         migrations.AlterField(
@@ -28,8 +26,7 @@ class Migration(migrations.Migration):
             name='client_secret',
             field=models.CharField(
                 default=dashboard.app_helpers.generate_app_client_secret,
-                max_length=64,
-                unique=True
-            ),  
+                max_length=64
+            ),
         ),
     ]

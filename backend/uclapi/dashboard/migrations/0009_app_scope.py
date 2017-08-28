@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('oauth', '0001_initial'),
-        ('dashboard', '0008_auto_20170701_1626'),
+        ('dashboard', '0008_set_client_defaults'),
     ]
 
     operations = [
