@@ -24,7 +24,7 @@ class Command(BaseCommand):
 
         select_query = ('SELECT * FROM "CMIS_UCLAPI_V_BOOKINGS"'
                         ' WHERE (bookabletype = \'CB\' AND setid'
-                        ' = \'LIVE-16-17\')'
+                        ' = \'LIVE-17-18\')'
                         )
 
         cur.execute(select_query)

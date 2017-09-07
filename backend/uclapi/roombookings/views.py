@@ -29,7 +29,7 @@ def get_rooms(request, *args, **kwargs):
 
     # webview available rooms
     all_rooms = Room.objects.using("roombookings").filter(
-            setid='LIVE-16-17',
+            setid='LIVE-17-18',
             bookabletype='CB'
         )
 
@@ -118,7 +118,7 @@ def get_bookings(request, *args, **kwargs):
     request_params = dict((k, v) for k, v in request_params.items() if v)
 
     # global filters
-    request_params["setid"] = "LIVE-16-17"
+    request_params["setid"] = "LIVE-17-18"
     request_params["bookabletype"] = "CB"
 
     # create a database entry for token
@@ -160,7 +160,7 @@ def get_equipment(request, *args, **kwargs):
         return response
 
     equipment = Equipment.objects.using("roombookings").filter(
-        setid="LIVE-16-17",
+        setid="LIVE-17-18",
         roomid=roomid,
         siteid=siteid
     )

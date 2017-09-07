@@ -27,7 +27,7 @@ class EquipmentSerializationTestCase(SimpleTestCase):
         def test_serialize_equipment(self):
             equipment_list = [
                 FakeModelClass(
-                    setid="LIVE-16-17",
+                    setid="LIVE-17-18",
                     roomid="016",
                     units=1,
                     description="Chairs with Tables",
@@ -35,7 +35,7 @@ class EquipmentSerializationTestCase(SimpleTestCase):
                     type="FF"
                 ),
                 FakeModelClass(
-                    setid="LIVE-16-17",
+                    setid="LIVE-17-18",
                     roomid="105",
                     units=1,
                     description="Software - Earth Sciences - self learning",
