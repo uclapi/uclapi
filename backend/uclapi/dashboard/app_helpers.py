@@ -2,7 +2,6 @@ from binascii import hexlify
 from random import SystemRandom
 
 import os
-import string
 import textwrap
 
 

@@ -30,6 +30,6 @@ class Migration(migrations.Migration):
                 default=dashboard.app_helpers.generate_app_client_secret,
                 max_length=64,
                 unique=True
-            ),  
+            ),
         ),
     ]
