@@ -1,13 +1,9 @@
 import json
 import os
 import tldextract
-from django.http import HttpResponseBadRequest
-
-from oauth.scoping import Scopes
-from django.http import HttpResponseBadRequest
 
 from dashboard.tasks import keen_add_event_task as keen_add_event
-
+from oauth.scoping import Scopes
 from roombookings.helpers import PrettyJsonResponse
 
 from .models import App, User
@@ -72,10 +68,12 @@ def create_app(request):
 
 def rename_app(request):
     if request.method != "POST":
-        return HttpResponseBadRequest(json.dumps({
+        response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
-        }))
+        })
+        response.status_code = 400
+        return response
 
     try:
         app_id = request.POST["app_id"]
@@ -119,10 +117,12 @@ def rename_app(request):
 
 def regenerate_app_token(request):
     if request.method != "POST":
-        return HttpResponseBadRequest(json.dumps({
+        response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
-        }))
+        })
+        response.status_code = 400
+        return response
 
     try:
         app_id = request.POST["app_id"]
@@ -168,10 +168,12 @@ def regenerate_app_token(request):
 
 def delete_app(request):
     if request.method != "POST":
-        return HttpResponseBadRequest(json.dumps({
+        response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
-        }))
+        })
+        response.status_code = 400
+        return response
 
     try:
         app_id = request.POST["app_id"]
@@ -211,10 +213,12 @@ def delete_app(request):
 
 def set_callback_url(request):
     if request.method != "POST":
-        return HttpResponseBadRequest(json.dumps({
+        response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
-        }))
+        })
+        response.status_code = 400
+        return response
     try:
         app_id = request.POST["app_id"]
         new_callback_url = request.POST["callback_url"]
@@ -287,10 +291,12 @@ def set_callback_url(request):
 
 def update_scopes(request):
     if request.method != "POST":
-        return HttpResponseBadRequest(json.dumps({
+        response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
-        }))
+        })
+        response.status_code = 400
+        return response
 
     try:
         app_id = request.POST["app_id"]
