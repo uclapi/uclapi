@@ -7,6 +7,7 @@ from django.core.management import call_command
 from django.test import SimpleTestCase, TestCase
 from freezegun import freeze_time
 from rest_framework.test import APIRequestFactory
+from django.conf import settings
 
 from dashboard.models import App, TemporaryToken, User
 
@@ -27,7 +28,7 @@ class EquipmentSerializationTestCase(SimpleTestCase):
         def test_serialize_equipment(self):
             equipment_list = [
                 FakeModelClass(
-                    setid="LIVE-17-18",
+                    setid=settings.ROOMBOOKINGS_SETID,
                     roomid="016",
                     units=1,
                     description="Chairs with Tables",
@@ -35,7 +36,7 @@ class EquipmentSerializationTestCase(SimpleTestCase):
                     type="FF"
                 ),
                 FakeModelClass(
-                    setid="LIVE-17-18",
+                    setid=settings.ROOMBOOKINGS_SETID,
                     roomid="105",
                     units=1,
                     description="Software - Earth Sciences - self learning",

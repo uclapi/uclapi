@@ -1,6 +1,7 @@
 import os
 
 from django.core.management.base import BaseCommand
+from django.conf import settings
 
 import cx_Oracle
 from roombookings.models import BookingA, BookingB, Lock
@@ -22,10 +23,11 @@ class Command(BaseCommand):
 
         cur = con.cursor()
 
-        select_query = ('SELECT * FROM "CMIS_UCLAPI_V_BOOKINGS"'
-                        ' WHERE (bookabletype = \'CB\' AND setid'
-                        ' = \'LIVE-17-18\')'
-                        )
+        select_query = (
+            'SELECT * FROM "CMIS_UCLAPI_V_BOOKINGS"'
+            ' WHERE (bookabletype = \'CB\' AND setid'
+            ' = \'{}\')'.format(settings.ROOMBOOKINGS_SETID)
+        )
 
         cur.execute(select_query)
 
