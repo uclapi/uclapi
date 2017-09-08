@@ -197,10 +197,13 @@ CORS_URLS_REGEX = r'^/roombookings/.*$'
 with open(os.path.join(BASE_DIR, 'uclapi/UCLAPIAcceptableUsePolicy.txt'), 'r', encoding='utf-8') as fp:
     FAIR_USE_POLICY = list(fp)
 
-REDIS_UCLAPI_HOST = os.environ.get("REDIS_UCLAPI_HOST")
+REDIS_UCLAPI_HOST = os.environ["REDIS_UCLAPI_HOST"]
 
 # Celery Settings
 CELERY_BROKER_URL = 'redis://' + REDIS_UCLAPI_HOST
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+
+ROOMBOOKINGS_SETID = 'LIVE-17-18'

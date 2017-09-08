@@ -1,6 +1,7 @@
 from functools import reduce
 
 from rest_framework.decorators import api_view
+from django.conf import settings
 
 from .decorators import does_token_exist, log_api_call, throttle
 from .helpers import (PrettyJsonResponse, _create_page_token,
@@ -29,7 +30,7 @@ def get_rooms(request, *args, **kwargs):
 
     # webview available rooms
     all_rooms = Room.objects.using("roombookings").filter(
-            setid='LIVE-16-17',
+            setid=settings.ROOMBOOKINGS_SETID,
             bookabletype='CB'
         )
 
@@ -118,7 +119,7 @@ def get_bookings(request, *args, **kwargs):
     request_params = dict((k, v) for k, v in request_params.items() if v)
 
     # global filters
-    request_params["setid"] = "LIVE-16-17"
+    request_params["setid"] = settings.ROOMBOOKINGS_SETID
     request_params["bookabletype"] = "CB"
 
     # create a database entry for token
@@ -160,7 +161,7 @@ def get_equipment(request, *args, **kwargs):
         return response
 
     equipment = Equipment.objects.using("roombookings").filter(
-        setid="LIVE-16-17",
+        setid=settings.ROOMBOOKINGS_SETID,
         roomid=roomid,
         siteid=siteid
     )
