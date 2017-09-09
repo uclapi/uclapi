@@ -47,3 +47,20 @@ def generate_app_client_id():
 def generate_app_client_secret():
     client_secret = hexlify(os.urandom(32)).decode()
     return client_secret
+
+def is_url_safe(url):
+    protocols = os.environ["UCLAPI_CALLBACK_ALLOWED_PROTOCOLS"].split(';')
+    denied_urls = os.environ["UCLAPI_CALLBACK_DENIED_URLS"].split(';')
+
+    # If the URL does not start with a permitted protocol followed
+    # by :// then deny it 
+    if not any([url.startswith(p + "://") for p in protocols]):
+        return False
+
+    # If the URL contains any of our denied URLs (such as uclapi.com)
+    # then we deny it
+    if any([(u in url) for u in denied_urls]):
+        return False
+
+    # Otherwise we assume all is ok and mark the URL as safe
+    return True

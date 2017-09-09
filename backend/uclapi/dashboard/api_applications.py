@@ -6,6 +6,7 @@ from dashboard.tasks import keen_add_event_task as keen_add_event
 from oauth.scoping import Scopes
 from roombookings.helpers import PrettyJsonResponse
 
+from .app_helpers import is_url_safe
 from .models import App, User
 
 
@@ -231,33 +232,11 @@ def set_callback_url(request):
         response.status_code = 400
         return response
 
-    # Check if the new callback URL uses an acceptable protocol
-    # (e.g. HTTP or HTTPS)
-    # The list comprehension will explode the
-    # UCLAPI_OAUTH_CALLBACK_ALLOWED_PROTOCOLS environment
-    # variable, split by semicolons, append each one with :// then
-    # check if the URL starts with it.
-    # If none of them work then bail out.
-    if not any([new_callback_url.startswith(p + "://") for p in os.environ.get(
-            "UCLAPI_OAUTH_CALLBACK_ALLOWED_PROTOCOLS").split(';')]):
+    if not is_url_safe(new_callback_url):
         response = PrettyJsonResponse({
             "success": False,
             "message": ("The requested callback URL"
-                        " does not use an acceptable protocol.")
-        })
-        response.status_code = 400
-        return response
-
-    url_data = tldextract.extract(new_callback_url)
-
-    if any(
-        [p == (url_data.domain + "." + url_data.suffix)
-            for p in os.environ.get(
-            "UCLAPI_OAUTH_CALLBACK_DENIED_URLS").split(';')]):
-        response = PrettyJsonResponse({
-            "success": False,
-            "message": ("The requested callback URL"
-                        " is hosted on a banned domain.")
+                        " is not valid.")
         })
         response.status_code = 400
         return response

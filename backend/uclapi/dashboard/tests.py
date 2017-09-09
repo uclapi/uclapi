@@ -2,6 +2,7 @@ from unittest.mock import patch
 
 from django.test import RequestFactory, TestCase
 
+from .app_helpers import is_url_safe
 from .middleware.fake_shibboleth_middleware import FakeShibbolethMiddleWare
 from .models import App, User
 
@@ -57,6 +58,15 @@ class DashboardTestCase(TestCase):
         self.assertContains(res, "An App")
         self.assertContains(res, "Test testington")
 
+
+    def test_unsafe_urls(self):
+        assert not is_url_safe("ftp://test.com")
+        assert not is_url_safe("https://uclapi.com/callback")
+        assert not is_url_safe("ssh://uclapi.com/callback")
+
+    def test_safe_url(self):
+        assert is_url_safe("https://mytestapp.com/callback")
+        assert is_url_safe("https://uclapiexample.com/callback")
 
 class FakeShibbolethMiddleWareTestCase(TestCase):
     def setUp(self):
