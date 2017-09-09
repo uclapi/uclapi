@@ -49,6 +49,10 @@ def is_url_safe(url):
     if not validators.url(url, public=True):
         return False
 
+    whitelist_urls = ["https://live-roombookings.uclapi.com/webhook/"]
+    if url in whitelist_urls:
+        return True
+
     forbidden_urls = ["uclapi.com", "staging.ninja"]
     for furl in forbidden_urls:
         if furl in url:
