@@ -43,7 +43,7 @@ def verify_ownership(webhook_url, ownership_challenge, verification_secret):
 
 
 def is_url_safe(url):
-    if url[:8] != "https://":
+    if not url.startswith("https://"):
         return False
 
     if not validators.url(url, public=True):
