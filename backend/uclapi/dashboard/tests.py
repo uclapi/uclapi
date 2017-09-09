@@ -9,13 +9,9 @@ from .app_helpers import is_url_safe, generate_api_token, \
     generate_app_id
 from .middleware.fake_shibboleth_middleware import FakeShibbolethMiddleWare
 from .models import App, User
-from .webhook_views import (
-    edit_webhook,
-    user_owns_app,
-    verify_ownership,
-    is_url_safe,
-    refresh_verification_secret
-)
+from .webhook_views import (edit_webhook, is_url_safe,
+                            refresh_verification_secret, user_owns_app,
+                            verify_ownership)
 
 
 class DashboardTestCase(TestCase):
