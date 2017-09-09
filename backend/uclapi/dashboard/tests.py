@@ -58,7 +58,6 @@ class DashboardTestCase(TestCase):
         self.assertContains(res, "An App")
         self.assertContains(res, "Test testington")
 
-
     def test_unsafe_urls(self):
         assert not is_url_safe("ftp://test.com")
         assert not is_url_safe("https://uclapi.com/callback")

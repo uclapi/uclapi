@@ -48,12 +48,13 @@ def generate_app_client_secret():
     client_secret = hexlify(os.urandom(32)).decode()
     return client_secret
 
+
 def is_url_safe(url):
     protocols = os.environ["UCLAPI_CALLBACK_ALLOWED_PROTOCOLS"].split(';')
     denied_urls = os.environ["UCLAPI_CALLBACK_DENIED_URLS"].split(';')
 
     # If the URL does not start with a permitted protocol followed
-    # by :// then deny it 
+    # by :// then deny it
     if not any([url.startswith(p + "://") for p in protocols]):
         return False
 
