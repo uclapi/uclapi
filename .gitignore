@@ -115,3 +115,5 @@ node_modules
 
 # Django static files
 static/
+!backend/uclapi/dashboard/static/
+!backend/uclapi/oauth/static/
