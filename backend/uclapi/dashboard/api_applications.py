@@ -325,7 +325,7 @@ def update_scopes(request):
 
     try:
         scopes = json.loads(scopes_json)
-    except:
+    except ValueError:
         response = PrettyJsonResponse({
             "success": False,
             "message": "Invalid scope data that could not be parsed."
