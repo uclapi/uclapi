@@ -295,12 +295,30 @@ def update_scopes(request):
 
     try:
         app_id = request.POST["app_id"]
-        scopes_json = request.POST["scopes"]
-        user_id = request.session["user_id"]
     except KeyError:
         response = PrettyJsonResponse({
             "success": False,
-            "message": "Request does not have app_id."
+            "message": "Request does not have an app_id."
+        })
+        response.status_code = 400
+        return response
+
+    try:
+        user_id = request.session["user_id"]
+    except KeyError:
+         response = PrettyJsonResponse({
+            "success": False,
+            "message": "User ID not set in session. Please log in again."
+        })
+        response.status_code = 400
+        return response
+
+    try:
+        scopes_json = request.POST["scopes"]
+    except KeyError:
+        response = PrettyJsonResponse({
+            "success": False,
+            "message": "No scopes data attached."
         })
         response.status_code = 400
         return response
