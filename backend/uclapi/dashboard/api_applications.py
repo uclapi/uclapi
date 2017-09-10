@@ -220,12 +220,30 @@ def set_callback_url(request):
         return response
     try:
         app_id = request.POST["app_id"]
-        new_callback_url = request.POST["callback_url"]
-        user_id = request.session["user_id"]
     except KeyError:
         response = PrettyJsonResponse({
             "success": False,
-            "message": "Request does not have app_id."
+            "message": "Request does not have an app_id."
+        })
+        response.status_code = 400
+        return response
+
+    try:
+        user_id = request.session["user_id"]
+    except KeyError:
+         response = PrettyJsonResponse({
+            "success": False,
+            "message": "User ID not set in session. Please log in again."
+        })
+        response.status_code = 400
+        return response
+
+    try:
+        new_callback_url = request.POST["callback_url"]
+    except KeyError:
+         response = PrettyJsonResponse({
+            "success": False,
+            "message": "Request does not have a Callback URL."
         })
         response.status_code = 400
         return response
