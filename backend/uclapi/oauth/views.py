@@ -48,9 +48,9 @@ def authorise(request):
 
     # Build Shibboleth callback URL
     url = os.environ.get("SHIBBOLETH_ROOT") + "/Login?target="
-    target = request.build_absolute_uri(request.path)
-    target += "shibcallback?appdata="
-    target += signed_data
+    target = request.build_absolute_uri(
+        "/oauth/shibcallback?appdata={}".format(signed_data)
+    )
     target = quote(target)
     url += target
 
