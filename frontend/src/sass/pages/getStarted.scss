@@ -17,7 +17,6 @@ h1 {
 
 h2 {
   font-size: 28px;
-  font-family: 'Source Sans Pro', sans-serif;
   font-weight: lighter;
 }
 
@@ -39,6 +38,24 @@ h3 {
     font-weight: bold !important;
     text-decoration: underline;
   }
+}
+
+.tagline {
+  padding-top: 120px;
+  padding-bottom: 0px;
+  // background: #F4F4F4;
+  // color: #0B3954;
+  background: #0B3954;
+  color: #F4F4F4;
+  text-align: center;
+}
+
+.tagline h2 {
+  margin: 0px;
+}
+
+.tagline .container {
+  max-width: 800px;
 }
 
 .jumbotron {
@@ -116,10 +133,8 @@ code {
   }
 
   h1 {
-    font-family: 'Source Sans Pro', sans-serif;
     font-weight: lighter;
     text-align: center;
-    // color: #555A72;
     margin-top: 0px;
     margin-bottom: 60px;
   }
@@ -136,7 +151,6 @@ code {
   a {
     color: rgba(255,255,255,.65);
     font-size: 18px;
-    font-family: 'Source Sans Pro', sans-serif;
     display: block;
     text-decoration: none;
     margin-bottom: 14px;

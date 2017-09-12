@@ -14,7 +14,7 @@ export default class Footer extends React.Component {
             <div className="col">
               <h3>Links</h3>
               <a href={"https://twitter.com/uclapi"}>Twitter</a>
-              <a href={"https://facebook.com"}>Facebook</a>
+              <a href={"https://www.facebook.com/uclapi"}>Facebook</a>
               <a href={"https://github.com/uclapi"}>GitHub</a>
             </div>
             <div className="col">
