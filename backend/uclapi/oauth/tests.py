@@ -18,6 +18,7 @@ class ScopingTestCase(TestCase):
         "uclu": (2, "Private UCLU data"),
         "moodle": (3, "Private Moodle data")
     }
+
     def setUp(self):
         self.s = Scopes(self.test_scope_map)
         self.scope_a = OAuthScope.objects.create()

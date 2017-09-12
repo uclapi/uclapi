@@ -16,7 +16,7 @@
 
 
 class Scopes:
-    SCOPE_MAP = { }
+    SCOPE_MAP = {}
 
     def __init__(self, scope_map=None):
         if scope_map:

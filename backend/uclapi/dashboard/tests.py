@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 from django.test import RequestFactory, TestCase
 
-from .app_helpers import is_url_safe,generate_api_token, \
+from .app_helpers import is_url_safe, generate_api_token, \
     generate_app_client_id, generate_app_client_secret, \
     generate_app_id
 from .middleware.fake_shibboleth_middleware import FakeShibbolethMiddleWare
@@ -113,6 +113,7 @@ class FakeShibbolethMiddleWareTestCase(TestCase):
 
         self.assertIsNone(request.META.get("key1"))
         self.assertIsNone(request.META.get("key2"))
+
 
 class DashboardAppHelpersTestCase(TestCase):
     def test_generate_api_token(self):
