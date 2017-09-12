@@ -4,6 +4,11 @@
 # We have a BigIntegerField to work with, which means 64 bits of storage.
 # This translates into 64 types of scope, each of which can be checked with a
 # bit mask.
+# We do not have any OAuth scopes needed yet, but the current plan is:
+#   roombookings": (0, "Private room bookings data"),
+#   "timetable": (1, "Private timetable data"),
+#   "uclu": (2, "Private UCLU data"),
+#   "moodle": (3, "Private Moodle data")
 # E.g. roombookings has scope 0, which is
 # 0000000000000000000000000000000000000000000000000000000000000001b.
 # This is because the 0th bit (LSB) is set to 1.
@@ -11,12 +16,7 @@
 
 
 class Scopes:
-    SCOPE_MAP = {
-        "roombookings": (0, "Private room bookings data"),
-        "timetable": (1, "Private timetable data"),
-        "uclu": (2, "Private UCLU data"),
-        "moodle": (3, "Private Moodle data")
-    }
+    SCOPE_MAP = { }
 
     # Add a scope to the scope number given and return the new number
     def add_scope(self, current, scope_name):
