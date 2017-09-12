@@ -357,7 +357,7 @@ def update_scopes(request):
             app.scope.scope_number = current
             app.scope.save()
             app.save()
-        except:
+        except KeyError, ValueError:
             response = PrettyJsonResponse({
                 "success": False,
                 "message": "Invalid scope data that could not be iterated."
