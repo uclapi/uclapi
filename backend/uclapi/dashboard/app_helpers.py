@@ -37,9 +37,10 @@ def generate_app_id():
 def generate_app_client_id():
     sr = SystemRandom()
 
-    client_id = ''.join(str(sr.randint(0, 9)) for _ in range(16))
-    client_id += "."
-    client_id += ''.join(str(sr.randint(0, 9)) for _ in range(16))
+    client_id = '{}.{}'.format(
+        ''.join(str(sr.randint(0, 9)) for _ in range(16)),
+        ''.join(str(sr.randint(0, 9)) for _ in range(16))
+    )
 
     return client_id
 
