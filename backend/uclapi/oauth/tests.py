@@ -6,6 +6,7 @@ from rest_framework.test import APIRequestFactory
 
 from dashboard.models import App, User
 
+from .app_helpers import generate_random_verification_code
 from .decorators import oauth_token_check
 from .models import OAuthScope, OAuthToken
 from .scoping import Scopes
@@ -44,6 +45,14 @@ class ScopingTestCase(TestCase):
         self.assertEqual(self.scope_a.scope_number, 3)
         self.assertEqual(self.scope_b.scope_number, 2)
 
+    def test_add_incorrect_scope(self):
+        self.scope_a.scope_number = 3
+        self.scope_a.scope_number = self.s.add_scope(
+            self.scope_a.scope_number,
+            "blah"
+        )
+        self.assertEqual(self.scope_a.scope_number, 3)
+
     def test_remove_scope(self):
         self.scope_a.scope_number = 3
         self.scope_a.scope_number = self.s.remove_scope(
@@ -53,6 +62,15 @@ class ScopingTestCase(TestCase):
         self.scope_a.save()
 
         self.assertEqual(self.scope_a.scope_number, 2)
+
+    def test_remove_incorrect_scope(self):
+        self.scope_a.scope_number = 3
+        self.scope_a.scope_number = self.s.remove_scope(
+            self.scope_a.scope_number,
+            "blah"
+        )
+        self.scope_a.save()
+        self.assertEqual(self.scope_a.scope_number, 3)
 
     def test_scopes_equal(self):
         equal = self.scope_a.scopeIsEqual(self.scope_b)
@@ -92,6 +110,16 @@ class ScopingTestCase(TestCase):
         scopes_dict.sort(key=lambda x: x["id"])
         check_dict.sort(key=lambda x: x["id"])
         self.assertEqual(scopes_dict, check_dict)
+
+    def test_dump_scopes_map(self):
+        scopes_map = self.s.get_scope_map()
+        self.assertTrue(
+            {
+                "name": "roombookings",
+                "id": 0,
+                "description": "Private room bookings data"
+            } in scopes_map
+        )
 
 
 class OAuthTokenCheckDecoratorTestCase(TestCase):
@@ -279,3 +307,11 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
         response = self.dec_view(request)
 
         self.assertEqual(response.status_code, 200)
+
+
+class AppHelpersTestCase(TestCase):
+    def test_generate_random_verification_code(self):
+        code = generate_random_verification_code()
+        self.assertEqual(code[:6], "verify")
+        self.assertEqual(len(code), 86)
+
