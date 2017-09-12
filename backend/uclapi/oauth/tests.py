@@ -314,4 +314,3 @@ class AppHelpersTestCase(TestCase):
         code = generate_random_verification_code()
         self.assertEqual(code[:6], "verify")
         self.assertEqual(len(code), 86)
-
