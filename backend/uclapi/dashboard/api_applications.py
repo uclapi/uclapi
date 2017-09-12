@@ -231,7 +231,7 @@ def set_callback_url(request):
     try:
         user_id = request.session["user_id"]
     except KeyError:
-         response = PrettyJsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "User ID not set in session. Please log in again."
         })
@@ -241,7 +241,7 @@ def set_callback_url(request):
     try:
         new_callback_url = request.POST["callback_url"]
     except KeyError:
-         response = PrettyJsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have a Callback URL."
         })
@@ -306,7 +306,7 @@ def update_scopes(request):
     try:
         user_id = request.session["user_id"]
     except KeyError:
-         response = PrettyJsonResponse({
+        response = PrettyJsonResponse({
             "success": False,
             "message": "User ID not set in session. Please log in again."
         })
@@ -357,7 +357,7 @@ def update_scopes(request):
             app.scope.scope_number = current
             app.scope.save()
             app.save()
-        except KeyError, ValueError:
+        except (KeyError, ValueError):
             response = PrettyJsonResponse({
                 "success": False,
                 "message": "Invalid scope data that could not be iterated."

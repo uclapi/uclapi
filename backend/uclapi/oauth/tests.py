@@ -12,8 +12,14 @@ from .scoping import Scopes
 
 
 class ScopingTestCase(TestCase):
+    test_scope_map = {
+        "roombookings": (0, "Private room bookings data"),
+        "timetable": (1, "Private timetable data"),
+        "uclu": (2, "Private UCLU data"),
+        "moodle": (3, "Private Moodle data")
+    }
     def setUp(self):
-        self.s = Scopes()
+        self.s = Scopes(self.test_scope_map)
         self.scope_a = OAuthScope.objects.create()
         self.scope_b = OAuthScope.objects.create()
 
@@ -216,6 +222,36 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             content["error"],
             "The token provided does not have permission"
             " to access this data."
+        )
+
+    def test_decorator_token_inactive(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+        oauth_scope = OAuthScope.objects.create()
+        oauth_token = OAuthToken.objects.create(
+            app=app_,
+            user=user_,
+            scope=oauth_scope,
+            active=False
+        )
+        request = self.factory.get(
+            '/',
+            {
+                'client_secret': app_.client_secret,
+                'token': oauth_token.token
+            }
+        )
+        response = self.dec_view(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["error"],
+            "The token is inactive as the user has revoked "
+            "your app's access to their data."
         )
 
     def test_decorator_everything_passes(self):

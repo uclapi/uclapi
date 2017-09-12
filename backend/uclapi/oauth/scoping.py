@@ -18,6 +18,10 @@
 class Scopes:
     SCOPE_MAP = { }
 
+    def __init__(self, scope_map=None):
+        if scope_map:
+            self.SCOPE_MAP = scope_map
+
     # Add a scope to the scope number given and return the new number
     def add_scope(self, current, scope_name):
         try:

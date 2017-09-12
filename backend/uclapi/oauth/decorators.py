@@ -45,6 +45,16 @@ def oauth_token_check(required_scopes=None):
                 response.status_code = 400
                 return response
 
+            if not token.active:
+                response = JsonResponse({
+                    "ok": False,
+                    "error":
+                        "The token is inactive as the user has revoked "
+                        "your app's access to their data."
+                })
+                response.status_code = 400
+                return response
+
             scopes = Scopes()
             for s in required_scopes:
                 if not scopes.check_scope(token.scope.scope_number, s):

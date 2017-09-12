@@ -192,8 +192,18 @@ def userdeny(request):
     app = App.objects.get(client_id=data["client_id"])
     state = data["state"]
 
-    redir = app.callback_url + "?result=denied&state=" + state
+    redir = "{}?result=denied&state={}".format(app.callback_url, state)
 
+    # Now check if a token has been granted in the past. If so, invalidate it.
+    # There shouldn't be a situation where more than one user/app token pair
+    # exists but, just in case, let's invalidate them all.
+    user = User.objects.get(employee_id=data['upi'])
+    tokens = OAuthToken.objects.filter(app=app, user=user)
+    for token in tokens:
+        token.active = False
+        token.save()
+
+    # Send the user to the app's denied permission page
     return redirect(redir)
 
 
@@ -333,6 +343,12 @@ def token(request):
             token.scope = app_scope
 
             # Save the token with the new scope
+            token.save()
+
+        # If the user has denied this app access before and invalidated a token
+        # then let's re-enabled that token because access is permitted again.
+        if token.active is False:
+            token.active = True
             token.save()
 
     except OAuthToken.DoesNotExist:
