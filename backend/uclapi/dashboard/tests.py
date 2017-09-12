@@ -2,7 +2,9 @@ from unittest.mock import patch
 
 from django.test import RequestFactory, TestCase
 
-from .app_helpers import is_url_safe
+from .app_helpers import is_url_safe,generate_api_token, \
+    generate_app_client_id, generate_app_client_secret, \
+    generate_app_id
 from .middleware.fake_shibboleth_middleware import FakeShibbolethMiddleWare
 from .models import App, User
 
@@ -111,3 +113,27 @@ class FakeShibbolethMiddleWareTestCase(TestCase):
 
         self.assertIsNone(request.META.get("key1"))
         self.assertIsNone(request.META.get("key2"))
+
+class DashboardAppHelpersTestCase(TestCase):
+    def test_generate_api_token(self):
+        token = generate_api_token()
+        self.assertEqual(token[:6], "uclapi")
+        self.assertEqual(len(token), 66)
+        self.assertEqual(token[6], "-")
+        self.assertEqual(token[21], "-")
+        self.assertEqual(token[36], "-")
+        self.assertEqual(token[51], "-")
+
+    def test_generate_app_client_id(self):
+        client_id = generate_app_client_id()
+        self.assertEqual(client_id[16], '.')
+        self.assertEqual(len(client_id), 33)
+
+    def test_generate_app_client_secret(self):
+        client_secret = generate_app_client_secret()
+        self.assertEqual(len(client_secret), 64)
+
+    def generate_app_id(self):
+        app_id = generate_app_id()
+        self.assertEqual(app_id[0], 'A')
+        self.assertEqual(len(app_id), 11)
