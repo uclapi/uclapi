@@ -41,21 +41,19 @@ h3 {
 }
 
 .tagline {
+  h2 {
+    margin: 0px;
+  }
+
+  .container {
+    max-width: 800px;
+  }
+
   padding-top: 120px;
   padding-bottom: 0px;
-  // background: #F4F4F4;
-  // color: #0B3954;
   background: #0B3954;
   color: #F4F4F4;
   text-align: center;
-}
-
-.tagline h2 {
-  margin: 0px;
-}
-
-.tagline .container {
-  max-width: 800px;
 }
 
 .jumbotron {
