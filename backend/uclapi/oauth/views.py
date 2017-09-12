@@ -41,7 +41,7 @@ def authorise(request):
         })
 
     if app.callback_url is None:
-         return JsonResponse({
+        return JsonResponse({
             "ok": False,
             "error": "No callback URL set for this app."
         })
