@@ -40,6 +40,12 @@ def authorise(request):
             "error": "App does not exist for client id"
         })
 
+    if app.callback_url is None:
+         return JsonResponse({
+            "ok": False,
+            "error": "No callback URL set for this app."
+        })
+
     # Sign the app and state pair before heading to Shibboleth to help protect
     # against CSRF and XSS attacks
     signer = TimestampSigner()
