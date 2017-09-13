@@ -3,6 +3,7 @@ from random import SystemRandom
 
 import os
 import textwrap
+import validators
 
 
 def generate_api_token():
@@ -51,18 +52,19 @@ def generate_app_client_secret():
 
 
 def is_url_safe(url):
-    protocols = os.environ["UCLAPI_CALLBACK_ALLOWED_PROTOCOLS"].split(';')
-    denied_urls = os.environ["UCLAPI_CALLBACK_DENIED_URLS"].split(';')
-
-    # If the URL does not start with a permitted protocol followed
-    # by :// then deny it
-    if not any([url.startswith(p + "://") for p in protocols]):
+    if not url.startswith("https://"):
         return False
 
-    # If the URL contains any of our denied URLs (such as uclapi.com)
-    # then we deny it
-    if any([(u in url) for u in denied_urls]):
+    if not validators.url(url, public=True):
         return False
 
-    # Otherwise we assume all is ok and mark the URL as safe
+    whitelist_urls = os.environ["WHITELISTED_CALLBACK_URLS"].split(';')
+    if url in whitelist_urls:
+        return True
+
+    forbidden_urls = os.environ["FORBIDDEN_CALLBACK_URLS"].split(';')
+    for furl in forbidden_urls:
+        if furl in url:
+            return False
+
     return True

@@ -69,6 +69,7 @@ class DashboardTestCase(TestCase):
         assert is_url_safe("https://mytestapp.com/callback")
         assert is_url_safe("https://uclapiexample.com/callback")
 
+
 class FakeShibbolethMiddleWareTestCase(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
@@ -138,3 +139,41 @@ class DashboardAppHelpersTestCase(TestCase):
         app_id = generate_app_id()
         self.assertEqual(app_id[0], 'A')
         self.assertEqual(len(app_id), 11)
+
+
+class URLSafetyTestCase(TestCase):
+    def test_is_url_safe_full_success(self):
+        self.assertTrue(
+            is_url_safe("https://example.com")
+        )
+
+    def test_is_url_safe_https_failure(self):
+        self.assertFalse(
+            is_url_safe("http://example.com")
+        )
+
+    def test_is_url_safe_validators_failure(self):
+        self.assertFalse(
+            is_url_safe("https://asdasd.asd.asd.asd.1234")
+        )
+
+    def test_is_url_safe_validators_failure_private(self):
+        self.assertFalse(
+            is_url_safe("https://127.0.0.1")
+        )
+
+    def test_is_url_safe_validators_failure_private2(self):
+        self.assertFalse(
+            is_url_safe("https://10.0.0.1")
+        )
+
+    def test_is_url_safe_forbidden(self):
+        self.assertFalse(
+            is_url_safe("https://uclapi.com/test/test")
+        )
+
+    def test_is_url_safe_forbidden2(self):
+        self.assertFalse(
+            is_url_safe("https://staging.ninja/test/test")
+        )
+    # Testcase for whitelisted URL needed
