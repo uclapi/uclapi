@@ -1,5 +1,7 @@
 @import '../includes/helpers';
 
+$primary-color: #0B3954;
+$secondary-color: #F4F4F4;
 
 body {
   margin: 0px;
@@ -41,6 +43,12 @@ h3 {
 }
 
 .tagline {
+  background: $primary-color;
+  color: $secondary-color;
+  padding-bottom: 0;
+  padding-top: 120px;
+  text-align: center;
+
   h2 {
     margin: 0px;
   }
@@ -48,12 +56,6 @@ h3 {
   .container {
     max-width: 800px;
   }
-
-  padding-top: 120px;
-  padding-bottom: 0px;
-  background: #0B3954;
-  color: #F4F4F4;
-  text-align: center;
 }
 
 .jumbotron {
