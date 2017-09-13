@@ -59,7 +59,7 @@ export default class Navbar extends React.Component {
     let rightButtons = (
       <div>
         <a href={"/"}>
-          <FlatButton label="Get Started" className="active" style={styles.flatButton}/>
+          <FlatButton label="Home" className="active" style={styles.flatButton}/>
         </a>
         <a href={"https://docs.uclapi.com"}>
           <FlatButton label="Documentation" style={styles.flatButton}/>
@@ -74,7 +74,7 @@ export default class Navbar extends React.Component {
       rightButtons = (
         <div>
           <a href={"/"}>
-            <FlatButton label="Get Started" className="active" style={styles.flatButton}/>
+            <FlatButton label="Home" className="active" style={styles.flatButton}/>
           </a>
           <a href={"https://docs.uclapi.com"}>
             <FlatButton label="Documentation" style={styles.flatButton}/>
@@ -94,7 +94,7 @@ export default class Navbar extends React.Component {
           </IconButton>
           <Drawer open={this.state.open} openSecondary={true} docked={false}>
             <a href={"/"}>
-              <MenuItem onTouchTap={this.handleToggle}>Get Started</MenuItem>
+              <MenuItem onTouchTap={this.handleToggle}>Home</MenuItem>
             </a>
             <a href={"https://docs.uclapi.com"}>
               <MenuItem onTouchTap={this.handleToggle}>Documentation</MenuItem>
@@ -114,7 +114,7 @@ export default class Navbar extends React.Component {
             </IconButton>
             <Drawer open={this.state.open} openSecondary={true} docked={false}>
               <a href={"/"}>
-                <MenuItem onTouchTap={this.handleToggle}>Get Started</MenuItem>
+                <MenuItem onTouchTap={this.handleToggle}>Home</MenuItem>
               </a>
               <a href={"https://docs.uclapi.com"}>
                 <MenuItem onTouchTap={this.handleToggle}>Documentation</MenuItem>
