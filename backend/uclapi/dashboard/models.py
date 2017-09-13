@@ -1,7 +1,9 @@
 from django.db import models
+from .app_helpers import generate_api_token, generate_app_id, \
+    generate_app_client_id, generate_app_client_secret, \
+    generate_temp_api_token
 
-from .app_helpers import generate_temp_api_token, generate_api_token, \
-    generate_app_id
+from oauth.models import OAuthScope
 
 models.options.DEFAULT_NAMES += ('_DATABASE',)
 
@@ -37,6 +39,30 @@ class App(models.Model):
     )
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+
+    client_id = models.CharField(
+        max_length=33,
+        unique=True,
+        default=generate_app_client_id
+    )
+
+    client_secret = models.CharField(
+        max_length=64,
+        unique=True,
+        default=generate_app_client_secret
+    )
+
+    callback_url = models.CharField(max_length=500, default="")
+
+    def create_scope():
+        s = OAuthScope()
+        s.save()
+        return s.id
+
+    scope = models.ForeignKey(
+        OAuthScope,
+        on_delete=models.CASCADE,
+        default=create_scope)
 
     def regenerate_token(self):
         new_token = generate_api_token()

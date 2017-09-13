@@ -1,6 +1,5 @@
-import re
-
 import datetime
+import re
 import redis
 from django.core.exceptions import ObjectDoesNotExist
 
