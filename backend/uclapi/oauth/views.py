@@ -203,7 +203,7 @@ def userdeny(request):
     # Now check if a token has been granted in the past. If so, invalidate it.
     # There shouldn't be a situation where more than one user/app token pair
     # exists but, just in case, let's invalidate them all.
-    user = User.objects.get(employee_id=data['upi'])
+    user = User.objects.get(employee_id=data['user_upi'])
     tokens = OAuthToken.objects.filter(app=app, user=user)
     for token in tokens:
         token.active = False
