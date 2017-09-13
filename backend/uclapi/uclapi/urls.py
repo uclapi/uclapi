@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^dashboard/', include('dashboard.urls')),
     url(r'^roombookings/', include('roombookings.urls')),
-    url(r'^', get_started),
+    url(r'^oauth/', include('oauth.urls')),
+    url(r'^$', get_started)
 ]

@@ -107,9 +107,13 @@ node_modules
 # Oracle configuration files
 *.ora
 
-# Ignore VS files
+# Visual Studio Code Configuration
 .vscode/
+
+# Visual Studio Configuration
 .vs/
 
-# Static files
+# Django static files
 static/
+!backend/uclapi/dashboard/static/
+!backend/uclapi/oauth/static/

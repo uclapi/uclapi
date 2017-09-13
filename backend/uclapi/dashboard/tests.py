@@ -2,6 +2,9 @@ from unittest.mock import patch
 
 from django.test import RequestFactory, TestCase
 
+from .app_helpers import is_url_safe, generate_api_token, \
+    generate_app_client_id, generate_app_client_secret, \
+    generate_app_id
 from .middleware.fake_shibboleth_middleware import FakeShibbolethMiddleWare
 from .models import App, User
 
@@ -57,6 +60,15 @@ class DashboardTestCase(TestCase):
         self.assertContains(res, "An App")
         self.assertContains(res, "Test testington")
 
+    def test_unsafe_urls(self):
+        assert not is_url_safe("ftp://test.com")
+        assert not is_url_safe("https://uclapi.com/callback")
+        assert not is_url_safe("ssh://uclapi.com/callback")
+
+    def test_safe_url(self):
+        assert is_url_safe("https://mytestapp.com/callback")
+        assert is_url_safe("https://uclapiexample.com/callback")
+
 
 class FakeShibbolethMiddleWareTestCase(TestCase):
     def setUp(self):
@@ -102,3 +114,66 @@ class FakeShibbolethMiddleWareTestCase(TestCase):
 
         self.assertIsNone(request.META.get("key1"))
         self.assertIsNone(request.META.get("key2"))
+
+
+class DashboardAppHelpersTestCase(TestCase):
+    def test_generate_api_token(self):
+        token = generate_api_token()
+        self.assertEqual(token[:6], "uclapi")
+        self.assertEqual(len(token), 66)
+        self.assertEqual(token[6], "-")
+        self.assertEqual(token[21], "-")
+        self.assertEqual(token[36], "-")
+        self.assertEqual(token[51], "-")
+
+    def test_generate_app_client_id(self):
+        client_id = generate_app_client_id()
+        self.assertEqual(client_id[16], '.')
+        self.assertEqual(len(client_id), 33)
+
+    def test_generate_app_client_secret(self):
+        client_secret = generate_app_client_secret()
+        self.assertEqual(len(client_secret), 64)
+
+    def generate_app_id(self):
+        app_id = generate_app_id()
+        self.assertEqual(app_id[0], 'A')
+        self.assertEqual(len(app_id), 11)
+
+
+class URLSafetyTestCase(TestCase):
+    def test_is_url_safe_full_success(self):
+        self.assertTrue(
+            is_url_safe("https://example.com")
+        )
+
+    def test_is_url_safe_https_failure(self):
+        self.assertFalse(
+            is_url_safe("http://example.com")
+        )
+
+    def test_is_url_safe_validators_failure(self):
+        self.assertFalse(
+            is_url_safe("https://asdasd.asd.asd.asd.1234")
+        )
+
+    def test_is_url_safe_validators_failure_private(self):
+        self.assertFalse(
+            is_url_safe("https://127.0.0.1")
+        )
+
+    def test_is_url_safe_validators_failure_private2(self):
+        self.assertFalse(
+            is_url_safe("https://10.0.0.1")
+        )
+
+    def test_is_url_safe_forbidden(self):
+        self.assertFalse(
+            is_url_safe("https://uclapi.com/test/test")
+        )
+
+    def test_is_url_safe_forbidden2(self):
+        self.assertFalse(
+            is_url_safe("https://staging.ninja/test/test")
+        )
+    # Testcase for whitelisted URL needed
