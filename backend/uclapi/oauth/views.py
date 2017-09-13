@@ -13,7 +13,7 @@ from django.views.decorators.csrf import (csrf_exempt, csrf_protect,
 
 from dashboard.models import App, User
 from dashboard.tasks import keen_add_event_task as keen_add_event
-from roombookings.helpers import PrettyJsonResponse as JsonResponse
+from roombookings.helpers import PrettyJsonResponse
 from uclapi.settings import REDIS_UCLAPI_HOST
 
 from .app_helpers import generate_random_verification_code
@@ -27,24 +27,30 @@ def authorise(request):
     client_id = request.GET.get("client_id", None)
     state = request.GET.get("state", None)
     if not (client_id and state):
-        return JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": "incorrect parameters supplied"
         })
+        response.status_code = 400
+        return response
 
     try:
         app = App.objects.get(client_id=client_id)
     except ObjectDoesNotExist:
-        return JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": "App does not exist for client id"
         })
+        response.status_code = 400
+        return response
 
     if app.callback_url is None:
-        return JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": "No callback URL set for this app."
         })
+        response.status_code = 400
+        return response
 
     # Sign the app and state pair before heading to Shibboleth to help protect
     # against CSRF and XSS attacks
@@ -70,26 +76,32 @@ def shibcallback(request):
     # Callback from Shib login. Get ALL the meta!
     appdata_signed = request.GET.get("appdata", None)
     if not appdata_signed:
-        return JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": ("No signed app data returned from Shibboleth."
                       " Please use the authorise endpoint.")
         })
+        response.status_code = 400
+        return response
 
     signer = TimestampSigner()
     try:
         # Expire our signed tokens after five minutes for added security
         appdata = signer.unsign(appdata_signed, max_age=300)
     except signing.BadSignature:
-        return JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": "Bad signature. Please try login again."
         })
+        response.status_code = 400
+        return response
     except signing.SignatureExpired:
-        return JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": "Signature has expired. Please try login again."
         })
+        response.status_code = 400
+        return response
 
     client_id = appdata[:33]
     state = appdata[33:]
@@ -179,21 +191,25 @@ def userdeny(request):
         signed_data = request.POST.get("signed_app_data")
         raw_data_str = signer.unsign(signed_data, max_age=300)
     except:
-        return JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": ("The signed data received was invalid."
                       " Please try the login process again. "
                       "If this issue persists, please contact support.")
         })
+        response.status_code = 400
+        return response
 
     try:
         data = json.loads(raw_data_str)
     except:
-        return JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": ("The JSON data was not in the expected format."
                       " Please contact support.")
         })
+        response.status_code = 400
+        return response
 
     app = App.objects.get(client_id=data["client_id"])
     state = data["state"]
@@ -203,7 +219,19 @@ def userdeny(request):
     # Now check if a token has been granted in the past. If so, invalidate it.
     # There shouldn't be a situation where more than one user/app token pair
     # exists but, just in case, let's invalidate them all.
-    user = User.objects.get(employee_id=data['user_upi'])
+    try:
+        users = User.objects.filter(employee_id=data["user_upi"])
+        user = users[0]
+    except (User.DoesNotExist, KeyError):
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error":
+                "User does not exist. This should never occur. "
+                "Please contact support."
+        })
+        response.status_code = 400
+        return response
+
     tokens = OAuthToken.objects.filter(app=app, user=user)
     for token in tokens:
         token.active = False
@@ -221,21 +249,25 @@ def userallow(request):
         raw_data_str = signer.unsign(
             request.POST.get("signed_app_data"), max_age=300)
     except (signing.BadSignature, KeyError):
-        return JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": ("The signed data received was invalid."
                       " Please try the login process again."
                       " If this issue persists, please contact support.")
         })
+        response.status_code = 400
+        return response
 
     try:
         data = json.loads(raw_data_str)
     except ValueError:
-        return JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": ("The JSON data was not in the expected format."
                       " Please contact support.")
         })
+        response.status_code = 400
+        return response
 
     app = App.objects.get(client_id=data["client_id"])
     state = data["state"]
@@ -280,22 +312,26 @@ def token(request):
         client_id = request.GET.get("client_id")
         client_secret = request.GET.get("client_secret")
     except KeyError:
-        return JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": ("The client did not provide"
                       " the requisite data to get a token.")
         })
+        response.status_code = 400
+        return response
 
     r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
     try:
         data_json = r.get(code).decode('ascii')
 
     except:
-        return JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": ("The code received was invalid, or has expired."
                       " Please try again.")
         })
+        response.status_code = 400
+        return response
 
     # Remove code from Redis once used to protect against replay attacks.
     # This is in a try...except to prevent against the edge case when the
@@ -313,7 +349,7 @@ def token(request):
 
     app = App.objects.get(client_id=client_id)
     if app.client_secret != client_secret:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": "Client secret incorrect"
         })
@@ -389,14 +425,14 @@ def token(request):
         "scope": json.dumps(s.scope_dict(token.scope.scope_number))
     }
 
-    return JsonResponse(oauth_data)
+    return PrettyJsonResponse(oauth_data)
 
 
 @oauth_token_check([])
 def userdata(request, *args, **kwargs):
     token = kwargs['token']
 
-    return JsonResponse({
+    return PrettyJsonResponse({
         "ok": True,
         "full_name": token.user.full_name,
         "email": token.user.email,
@@ -413,7 +449,7 @@ def scope_map(request):
     scope_map = {
         "scope_map": s.get_scope_map()
     }
-    return JsonResponse(scope_map)
+    return PrettyJsonResponse(scope_map)
 
 
 @oauth_token_check([])
@@ -422,7 +458,7 @@ def token_test(request, *args, **kwargs):
 
     token = kwargs['token']
 
-    return JsonResponse({
+    return PrettyJsonResponse({
         "ok": True,
         "active": token.active,
         "user_upi": token.user.employee_id,
