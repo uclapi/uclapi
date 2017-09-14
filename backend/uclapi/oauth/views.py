@@ -123,7 +123,7 @@ def shibcallback(request):
         login_reminder = "login-after-2017-09-26-to-fix"
         try:
             user = User.objects.get(email=implied_eppn)
-        except ObjectDoesNotExist:
+        except User.DoesNotExist:
             # create new user
             new_user = User(
                 email=implied_eppn,
