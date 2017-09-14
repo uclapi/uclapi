@@ -18,49 +18,15 @@ from .tasks import keen_add_event_task as keen_add_event
 
 @csrf_exempt
 def shibboleth_callback(request):
-    # this view is user facing, so should return html error page
     # should auth user login or signup
     # then redirect to dashboard homepage
-    try:
-        eppn = request.META['HTTP_EPPN']
-        groups = request.META['HTTP_UCLINTRANETGROUPS']
-        cn = request.META['HTTP_CN']
-        department = request.META['HTTP_DEPARTMENT']
-        given_name = request.META['HTTP_GIVENNAME']
-        display_name = request.META['HTTP_DISPLAYNAME']
-        employee_id = request.META['HTTP_EMPLOYEEID']
-    except KeyError:
-        # didn't receive all required data
-
-        # Delete this code on September 26th 2017! Temporary shib workaround
-        implied_eppn = "{}@ucl.ac.uk".format(cn)
-        login_reminder = "login-after-2017-09-26-to-fix"
-        try:
-            user = User.objects.get(email=implied_eppn)
-        except ObjectDoesNotExist:
-            # create new user
-            new_user = User(
-                email=implied_eppn,
-                full_name="temp-full-name-{}".format(login_reminder),
-                given_name="temp-given-name-{}".format(login_reminder),
-                department="temp-department-{}".format(login_reminder),
-                cn=cn,
-                raw_intranet_groups="temp-groups-{}".format(login_reminder),
-                employee_id="temp-not-real-upi-{}".format(cn)
-            )
-            new_user.save()
-
-            request.session["user_id"] = new_user.id
-            keen_add_event.delay("signup", {
-                "id": new_user.id,
-                "email": eppn,
-                "name": display_name
-            })
-        else:
-            # user already exists, log them in
-            request.session["user_id"] = user.id
-
-        # end temporary shib workaround - delete until here
+    eppn = request.META['HTTP_EPPN']
+    groups = request.META['HTTP_UCLINTRANETGROUPS']
+    cn = request.META['HTTP_CN']
+    department = request.META['HTTP_DEPARTMENT']
+    given_name = request.META['HTTP_GIVENNAME']
+    display_name = request.META['HTTP_DISPLAYNAME']
+    employee_id = request.META['HTTP_EMPLOYEEID']
 
     try:
         user = User.objects.get(email=eppn)
