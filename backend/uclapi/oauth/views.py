@@ -109,13 +109,14 @@ def shibcallback(request):
     app = App.objects.get(client_id=client_id)
 
     try:
+        
         eppn = request.META['HTTP_EPPN']
-        groups = request.META['HTTP_UCLINTRANETGROUPS']
         cn = request.META['HTTP_CN']
+        employee_id = request.META['HTTP_EMPLOYEEID']
         department = request.META['HTTP_DEPARTMENT']
         given_name = request.META['HTTP_GIVENNAME']
         display_name = request.META['HTTP_DISPLAYNAME']
-        employee_id = request.META['HTTP_EMPLOYEEID']
+        groups = request.META['HTTP_UCLINTRANETGROUPS']
     except KeyError:
 
         # Delete this code on September 26th 2017! Temporary shib workaround
