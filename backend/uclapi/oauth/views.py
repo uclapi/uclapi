@@ -121,18 +121,23 @@ def shibcallback(request):
         # Delete this code on September 26th 2017! Temporary shib workaround
         implied_eppn = "{}@ucl.ac.uk".format(cn)
         login_reminder = "login-after-2017-09-26-to-fix"
+        employee_id = "temp-not-real-upi-{}".format(cn)
+        department = "temp-not-real-department-{}".format(cn)
+        given_name = "temp-not-real-full-name-{}".format(cn)
+        display_name = "temp-not-real-display-name-{}".format(cn)
+        groups = "temp-groups-{}".format(login_reminder),
         try:
             user = User.objects.get(email=implied_eppn)
         except User.DoesNotExist:
             # create new user
             new_user = User(
                 email=implied_eppn,
-                full_name="temp-full-name-{}".format(login_reminder),
-                given_name="temp-given-name-{}".format(login_reminder),
-                department="temp-department-{}".format(login_reminder),
+                full_name=display_name,
+                given_name=given_name,
+                department=department,
                 cn=cn,
-                raw_intranet_groups="temp-groups-{}".format(login_reminder),
-                employee_id="temp-not-real-upi-{}".format(cn)
+                raw_intranet_groups=groups
+                employee_id=employee_id
             )
             new_user.save()
 
