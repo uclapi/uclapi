@@ -148,6 +148,22 @@ def shibcallback(request):
             "email": eppn,
             "name": display_name
         })
+    else:
+        # user exists already, update values
+        user = User.objects.get(email=eppn)
+        request.session["user_id"] = user.id
+        user.full_name = display_name
+        user.given_name = given_name
+        user.department = department
+        user.raw_intranet_groups = groups
+        user.employee_id = employee_id
+        user.save()
+
+        keen_add_event.delay("User data updated", {
+            "id": user.id,
+            "email": eppn,
+            "name": display_name
+        })
 
     signer = TimestampSigner()
     response_data = {

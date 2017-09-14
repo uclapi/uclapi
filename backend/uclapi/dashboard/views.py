@@ -61,7 +61,20 @@ def shibboleth_callback(request):
             "name": display_name
         })
     else:
+        # user exists already, update values
         request.session["user_id"] = user.id
+        user.full_name = display_name
+        user.given_name = given_name
+        user.department = department
+        user.raw_intranet_groups = groups
+        user.employee_id = employee_id
+        user.save()
+
+        keen_add_event.delay("User data updated", {
+            "id": user.id,
+            "email": eppn,
+            "name": display_name
+        })
 
     return redirect(dashboard)
 
@@ -141,7 +154,7 @@ def get_started(request):
     logged_in = True
 
     try:
-        user_id = request.session["user_id"]
+        request.session["user_id"]
     except KeyError:
         logged_in = False
 
