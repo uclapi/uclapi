@@ -136,7 +136,7 @@ def shibcallback(request):
                 given_name=given_name,
                 department=department,
                 cn=cn,
-                raw_intranet_groups=groups
+                raw_intranet_groups=groups,
                 employee_id=employee_id
             )
             new_user.save()
