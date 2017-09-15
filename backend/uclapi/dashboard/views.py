@@ -23,30 +23,39 @@ def shibboleth_callback(request):
     # then redirect to dashboard homepage
     try:
         eppn = request.META['HTTP_EPPN']
-        groups = request.META['HTTP_UCLINTRANETGROUPS']
         cn = request.META['HTTP_CN']
+        employee_id = request.META['HTTP_EMPLOYEEID']
         department = request.META['HTTP_DEPARTMENT']
         given_name = request.META['HTTP_GIVENNAME']
         display_name = request.META['HTTP_DISPLAYNAME']
-        employee_id = request.META['HTTP_EMPLOYEEID']
+        groups = request.META['HTTP_UCLINTRANETGROUPS']
     except KeyError:
         # didn't receive all required data
 
         # Delete this code on September 26th 2017! Temporary shib workaround
-        implied_eppn = "{}@ucl.ac.uk".format(cn)
         login_reminder = "login-after-2017-09-26-to-fix"
+        department = "temp-not-real-department-{}-{}".format(
+            cn,
+            login_reminder
+        )
+        given_name = "temp-not-real-full-name-{}-{}".format(cn, login_reminder)
+        display_name = "temp-not-real-display-name-{}-{}".format(
+            cn,
+            login_reminder
+        )
+        groups = "temp-groups-{}-{}".format(cn, login_reminder),
         try:
-            user = User.objects.get(email=implied_eppn)
-        except ObjectDoesNotExist:
+            user = User.objects.get(email=eppn)
+        except User.DoesNotExist:
             # create new user
             new_user = User(
-                email=implied_eppn,
-                full_name="temp-full-name-{}".format(login_reminder),
-                given_name="temp-given-name-{}".format(login_reminder),
-                department="temp-department-{}".format(login_reminder),
+                email=eppn,
+                full_name=display_name,
+                given_name=given_name,
+                department=department,
                 cn=cn,
-                raw_intranet_groups="temp-groups-{}".format(login_reminder),
-                employee_id="temp-not-real-upi-{}".format(cn)
+                raw_intranet_groups=groups,
+                employee_id=employee_id
             )
             new_user.save()
 

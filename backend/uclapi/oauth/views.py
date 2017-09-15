@@ -119,19 +119,23 @@ def shibcallback(request):
     except KeyError:
 
         # Delete this code on September 26th 2017! Temporary shib workaround
-        implied_eppn = "{}@ucl.ac.uk".format(cn)
         login_reminder = "login-after-2017-09-26-to-fix"
-        employee_id = "temp-not-real-upi-{}".format(cn)
-        department = "temp-not-real-department-{}".format(cn)
-        given_name = "temp-not-real-full-name-{}".format(cn)
-        display_name = "temp-not-real-display-name-{}".format(cn)
-        groups = "temp-groups-{}".format(login_reminder),
+        department = "temp-not-real-department-{}-{}".format(
+            cn,
+            login_reminder
+        )
+        given_name = "temp-not-real-full-name-{}-{}".format(cn, login_reminder)
+        display_name = "temp-not-real-display-name-{}-{}".format(
+            cn,
+            login_reminder
+        )
+        groups = "temp-groups-{}-{}".format(cn, login_reminder),
         try:
-            user = User.objects.get(email=implied_eppn)
+            user = User.objects.get(email=eppn)
         except User.DoesNotExist:
             # create new user
             new_user = User(
-                email=implied_eppn,
+                email=eppn,
                 full_name=display_name,
                 given_name=given_name,
                 department=department,
