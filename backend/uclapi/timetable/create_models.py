@@ -70,7 +70,7 @@ def get_field_type(right):
     if find_prefix(right) == "DATE":
         return "DateField()"
     if find_prefix(right) == "CHAR":
-        return "CharField()"
+        return "CharField(max_length=1)"
     if find_prefix(right) == "VARCHAR2":
         i = 0
         while right[i] != "(":
@@ -88,7 +88,7 @@ def format_table_name(name):
 
 for table_name, fields in data.items():
     ret_str = ""
-    ret_str += "class {}:\n".format(format_table_name(table_name[11:-1]))
+    ret_str += "class {}(models.Model):\n".format(format_table_name(table_name[11:-1]))
     for field in fields:
         if not field:
             continue
@@ -98,4 +98,3 @@ for table_name, fields in data.items():
         ret_str += "    {} = models.{}\n".format(field_name.lower(), right_hand)
     ret_str += a.replace("####", table_name[:-1])
     print(ret_str)
-    print("\n")
