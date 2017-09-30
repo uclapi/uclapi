@@ -1,7 +1,7 @@
 import React from 'react';
 import Cookies from 'js-cookie';
 
-import { CopyActionField } from './copyField.jsx';
+import { CopyActionField } from './../copyField.jsx';
 
 
 class Webhook extends React.Component {
