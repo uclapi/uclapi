@@ -108,9 +108,9 @@ class App extends React.Component {
           <Panel header="OAuth Settings" showArrow>
             <OAuth
               appId={this.props.appId}
-              clientId={this.props.oauth.clientId}
-              clientSecret={this.props.oauth.clientSecret}
-              callbackUrl={this.props.oauth.callbackUrl}
+              clientId={this.props.oauth.client_id}
+              clientSecret={this.props.oauth.client_secret}
+              callbackUrl={this.props.oauth.callback_url}
               scopes={this.props.oauth.scopes}
             />
           </Panel>
@@ -145,9 +145,9 @@ App.propTypes = {
     contact: React.PropTypes.string.isRequired,
   }),
   oauth: React.PropTypes.shape({
-    clientId: React.PropTypes.string.isRequired,
-    clientSecret: React.PropTypes.string.isRequired,
-    callbackUrl: React.PropTypes.string.isRequired,
+    client_id: React.PropTypes.string.isRequired,
+    client_secret: React.PropTypes.string.isRequired,
+    callback_url: React.PropTypes.string.isRequired,
     scopes: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
   }),
   update: React.PropTypes.func.isRequired,
