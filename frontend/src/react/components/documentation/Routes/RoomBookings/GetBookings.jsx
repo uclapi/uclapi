@@ -28,6 +28,36 @@ print(r.json())`,
 }
 
 
+let response = `{
+   "ok": true,
+   "bookings": [
+      {
+          "slotid": 998503,
+          "end_time": "2016-09-02T18:00:00+00:00",
+          "description": "split weeks to assist rooming 29.06",
+          "roomname": "Torrington (1-19) 433",
+          "siteid": "086",
+          "contact": "Ms Leah Markwick",
+          "weeknumber": 1,
+          "roomid": "433",
+          "start_time": "2016-09-02T09:00:00+00:00",
+          "phone": "45699"
+       },
+       ...
+    ],
+    "next_page_exists": true,
+    "page_token": "6hb14hXjRV",
+    "count": 1197
+}
+`
+
+let responseCodeExample = {
+  python: response,
+  javascript: response,
+  shell: response
+}
+
+
 export default class GetBookings extends React.Component {
 
     render () {

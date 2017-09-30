@@ -10,14 +10,16 @@ let codeExamples = {
 
 params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
-  "contact": "Mark"
+  "roomid": "433"
+  "siteid": "086"
 }
-r = requests.get("https://uclapi.com/roombookings/bookings", params=params)
+
+r = requests.get("https://uclapi.com/roombookings/equipment", params=params)
 print(r.json())`,
 
-  shell: `curl https://uclapi.com/roombookings/bookings?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&contact=Mark`,
+  shell: `curl https://uclapi.com/roombookings/equipment?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&roomid=433&siteid=086`,
 
-  javascript: `fetch("https://uclapi.com/roombookings/bookings?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&contact=Mark")
+  javascript: `fetch("https://uclapi.com/roombookings/equipment?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&roomid=433&siteid=086")
 .then((response) => {
   return response.json()
 })
@@ -28,44 +30,97 @@ print(r.json())`,
 }
 
 
+let response = `{
+  "ok": true,
+  "equipment": [
+    {
+      "type": "FF",
+      "description": "Managed PC",
+      "units": 1
+    },
+    {
+      "type": "FE",
+      "description": "Chairs with Tables",
+      "units": 1
+    },
+    ...
+  ]
+}
+`
+
+let responseCodeExample = {
+  python: response,
+  javascript: response,
+  shell: response
+}
+
+
 export default class GetEquiment extends React.Component {
 
     render () {
       return (
-        <Topic
-          activeLanguage={this.props.activeLanguage}
-          codeExamples={codeExamples}>
-          <h1 id="rooms/get-bookings">Get Bookings</h1>
-          <p>
-            This endpoint shows the results to a bookings or space availability query.
-            It returns a paginated list of bookings.
-            Note: This endpoint only returns publicly displayed bookings.
-            Departmental bookings are not included.
-          </p>
-          <Table
-            name="Query Pararmeters">
-            <Cell
-              name="token"
-              requirement="required"
-              example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
-              description="Authentication token" />
-            <Cell
-              name="roomname"
-              requirement="optional"
-              example="Cruciform Building B.3.05"
-              description="The name of the room. It often includes the name of the site (building) as well." />
-            <Cell
-              name="roomid"
-              requirement="optional"
-              example="433"
-              description="The room ID (not to be confused with the roomname)." />
-            <Cell
-              name="start_datetime"
-              requirement="optional"
-              example="2011-03-06T03:36:45+00:00"
-              description="Start datetime of the booking. Returns bookings with a start_datetime after the one supplied. Follows the ISO 8601 formatting standard." />
-          </Table>
-        </Topic>
+        <div>
+          <Topic
+            activeLanguage={this.props.activeLanguage}
+            codeExamples={codeExamples}>
+            <h1 id="rooms/get-equipment">Get Equipment</h1>
+            <p>
+              This endpoint returns any equipment/feature information about a specific room. So, for example whether there is a Whiteboard or a DVD Player in the room. A full example can be seen here.
+            </p>
+            <p>
+              You need to supply a token, roomid, and siteid to get a response.
+            </p>
+
+            <Table
+              name="Query Pararmeters">
+              <Cell
+                name="token"
+                requirement="required"
+                example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
+                description="Authentication token" />
+              <Cell
+                name="roomid"
+                requirement="optional"
+                example="433"
+                description="The room ID (not to be confused with the roomname)." />
+              <Cell
+                name="siteid"
+                requirement="optional"
+                example="086"
+                description="Every room is inside a site (building). All sites have IDs." />
+            </Table>
+          </Topic>
+
+          <Topic
+            activeLanguage={this.props.activeLanguage}
+            codeExamples={responseCodeExample}>
+            <h2>Response</h2>
+            <p>
+              The equipment field contains a list of equipment items. This list can have a different length depending on the room, and it can also be empty.
+            </p>
+            <p>
+              Each equipment item contains a type, a description, and the number of units.
+            </p>
+            <Table
+              name="Response">
+              <Cell
+                name="type"
+                extra="string"
+                example="FE"
+                description="The type of equipment. Either Fixed Equipment (FE) or Fixed Feature (FF)." />
+              <Cell
+                name="description"
+                extra="string"
+                example="Managed PC"
+                description="What the piece of equipment actually is." />
+              <Cell
+                name="units"
+                extra="int"
+                example="1"
+                description="The number of times this piece of equipment exists in the room." />
+            </Table>
+          </Topic>
+        </div>
       )
     }
 
