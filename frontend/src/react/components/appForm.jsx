@@ -17,7 +17,7 @@ class AppForm extends React.Component {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'X-CSRFToken':Cookies.get('csrftoken') 
+        'X-CSRFToken':Cookies.get('csrftoken')
       },
       body: 'name=' + this.refs.name.value
     }).then((res)=>{
@@ -55,9 +55,9 @@ class AppForm extends React.Component {
           </div>
           <div className="pure-g">
             <div className="pure-u-1-24"></div>
-            <button type="submit" className="pure-button pure-button-primary pure-u-10-24">Create</button>
-            <div className="pure-u-2-24"></div>
             <button type="button" className="pure-button button-error pure-u-10-24" onClick={this.props.close}>Cancel</button>
+            <div className="pure-u-2-24"></div>
+            <button type="submit" className="pure-button pure-button-primary pure-u-10-24">Create</button>
             <div className="pure-u-1-24>"></div>
           </div>
           <label className="error">{this.state.error}</label>
