@@ -1,21 +1,24 @@
 from django.db import models
 
 models.options.DEFAULT_NAMES += ('_DATABASE',)
+
+
 class Weekstructure(models.Model):
     setid = models.TextField(max_length=10)
     weeknumber = models.BigIntegerField()
     startdate = models.DateField()
-    description = models.TextField(max_length=80)
+    description = models.TextField(primary_key=True, max_length=80)
     mappedto = models.BigIntegerField()
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.WEEKSTRUCTURE'
+        db_table = 'NOSH_CMIS_WEEKSTRUCTURE'
         _DATABASE = 'roombookings'
+
 
 class Students(models.Model):
     setid = models.TextField(max_length=10)
-    studentid = models.TextField(max_length=12)
+    studentid = models.TextField(primary_key=True, max_length=12)
     name = models.TextField(max_length=120)
     linkcode = models.TextField(max_length=20)
     courseid = models.TextField(max_length=12)
@@ -59,15 +62,16 @@ class Students(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.STUDENTS'
+        db_table = 'NOSH_CMIS_STUDENTS'
         _DATABASE = 'roombookings'
+
 
 class Sites(models.Model):
     setid = models.TextField(max_length=10)
     siteid = models.TextField(max_length=10)
     sitename = models.TextField(max_length=80)
     address1 = models.TextField(max_length=80)
-    address2 = models.TextField(max_length=80)
+    address2 = models.TextField(primary_key=True, max_length=80)
     address3 = models.TextField(max_length=80)
     address4 = models.TextField(max_length=80)
     phone1 = models.TextField(max_length=50)
@@ -79,17 +83,18 @@ class Sites(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.SITES'
+        db_table = 'NOSH_CMIS_SITES'
         _DATABASE = 'roombookings'
+
 
 class Module(models.Model):
     setid = models.TextField(max_length=10)
-    moduleid = models.TextField(max_length=12)
+    moduleid = models.TextField(primary_key=True, max_length=12)
     owner = models.TextField(max_length=10)
     name = models.TextField(max_length=120)
     category = models.TextField(max_length=10)
     classif = models.TextField(max_length=10)
-    linkcode = models.TextField(max_length=20)
+    linkcode = models.TextField(primary_key=True, max_length=20)
     csize = models.BigIntegerField()
     minsize = models.BigIntegerField()
     maxsize = models.BigIntegerField()
@@ -103,8 +108,9 @@ class Module(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.MODULE'
+        db_table = 'NOSH_CMIS_MODULE'
         _DATABASE = 'roombookings'
+
 
 class Lecturer(models.Model):
     setid = models.TextField(max_length=10)
@@ -118,19 +124,20 @@ class Lecturer(models.Model):
     costtype = models.TextField(max_length=10)
     linkcode = models.TextField(max_length=20)
     owner = models.TextField(max_length=10)
-    displectid = models.TextField(max_length=10)
+    displectid = models.TextField(primary_key=True, max_length=10)
     covprior = models.BigIntegerField()
     covingprior = models.BigIntegerField()
     excludecover = models.BigIntegerField()
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.LECTURER'
+        db_table = 'NOSH_CMIS_LECTURER'
         _DATABASE = 'roombookings'
+
 
 class Sources(models.Model):
     setid = models.TextField(max_length=10)
-    sourcesid = models.TextField(max_length=20)
+    sourcesid = models.TextField(primary_key=True, max_length=20)
     name = models.TextField(max_length=250)
     descrip = models.TextField(max_length=100)
     deptid = models.TextField(max_length=10)
@@ -140,19 +147,21 @@ class Sources(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.SOURCES'
+        db_table = 'NOSH_CMIS_SOURCES'
         _DATABASE = 'roombookings'
 
+
 class Ccalmaps(models.Model):
-    setid = models.TextField(max_length=10)
+    setid = models.TextField(primary_key=True, max_length=10)
     dayposn = models.BigIntegerField()
     weeknum = models.BigIntegerField()
     mapdate = models.DateField()
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.CCALMAPS'
+        db_table = 'NOSH_CMIS_CCALMAPS'
         _DATABASE = 'roombookings'
+
 
 class Depts(models.Model):
     deptid = models.TextField(max_length=10)
@@ -160,7 +169,7 @@ class Depts(models.Model):
     category = models.TextField(max_length=10)
     type = models.TextField(max_length=10)
     linkcode = models.TextField(max_length=20)
-    headofdepartment = models.TextField(max_length=50)
+    headofdepartment = models.TextField(primary_key=True, max_length=50)
     headphone = models.TextField(max_length=50)
     address1 = models.TextField(max_length=50)
     address2 = models.TextField(max_length=50)
@@ -172,8 +181,9 @@ class Depts(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.DEPTS'
+        db_table = 'NOSH_CMIS_DEPTS'
         _DATABASE = 'roombookings'
+
 
 class Weekmapstring(models.Model):
     setid = models.TextField(max_length=10)
@@ -181,17 +191,18 @@ class Weekmapstring(models.Model):
     name = models.TextField(max_length=50)
     weeks = models.TextField(max_length=104)
     numweeks = models.BigIntegerField()
-    statweeks = models.TextField(max_length=10)
+    statweeks = models.TextField(primary_key=True, max_length=10)
     drstatus = models.BigIntegerField()
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.WEEKMAPSTRING'
+        db_table = 'NOSH_CMIS_WEEKMAPSTRING'
         _DATABASE = 'roombookings'
+
 
 class Contact(models.Model):
     setid = models.TextField(max_length=10)
-    contactid = models.TextField(max_length=10)
+    contactid = models.TextField(primary_key=True, max_length=10)
     name = models.TextField(max_length=80)
     company = models.TextField(max_length=80)
     address = models.TextField(max_length=200)
@@ -208,8 +219,9 @@ class Contact(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.CONTACT'
+        db_table = 'NOSH_CMIS_CONTACT'
         _DATABASE = 'roombookings'
+
 
 class Slotdetails(models.Model):
     setid = models.TextField(max_length=10)
@@ -234,7 +246,7 @@ class Slotdetails(models.Model):
     notes = models.TextField(max_length=100)
     speaker = models.TextField(max_length=40)
     spktitle = models.TextField(max_length=40)
-    spktopic = models.TextField(max_length=50)
+    spktopic = models.TextField(primary_key=True, max_length=50)
     spkaddr = models.TextField(max_length=100)
     urlline = models.TextField(max_length=100)
     weeklystatus = models.TextField(max_length=60)
@@ -245,8 +257,9 @@ class Slotdetails(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.SLOTDETAILS'
+        db_table = 'NOSH_CMIS_SLOTDETAILS'
         _DATABASE = 'roombookings'
+
 
 class Classgrps(models.Model):
     setid = models.TextField(max_length=10)
@@ -259,7 +272,7 @@ class Classgrps(models.Model):
     minsize = models.BigIntegerField()
     maxsize = models.BigIntegerField()
     prefmaxsize = models.BigIntegerField()
-    linkcode = models.TextField(max_length=20)
+    linkcode = models.TextField(primary_key=True, max_length=20)
     estsize = models.BigIntegerField()
     thiskey = models.BigIntegerField()
     parentkey = models.BigIntegerField()
@@ -269,12 +282,13 @@ class Classgrps(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.CLASSGRPS'
+        db_table = 'NOSH_CMIS_CLASSGRPS'
         _DATABASE = 'roombookings'
+
 
 class Crscompmodules(models.Model):
     setid = models.TextField(max_length=10)
-    courseid = models.TextField(max_length=12)
+    courseid = models.TextField(primary_key=True, max_length=12)
     crsyear = models.BigIntegerField()
     deptid = models.TextField(max_length=10)
     moduleid = models.TextField(max_length=12)
@@ -285,21 +299,23 @@ class Crscompmodules(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.CRSCOMPMODULES'
+        db_table = 'NOSH_CMIS_CRSCOMPMODULES'
         _DATABASE = 'roombookings'
+
 
 class Classifications(models.Model):
     setid = models.TextField(max_length=10)
     classid = models.TextField(max_length=10)
     type = models.TextField(max_length=15)
-    name = models.TextField(max_length=55)
+    name = models.TextField(primary_key=True, max_length=55)
     description = models.TextField(max_length=120)
     linkcode = models.TextField(max_length=20)
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.CLASSIFICATIONS'
+        db_table = 'NOSH_CMIS_CLASSIFICATIONS'
         _DATABASE = 'roombookings'
+
 
 class Rooms(models.Model):
     roomid = models.TextField(max_length=10)
@@ -307,7 +323,7 @@ class Rooms(models.Model):
     name = models.TextField(max_length=80)
     category = models.TextField(max_length=10)
     type = models.TextField(max_length=10)
-    classification = models.TextField(max_length=10)
+    classification = models.TextField(primary_key=True, max_length=10)
     roomgrpcode = models.TextField(max_length=10)
     zone = models.TextField(max_length=10)
     capacity = models.BigIntegerField()
@@ -323,19 +339,21 @@ class Rooms(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.ROOMS'
+        db_table = 'NOSH_CMIS_ROOMS'
         _DATABASE = 'roombookings'
 
+
 class Weekmapnumeric(models.Model):
-    setid = models.TextField(max_length=10)
+    setid = models.TextField(primary_key=True, max_length=10)
     weekid = models.BigIntegerField()
     weeknumber = models.BigIntegerField()
     drstatus = models.BigIntegerField()
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.WEEKMAPNUMERIC'
+        db_table = 'NOSH_CMIS_WEEKMAPNUMERIC'
         _DATABASE = 'roombookings'
+
 
 class Crsavailmodules(models.Model):
     setid = models.TextField(max_length=10)
@@ -343,7 +361,7 @@ class Crsavailmodules(models.Model):
     crsyear = models.BigIntegerField()
     groupnum = models.BigIntegerField()
     deptid = models.TextField(max_length=10)
-    moduleid = models.TextField(max_length=12)
+    moduleid = models.TextField(primary_key=True, max_length=12)
     instid = models.BigIntegerField()
     semid = models.BigIntegerField()
     unitvalue = models.TextField(max_length=19)
@@ -351,11 +369,12 @@ class Crsavailmodules(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.CRSAVAILMODULES'
+        db_table = 'NOSH_CMIS_CRSAVAILMODULES'
         _DATABASE = 'roombookings'
 
+
 class Timetable(models.Model):
-    slotid = models.BigIntegerField()
+    slotid = models.BigIntegerField(primary_key=True)
     slotentry = models.BigIntegerField()
     slottotal = models.BigIntegerField()
     setid = models.TextField(max_length=10)
@@ -449,12 +468,13 @@ class Timetable(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.TIMETABLE'
+        db_table = "NOSH_CMIS_TIMETABLE"
         _DATABASE = 'roombookings'
+
 
 class Stumodules(models.Model):
     setid = models.TextField(max_length=10)
-    studentid = models.TextField(max_length=12)
+    studentid = models.TextField(primary_key=True, max_length=12)
     deptid = models.TextField(max_length=10)
     moduleid = models.TextField(max_length=12)
     modgrpcode = models.TextField(max_length=10)
@@ -477,25 +497,27 @@ class Stumodules(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.STUMODULES'
+        db_table = 'NOSH_CMIS_STUMODULES'
         _DATABASE = 'roombookings'
+
 
 class Features(models.Model):
     setid = models.TextField(max_length=10)
     featureid = models.TextField(max_length=10)
-    description = models.TextField(max_length=80)
+    description = models.TextField(primary_key=True, max_length=80)
     linkcode = models.TextField(max_length=20)
     contactid = models.TextField(max_length=10)
     cost = models.TextField(max_length=10)
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.FEATURES'
+        db_table = 'NOSH_CMIS_FEATURES'
         _DATABASE = 'roombookings'
+
 
 class Equipment(models.Model):
     setid = models.TextField(max_length=10)
-    equipid = models.TextField(max_length=10)
+    equipid = models.TextField(primary_key=True, max_length=10)
     description = models.TextField(max_length=80)
     linkcode = models.TextField(max_length=20)
     contactid = models.TextField(max_length=10)
@@ -503,12 +525,13 @@ class Equipment(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.EQUIPMENT'
+        db_table = 'NOSH_CMIS_EQUIPMENT'
         _DATABASE = 'roombookings'
+
 
 class Course(models.Model):
     setid = models.TextField(max_length=10)
-    courseid = models.TextField(max_length=12)
+    courseid = models.TextField(primary_key=True, max_length=12)
     name = models.TextField(max_length=80)
     category = models.TextField(max_length=10)
     type = models.TextField(max_length=10)
@@ -528,6 +551,5 @@ class Course(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'CMIS_OWNER.COURSE'
+        db_table = 'NOSH_CMIS_COURSE'
         _DATABASE = 'roombookings'
-

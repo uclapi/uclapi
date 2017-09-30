@@ -50,7 +50,6 @@ for index in find_all("CREATE TABLE", file_string):
     table_fields = list(map(lambda k: strip_prefix(strip_prefix(k, ","), " "), table_fields))
     data[strip_prefix(table_name.replace("\n", ""), " ")] = table_fields
 
-
 def find_prefix(right):
     name_map = {
         "text": "VARCHAR2",
@@ -97,4 +96,4 @@ for table_name, fields in data.items():
         right_hand = map_field(rest)
         ret_str += "    {} = models.{}\n".format(field_name.lower(), right_hand)
     ret_str += a.replace("####", table_name[:-1])
-    print(ret_str)
+    # print(ret_str)
