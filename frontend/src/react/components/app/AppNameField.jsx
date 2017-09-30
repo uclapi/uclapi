@@ -1,11 +1,7 @@
 import React from 'react';
-import { EditableTextField } from './editableTextField.jsx';
-import Cookies from 'js-cookie';
 
-const defaultHeaders = {
-  'Content-Type': 'application/x-www-form-urlencoded',
-  'X-CSRFToken': Cookies.get('csrftoken')
-};
+import { EditableTextField } from './../editableTextField.jsx';
+import defaultHeaders from './defaultHeaders.js';
 
 class AppNameField extends EditableTextField {
   constructor(props){
@@ -50,7 +46,10 @@ class AppNameField extends EditableTextField {
 }
 
 AppNameField.propTypes = {
-  scopes: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+  origValue: React.PropTypes.string.isRequired,
+  update: React.PropTypes.func.isRequired,
   appId: React.PropTypes.string.isRequired,
-  setError: React.PropTypes.func
+  setError: React.PropTypes.func.isRequired,
 };
+
+export default AppNameField;

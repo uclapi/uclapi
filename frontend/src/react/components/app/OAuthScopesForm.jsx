@@ -1,11 +1,7 @@
 import React from 'react';
-import Cookies from 'js-cookie';
 import update from 'immutability-helper';
 
-const defaultHeaders = {
-  'Content-Type': 'application/x-www-form-urlencoded',
-  'X-CSRFToken': Cookies.get('csrftoken')
-};
+import defaultHeaders from './defaultHeaders.js';
 
 class OAuthScopesForm extends React.Component {
   constructor(props){
@@ -93,3 +89,5 @@ OAuthScopesForm.propTypes = {
   appId: React.PropTypes.string.isRequired,
   setError: React.PropTypes.func
 };
+
+export default OAuthScopesForm;
