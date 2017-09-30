@@ -1,6 +1,7 @@
 import React from 'react';
 import 'whatwg-fetch';
 import Collapse, { Panel } from 'rc-collapse';
+import { StyleSheet, css } from 'aphrodite';
 
 import {CopyActionField} from './copyField.jsx';
 import RelativeDate from './relativeDate.jsx';
@@ -9,6 +10,12 @@ import DeleteButton from './app/DeleteButton.jsx';
 import defaultHeaders from './app/defaultHeaders.js';
 import OAuth from './app/OAuth.jsx';
 import Webhook from './app/Webhook.jsx';
+
+const styles = StyleSheet.create({
+  timestamps: {
+    margin: '10px 0',
+  }
+});
 
 class App extends React.Component {
   constructor(props){
@@ -93,7 +100,7 @@ class App extends React.Component {
             />
           </div>
         </div>
-        <div>
+        <div className={css(styles.timestamps)}>
           <RelativeDate date={this.props.created} label={'Created: '} />
           <RelativeDate date={this.props.updated} label={'Last Updated: '} />
         </div>
