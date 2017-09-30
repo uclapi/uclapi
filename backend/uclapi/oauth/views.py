@@ -138,9 +138,8 @@ def shibcallback(request):
             "name": display_name
         })
     else:
-        # user exists already, update values
+        # User exists already, so update the values
         user = User.objects.get(email=eppn)
-        request.session["user_id"] = user.id
         user.full_name = display_name
         user.given_name = given_name
         user.department = department
@@ -153,6 +152,9 @@ def shibcallback(request):
             "email": eppn,
             "name": display_name
         })
+
+    # Log the user into the system using their User ID
+    request.session["user_id"] = user.id
 
     signer = TimestampSigner()
     response_data = {
