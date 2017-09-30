@@ -119,7 +119,7 @@ def shibcallback(request):
     # If a user has never used the API before then we need to sign them up
     try:
         user = User.objects.get(email=eppn)
-    except ObjectDoesNotExist:
+    except User.DoesNotExist:
         # create a new user
         user = User(
             email=eppn,
