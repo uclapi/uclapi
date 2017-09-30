@@ -372,43 +372,6 @@ class VerifyOwnershipTestCase(TestCase):
         )
 
 
-class URLSafetyTestCase(TestCase):
-    def test_is_url_safe_full_success(self):
-        self.assertTrue(
-            is_url_safe("https://example.com")
-        )
-
-    def test_is_url_safe_https_failure(self):
-        self.assertFalse(
-            is_url_safe("http://example.com")
-        )
-
-    def test_is_url_safe_validators_failure(self):
-        self.assertFalse(
-            is_url_safe("https://asdasd.asd.asd.asd.1234")
-        )
-
-    def test_is_url_safe_validators_failure_private(self):
-        self.assertFalse(
-            is_url_safe("https://127.0.0.1")
-        )
-
-    def test_is_url_safe_validators_failure_private2(self):
-        self.assertFalse(
-            is_url_safe("https://10.0.0.1")
-        )
-
-    def test_is_url_safe_forbidden(self):
-        self.assertFalse(
-            is_url_safe("https://uclapi.com/test/test")
-        )
-
-    def test_is_url_safe_forbidden2(self):
-        self.assertFalse(
-            is_url_safe("https://staging.ninja/test/test")
-        )
-
-
 class RefreshVerifcationSecretViewTests(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()

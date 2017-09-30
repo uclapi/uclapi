@@ -3,8 +3,7 @@ from .models import App, User
 import keen
 from django.core.exceptions import ObjectDoesNotExist
 import requests
-import validators
-from .app_helpers import generate_secret
+from .app_helpers import generate_secret, is_url_safe
 
 
 def user_owns_app(user_id, app_id):
@@ -40,25 +39,6 @@ def verify_ownership(webhook_url, ownership_challenge, verification_secret):
             resp["challenge"] ==
             ownership_challenge
         )
-
-
-def is_url_safe(url):
-    if not url.startswith("https://"):
-        return False
-
-    if not validators.url(url, public=True):
-        return False
-
-    whitelist_urls = ["https://live-roombookings.uclapi.com/webhook/"]
-    if url in whitelist_urls:
-        return True
-
-    forbidden_urls = ["uclapi.com", "staging.ninja"]
-    for furl in forbidden_urls:
-        if furl in url:
-            return False
-
-    return True
 
 
 def edit_webhook(request):
