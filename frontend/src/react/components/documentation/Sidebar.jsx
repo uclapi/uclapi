@@ -64,46 +64,56 @@ export default class Sidebar extends React.Component {
               <ListItem primaryText="API Rate Limits" value="/get-started/usage" />,
             ]}
           />
+
           <ListItem
             primaryText="Room Bookings"
             primaryTogglesNestedList={true}
             nestedItems={[
               <ListItem
                 primaryText="Get Rooms"
-                value="/components/app-bar"
-                href="#/components/app-bar"
+                href="#/roombookings/rooms"
               />,
               <ListItem
                 primaryText="Get Bookings"
-                value="/components/auto-complete"
-                href="#/components/auto-complete"
+                href="#/roombookings/bookings"
               />,
               <ListItem
                 primaryText="Get Equipment"
-                value="/components/avatar"
-                href="#/components/avatar"
+                href="#/roombookings/equipment"
               />,
             ]}
           />
+
+          <ListItem
+            primaryText="Search"
+            primaryTogglesNestedList={true}
+            nestedItems={[
+              <ListItem
+                primaryText="Get People"
+                href="#/search/people"
+              />,
+            ]}
+          />
+
           <ListItem
             primaryText="Get Involved"
             primaryTogglesNestedList={true}
             nestedItems={[
               <ListItem primaryText="Community" value="/discover-more/community" />,
               <ListItem primaryText="Contributing" value="/discover-more/contributing" />,
-              <ListItem primaryText="Showcase" value="/discover-more/showcase" />,
-              <ListItem primaryText="Related projects" value="/discover-more/related-projects" />,
             ]}
           />
         </SelectableList>
+
         <Divider />
+
         <SelectableList
           value=""
         >
           <Subheader>Resources</Subheader>
-          <ListItem primaryText="GitHub" value="https://github.com/callemall/material-ui" />
-          <ListItem primaryText="Facebook" value="https://github.com/callemall/material-ui" />
-          <ListItem primaryText="Twitter" value="https://github.com/callemall/material-ui" />
+          <ListItem primaryText="GitHub" href="https://github.com/callemall/material-ui" />
+          <ListItem primaryText="Facebook" href="https://github.com/callemall/material-ui" />
+          <ListItem primaryText="Twitter" href="https://github.com/callemall/material-ui" />
         </SelectableList>
       </Drawer>
     );

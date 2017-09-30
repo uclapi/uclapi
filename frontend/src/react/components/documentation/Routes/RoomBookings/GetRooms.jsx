@@ -1,0 +1,178 @@
+import React from 'react';
+
+import Topic from './../../Topic.jsx';
+import Table from './../../Table.jsx';
+import Cell from './../../Cell.jsx';
+
+
+let codeExamples = {
+  python: `import requests
+
+params = {
+  "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
+}
+r = requests.get("https://uclapi.com/roombookings/rooms", params=params)
+print(r.json())`,
+
+  shell: `curl https://uclapi.com/roombookings/rooms?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb`,
+
+  javascript: `fetch("https://uclapi.com/roombookings/rooms?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
+.then((response) => {
+  return response.json()
+})
+.then((json) => {
+  console.log(json);
+})`
+}
+
+let response = `{
+  "ok": true,
+  "rooms": [
+    {
+      "roomname": "Wilkins Building (Main Building) Portico",
+      "roomid": "Z4",
+      "siteid": "005",
+      "sitename": "Main Building",
+      "capacity": 50,
+      "classification": "SS",
+      "automated": "N",
+      "location": {
+        "coordinates": {
+          "lat": "51.524699",
+          "lng": "-0.13366"
+        },
+        "address": [
+          "Gower Street",
+          "London",
+          "WC1E 6BT",
+          ""
+        ]
+      }
+    }
+    ...
+  ]
+}
+`
+
+let responseCodeExample = {
+  python: response,
+  javascript: response,
+  shell: response
+}
+
+
+export default class GetRooms extends React.Component {
+
+    render () {
+      return (
+        <div>
+          <Topic
+            activeLanguage={this.props.activeLanguage}
+            codeExamples={codeExamples}>
+            <h1 id="rooms/get-bookings">Get Rooms</h1>
+            <p>
+              This endpoint returns rooms and information about them. If you don’t specify any query parameters besides the token, all rooms will be returned.
+            </p>
+            <p>
+              <i>
+                Note: This endpoint only returns publicly bookable rooms. Departmentally bookable rooms are not included.
+              </i>
+            </p>
+            <Table
+              name="Query Pararmeters">
+              <Cell
+                name="token"
+                requirement="required"
+                example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
+                description="Authentication token" />
+              <Cell
+                name="roomname"
+                requirement="optional"
+                example="Torrington (1-19) 433"
+                description="The name of the room. It often includes the name of the site (building) as well." />
+              <Cell
+                name="roomid"
+                requirement="optional"
+                example="433"
+                description="The room ID (not to be confused with the roomname)." />
+              <Cell
+                name="siteid"
+                requirement="optional"
+                example="086"
+                description="Every room is inside a site (building). All sites have IDs." />
+              <Cell
+                name="sitename"
+                requirement="optional"
+                example="Torrington Place, 1-19"
+                description="Every site (building) has a name. In some cases this is contained in the roomname as well." />
+              <Cell
+                name="classification"
+                requirement="optional"
+                example="CR"
+                description="The type of room. LT = Lecture Theatre, CR = Classroom, SS = Social Space, PC1 = Public Cluster." />
+              <Cell
+                name="capacity"
+                requirement="optional"
+                example="55"
+                description="Every room has a set capacity of how many people can fit inside it. When supplied, all rooms with the given capacity or greater will be returned." />
+            </Table>
+          </Topic>
+
+          <Topic
+            activeLanguage={this.props.activeLanguage}
+            codeExamples={responseCodeExample}>
+            <h2>Response</h2>
+            <p>
+              The room field contains a list of rooms that match your query.
+              If no filters are applied, all rooms will be returned.
+            </p>
+            <Table
+              name="Response">
+              <Cell
+                name="roomname"
+                extra="string"
+                example="Wilkins Building (Main Building) Portico"
+                description="Every site (building) has a name. In some cases this is contained in the roomname as well." />
+              <Cell
+                name="roomid"
+                extra="string"
+                example="Z4"
+                description="The room ID (not to be confused with the roomname)." />
+              <Cell
+                name="siteid"
+                extra="string"
+                example="086"
+                description="Every room is inside a site (building). All sites have IDs." />
+              <Cell
+                name="sitename"
+                extra="string"
+                example="Main Building"
+                description="The name of the site (building)." />
+              <Cell
+                name="capacity"
+                extra="int"
+                example="50"
+                description="The number of people that can fit in the room." />
+              <Cell
+                name="classification"
+                extra="string"
+                example="SS"
+                description="The type of room. LT = Lecture Theatre, CR = Classroom, SS = Social Space, PC1 = Public Cluster." />
+              <Cell
+                name="automated"
+                extra="string"
+                example="N"
+                description="Whether bookings in this room will be confirmed automatically. A stands for automated, and N for not automated. P represents that the confirmation will be automatic, but only under certain circumstances." />
+              <Cell
+                name="location"
+                extra="string"
+                example="-"
+                description="Contains an object with two keys address, and coordinates. address contains an array of address information, which when combined will make up a complete address.
+coordinates contains a lat and lng key with the latitude and longitude of the room." />
+            </Table>
+          </Topic>
+        </div>
+      )
+    }
+
+}
