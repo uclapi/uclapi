@@ -69,7 +69,7 @@ export default class GetRooms extends React.Component {
           <Topic
             activeLanguage={this.props.activeLanguage}
             codeExamples={codeExamples}>
-            <h1 id="rooms/get-bookings">Get Rooms</h1>
+            <h1 id="roombookings/rooms">Get Rooms</h1>
             <p>
               This endpoint returns rooms and information about them. If you don’t specify any query parameters besides the token, all rooms will be returned.
             </p>

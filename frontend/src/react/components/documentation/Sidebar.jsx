@@ -71,15 +71,15 @@ export default class Sidebar extends React.Component {
             nestedItems={[
               <ListItem
                 primaryText="Get Rooms"
-                href="#/roombookings/rooms"
+                href="#roombookings/rooms"
               />,
               <ListItem
                 primaryText="Get Bookings"
-                href="#/roombookings/bookings"
+                href="#roombookings/bookings"
               />,
               <ListItem
                 primaryText="Get Equipment"
-                href="#/roombookings/equipment"
+                href="#roombookings/equipment"
               />,
             ]}
           />
@@ -90,7 +90,7 @@ export default class Sidebar extends React.Component {
             nestedItems={[
               <ListItem
                 primaryText="Get People"
-                href="#/search/people"
+                href="#search/people"
               />,
             ]}
           />

@@ -63,7 +63,7 @@ export default class GetEquiment extends React.Component {
           <Topic
             activeLanguage={this.props.activeLanguage}
             codeExamples={codeExamples}>
-            <h1 id="rooms/get-equipment">Get Equipment</h1>
+            <h1 id="roombookings/equipment">Get Equipment</h1>
             <p>
               This endpoint returns any equipment/feature information about a specific room. So, for example whether there is a Whiteboard or a DVD Player in the room. A full example can be seen here.
             </p>

@@ -66,7 +66,7 @@ export default class GetBookings extends React.Component {
           <Topic
             activeLanguage={this.props.activeLanguage}
             codeExamples={codeExamples}>
-            <h1 id="rooms/get-bookings">Get Bookings</h1>
+            <h1 id="roombookings/bookings">Get Bookings</h1>
             <p>
               This endpoint shows the results to a bookings or space availability query.
               It returns a paginated list of bookings. Note: This endpoint only returns publicly displayed bookings. Departmental bookings are not included.
