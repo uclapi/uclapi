@@ -18,58 +18,15 @@ from .tasks import keen_add_event_task as keen_add_event
 
 @csrf_exempt
 def shibboleth_callback(request):
-    # this view is user facing, so should return html error page
     # should auth user login or signup
     # then redirect to dashboard homepage
-    try:
-        eppn = request.META['HTTP_EPPN']
-        cn = request.META['HTTP_CN']
-        employee_id = request.META['HTTP_EMPLOYEEID']
-        department = request.META['HTTP_DEPARTMENT']
-        given_name = request.META['HTTP_GIVENNAME']
-        display_name = request.META['HTTP_DISPLAYNAME']
-        groups = request.META['HTTP_UCLINTRANETGROUPS']
-    except KeyError:
-        # didn't receive all required data
-
-        # Delete this code on September 26th 2017! Temporary shib workaround
-        login_reminder = "login-after-2017-09-26-to-fix"
-        department = "temp-not-real-department-{}-{}".format(
-            cn,
-            login_reminder
-        )
-        given_name = "temp-not-real-full-name-{}-{}".format(cn, login_reminder)
-        display_name = "temp-not-real-display-name-{}-{}".format(
-            cn,
-            login_reminder
-        )
-        groups = "temp-groups-{}-{}".format(cn, login_reminder),
-        try:
-            user = User.objects.get(email=eppn)
-        except User.DoesNotExist:
-            # create new user
-            new_user = User(
-                email=eppn,
-                full_name=display_name,
-                given_name=given_name,
-                department=department,
-                cn=cn,
-                raw_intranet_groups=groups,
-                employee_id=employee_id
-            )
-            new_user.save()
-
-            request.session["user_id"] = new_user.id
-            keen_add_event.delay("signup", {
-                "id": new_user.id,
-                "email": eppn,
-                "name": display_name
-            })
-        else:
-            # user already exists, log them in
-            request.session["user_id"] = user.id
-
-        # end temporary shib workaround - delete until here
+    eppn = request.META['HTTP_EPPN']
+    groups = request.META['HTTP_UCLINTRANETGROUPS']
+    cn = request.META['HTTP_CN']
+    department = request.META['HTTP_DEPARTMENT']
+    given_name = request.META['HTTP_GIVENNAME']
+    display_name = request.META['HTTP_DISPLAYNAME']
+    employee_id = request.META['HTTP_EMPLOYEEID']
 
     try:
         user = User.objects.get(email=eppn)

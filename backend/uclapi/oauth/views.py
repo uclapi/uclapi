@@ -108,59 +108,18 @@ def shibcallback(request):
 
     app = App.objects.get(client_id=client_id)
 
-    try:
-        eppn = request.META['HTTP_EPPN']
-        cn = request.META['HTTP_CN']
-        employee_id = request.META['HTTP_EMPLOYEEID']
-        department = request.META['HTTP_DEPARTMENT']
-        given_name = request.META['HTTP_GIVENNAME']
-        display_name = request.META['HTTP_DISPLAYNAME']
-        groups = request.META['HTTP_UCLINTRANETGROUPS']
-    except KeyError:
-
-        # Delete this code on September 26th 2017! Temporary shib workaround
-        login_reminder = "login-after-2017-09-26-to-fix"
-        department = "temp-not-real-department-{}-{}".format(
-            cn,
-            login_reminder
-        )
-        given_name = "temp-not-real-full-name-{}-{}".format(cn, login_reminder)
-        display_name = "temp-not-real-display-name-{}-{}".format(
-            cn,
-            login_reminder
-        )
-        groups = "temp-groups-{}-{}".format(cn, login_reminder),
-        try:
-            user = User.objects.get(email=eppn)
-        except User.DoesNotExist:
-            # create new user
-            new_user = User(
-                email=eppn,
-                full_name=display_name,
-                given_name=given_name,
-                department=department,
-                cn=cn,
-                raw_intranet_groups=groups,
-                employee_id=employee_id
-            )
-            new_user.save()
-
-            request.session["user_id"] = new_user.id
-            keen_add_event.delay("signup", {
-                "id": new_user.id,
-                "email": eppn,
-                "name": display_name
-            })
-        else:
-            # user already exists, log them in
-            request.session["user_id"] = user.id
-
-        # end temporary shib workaround - delete until here
+    eppn = request.META['HTTP_EPPN']
+    groups = request.META['HTTP_UCLINTRANETGROUPS']
+    cn = request.META['HTTP_CN']
+    department = request.META['HTTP_DEPARTMENT']
+    given_name = request.META['HTTP_GIVENNAME']
+    display_name = request.META['HTTP_DISPLAYNAME']
+    employee_id = request.META['HTTP_EMPLOYEEID']
 
     # If a user has never used the API before then we need to sign them up
     try:
         user = User.objects.get(email=eppn)
-    except ObjectDoesNotExist:
+    except User.DoesNotExist:
         # create a new user
         user = User(
             email=eppn,
@@ -179,9 +138,8 @@ def shibcallback(request):
             "name": display_name
         })
     else:
-        # user exists already, update values
+        # User exists already, so update the values
         user = User.objects.get(email=eppn)
-        request.session["user_id"] = user.id
         user.full_name = display_name
         user.given_name = given_name
         user.department = department
@@ -194,6 +152,9 @@ def shibcallback(request):
             "email": eppn,
             "name": display_name
         })
+
+    # Log the user into the system using their User ID
+    request.session["user_id"] = user.id
 
     signer = TimestampSigner()
     response_data = {
