@@ -347,16 +347,16 @@ def userallow(request):
     # Just in case they've tried to be super clever and host multiple apps with
     # the same callback URL, we'll provide the client ID along with the state
     return redirect(
-            app.callback_url + "?result=allowed&code=" + code + "&client_id=" +
-            app.client_id + "&state=" + state
-        )
+        app.callback_url + "?result=allowed&code=" + code + "&client_id=" +
+        app.client_id + "&state=" + state
+    )
 
 
 def token(request):
     try:
-        code = request.GET.get("code")
-        client_id = request.GET.get("client_id")
-        client_secret = request.GET.get("client_secret")
+        code = request.GET["code"]
+        client_id = request.GET["client_id"]
+        client_secret = request.GET["client_secret"]
     except KeyError:
         response = PrettyJsonResponse({
             "ok": False,

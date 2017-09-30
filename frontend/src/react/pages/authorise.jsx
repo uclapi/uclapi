@@ -58,7 +58,7 @@ class AuthoriseApp extends React.Component {
               </ul>
             </div>
             <form method="post" action="/oauth/user/allow" className={formButton}>
-              <button type="submit" className="pure-button pure-button-primary padded">Authorise hackathon</button>
+              <button type="submit" className="pure-button pure-button-primary padded">Authorise {appName}</button>
               <input type="hidden" name="signed_app_data" value={this.state.data.signed_data}/>
               <input type="hidden" name="csrfmiddlewaretoken" value={Cookies.get('csrftoken')}/>
             </form>
