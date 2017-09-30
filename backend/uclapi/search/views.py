@@ -12,13 +12,13 @@ import requests
 @throttle
 @log_api_call
 def people(request):
-    if "name" not in request.GET:
+    if "query" not in request.GET:
         return JsonResponse({
             "ok": False,
-            "error": "Required param name not provided"
+            "error": "No query provided"
         })
 
-    query = request.GET["name"]
+    query = request.GET["query"]
 
     url = (
         "{}?query={}"
@@ -37,16 +37,14 @@ def people(request):
     def serialize_person(person):
         return {
             "name": person["title"],
-            "department": person["metaData"]["7"],
-            "email": person["metaData"]["E"],
-            "status": person["metaData"]["g"]
+            "department": person["metaData"].get("7", ""),
+            "email": person["metaData"].get("E", ""),
+            "status": person["metaData"].get("g", ""),
         }
 
-    people = []
-    for person in results:
-        people.append(serialize_person(person))
+    people = [serialize_person(person) for person in results]
 
     return JsonResponse({
-        "ok": False,
+        "ok": True,
         "people": people
     })
