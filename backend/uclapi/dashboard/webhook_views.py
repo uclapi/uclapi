@@ -1,6 +1,6 @@
 from roombookings.helpers import PrettyJsonResponse
 from .models import App, User
-import keen
+from dashboard.tasks import keen_add_event_task as keen_add_event
 from django.core.exceptions import ObjectDoesNotExist
 import requests
 from .app_helpers import generate_secret, is_url_safe
@@ -120,7 +120,7 @@ def edit_webhook(request):
     webhook.enabled = True
     webhook.save()
 
-    keen.add_event("Webhook edited", {
+    keen_add_event.delay("Webhook edited", {
         "appid": app.id,
         "userid": user_id,
         "url": url,
