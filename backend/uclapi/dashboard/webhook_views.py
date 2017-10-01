@@ -1,7 +1,6 @@
 from roombookings.helpers import PrettyJsonResponse
 from .models import App, User
 from dashboard.tasks import keen_add_event_task as keen_add_event
-from django.core.exceptions import ObjectDoesNotExist
 import requests
 from .app_helpers import generate_secret, is_url_safe
 
@@ -10,7 +9,7 @@ def user_owns_app(user_id, app_id):
     user = User.objects.get(id=user_id)
     try:
         app = App.objects.get(id=app_id)
-    except ObjectDoesNotExist:
+    except App.DoesNotExist:
         return False
     return app.user == user
 
