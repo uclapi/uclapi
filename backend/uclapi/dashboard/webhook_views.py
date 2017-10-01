@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from roombookings.helpers import PrettyJsonResponse
 from .models import App, User
 import keen
 from django.core.exceptions import ObjectDoesNotExist
@@ -43,7 +43,7 @@ def verify_ownership(webhook_url, ownership_challenge, verification_secret):
 
 def edit_webhook(request):
     if request.method != "POST":
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "message": (
                 "Request is not of method POST"
@@ -60,7 +60,7 @@ def edit_webhook(request):
         contact = request.POST["contact"]
         user_id = request.session["user_id"]
     except KeyError:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "message": (
                 "Request is missing parameters. Should have app_id"
@@ -72,7 +72,7 @@ def edit_webhook(request):
         return response
 
     if not user_owns_app(user_id, app_id):
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "message": (
                 "App does not exist or user is lacking permission."
@@ -86,7 +86,7 @@ def edit_webhook(request):
 
     if url != webhook.url:
         if not is_url_safe(url):
-            response = JsonResponse({
+            response = PrettyJsonResponse({
                 "ok": False,
                 "message": (
                     "Invalid URL"
@@ -100,7 +100,7 @@ def edit_webhook(request):
             generate_secret(),
             webhook.verification_secret
         ):
-            response = JsonResponse({
+            response = PrettyJsonResponse({
                 "ok": False,
                 "message": (
                     "Ownership of webhook can't be verified."
@@ -129,7 +129,7 @@ def edit_webhook(request):
         "contact": contact,
     })
 
-    return JsonResponse({
+    return PrettyJsonResponse({
         "ok": True,
         "message": "Webhook sucessfully changed.",
         "url": webhook.url,
@@ -141,7 +141,7 @@ def edit_webhook(request):
 
 def refresh_verification_secret(request):
     if request.method != "POST":
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "message": (
                 "Request is not of method POST"
@@ -154,7 +154,7 @@ def refresh_verification_secret(request):
         app_id = request.POST["app_id"]
         user_id = request.session["user_id"]
     except KeyError:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "message": (
                 "Request is missing parameters. Should have app_id"
@@ -165,7 +165,7 @@ def refresh_verification_secret(request):
         return response
 
     if not user_owns_app(user_id, app_id):
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "message": (
                 "App does not exist or user is lacking permission."
@@ -181,7 +181,7 @@ def refresh_verification_secret(request):
     webhook.verification_secret = new_secret
     webhook.save()
 
-    return JsonResponse({
+    return PrettyJsonResponse({
         "ok": True,
         "new_secret": new_secret
     })
