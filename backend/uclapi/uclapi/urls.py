@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^dashboard/', include('dashboard.urls')),
     url(r'^roombookings/', include('roombookings.urls')),
     url(r'^oauth/', include('oauth.urls')),
+    url(r'^timetable/', include('timetable.urls')),
     url(r'^$', get_started)
 ]

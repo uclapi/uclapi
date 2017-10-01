@@ -5,10 +5,9 @@ from oauth.models import OAuthToken
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Students
 from django.conf import settings
-from .api_helpers import get_timetable
+from .app_helpers import get_timetable
 
 
-# Create your views here.
 def get_personal_timetable(request):
     try:
         token = request.GET["token"]
@@ -28,12 +27,12 @@ def get_personal_timetable(request):
         )
 
     try:
-        student = Students.Objects.filter(
+        student = Students.objects.filter(
             qtype2=user.employee_id, setid=settings.ROOMBOOKINGS_SETID)[0]
     except IndexError:
-        return JsonResponse(
+        return JsonResponse({
             "ok": False,
             "error": "Student does not have any timetable assigned."
-        )
+        })
 
-    modules = get_timetable(student)
+    return JsonResponse(get_timetable(student))
