@@ -71,6 +71,9 @@ export default class GetRooms extends React.Component {
             codeExamples={codeExamples}>
             <h1 id="roombookings/rooms">Get Rooms</h1>
             <p>
+              Endpoint: <code>https://uclapi.com/roombookings/rooms</code>
+            </p>
+            <p>
               This endpoint returns rooms and information about them. If you don’t specify any query parameters besides the token, all rooms will be returned.
             </p>
             <p>
