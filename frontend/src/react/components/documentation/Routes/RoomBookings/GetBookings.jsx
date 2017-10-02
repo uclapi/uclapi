@@ -159,6 +159,28 @@ export default class GetBookings extends React.Component {
                 description="Total number of bookings matching the query. The count field will only be in the first response to a query" />
             </Table>
           </Topic>
+
+          <Topic
+            noExamples={true}>
+            <Table
+              name="Errors">
+              <Cell
+                name="No token provided"
+                description="Gets returned when you have not supplied a token in your request." />
+              <Cell
+                name="Token does not exist"
+                description="Gets returned when you supply an invalid token." />
+              <Cell
+                name="date/time isn't formatted as suggested in the docs"
+                description="Passed datetime parameter does not conform to the ISO8601 format" />
+              <Cell
+                name="results_per_page should be an integer"
+                description="results_per_page should always be an integer." />
+              <Cell
+                name="Page token does not exist"
+                description="The passed page_token parameter isn’t a valid one." />
+              </Table>
+          </Topic>
         </div>
       )
     }

@@ -31,6 +31,15 @@ p {
   line-height: 26px;
 }
 
+.warning {
+  font-size: 14px;
+  line-height: 26px;
+  background-color: #C97A7E;
+  padding: 10px;
+  border-radius: 8px;
+  color: black;
+}
+
 .text {
   padding: 20px;
 }
@@ -137,11 +146,4 @@ code {
   }
 
   vertical-align: middle;
-}
-
-.warning {
-  background-color: #C97A7E;
-  padding: 10px;
-  border-radius: 8px;
-  color: black;
 }

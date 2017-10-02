@@ -171,6 +171,19 @@ export default class GetRooms extends React.Component {
 coordinates contains a lat and lng key with the latitude and longitude of the room." />
             </Table>
           </Topic>
+
+          <Topic
+            noExamples={true}>
+            <Table
+              name="Errors">
+              <Cell
+                name="No token provided"
+                description="Gets returned when you have not supplied a token in your request." />
+              <Cell
+                name="Token does not exist"
+                description="Gets returned when you supply an invalid token." />
+              </Table>
+          </Topic>
         </div>
       )
     }

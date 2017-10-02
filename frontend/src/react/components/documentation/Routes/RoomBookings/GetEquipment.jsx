@@ -120,6 +120,25 @@ export default class GetEquiment extends React.Component {
                 description="The number of times this piece of equipment exists in the room." />
             </Table>
           </Topic>
+
+          <Topic
+            noExamples={true}>
+            <Table
+              name="Errors">
+              <Cell
+                name="No token provided"
+                description="Gets returned when you have not supplied a token in your request." />
+              <Cell
+                name="Token does not exist"
+                description="Gets returned when you supply an invalid token." />
+              <Cell
+                name="No roomid supplied"
+                description="Gets returned when you don’t supply a roomid." />
+              <Cell
+                name="No siteid supplied"
+                description="Gets returned when you don’t supply a siteid." />
+              </Table>
+          </Topic>
         </div>
       )
     }
