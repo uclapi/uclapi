@@ -401,7 +401,7 @@ def token(request):
     except IndexError:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": "App has since been deleted, or an Incorrect client ID was sent."
+            "error": "App has been deleted or the Client ID is invalid."
         })
         response.status_code = 400
         return response
