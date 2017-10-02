@@ -1,5 +1,7 @@
 import React from 'react';
 
+import SectionHeader from './SectionHeader.jsx';
+
 import Welcome from './Meta/Welcome.jsx';
 import VersionInformation from './Meta/VersionInformation.jsx';
 
@@ -19,11 +21,14 @@ export default class DocumentationComponent extends React.Component {
         <div>
           <Sidebar />
           <LanguageTabs>
+            <SectionHeader title="Welcome" />
             <Welcome />
             <VersionInformation />
+            <SectionHeader title="Room Bookings" />
             <GetRooms />
             <GetBookings />
             <GetEquiment />
+            <SectionHeader title="Search" />
             <GetPeople />
           </LanguageTabs>
         </div>
