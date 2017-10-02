@@ -56,17 +56,19 @@ export default class Sidebar extends React.Component {
           value={location.pathname}
         >
           <ListItem
+            href="#meta"
             primaryText="Meta"
             primaryTogglesNestedList={true}
             nestedItems={[
               <ListItem primaryText="Welcome" href="#welcome" />,
               <ListItem primaryText="Get Your API Key" href="#get-api-key" />,
-              <ListItem primaryText="API Rate Limits" href="api-rate-limits" />,
-              <ListItem primaryText="Version Information" href="version-information" />,
+              <ListItem primaryText="API Rate Limits" href="#api-rate-limits" />,
+              <ListItem primaryText="Version Information" href="#version-information" />,
             ]}
           />
 
           <ListItem
+            href="#roombookings"
             primaryText="Room Bookings"
             primaryTogglesNestedList={true}
             nestedItems={[
@@ -86,6 +88,7 @@ export default class Sidebar extends React.Component {
           />
 
           <ListItem
+            href="#search"
             primaryText="Search"
             primaryTogglesNestedList={true}
             nestedItems={[
@@ -98,11 +101,7 @@ export default class Sidebar extends React.Component {
 
           <ListItem
             primaryText="Get Involved"
-            primaryTogglesNestedList={true}
-            nestedItems={[
-              <ListItem primaryText="Community" value="/discover-more/community" />,
-              <ListItem primaryText="Contributing" value="/discover-more/contributing" />,
-            ]}
+            href="#getInvolved"
           />
         </SelectableList>
 
@@ -111,10 +110,10 @@ export default class Sidebar extends React.Component {
         <SelectableList
           value=""
         >
-          <Subheader>Resources</Subheader>
-          <ListItem primaryText="GitHub" href="https://github.com/callemall/material-ui" />
-          <ListItem primaryText="Facebook" href="https://github.com/callemall/material-ui" />
-          <ListItem primaryText="Twitter" href="https://github.com/callemall/material-ui" />
+          <Subheader>Links</Subheader>
+          <ListItem primaryText="GitHub" href="https://github.com/uclapi" />
+          <ListItem primaryText="Facebook" href="https://facebook.com/uclapi" />
+          <ListItem primaryText="Twitter" href="https://twitter.com/uclapi" />
         </SelectableList>
       </Drawer>
     );

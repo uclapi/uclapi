@@ -9,7 +9,7 @@ export default class SectionHeader extends React.Component {
       return (
         <Topic
           noExamples={true}>
-          <h1 className="sectionHeader">{this.props.title}</h1>
+          <h1 id={this.props.link} className="sectionHeader">{this.props.title}</h1>
         </Topic>
       )
     }

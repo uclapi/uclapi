@@ -11,6 +11,8 @@ import GetEquiment from './Routes/RoomBookings/GetEquipment.jsx';
 
 import GetPeople from './Routes/Search/GetPeople.jsx';
 
+import GetInvolved from './GetInvolved/GetInvolved.jsx';
+
 import LanguageTabs from './LanguageTabs.jsx';
 import Sidebar from './Sidebar.jsx';
 
@@ -21,15 +23,15 @@ export default class DocumentationComponent extends React.Component {
         <div>
           <Sidebar />
           <LanguageTabs>
-            <SectionHeader title="Welcome" />
             <Welcome />
             <VersionInformation />
-            <SectionHeader title="Room Bookings" />
+            <SectionHeader link="roombookings" title="Room Bookings" />
             <GetRooms />
             <GetBookings />
             <GetEquiment />
-            <SectionHeader title="Search" />
+            <SectionHeader link="search" title="Search" />
             <GetPeople />
+            <GetInvolved />
           </LanguageTabs>
         </div>
       )

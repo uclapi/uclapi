@@ -9,6 +9,7 @@ export default class Welcome extends React.Component {
       return (
         <Topic
           noExamples={true}>
+          <h1 id="welcome">Welcome</h1>
           <p>Yay, you made it! 🎉</p>
 
           <p>Welcome to the documentation for UCL’s brand new open API. Each service is listed below with examples in three different programming languages (Shell script using cURL, Python and JavaScript) to help you get going as quickly as possible.</p>
