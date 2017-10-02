@@ -1,5 +1,8 @@
 import React from 'react';
 
+import Welcome from './Meta/Welcome.jsx';
+import VersionInformation from './Meta/VersionInformation.jsx';
+
 import GetRooms from './Routes/RoomBookings/GetRooms.jsx';
 import GetBookings from './Routes/RoomBookings/GetBookings.jsx';
 import GetEquiment from './Routes/RoomBookings/GetEquipment.jsx';
@@ -16,6 +19,8 @@ export default class DocumentationComponent extends React.Component {
         <div>
           <Sidebar />
           <LanguageTabs>
+            <Welcome />
+            <VersionInformation />
             <GetRooms />
             <GetBookings />
             <GetEquiment />

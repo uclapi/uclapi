@@ -59,9 +59,10 @@ export default class Sidebar extends React.Component {
             primaryText="Meta"
             primaryTogglesNestedList={true}
             nestedItems={[
-              <ListItem primaryText="Version Information" value="/get-started/required-knowledge" />,
-              <ListItem primaryText="Get Your API Key" value="/get-started/installation" />,
-              <ListItem primaryText="API Rate Limits" value="/get-started/usage" />,
+              <ListItem primaryText="Welcome" href="#welcome" />,
+              <ListItem primaryText="Get Your API Key" href="#get-api-key" />,
+              <ListItem primaryText="API Rate Limits" href="api-rate-limits" />,
+              <ListItem primaryText="Version Information" href="version-information" />,
             ]}
           />
 

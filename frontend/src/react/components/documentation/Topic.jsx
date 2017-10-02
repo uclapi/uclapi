@@ -47,14 +47,18 @@ export default class Topic extends React.Component {
           { this.props.children }
         </div>
         <div className="col code">
-          <SyntaxHighlighter
-            language={this.props.activeLanguage}
-            style={dracula}
-            customStyle={customStyle}>
-            {this.props.codeExamples[
-              this.props.activeLanguage
-            ]}
-          </SyntaxHighlighter>
+          {
+            (!this.props.noExamples) ? (
+              <SyntaxHighlighter
+                language={this.props.activeLanguage}
+                style={dracula}
+                customStyle={customStyle}>
+                {this.props.codeExamples[
+                  this.props.activeLanguage
+                ]}
+              </SyntaxHighlighter>
+            ) : <div></div>
+          }
         </div>
       </div>
     );
