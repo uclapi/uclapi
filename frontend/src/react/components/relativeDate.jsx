@@ -34,4 +34,4 @@ RelativeDate.propTypes = {
   label: React.PropTypes.string
 };
 
-export {RelativeDate};
+export default RelativeDate;

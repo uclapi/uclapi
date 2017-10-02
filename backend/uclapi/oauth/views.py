@@ -35,8 +35,10 @@ def authorise(request):
         return response
 
     try:
-        app = App.objects.get(client_id=client_id)
-    except ObjectDoesNotExist:
+        # We only allow the process to happen if the app exists and has not
+        # been flagged as deleted
+        app = App.objects.filter(client_id=client_id, deleted=False)[0]
+    except IndexError:
         response = PrettyJsonResponse({
             "ok": False,
             "error": "App does not exist for client id"
@@ -106,6 +108,8 @@ def shibcallback(request):
     client_id = appdata[:33]
     state = appdata[33:]
 
+    # We can trust this value because it was extracted from the signed data
+    # string sent via Shibboleth
     app = App.objects.get(client_id=client_id)
 
     eppn = request.META['HTTP_EPPN']
@@ -218,6 +222,7 @@ def userdeny(request):
         response.status_code = 400
         return response
 
+    # We can trust this value because it came from a signed dictionary
     app = App.objects.get(client_id=data["client_id"])
     state = data["state"]
 
@@ -276,6 +281,8 @@ def userallow(request):
         response.status_code = 400
         return response
 
+    # We can trust this app value because it was sent from a signed
+    # data dictionary
     app = App.objects.get(client_id=data["client_id"])
     state = data["state"]
 
@@ -354,7 +361,16 @@ def token(request):
     state = data["state"]
     upi = data["upi"]
 
-    app = App.objects.get(client_id=client_id)
+    try:
+        app = App.objects.filter(client_id=client_id, deleted=False)[0]
+    except IndexError:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": "App has been deleted or the Client ID is invalid."
+        })
+        response.status_code = 400
+        return response
+
     if app.client_secret != client_secret:
         response = PrettyJsonResponse({
             "ok": False,

@@ -113,7 +113,7 @@ def dashboard(request):
         "apps": []
     }
 
-    user_apps = App.objects.filter(user=user)
+    user_apps = App.objects.filter(user=user, deleted=False)
 
     s = Scopes()
 
@@ -129,6 +129,13 @@ def dashboard(request):
                 "client_secret": app.client_secret,
                 "callback_url": app.callback_url,
                 "scopes": s.scope_dict_all(app.scope.scope_number)
+            },
+            "webhook": {
+                "verification_secret": app.webhook.verification_secret,
+                "url": app.webhook.url,
+                "siteid": app.webhook.siteid,
+                "roomid": app.webhook.roomid,
+                "contact": app.webhook.contact
             }
         })
 
