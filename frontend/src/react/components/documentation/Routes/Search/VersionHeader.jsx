@@ -20,7 +20,7 @@ export default class VersionHeader extends React.Component {
               example="uclapi-roombookings-version" />
             <Cell
               name="Latest Version"
-              example="uclapi-roombookings-version" />
+              example="1" />
           </Table>
         </Topic>
       )

@@ -59,7 +59,7 @@ export default class Sidebar extends React.Component {
           value={location.pathname}
         >
           <ListItem
-            href="#meta"
+            href="#welcome"
             primaryText="Meta"
             primaryTogglesNestedList={true}
             nestedItems={[
