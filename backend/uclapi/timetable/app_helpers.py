@@ -51,16 +51,16 @@ def _serialize_timetable(timetable_slots, modules):
         for date in dates:
             if date not in serialized:
                 serialized[date] = []
-            serialized[date].append(_get_event(tt_slot))
+            serialized[date].append(_get_event(tt_slot, modules))
     return serialized
 
 
-def _get_event(tt_slot):
+def _get_event(tt_slot, modules):
     return {
         "start_time": tt_slot.starttime,
         "end_time": tt_slot.finishtime,
         "duration": tt_slot.duration,
-        "module": _get_module_details(tt_slot.moduleid),
+        "module": _get_module_details(tt_slot.moduleid, modules),
         "location": _get_location_details(tt_slot.roomid)
     }
 
@@ -82,9 +82,12 @@ def _get_location_details(roomid):
     }
 
 
-def _get_module_details(moduleid):
+def _get_module_details(moduleid, modules):
     if not moduleid: return {}
-    module = Module.objects.get(moduleid=moduleid)
+    try:
+        module = modules[moduleid]
+    except KeyError:
+        return {}
     return {
         "name": module.name,
         "module_code": module.linkcode,
@@ -106,6 +109,6 @@ def _get_lecturer_details(lecturerid):
 def _create_dates(tt_slot):
     return [
         week_num_date_map[startdate]
-        + datetime.timedelta(days=tt_slot.weekday)
+        + datetime.timedelta(days=(tt_slot.weekday - 1))
         for startdate in week_map[tt_slot.weekid]
     ]
