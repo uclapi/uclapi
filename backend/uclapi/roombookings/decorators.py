@@ -12,69 +12,8 @@ from .helpers import how_many_seconds_until_midnight
 
 
 def does_token_exist(view_func):
-
     def wrapped(request, *args, **kwargs):
         token = request.GET.get("token")
-
-        try:
-            if token.split("-")[1] == "temp":
-                is_temp_token = True
-        except IndexError:
-            is_temp_token = False
-
-        if is_temp_token:
-            try:
-                temp_token = TemporaryToken.objects.get(
-                    api_token=token
-                )
-            except ObjectDoesNotExist:
-                response = PrettyJsonResponse({
-                    "ok": False,
-                    "error": "Invalid temporary token"
-                })
-                response.status_code = 400
-                return response
-
-            if request.path != "/roombookings/bookings":
-                temp_token.uses += 1
-                temp_token.save()
-                response = PrettyJsonResponse({
-                    "ok": False,
-                    "error": "Temporary token can only be used for /bookings"
-                })
-                response.status_code = 400
-                return response
-
-            if request.GET.get('page_token'):
-                temp_token.uses += 1
-                temp_token.save()
-                response = PrettyJsonResponse({
-                    "ok": False,
-                    "error": "Temporary token can only return one booking"
-                })
-                response.status_code = 400
-                return response
-
-            # Check if TemporaryToken is still valid
-            existed = datetime.datetime.now() - temp_token.created
-
-            if temp_token.uses > 10 or existed.seconds > 300:
-                temp_token.delete()  # Delete expired token
-                response = PrettyJsonResponse({
-                    "ok": False,
-                    "error": "Temporary token expired"
-                })
-                response.status_code = 400
-                return response
-
-            if not request.GET._mutable:
-                request.GET._mutable = True
-
-            request.GET['results_per_page'] = 1
-
-            temp_token.uses += 1
-            temp_token.save()
-            return view_func(request, *args, **kwargs)
 
         if not token:
             response = PrettyJsonResponse({
