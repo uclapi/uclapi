@@ -21,12 +21,12 @@ def people(request):
     query = request.GET["query"]
 
     url = (
-        "{}?query={}"
-        "&collection=website-meta&profile=_directory&tab=directory"
-        "&num_ranks=10000"
+        "{}?{}={}{}"
         .format(
             os.environ["SEARCH_API_URL"],
-            query
+            os.environ["SEARCH_API_QUERY"],
+            query,
+            os.environ["SEARCH_API_QUERY_PARAMS"],
         )
     )
 
