@@ -21,12 +21,11 @@ def people(request):
     query = request.GET["query"]
 
     url = (
-        "{}?{}={}{}"
+        "{}?{}={}"
         .format(
             os.environ["SEARCH_API_URL"],
-            os.environ["SEARCH_API_QUERY"],
-            query,
             os.environ["SEARCH_API_QUERY_PARAMS"],
+            query,
         )
     )
 
