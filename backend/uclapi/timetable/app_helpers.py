@@ -18,15 +18,13 @@ def get_timetable(student):
     student_modules = Stumodules.objects.filter(
         setid=_SETID, studentid=student.studentid)
 
-    timetable_slots, modules = [], {}
+    timetable_slots = []
 
     for st_mod in student_modules:
         timetable_slots.extend(Timetable.objects.filter(
             setid=_SETID, moduleid=st_mod.moduleid))
-        modules[st_mod.moduleid] = Module.objects.filter(
-            setid=_SETID, moduleid=st_mod.moduleid)[0]
 
-    return(_serialize_timetable(timetable_slots, modules))
+    return(_serialize_timetable(timetable_slots))
 
 
 def _map_weeks():
@@ -44,57 +42,60 @@ def _map_weeks():
         week_map[wk.weekid].append(wk.weeknumber)
 
 
-def _serialize_timetable(timetable_slots, modules):
-    serialized = {}
+def _serialize_timetable(timetable_slots):
+    serialized, modules, sites, rooms = {}, {}, {}, {}
     for tt_slot in timetable_slots:
         dates = map(lambda k: k.isoformat(), _create_dates(tt_slot))
         for date in dates:
             if date not in serialized:
                 serialized[date] = []
-            serialized[date].append(_get_event(tt_slot, modules))
+            serialized[date].append(_get_event(tt_slot, modules, sites, rooms))
     return serialized
 
 
-def _get_event(tt_slot, modules):
+def _get_event(tt_slot, modules, sites, rooms):
     return {
         "start_time": tt_slot.starttime,
         "end_time": tt_slot.finishtime,
         "duration": tt_slot.duration,
         "module": _get_module_details(tt_slot.moduleid, modules),
-        "location": _get_location_details(tt_slot.roomid)
+        "location": _get_location_details(tt_slot.roomid, rooms, sites)
     }
 
 
-def _get_location_details(roomid):
+def _get_location_details(roomid, rooms, sites):
     if not roomid: return {}
-    room = Rooms.objects.filter(roomid=roomid)[0]
-    site = Sites.objects.get(siteid=room.siteid)
-    return {
-        "name": room.name,
-        "capacity": room.capacity,
-        "type": room.type,
-        "address": [
-            site.address1,
-            site.address2,
-            site.address3
-        ],
-        "sitename": site.sitename
-    }
+    if roomid not in rooms:
+        room = Rooms.objects.filter(roomid=roomid)[0]
+        if room.siteid not in sites:
+            sites[room.siteid] = Sites.objects.get(siteid=room.siteid)
+        site = sites[room.siteid]
+        rooms[roomid] = {
+            "name": room.name,
+            "capacity": room.capacity,
+            "type": room.type,
+            "address": [
+                site.address1,
+                site.address2,
+                site.address3
+            ],
+            "sitename": site.sitename
+        }
+    return rooms[roomid]
 
 
 def _get_module_details(moduleid, modules):
     if not moduleid: return {}
-    try:
-        module = modules[moduleid]
-    except KeyError:
-        return {}
-    return {
-        "name": module.name,
-        "module_code": module.linkcode,
-        "course_owner": module.owner,
-        "module_id": moduleid,
-        "lecturer": _get_lecturer_details(module.lecturerid)
-    }
+    if moduleid not in modules:
+        module = Module.objects.get(moduleid=moduleid, setid=_SETID)
+        modules[moduleid] = {
+            "name": module.name,
+            "module_code": module.linkcode,
+            "course_owner": module.owner,
+            "module_id": moduleid,
+            "lecturer": _get_lecturer_details(module.lecturerid)
+        }
+    return modules[moduleid]
 
 
 def _get_lecturer_details(lecturerid):
