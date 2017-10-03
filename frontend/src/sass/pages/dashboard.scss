@@ -1,20 +1,43 @@
 @import '../includes/helpers';
-@import '../components/navbar.scss';
-@import '../components/layout.scss';
+@import '../components/navbar';
+@import '../components/layout';
+@import '../includes/rc-collapse';
 
-html, button, input, select, textarea,
+html,
+button,
+input,
+select,
+textarea,
 .pure-g [class *= "pure-u"] {
-	font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
-h1, h2, h3, h4, h5{
-	font-family: 'Roboto', sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: 'Roboto', sans-serif;
 }
 
 .centered {
   text-align: center;
 }
 
-body{
+body {
   background-color: rgba(234, 237, 241, 1);
+}
+
+.webhook {
+  form:not(:first-child) {
+    .pure-g > div {
+      :not(:first-child) {
+        margin-top: 10px;
+      }
+
+      :last-child {
+        margin-bottom: 10px;
+      }
+    }
+  }
 }

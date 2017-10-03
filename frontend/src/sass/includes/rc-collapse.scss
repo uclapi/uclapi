@@ -1,0 +1,83 @@
+$grey: #d9d9d9;
+$light-grey: #f7f7f7;
+$light-grey-2: #f3f3f3;
+$dark-grey: #666;
+$medium-grey: #999;
+$white: #fff;
+
+
+.rc-collapse {
+  background-color: $light-grey;
+  border: 1px solid $grey;
+  border-radius: 3px;
+
+  > .rc-collapse-item {
+    border-top: 1px solid $grey;
+
+    > .rc-collapse-header {
+      color: $dark-grey;
+      cursor: pointer;
+      height: 38px;
+      line-height: 38px;
+      text-indent: 16px;
+
+      .arrow {
+        border-bottom: 3px solid transparent;
+        border-left: 4px solid $dark-grey;
+        border-top: 3px solid transparent;
+        content: '\20';
+        display: inline-block;
+        font-size: 0;
+        height: 0;
+        line-height: 0;
+        margin-right: 8px;
+        vertical-align: middle;
+        width: 0;
+      }
+    }
+  }
+
+  > .rc-collapse-item:first-child {
+    border-top: 0;
+  }
+
+  > .rc-collapse-item-disabled > .rc-collapse-header {
+    background-color: $light-grey-2;
+    color: $medium-grey;
+    cursor: not-allowed;
+  }
+
+  > .rc-collapse-item-active > .rc-collapse-header .arrow {
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 4px solid $dark-grey;
+    margin-right: 6px;
+  }
+
+}
+
+.rc-collapse-anim-active {
+  transition: height .2s ease-out;
+}
+
+
+.rc-collapse-content {
+  background-color: $white;
+  color: $dark-grey;
+  overflow: hidden;
+  padding: 0 16px;
+
+  > .rc-collapse-content-box {
+    margin-bottom: 16px;
+    margin-top: 16px;
+  }
+}
+
+
+.rc-collapse-content-inactive {
+  display: none;
+}
+
+.rc-collapse-item:last-child > .rc-collapse-content {
+  border-radius: 0 0 3px 3px;
+}

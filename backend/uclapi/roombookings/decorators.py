@@ -1,11 +1,10 @@
-import re
-
 import datetime
-import keen
+import re
 import redis
 from django.core.exceptions import ObjectDoesNotExist
 
 from dashboard.models import App, TemporaryToken
+from dashboard.tasks import keen_add_event_task as keen_add_event
 from uclapi.settings import REDIS_UCLAPI_HOST
 
 from .helpers import PrettyJsonResponse
@@ -85,8 +84,70 @@ def does_token_exist(view_func):
             response.status_code = 400
             return response
 
+        is_temp_token = False
         try:
-            App.objects.get(api_token=token)
+            if token.split("-")[1] == "temp":
+                is_temp_token = True
+        except IndexError:
+            is_temp_token = False
+
+        if is_temp_token:
+            try:
+                temp_token = TemporaryToken.objects.get(
+                    api_token=token
+                )
+            except ObjectDoesNotExist:
+                response = PrettyJsonResponse({
+                    "ok": False,
+                    "error": "Invalid temporary token"
+                })
+                response.status_code = 400
+                return response
+
+            if request.path != "/roombookings/bookings":
+                temp_token.uses += 1
+                temp_token.save()
+                response = PrettyJsonResponse({
+                    "ok": False,
+                    "error": "Temporary token can only be used for /bookings"
+                })
+                response.status_code = 400
+                return response
+
+            if request.GET.get('page_token'):
+                temp_token.uses += 1
+                temp_token.save()
+                response = PrettyJsonResponse({
+                    "ok": False,
+                    "error": "Temporary token can only return one booking"
+                })
+                response.status_code = 400
+                return response
+
+            # Check if TemporaryToken is still valid
+            existed = datetime.datetime.now() - temp_token.created
+
+            if temp_token.uses > 10 or existed.seconds > 300:
+                temp_token.delete()  # Delete expired token
+                response = PrettyJsonResponse({
+                    "ok": False,
+                    "error": "Temporary token expired"
+                })
+                response.status_code = 400
+                return response
+
+            # This is a horrible hack to force the temporary token always
+            # return only 1 booking
+            # courtesy: https://stackoverflow.com/a/38372217/825916
+            request.GET._mutable = True
+            request.GET['results_per_page'] = 1
+
+            temp_token.uses += 1
+            temp_token.save()
+            return view_func(request, *args, **kwargs)
+
+        try:
+            App.objects.get(api_token=token, deleted=False)
         except ObjectDoesNotExist:
             response = PrettyJsonResponse({
                 "ok": False,
@@ -115,6 +176,7 @@ def log_api_call(view_func):
         queryparams = dict(request.GET)
 
         token = request.GET["token"]
+        is_temp_token = False
 
         try:
             if token.split("-")[1] == "temp":
@@ -133,7 +195,7 @@ def log_api_call(view_func):
                 "temp_token": True
             }
 
-            keen.add_event("apicall", parameters)
+            keen_add_event.delay("apicall", parameters)
 
             return view_func(request, *args, **kwargs)
 
@@ -149,7 +211,7 @@ def log_api_call(view_func):
             "queryparams": queryparams
         }
 
-        keen.add_event("apicall", parameters)
+        keen_add_event.delay("apicall", parameters)
 
         return view_func(request, *args, **kwargs)
 
@@ -159,6 +221,7 @@ def log_api_call(view_func):
 def throttle(view_func):
     def wrapped(request, *args, **kwargs):
         token = request.GET.get("token")
+        is_temp_token = False
 
         try:
             if token.split("-")[1] == "temp":

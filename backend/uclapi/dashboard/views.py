@@ -2,7 +2,6 @@ import json
 import os
 from distutils.util import strtobool
 
-import keen
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import redirect, render
@@ -12,31 +11,22 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from uclapi.settings import FAIR_USE_POLICY
 
 from .models import App, User, TemporaryToken
+from oauth.scoping import Scopes
+
+from .tasks import keen_add_event_task as keen_add_event
 
 
 @csrf_exempt
 def shibboleth_callback(request):
-    # this view is user facing, so should return html error page
     # should auth user login or signup
     # then redirect to dashboard homepage
-    try:
-        eppn = request.META['HTTP_EPPN']
-        groups = request.META['HTTP_UCLINTRANETGROUPS']
-        cn = request.META['HTTP_CN']
-        department = request.META['HTTP_DEPARTMENT']
-        given_name = request.META['HTTP_GIVENNAME']
-        display_name = request.META['HTTP_DISPLAYNAME']
-        employee_id = request.META['HTTP_EMPLOYEEID']
-    except KeyError as e:
-        context = {
-            "error": "Didn't receive all required Shibboleth data."
-        }
-        return render(
-            request,
-            'shibboleth_error.html',
-            context=context,
-            status=400
-        )
+    eppn = request.META['HTTP_EPPN']
+    groups = request.META['HTTP_UCLINTRANETGROUPS']
+    cn = request.META['HTTP_CN']
+    department = request.META['HTTP_DEPARTMENT']
+    given_name = request.META['HTTP_GIVENNAME']
+    display_name = request.META['HTTP_DISPLAYNAME']
+    employee_id = request.META['HTTP_EMPLOYEEID']
 
     try:
         user = User.objects.get(email=eppn)
@@ -54,13 +44,26 @@ def shibboleth_callback(request):
 
         new_user.save()
         request.session["user_id"] = new_user.id
-        keen.add_event("signup", {
+        keen_add_event.delay("signup", {
             "id": new_user.id,
             "email": eppn,
             "name": display_name
         })
     else:
+        # user exists already, update values
         request.session["user_id"] = user.id
+        user.full_name = display_name
+        user.given_name = given_name
+        user.department = department
+        user.raw_intranet_groups = groups
+        user.employee_id = employee_id
+        user.save()
+
+        keen_add_event.delay("User data updated", {
+            "id": user.id,
+            "email": eppn,
+            "name": display_name
+        })
 
     return redirect(dashboard)
 
@@ -71,7 +74,8 @@ def dashboard(request):
         user_id = request.session["user_id"]
     except KeyError:
         url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
-        param = request.build_absolute_uri(request.path) + "user/login.callback"
+        param = (request.build_absolute_uri(request.path) +
+                 "user/login.callback")
         param = quote(param)
         url = url + param
         return redirect(url)
@@ -109,7 +113,9 @@ def dashboard(request):
         "apps": []
     }
 
-    user_apps = App.objects.filter(user=user)
+    user_apps = App.objects.filter(user=user, deleted=False)
+
+    s = Scopes()
 
     for app in user_apps:
         user_meta["apps"].append({
@@ -117,7 +123,20 @@ def dashboard(request):
             "id": app.id,
             "token": app.api_token,
             "created": app.created,
-            "updated": app.last_updated
+            "updated": app.last_updated,
+            "oauth": {
+                "client_id": app.client_id,
+                "client_secret": app.client_secret,
+                "callback_url": app.callback_url,
+                "scopes": s.scope_dict_all(app.scope.scope_number)
+            },
+            "webhook": {
+                "verification_secret": app.webhook.verification_secret,
+                "url": app.webhook.url,
+                "siteid": app.webhook.siteid,
+                "roomid": app.webhook.roomid,
+                "contact": app.webhook.contact
+            }
         })
 
     initial_data = json.dumps(user_meta, cls=DjangoJSONEncoder)
@@ -131,7 +150,7 @@ def get_started(request):
     logged_in = True
 
     try:
-        user_id = request.session["user_id"]
+        request.session["user_id"]
     except KeyError:
         logged_in = False
 

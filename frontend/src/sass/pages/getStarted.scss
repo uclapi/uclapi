@@ -1,5 +1,7 @@
 @import '../includes/helpers';
 
+$primary-color: #0b3954;
+$secondary-color: #f4f4f4;
 
 body {
   margin: 0px;
@@ -17,7 +19,6 @@ h1 {
 
 h2 {
   font-size: 28px;
-  font-family: 'Source Sans Pro', sans-serif;
   font-weight: lighter;
 }
 
@@ -38,6 +39,22 @@ h3 {
   .active span {
     font-weight: bold !important;
     text-decoration: underline;
+  }
+}
+
+.tagline {
+  background: $primary-color;
+  color: $secondary-color;
+  padding-bottom: 0;
+  padding-top: 120px;
+  text-align: center;
+
+  h2 {
+    margin: 0;
+  }
+
+  .container {
+    max-width: 800px;
   }
 }
 
@@ -116,10 +133,8 @@ code {
   }
 
   h1 {
-    font-family: 'Source Sans Pro', sans-serif;
     font-weight: lighter;
     text-align: center;
-    // color: #555A72;
     margin-top: 0px;
     margin-bottom: 60px;
   }
@@ -136,7 +151,6 @@ code {
   a {
     color: rgba(255,255,255,.65);
     font-size: 18px;
-    font-family: 'Source Sans Pro', sans-serif;
     display: block;
     text-decoration: none;
     margin-bottom: 14px;
