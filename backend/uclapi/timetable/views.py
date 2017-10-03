@@ -5,10 +5,11 @@ from oauth.models import OAuthToken
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Students
 from django.conf import settings
-from .app_helpers import get_timetable
+from .app_helpers import get_timetable, get_modules
+from rest_framework.decorators import api_view
 
 
-# Create your views here.
+@api_view(["GET"])
 def get_personal_timetable(request):
     try:
         token = request.GET["token"]
@@ -37,3 +38,19 @@ def get_personal_timetable(request):
         })
 
     return JsonResponse(get_timetable(student))
+
+
+@api_view(["POST"])
+def get_modules_timetable(request):
+    """
+    Only post request accepted.
+    Given a list of modulesids, this will return a yearly calendar for those
+    courses.
+    """
+    module_ids = request.POST.getlist("modules")
+    if not module_ids:
+        return JsonResponse({
+            "ok": False,
+            "error": "No module ids provided."
+        })
+    return JsonResponse(get_modules(module_ids))

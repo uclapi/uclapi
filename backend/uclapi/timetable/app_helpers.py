@@ -24,7 +24,18 @@ def get_timetable(student):
         timetable_slots.extend(Timetable.objects.filter(
             setid=_SETID, moduleid=st_mod.moduleid))
 
-    return(_serialize_timetable(timetable_slots))
+    return _serialize_timetable(timetable_slots)
+
+
+def get_modules(modules):
+    # To avoid hitting database multiple times.
+    if not week_map:
+        _map_weeks()
+    timetable_slots = []
+    for moduleid in modules:
+        timetable_slots.extend(Timetable.objects.filter(
+            setid=_SETID, moduleid=moduleid))
+    return _serialize_timetable(timetable_slots)
 
 
 def _map_weeks():
