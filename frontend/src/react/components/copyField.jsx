@@ -36,7 +36,7 @@ class CopyField extends React.Component {
     return(
       <form className="pure-form pure-g">
         <div className="pure-u-3-4">
-          <input 
+          <input
             type="text"
             ref="copyField"
             className="pure-input-1"
@@ -46,7 +46,7 @@ class CopyField extends React.Component {
           />
         </div>
         <div className="pure-u-1-4">
-          <button 
+          <button
             className="pure-button pure-button-primary pure-input-1 tooltip"
             onClick={this.copyToClipBoard}
             style={{ 'border': '1px solid #ccc', 'borderRadius': '0px'}}
@@ -70,7 +70,7 @@ class CopyActionField extends CopyField {
     return(
       <form className="pure-form pure-g">
         <div className="pure-u-2-3">
-          <input 
+          <input
             type="text"
             ref="copyField"
             className="pure-input-1"
@@ -80,7 +80,7 @@ class CopyActionField extends CopyField {
           />
         </div>
         <div className="pure-u-1-6">
-          <button 
+          <button
             className="pure-button pure-button-primary pure-input-1 tooltip"
             onClick={this.copyToClipBoard}
             style={{ 'border': '1px solid #ccc', 'borderRadius': '0px'}}
@@ -90,8 +90,8 @@ class CopyActionField extends CopyField {
           </button>
         </div>
         <div className="pure-u-1-6">
-          <button 
-            className="pure-button pure-button-primary pure-input-1" 
+          <button
+            className="pure-button pure-button-primary pure-input-1"
             onClick={this.props.action}
             style={{ 'border': '1px solid #ccc', 'borderRadius': '0px 4px 4px 0px'}}
           >

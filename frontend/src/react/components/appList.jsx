@@ -31,7 +31,7 @@ class AppList extends React.Component {
     if(appIndex !== undefined){
       Object.keys(values).forEach((key)=>{
         this.setState((state) => {
-          return update(state, {apps: {[appIndex]: {[key]:{$set: values[key]}}}});          
+          return update(state, {apps: {[appIndex]: {[key]:{$set: values[key]}}}});
         });
       });
     }
@@ -79,10 +79,8 @@ class AppList extends React.Component {
             key={i}
             update={this.updateApp}
             remove={this.deleteApp}
-            clientId={app.oauth.client_id}
-            clientSecret={app.oauth.client_secret}
-            callbackUrl={app.oauth.callback_url}
-            scopes={app.oauth.scopes}
+            oauth={app.oauth}
+            webhook={app.webhook}
           />;
         })}
       </div>
@@ -90,8 +88,8 @@ class AppList extends React.Component {
         isOpen={this.state.showCreate}
         contentLabel="Create app form"
         onRequestClose={this.hideForm}
-				className="Modal"
-				overlayClassName="Overlay"
+        className="Modal"
+        overlayClassName="Overlay"
       >
         <AppForm add={this.addApp} close={this.hideForm}/>
       </Modal>
