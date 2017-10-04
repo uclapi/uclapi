@@ -7,6 +7,14 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
+def create_webhooks_for_existing_apps(apps, schema_editor):
+    App = apps.get_model('dashboard', 'App')
+    Webhook = apps.get_model('dashboard', 'Webhook')
+    for app in App.objects.all():
+        new_webhook = Webhook(app=app)
+        new_webhook.save()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -47,4 +55,5 @@ class Migration(migrations.Migration):
             name='app',
             field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='dashboard.App'),
         ),
+        migrations.RunPython(create_webhooks_for_existing_apps)
     ]
