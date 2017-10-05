@@ -12,7 +12,7 @@ class Weekstructure(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_WEEKSTRUCTURE'
+        db_table = '"CMIS_OWNER"."WEEKSTRUCTURE"'
         _DATABASE = 'roombookings'
 
 
@@ -62,7 +62,7 @@ class Students(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_STUDENTS'
+        db_table = '"CMIS_OWNER"."STUDENTS"'
         _DATABASE = 'roombookings'
 
 
@@ -83,7 +83,7 @@ class Sites(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_SITES'
+        db_table = '"CMIS_OWNER"."SITES"'
         _DATABASE = 'roombookings'
 
 
@@ -108,7 +108,7 @@ class Module(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_MODULE'
+        db_table = '"CMIS_OWNER"."MODULE"'
         _DATABASE = 'roombookings'
 
 
@@ -131,7 +131,7 @@ class Lecturer(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_LECTURER'
+        db_table = '"CMIS_OWNER"."LECTURER"'
         _DATABASE = 'roombookings'
 
 
@@ -147,7 +147,7 @@ class Sources(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_SOURCES'
+        db_table = '"CMIS_OWNER"."SOURCES"'
         _DATABASE = 'roombookings'
 
 
@@ -159,7 +159,7 @@ class Ccalmaps(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_CCALMAPS'
+        db_table = '"CMIS_OWNER"."CCALMAPS"'
         _DATABASE = 'roombookings'
 
 
@@ -181,7 +181,7 @@ class Depts(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_DEPTS'
+        db_table = '"CMIS_OWNER"."DEPTS"'
         _DATABASE = 'roombookings'
 
 
@@ -196,7 +196,7 @@ class Weekmapstring(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_WEEKMAPSTRING'
+        db_table = '"CMIS_OWNER"."WEEKMAPSTRING"'
         _DATABASE = 'roombookings'
 
 
@@ -219,7 +219,7 @@ class Contact(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_CONTACT'
+        db_table = '"CMIS_OWNER"."CONTACT"'
         _DATABASE = 'roombookings'
 
 
@@ -257,7 +257,7 @@ class Slotdetails(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_SLOTDETAILS'
+        db_table = '"CMIS_OWNER"."SLOTDETAILS"'
         _DATABASE = 'roombookings'
 
 
@@ -282,7 +282,7 @@ class Classgrps(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_CLASSGRPS'
+        db_table = '"CMIS_OWNER"."CLASSGRPS"'
         _DATABASE = 'roombookings'
 
 
@@ -299,7 +299,7 @@ class Crscompmodules(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_CRSCOMPMODULES'
+        db_table = '"CMIS_OWNER"."CRSCOMPMODULES"'
         _DATABASE = 'roombookings'
 
 
@@ -313,7 +313,7 @@ class Classifications(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_CLASSIFICATIONS'
+        db_table = '"CMIS_OWNER"."CLASSIFICATIONS"'
         _DATABASE = 'roombookings'
 
 
@@ -339,7 +339,7 @@ class Rooms(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_ROOMS'
+        db_table = '"CMIS_OWNER"."ROOMS"'
         _DATABASE = 'roombookings'
 
 
@@ -351,7 +351,7 @@ class Weekmapnumeric(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_WEEKMAPNUMERIC'
+        db_table = '"CMIS_OWNER"."WEEKMAPNUMERIC"'
         _DATABASE = 'roombookings'
 
 
@@ -369,7 +369,7 @@ class Crsavailmodules(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_CRSAVAILMODULES'
+        db_table = '"CMIS_OWNER"."CRSAVAILMODULES"'
         _DATABASE = 'roombookings'
 
 
@@ -468,7 +468,7 @@ class Timetable(models.Model):
 
     class Meta:
         managed = False
-        db_table = "NOSH_CMIS_TIMETABLE"
+        db_table = '"CMIS_OWNER"."TIMETABLE"'
         _DATABASE = 'roombookings'
 
 
@@ -497,7 +497,7 @@ class Stumodules(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_STUMODULES'
+        db_table = '"CMIS_OWNER"."STUMODULES"'
         _DATABASE = 'roombookings'
 
 
@@ -511,7 +511,7 @@ class Features(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_FEATURES'
+        db_table = '"CMIS_OWNER"."FEATURES"'
         _DATABASE = 'roombookings'
 
 
@@ -525,7 +525,7 @@ class Equipment(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_EQUIPMENT'
+        db_table = '"CMIS_OWNER"."EQUIPMENT"'
         _DATABASE = 'roombookings'
 
 
@@ -551,5 +551,5 @@ class Course(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'NOSH_CMIS_COURSE'
+        db_table = '"CMIS_OWNER"."COURSE"'
         _DATABASE = 'roombookings'

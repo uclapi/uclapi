@@ -1,9 +1,12 @@
-from roombookings.helpers import PrettyJsonResponse as JsonResponse
+import datetime
+
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
+
+from roombookings.helpers import PrettyJsonResponse as JsonResponse
+
 from .models import Stumodules, Timetable, Module, Weekstructure, \
     Weekmapnumeric, Lecturer, Rooms, Sites, Crscompmodules, Crsavailmodules
-from django.conf import settings
-import datetime
 
 _SETID = settings.ROOMBOOKINGS_SETID
 
@@ -62,8 +65,6 @@ def _map_weeks():
     week_nums = Weekmapnumeric.objects.filter(setid=_SETID)
     week_strs = Weekstructure.objects.filter(setid=_SETID)
 
-    tmp_map = {}
-
     for wk in week_strs:
         week_num_date_map[wk.weeknumber] = wk.startdate
 
@@ -87,8 +88,8 @@ def _serialize_timetable(timetable_slots):
 
 def _get_event(tt_slot, modules, sites, rooms, lecturers):
     return {
-        "start_time": tt_slot.starttime,
-        "end_time": tt_slot.finishtime,
+        "start_time": tt_slot.starttime + ":00",
+        "end_time": tt_slot.finishtime + ":00",
         "duration": tt_slot.duration,
         "module": _get_module_details(tt_slot.moduleid, modules, lecturers),
         "location": _get_location_details(tt_slot.roomid, rooms, sites)
@@ -101,7 +102,7 @@ def _get_location_details(roomid, rooms, sites):
     if roomid not in rooms:
         room = Rooms.objects.filter(roomid=roomid)[0]
         if room.siteid not in sites:
-            sites[room.siteid] = Sites.objects.get(siteid=room.siteid)
+            sites[room.siteid] = Sites.objects.filter(siteid=room.siteid)[0]
         site = sites[room.siteid]
         rooms[roomid] = {
             "name": room.name,
@@ -136,7 +137,7 @@ def _get_lecturer_details(lecturerid, lecturers):
     if not lecturerid:
         return {}
     if lecturerid not in lecturers:
-        lecturer = Lecturer.objects.get(lecturerid=lecturerid)
+        lecturer = Lecturer.objects.get(lecturerid=lecturerid, setid=_SETID)
         lecturers[lecturerid] = {
             "name": lecturer.name,
             "email": lecturer.linkcode + "@ucl.ac.uk"

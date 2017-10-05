@@ -1,12 +1,16 @@
 from django.shortcuts import render
-from roombookings.helpers import PrettyJsonResponse as JsonResponse
-from oauth.models import OAuthToken
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Students, Course
 from django.conf import settings
-from .app_helpers import get_timetable, get_modules, get_course_modules
-from rest_framework.decorators import api_view
+
 from oauth.decorators import oauth_token_check
+from oauth.models import OAuthToken
+
+from rest_framework.decorators import api_view
+
+from roombookings.helpers import PrettyJsonResponse as JsonResponse
+
+from .models import Students, Course
+from .app_helpers import get_timetable, get_modules, get_course_modules
 
 _SETID = settings.ROOMBOOKINGS_SETID
 
@@ -33,7 +37,7 @@ def get_personal_timetable(request):
 
     try:
         student = Students.objects.filter(
-            qtype2=user.employeeid, setid=settings.ROOMBOOKINGS_SETID)[0]
+            qtype2=student.employeeid, setid=_SETID)[0]
     except IndexError:
         return JsonResponse({
             "ok": False,
