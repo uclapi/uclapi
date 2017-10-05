@@ -120,3 +120,6 @@ node_modules
 static/
 !backend/uclapi/dashboard/static/
 !backend/uclapi/oauth/static/
+
+# Redis
+dump.rdb
