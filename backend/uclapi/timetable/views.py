@@ -10,7 +10,7 @@ from rest_framework.decorators import api_view
 from roombookings.helpers import PrettyJsonResponse as JsonResponse
 
 from .models import Students, Course
-from .app_helpers import get_timetable, get_modules, get_course_modules
+from .app_helpers import get_timetable, get_modules, get_all_course_modules
 
 _SETID = settings.ROOMBOOKINGS_SETID
 
@@ -103,5 +103,5 @@ def get_course_modules(request):
 
     return JsonResponse({
         "ok": True,
-        "modules": get_course_modules(courseid)
+        "modules": get_all_course_modules(courseid)
     })

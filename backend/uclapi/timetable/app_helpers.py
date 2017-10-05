@@ -41,7 +41,7 @@ def get_modules(modules):
     return _serialize_timetable(timetable_slots)
 
 
-def get_course_modules(courseid):
+def get_all_course_modules(courseid):
     compulsary_modules = Crscompmodules.objects.filter(
         setid=_SETID, courseid=courseid)
     available_modules = Crsavailmodules.objects.filter(
