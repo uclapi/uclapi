@@ -89,7 +89,7 @@ def get_courses(request):
 
 @api_view(["GET"])
 @oauth_token_check(["timetable"])
-def get_modules(request):
+def get_course_modules(request):
     """
     Returns all the modules in the specified course.
     @param: courseid
