@@ -11,7 +11,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 import ciso8601
 
-from .models import BookingA, BookingB, Location, Lock, PageToken
+from .models import BookingA, BookingB, Location, Lock, PageToken, SiteLocation
 
 
 class PrettyJsonResponse(django.http.JsonResponse):
@@ -154,9 +154,19 @@ def _serialize_rooms(room_set):
                 "lat": location.lat,
                 "lng": location.lng
             }
-        except ObjectDoesNotExist:
-            # no location for this room, leave out
-            pass
+        except Location.DoesNotExist:
+            # no location for this room, try building
+            try:
+                location = SiteLocation.objects.get(
+                    siteid=room.siteid
+                )
+                room_to_add['location']['coordinates'] = {
+                    "lat": location.lat,
+                    "lng": location.lng
+                }
+            except SiteLocation.DoesNotExist:
+                # no location for this room
+                pass
 
         rooms.append(room_to_add)
     return rooms
