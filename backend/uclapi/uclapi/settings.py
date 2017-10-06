@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'dashboard',
     'roombookings',
     'oauth',
+    'timetable',
     'opbeat.contrib.django',
     'raven.contrib.django.raven_compat',
     'corsheaders'
