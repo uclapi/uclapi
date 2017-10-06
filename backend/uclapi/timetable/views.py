@@ -21,9 +21,12 @@ def get_personal_timetable(request, *args, **kwargs):
     token = kwargs['token']
     user = token.user
 
+    # CMIS stores data as per an upper case representation of the UPI
+    upi = user.employee_id.upper()
+
     try:
         student = Students.objects.filter(
-            qtype2=user.employee_id, setid=_SETID)[0]
+            qtype2=upi, setid=_SETID)[0]
     except IndexError:
         return JsonResponse({
             "ok": False,
