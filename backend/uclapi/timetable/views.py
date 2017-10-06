@@ -23,7 +23,7 @@ def get_personal_timetable(request, *args, **kwargs):
 
     try:
         student = Students.objects.filter(
-            qtype2=user.employeeid, setid=_SETID)[0]
+            qtype2=user.employee_id, setid=_SETID)[0]
     except IndexError:
         return JsonResponse({
             "ok": False,
