@@ -17,23 +17,9 @@ _SETID = settings.ROOMBOOKINGS_SETID
 
 @api_view(["GET"])
 @oauth_token_check(["timetable"])
-def get_personal_timetable(request):
-    try:
-        token = request.GET["token"]
-    except KeyError:
-        return JsonResponse({
-            "ok": False,
-            "error": "No Oauth token found."
-        })
-
-    try:
-        oauth_token = OAuthToken.objects.get(token=token)
-        user = oauth_token.user
-    except ObjectDoesNotExist:
-        return JsonResponse({
-            "ok": False,
-            "error": "OAuth token doesn't exist."
-        })
+def get_personal_timetable(request, *args, **kwargs):
+    token = kwargs['token']
+    user = token.user
 
     try:
         student = Students.objects.filter(
