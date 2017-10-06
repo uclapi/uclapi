@@ -35,8 +35,10 @@ def authorise(request):
         return response
 
     try:
-        app = App.objects.get(client_id=client_id)
-    except ObjectDoesNotExist:
+        # We only allow the process to happen if the app exists and has not
+        # been flagged as deleted
+        app = App.objects.filter(client_id=client_id, deleted=False)[0]
+    except IndexError:
         response = PrettyJsonResponse({
             "ok": False,
             "error": "App does not exist for client id"
@@ -106,61 +108,22 @@ def shibcallback(request):
     client_id = appdata[:33]
     state = appdata[33:]
 
+    # We can trust this value because it was extracted from the signed data
+    # string sent via Shibboleth
     app = App.objects.get(client_id=client_id)
 
-    try:
-        eppn = request.META['HTTP_EPPN']
-        cn = request.META['HTTP_CN']
-        employee_id = request.META['HTTP_EMPLOYEEID']
-        department = request.META['HTTP_DEPARTMENT']
-        given_name = request.META['HTTP_GIVENNAME']
-        display_name = request.META['HTTP_DISPLAYNAME']
-        groups = request.META['HTTP_UCLINTRANETGROUPS']
-    except KeyError:
-
-        # Delete this code on September 26th 2017! Temporary shib workaround
-        login_reminder = "login-after-2017-09-26-to-fix"
-        department = "temp-not-real-department-{}-{}".format(
-            cn,
-            login_reminder
-        )
-        given_name = "temp-not-real-full-name-{}-{}".format(cn, login_reminder)
-        display_name = "temp-not-real-display-name-{}-{}".format(
-            cn,
-            login_reminder
-        )
-        groups = "temp-groups-{}-{}".format(cn, login_reminder),
-        try:
-            user = User.objects.get(email=eppn)
-        except User.DoesNotExist:
-            # create new user
-            new_user = User(
-                email=eppn,
-                full_name=display_name,
-                given_name=given_name,
-                department=department,
-                cn=cn,
-                raw_intranet_groups=groups,
-                employee_id=employee_id
-            )
-            new_user.save()
-
-            request.session["user_id"] = new_user.id
-            keen_add_event.delay("signup", {
-                "id": new_user.id,
-                "email": eppn,
-                "name": display_name
-            })
-        else:
-            # user already exists, log them in
-            request.session["user_id"] = user.id
-
-        # end temporary shib workaround - delete until here
+    eppn = request.META['HTTP_EPPN']
+    groups = request.META['HTTP_UCLINTRANETGROUPS']
+    cn = request.META['HTTP_CN']
+    department = request.META['HTTP_DEPARTMENT']
+    given_name = request.META['HTTP_GIVENNAME']
+    display_name = request.META['HTTP_DISPLAYNAME']
+    employee_id = request.META['HTTP_EMPLOYEEID']
 
     # If a user has never used the API before then we need to sign them up
     try:
         user = User.objects.get(email=eppn)
-    except ObjectDoesNotExist:
+    except User.DoesNotExist:
         # create a new user
         user = User(
             email=eppn,
@@ -179,9 +142,8 @@ def shibcallback(request):
             "name": display_name
         })
     else:
-        # user exists already, update values
+        # User exists already, so update the values
         user = User.objects.get(email=eppn)
-        request.session["user_id"] = user.id
         user.full_name = display_name
         user.given_name = given_name
         user.department = department
@@ -194,6 +156,9 @@ def shibcallback(request):
             "email": eppn,
             "name": display_name
         })
+
+    # Log the user into the system using their User ID
+    request.session["user_id"] = user.id
 
     signer = TimestampSigner()
     response_data = {
@@ -257,6 +222,7 @@ def userdeny(request):
         response.status_code = 400
         return response
 
+    # We can trust this value because it came from a signed dictionary
     app = App.objects.get(client_id=data["client_id"])
     state = data["state"]
 
@@ -315,6 +281,8 @@ def userallow(request):
         response.status_code = 400
         return response
 
+    # We can trust this app value because it was sent from a signed
+    # data dictionary
     app = App.objects.get(client_id=data["client_id"])
     state = data["state"]
 
@@ -347,16 +315,16 @@ def userallow(request):
     # Just in case they've tried to be super clever and host multiple apps with
     # the same callback URL, we'll provide the client ID along with the state
     return redirect(
-            app.callback_url + "?result=allowed&code=" + code + "&client_id=" +
-            app.client_id + "&state=" + state
-        )
+        app.callback_url + "?result=allowed&code=" + code + "&client_id=" +
+        app.client_id + "&state=" + state
+    )
 
 
 def token(request):
     try:
-        code = request.GET.get("code")
-        client_id = request.GET.get("client_id")
-        client_secret = request.GET.get("client_secret")
+        code = request.GET["code"]
+        client_id = request.GET["client_id"]
+        client_secret = request.GET["client_secret"]
     except KeyError:
         response = PrettyJsonResponse({
             "ok": False,
@@ -393,7 +361,16 @@ def token(request):
     state = data["state"]
     upi = data["upi"]
 
-    app = App.objects.get(client_id=client_id)
+    try:
+        app = App.objects.filter(client_id=client_id, deleted=False)[0]
+    except IndexError:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": "App has been deleted or the Client ID is invalid."
+        })
+        response.status_code = 400
+        return response
+
     if app.client_secret != client_secret:
         response = PrettyJsonResponse({
             "ok": False,

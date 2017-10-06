@@ -5,6 +5,7 @@ from django.conf import settings
 
 import cx_Oracle
 from roombookings.models import BookingA, BookingB, Lock
+from django.core.management import call_command
 
 
 class Command(BaseCommand):
@@ -79,3 +80,4 @@ class Command(BaseCommand):
         lock.save()
 
         self.stdout.write("Updated a bucket!")
+        call_command('trigger_webhooks')

@@ -1,9 +1,12 @@
 from django.db import models
 from .app_helpers import generate_api_token, generate_app_id, \
     generate_app_client_id, generate_app_client_secret, \
-    generate_temp_api_token
+    generate_temp_api_token, generate_secret
 
 from oauth.models import OAuthScope
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 models.options.DEFAULT_NAMES += ('_DATABASE',)
 
@@ -39,6 +42,8 @@ class App(models.Model):
     )
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+
+    deleted = models.BooleanField(default=False)
 
     client_id = models.CharField(
         max_length=33,
@@ -96,3 +101,43 @@ class APICall(models.Model):
 
     class Meta:
         _DATABASE = 'default'
+
+
+class Webhook(models.Model):
+    app = models.OneToOneField(App)
+    url = models.URLField(max_length=1000, blank=True)
+
+    siteid = models.CharField(max_length=40, blank=True)
+    roomid = models.CharField(max_length=160, blank=True)
+    contact = models.CharField(max_length=4000, blank=True)
+
+    last_fired = models.DateTimeField(blank=True, null=True)
+
+    verification_secret = models.CharField(
+        max_length=100,
+        default=generate_secret
+    )
+
+    enabled = models.BooleanField(default=False)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        _DATABASE = 'default'
+
+
+class WebhookTriggerHistory(models.Model):
+    webhook = models.ForeignKey(Webhook)
+    payload = models.CharField(max_length=10000000)
+
+    timestamp = models.DateTimeField(auto_now_add=True, editable=False)
+
+    class Meta:
+        _DATABASE = 'default'
+
+
+# Django signal
+@receiver(post_save, sender=App)
+def create_webhook_on_app_creation(sender, instance, created, **kwargs):
+    if created:
+        new_webhook = Webhook(app=instance)
+        new_webhook.save()
