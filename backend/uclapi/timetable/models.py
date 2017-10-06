@@ -16,6 +16,28 @@ class Weekstructure(models.Model):
         _DATABASE = 'roombookings'
 
 
+class WeekstructureA(models.Model):
+    setid = models.TextField(max_length=10)
+    weeknumber = models.BigIntegerField()
+    startdate = models.DateField()
+    description = models.TextField(primary_key=True, max_length=80)
+    mappedto = models.BigIntegerField()
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class WeekstructureB(models.Model):
+    setid = models.TextField(max_length=10)
+    weeknumber = models.BigIntegerField()
+    startdate = models.DateField()
+    description = models.TextField(primary_key=True, max_length=80)
+    mappedto = models.BigIntegerField()
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
 class Students(models.Model):
     setid = models.TextField(max_length=10)
     studentid = models.TextField(primary_key=True, max_length=12)
@@ -87,6 +109,44 @@ class Sites(models.Model):
         _DATABASE = 'roombookings'
 
 
+class SitesA(models.Model):
+    setid = models.TextField(max_length=10)
+    siteid = models.TextField(max_length=10)
+    sitename = models.TextField(max_length=80)
+    address1 = models.TextField(max_length=80)
+    address2 = models.TextField(primary_key=True, max_length=80)
+    address3 = models.TextField(max_length=80)
+    address4 = models.TextField(max_length=80)
+    phone1 = models.TextField(max_length=50)
+    phone2 = models.TextField(max_length=50)
+    contact1 = models.TextField(max_length=50)
+    contact2 = models.TextField(max_length=50)
+    linkcode = models.TextField(max_length=20)
+    campusid = models.TextField(max_length=10)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class SitesB(models.Model):
+    setid = models.TextField(max_length=10)
+    siteid = models.TextField(max_length=10)
+    sitename = models.TextField(max_length=80)
+    address1 = models.TextField(max_length=80)
+    address2 = models.TextField(primary_key=True, max_length=80)
+    address3 = models.TextField(max_length=80)
+    address4 = models.TextField(max_length=80)
+    phone1 = models.TextField(max_length=50)
+    phone2 = models.TextField(max_length=50)
+    contact1 = models.TextField(max_length=50)
+    contact2 = models.TextField(max_length=50)
+    linkcode = models.TextField(max_length=20)
+    campusid = models.TextField(max_length=10)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
 class Module(models.Model):
     setid = models.TextField(max_length=10)
     moduleid = models.TextField(primary_key=True, max_length=12)
@@ -112,6 +172,52 @@ class Module(models.Model):
         _DATABASE = 'roombookings'
 
 
+class ModuleA(models.Model):
+    setid = models.TextField(max_length=10)
+    moduleid = models.TextField(primary_key=True, max_length=12)
+    owner = models.TextField(max_length=10)
+    name = models.TextField(max_length=120)
+    category = models.TextField(max_length=10)
+    classif = models.TextField(max_length=10)
+    linkcode = models.TextField(max_length=20)
+    csize = models.BigIntegerField()
+    minsize = models.BigIntegerField()
+    maxsize = models.BigIntegerField()
+    prefmaxsize = models.BigIntegerField()
+    lecturerid = models.TextField(max_length=10)
+    lectgroup = models.BigIntegerField()
+    dontfit = models.CharField(max_length=1)
+    unitvalue = models.TextField(max_length=10)
+    instid = models.BigIntegerField()
+    isactive = models.CharField(max_length=1)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class ModuleB(models.Model):
+    setid = models.TextField(max_length=10)
+    moduleid = models.TextField(primary_key=True, max_length=12)
+    owner = models.TextField(max_length=10)
+    name = models.TextField(max_length=120)
+    category = models.TextField(max_length=10)
+    classif = models.TextField(max_length=10)
+    linkcode = models.TextField(max_length=20)
+    csize = models.BigIntegerField()
+    minsize = models.BigIntegerField()
+    maxsize = models.BigIntegerField()
+    prefmaxsize = models.BigIntegerField()
+    lecturerid = models.TextField(max_length=10)
+    lectgroup = models.BigIntegerField()
+    dontfit = models.CharField(max_length=1)
+    unitvalue = models.TextField(max_length=10)
+    instid = models.BigIntegerField()
+    isactive = models.CharField(max_length=1)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
 class Lecturer(models.Model):
     setid = models.TextField(max_length=10)
     lecturerid = models.TextField(max_length=10)
@@ -133,6 +239,48 @@ class Lecturer(models.Model):
         managed = False
         db_table = '"CMIS_OWNER"."LECTURER"'
         _DATABASE = 'roombookings'
+
+
+class LecturerA(models.Model):
+    setid = models.TextField(max_length=10)
+    lecturerid = models.TextField(max_length=10)
+    name = models.TextField(max_length=80)
+    category = models.TextField(max_length=10)
+    type = models.TextField(max_length=10)
+    status = models.TextField(max_length=10)
+    parttime = models.TextField(max_length=20)
+    cost = models.BigIntegerField()
+    costtype = models.TextField(max_length=10)
+    linkcode = models.TextField(max_length=20)
+    owner = models.TextField(max_length=10)
+    displectid = models.TextField(primary_key=True, max_length=10)
+    covprior = models.BigIntegerField()
+    covingprior = models.BigIntegerField()
+    excludecover = models.BigIntegerField()
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class LecturerB(models.Model):
+    setid = models.TextField(max_length=10)
+    lecturerid = models.TextField(max_length=10)
+    name = models.TextField(max_length=80)
+    category = models.TextField(max_length=10)
+    type = models.TextField(max_length=10)
+    status = models.TextField(max_length=10)
+    parttime = models.TextField(max_length=20)
+    cost = models.BigIntegerField()
+    costtype = models.TextField(max_length=10)
+    linkcode = models.TextField(max_length=20)
+    owner = models.TextField(max_length=10)
+    displectid = models.TextField(primary_key=True, max_length=10)
+    covprior = models.BigIntegerField()
+    covingprior = models.BigIntegerField()
+    excludecover = models.BigIntegerField()
+
+    class Meta:
+        _DATABASE = 'gencache'
 
 
 class Sources(models.Model):
@@ -198,6 +346,32 @@ class Weekmapstring(models.Model):
         managed = False
         db_table = '"CMIS_OWNER"."WEEKMAPSTRING"'
         _DATABASE = 'roombookings'
+
+
+class WeekmapstringA(models.Model):
+    setid = models.TextField(max_length=10)
+    weekid = models.BigIntegerField()
+    name = models.TextField(max_length=50)
+    weeks = models.TextField(max_length=104)
+    numweeks = models.BigIntegerField()
+    statweeks = models.TextField(primary_key=True, max_length=10)
+    drstatus = models.BigIntegerField()
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class WeekmapstringB(models.Model):
+    setid = models.TextField(max_length=10)
+    weekid = models.BigIntegerField()
+    name = models.TextField(max_length=50)
+    weeks = models.TextField(max_length=104)
+    numweeks = models.BigIntegerField()
+    statweeks = models.TextField(primary_key=True, max_length=10)
+    drstatus = models.BigIntegerField()
+
+    class Meta:
+        _DATABASE = 'gencache'
 
 
 class Contact(models.Model):
@@ -343,6 +517,54 @@ class Rooms(models.Model):
         _DATABASE = 'roombookings'
 
 
+class RoomsA(models.Model):
+    roomid = models.TextField(max_length=10)
+    siteid = models.TextField(max_length=10)
+    name = models.TextField(max_length=80)
+    category = models.TextField(max_length=10)
+    type = models.TextField(max_length=10)
+    classification = models.TextField(primary_key=True, max_length=10)
+    roomgrpcode = models.TextField(max_length=10)
+    zone = models.TextField(max_length=10)
+    capacity = models.BigIntegerField()
+    prefmin = models.BigIntegerField()
+    prefmax = models.BigIntegerField()
+    deptid = models.TextField(max_length=10)
+    roomarea = models.BigIntegerField()
+    dynafill = models.CharField(max_length=1)
+    setid = models.TextField(max_length=10)
+    uniquefield = models.TextField(max_length=10)
+    linkcode = models.TextField(max_length=20)
+    campusid = models.TextField(max_length=10)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class RoomsB(models.Model):
+    roomid = models.TextField(max_length=10)
+    siteid = models.TextField(max_length=10)
+    name = models.TextField(max_length=80)
+    category = models.TextField(max_length=10)
+    type = models.TextField(max_length=10)
+    classification = models.TextField(primary_key=True, max_length=10)
+    roomgrpcode = models.TextField(max_length=10)
+    zone = models.TextField(max_length=10)
+    capacity = models.BigIntegerField()
+    prefmin = models.BigIntegerField()
+    prefmax = models.BigIntegerField()
+    deptid = models.TextField(max_length=10)
+    roomarea = models.BigIntegerField()
+    dynafill = models.CharField(max_length=1)
+    setid = models.TextField(max_length=10)
+    uniquefield = models.TextField(max_length=10)
+    linkcode = models.TextField(max_length=20)
+    campusid = models.TextField(max_length=10)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
 class Weekmapnumeric(models.Model):
     setid = models.TextField(primary_key=True, max_length=10)
     weekid = models.BigIntegerField()
@@ -353,6 +575,26 @@ class Weekmapnumeric(models.Model):
         managed = False
         db_table = '"CMIS_OWNER"."WEEKMAPNUMERIC"'
         _DATABASE = 'roombookings'
+
+
+class WeekmapnumericA(models.Model):
+    setid = models.TextField(primary_key=True, max_length=10)
+    weekid = models.BigIntegerField()
+    weeknumber = models.BigIntegerField()
+    drstatus = models.BigIntegerField()
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class WeekmapnumericB(models.Model):
+    setid = models.TextField(primary_key=True, max_length=10)
+    weekid = models.BigIntegerField()
+    weeknumber = models.BigIntegerField()
+    drstatus = models.BigIntegerField()
+
+    class Meta:
+        _DATABASE = 'gencache'
 
 
 class Crsavailmodules(models.Model):
@@ -472,6 +714,200 @@ class Timetable(models.Model):
         _DATABASE = 'roombookings'
 
 
+class TimetableA(models.Model):
+    slotid = models.BigIntegerField(primary_key=True)
+    slotentry = models.BigIntegerField()
+    slottotal = models.BigIntegerField()
+    setid = models.TextField(max_length=10)
+    periodid = models.BigIntegerField()
+    weekday = models.BigIntegerField()
+    starttime = models.TextField(max_length=5)
+    duration = models.BigIntegerField()
+    finishtime = models.TextField(max_length=5)
+    weekid = models.BigIntegerField()
+    classgroupid = models.TextField(max_length=10)
+    courseid = models.TextField(max_length=12)
+    courseyear = models.BigIntegerField()
+    clsgrpcode = models.TextField(max_length=10)
+    lecturerid = models.TextField(max_length=10)
+    moduleid = models.TextField(max_length=12)
+    deptid = models.TextField(max_length=10)
+    moduletype = models.TextField(max_length=10)
+    modgrpcode = models.TextField(max_length=10)
+    siteid = models.TextField(max_length=10)
+    roomid = models.TextField(max_length=10)
+    roomgrpcode = models.TextField(max_length=10)
+    sourcesid = models.TextField(max_length=20)
+    capacity = models.BigIntegerField()
+    reqsiteid = models.TextField(max_length=10)
+    reqroomid = models.TextField(max_length=10)
+    reqtype = models.TextField(max_length=10)
+    reqcategory = models.TextField(max_length=10)
+    linkcode = models.TextField(max_length=10)
+    linkid = models.BigIntegerField()
+    chainid = models.BigIntegerField()
+    exclid = models.BigIntegerField()
+    associd = models.BigIntegerField()
+    specid = models.BigIntegerField()
+    locked = models.BigIntegerField()
+    status = models.BigIntegerField()
+    readlock = models.BigIntegerField()
+    classif = models.TextField(max_length=10)
+    owner = models.TextField(max_length=10)
+    drstatus = models.BigIntegerField()
+    lectgrp = models.BigIntegerField()
+    evpriority = models.BigIntegerField()
+    fixlect = models.CharField(max_length=1)
+    fixroom = models.CharField(max_length=1)
+    fixevent = models.CharField(max_length=1)
+    reqclass = models.TextField(max_length=10)
+    reqzone = models.TextField(max_length=10)
+    tweightid = models.BigIntegerField()
+    fixweight = models.BigIntegerField()
+    siteproximity = models.BigIntegerField()
+    zoneproximity = models.BigIntegerField()
+    maxrooms = models.BigIntegerField()
+    datechanged = models.TextField(max_length=12)
+    sizeused = models.BigIntegerField()
+    uniquefield = models.TextField(max_length=10)
+    equipid = models.TextField(max_length=10)
+    ecode = models.TextField(max_length=20)
+    einstalled = models.TextField(max_length=12)
+    eremoved = models.TextField(max_length=12)
+    ewhoinstalled = models.TextField(max_length=20)
+    ewhoremoved = models.TextField(max_length=20)
+    tobecopied = models.CharField(max_length=1)
+    copied = models.CharField(max_length=1)
+    excludefit = models.CharField(max_length=1)
+    gendatanum = models.BigIntegerField()
+    gendatastring = models.TextField(max_length=100)
+    regid = models.BigIntegerField()
+    sourcechange = models.BigIntegerField()
+    userchange = models.TextField(max_length=30)
+    mequipcat = models.TextField(max_length=10)
+    mequiptype = models.TextField(max_length=10)
+    mequipnotes = models.CharField(max_length=1)
+    triggerdate = models.TextField(max_length=10)
+    reqcampusid = models.TextField(max_length=10)
+    instid = models.BigIntegerField()
+    numperiods = models.BigIntegerField()
+    maxperiodgap = models.BigIntegerField()
+    groupid = models.BigIntegerField()
+    tobescheduled = models.BigIntegerField()
+    board = models.TextField(max_length=10)
+    series = models.TextField(max_length=10)
+    crsyear = models.TextField(max_length=4)
+    optcode = models.TextField(max_length=10)
+    compcode = models.TextField(max_length=20)
+    subcode = models.TextField(max_length=10)
+    compinstid = models.BigIntegerField()
+    roompoolid = models.BigIntegerField()
+    nonconid = models.BigIntegerField()
+    typeevent = models.BigIntegerField()
+    ncyear = models.TextField(max_length=3)
+    reasonforchange = models.TextField(max_length=10)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class TimetableB(models.Model):
+    slotid = models.BigIntegerField(primary_key=True)
+    slotentry = models.BigIntegerField()
+    slottotal = models.BigIntegerField()
+    setid = models.TextField(max_length=10)
+    periodid = models.BigIntegerField()
+    weekday = models.BigIntegerField()
+    starttime = models.TextField(max_length=5)
+    duration = models.BigIntegerField()
+    finishtime = models.TextField(max_length=5)
+    weekid = models.BigIntegerField()
+    classgroupid = models.TextField(max_length=10)
+    courseid = models.TextField(max_length=12)
+    courseyear = models.BigIntegerField()
+    clsgrpcode = models.TextField(max_length=10)
+    lecturerid = models.TextField(max_length=10)
+    moduleid = models.TextField(max_length=12)
+    deptid = models.TextField(max_length=10)
+    moduletype = models.TextField(max_length=10)
+    modgrpcode = models.TextField(max_length=10)
+    siteid = models.TextField(max_length=10)
+    roomid = models.TextField(max_length=10)
+    roomgrpcode = models.TextField(max_length=10)
+    sourcesid = models.TextField(max_length=20)
+    capacity = models.BigIntegerField()
+    reqsiteid = models.TextField(max_length=10)
+    reqroomid = models.TextField(max_length=10)
+    reqtype = models.TextField(max_length=10)
+    reqcategory = models.TextField(max_length=10)
+    linkcode = models.TextField(max_length=10)
+    linkid = models.BigIntegerField()
+    chainid = models.BigIntegerField()
+    exclid = models.BigIntegerField()
+    associd = models.BigIntegerField()
+    specid = models.BigIntegerField()
+    locked = models.BigIntegerField()
+    status = models.BigIntegerField()
+    readlock = models.BigIntegerField()
+    classif = models.TextField(max_length=10)
+    owner = models.TextField(max_length=10)
+    drstatus = models.BigIntegerField()
+    lectgrp = models.BigIntegerField()
+    evpriority = models.BigIntegerField()
+    fixlect = models.CharField(max_length=1)
+    fixroom = models.CharField(max_length=1)
+    fixevent = models.CharField(max_length=1)
+    reqclass = models.TextField(max_length=10)
+    reqzone = models.TextField(max_length=10)
+    tweightid = models.BigIntegerField()
+    fixweight = models.BigIntegerField()
+    siteproximity = models.BigIntegerField()
+    zoneproximity = models.BigIntegerField()
+    maxrooms = models.BigIntegerField()
+    datechanged = models.TextField(max_length=12)
+    sizeused = models.BigIntegerField()
+    uniquefield = models.TextField(max_length=10)
+    equipid = models.TextField(max_length=10)
+    ecode = models.TextField(max_length=20)
+    einstalled = models.TextField(max_length=12)
+    eremoved = models.TextField(max_length=12)
+    ewhoinstalled = models.TextField(max_length=20)
+    ewhoremoved = models.TextField(max_length=20)
+    tobecopied = models.CharField(max_length=1)
+    copied = models.CharField(max_length=1)
+    excludefit = models.CharField(max_length=1)
+    gendatanum = models.BigIntegerField()
+    gendatastring = models.TextField(max_length=100)
+    regid = models.BigIntegerField()
+    sourcechange = models.BigIntegerField()
+    userchange = models.TextField(max_length=30)
+    mequipcat = models.TextField(max_length=10)
+    mequiptype = models.TextField(max_length=10)
+    mequipnotes = models.CharField(max_length=1)
+    triggerdate = models.TextField(max_length=10)
+    reqcampusid = models.TextField(max_length=10)
+    instid = models.BigIntegerField()
+    numperiods = models.BigIntegerField()
+    maxperiodgap = models.BigIntegerField()
+    groupid = models.BigIntegerField()
+    tobescheduled = models.BigIntegerField()
+    board = models.TextField(max_length=10)
+    series = models.TextField(max_length=10)
+    crsyear = models.TextField(max_length=4)
+    optcode = models.TextField(max_length=10)
+    compcode = models.TextField(max_length=20)
+    subcode = models.TextField(max_length=10)
+    compinstid = models.BigIntegerField()
+    roompoolid = models.BigIntegerField()
+    nonconid = models.BigIntegerField()
+    typeevent = models.BigIntegerField()
+    ncyear = models.TextField(max_length=3)
+    reasonforchange = models.TextField(max_length=10)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
 class Stumodules(models.Model):
     setid = models.TextField(max_length=10)
     studentid = models.TextField(primary_key=True, max_length=12)
@@ -553,3 +989,11 @@ class Course(models.Model):
         managed = False
         db_table = '"CMIS_OWNER"."COURSE"'
         _DATABASE = 'roombookings'
+
+
+class Lock(models.Model):
+    a = models.BooleanField()
+    b = models.BooleanField()
+
+    class Meta:
+        _DATABASE = 'default'
