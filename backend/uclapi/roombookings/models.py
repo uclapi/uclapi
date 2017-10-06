@@ -80,6 +80,41 @@ class BookingB(models.Model):
         _DATABASE = 'gencache'
 
 
+class RoomCache(models.Model):
+    setid = models.CharField(max_length=40, blank=True, null=True)
+    siteid = models.CharField(max_length=40, blank=True, null=True)
+    sitename = models.CharField(max_length=320, blank=True, null=True)
+    address1 = models.CharField(max_length=320, blank=True, null=True)
+    address2 = models.CharField(max_length=320, blank=True, null=True)
+    address3 = models.CharField(max_length=320, blank=True, null=True)
+    address4 = models.CharField(max_length=320, blank=True, null=True)
+    roomid = models.CharField(max_length=40, primary_key=True)
+    roomname = models.CharField(max_length=320, blank=True, null=True)
+    roomdeptid = models.CharField(max_length=40, blank=True, null=True)
+    bookabletype = models.CharField(max_length=40, blank=True, null=True)
+    roomclass = models.CharField(max_length=40, blank=True, null=True)
+    zone = models.CharField(max_length=40, blank=True, null=True)
+    webview = models.CharField(max_length=4, blank=True, null=True)
+    automated = models.CharField(max_length=4, blank=True, null=True)
+    capacity = models.FloatField(blank=True, null=True)
+    category = models.CharField(max_length=40, blank=True, null=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class EquipmentCache(models.Model):
+    setid = models.CharField(max_length=40, blank=True, null=True)
+    roomid = models.CharField(max_length=40, primary_key=True)
+    units = models.FloatField(blank=True, null=True)
+    description = models.CharField(max_length=320, blank=True, null=True)
+    siteid = models.CharField(max_length=40, blank=True, null=True)
+    type = models.CharField(max_length=8, blank=True, null=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
 class Room(models.Model):
     setid = models.CharField(max_length=40, blank=True, null=True)
     siteid = models.CharField(max_length=40, blank=True, null=True)
