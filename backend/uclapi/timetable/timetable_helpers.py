@@ -15,6 +15,11 @@ _SETID = settings.ROOMBOOKINGS_SETID
 _week_map = {}
 _week_num_date_map = {}
 
+_session_type_map = {
+    "L": "Lecture",
+    "PBL": "Problem Based Learning",
+    "P": "Practical"
+}
 
 def _get_cache(model_name):
     models = {
@@ -88,7 +93,8 @@ def _get_timetable_events(student_modules):
                     "endtime": event.finishtime,
                     "duration": event.duration,
                     "lecturerid": _get_lecturer_details(event.lecturerid),
-                    "moduletype": event.moduletype,
+                    "sessiontype": event.moduletype,
+                    "sessiontypestr": _get_session_type_str(event.moduletype),
                     "siteid": event.siteid,
                     "roomid": event.roomid,
                     "startdate": date_str,
@@ -126,6 +132,13 @@ def _get_real_dates(slot):
         )
         for startdate in _week_map[slot.weekid]
     ]
+
+
+def _get_session_type_str(session_type):
+    if session_type in _session_type_map:
+        return _session_type_map[session_type]
+    else:
+        return "Unknown"
 
 
 def get_student_timetable(upi):
