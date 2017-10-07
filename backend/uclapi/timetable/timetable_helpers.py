@@ -39,10 +39,14 @@ def _get_student_by_upi(upi):
 
 def _get_student_modules(student):
     print("Getting student modules for student: " + student.qtype2)
-    student_modules = list(Stumodules.objects.filter(
-        studentid=student.studentid,
-        setid=_SETID
-    ))
+    # student_modules = list(Stumodules.objects.filter(
+    #     studentid=student.studentid,
+    #     setid=_SETID
+    # ))
+    raw_query = 'SELECT * FROM CMIS_OWNER.STUMODULES WHERE SETID=\'LIVE-17-18\' AND studentid=\'{}\''.format(
+        student.studentid
+    )
+    student_modules = list(Stumodules.objects.raw(raw_query))
     print("Got student modules for student: " + student.qtype2)
     return student_modules
 
