@@ -3,13 +3,20 @@ from roombookings.helpers import PrettyJsonResponse as JsonResponse
 from .models import OAuthToken
 from .scoping import Scopes
 
+# Gets a variable from GET or POST not caring which is which
+def get_var(request, var_name):
+    if var_name in request.GET:
+        return request.GET[var_name]
+    elif var_name in request.POST:
+        return request.POST[var_name]
+    else:
+        return None
 
 def oauth_token_check(required_scopes=None):
     def oauth_token_and_scope(view_func):
         def wrapped(request, *args, **kwargs):
-            try:
-                client_secret = request.GET['client_secret']
-            except KeyError:
+            client_secret = get_var(request, 'client_secret')
+            if client_secret is None:
                 response = JsonResponse({
                     "ok": False,
                     "error": "No Client Secret provided."
@@ -17,9 +24,8 @@ def oauth_token_check(required_scopes=None):
                 response.status_code = 400
                 return response
 
-            try:
-                token_code = request.GET["token"]
-            except KeyError:
+            token_code = get_var(request, 'token')
+            if token_code is None:
                 response = JsonResponse({
                     "ok": False,
                     "error": "No token provided via GET."

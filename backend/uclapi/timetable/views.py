@@ -39,30 +39,38 @@ def get_personal_timetable(request, *args, **kwargs):
     })
 
 
-@api_view(["POST"])
+@api_view(["GET"])
 @oauth_token_check(["timetable"])
-def get_modules_timetable(request):
+def get_modules_timetable(request, *args, **kwargs):
     """
-    Only post request accepted.
+    Only get request accepted.
     Given a list of modulesids, this will return a yearly calendar for those
     courses.
     """
-    module_ids = request.POST.getlist("modules")
-    if not module_ids:
+    module_ids = request.GET.get("modules")
+    if module_ids is None:
         return JsonResponse({
             "ok": False,
-            "error": "No module ids provided."
+            "error": "No module IDs provided."
+        })
+
+    try:
+        modules = module_ids.split(',')
+    except ValueError:
+        return JsonResponse({
+            "ok": False,
+            "error": "Invalid module IDs provided."
         })
 
     return JsonResponse({
         "ok": True,
-        "timetable": get_modules(module_ids)
+        "timetable": get_modules(modules)
     })
 
 
 @api_view(["GET"])
 @oauth_token_check(["timetable"])
-def get_courses(request):
+def get_courses(request, *args, **kwargs):
     """
     Returns all the courses in UCL with relevant ID
     """
@@ -78,7 +86,7 @@ def get_courses(request):
 
 @api_view(["GET"])
 @oauth_token_check(["timetable"])
-def get_course_modules(request):
+def get_course_modules(request, *args, **kwargs):
     """
     Returns all the modules in the specified course.
     @param: courseid
