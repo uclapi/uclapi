@@ -94,9 +94,9 @@ def _get_timetable_events(student_modules):
                     "moduleid": event.moduleid,
                     "modulegroup": module.modgrpcode
                 }
-                if event_data["startdate"] not in student_timetable:
-                    student_timetable[event_data["startdate"]] = []
-                student_timetable[event["startdate"]].append(event_data)
+                if event_data.startdate not in student_timetable:
+                    student_timetable[event_data.startdate] = []
+                student_timetable[event.startdate].append(event_data)
     print("Got timetabled events")
     return student_timetable
 
