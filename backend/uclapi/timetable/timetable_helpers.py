@@ -31,7 +31,7 @@ def _get_student_by_upi(upi):
     upi_upper = upi.upper()
     student = students.objects.filter(
         qtype2=upi_upper
-    )
+    )[0]
     return student
 
 
