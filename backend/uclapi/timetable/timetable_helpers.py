@@ -82,6 +82,7 @@ def _get_timetable_events(student_modules):
         )
         for event in events_data:
             for date in _get_real_dates(event):
+                date_str = date.strftime("%Y-%m-%d")
                 event_data = {
                     "starttime": event.starttime,
                     "endtime": event.finishtime,
@@ -90,13 +91,13 @@ def _get_timetable_events(student_modules):
                     "moduletype": event.moduletype,
                     "siteid": event.siteid,
                     "roomid": event.roomid,
-                    "startdate": date,
+                    "startdate": date_str,
                     "moduleid": event.moduleid,
                     "modulegroup": module.modgrpcode
                 }
-                if event_data["startdate"] not in student_timetable:
-                    student_timetable[event_data["startdate"]] = []
-                student_timetable[event_data["startdate"]].append(event_data)
+                if date_str not in student_timetable:
+                    student_timetable[date_str] = []
+                student_timetable[date_str].append(event_data)
     print("Got timetabled events")
     return student_timetable
 
