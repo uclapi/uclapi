@@ -132,7 +132,7 @@ class StudentsA(models.Model):
     adjacadstanding = models.BigIntegerField(null=True, blank=True)
     ema = models.CharField(max_length=1)
     emaid = models.TextField(max_length=12)
-    dob = models.DateField()
+    dob = models.DateField(null=True, blank=True)
 
     class Meta:
         _DATABASE = 'gencache'
@@ -180,7 +180,7 @@ class StudentsB(models.Model):
     adjacadstanding = models.BigIntegerField(null=True, blank=True)
     ema = models.CharField(max_length=1)
     emaid = models.TextField(max_length=12)
-    dob = models.DateField()
+    dob = models.DateField(null=True, blank=True)
 
     class Meta:
         _DATABASE = 'gencache'
