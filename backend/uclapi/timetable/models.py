@@ -17,6 +17,7 @@ class Weekstructure(models.Model):
 
 
 class WeekstructureA(models.Model):
+    id = models.AutoField(primary_key=True)
     setid = models.TextField(max_length=10)
     weeknumber = models.BigIntegerField()
     startdate = models.DateField()
@@ -28,6 +29,7 @@ class WeekstructureA(models.Model):
 
 
 class WeekstructureB(models.Model):
+    id = models.AutoField(primary_key=True)
     setid = models.TextField(max_length=10)
     weeknumber = models.BigIntegerField()
     startdate = models.DateField()
@@ -110,6 +112,7 @@ class Sites(models.Model):
 
 
 class SitesA(models.Model):
+    id = models.AutoField(primary_key=True)
     setid = models.TextField(max_length=10)
     siteid = models.TextField(max_length=10)
     sitename = models.TextField(max_length=80)
@@ -129,6 +132,7 @@ class SitesA(models.Model):
 
 
 class SitesB(models.Model):
+    id = models.AutoField(primary_key=True)
     setid = models.TextField(max_length=10)
     siteid = models.TextField(max_length=10)
     sitename = models.TextField(max_length=80)
@@ -173,6 +177,7 @@ class Module(models.Model):
 
 
 class ModuleA(models.Model):
+    id = models.AutoField(primary_key=True)
     setid = models.TextField(max_length=10)
     moduleid = models.TextField(max_length=12)
     owner = models.TextField(max_length=10)
@@ -196,6 +201,7 @@ class ModuleA(models.Model):
 
 
 class ModuleB(models.Model):
+    id = models.AutoField(primary_key=True)
     setid = models.TextField(max_length=10)
     moduleid = models.TextField(max_length=12)
     owner = models.TextField(max_length=10)
@@ -242,6 +248,7 @@ class Lecturer(models.Model):
 
 
 class LecturerA(models.Model):
+    id = models.AutoField(primary_key=True)
     setid = models.TextField(max_length=10)
     lecturerid = models.TextField(max_length=10)
     name = models.TextField(max_length=80)
@@ -263,6 +270,7 @@ class LecturerA(models.Model):
 
 
 class LecturerB(models.Model):
+    id = models.AutoField(primary_key=True)
     setid = models.TextField(max_length=10)
     lecturerid = models.TextField(max_length=10)
     name = models.TextField(max_length=80)
@@ -349,6 +357,7 @@ class Weekmapstring(models.Model):
 
 
 class WeekmapstringA(models.Model):
+    id = models.AutoField(primary_key=True)
     setid = models.TextField(max_length=10)
     weekid = models.BigIntegerField()
     name = models.TextField(max_length=50)
@@ -362,6 +371,7 @@ class WeekmapstringA(models.Model):
 
 
 class WeekmapstringB(models.Model):
+    id = models.AutoField(primary_key=True)
     setid = models.TextField(max_length=10)
     weekid = models.BigIntegerField()
     name = models.TextField(max_length=50)
@@ -518,6 +528,7 @@ class Rooms(models.Model):
 
 
 class RoomsA(models.Model):
+    id = models.AutoField(primary_key=True)
     roomid = models.TextField(max_length=10)
     siteid = models.TextField(max_length=10)
     name = models.TextField(max_length=80)
@@ -542,6 +553,7 @@ class RoomsA(models.Model):
 
 
 class RoomsB(models.Model):
+    id = models.AutoField(primary_key=True)
     roomid = models.TextField(max_length=10)
     siteid = models.TextField(max_length=10)
     name = models.TextField(max_length=80)
@@ -578,6 +590,7 @@ class Weekmapnumeric(models.Model):
 
 
 class WeekmapnumericA(models.Model):
+    id = models.AutoField(primary_key=True)
     setid = models.TextField(max_length=10)
     weekid = models.BigIntegerField()
     weeknumber = models.BigIntegerField()
@@ -588,6 +601,7 @@ class WeekmapnumericA(models.Model):
 
 
 class WeekmapnumericB(models.Model):
+    id = models.AutoField(primary_key=True)
     setid = models.TextField(max_length=10)
     weekid = models.BigIntegerField()
     weeknumber = models.BigIntegerField()
@@ -715,6 +729,7 @@ class Timetable(models.Model):
 
 
 class TimetableA(models.Model):
+    id = models.AutoField(primary_key=True)
     slotid = models.BigIntegerField()
     slotentry = models.BigIntegerField()
     slottotal = models.BigIntegerField()
@@ -812,6 +827,7 @@ class TimetableA(models.Model):
 
 
 class TimetableB(models.Model):
+    id = models.AutoField(primary_key=True)
     slotid = models.BigIntegerField()
     slotentry = models.BigIntegerField()
     slottotal = models.BigIntegerField()
