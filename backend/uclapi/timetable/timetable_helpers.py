@@ -55,6 +55,7 @@ def _get_timetable_events(student_modules):
     timetable = _get_cache("timetable")
     student_timetable = []
     for module in student_modules:
+        print("Getting data for Module ID " + module.moduleid)
         events_data = timetable.objects.filter(
             moduleid=module.moduleid,
             modgrpcode=module.modgrpcode
