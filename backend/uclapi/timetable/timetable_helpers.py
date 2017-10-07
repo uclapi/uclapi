@@ -26,24 +26,29 @@ def _get_cache(model_name):
 
 
 def _get_student_by_upi(upi):
+    print("Getting student by UPI: " + upi)
     students = _get_cache("students")
     # Assume the current Set ID due to caching
     upi_upper = upi.upper()
     student = students.objects.filter(
         qtype2=upi_upper
     )[0]
+    print("Got student")
     return student
 
 
 def _get_student_modules(student):
+    print("Getting student modules for student: " + student.qtype2)
     student_modules = Stumodules.objects.filter(
         studentid=student.studentid,
         setid=_SETID
     )
+    print("Got student modules for student: " + student.qtype2)
     return student_modules
 
 
 def _get_timetable_events(student_modules):
+    print("Getting timetabled events")
     if not _week_map:
         _map_weeks()
 
@@ -71,10 +76,12 @@ def _get_timetable_events(student_modules):
                     "modulegroup": module["modgrpcode"]
                 }
         student_timetable += events
+    print("Got timetabled events")
     return student_modules
 
 
 def _map_weeks():
+    print("Mapping weeks")
     weekmapnumeric = _get_cache("weekmapnumeric")
     weekstructure = _get_cache("weekstructure")
     week_nums = weekmapnumeric.objects.all()
@@ -87,6 +94,7 @@ def _map_weeks():
         if week.weekid not in _week_map:
             _week_map[week.weekid] = []
         _week_map[week.weekid].append(week.weeknumber)
+    print("Weeks mapped successfully")
 
 
 def _get_real_dates(slot):
@@ -99,7 +107,11 @@ def _get_real_dates(slot):
 
 
 def get_student_timetable(upi):
+    print("*** GETTING STUDENT TIMETABLE FOR UPI " + upi + " ***")
     student = _get_student_by_upi(upi)
+    print("Getting modules....")
     student_modules = _get_student_modules(student)
+    print("Getting events...")
     student_events = _get_timetable_events(student_modules)
+    print("Returning events...")
     return student_events
