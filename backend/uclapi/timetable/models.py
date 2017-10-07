@@ -20,7 +20,7 @@ class WeekstructureA(models.Model):
     setid = models.TextField(max_length=10)
     weeknumber = models.BigIntegerField()
     startdate = models.DateField()
-    description = models.TextField(primary_key=True, max_length=80)
+    description = models.TextField(max_length=80)
     mappedto = models.BigIntegerField()
 
     class Meta:
@@ -31,7 +31,7 @@ class WeekstructureB(models.Model):
     setid = models.TextField(max_length=10)
     weeknumber = models.BigIntegerField()
     startdate = models.DateField()
-    description = models.TextField(primary_key=True, max_length=80)
+    description = models.TextField(max_length=80)
     mappedto = models.BigIntegerField()
 
     class Meta:
@@ -114,7 +114,7 @@ class SitesA(models.Model):
     siteid = models.TextField(max_length=10)
     sitename = models.TextField(max_length=80)
     address1 = models.TextField(max_length=80)
-    address2 = models.TextField(primary_key=True, max_length=80)
+    address2 = models.TextField(max_length=80)
     address3 = models.TextField(max_length=80)
     address4 = models.TextField(max_length=80)
     phone1 = models.TextField(max_length=50)
@@ -133,7 +133,7 @@ class SitesB(models.Model):
     siteid = models.TextField(max_length=10)
     sitename = models.TextField(max_length=80)
     address1 = models.TextField(max_length=80)
-    address2 = models.TextField(primary_key=True, max_length=80)
+    address2 = models.TextField(max_length=80)
     address3 = models.TextField(max_length=80)
     address4 = models.TextField(max_length=80)
     phone1 = models.TextField(max_length=50)
@@ -174,7 +174,7 @@ class Module(models.Model):
 
 class ModuleA(models.Model):
     setid = models.TextField(max_length=10)
-    moduleid = models.TextField(primary_key=True, max_length=12)
+    moduleid = models.TextField(max_length=12)
     owner = models.TextField(max_length=10)
     name = models.TextField(max_length=120)
     category = models.TextField(max_length=10)
@@ -197,7 +197,7 @@ class ModuleA(models.Model):
 
 class ModuleB(models.Model):
     setid = models.TextField(max_length=10)
-    moduleid = models.TextField(primary_key=True, max_length=12)
+    moduleid = models.TextField(max_length=12)
     owner = models.TextField(max_length=10)
     name = models.TextField(max_length=120)
     category = models.TextField(max_length=10)
@@ -253,7 +253,7 @@ class LecturerA(models.Model):
     costtype = models.TextField(max_length=10)
     linkcode = models.TextField(max_length=20)
     owner = models.TextField(max_length=10)
-    displectid = models.TextField(primary_key=True, max_length=10)
+    displectid = models.TextField(max_length=10)
     covprior = models.BigIntegerField()
     covingprior = models.BigIntegerField()
     excludecover = models.BigIntegerField()
@@ -274,7 +274,7 @@ class LecturerB(models.Model):
     costtype = models.TextField(max_length=10)
     linkcode = models.TextField(max_length=20)
     owner = models.TextField(max_length=10)
-    displectid = models.TextField(primary_key=True, max_length=10)
+    displectid = models.TextField(max_length=10)
     covprior = models.BigIntegerField()
     covingprior = models.BigIntegerField()
     excludecover = models.BigIntegerField()
@@ -354,7 +354,7 @@ class WeekmapstringA(models.Model):
     name = models.TextField(max_length=50)
     weeks = models.TextField(max_length=104)
     numweeks = models.BigIntegerField()
-    statweeks = models.TextField(primary_key=True, max_length=10)
+    statweeks = models.TextField(max_length=10)
     drstatus = models.BigIntegerField()
 
     class Meta:
@@ -367,7 +367,7 @@ class WeekmapstringB(models.Model):
     name = models.TextField(max_length=50)
     weeks = models.TextField(max_length=104)
     numweeks = models.BigIntegerField()
-    statweeks = models.TextField(primary_key=True, max_length=10)
+    statweeks = models.TextField(max_length=10)
     drstatus = models.BigIntegerField()
 
     class Meta:
@@ -523,7 +523,7 @@ class RoomsA(models.Model):
     name = models.TextField(max_length=80)
     category = models.TextField(max_length=10)
     type = models.TextField(max_length=10)
-    classification = models.TextField(primary_key=True, max_length=10)
+    classification = models.TextField(max_length=10)
     roomgrpcode = models.TextField(max_length=10)
     zone = models.TextField(max_length=10)
     capacity = models.BigIntegerField()
@@ -547,7 +547,7 @@ class RoomsB(models.Model):
     name = models.TextField(max_length=80)
     category = models.TextField(max_length=10)
     type = models.TextField(max_length=10)
-    classification = models.TextField(primary_key=True, max_length=10)
+    classification = models.TextField(max_length=10)
     roomgrpcode = models.TextField(max_length=10)
     zone = models.TextField(max_length=10)
     capacity = models.BigIntegerField()
@@ -578,7 +578,7 @@ class Weekmapnumeric(models.Model):
 
 
 class WeekmapnumericA(models.Model):
-    setid = models.TextField(primary_key=True, max_length=10)
+    setid = models.TextField(max_length=10)
     weekid = models.BigIntegerField()
     weeknumber = models.BigIntegerField()
     drstatus = models.BigIntegerField()
@@ -588,7 +588,7 @@ class WeekmapnumericA(models.Model):
 
 
 class WeekmapnumericB(models.Model):
-    setid = models.TextField(primary_key=True, max_length=10)
+    setid = models.TextField(max_length=10)
     weekid = models.BigIntegerField()
     weeknumber = models.BigIntegerField()
     drstatus = models.BigIntegerField()
@@ -715,7 +715,7 @@ class Timetable(models.Model):
 
 
 class TimetableA(models.Model):
-    slotid = models.BigIntegerField(primary_key=True)
+    slotid = models.BigIntegerField()
     slotentry = models.BigIntegerField()
     slottotal = models.BigIntegerField()
     setid = models.TextField(max_length=10)
@@ -812,7 +812,7 @@ class TimetableA(models.Model):
 
 
 class TimetableB(models.Model):
-    slotid = models.BigIntegerField(primary_key=True)
+    slotid = models.BigIntegerField()
     slotentry = models.BigIntegerField()
     slottotal = models.BigIntegerField()
     setid = models.TextField(max_length=10)
