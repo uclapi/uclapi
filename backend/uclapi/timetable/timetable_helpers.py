@@ -81,7 +81,8 @@ def _get_timetable_events(student_modules):
                     "modulegroup": module.modgrpcode
                 }
                 events += event_data
-        student_timetable += events
+        for e in events:
+            student_timetable += e
     print("Got timetabled events")
     return student_timetable
 
