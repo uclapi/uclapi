@@ -2,10 +2,13 @@ import datetime
 
 from django.conf import settings
 
+from django.core.exceptions import ObjectDoesNotExist
+
 from .models import Lock, StudentsA, StudentsB, \
     Stumodules, TimetableA, TimetableB, \
     WeekmapnumericA, WeekmapnumericB, \
-    WeekstructureA, WeekstructureB
+    WeekstructureA, WeekstructureB, \
+    LecturerA, LecturerB
 
 _SETID = settings.ROOMBOOKINGS_SETID
 
@@ -18,7 +21,8 @@ def _get_cache(model_name):
         "students": [StudentsA, StudentsB],
         "timetable": [TimetableA, TimetableB],
         "weekmapnumeric": [WeekmapnumericA, WeekmapnumericB],
-        "weekstructure": [WeekstructureA, WeekstructureB]
+        "weekstructure": [WeekstructureA, WeekstructureB],
+        "lecturer": [LecturerA, LecturerB]
     }
     lock = Lock.objects.all()[0]
     model = models[model_name][0] if lock.a else models[model_name][1]
@@ -39,10 +43,6 @@ def _get_student_by_upi(upi):
 
 def _get_student_modules(student):
     print("Getting student modules for student: " + student.qtype2)
-    # student_modules = list(Stumodules.objects.filter(
-    #     studentid=student.studentid,
-    #     setid=_SETID
-    # ))
     raw_query = 'SELECT * FROM CMIS_OWNER.STUMODULES WHERE SETID=\'LIVE-17-18\' AND studentid=\'{}\''.format(
         student.studentid
     )
@@ -51,38 +51,52 @@ def _get_student_modules(student):
     return student_modules
 
 
+def _get_lecturer_details(lecturer_upi):
+    lecturers = _get_cache("lecturer")
+    details = {
+        "name": "unknown",
+        "email": "unknown"
+    }
+    try:
+        lecturer = lecturers.objects.get(lecturerid=lecturer_upi)
+        details["name"] = lecturer.name
+        details["email"] = lecturer.linkcode + "@ucl.ac.uk"
+    except ObjectDoesNotExist:
+        pass
+
+    return details
+
+
 def _get_timetable_events(student_modules):
     print("Getting timetabled events")
     if not _week_map:
         _map_weeks()
 
     timetable = _get_cache("timetable")
-    student_timetable = []
+    student_timetable = {}
     for module in student_modules:
         print("Getting data for Module ID " + module.moduleid)
         events_data = timetable.objects.filter(
             moduleid=module.moduleid,
             modgrpcode=module.modgrpcode
         )
-        events = []
         for event in events_data:
             for date in _get_real_dates(event):
                 event_data = {
                     "starttime": event.starttime,
                     "endtime": event.finishtime,
                     "duration": event.duration,
-                    "lecturerid": event.lecturerid,
+                    "lecturerid": _get_lecturer_details(event.lecturerid),
                     "moduletype": event.moduletype,
-                    "modgrpcode": event.modgrpcode,
                     "siteid": event.siteid,
                     "roomid": event.roomid,
                     "startdate": date,
                     "moduleid": event.moduleid,
                     "modulegroup": module.modgrpcode
                 }
-                events.append(event_data)
-        for e in events:
-            student_timetable.append(e)
+                if event_data["startdate"] not in student_timetable:
+                    student_timetable[event_data["startdate"]] = []
+                student_timetable[event["startdate"]].append(event_data)
     print("Got timetabled events")
     return student_timetable
 
@@ -112,6 +126,7 @@ def _get_real_dates(slot):
         for startdate in _week_map[slot.weekid]
     ]
 
+
 def get_student_timetable(upi):
     print("*** GETTING STUDENT TIMETABLE FOR UPI " + upi + " ***")
     student = _get_student_by_upi(upi)
@@ -120,7 +135,4 @@ def get_student_timetable(upi):
     print("Getting events...")
     student_events = _get_timetable_events(student_modules)
     print("Returning events...")
-    timetable = {
-        "timetable": student_events
-    }
-    return timetable
+    return student_events
