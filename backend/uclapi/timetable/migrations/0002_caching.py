@@ -12,6 +12,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='LecturerA',
             fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('setid', models.TextField(max_length=10)),
                 ('lecturerid', models.TextField(max_length=10)),
                 ('name', models.TextField(max_length=80)),
@@ -23,7 +24,7 @@ class Migration(migrations.Migration):
                 ('costtype', models.TextField(max_length=10)),
                 ('linkcode', models.TextField(max_length=20)),
                 ('owner', models.TextField(max_length=10)),
-                ('displectid', models.TextField(max_length=10, primary_key=True, serialize=False)),
+                ('displectid', models.TextField(max_length=10, serialize=False)),
                 ('covprior', models.BigIntegerField()),
                 ('covingprior', models.BigIntegerField()),
                 ('excludecover', models.BigIntegerField()),
@@ -32,6 +33,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='LecturerB',
             fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('setid', models.TextField(max_length=10)),
                 ('lecturerid', models.TextField(max_length=10)),
                 ('name', models.TextField(max_length=80)),
@@ -43,7 +45,7 @@ class Migration(migrations.Migration):
                 ('costtype', models.TextField(max_length=10)),
                 ('linkcode', models.TextField(max_length=20)),
                 ('owner', models.TextField(max_length=10)),
-                ('displectid', models.TextField(max_length=10, primary_key=True, serialize=False)),
+                ('displectid', models.TextField(max_length=10, serialize=False)),
                 ('covprior', models.BigIntegerField()),
                 ('covingprior', models.BigIntegerField()),
                 ('excludecover', models.BigIntegerField()),
@@ -60,8 +62,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ModuleA',
             fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('setid', models.TextField(max_length=10)),
-                ('moduleid', models.TextField(max_length=12, primary_key=True, serialize=False)),
+                ('moduleid', models.TextField(max_length=12, serialize=False)),
                 ('owner', models.TextField(max_length=10)),
                 ('name', models.TextField(max_length=120)),
                 ('category', models.TextField(max_length=10)),
@@ -82,8 +85,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ModuleB',
             fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('setid', models.TextField(max_length=10)),
-                ('moduleid', models.TextField(max_length=12, primary_key=True, serialize=False)),
+                ('moduleid', models.TextField(max_length=12, serialize=False)),
                 ('owner', models.TextField(max_length=10)),
                 ('name', models.TextField(max_length=120)),
                 ('category', models.TextField(max_length=10)),
@@ -104,12 +108,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='RoomsA',
             fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('roomid', models.TextField(max_length=10)),
                 ('siteid', models.TextField(max_length=10)),
                 ('name', models.TextField(max_length=80)),
                 ('category', models.TextField(max_length=10)),
                 ('type', models.TextField(max_length=10)),
-                ('classification', models.TextField(max_length=10, primary_key=True, serialize=False)),
+                ('classification', models.TextField(max_length=10, serialize=False)),
                 ('roomgrpcode', models.TextField(max_length=10)),
                 ('zone', models.TextField(max_length=10)),
                 ('capacity', models.BigIntegerField()),
@@ -127,12 +132,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='RoomsB',
             fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('roomid', models.TextField(max_length=10)),
                 ('siteid', models.TextField(max_length=10)),
                 ('name', models.TextField(max_length=80)),
                 ('category', models.TextField(max_length=10)),
                 ('type', models.TextField(max_length=10)),
-                ('classification', models.TextField(max_length=10, primary_key=True, serialize=False)),
+                ('classification', models.TextField(max_length=10, serialize=False)),
                 ('roomgrpcode', models.TextField(max_length=10)),
                 ('zone', models.TextField(max_length=10)),
                 ('capacity', models.BigIntegerField()),
@@ -150,11 +156,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SitesA',
             fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('setid', models.TextField(max_length=10)),
                 ('siteid', models.TextField(max_length=10)),
                 ('sitename', models.TextField(max_length=80)),
                 ('address1', models.TextField(max_length=80)),
-                ('address2', models.TextField(max_length=80, primary_key=True, serialize=False)),
+                ('address2', models.TextField(max_length=80, serialize=False)),
                 ('address3', models.TextField(max_length=80)),
                 ('address4', models.TextField(max_length=80)),
                 ('phone1', models.TextField(max_length=50)),
@@ -168,11 +175,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SitesB',
             fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('setid', models.TextField(max_length=10)),
                 ('siteid', models.TextField(max_length=10)),
                 ('sitename', models.TextField(max_length=80)),
                 ('address1', models.TextField(max_length=80)),
-                ('address2', models.TextField(max_length=80, primary_key=True, serialize=False)),
+                ('address2', models.TextField(max_length=80, serialize=False)),
                 ('address3', models.TextField(max_length=80)),
                 ('address4', models.TextField(max_length=80)),
                 ('phone1', models.TextField(max_length=50)),
@@ -186,7 +194,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TimetableA',
             fields=[
-                ('slotid', models.BigIntegerField(primary_key=True, serialize=False)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('slotid', models.BigIntegerField(serialize=False)),
                 ('slotentry', models.BigIntegerField()),
                 ('slottotal', models.BigIntegerField()),
                 ('setid', models.TextField(max_length=10)),
@@ -282,7 +291,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TimetableB',
             fields=[
-                ('slotid', models.BigIntegerField(primary_key=True, serialize=False)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('slotid', models.BigIntegerField(serialize=False)),
                 ('slotentry', models.BigIntegerField()),
                 ('slottotal', models.BigIntegerField()),
                 ('setid', models.TextField(max_length=10)),
@@ -378,7 +388,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='WeekmapnumericA',
             fields=[
-                ('setid', models.TextField(max_length=10, primary_key=True, serialize=False)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('setid', models.TextField(max_length=10, serialize=False)),
                 ('weekid', models.BigIntegerField()),
                 ('weeknumber', models.BigIntegerField()),
                 ('drstatus', models.BigIntegerField()),
@@ -387,7 +398,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='WeekmapnumericB',
             fields=[
-                ('setid', models.TextField(max_length=10, primary_key=True, serialize=False)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('setid', models.TextField(max_length=10, serialize=False)),
                 ('weekid', models.BigIntegerField()),
                 ('weeknumber', models.BigIntegerField()),
                 ('drstatus', models.BigIntegerField()),
@@ -396,44 +408,48 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='WeekmapstringA',
             fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('setid', models.TextField(max_length=10)),
                 ('weekid', models.BigIntegerField()),
                 ('name', models.TextField(max_length=50)),
                 ('weeks', models.TextField(max_length=104)),
                 ('numweeks', models.BigIntegerField()),
-                ('statweeks', models.TextField(max_length=10, primary_key=True, serialize=False)),
+                ('statweeks', models.TextField(max_length=10, serialize=False)),
                 ('drstatus', models.BigIntegerField()),
             ],
         ),
         migrations.CreateModel(
             name='WeekmapstringB',
             fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('setid', models.TextField(max_length=10)),
                 ('weekid', models.BigIntegerField()),
                 ('name', models.TextField(max_length=50)),
                 ('weeks', models.TextField(max_length=104)),
                 ('numweeks', models.BigIntegerField()),
-                ('statweeks', models.TextField(max_length=10, primary_key=True, serialize=False)),
+                ('statweeks', models.TextField(max_length=10, serialize=False)),
                 ('drstatus', models.BigIntegerField()),
             ],
         ),
         migrations.CreateModel(
             name='WeekstructureA',
             fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('setid', models.TextField(max_length=10)),
                 ('weeknumber', models.BigIntegerField()),
                 ('startdate', models.DateField()),
-                ('description', models.TextField(max_length=80, primary_key=True, serialize=False)),
+                ('description', models.TextField(max_length=80, serialize=False)),
                 ('mappedto', models.BigIntegerField()),
             ],
         ),
         migrations.CreateModel(
             name='WeekstructureB',
             fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('setid', models.TextField(max_length=10)),
                 ('weeknumber', models.BigIntegerField()),
                 ('startdate', models.DateField()),
-                ('description', models.TextField(max_length=80, primary_key=True, serialize=False)),
+                ('description', models.TextField(max_length=80, serialize=False)),
                 ('mappedto', models.BigIntegerField()),
             ],
         ),
