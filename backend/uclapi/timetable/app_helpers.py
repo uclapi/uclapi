@@ -112,7 +112,8 @@ def _get_location_details(roomid, rooms, sites):
         R = RoomsA if lock.a else RoomsB
         room = R.objects.filter(roomid=roomid)[0]
         if room.siteid not in sites:
-            sites[room.siteid] = Sites.objects.filter(siteid=room.siteid)[0]
+            S = SitesA if lock.a else SitesB
+            sites[room.siteid] = S.objects.filter(siteid=room.siteid)[0]
         site = sites[room.siteid]
         rooms[roomid] = {
             "name": room.name,
