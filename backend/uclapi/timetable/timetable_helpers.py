@@ -37,7 +37,7 @@ def _get_student_by_upi(upi):
 
 def _get_student_modules(student):
     student_modules = Stumodules.objects.filter(
-        studentid=student["studentid"],
+        studentid=student.studentid,
         setid=_SETID
     )
     return student_modules
