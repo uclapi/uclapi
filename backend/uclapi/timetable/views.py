@@ -41,7 +41,7 @@ def get_personal_timetable(request, *args, **kwargs):
 
 @api_view(["POST"])
 @oauth_token_check(["timetable"])
-def get_modules_timetable(request):
+def get_modules_timetable(request, *args, **kwargs):
     """
     Only post request accepted.
     Given a list of modulesids, this will return a yearly calendar for those
@@ -62,7 +62,7 @@ def get_modules_timetable(request):
 
 @api_view(["GET"])
 @oauth_token_check(["timetable"])
-def get_courses(request):
+def get_courses(request, *args, **kwargs):
     """
     Returns all the courses in UCL with relevant ID
     """
@@ -78,7 +78,7 @@ def get_courses(request):
 
 @api_view(["GET"])
 @oauth_token_check(["timetable"])
-def get_course_modules(request):
+def get_course_modules(request, *args, **kwargs):
     """
     Returns all the modules in the specified course.
     @param: courseid
