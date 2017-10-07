@@ -11,7 +11,7 @@ from timetable.models import Timetable, TimetableA, TimetableB, \
     Sites, SitesA, SitesB, \
     Timetable, TimetableA, TimetableB, \
     Module, ModuleA, ModuleB, \
-    Weekmapstring, WeekmapstringA, WeekmapstringB, 
+    Weekmapstring, WeekmapstringA, WeekmapstringB, \
     Students, StudentsA, StudentsB, \
     Lock
 
