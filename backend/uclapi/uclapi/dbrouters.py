@@ -1,10 +1,10 @@
 class ModelRouter(object):
     def __init__(self):
         self.managed_db_list = ['default', 'gencache']
-        self.model_names = [
+        self.gencache_model_names = [
             "bookinga",
             "bookingb",
-            "lecturera"
+            "lecturera",
             "lecturerb",
             "modulea",
             "moduleb",
@@ -32,9 +32,9 @@ class ModelRouter(object):
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
         if db == "default":
-            return model_name not in self.model_names
+            return model_name not in self.gencache_model_names
 
         elif db == "gencache":
-            return model_name in self.model_names
+            return model_name in self.gencache_model_names
 
         return False
