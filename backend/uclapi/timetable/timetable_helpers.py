@@ -43,7 +43,6 @@ def _get_student_modules(student):
         studentid=student.studentid,
         setid=_SETID
     ))
-    )
     print("Got student modules for student: " + student.qtype2)
     return student_modules
 
