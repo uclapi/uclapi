@@ -118,4 +118,7 @@ def get_student_timetable(upi):
     print("Getting events...")
     student_events = _get_timetable_events(student_modules)
     print("Returning events...")
-    return student_events
+    timetable = {
+        "timetable": student_events
+    }
+    return timetable
