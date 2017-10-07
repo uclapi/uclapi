@@ -10,6 +10,8 @@ from timetable.models import Timetable, TimetableA, TimetableB, \
     Rooms, RoomsA, RoomsB, \
     Sites, SitesA, SitesB, \
     Timetable, TimetableA, TimetableB, \
+    Module, ModuleA, ModuleB, \
+    Weekmapstring, WeekmapstringA, WeekmapstringB, \
     Lock
 
 
@@ -19,13 +21,14 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         classes = [
+            (Module, ModuleA, ModuleB),
             (Timetable, TimetableA, TimetableB),
             (Weekstructure, WeekstructureA, WeekstructureB),
             (Weekmapnumeric, WeekmapnumericA, WeekmapnumericB),
+            (Weekmapstring, WeekmapstringA, WeekmapstringB),
             (Lecturer, LecturerA, LecturerB),
             (Rooms, RoomsA, RoomsB),
             (Sites, SitesA, SitesB),
-            (Timetable, TimetableA, TimetableB)
         ]
 
         lock = Lock.objects.all()[0]
@@ -42,6 +45,7 @@ class Command(BaseCommand):
                         map(lambda k: (k, getattr(obj, k)),
                             map(lambda l: l.name, obj._meta.get_fields())))
                 ))
+            c[tbu].objects.all().delete()
             c[tbu].objects.using('gencache').bulk_create(
                 new_objs,
                 batch_size=5000
