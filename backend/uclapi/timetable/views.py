@@ -1,9 +1,6 @@
-from django.shortcuts import render
-from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
 from oauth.decorators import oauth_token_check
-from oauth.models import OAuthToken
 
 from rest_framework.decorators import api_view
 
@@ -11,6 +8,8 @@ from roombookings.helpers import PrettyJsonResponse as JsonResponse
 
 from .models import StudentsA, StudentsB, Lock, Course
 from .app_helpers import get_timetable, get_modules, get_all_course_modules
+
+from .timetable_helpers import get_student_timetable
 
 _SETID = settings.ROOMBOOKINGS_SETID
 
@@ -70,6 +69,15 @@ def get_modules_timetable(request, *args, **kwargs):
         "ok": True,
         "timetable": get_modules(modules)
     })
+
+
+@api_view(["GET"])
+@oauth_token_check(["timetable"])
+def get_personal_timetable_fast(request, *args, **kwargs):
+    token = kwargs['token']
+    user = token.user
+    timetable = get_student_timetable(user.employee_id)
+    return JsonResponse(timetable)
 
 
 @api_view(["GET"])
