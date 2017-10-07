@@ -66,7 +66,7 @@ def _get_timetable_events(student_modules):
         )
         events = []
         for event in events_data:
-            for date in _get_real_dates(event.slotid):
+            for date in _get_real_dates(event):
                 events += {
                     "starttime": event.starttime,
                     "endtime": event.finishtime,
@@ -109,7 +109,6 @@ def _get_real_dates(slot):
         )
         for startdate in _week_map[slot.weekid]
     ]
-
 
 def get_student_timetable(upi):
     print("*** GETTING STUDENT TIMETABLE FOR UPI " + upi + " ***")
