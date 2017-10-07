@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 
 from roombookings.helpers import PrettyJsonResponse as JsonResponse
 
-from .models import Students, Course
+from .models import StudentsA, StudentsB, Lock, Course
 from .app_helpers import get_timetable, get_modules, get_all_course_modules
 
 _SETID = settings.ROOMBOOKINGS_SETID
@@ -24,8 +24,12 @@ def get_personal_timetable(request, *args, **kwargs):
     # CMIS stores data as per an upper case representation of the UPI
     upi = user.employee_id.upper()
 
+    # Get student information from cache
+    lock = Lock.objects.all()[0]
+    s = StudentsA if lock.a else StudentsB
+
     try:
-        student = Students.objects.filter(
+        student = s.objects.filter(
             qtype2=upi, setid=_SETID)[0]
     except IndexError:
         return JsonResponse({

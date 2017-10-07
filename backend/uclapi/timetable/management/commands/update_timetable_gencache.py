@@ -12,6 +12,7 @@ from timetable.models import Timetable, TimetableA, TimetableB, \
     Timetable, TimetableA, TimetableB, \
     Module, ModuleA, ModuleB, \
     Weekmapstring, WeekmapstringA, WeekmapstringB, \
+    Students, StudentsA, StudentsB, \
     Lock
 
 
@@ -29,6 +30,7 @@ class Command(BaseCommand):
             (Lecturer, LecturerA, LecturerB),
             (Rooms, RoomsA, RoomsB),
             (Sites, SitesA, SitesB),
+            (Students, StudentsA, StudentsB)
         ]
 
         lock = Lock.objects.all()[0]

@@ -19,7 +19,9 @@ class ModelRouter(object):
             "weekmapstringa",
             "weekmapstringb",
             "weekstructurea",
-            "weekstructureb"
+            "weekstructureb",
+            "studentsa",
+            "studentsb"
         ]
     def db_for_read(self, model, **hints):
         return getattr(model._meta, "_DATABASE", "default")
