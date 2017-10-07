@@ -5,7 +5,7 @@ from django.conf import settings
 
 from roombookings.helpers import PrettyJsonResponse as JsonResponse
 
-from .models import Stumodules, TimetableA, TimetableB, ModuleA, ModuleB \
+from .models import Stumodules, TimetableA, TimetableB, ModuleA, ModuleB, \
     WeekstructureA, WeekstructureB, WeekmapnumericA, WeekmapnumericB, \
     LecturerA, LecturerB, RoomsA, RoomsB, SitesA, SitesB, Crscompmodules, \
     Crsavailmodules
