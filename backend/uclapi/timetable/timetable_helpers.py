@@ -67,7 +67,7 @@ def _get_timetable_events(student_modules):
         events = []
         for event in events_data:
             for date in _get_real_dates(event):
-                events += {
+                event_data = {
                     "starttime": event.starttime,
                     "endtime": event.finishtime,
                     "duration": event.duration,
@@ -80,6 +80,7 @@ def _get_timetable_events(student_modules):
                     "moduleid": event.moduleid,
                     "modulegroup": module.modgrpcode
                 }
+                events += event_data
         student_timetable += events
     print("Got timetabled events")
     return student_timetable
