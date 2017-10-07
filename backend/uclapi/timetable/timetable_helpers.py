@@ -82,7 +82,7 @@ def _get_timetable_events(student_modules):
                 }
         student_timetable += events
     print("Got timetabled events")
-    return student_modules
+    return student_timetable
 
 
 def _map_weeks():
