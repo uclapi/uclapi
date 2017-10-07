@@ -32,7 +32,7 @@ class Command(BaseCommand):
         ]
 
         lock = Lock.objects.all()[0]
-        tbu = 1 if lock.a else 2
+        tbu = 2 if lock.a else 1
 
         for c in classes:
             # get all current year objects
