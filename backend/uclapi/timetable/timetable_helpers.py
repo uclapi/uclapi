@@ -39,10 +39,11 @@ def _get_student_by_upi(upi):
 
 def _get_student_modules(student):
     print("Getting student modules for student: " + student.qtype2)
-    list(student_modules = Stumodules.objects.filter(
+    student_modules = list(Stumodules.objects.filter(
         studentid=student.studentid,
         setid=_SETID
     ))
+    )
     print("Got student modules for student: " + student.qtype2)
     return student_modules
 
