@@ -178,7 +178,7 @@ def _get_location_details(siteid, roomid):
     return _rooms_cache[cache_id]
 
 
-def get_student_timetable(upi):
+def get_student_timetable(upi, date_filter=None):
     print("*** GETTING STUDENT TIMETABLE FOR UPI " + upi + " ***")
     student = _get_student_by_upi(upi)
     print("Getting modules....")
@@ -186,4 +186,10 @@ def get_student_timetable(upi):
     print("Getting events...")
     student_events = _get_timetable_events(student_modules)
     print("Returning events...")
+    if date_filter:
+        if date_filter in student_events:
+            filtered_student_events = {
+                date_filter: student_events[date_filter]
+            }
+            return filtered_student_events
     return student_events
