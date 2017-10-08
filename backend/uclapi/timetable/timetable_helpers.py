@@ -158,7 +158,7 @@ def _get_timetable_events_module_list(module_list):
                     "location": _get_location_details(event.siteid, event.roomid),
                     "session_type": event.moduletype,
                     "session_type_str": _get_session_type_str(event.moduletype),
-                    "session_group": module.modgrpcode
+                    "session_group": event.modgrpcode
                 }
                 if date_str not in returned_timetable:
                     returned_timetable[date_str] = []
