@@ -124,7 +124,7 @@ def get_modules_timetable_fast(request, *args, **kwargs):
     else:
         response_json = {
             "ok": False,
-            "error": "Invalid Module ID supplied"
+            "error": "One or more invalid Module IDs supplied."
         }
         response = JsonResponse(response_json)
         response.status_code = 400
