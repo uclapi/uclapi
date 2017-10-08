@@ -26,6 +26,8 @@ _session_type_map = {
 
 _rooms_cache = {}
 
+_module_name_cache = {}
+
 def _get_cache(model_name):
     models = {
         "module": [ModuleA, ModuleB],
@@ -86,6 +88,8 @@ def _get_timetable_events(student_modules):
         _map_weeks()
 
     timetable = _get_cache("timetable")
+    modules = _get_cache("module")
+
     student_timetable = {}
     for module in student_modules:
         print("Getting data for Module ID " + module.moduleid)
@@ -105,13 +109,20 @@ def _get_timetable_events(student_modules):
                         "module_id": event.moduleid,
                         "course_owner": event.owner,
                         "lecturer": _get_lecturer_details(event.lecturerid),
-                        "name": event.name
+                        "name": "Unknown"
                     },
                     "location": _get_location_details(event.siteid, event.roomid),
                     "session_type": event.moduletype,
                     "session_type_str": _get_session_type_str(event.moduletype),
                     "session_group": module.modgrpcode
                 }
+                if event.moduleid not in _module_name_cache:
+                    try:
+                        module_name = modules.objects.get(moduleid=event.moduleid)
+                        _module_name_cache[event.moduleid] = module_name
+                    except ObjectDoesNotExist:
+                        _module_name_cache[event.moduleid] = "Unknown"
+                event_data["module"]["name"] = _module_name_cache[event.moduleid]
                 if date_str not in student_timetable:
                     student_timetable[date_str] = []
                 student_timetable[date_str].append(event_data)
