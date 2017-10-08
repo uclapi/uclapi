@@ -78,7 +78,7 @@ def get_personal_timetable_fast(request, *args, **kwargs):
     user = token.user
     timetable = get_student_timetable(user.employee_id)
     response = {
-        "ok": true,
+        "ok": True,
         "timetable": timetable
     }
     return JsonResponse(response)
