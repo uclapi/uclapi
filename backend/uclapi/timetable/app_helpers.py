@@ -20,15 +20,18 @@ def get_timetable(student):
     # To avoid hitting database multiple times.
     if not week_map:
         _map_weeks()
-    student_modules = Stumodules.objects.filter(
-        setid=_SETID, studentid=student.studentid)
+    student_modules = Stumodules.objects.filter(studentid=student.studentid)
 
     timetable_slots = []
     lock = Lock.objects.all()[0]
     TT = TimetableA if lock.a else TimetableB
     for st_mod in student_modules:
-        timetable_slots.extend(TT.objects.filter(
-            setid=_SETID, moduleid=st_mod.moduleid))
+        timetable_slots.extend(
+            TT.objects.filter(
+                moduleid=st_mod.moduleid,
+                modgrpcode=st_mod.modgrpcode
+            )
+        )
 
     return _serialize_timetable(timetable_slots)
 
