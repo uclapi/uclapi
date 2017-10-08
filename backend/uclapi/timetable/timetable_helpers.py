@@ -118,8 +118,8 @@ def _get_timetable_events(student_modules):
                 }
                 if event.moduleid not in _module_name_cache:
                     try:
-                        module_name = modules.objects.get(moduleid=event.moduleid)
-                        _module_name_cache[event.moduleid] = module_name
+                        module_data = modules.objects.get(moduleid=event.moduleid)
+                        _module_name_cache[event.moduleid] = module_data.name
                     except ObjectDoesNotExist:
                         _module_name_cache[event.moduleid] = "Unknown"
                 event_data["module"]["name"] = _module_name_cache[event.moduleid]
