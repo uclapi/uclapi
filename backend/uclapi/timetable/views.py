@@ -76,7 +76,12 @@ def get_modules_timetable(request, *args, **kwargs):
 def get_personal_timetable_fast(request, *args, **kwargs):
     token = kwargs['token']
     user = token.user
-    timetable = get_student_timetable(user.employee_id)
+    try:
+        date_filter = request.GET["date_filter"]
+        timetable = get_student_timetable(user.employee_id, date_filter)
+    except KeyError:
+        timetable = get_student_timetable(user.employee_id)
+
     response = {
         "ok": True,
         "timetable": timetable
