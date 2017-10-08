@@ -136,7 +136,7 @@ def _get_timetable_events_module_list(module_list):
     returned_timetable = {}
     for module in full_modules:
         events_data = timetable.objects.filter(
-            moduleid=module
+            moduleid=module.moduleid
         )
         print("Count of events data:")
         print(events_data.count())
