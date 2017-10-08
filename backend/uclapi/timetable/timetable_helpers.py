@@ -10,7 +10,8 @@ from .models import Lock, StudentsA, StudentsB, \
     WeekstructureA, WeekstructureB, \
     LecturerA, LecturerB, \
     RoomsA, RoomsB, \
-    SitesA, SitesB
+    SitesA, SitesB, \
+    ModuleA, ModuleB
 
 _SETID = settings.ROOMBOOKINGS_SETID
 
@@ -25,8 +26,11 @@ _session_type_map = {
 
 _rooms_cache = {}
 
+_module_name_cache = {}
+
 def _get_cache(model_name):
     models = {
+        "module": [ModuleA, ModuleB],
         "students": [StudentsA, StudentsB],
         "timetable": [TimetableA, TimetableB],
         "weekmapnumeric": [WeekmapnumericA, WeekmapnumericB],
@@ -84,6 +88,8 @@ def _get_timetable_events(student_modules):
         _map_weeks()
 
     timetable = _get_cache("timetable")
+    modules = _get_cache("module")
+
     student_timetable = {}
     for module in student_modules:
         print("Getting data for Module ID " + module.moduleid)
@@ -103,18 +109,74 @@ def _get_timetable_events(student_modules):
                         "module_id": event.moduleid,
                         "course_owner": event.owner,
                         "lecturer": _get_lecturer_details(event.lecturerid),
+                        "name": "Unknown"
                     },
                     "location": _get_location_details(event.siteid, event.roomid),
                     "session_type": event.moduletype,
                     "session_type_str": _get_session_type_str(event.moduletype),
                     "session_group": module.modgrpcode
                 }
+                if event.moduleid not in _module_name_cache:
+                    try:
+                        module_data = modules.objects.get(moduleid=event.moduleid)
+                        _module_name_cache[event.moduleid] = module_data.name
+                    except ObjectDoesNotExist:
+                        _module_name_cache[event.moduleid] = "Unknown"
+                event_data["module"]["name"] = _module_name_cache[event.moduleid]
                 if date_str not in student_timetable:
                     student_timetable[date_str] = []
                 student_timetable[date_str].append(event_data)
     print("Got timetabled events")
     return student_timetable
 
+
+def _get_timetable_events_module_list(module_list):
+    if not _week_map:
+        _map_weeks()
+
+    timetable = _get_cache("timetable")
+    modules = _get_cache("module")
+
+    full_modules = []
+
+    for module in module_list:
+        try:
+            full_modules.append(modules.objects.get(moduleid=module))
+        except ObjectDoesNotExist:
+            return False
+
+    returned_timetable = {}
+    for module in full_modules:
+        events_data = timetable.objects.filter(
+            moduleid=module.moduleid
+        )
+        print("Count of events data:")
+        print(events_data.count())
+        for event in events_data:
+            print(event)
+            for date in _get_real_dates(event):
+                print(date)
+                date_str = date.strftime("%Y-%m-%d")
+                event_data = {
+                    "start_time": event.starttime,
+                    "end_time": event.finishtime,
+                    "duration": event.duration,
+                    "module": {
+                        "module_code": event.linkcode,
+                        "module_id": event.moduleid,
+                        "course_owner": event.owner,
+                        "lecturer": _get_lecturer_details(event.lecturerid),
+                        "name": module.name
+                    },
+                    "location": _get_location_details(event.siteid, event.roomid),
+                    "session_type": event.moduletype,
+                    "session_type_str": _get_session_type_str(event.moduletype),
+                    "session_group": event.modgrpcode
+                }
+                if date_str not in returned_timetable:
+                    returned_timetable[date_str] = []
+                returned_timetable[date_str].append(event_data)
+    return returned_timetable
 
 def _map_weeks():
     print("Mapping weeks")
@@ -197,3 +259,20 @@ def get_student_timetable(upi, date_filter=None):
             }
         return filtered_student_events
     return student_events
+
+
+def get_custom_timetable(modules, date_filter=None):
+    events = _get_timetable_events_module_list(modules)
+    if events:
+        if date_filter:
+            if date_filter in events:
+                filtered_events = {
+                    date_filter: events[date_filter]
+                }
+            else:
+                filtered_events = {
+                    date_filter: []
+                }
+            return filtered_events
+        return events
+    return None
