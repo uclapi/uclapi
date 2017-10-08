@@ -126,11 +126,17 @@ def _get_timetable_events_module_list(module_list):
     modules = _get_cache("module")
 
     full_modules = []
+    print("Module list: ")
+    print(module_list)
+
     for module in module_list:
         try:
             full_modules.append(modules.objects.get(moduleid=module))
         except ObjectDoesNotExist:
             return False
+
+    print("Got a full module list: ")
+    print(full_modules)
 
     returned_timetable = {}
     for module in full_modules:
