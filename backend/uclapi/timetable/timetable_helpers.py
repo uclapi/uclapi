@@ -138,7 +138,8 @@ def _get_timetable_events_module_list(module_list):
         events_data = timetable.objects.filter(
             moduleid=module
         )
-        print(events_data)
+        print("Count of events data:")
+        print(events_data.count())
         for event in events_data:
             print(event)
             for date in _get_real_dates(event):
