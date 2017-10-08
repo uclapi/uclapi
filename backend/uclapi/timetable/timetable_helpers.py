@@ -101,7 +101,7 @@ def _get_timetable_events(student_modules):
                     "location": {
                         "siteid": event.siteid,
                         "roomid": event.roomid,
-                    }
+                    },
                     "session_type": event.moduletype,
                     "session_type_str": _get_session_type_str(event.moduletype),
                     "session_group": module.modgrpcode
