@@ -141,6 +141,7 @@ def _get_timetable_events_module_list(module_list):
         for event in events_data:
             print(event)
             for date in _get_real_dates(event):
+                print(date)
                 date_str = date.strftime("%Y-%m-%d")
                 event_data = {
                     "start_time": event.starttime,
