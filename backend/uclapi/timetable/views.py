@@ -11,7 +11,7 @@ from .models import StudentsA, StudentsB, Lock, Course, Depts, \
 
 from .app_helpers import get_timetable, get_modules, get_all_course_modules
 
-from .timetable_helpers import get_student_timetable
+from .timetable_helpers import get_student_timetable, get_custom_timetable
 
 _SETID = settings.ROOMBOOKINGS_SETID
 
@@ -93,6 +93,46 @@ def get_personal_timetable_fast(request, *args, **kwargs):
 
 @api_view(["GET"])
 @oauth_token_check(["timetable"])
+def get_modules_timetable_fast(request, *args, **kwargs):
+    module_ids = request.GET.get("modules")
+    if module_ids is None:
+        return JsonResponse({
+            "ok": False,
+            "error": "No module IDs provided."
+        })
+
+    try:
+        modules = module_ids.split(',')
+    except ValueError:
+        return JsonResponse({
+            "ok": False,
+            "error": "Invalid module IDs provided."
+        })
+
+    try:
+        date_filter = request.GET["date_filter"]
+        custom_timetable = get_custom_timetable(modules, date_filter)
+    except KeyError:
+        custom_timetable = get_custom_timetable(modules)
+
+    if custom_timetable:
+        response_json = {
+            "ok": True,
+            "timetable": custom_timetable
+        }
+        return JsonResponse(response_json)
+    else:
+        response_json = {
+            "ok": False,
+            "error": "Invalid Module ID supplied"
+        }
+        response = JsonResponse(response_json)
+        response.status_code = 400
+        return response
+
+
+@api_view(["GET"])
+@oauth_token_check(["timetable"])
 def get_departments(request, *args, **kwargs):
     """
     Returns all departments at UCL
@@ -119,7 +159,7 @@ def get_department_courses(request, *args, **kwargs):
             "ok": False,
             "error": "Supply a Department ID using the department parameter."
         })
-        response.status_code = 200
+        response.status_code = 400
         return response
 
     courses = {"ok": True, "courses": []}
@@ -145,7 +185,7 @@ def get_department_modules(request, *args, **kwargs):
             "ok": False,
             "error": "Supply a Department ID using the department parameter."
         })
-        response.status_code = 200
+        response.status_code = 400
         return response
 
     modules = {"ok": True, "modules": []}
