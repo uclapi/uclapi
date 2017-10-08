@@ -109,7 +109,8 @@ def _get_timetable_events(student_modules):
                     "location": _get_location_details(event.siteid, event.roomid),
                     "session_type": event.moduletype,
                     "session_type_str": _get_session_type_str(event.moduletype),
-                    "session_group": module.modgrpcode
+                    "session_group": module.modgrpcode,
+                    "name": module.name
                 }
                 if date_str not in student_timetable:
                     student_timetable[date_str] = []
@@ -158,7 +159,8 @@ def _get_timetable_events_module_list(module_list):
                     "location": _get_location_details(event.siteid, event.roomid),
                     "session_type": event.moduletype,
                     "session_type_str": _get_session_type_str(event.moduletype),
-                    "session_group": event.modgrpcode
+                    "session_group": event.modgrpcode,
+                    "name": module.name
                 }
                 if date_str not in returned_timetable:
                     returned_timetable[date_str] = []
