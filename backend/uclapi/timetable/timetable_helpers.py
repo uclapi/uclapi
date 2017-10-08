@@ -149,7 +149,7 @@ def _get_session_type_str(session_type):
         return "Unknown"
 
 
- def _get_location_details(siteid, roomid):
+def _get_location_details(siteid, roomid):
     if not roomid:
         return {}
     if not siteid:
