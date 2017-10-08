@@ -126,8 +126,6 @@ def _get_timetable_events_module_list(module_list):
     modules = _get_cache("module")
 
     full_modules = []
-    print("Module list: ")
-    print(module_list)
 
     for module in module_list:
         try:
@@ -135,16 +133,13 @@ def _get_timetable_events_module_list(module_list):
         except ObjectDoesNotExist:
             return False
 
-    print("Got a full module list: ")
-    print(full_modules)
-
     returned_timetable = {}
     for module in full_modules:
         events_data = timetable.objects.filter(
             moduleid=module
         )
-
         for event in events_data:
+            print(event)
             for date in _get_real_dates(event):
                 date_str = date.strftime("%Y-%m-%d")
                 event_data = {
