@@ -13,10 +13,12 @@ import requests
 @log_api_call
 def people(request):
     if "query" not in request.GET:
-        return JsonResponse({
+        response = JsonResponse({
             "ok": False,
-            "error": "No query provided"
+            "error": "No query provided."
         })
+        response.status_code = 400
+        return response
 
     query = request.GET["query"]
 
