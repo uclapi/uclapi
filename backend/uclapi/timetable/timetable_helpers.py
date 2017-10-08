@@ -8,7 +8,9 @@ from .models import Lock, StudentsA, StudentsB, \
     Stumodules, TimetableA, TimetableB, \
     WeekmapnumericA, WeekmapnumericB, \
     WeekstructureA, WeekstructureB, \
-    LecturerA, LecturerB
+    LecturerA, LecturerB, \
+    RoomsA, RoomsB, \
+    SitesA, SitesB
 
 _SETID = settings.ROOMBOOKINGS_SETID
 
@@ -21,13 +23,17 @@ _session_type_map = {
     "P": "Practical"
 }
 
+_rooms_cache = {}
+
 def _get_cache(model_name):
     models = {
         "students": [StudentsA, StudentsB],
         "timetable": [TimetableA, TimetableB],
         "weekmapnumeric": [WeekmapnumericA, WeekmapnumericB],
         "weekstructure": [WeekstructureA, WeekstructureB],
-        "lecturer": [LecturerA, LecturerB]
+        "lecturer": [LecturerA, LecturerB],
+        "rooms": [RoomsA, RoomsB],
+        "sites": [SitesA, SitesB]
     }
     lock = Lock.objects.all()[0]
     model = models[model_name][0] if lock.a else models[model_name][1]
@@ -98,10 +104,7 @@ def _get_timetable_events(student_modules):
                         "course_owner": event.owner,
                         "lecturer": _get_lecturer_details(event.lecturerid),
                     },
-                    "location": {
-                        "siteid": event.siteid,
-                        "roomid": event.roomid,
-                    },
+                    "location": _get_location_details(event.siteid, event.roomid),
                     "session_type": event.moduletype,
                     "session_type_str": _get_session_type_str(event.moduletype),
                     "session_group": module.modgrpcode
@@ -144,6 +147,35 @@ def _get_session_type_str(session_type):
         return _session_type_map[session_type]
     else:
         return "Unknown"
+
+
+ def _get_location_details(siteid, roomid):
+    if not roomid:
+        return {}
+    if not siteid:
+        return {}
+
+    cache_id = siteid + "___" + roomid
+    if cache_id not in _rooms_cache:
+        rooms = _get_cache("rooms")
+        sites = _get_cache("sites")
+        try:
+            room = rooms.objects.filter(roomid=roomid, siteid=siteid)[0]
+            site = sites.objects.filter(siteid=siteid)[0]
+        except IndexError:
+            return {}
+        _rooms_cache[cache_id] = {
+            "name": room.name,
+            "capacity": room.capacity,
+            "type": room.type,
+            "address": [
+                site.address1,
+                site.address2,
+                site.address3
+            ],
+            "site_name": site.sitename
+        }
+    return _rooms_cache[cache_id]
 
 
 def get_student_timetable(upi):
