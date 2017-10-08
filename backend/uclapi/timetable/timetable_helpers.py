@@ -195,5 +195,5 @@ def get_student_timetable(upi, date_filter=None):
             filtered_student_events = {
                 date_filter: []
             }
-            return filtered_student_events
+        return filtered_student_events
     return student_events
