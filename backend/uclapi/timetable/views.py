@@ -99,7 +99,7 @@ def get_courses(request, *args, **kwargs):
     for course in Course.objects.all():
         courses["courses"].append({
             "course_name": course.name,
-            "couse_id": course.courseid,
+            "course_id": course.courseid,
             "year": course.numyears
         })
     return JsonResponse(courses)
