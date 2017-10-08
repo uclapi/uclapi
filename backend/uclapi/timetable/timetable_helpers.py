@@ -89,17 +89,22 @@ def _get_timetable_events(student_modules):
             for date in _get_real_dates(event):
                 date_str = date.strftime("%Y-%m-%d")
                 event_data = {
-                    "starttime": event.starttime,
-                    "endtime": event.finishtime,
+                    "start_time": event.starttime,
+                    "end_time": event.finishtime,
                     "duration": event.duration,
-                    "lecturerid": _get_lecturer_details(event.lecturerid),
-                    "sessiontype": event.moduletype,
-                    "sessiontypestr": _get_session_type_str(event.moduletype),
-                    "siteid": event.siteid,
-                    "roomid": event.roomid,
-                    "startdate": date_str,
-                    "moduleid": event.moduleid,
-                    "modulegroup": module.modgrpcode
+                    "module": {
+                        "module_code": event.linkcode,
+                        "module_id": event.moduleid,
+                        "course_owner": event.owner,
+                        "lecturer": _get_lecturer_details(event.lecturerid),
+                    },
+                    "location": {
+                        "siteid": event.siteid,
+                        "roomid": event.roomid,
+                    }
+                    "session_type": event.moduletype,
+                    "session_type_str": _get_session_type_str(event.moduletype),
+                    "session_group": module.modgrpcode
                 }
                 if date_str not in student_timetable:
                     student_timetable[date_str] = []
