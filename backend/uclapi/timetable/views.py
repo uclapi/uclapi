@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 
 from roombookings.helpers import PrettyJsonResponse as JsonResponse
 
-from .models import StudentsA, StudentsB, Lock, Course
+from .models import StudentsA, StudentsB, Lock, Course, Depts
 from .app_helpers import get_timetable, get_modules, get_all_course_modules
 
 from .timetable_helpers import get_student_timetable
@@ -91,16 +91,41 @@ def get_personal_timetable_fast(request, *args, **kwargs):
 
 @api_view(["GET"])
 @oauth_token_check(["timetable"])
+def get_departments(request, *args, **kwargs):
+    """
+    Returns all departments at UCL
+    """
+    depts = {"ok": True, "departments": []}
+    for dept in Depts.objects.all():
+        depts["departments"].append({
+            "department_id": dept.deptid,
+            "name": dept.name
+        })
+    return JsonResponse(depts)
+
+
+@api_view(["GET"])
+@oauth_token_check(["timetable"])
 def get_courses(request, *args, **kwargs):
     """
     Returns all the courses in UCL with relevant ID
     """
+    try:
+        department_id = request.GET["department"]
+    except KeyError:
+        response = JsonResponse({
+            "ok": False,
+            "error": "Supply a Department ID using the department parameter."
+        })
+        response.status_code = 200
+        return response
+
     courses = {"ok": True, "courses": []}
-    for course in Course.objects.all():
+    for course in Course.objects.filter(owner=department_id, setid=_SETID):
         courses["courses"].append({
             "course_name": course.name,
             "course_id": course.courseid,
-            "year": course.numyears
+            "years": course.numyears
         })
     return JsonResponse(courses)
 
