@@ -6,7 +6,9 @@ from rest_framework.decorators import api_view
 
 from roombookings.helpers import PrettyJsonResponse as JsonResponse
 
-from .models import StudentsA, StudentsB, Lock, Course, Depts
+from .models import StudentsA, StudentsB, Lock, Course, Depts, \
+    ModuleA, ModuleB
+
 from .app_helpers import get_timetable, get_modules, get_all_course_modules
 
 from .timetable_helpers import get_student_timetable
@@ -106,7 +108,7 @@ def get_departments(request, *args, **kwargs):
 
 @api_view(["GET"])
 @oauth_token_check(["timetable"])
-def get_courses(request, *args, **kwargs):
+def get_department_courses(request, *args, **kwargs):
     """
     Returns all the courses in UCL with relevant ID
     """
@@ -128,6 +130,36 @@ def get_courses(request, *args, **kwargs):
             "years": course.numyears
         })
     return JsonResponse(courses)
+
+
+@api_view(["GET"])
+@oauth_token_check(["timetable"])
+def get_department_modules(request, *args, **kwargs):
+    """
+    Returns all modules taught by a particular department.
+    """
+    try:
+        department_id = request.GET["department"]
+    except KeyError:
+        response = JsonResponse({
+            "ok": False,
+            "error": "Supply a Department ID using the department parameter."
+        })
+        response.status_code = 200
+        return response
+
+    modules = {"ok": True, "modules": []}
+    lock = Lock.objects.all()[0]
+    m = ModuleA if lock.a else ModuleB
+    for module in m.objects.filter(owner=department_id, setid=_SETID):
+        modules["modules"].append({
+            "module_id": module.moduleid,
+            "name": module.name,
+            "module_code": module.linkcode,
+            "class_size": module.csize
+        })
+
+    return JsonResponse(modules)
 
 
 @api_view(["GET"])
