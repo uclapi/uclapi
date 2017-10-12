@@ -14,12 +14,13 @@ from django.views.decorators.csrf import (csrf_exempt, csrf_protect,
 from dashboard.models import App, User
 from dashboard.tasks import keen_add_event_task as keen_add_event
 from roombookings.helpers import PrettyJsonResponse
-from uclapi.settings import REDIS_UCLAPI_HOST
 
 from .app_helpers import generate_random_verification_code
-from .decorators import oauth_token_check
 from .models import OAuthToken
 from .scoping import Scopes
+
+from uclapi.settings import REDIS_UCLAPI_HOST
+from uclapi.decorators import uclapi_protected_endpoint
 
 
 # The endpoint that creates a Shibboleth login and redirects the user to it
@@ -451,7 +452,7 @@ def token(request):
     return PrettyJsonResponse(oauth_data)
 
 
-@oauth_token_check([])
+@uclapi_protected_endpoint(personal_data=True)
 def userdata(request, *args, **kwargs):
     token = kwargs['token']
 
@@ -475,7 +476,7 @@ def scope_map(request):
     return PrettyJsonResponse(scope_map)
 
 
-@oauth_token_check([])
+@uclapi_protected_endpoint(personal_data=True)
 def token_test(request, *args, **kwargs):
     s = Scopes()
 

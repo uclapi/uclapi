@@ -8,7 +8,7 @@ from dashboard.tasks import keen_add_event_task as keen_add_event
 from oauth.models import OAuthToken
 from oauth.scoping import Scopes
 
-from roombookings.helpers import JsonResponse as JsonResponse
+from roombookings.helpers import PrettyJsonResponse as JsonResponse
 
 from .settings import REDIS_UCLAPI_HOST
 
@@ -105,6 +105,7 @@ def throttle_api_call(token, token_type):
         raise UclApiIncorrectTokenTypeException
 
     r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    r.set_response_callback('GET', int)
     count = r.get(cache_key)
 
     secs = how_many_seconds_until_midnight()
@@ -119,14 +120,14 @@ def throttle_api_call(token, token_type):
             return (False, limit, limit - count, secs)
 
 
-def uclapi_protected_endpoint(personal_data=False, required_scopes=None):
+def uclapi_protected_endpoint(personal_data=False, required_scopes=[]):
     def token_scope_check(view_func):
         def wrapped(request, *args, **kwargs):
             # A small sanity check
             # You cannot apply a personal data scope if you are not using
             # a personal data flag
             if personal_data is False:
-                if required_scopes is not None:
+                if required_scopes is not []:
                     raise UclApiIncorrectDecoratorUsageException
 
             # In any case, a token should be provided
