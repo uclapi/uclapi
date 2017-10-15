@@ -1,81 +1,23 @@
 from django.conf import settings
 
-from oauth.decorators import oauth_token_check
-
 from rest_framework.decorators import api_view
 
 from roombookings.helpers import PrettyJsonResponse as JsonResponse
 
-from .models import StudentsA, StudentsB, Lock, Course, Depts, \
-    ModuleA, ModuleB
+from .models import Lock, Course, Depts, ModuleA, ModuleB
 
-from .app_helpers import get_timetable, get_modules, get_all_course_modules
+from .app_helpers import get_all_course_modules
 
 from .timetable_helpers import get_student_timetable, get_custom_timetable
+
+from uclapi.decorators import uclapi_protected_endpoint
 
 _SETID = settings.ROOMBOOKINGS_SETID
 
 
 @api_view(["GET"])
-@oauth_token_check(["timetable"])
+@uclapi_protected_endpoint(personal_data=True, required_scopes=['timetable'])
 def get_personal_timetable(request, *args, **kwargs):
-    token = kwargs['token']
-    user = token.user
-
-    # CMIS stores data as per an upper case representation of the UPI
-    upi = user.employee_id.upper()
-
-    # Get student information from cache
-    lock = Lock.objects.all()[0]
-    s = StudentsA if lock.a else StudentsB
-
-    try:
-        student = s.objects.filter(
-            qtype2=upi, setid=_SETID)[0]
-    except IndexError:
-        return JsonResponse({
-            "ok": False,
-            "error": "Student does not have any assigned timetables."
-        })
-
-    return JsonResponse({
-        "ok": True,
-        "timetable": get_timetable(student)
-    })
-
-
-@api_view(["GET"])
-@oauth_token_check(["timetable"])
-def get_modules_timetable(request, *args, **kwargs):
-    """
-    Only get request accepted.
-    Given a list of modulesids, this will return a yearly calendar for those
-    courses.
-    """
-    module_ids = request.GET.get("modules")
-    if module_ids is None:
-        return JsonResponse({
-            "ok": False,
-            "error": "No module IDs provided."
-        })
-
-    try:
-        modules = module_ids.split(',')
-    except ValueError:
-        return JsonResponse({
-            "ok": False,
-            "error": "Invalid module IDs provided."
-        })
-
-    return JsonResponse({
-        "ok": True,
-        "timetable": get_modules(modules)
-    })
-
-
-@api_view(["GET"])
-@oauth_token_check(["timetable"])
-def get_personal_timetable_fast(request, *args, **kwargs):
     token = kwargs['token']
     user = token.user
     try:
@@ -92,8 +34,8 @@ def get_personal_timetable_fast(request, *args, **kwargs):
 
 
 @api_view(["GET"])
-@oauth_token_check(["timetable"])
-def get_modules_timetable_fast(request, *args, **kwargs):
+@uclapi_protected_endpoint()
+def get_modules_timetable(request, *args, **kwargs):
     module_ids = request.GET.get("modules")
     if module_ids is None:
         return JsonResponse({
@@ -132,7 +74,7 @@ def get_modules_timetable_fast(request, *args, **kwargs):
 
 
 @api_view(["GET"])
-@oauth_token_check(["timetable"])
+@uclapi_protected_endpoint()
 def get_departments(request, *args, **kwargs):
     """
     Returns all departments at UCL
@@ -147,7 +89,7 @@ def get_departments(request, *args, **kwargs):
 
 
 @api_view(["GET"])
-@oauth_token_check(["timetable"])
+@uclapi_protected_endpoint()
 def get_department_courses(request, *args, **kwargs):
     """
     Returns all the courses in UCL with relevant ID
@@ -173,7 +115,7 @@ def get_department_courses(request, *args, **kwargs):
 
 
 @api_view(["GET"])
-@oauth_token_check(["timetable"])
+@uclapi_protected_endpoint()
 def get_department_modules(request, *args, **kwargs):
     """
     Returns all modules taught by a particular department.
@@ -203,7 +145,7 @@ def get_department_modules(request, *args, **kwargs):
 
 
 @api_view(["GET"])
-@oauth_token_check(["timetable"])
+@uclapi_protected_endpoint()
 def get_course_modules(request, *args, **kwargs):
     """
     Returns all the modules in the specified course.

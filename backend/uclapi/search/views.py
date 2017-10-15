@@ -1,16 +1,14 @@
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 
-from roombookings.decorators import does_token_exist, log_api_call, throttle
+from uclapi.decorators import uclapi_protected_endpoint
 
 import os
 import requests
 
 
 @api_view(['GET'])
-@does_token_exist
-@throttle
-@log_api_call
+@uclapi_protected_endpoint()
 def people(request):
     if "query" not in request.GET:
         response = JsonResponse({

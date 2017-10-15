@@ -1,15 +1,13 @@
-import os
-
 from django.core.management.base import BaseCommand
 from django.conf import settings
 
-from timetable.models import Timetable, TimetableA, TimetableB, \
+from timetable.models import \
+    Timetable, TimetableA, TimetableB, \
     Weekstructure, WeekstructureA, WeekstructureB, \
     Weekmapnumeric, WeekmapnumericA, WeekmapnumericB, \
     Lecturer, LecturerA, LecturerB, \
     Rooms, RoomsA, RoomsB, \
     Sites, SitesA, SitesB, \
-    Timetable, TimetableA, TimetableB, \
     Module, ModuleA, ModuleB, \
     Weekmapstring, WeekmapstringA, WeekmapstringB, \
     Students, StudentsA, StudentsB, \

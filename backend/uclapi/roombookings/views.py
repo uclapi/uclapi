@@ -3,18 +3,16 @@ from functools import reduce
 from rest_framework.decorators import api_view
 from django.conf import settings
 
-from .decorators import does_token_exist, log_api_call, throttle
 from .helpers import (PrettyJsonResponse, _create_page_token,
                       _get_paginated_bookings, _parse_datetime,
                       _return_json_bookings, _serialize_equipment,
                       _serialize_rooms)
 from .models import BookingA, BookingB, Equipment, Lock, Room
 
+from uclapi.decorators import uclapi_protected_endpoint
 
 @api_view(['GET'])
-@does_token_exist
-@throttle
-@log_api_call
+@uclapi_protected_endpoint()
 def get_rooms(request, *args, **kwargs):
     # add them to iterables so can be filtered without if-else
     request_params = {}
@@ -52,9 +50,7 @@ def get_rooms(request, *args, **kwargs):
 
 
 @api_view(['GET'])
-@does_token_exist
-@throttle
-@log_api_call
+@uclapi_protected_endpoint()
 def get_bookings(request, *args, **kwargs):
     # if page_token exists, dont look for query
     page_token = request.GET.get('page_token')
@@ -137,9 +133,7 @@ def get_bookings(request, *args, **kwargs):
 
 
 @api_view(['GET'])
-@does_token_exist
-@throttle
-@log_api_call
+@uclapi_protected_endpoint()
 def get_equipment(request, *args, **kwargs):
     roomid = request.GET.get("roomid")
     siteid = request.GET.get("siteid")
