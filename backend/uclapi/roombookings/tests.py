@@ -228,6 +228,10 @@ class DoesTokenExistTestCase(TestCase):
         'roombookings.models.BookingA.objects',
         fake_bookings
     )
+    bookingb_objects = unittest.mock.patch(
+        'roombookings.models.BookingB.objects',
+        fake_bookings
+    )
 
     fake_locks = MockSet(
         MockModel(
@@ -252,6 +256,7 @@ class DoesTokenExistTestCase(TestCase):
 
     @booking_objects
     @bookinga_objects
+    @bookingb_objects
     @lock_objects
     def test_no_token_provided(self):
         request = self.factory.get('/a/random/path')
@@ -264,6 +269,7 @@ class DoesTokenExistTestCase(TestCase):
 
     @booking_objects
     @bookinga_objects
+    @bookingb_objects
     @lock_objects
     def test_invalid_token_provided(self):
         request = self.factory.get('/a/random/path', {'token': 'uclapi'})
@@ -276,6 +282,7 @@ class DoesTokenExistTestCase(TestCase):
 
     @booking_objects
     @bookinga_objects
+    @bookingb_objects
     @lock_objects
     def test_invalid_temp_token_provided(self):
         request = self.factory.get(
@@ -291,6 +298,7 @@ class DoesTokenExistTestCase(TestCase):
 
     @booking_objects
     @bookinga_objects
+    @bookingb_objects
     @lock_objects
     def test_temp_token_wrong_path(self):
         token = TemporaryToken.objects.create()
@@ -308,6 +316,7 @@ class DoesTokenExistTestCase(TestCase):
 
     @booking_objects
     @bookinga_objects
+    @bookingb_objects
     @lock_objects
     def test_temp_token_page_token_provided(self):
         token = TemporaryToken.objects.create()
@@ -328,6 +337,7 @@ class DoesTokenExistTestCase(TestCase):
 
     @booking_objects
     @bookinga_objects
+    @bookingb_objects
     @lock_objects
     def test_temp_token_overused(self):
         token = TemporaryToken.objects.create()
@@ -352,6 +362,7 @@ class DoesTokenExistTestCase(TestCase):
     )
     @booking_objects
     @bookinga_objects
+    @bookingb_objects
     @lock_objects
     def test_temp_token_expired(self):
         token = TemporaryToken.objects.create()
@@ -371,6 +382,7 @@ class DoesTokenExistTestCase(TestCase):
 
     @booking_objects
     @bookinga_objects
+    @bookingb_objects
     @lock_objects
     def test_temp_token_valid(self):
         token = TemporaryToken.objects.create()
@@ -386,6 +398,7 @@ class DoesTokenExistTestCase(TestCase):
 
     @booking_objects
     @bookinga_objects
+    @bookingb_objects
     @lock_objects
     def test_normal_token_valid(self):
         user_ = User.objects.create(cn="test", employee_id=7357)
@@ -397,4 +410,3 @@ class DoesTokenExistTestCase(TestCase):
         response = get_bookings(request)
 
         self.assertEqual(response.status_code, 200)
-
