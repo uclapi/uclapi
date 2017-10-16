@@ -29,6 +29,6 @@ before_script:
 script:
   - python ./manage.py migrate
   # codecov.io
-  - coverage run --source='.' --omit='*migrations*' manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner'
+  - coverage run --source='.' --omit='*migrations*' manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner --settings=uclapi.settings_mocked'
 after_success:
   - codecov

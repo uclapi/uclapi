@@ -8,6 +8,7 @@ from django.test import SimpleTestCase, TestCase
 from freezegun import freeze_time
 from rest_framework.test import APIRequestFactory
 from django.conf import settings
+from django_mock_queries.query import MockSet, MockModel
 
 from common.decorators import uclapi_protected_endpoint
 
@@ -178,15 +179,61 @@ class ManagementCommandsTestCase(TestCase):
 
 
 class DoesTokenExistTestCase(TestCase):
+    # Sets up some fake bookings
+    fake_bookings = MockSet(
+        MockModel(
+            setid='LIVE-17-18',
+            finishtime='16:00',
+            id=8869,
+            weeknumber=12.0,
+            starttime='13:00',
+            bookabletype='CB',
+            title='Some topic',
+            finishdatetime=datetime.datetime(2017, 11, 14, 16, 0),
+            descrip='8 x rooms needed',
+            slotid=1662773,
+            sitename='IOE - Bedford Way, 20',
+            phone=None,
+            siteid='162',
+            roomname='IOE - Bedford Way (20) - 790',
+            condisplayname='Some Lecturer',
+            startdatetime=datetime.datetime(2017, 11, 14, 13, 0),
+            roomid='790',
+            bookingid=None
+        ),
+        MockModel(
+            setid='LIVE-17-18',
+            finishtime='12:30',
+            id=13692,
+            weeknumber=21.0,
+            starttime='11:00',
+            bookabletype='CB',
+            title='Another topic',
+            finishdatetime=datetime.datetime(2018, 1, 19, 12, 30),
+            descrip=None,
+            slotid=1673854,
+            sitename='IOE - Bedford Way, 20',
+            phone=None,
+            siteid='162',
+            roomname='Some other room',
+            condisplayname='Some other lecturer',
+            startdatetime=datetime.datetime(2018, 1, 19, 11, 0),
+            roomid='418',
+            bookingid=None
+        )
+    )
+    booking_objects = unittest.mock.patch('roombookings.models.Booking.objects', fake_bookings)
+
     def setUp(self):
         mock = unittest.mock.Mock()
         mock.status_code = 200
         
         self.factory = APIRequestFactory()
 
-        # this fixes a bug when the `test_temp_token_valid` test would fail
+        # This fixes a bug when the `test_temp_token_valid` test would fail
         TemporaryToken.objects.all().delete()
 
+    @booking_objects
     def test_no_token_provided(self):
         request = self.factory.get('/a/random/path')
         response = get_bookings(request)
@@ -196,6 +243,7 @@ class DoesTokenExistTestCase(TestCase):
         self.assertFalse(content["ok"])
         self.assertEqual(content["error"], "No token provided.")
 
+    @booking_objects
     def test_invalid_token_provided(self):
         request = self.factory.get('/a/random/path', {'token': 'uclapi'})
         response = get_bookings(request)
@@ -205,6 +253,7 @@ class DoesTokenExistTestCase(TestCase):
         self.assertFalse(content["ok"])
         self.assertEqual(content["error"], "Token is invalid.")
 
+    @booking_objects
     def test_invalid_temp_token_provided(self):
         request = self.factory.get(
             '/a/random/path',
@@ -217,6 +266,7 @@ class DoesTokenExistTestCase(TestCase):
         self.assertFalse(content["ok"])
         self.assertEqual(content["error"], "Invalid temporary token")
 
+    @booking_objects
     def test_temp_token_wrong_path(self):
         token = TemporaryToken.objects.create()
 
@@ -231,6 +281,7 @@ class DoesTokenExistTestCase(TestCase):
             "Temporary token can only be used for /bookings"
         )
 
+    @booking_objects
     def test_temp_token_page_token_provided(self):
         token = TemporaryToken.objects.create()
 
@@ -248,6 +299,7 @@ class DoesTokenExistTestCase(TestCase):
             "Temporary token can only return one booking"
         )
 
+    @booking_objects
     def test_temp_token_overused(self):
         token = TemporaryToken.objects.create()
 
@@ -269,6 +321,7 @@ class DoesTokenExistTestCase(TestCase):
         'django.utils.timezone.now',
         lambda: datetime.datetime(2010, 10, 10, 10, 10, 10)
     )
+    @booking_objects
     def test_temp_token_expired(self):
         token = TemporaryToken.objects.create()
 
@@ -285,6 +338,7 @@ class DoesTokenExistTestCase(TestCase):
             "Temporary token expired"
         )
 
+    @booking_objects
     def test_temp_token_valid(self):
         token = TemporaryToken.objects.create()
         token.save()
@@ -297,6 +351,7 @@ class DoesTokenExistTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(request.GET['results_per_page'], 1)
 
+    @booking_objects
     def test_normal_token_valid(self):
         user_ = User.objects.create(cn="test", employee_id=7357)
         app = App.objects.create(user=user_, name="An App")
