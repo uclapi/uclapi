@@ -10,15 +10,13 @@ from rest_framework.test import APIRequestFactory
 from django.conf import settings
 from django_mock_queries.query import MockSet, MockModel
 
-from common.decorators import uclapi_protected_endpoint
-
 from dashboard.models import App, TemporaryToken, User
 
 from .helpers import (PrettyJsonResponse, _parse_datetime,
                       _serialize_equipment, how_many_seconds_until_midnight)
 from .models import Lock, Room
 
-from .views import get_rooms, get_bookings, get_equipment
+from .views import get_bookings
 
 
 class FakeModelClass:
@@ -222,7 +220,10 @@ class DoesTokenExistTestCase(TestCase):
             bookingid=None
         )
     )
-    booking_objects = unittest.mock.patch('roombookings.models.Booking.objects', fake_bookings)
+    booking_objects = unittest.mock.patch(
+        'roombookings.models.Booking.objects',
+        fake_bookings
+    )
 
     def setUp(self):
         mock = unittest.mock.Mock()

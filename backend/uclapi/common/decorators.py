@@ -165,9 +165,10 @@ def _check_oauth_token_issues(token_code, client_secret, required_scopes):
     # Return the token as there are no issues
     return token
 
+
 def _check_temp_token_issues(token_code, personal_data, request_path, page_token=None):
     # The token is a generic one, so sanity check
-    if personal_data == True:
+    if personal_data:
         response = JsonResponse({
             "ok": False,
             "error": "Personal data requires OAuth."
@@ -221,9 +222,10 @@ def _check_temp_token_issues(token_code, personal_data, request_path, page_token
     # No issues, so return the temporary token
     return temp_token
 
+
 def _check_general_token_issues(token_code, personal_data):
     # The token is a generic one, so sanity check
-    if personal_data == True:
+    if personal_data:
         response = JsonResponse({
             "ok": False,
             "error": "Personal data requires OAuth."
@@ -281,9 +283,9 @@ def uclapi_protected_endpoint(personal_data=False, required_scopes=[]):
                     return response
 
                 # Check for an OAuth issue.
-                # If there is one, a JSONResponse will be returned from the utility
-                # function. If not, it'll return the token model and we can
-                # happily move on.
+                # If there is one, a JSONResponse will be returned from the
+                # utility function. If not, it'll return the token model
+                # and we can happily move on.
                 oauth_check = _check_oauth_token_issues(
                     token_code,
                     client_secret,
@@ -291,7 +293,7 @@ def uclapi_protected_endpoint(personal_data=False, required_scopes=[]):
                 )
                 if isinstance(oauth_check, JsonResponse):
                     return oauth_check
-                
+
                 token = oauth_check
                 kwargs['token_type'] = 'oauth'
 

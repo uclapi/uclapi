@@ -12,7 +12,6 @@ from dashboard.models import App, User
 from .app_helpers import generate_random_verification_code
 from .models import OAuthScope, OAuthToken
 from .scoping import Scopes
-from .views import userdata
 
 
 @uclapi_protected_endpoint(personal_data=True, required_scopes=["timetable"])

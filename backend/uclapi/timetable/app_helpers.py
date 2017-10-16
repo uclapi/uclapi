@@ -3,8 +3,6 @@ import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
-from common.helpers import PrettyJsonResponse as JsonResponse
-
 from .models import Stumodules, TimetableA, TimetableB, ModuleA, ModuleB, \
     WeekstructureA, WeekstructureB, WeekmapnumericA, WeekmapnumericB, \
     LecturerA, LecturerB, RoomsA, RoomsB, SitesA, SitesB, Crscompmodules, \

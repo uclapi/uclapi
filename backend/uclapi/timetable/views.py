@@ -30,7 +30,7 @@ def get_personal_timetable(request, *args, **kwargs):
         "ok": True,
         "timetable": timetable
     }
-    return JsonResponse(response)
+    return JsonResponse(response, rate_limiting_data=kwargs)
 
 
 @api_view(["GET"])
@@ -41,7 +41,7 @@ def get_modules_timetable(request, *args, **kwargs):
         return JsonResponse({
             "ok": False,
             "error": "No module IDs provided."
-        })
+        }, rate_limiting_data=kwargs)
 
     try:
         modules = module_ids.split(',')
@@ -49,7 +49,7 @@ def get_modules_timetable(request, *args, **kwargs):
         return JsonResponse({
             "ok": False,
             "error": "Invalid module IDs provided."
-        })
+        }, rate_limiting_data=kwargs)
 
     try:
         date_filter = request.GET["date_filter"]
@@ -62,13 +62,13 @@ def get_modules_timetable(request, *args, **kwargs):
             "ok": True,
             "timetable": custom_timetable
         }
-        return JsonResponse(response_json)
+        return JsonResponse(response_json, rate_limiting_data=kwargs)
     else:
         response_json = {
             "ok": False,
             "error": "One or more invalid Module IDs supplied."
         }
-        response = JsonResponse(response_json)
+        response = JsonResponse(response_json, rate_limiting_data=kwargs)
         response.status_code = 400
         return response
 
@@ -84,8 +84,8 @@ def get_departments(request, *args, **kwargs):
         depts["departments"].append({
             "department_id": dept.deptid,
             "name": dept.name
-        })
-    return JsonResponse(depts)
+        }, rate_limiting_data=kwargs)
+    return JsonResponse(depts, rate_limiting_data=kwargs)
 
 
 @api_view(["GET"])
@@ -100,7 +100,7 @@ def get_department_courses(request, *args, **kwargs):
         response = JsonResponse({
             "ok": False,
             "error": "Supply a Department ID using the department parameter."
-        })
+        }, rate_limiting_data=kwargs)
         response.status_code = 400
         return response
 
@@ -111,7 +111,7 @@ def get_department_courses(request, *args, **kwargs):
             "course_id": course.courseid,
             "years": course.numyears
         })
-    return JsonResponse(courses)
+    return JsonResponse(courses, rate_limiting_data=kwargs)
 
 
 @api_view(["GET"])
@@ -126,7 +126,7 @@ def get_department_modules(request, *args, **kwargs):
         response = JsonResponse({
             "ok": False,
             "error": "Supply a Department ID using the department parameter."
-        })
+        }, rate_limiting_data=kwargs)
         response.status_code = 400
         return response
 
@@ -141,7 +141,7 @@ def get_department_modules(request, *args, **kwargs):
             "class_size": module.csize
         })
 
-    return JsonResponse(modules)
+    return JsonResponse(modules, rate_limiting_data=kwargs)
 
 
 @api_view(["GET"])
@@ -156,9 +156,9 @@ def get_course_modules(request, *args, **kwargs):
         return JsonResponse({
             "ok": False,
             "error": "No courseid found."
-        })
+        }, rate_limiting_data=kwargs)
 
     return JsonResponse({
         "ok": True,
         "modules": get_all_course_modules(courseid)
-    })
+    }, rate_limiting_data=kwargs)
