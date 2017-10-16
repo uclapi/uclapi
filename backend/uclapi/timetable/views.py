@@ -2,7 +2,7 @@ from django.conf import settings
 
 from rest_framework.decorators import api_view
 
-from roombookings.helpers import PrettyJsonResponse as JsonResponse
+from common.helpers import PrettyJsonResponse as JsonResponse
 
 from .models import Lock, Course, Depts, ModuleA, ModuleB
 
@@ -10,7 +10,7 @@ from .app_helpers import get_all_course_modules
 
 from .timetable_helpers import get_student_timetable, get_custom_timetable
 
-from uclapi.decorators import uclapi_protected_endpoint
+from common.decorators import uclapi_protected_endpoint
 
 _SETID = settings.ROOMBOOKINGS_SETID
 

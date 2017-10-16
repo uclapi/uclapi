@@ -8,9 +8,9 @@ from dashboard.tasks import keen_add_event_task as keen_add_event
 from oauth.models import OAuthToken
 from oauth.scoping import Scopes
 
-from roombookings.helpers import PrettyJsonResponse as JsonResponse
+from .helpers import PrettyJsonResponse as JsonResponse
 
-from .settings import REDIS_UCLAPI_HOST
+from uclapi.settings import REDIS_UCLAPI_HOST
 
 
 # Gets a variable from GET or POST not caring which is which

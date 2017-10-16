@@ -11,12 +11,8 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 import ciso8601
 
+from common.helpers import PrettyJsonResponse
 from .models import BookingA, BookingB, Location, Lock, PageToken, SiteLocation
-
-
-class PrettyJsonResponse(django.http.JsonResponse):
-    def __init__(self, data):
-        super().__init__(data, json_dumps_params={'indent': 4})
 
 
 def _create_page_token(query, pagination):

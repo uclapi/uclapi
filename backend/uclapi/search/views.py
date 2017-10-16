@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 
-from uclapi.decorators import uclapi_protected_endpoint
+from common.decorators import uclapi_protected_endpoint
 
 import os
 import requests

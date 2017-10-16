@@ -9,9 +9,10 @@ from freezegun import freeze_time
 from rest_framework.test import APIRequestFactory
 from django.conf import settings
 
+from common.decorators import uclapi_protected_endpoint
+
 from dashboard.models import App, TemporaryToken, User
 
-from .decorators import does_token_exist, log_api_call
 from .helpers import (PrettyJsonResponse, _parse_datetime,
                       _serialize_equipment, how_many_seconds_until_midnight)
 from .models import Lock, Room
@@ -178,9 +179,10 @@ class DoesTokenExistTestCase(TestCase):
     def setUp(self):
         mock = unittest.mock.Mock()
         mock.status_code = 200
-        self.dec_view = does_token_exist(
-            unittest.mock.Mock(return_value=mock)
-        )
+        # self.dec_view = uclapi_protected_endpoint(
+        #     unittest.mock.Mock(return_value=mock)
+        # )
+        self.dec_view = uclapi_protected_endpoint
         self.factory = APIRequestFactory()
 
         # this fixes a bug when the `test_temp_token_valid` test would fail

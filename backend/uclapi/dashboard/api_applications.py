@@ -2,7 +2,7 @@ import json
 
 from dashboard.tasks import keen_add_event_task as keen_add_event
 from oauth.scoping import Scopes
-from roombookings.helpers import PrettyJsonResponse
+from common.helpers import PrettyJsonResponse
 
 from .app_helpers import is_url_safe
 from .models import App, User

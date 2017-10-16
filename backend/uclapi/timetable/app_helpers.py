@@ -3,7 +3,7 @@ import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
-from roombookings.helpers import PrettyJsonResponse as JsonResponse
+from common.helpers import PrettyJsonResponse as JsonResponse
 
 from .models import Stumodules, TimetableA, TimetableB, ModuleA, ModuleB, \
     WeekstructureA, WeekstructureB, WeekmapnumericA, WeekmapnumericB, \

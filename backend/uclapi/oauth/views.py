@@ -20,7 +20,7 @@ from .models import OAuthToken
 from .scoping import Scopes
 
 from uclapi.settings import REDIS_UCLAPI_HOST
-from uclapi.decorators import uclapi_protected_endpoint
+from common.decorators import uclapi_protected_endpoint
 
 
 # The endpoint that creates a Shibboleth login and redirects the user to it

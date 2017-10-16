@@ -1,4 +1,4 @@
-from roombookings.helpers import PrettyJsonResponse as JsonResponse
+from common.helpers import PrettyJsonResponse as JsonResponse
 
 from .models import OAuthToken
 from .scoping import Scopes

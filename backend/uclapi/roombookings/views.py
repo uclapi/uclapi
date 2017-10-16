@@ -9,7 +9,7 @@ from .helpers import (PrettyJsonResponse, _create_page_token,
                       _serialize_rooms)
 from .models import BookingA, BookingB, Equipment, Lock, Room
 
-from uclapi.decorators import uclapi_protected_endpoint
+from common.decorators import uclapi_protected_endpoint
 
 @api_view(['GET'])
 @uclapi_protected_endpoint()
