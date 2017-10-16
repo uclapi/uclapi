@@ -465,7 +465,7 @@ def userdata(request, *args, **kwargs):
         "department": token.user.department,
         "upi": token.user.employee_id,
         "scope_number": token.scope.scope_number
-    })
+    }, rate_limiting_data=kwargs)
 
 
 def scope_map(request):
@@ -491,4 +491,4 @@ def token_test(request, *args, **kwargs):
             pretty_print=False
         ),
         "scope_number": token.scope.scope_number
-    })
+    }, rate_limiting_data=kwargs)

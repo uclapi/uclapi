@@ -121,7 +121,7 @@ def throttle_api_call(token, token_type):
             r.incr(cache_key)
             return (False, limit, limit - count, secs)
 
-def _check_oauth_token_issues(token_code, client_secret, scopes):
+def _check_oauth_token_issues(token_code, client_secret, required_scopes):
     try:
         token = OAuthToken.objects.get(token=token_code)
     except OAuthToken.DoesNotExist:
