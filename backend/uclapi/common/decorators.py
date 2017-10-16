@@ -1,4 +1,5 @@
 import datetime
+from functools import wraps
 import re
 import redis
 
@@ -97,7 +98,7 @@ def throttle_api_call(token, token_type):
         limit = 10000
     elif token_type == 'general-temp':
         cache_key = token.api_token
-        limit = 100
+        limit = 10
     elif token_type == 'oauth':
         cache_key = token.user.email
         limit = 10000
@@ -105,29 +106,157 @@ def throttle_api_call(token, token_type):
         raise UclApiIncorrectTokenTypeException
 
     r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
-    r.set_response_callback('GET', int)
-    count = r.get(cache_key)
+    # r.set_response_callback('GET', int)
+    count_data = r.get(cache_key)
 
     secs = how_many_seconds_until_midnight()
-    if count is None:
+    if count_data is None:
         r.set(cache_key, 1, secs)
         return (False, limit, limit - 1, secs)
     else:
-        if count > limit:
+        count = int(count_data)
+        if count >= limit:
             return (True, limit, limit - count, secs)
         else:
             r.incr(cache_key)
             return (False, limit, limit - count, secs)
 
+def _check_oauth_token_issues(token_code, client_secret, scopes):
+    try:
+        token = OAuthToken.objects.get(token=token_code)
+    except OAuthToken.DoesNotExist:
+        response = JsonResponse({
+            "ok": False,
+            "error": "Token does not exist."
+        })
+        response.status_code = 400
+        return response
+
+    if token.app.client_secret != client_secret:
+        response = JsonResponse({
+            "ok": False,
+            "error": "Client secret incorrect."
+        })
+        response.status_code = 400
+        return response
+
+    if not token.active:
+        response = JsonResponse({
+            "ok": False,
+            "error":
+                "The token is inactive as the user has revoked "
+                "your app's access to their data."
+        })
+        response.status_code = 400
+        return response
+
+    scopes = Scopes()
+    for s in required_scopes:
+        if not scopes.check_scope(token.scope.scope_number, s):
+            response = JsonResponse({
+                "ok": False,
+                "error":
+                    "The token provided does not have "
+                    "permission to access this data."
+            })
+            response.status_code = 400
+            return response
+
+    # Return the token as there are no issues
+    return token
+
+def _check_temp_token_issues(token_code, personal_data, request_path, page_token=None):
+    # The token is a generic one, so sanity check
+    if personal_data == True:
+        response = JsonResponse({
+            "ok": False,
+            "error": "Personal data requires OAuth."
+        })
+        response.status_code = 400
+        return response
+
+    try:
+        temp_token = TemporaryToken.objects.get(
+            api_token=token_code
+        )
+    except TemporaryToken.DoesNotExist:
+        response = JsonResponse({
+            "ok": False,
+            "error": "Invalid temporary token"
+        })
+        response.status_code = 400
+        return response
+
+    if request_path != "/roombookings/bookings":
+        response = JsonResponse({
+            "ok": False,
+            "error":
+                "Temporary token can only be used "
+                "for /bookings"
+        })
+        response.status_code = 400
+        return response
+
+    if page_token:
+        response = JsonResponse({
+            "ok": False,
+            "error":
+                "Temporary token can only return one booking"
+        })
+        response.status_code = 400
+        return response
+
+    # Check if TemporaryToken is still valid
+    existed = datetime.datetime.now() - temp_token.created
+
+    if existed.seconds > 300:
+        temp_token.delete()  # Delete expired token
+        response = JsonResponse({
+            "ok": False,
+            "error": "Temporary token expired"
+        })
+        response.status_code = 400
+        return response
+
+    # No issues, so return the temporary token
+    return temp_token
+
+def _check_general_token_issues(token_code, personal_data):
+    # The token is a generic one, so sanity check
+    if personal_data == True:
+        response = JsonResponse({
+            "ok": False,
+            "error": "Personal data requires OAuth."
+        })
+        response.status_code = 400
+        return response
+
+    try:
+        token = App.objects.get(
+            api_token=token_code,
+            deleted=False
+        )
+    except App.DoesNotExist:
+        response = JsonResponse({
+            "ok": False,
+            "error": "Token does not exist"
+        })
+        response.status_code = 400
+        return response
+
+    # No issues, so return the token
+    return token
+
 
 def uclapi_protected_endpoint(personal_data=False, required_scopes=[]):
-    def token_scope_check(view_func):
+    def check_request(view_func):
+        @wraps(view_func)
         def wrapped(request, *args, **kwargs):
             # A small sanity check
             # You cannot apply a personal data scope if you are not using
             # a personal data flag
-            if personal_data is False:
-                if required_scopes is not []:
+            if not personal_data:
+                if required_scopes != []:
                     raise UclApiIncorrectDecoratorUsageException
 
             # In any case, a token should be provided
@@ -137,7 +266,8 @@ def uclapi_protected_endpoint(personal_data=False, required_scopes=[]):
                     "ok": False,
                     "error": "No token provided."
                 })
-                response.status
+                response.status_code = 400
+                return response
 
             if token_code.startswith('uclapi-user-'):
                 # The token is an OAuth token, so apply OAuth logic
@@ -150,147 +280,71 @@ def uclapi_protected_endpoint(personal_data=False, required_scopes=[]):
                     response.status_code = 400
                     return response
 
-                try:
-                    token = OAuthToken.objects.get(token=token_code)
-                except OAuthToken.DoesNotExist:
-                    response = JsonResponse({
-                        "ok": False,
-                        "error": "Token does not exist."
-                    })
-                    response.status_code = 400
-                    return response
-
-                if token.app.client_secret != client_secret:
-                    response = JsonResponse({
-                        "ok": False,
-                        "error": "Client secret incorrect."
-                    })
-                    response.status_code = 400
-                    return response
-
-                if not token.active:
-                    response = JsonResponse({
-                        "ok": False,
-                        "error":
-                            "The token is inactive as the user has revoked "
-                            "your app's access to their data."
-                    })
-                    response.status_code = 400
-                    return response
-
-                scopes = Scopes()
-                for s in required_scopes:
-                    if not scopes.check_scope(token.scope.scope_number, s):
-                        response = JsonResponse({
-                            "ok": False,
-                            "error":
-                                "The token provided does not have "
-                                "permission to access this data."
-                        })
-                        response.status_code = 400
-                        return response
-
+                # Check for an OAuth issue.
+                # If there is one, a JSONResponse will be returned from the utility
+                # function. If not, it'll return the token model and we can
+                # happily move on.
+                oauth_check = _check_oauth_token_issues(
+                    token_code,
+                    client_secret,
+                    required_scopes
+                )
+                if isinstance(oauth_check, JsonResponse):
+                    return oauth_check
+                
+                token = oauth_check
                 kwargs['token_type'] = 'oauth'
-                kwargs['token'] = token
+
+            elif token_code.startswith('uclapi-temp-'):
+                temp_token_check = _check_temp_token_issues(
+                    token_code,
+                    personal_data,
+                    request.path,
+                    request.GET.get('page_token')
+                )
+                if isinstance(temp_token_check, JsonResponse):
+                    return temp_token_check
+                token = temp_token_check
+
+                # This is a horrible hack to force the temporary
+                # token to always return only 1 booking
+                # Courtesy of: https://stackoverflow.com/a/38372217/825916
+                request.GET._mutable = True
+                request.GET['results_per_page'] = 1
+
+                kwargs['token_type'] = 'general-temp'
 
             elif token_code.startswith('uclapi-'):
-                # The token is a generic one, so sanity check
-                if personal_data is True:
-                    response = JsonResponse({
-                        "ok": False,
-                        "error": "Personal data requires OAuth."
-                    })
-                    response.status_code = 400
-                    return response
+                general_token_check = _check_general_token_issues(
+                    token_code,
+                    personal_data
+                )
+                if isinstance(general_token_check, JsonResponse):
+                    return JsonResponse
 
-                is_temp_token = False
-                try:
-                    if token_code.split("-")[1] == "temp":
-                        is_temp_token = True
-                except IndexError:
-                    is_temp_token = False
+                token = general_token_check
 
-                if is_temp_token:
-                    try:
-                        temp_token = TemporaryToken.objects.get(
-                            api_token=token_code
-                        )
-                    except TemporaryToken.DoesNotExist:
-                        response = JsonResponse({
-                            "ok": False,
-                            "error": "Invalid temporary token"
-                        })
-                        response.status_code = 400
-                        return response
+                kwargs['token_type'] = 'general'
 
-                    if request.path != "/roombookings/bookings":
-                        temp_token.uses += 1
-                        temp_token.save()
-                        response = JsonResponse({
-                            "ok": False,
-                            "error":
-                                "Temporary token can only be used "
-                                "for /bookings"
-                        })
-                        response.status_code = 400
-                        return response
+            else:
+                # This is some type of token that we haven't seen before.
+                # The user sent us a bad token.
+                response = JsonResponse({
+                    "ok": False,
+                    "error": "Token is invalid."
+                })
+                response.status_code = 400
+                return response
 
-                    if request.GET.get('page_token'):
-                        temp_token.uses += 1
-                        temp_token.save()
-                        response = JsonResponse({
-                            "ok": False,
-                            "error":
-                                "Temporary token can only return one booking"
-                        })
-                        response.status_code = 400
-                        return response
-
-                    # Check if TemporaryToken is still valid
-                    existed = datetime.datetime.now() - temp_token.created
-
-                    if temp_token.uses > 10 or existed.seconds > 300:
-                        temp_token.delete()  # Delete expired token
-                        response = JsonResponse({
-                            "ok": False,
-                            "error": "Temporary token expired"
-                        })
-                        response.status_code = 400
-                        return response
-
-                    # This is a horrible hack to force the temporary
-                    # token to always return only 1 booking
-                    # courtesy: https://stackoverflow.com/a/38372217/825916
-                    request.GET._mutable = True
-                    request.GET['results_per_page'] = 1
-
-                    temp_token.uses += 1
-                    temp_token.save()
-
-                    kwargs['token'] = temp_token
-                    kwargs['token_type'] = 'general-temp'
-
-                else:
-                    try:
-                        token = App.objects.get(
-                            api_token=token_code,
-                            deleted=False
-                        )
-                    except App.DoesNotExist:
-                        response = JsonResponse({
-                            "ok": False,
-                            "error": "Token does not exist"
-                        })
-                        response.status_code = 400
-                        return response
-                    kwargs['token'] = token
-                    kwargs['token_type'] = 'general'
-
+            # This should never happen. It's more of a sanity check to ensure
+            # that the code above all works fine.
             if 'token_type' not in kwargs:
                 raise UclApiIncorrectTokenTypeException
 
+            kwargs['token'] = token
+
             # Log the API call before carrying it out
-            log_api_call(request, kwargs['token'], kwargs['token_type'])
+            log_api_call(request, token, kwargs['token_type'])
 
             # Get throttle data
             (
@@ -298,7 +352,7 @@ def uclapi_protected_endpoint(personal_data=False, required_scopes=[]):
                 limit,
                 remaining,
                 reset_secs
-            ) = throttle_api_call(kwargs['token'], kwargs['token_type'])
+            ) = throttle_api_call(token, kwargs['token_type'])
 
             if throttled:
                 response = JsonResponse({
@@ -319,4 +373,4 @@ def uclapi_protected_endpoint(personal_data=False, required_scopes=[]):
 
             return view_func(request, *args, **kwargs)
         return wrapped
-    return token_scope_check
+    return check_request

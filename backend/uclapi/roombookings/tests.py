@@ -1,7 +1,7 @@
 import datetime
 import json
 import unittest.mock
-from itertools import chain
+from itertools import chain, repeat
 
 from django.core.management import call_command
 from django.test import SimpleTestCase, TestCase
@@ -16,6 +16,8 @@ from dashboard.models import App, TemporaryToken, User
 from .helpers import (PrettyJsonResponse, _parse_datetime,
                       _serialize_equipment, how_many_seconds_until_midnight)
 from .models import Lock, Room
+
+from .views import get_rooms, get_bookings, get_equipment
 
 
 class FakeModelClass:
@@ -179,10 +181,7 @@ class DoesTokenExistTestCase(TestCase):
     def setUp(self):
         mock = unittest.mock.Mock()
         mock.status_code = 200
-        # self.dec_view = uclapi_protected_endpoint(
-        #     unittest.mock.Mock(return_value=mock)
-        # )
-        self.dec_view = uclapi_protected_endpoint
+        
         self.factory = APIRequestFactory()
 
         # this fixes a bug when the `test_temp_token_valid` test would fail
@@ -190,29 +189,28 @@ class DoesTokenExistTestCase(TestCase):
 
     def test_no_token_provided(self):
         request = self.factory.get('/a/random/path')
-        response = self.dec_view(request)
-
+        response = get_bookings(request)
         content = json.loads(response.content.decode())
 
         self.assertEqual(response.status_code, 400)
         self.assertFalse(content["ok"])
-        self.assertEqual(content["error"], "No token provided")
+        self.assertEqual(content["error"], "No token provided.")
 
     def test_invalid_token_provided(self):
         request = self.factory.get('/a/random/path', {'token': 'uclapi'})
-        response = self.dec_view(request)
+        response = get_bookings(request)
 
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
         self.assertFalse(content["ok"])
-        self.assertEqual(content["error"], "Token does not exist")
+        self.assertEqual(content["error"], "Token is invalid.")
 
     def test_invalid_temp_token_provided(self):
         request = self.factory.get(
             '/a/random/path',
             {'token': 'uclapi-temp-invalid-token'}
         )
-        response = self.dec_view(request)
+        response = get_bookings(request)
 
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -223,7 +221,7 @@ class DoesTokenExistTestCase(TestCase):
         token = TemporaryToken.objects.create()
 
         request = self.factory.get('/a/path', {'token': token.api_token})
-        response = self.dec_view(request)
+        response = get_bookings(request)
 
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -240,7 +238,7 @@ class DoesTokenExistTestCase(TestCase):
             '/roombookings/bookings',
             {'token': token.api_token, 'page_token': 'next_page_comes_here'}
         )
-        response = self.dec_view(request)
+        response = get_bookings(request)
 
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -251,19 +249,20 @@ class DoesTokenExistTestCase(TestCase):
         )
 
     def test_temp_token_overused(self):
-        token = TemporaryToken.objects.create(uses=300)
+        token = TemporaryToken.objects.create()
 
         request = self.factory.get(
             '/roombookings/bookings', {'token': token.api_token}
         )
-        response = self.dec_view(request)
+        for _ in repeat(None, 11):
+            response = get_bookings(request)
 
         content = json.loads(response.content.decode())
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 429)
         self.assertFalse(content["ok"])
         self.assertEqual(
-            content["error"],
-            "Temporary token expired"
+            "You have been throttled. Please try again in ",
+            content["error"][:45]
         )
 
     @unittest.mock.patch(
@@ -276,7 +275,7 @@ class DoesTokenExistTestCase(TestCase):
         request = self.factory.get(
             '/roombookings/bookings', {'token': token.api_token}
         )
-        response = self.dec_view(request)
+        response = get_bookings(request)
 
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -293,14 +292,10 @@ class DoesTokenExistTestCase(TestCase):
         request = self.factory.get(
             '/roombookings/bookings', {'token': token.api_token}
         )
-        response = self.dec_view(request)
+        response = get_bookings(request)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(request.GET['results_per_page'], 1)
-        self.assertEqual(
-            TemporaryToken.objects.all()[0].uses,
-            1
-        )
 
     def test_normal_token_valid(self):
         user_ = User.objects.create(cn="test", employee_id=7357)
@@ -309,73 +304,7 @@ class DoesTokenExistTestCase(TestCase):
         request = self.factory.get(
             '/roombookings/bookings', {'token': app.api_token}
         )
-        response = self.dec_view(request)
+        response = get_bookings(request)
 
         self.assertEqual(response.status_code, 200)
 
-
-class LogApiCallTestCase(TestCase):
-    def setUp(self):
-        mock = unittest.mock.Mock()
-        mock.status_code = 200
-        self.dec_view = log_api_call(
-            unittest.mock.Mock(return_value=mock)
-        )
-        self.factory = APIRequestFactory()
-
-        # make tests work
-        App.objects.all().delete()
-        User.objects.all().delete()
-
-    @unittest.mock.patch('dashboard.tasks.keen_add_event_task.delay')
-    def test_log_api_call_temp_token(self, keen_instance):
-        request = self.factory.get(
-            '/roombookings/bookings', {'token': 'uclapi-temp-not-real'}
-        )
-        response = self.dec_view(request)
-
-        event, args = keen_instance.call_args[0]
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(event, "apicall")
-        self.assertEqual(args['method'], "bookings")
-        self.assertEqual(args['service'], "roombookings")
-        self.assertTrue(args['temp_token'])
-        self.assertEqual(
-            args['queryparams']['token'][0],
-            'uclapi-temp-not-real'
-        )
-
-    @unittest.mock.patch('dashboard.tasks.keen_add_event_task.delay')
-    def test_log_api_call_normal_token(self, keen_instance):
-        user_ = User.objects.create(
-            email="test@ucl.ac.uk", cn="test",
-            given_name="Test Test"
-        )
-        app = App.objects.create(user=user_, name="An App")
-
-        request = self.factory.get(
-            '/roombookings/bookings',
-            # GET args
-            {'token': app.api_token},
-            # headers
-            **{'HTTP_UCLAPI_ROOMBOOKINGS_VERSION': 1}
-        )
-        response = self.dec_view(request)
-
-        event, args = keen_instance.call_args[0]
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(event, "apicall")
-        self.assertEqual(args['name'], "Test Test")
-        self.assertEqual(args['email'], "test@ucl.ac.uk")
-        self.assertEqual(args['method'], "bookings")
-        self.assertEqual(args['service'], "roombookings")
-        self.assertEqual(
-            args['version-headers']['HTTP_UCLAPI_ROOMBOOKINGS_VERSION'],
-            1
-        )
-        self.assertEqual(
-            args['queryparams']['token'][0],
-            app.api_token
-        )
