@@ -5,7 +5,6 @@ from itertools import chain, repeat
 
 from django.core.management import call_command
 from django.test import SimpleTestCase, TestCase
-from freezegun import freeze_time
 from rest_framework.test import APIRequestFactory
 from django.conf import settings
 from django_mock_queries.query import MockSet, MockModel
@@ -13,7 +12,7 @@ from django_mock_queries.query import MockSet, MockModel
 from dashboard.models import App, TemporaryToken, User
 
 from .helpers import (PrettyJsonResponse, _parse_datetime,
-                      _serialize_equipment, how_many_seconds_until_midnight)
+                      _serialize_equipment)
 from .models import Lock, Room
 
 from .views import get_bookings
@@ -139,28 +138,6 @@ class PrettyPrintJsonTestCase(SimpleTestCase):
         self.assertEqual(response.content.decode(), '{\n    "foo": "bar"\n}')
 
 
-class SecondsUntilMidnightTestCase(SimpleTestCase):
-    def test_seconds_until_midnight(self):
-        arg_list = [
-            "2017-05-29 23:59:59",
-            "2017-05-29 00:00:00",
-            "2017-05-29 00:00:01"
-        ]
-
-        expected = [
-            1,
-            0,
-            86399
-        ]
-
-        for idx, arg in enumerate(arg_list):
-            with freeze_time(arg):
-                self.assertEqual(
-                    how_many_seconds_until_midnight(),
-                    expected[idx]
-                )
-
-
 class ManagementCommandsTestCase(TestCase):
     def test_create_lock(self):
         L = len(Lock.objects.all())
@@ -248,7 +225,7 @@ class DoesTokenExistTestCase(TestCase):
     def setUp(self):
         mock = unittest.mock.Mock()
         mock.status_code = 200
-        
+
         self.factory = APIRequestFactory()
 
         # This fixes a bug when the `test_temp_token_valid` test would fail

@@ -4,7 +4,6 @@ import datetime
 import json
 from datetime import timedelta
 
-import django.http
 import pytz
 from django.core.exceptions import FieldError, ObjectDoesNotExist
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
