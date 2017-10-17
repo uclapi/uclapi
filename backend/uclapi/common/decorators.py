@@ -244,7 +244,7 @@ def _check_general_token_issues(token_code, personal_data):
     except App.DoesNotExist:
         response = JsonResponse({
             "ok": False,
-            "error": "Token does not exist"
+            "error": "Token does not exist."
         })
         response.status_code = 400
         return response
