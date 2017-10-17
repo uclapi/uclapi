@@ -2,8 +2,11 @@ from django.test import TestCase, SimpleTestCase
 
 from .decorators import (
     how_many_seconds_until_midnight,
-    get_var
+    get_var,
+    throttle_api_call
 )
+
+from .helpers import generate_test_api_token
 
 from freezegun import freeze_time
 from rest_framework.test import APIRequestFactory
@@ -78,3 +81,31 @@ class GetVarTestCase(TestCase):
         self.assertEqual(p2, "testcase")
         self.assertEqual(p3, "some_other_param_case")
         self.assertEqual(p4, "$$$!!!___***")
+
+
+class ThrottleApiCallTest(TestCase):
+    def test_throttling(self):
+        token = generate_test_api_token()
+        (
+            throttled,
+            limit,
+            remaining,
+            reset_secs
+        ) = throttle_api_call(token, "test-token")
+
+        self.assertFalse(throttled)
+        self.assertEqual(limit, 1)
+        self.assertEqual(remaining, 0)
+        # Not testing reset_secs as this is handled by testing
+        # the how_many_seconds_until_midnight() function above
+
+        (
+            throttled,
+            limit,
+            remaining,
+            reset_secs
+        ) = throttle_api_call(token, "test-token")
+
+        self.assertTrue(throttled)
+        self.assertEqual(limit, 1)
+        self.assertEqual(remaining, 0)

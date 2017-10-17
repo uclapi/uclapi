@@ -102,11 +102,13 @@ def throttle_api_call(token, token_type):
     elif token_type == 'oauth':
         cache_key = token.user.email
         limit = 10000
+    elif token_type == 'test-token':
+        cache_key = token
+        limit = 1
     else:
         raise UclApiIncorrectTokenTypeException
 
     r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
-    # r.set_response_callback('GET', int)
     count_data = r.get(cache_key)
 
     secs = how_many_seconds_until_midnight()
@@ -120,6 +122,7 @@ def throttle_api_call(token, token_type):
         else:
             r.incr(cache_key)
             return (False, limit, limit - count, secs)
+
 
 def _check_oauth_token_issues(token_code, client_secret, required_scopes):
     try:
