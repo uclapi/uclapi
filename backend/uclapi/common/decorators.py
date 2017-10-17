@@ -186,7 +186,7 @@ def _check_temp_token_issues(token_code, personal_data, request_path, page_token
     except TemporaryToken.DoesNotExist:
         response = JsonResponse({
             "ok": False,
-            "error": "Invalid temporary token"
+            "error": "Invalid temporary token."
         })
         response.status_code = 400
         return response
@@ -196,7 +196,7 @@ def _check_temp_token_issues(token_code, personal_data, request_path, page_token
             "ok": False,
             "error":
                 "Temporary token can only be used "
-                "for /bookings"
+                "for /bookings."
         })
         response.status_code = 400
         return response
@@ -205,7 +205,7 @@ def _check_temp_token_issues(token_code, personal_data, request_path, page_token
         response = JsonResponse({
             "ok": False,
             "error":
-                "Temporary token can only return one booking"
+                "Temporary token can only return one booking."
         })
         response.status_code = 400
         return response
@@ -217,7 +217,7 @@ def _check_temp_token_issues(token_code, personal_data, request_path, page_token
         temp_token.delete()  # Delete expired token
         response = JsonResponse({
             "ok": False,
-            "error": "Temporary token expired"
+            "error": "Temporary token expired."
         })
         response.status_code = 400
         return response

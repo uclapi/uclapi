@@ -271,7 +271,7 @@ class DoesTokenExistTestCase(TestCase):
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
         self.assertFalse(content["ok"])
-        self.assertEqual(content["error"], "Invalid temporary token")
+        self.assertEqual(content["error"], "Invalid temporary token.")
 
     @booking_objects
     @bookinga_objects
@@ -288,7 +288,7 @@ class DoesTokenExistTestCase(TestCase):
         self.assertFalse(content["ok"])
         self.assertEqual(
             content["error"],
-            "Temporary token can only be used for /bookings"
+            "Temporary token can only be used for /bookings."
         )
 
     @booking_objects
@@ -309,7 +309,7 @@ class DoesTokenExistTestCase(TestCase):
         self.assertFalse(content["ok"])
         self.assertEqual(
             content["error"],
-            "Temporary token can only return one booking"
+            "Temporary token can only return one booking."
         )
 
     @booking_objects
@@ -354,7 +354,7 @@ class DoesTokenExistTestCase(TestCase):
         self.assertFalse(content["ok"])
         self.assertEqual(
             content["error"],
-            "Temporary token expired"
+            "Temporary token expired."
         )
 
     @booking_objects
