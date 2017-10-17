@@ -1,6 +1,5 @@
 import datetime
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
 from .models import Stumodules, TimetableA, TimetableB, ModuleA, ModuleB, \
