@@ -9,9 +9,7 @@ from roombookings.helpers import PrettyJsonResponse as JsonResponse
 from .models import StudentsA, StudentsB, Lock, Course, Depts, \
     ModuleA, ModuleB
 
-from .app_helpers import get_timetable, get_modules, get_all_course_modules
-
-from .timetable_helpers import get_student_timetable, get_custom_timetable
+from .app_helpers import get_student_timetable, get_custom_timetable
 
 _SETID = settings.ROOMBOOKINGS_SETID
 
@@ -19,63 +17,6 @@ _SETID = settings.ROOMBOOKINGS_SETID
 @api_view(["GET"])
 @oauth_token_check(["timetable"])
 def get_personal_timetable(request, *args, **kwargs):
-    token = kwargs['token']
-    user = token.user
-
-    # CMIS stores data as per an upper case representation of the UPI
-    upi = user.employee_id.upper()
-
-    # Get student information from cache
-    lock = Lock.objects.all()[0]
-    s = StudentsA if lock.a else StudentsB
-
-    try:
-        student = s.objects.filter(
-            qtype2=upi, setid=_SETID)[0]
-    except IndexError:
-        return JsonResponse({
-            "ok": False,
-            "error": "Student does not have any assigned timetables."
-        })
-
-    return JsonResponse({
-        "ok": True,
-        "timetable": get_timetable(student)
-    })
-
-
-@api_view(["GET"])
-@oauth_token_check(["timetable"])
-def get_modules_timetable(request, *args, **kwargs):
-    """
-    Only get request accepted.
-    Given a list of modulesids, this will return a yearly calendar for those
-    courses.
-    """
-    module_ids = request.GET.get("modules")
-    if module_ids is None:
-        return JsonResponse({
-            "ok": False,
-            "error": "No module IDs provided."
-        })
-
-    try:
-        modules = module_ids.split(',')
-    except ValueError:
-        return JsonResponse({
-            "ok": False,
-            "error": "Invalid module IDs provided."
-        })
-
-    return JsonResponse({
-        "ok": True,
-        "timetable": get_modules(modules)
-    })
-
-
-@api_view(["GET"])
-@oauth_token_check(["timetable"])
-def get_personal_timetable_fast(request, *args, **kwargs):
     token = kwargs['token']
     user = token.user
     try:
@@ -93,7 +34,7 @@ def get_personal_timetable_fast(request, *args, **kwargs):
 
 @api_view(["GET"])
 @oauth_token_check(["timetable"])
-def get_modules_timetable_fast(request, *args, **kwargs):
+def get_modules_timetable(request, *args, **kwargs):
     module_ids = request.GET.get("modules")
     if module_ids is None:
         return JsonResponse({
@@ -200,23 +141,3 @@ def get_department_modules(request, *args, **kwargs):
         })
 
     return JsonResponse(modules)
-
-
-@api_view(["GET"])
-@oauth_token_check(["timetable"])
-def get_course_modules(request, *args, **kwargs):
-    """
-    Returns all the modules in the specified course.
-    @param: courseid
-    """
-    courseid = request.GET.get("courseid")
-    if not courseid:
-        return JsonResponse({
-            "ok": False,
-            "error": "No courseid found."
-        })
-
-    return JsonResponse({
-        "ok": True,
-        "modules": get_all_course_modules(courseid)
-    })
