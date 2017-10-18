@@ -235,7 +235,9 @@ class DoesTokenExistTestCase(TestCase):
         # An expired token for the expiry test
         self.expired_token = TemporaryToken.objects.create()
         self.expired_token.save()
-        self.expired_token.created = datetime.datetime(2010, 10, 10, 10, 10, 10)
+        self.expired_token.created = datetime.datetime(
+            2010, 10, 10, 10, 10, 10
+        )
         self.expired_token.save()
 
         # A valid token to use later
