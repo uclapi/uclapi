@@ -3,6 +3,7 @@ from binascii import hexlify
 from django.http import JsonResponse
 
 import os
+import textwrap
 
 
 class PrettyJsonResponse(JsonResponse):
@@ -20,15 +21,13 @@ class PrettyJsonResponse(JsonResponse):
                 self['X-RateLimit-Retry-After'] = rate_limiting_data['X-RateLimit-Retry-After']
 
 
-def generate_test_api_token():
+def generate_api_token(prefix=None):
     key = hexlify(os.urandom(30)).decode()
-    dashes_key = ""
-    for idx, char in enumerate(key):
-        if idx % 15 == 0 and idx != len(key)-1:
-            dashes_key += "-"
-        else:
-            dashes_key += char
+    dashed = '-'.join(textwrap.wrap(key, 15))
 
-    final = "uclapi-test-" + dashes_key
+    if prefix:
+        final = "uclapi-{}-{}".format(prefix, dashed)
+    else:
+        final = "uclapi-" + dashed
 
     return final

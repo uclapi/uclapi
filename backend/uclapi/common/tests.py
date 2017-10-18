@@ -9,7 +9,7 @@ from .decorators import (
 )
 
 from .helpers import (
-    generate_test_api_token,
+    generate_api_token,
     PrettyJsonResponse as JsonResponse
 )
 
@@ -99,7 +99,7 @@ class GetVarTestCase(TestCase):
 
 class ThrottleApiCallTest(TestCase):
     def test_throttling(self):
-        token = generate_test_api_token()
+        token = generate_api_token("test")
         (
             throttled,
             limit,
@@ -281,4 +281,39 @@ class GeneralTokenCheckerTest(TestCase):
         self.assertEqual(
             result.api_token,
             self.valid_app.api_token
+        )
+
+
+class GenerateApiTokenTest(TestCase):
+    def general_token_test(self):
+        token = generate_api_token()
+        self.assertEqual(
+            len(token),
+            66
+        )
+        self.assertEqual(
+            token[:7],
+            "uclapi-"
+        )
+
+    def temp_token_test(self):
+        token = generate_api_token("temp")
+        self.assertEqual(
+            len(token),
+            71
+        )
+        self.assertEqual(
+            token[:12],
+            "uclapi-temp-"
+        )
+
+    def user_token_test(self):
+        token = generate_api_token("user")
+        self.assertEqual(
+            len(token),
+            71
+        )
+        self.assertEqual(
+            token[:12],
+            "uclapi-user-"
         )

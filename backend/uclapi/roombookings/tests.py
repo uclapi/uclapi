@@ -223,9 +223,6 @@ class DoesTokenExistTestCase(TestCase):
     )
 
     def setUp(self):
-        mock = unittest.mock.Mock()
-        mock.status_code = 200
-
         self.factory = APIRequestFactory()
 
         # This fixes a bug when the `test_temp_token_valid` test would fail
@@ -279,6 +276,7 @@ class DoesTokenExistTestCase(TestCase):
     @lock_objects
     def test_temp_token_wrong_path(self):
         token = TemporaryToken.objects.create()
+        token.save()
 
         request = self.factory.get('/a/path', {'token': token.api_token})
         response = get_bookings(request)
@@ -297,6 +295,7 @@ class DoesTokenExistTestCase(TestCase):
     @lock_objects
     def test_temp_token_page_token_provided(self):
         token = TemporaryToken.objects.create()
+        token.save()
 
         request = self.factory.get(
             '/roombookings/bookings',
@@ -318,7 +317,7 @@ class DoesTokenExistTestCase(TestCase):
     @lock_objects
     def test_temp_token_overused(self):
         token = TemporaryToken.objects.create()
-
+        token.save()
         request = self.factory.get(
             '/roombookings/bookings', {'token': token.api_token}
         )
@@ -343,7 +342,7 @@ class DoesTokenExistTestCase(TestCase):
     @lock_objects
     def test_temp_token_expired(self):
         token = TemporaryToken.objects.create()
-
+        token.save()
         request = self.factory.get(
             '/roombookings/bookings', {'token': token.api_token}
         )
@@ -369,7 +368,7 @@ class DoesTokenExistTestCase(TestCase):
             '/roombookings/bookings', {'token': token.api_token}
         )
         response = get_bookings(request)
-
+        print(token.api_token)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(request.GET['results_per_page'], 1)
 
