@@ -124,12 +124,11 @@ class FakeShibbolethMiddleWareTestCase(TestCase):
 class DashboardAppHelpersTestCase(TestCase):
     def test_generate_api_token(self):
         token = generate_api_token()
-        self.assertEqual(token[:6], "uclapi")
-        self.assertEqual(len(token), 66)
-        self.assertEqual(token[6], "-")
-        self.assertEqual(token[21], "-")
-        self.assertEqual(token[36], "-")
-        self.assertEqual(token[51], "-")
+        self.assertEqual(token[:7], "uclapi-")
+        self.assertEqual(len(token), 70)
+        self.assertEqual(token[22], "-")
+        self.assertEqual(token[38], "-")
+        self.assertEqual(token[54], "-")
 
     def test_generate_app_client_id(self):
         client_id = generate_app_client_id()

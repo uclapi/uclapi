@@ -1,31 +1,14 @@
 from binascii import hexlify
 from random import SystemRandom
 
+from common.helpers import generate_api_token
+
 import os
 import textwrap
 import validators
 
-
-def generate_api_token():
-    key = hexlify(os.urandom(30)).decode()
-    dashes_key = ""
-    for idx, char in enumerate(key):
-        if idx % 15 == 0 and idx != len(key)-1:
-            dashes_key += "-"
-        else:
-            dashes_key += char
-
-    final = "uclapi" + dashes_key
-
-    return final
-
-
 def generate_temp_api_token():
-    key = hexlify(os.urandom(30)).decode()
-    dashed = '-'.join(textwrap.wrap(key, 15))
-    final = "uclapi-temp-" + dashed
-
-    return final
+    return generate_api_token("temp")
 
 
 def generate_app_id():

@@ -3,6 +3,7 @@ from .app_helpers import (
     generate_app_id,
     generate_app_client_id,
     generate_app_client_secret,
+    generate_temp_api_token,
     generate_secret
 )
 
@@ -89,7 +90,7 @@ class TemporaryToken(models.Model):
     api_token = models.CharField(
         max_length=1000,
         unique=True,
-        default=generate_api_token("temp")
+        default=generate_temp_api_token
     )
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
     uses = models.IntegerField(default=0)

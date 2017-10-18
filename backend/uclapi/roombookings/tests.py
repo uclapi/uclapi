@@ -228,6 +228,24 @@ class DoesTokenExistTestCase(TestCase):
         # This fixes a bug when the `test_temp_token_valid` test would fail
         TemporaryToken.objects.all().delete()
 
+        # General temporary token for tests
+        self.token = TemporaryToken.objects.create()
+        self.token.save()
+
+        # An expired token for the expiry test
+        self.expired_token = TemporaryToken.objects.create()
+        self.expired_token.save()
+        self.expired_token.created = datetime.datetime(2010, 10, 10, 10, 10, 10)
+        self.expired_token.save()
+
+        # A valid token to use later
+        self.valid_token = TemporaryToken.objects.create()
+        self.valid_token.save()
+
+        # Standard Token data
+        self.user_ = User.objects.create(cn="test", employee_id=7357)
+        self.app = App.objects.create(user=self.user_, name="An App")
+
     @booking_objects
     @bookinga_objects
     @bookingb_objects
@@ -275,10 +293,7 @@ class DoesTokenExistTestCase(TestCase):
     @bookingb_objects
     @lock_objects
     def test_temp_token_wrong_path(self):
-        token = TemporaryToken.objects.create()
-        token.save()
-
-        request = self.factory.get('/a/path', {'token': token.api_token})
+        request = self.factory.get('/a/path', {'token': self.token.api_token})
         response = get_bookings(request)
 
         content = json.loads(response.content.decode())
@@ -294,12 +309,12 @@ class DoesTokenExistTestCase(TestCase):
     @bookingb_objects
     @lock_objects
     def test_temp_token_page_token_provided(self):
-        token = TemporaryToken.objects.create()
-        token.save()
-
         request = self.factory.get(
             '/roombookings/bookings',
-            {'token': token.api_token, 'page_token': 'next_page_comes_here'}
+            {
+                'token': self.token.api_token,
+                'page_token': 'next_page_comes_here'
+            }
         )
         response = get_bookings(request)
 
@@ -316,10 +331,8 @@ class DoesTokenExistTestCase(TestCase):
     @bookingb_objects
     @lock_objects
     def test_temp_token_overused(self):
-        token = TemporaryToken.objects.create()
-        token.save()
         request = self.factory.get(
-            '/roombookings/bookings', {'token': token.api_token}
+            '/roombookings/bookings', {'token': self.token.api_token}
         )
         for _ in repeat(None, 11):
             response = get_bookings(request)
@@ -332,19 +345,15 @@ class DoesTokenExistTestCase(TestCase):
             content["error"][:45]
         )
 
-    @unittest.mock.patch(
-        'django.utils.timezone.now',
-        lambda: datetime.datetime(2010, 10, 10, 10, 10, 10)
-    )
     @booking_objects
     @bookinga_objects
     @bookingb_objects
     @lock_objects
     def test_temp_token_expired(self):
-        token = TemporaryToken.objects.create()
-        token.save()
         request = self.factory.get(
-            '/roombookings/bookings', {'token': token.api_token}
+            '/roombookings/bookings', {
+                'token': self.expired_token.api_token
+            }
         )
         response = get_bookings(request)
 
@@ -361,14 +370,10 @@ class DoesTokenExistTestCase(TestCase):
     @bookingb_objects
     @lock_objects
     def test_temp_token_valid(self):
-        token = TemporaryToken.objects.create()
-        token.save()
-
         request = self.factory.get(
-            '/roombookings/bookings', {'token': token.api_token}
+            '/roombookings/bookings', {'token': self.valid_token.api_token}
         )
         response = get_bookings(request)
-        print(token.api_token)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(request.GET['results_per_page'], 1)
 
@@ -377,11 +382,8 @@ class DoesTokenExistTestCase(TestCase):
     @bookingb_objects
     @lock_objects
     def test_normal_token_valid(self):
-        user_ = User.objects.create(cn="test", employee_id=7357)
-        app = App.objects.create(user=user_, name="An App")
-
         request = self.factory.get(
-            '/roombookings/bookings', {'token': app.api_token}
+            '/roombookings/bookings', {'token': self.app.api_token}
         )
         response = get_bookings(request)
 
