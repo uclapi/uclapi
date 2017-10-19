@@ -361,7 +361,7 @@ class OAuthTokenCheckerTest(TestCase):
             scope=self.empty_scope
         )
         self.valid_oauth_token.save()
-        
+
     def test_nonexistent_token(self):
         result = _check_oauth_token_issues(
             "uclapi-user-blah-blah-blah",
@@ -418,7 +418,7 @@ class OAuthTokenCheckerTest(TestCase):
         self.assertEqual(
             data["error"],
             "The token is inactive as the user has revoked "
-                "your app's access to their data."
+            "your app's access to their data."
         )
 
     def test_wrong_scope(self):
@@ -440,7 +440,7 @@ class OAuthTokenCheckerTest(TestCase):
         self.assertEqual(
             data["error"],
             "The token provided does not have "
-                "permission to access this data."
+            "permission to access this data."
         )
 
     def test_valid_token(self):
