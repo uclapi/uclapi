@@ -6,9 +6,7 @@ from common.helpers import PrettyJsonResponse as JsonResponse
 
 from .models import Lock, Course, Depts, ModuleA, ModuleB
 
-from .app_helpers import get_all_course_modules
-
-from .timetable_helpers import get_student_timetable, get_custom_timetable
+from .app_helpers import get_student_timetable, get_custom_timetable
 
 from common.decorators import uclapi_protected_endpoint
 
@@ -142,23 +140,3 @@ def get_department_modules(request, *args, **kwargs):
         })
 
     return JsonResponse(modules, rate_limiting_data=kwargs)
-
-
-@api_view(["GET"])
-@uclapi_protected_endpoint()
-def get_course_modules(request, *args, **kwargs):
-    """
-    Returns all the modules in the specified course.
-    @param: courseid
-    """
-    courseid = request.GET.get("courseid")
-    if not courseid:
-        return JsonResponse({
-            "ok": False,
-            "error": "No courseid found."
-        }, rate_limiting_data=kwargs)
-
-    return JsonResponse({
-        "ok": True,
-        "modules": get_all_course_modules(courseid)
-    }, rate_limiting_data=kwargs)
