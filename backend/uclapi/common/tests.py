@@ -2,6 +2,7 @@ from django.test import TestCase, SimpleTestCase
 
 from .decorators import (
     _check_general_token_issues,
+    _check_oauth_token_issues,
     _check_temp_token_issues,
     how_many_seconds_until_midnight,
     get_var,
@@ -18,6 +19,9 @@ from dashboard.models import (
     TemporaryToken,
     User
 )
+
+from oauth.models import OAuthToken, OAuthScope
+from oauth.scoping import Scopes
 
 from freezegun import freeze_time
 from rest_framework.test import APIRequestFactory
@@ -316,4 +320,140 @@ class GenerateApiTokenTest(TestCase):
         self.assertEqual(
             token[:12],
             "uclapi-user-"
+        )
+
+
+class OAuthTokenCheckerTest(TestCase):
+    def setUp(self):
+        self.valid_user = User.objects.create(
+            email="testuserabc@ucl.ac.uk",
+            full_name="Test User",
+            given_name="Test",
+            cn="test2",
+            department="Dept. of Tests",
+            employee_id="TESTU12345",
+            raw_intranet_groups="test1;test2",
+            agreement=True
+        )
+        self.valid_user.save()
+
+        self.valid_app = App.objects.create(
+            user=self.valid_user,
+            name="Test App"
+        )
+        self.valid_app.save()
+
+        self.empty_scope = OAuthScope.objects.create(
+            scope_number=0
+        )
+        self.empty_scope.save()
+
+        s = Scopes()
+        scope_num = s.add_scope(0, 'timetable')
+        self.timetable_scope = OAuthScope.objects.create(
+            scope_number=scope_num
+        )
+        self.timetable_scope.save()
+
+        self.valid_oauth_token = OAuthToken.objects.create(
+            app=self.valid_app,
+            user=self.valid_user,
+            scope=self.empty_scope
+        )
+        self.valid_oauth_token.save()
+        
+    def test_nonexistent_token(self):
+        result = _check_oauth_token_issues(
+            "uclapi-user-blah-blah-blah",
+            "not-applicable",
+            []
+        )
+
+        self.assertTrue(isinstance(result, JsonResponse))
+        self.assertEqual(
+            result.status_code,
+            400
+        )
+        data = json.loads(result.content.decode())
+        self.assertFalse(data["ok"])
+        self.assertEqual(
+            data["error"],
+            "Token does not exist."
+        )
+
+    def test_bad_client_secret(self):
+        result = _check_oauth_token_issues(
+            self.valid_oauth_token.token,
+            "incorrect-client-secret",
+            []
+        )
+        self.assertTrue(isinstance(result, JsonResponse))
+        self.assertEqual(
+            result.status_code,
+            400
+        )
+        data = json.loads(result.content.decode())
+        self.assertFalse(data["ok"])
+        self.assertEqual(
+            data["error"],
+            "Client secret incorrect."
+        )
+
+    def test_inactive_token(self):
+        self.valid_oauth_token.active = False
+        self.valid_oauth_token.save()
+
+        result = _check_oauth_token_issues(
+            self.valid_oauth_token.token,
+            self.valid_app.client_secret,
+            []
+        )
+        self.assertTrue(isinstance(result, JsonResponse))
+        self.assertEqual(
+            result.status_code,
+            400
+        )
+        data = json.loads(result.content.decode())
+        self.assertFalse(data["ok"])
+        self.assertEqual(
+            data["error"],
+            "The token is inactive as the user has revoked "
+                "your app's access to their data."
+        )
+
+    def test_wrong_scope(self):
+        self.valid_oauth_token.active = True
+        self.valid_oauth_token.save()
+
+        result = _check_oauth_token_issues(
+            self.valid_oauth_token.token,
+            self.valid_app.client_secret,
+            ['timetable']
+        )
+        self.assertTrue(isinstance(result, JsonResponse))
+        self.assertEqual(
+            result.status_code,
+            400
+        )
+        data = json.loads(result.content.decode())
+        self.assertFalse(data["ok"])
+        self.assertEqual(
+            data["error"],
+            "The token provided does not have "
+                "permission to access this data."
+        )
+
+    def test_valid_token(self):
+        self.valid_oauth_token.scope = self.timetable_scope
+        self.valid_oauth_token.save()
+
+        result = _check_oauth_token_issues(
+            self.valid_oauth_token.token,
+            self.valid_app.client_secret,
+            ['timetable']
+        )
+
+        self.assertEqual(
+            result.token,
+            self.valid_oauth_token.token
         )
