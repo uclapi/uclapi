@@ -6,7 +6,8 @@ from .decorators import (
     _check_temp_token_issues,
     how_many_seconds_until_midnight,
     get_var,
-    throttle_api_call
+    throttle_api_call,
+    UclApiIncorrectTokenTypeException
 )
 
 from .helpers import (
@@ -127,6 +128,16 @@ class ThrottleApiCallTest(TestCase):
         self.assertTrue(throttled)
         self.assertEqual(limit, 1)
         self.assertEqual(remaining, 0)
+
+    def test_throttle_bad_token_type(self):
+        token = generate_api_token()
+        with self.assertRaises(UclApiIncorrectTokenTypeException):
+            (
+                throttled,
+                limit,
+                remaining,
+                reset_secs
+            ) = throttle_api_call(token, "incorrect")
 
 
 class TempTokenCheckerTest(TestCase):
