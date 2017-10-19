@@ -59,7 +59,7 @@ def _get_student_by_upi(upi):
 
 def _get_student_modules(student):
     print("Getting student modules for student: " + student.qtype2)
-    raw_query = 'SELECT * FROM CMIS_OWNER.STUMODULES WHERE SETID=\'LIVE-17-18\' AND studentid=\'{}\''.format(
+    raw_query = 'SELECT * FROM CMIS_OWNER.STUMODULES WHERE SETID=\'LIVE-17-18\' AND studentid=\'{}\''.format(  # NOQA
         student.studentid
     )
     student_modules = list(Stumodules.objects.raw(raw_query))
@@ -112,18 +112,29 @@ def _get_timetable_events(student_modules):
                         "lecturer": _get_lecturer_details(event.lecturerid),
                         "name": "Unknown"
                     },
-                    "location": _get_location_details(event.siteid, event.roomid),
+                    "location": _get_location_details(
+                        event.siteid,
+                        event.roomid
+                    ),
                     "session_type": event.moduletype,
-                    "session_type_str": _get_session_type_str(event.moduletype),
+                    "session_type_str": _get_session_type_str(
+                        event.moduletype
+                    ),
                     "session_group": module.modgrpcode
                 }
+
                 if event.moduleid not in _module_name_cache:
                     try:
-                        module_data = modules.objects.get(moduleid=event.moduleid)
+                        module_data = modules.objects.get(
+                            moduleid=event.moduleid
+                        )
                         _module_name_cache[event.moduleid] = module_data.name
                     except ObjectDoesNotExist:
                         _module_name_cache[event.moduleid] = "Unknown"
-                event_data["module"]["name"] = _module_name_cache[event.moduleid]
+
+                event_data["module"]["name"] = _module_name_cache[
+                    event.moduleid
+                ]
                 if date_str not in student_timetable:
                     student_timetable[date_str] = []
                 student_timetable[date_str].append(event_data)
@@ -169,9 +180,14 @@ def _get_timetable_events_module_list(module_list):
                         "lecturer": _get_lecturer_details(event.lecturerid),
                         "name": module.name
                     },
-                    "location": _get_location_details(event.siteid, event.roomid),
+                    "location": _get_location_details(
+                        event.siteid,
+                        event.roomid
+                    ),
                     "session_type": event.moduletype,
-                    "session_type_str": _get_session_type_str(event.moduletype),
+                    "session_type_str": _get_session_type_str(
+                        event.moduletype
+                    ),
                     "session_group": event.modgrpcode
                 }
                 if date_str not in returned_timetable:
