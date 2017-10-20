@@ -6,7 +6,8 @@ from .decorators import (
     _check_temp_token_issues,
     how_many_seconds_until_midnight,
     get_var,
-    throttle_api_call
+    throttle_api_call,
+    UclApiIncorrectTokenTypeException
 )
 
 from .helpers import (
@@ -127,6 +128,16 @@ class ThrottleApiCallTest(TestCase):
         self.assertTrue(throttled)
         self.assertEqual(limit, 1)
         self.assertEqual(remaining, 0)
+
+    def test_throttle_bad_token_type(self):
+        token = generate_api_token()
+        with self.assertRaises(UclApiIncorrectTokenTypeException):
+            (
+                throttled,
+                limit,
+                remaining,
+                reset_secs
+            ) = throttle_api_call(token, "incorrect")
 
 
 class TempTokenCheckerTest(TestCase):
@@ -361,7 +372,7 @@ class OAuthTokenCheckerTest(TestCase):
             scope=self.empty_scope
         )
         self.valid_oauth_token.save()
-        
+
     def test_nonexistent_token(self):
         result = _check_oauth_token_issues(
             "uclapi-user-blah-blah-blah",
@@ -418,7 +429,7 @@ class OAuthTokenCheckerTest(TestCase):
         self.assertEqual(
             data["error"],
             "The token is inactive as the user has revoked "
-                "your app's access to their data."
+            "your app's access to their data."
         )
 
     def test_wrong_scope(self):
@@ -440,7 +451,7 @@ class OAuthTokenCheckerTest(TestCase):
         self.assertEqual(
             data["error"],
             "The token provided does not have "
-                "permission to access this data."
+            "permission to access this data."
         )
 
     def test_valid_token(self):
