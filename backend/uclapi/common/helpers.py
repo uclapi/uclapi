@@ -1,9 +1,9 @@
+import os
+import textwrap
+
 from binascii import hexlify
 
 from django.http import JsonResponse
-
-import os
-import textwrap
 
 
 class PrettyJsonResponse(JsonResponse):
@@ -12,13 +12,15 @@ class PrettyJsonResponse(JsonResponse):
         super().__init__(data, json_dumps_params={'indent': 4})
 
         # Adds rate limiting headers from a passed view kwargs
+        rate_limit_headers = set([
+            'X-RateLimit-Limit',
+            'X-RateLimit-Remaining',
+            'X-RateLimit-Retry-After'
+        ])
         if rate_limiting_data:
-            if 'X-RateLimit-Limit' in rate_limiting_data:
-                self['X-RateLimit-Limit'] = rate_limiting_data['X-RateLimit-Limit']
-            if 'X-RateLimit-Remaining' in rate_limiting_data:
-                self['X-RateLimit-Remaining'] = rate_limiting_data['X-RateLimit-Remaining']
-            if 'X-RateLimit-Retry-After' in rate_limiting_data:
-                self['X-RateLimit-Retry-After'] = rate_limiting_data['X-RateLimit-Retry-After']
+            for header in rate_limit_headers:
+                if header in rate_limiting_data:
+                    self[header] = rate_limiting_data[header]
 
 
 def generate_api_token(prefix=None):

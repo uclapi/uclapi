@@ -124,7 +124,7 @@ class FakeShibbolethMiddleWareTestCase(TestCase):
 class DashboardAppHelpersTestCase(TestCase):
     def test_generate_api_token(self):
         token = generate_api_token()
-        self.assertEqual(token[:7], "uclapi-")
+        self.assertTrue(token.startswith("uclapi-"))
         self.assertEqual(len(token), 70)
         self.assertEqual(token[22], "-")
         self.assertEqual(token[38], "-")

@@ -1,7 +1,8 @@
 import datetime
-from functools import wraps
 import re
 import redis
+
+from functools import wraps
 
 from dashboard.models import App, TemporaryToken
 from dashboard.tasks import keen_add_event_task as keen_add_event
@@ -55,7 +56,7 @@ def log_api_call(request, token, token_type):
 
     queryparams = dict(request.GET)
 
-    if token_type == "oauth":
+    if token_type in("general", "oauth"):
         parameters = {
             "userid": token.user.id,
             "email": token.user.email,
@@ -74,18 +75,6 @@ def log_api_call(request, token, token_type):
             "version-headers": version_headers,
             "queryparams": queryparams,
             "temp_token": True,
-            "token_type": token_type
-        }
-    elif token_type == "general":
-        parameters = {
-            "userid": token.user.id,
-            "email": token.user.email,
-            "name": token.user.given_name,
-            "service": service,
-            "method": method,
-            "version-headers": version_headers,
-            "queryparams": queryparams,
-            "temp_token": False,
             "token_type": token_type
         }
 
