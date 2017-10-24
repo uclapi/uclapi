@@ -12,11 +12,11 @@ class PrettyJsonResponse(JsonResponse):
         super().__init__(data, json_dumps_params={'indent': 4})
 
         # Adds rate limiting headers from a passed view kwargs
-        rate_limit_headers = set([
+        rate_limit_headers = {
             'X-RateLimit-Limit',
             'X-RateLimit-Remaining',
             'X-RateLimit-Retry-After'
-        ])
+        }
         if rate_limiting_data:
             for header in rate_limit_headers:
                 if header in rate_limiting_data:
