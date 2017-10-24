@@ -1,4 +1,4 @@
-# uclapi [![Build Status](https://travis-ci.org/uclapi/uclapi.svg?branch=master)](https://travis-ci.org/uclapi/uclapi) [![codecov](https://codecov.io/gh/uclapi/uclapi/branch/master/graph/badge.svg)](https://codecov.io/gh/uclapi/uclapi)
+# UCL API [![Build Status](https://travis-ci.org/uclapi/uclapi.svg?branch=master)](https://travis-ci.org/uclapi/uclapi) [![Build Status](https://jenkins.uclapi.com/buildStatus/icon?job=UCLAPI)](https://jenkins.uclapi.com/job/UCLAPI/) [![codecov](https://codecov.io/gh/uclapi/uclapi/branch/master/graph/badge.svg)](https://codecov.io/gh/uclapi/uclapi)
 UCL API Main Repository
 
 ## Setting Up and Building
