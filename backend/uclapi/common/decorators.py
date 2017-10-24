@@ -56,7 +56,7 @@ def log_api_call(request, token, token_type):
 
     queryparams = dict(request.GET)
 
-    if token_type in("general", "oauth"):
+    if token_type in {"general", "oauth"}:
         parameters = {
             "userid": token.user.id,
             "email": token.user.email,
