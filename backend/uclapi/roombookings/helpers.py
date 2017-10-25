@@ -90,6 +90,24 @@ def _localize_time(time_string):
     return ret_time.replace(tzinfo=None)
 
 
+def _round_date(time_string, up=False):
+    """
+    Rounds the datetime to the nearest day.
+    Rounds down by default until up is passed as True in which case
+    it rounds up
+    """
+    date = datetime.date(
+        time_string.year,
+        time_string.month,
+        time_string.day
+    )
+
+    if up:
+        date += datetime.timedelta(days=1)
+
+    return date
+
+
 def _parse_datetime(start_time, end_time, search_date):
     parsed_start_time, parsed_end_time = None, None
     try:
@@ -243,25 +261,47 @@ def _get_bookings_for_room(bookings, siteid, roomid):
     return bookings_for_room
 
 
-def _filter_for_free_rooms(all_rooms, bookings):
+def overlaps(start1, end1, start2, end2):
+    """
+    takes 4 datetimes
+    checks if they overlap
+    """
+    return max(start1, start2) < min(end1, end2)
+
+
+def _filter_for_free_rooms(all_rooms, bookings, start, end):
     """
     Find all rooms which don't have any bookings.
     Args:
-        bookings: All the bookings made in the time period
-        we want to find free rooms in.
         all_rooms: All available rooms.
+        bookings: All the bookings made in the days of the given time period
+        start: Start time for free rooms
+        end: End time for free rooms
     """
-    free_rooms = []
-
+    rooms_with_bookings = list(all_rooms)
     for idx, room in enumerate(all_rooms):
         bookings_for_room = _get_bookings_for_room(
             bookings,
             room["siteid"],
             room["roomid"]
         )
+        rooms_with_bookings[idx]["bookings"] = bookings_for_room
 
-        # Room hasn't been booked in the give time period
-        if not bookings_for_room:
+    free_rooms = []
+    for room in rooms_with_bookings:
+        for booking in room["bookings"]:
+
+            booking_start = _localize_time(booking["start_time"])
+            booking_end = _localize_time(booking["end_time"])
+
+            if overlaps(
+                start1=booking_start,
+                end1=booking_end,
+                start2=start,
+                end2=end
+            ):
+                break
+        else:
             free_rooms.append(room)
 
     return free_rooms

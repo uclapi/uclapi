@@ -6,12 +6,10 @@ from django.conf import settings
 from .helpers import (PrettyJsonResponse, _create_page_token,
                       _get_paginated_bookings, _parse_datetime,
                       _return_json_bookings, _serialize_equipment,
-                      _serialize_rooms, _filter_for_free_rooms)
+                      _serialize_rooms, _filter_for_free_rooms, _round_date)
 from .models import BookingA, BookingB, Equipment, Lock, Room
 
 from common.decorators import uclapi_protected_endpoint
-
-import datetime
 
 
 @api_view(['GET'])
@@ -174,11 +172,6 @@ def get_equipment(request, *args, **kwargs):
 # @log_api_call
 def free_rooms(request, *args, **kwargs):
     request_params = {}
-
-    # maxing out results_per_page to get all the bookings in one page
-    results_per_page = 100000
-
-    # functional filters
     request_params['startdatetime__gte'] = request.GET.get('start_datetime')
     request_params['finishdatetime__lte'] = request.GET.get('end_datetime')
 
@@ -189,8 +182,6 @@ def free_rooms(request, *args, **kwargs):
         request_params['finishdatetime__lte'],
         None
     )
-    request_params["startdatetime__gte"] = start
-    request_params["finishdatetime__lte"] = end
 
     if not is_parsed:
         return PrettyJsonResponse({
@@ -198,7 +189,15 @@ def free_rooms(request, *args, **kwargs):
             "error": "date/time isn't formatted as suggested in the docs"
         })
 
-    # Pagination
+    # Rounding down start date to start of day
+    request_params["startdatetime__gte"] = _round_date(start)
+
+    # Rounding up end date to start of next day
+    request_params["finishdatetime__lte"] = _round_date(end, up=True)
+
+    # Pagination Logic
+    # maxing out results_per_page to get all the bookings in one page
+    results_per_page = 100000
     request_params = dict((k, v) for k, v in request_params.items() if v)
     request_params["setid"] = settings.ROOMBOOKINGS_SETID
     request_params["bookabletype"] = "CB"
@@ -214,7 +213,7 @@ def free_rooms(request, *args, **kwargs):
     )
     all_rooms = _serialize_rooms(all_rooms)
 
-    free_rooms = _filter_for_free_rooms(all_rooms, bookings)
+    free_rooms = _filter_for_free_rooms(all_rooms, bookings, start, end)
 
     return PrettyJsonResponse({
         "ok": True,
