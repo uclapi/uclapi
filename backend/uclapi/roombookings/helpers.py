@@ -4,19 +4,14 @@ import datetime
 import json
 from datetime import timedelta
 
-import django.http
 import pytz
 from django.core.exceptions import FieldError, ObjectDoesNotExist
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 import ciso8601
 
+from common.helpers import PrettyJsonResponse
 from .models import BookingA, BookingB, Location, Lock, PageToken, SiteLocation
-
-
-class PrettyJsonResponse(django.http.JsonResponse):
-    def __init__(self, data):
-        super().__init__(data, json_dumps_params={'indent': 4})
 
 
 def _create_page_token(query, pagination):
@@ -215,16 +210,16 @@ def _kloppify(date_string, date):
         return date_string + "+00:00"
 
 
-def _return_json_bookings(bookings):
+def _return_json_bookings(bookings, rate_limiting_data=None):
     if "error" in bookings:
         return PrettyJsonResponse({
             "ok": False,
             "error": bookings["error"]
-        })
+        }, rate_limiting_data)
 
     bookings["ok"] = True
 
-    return PrettyJsonResponse(bookings)
+    return PrettyJsonResponse(bookings, rate_limiting_data)
 
 
 def how_many_seconds_until_midnight():

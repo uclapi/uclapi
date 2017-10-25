@@ -1,4 +1,4 @@
-import React from 'React';
+import React from 'react';
 import {CopyField} from './../copyField.jsx';
 import OAuthScopesForm from './OAuthScopesForm.jsx';
 import OAuthCallbackField from './OAuthCallbackField.jsx';

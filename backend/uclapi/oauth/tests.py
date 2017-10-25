@@ -4,13 +4,21 @@ import unittest.mock
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 
+from common.decorators import uclapi_protected_endpoint
+from common.helpers import PrettyJsonResponse as JsonResponse
+
 from dashboard.models import App, User
 
 from .app_helpers import generate_random_verification_code
-from .decorators import oauth_token_check
 from .models import OAuthScope, OAuthToken
 from .scoping import Scopes
 
+
+@uclapi_protected_endpoint(personal_data=True, required_scopes=["timetable"])
+def test_timetable_request(request, *args, **kwargs):
+    return JsonResponse({
+        "ok": True
+    }, rate_limiting_data=kwargs)
 
 class ScopingTestCase(TestCase):
     test_scope_map = {
@@ -126,48 +134,47 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
     def setUp(self):
         mock_status_code = unittest.mock.Mock()
         mock_status_code.status_code = 200
-        self.mock_view_func = unittest.mock.Mock(return_value=mock_status_code)
-
-        self.dec_view = oauth_token_check(
-            required_scopes=[]
-        )(self.mock_view_func)
 
         self.factory = APIRequestFactory()
 
-    def test_decorator_no_client_secret_provided(self):
-        request = self.factory.get('/')
-        response = self.dec_view(request)
-
-        content = json.loads(response.content.decode())
-
-        self.assertEqual(response.status_code, 400)
-        self.assertFalse(content["ok"])
-        self.assertEqual(content["error"], "No Client Secret provided.")
-
     def test_decorator_no_token_provided(self):
         request = self.factory.get(
-            '/',
+            '/oauth/testcase',
             {'client_secret': 'not_a_real_secret'}
         )
-        response = self.dec_view(request)
-
+        response = test_timetable_request(request)
         content = json.loads(response.content.decode())
 
         self.assertEqual(response.status_code, 400)
         self.assertFalse(content["ok"])
-        self.assertEqual(content["error"], "No token provided via GET.")
+        self.assertEqual(content["error"], "No token provided.")
 
-    def test_decorator_nonexistent_token_provided(self):
+    def test_decorator_invalid_token_provided(self):
 
         request = self.factory.get(
-            '/',
+            '/oauth/testcase',
             {
                 'client_secret': 'not_a_real_secret',
                 'token': 'fake'
             }
         )
-        response = self.dec_view(request)
+        response = test_timetable_request(request)
+        content = json.loads(response.content.decode())
 
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["ok"])
+        self.assertEqual(content["error"], "Token is invalid.")
+
+    def test_decorator_nonexistent_oauth_token_provided(self):
+
+        request = self.factory.get(
+            '/oauth/testcase',
+            {
+                'client_secret': 'not_a_real_secret',
+                'token': 'uclapi-user-fake'
+            }
+        )
+        response = test_timetable_request(request)
         content = json.loads(response.content.decode())
 
         self.assertEqual(response.status_code, 400)
@@ -189,14 +196,13 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             scope=oauth_scope
         )
         request = self.factory.get(
-            '/',
+            '/oauth/testcase',
             {
                 'client_secret': 'not_a_real_secret',
                 'token': oauth_token.token
             }
         )
-        response = self.dec_view(request)
-
+        response = test_timetable_request(request)
         content = json.loads(response.content.decode())
 
         self.assertEqual(response.status_code, 400)
@@ -213,7 +219,7 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             given_name="Test Test"
         )
         oauth_scope_app = OAuthScope.objects.create(
-            scope_number=1,
+            scope_number=0,
         )
         app_ = App.objects.create(
             user=user_,
@@ -221,7 +227,7 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             scope=oauth_scope_app
         )
         oauth_scope_user = OAuthScope.objects.create(
-            scope_number=2
+            scope_number=1
         )
         oauth_token = OAuthToken.objects.create(
             app=app_,
@@ -230,19 +236,14 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
         )
 
         request = self.factory.get(
-            '/',
+            '/oauth/testcase',
             {
                 'token': oauth_token.token,
                 'client_secret': app_.client_secret
             }
         )
 
-        dec_view_rb = oauth_token_check(
-            required_scopes=["roombookings"]
-        )(self.mock_view_func)
-
-        response = dec_view_rb(request)
-
+        response = test_timetable_request(request)
         content = json.loads(response.content.decode())
 
         self.assertEqual(response.status_code, 400)
@@ -268,13 +269,13 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             active=False
         )
         request = self.factory.get(
-            '/',
+            '/oauth/testcase',
             {
                 'client_secret': app_.client_secret,
                 'token': oauth_token.token
             }
         )
-        response = self.dec_view(request)
+        response = test_timetable_request(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
@@ -290,7 +291,9 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             given_name="Test Test"
         )
         app_ = App.objects.create(user=user_, name="An App")
-        oauth_scope = OAuthScope.objects.create()
+        oauth_scope = OAuthScope.objects.create(
+            scope_number=2
+        )
         oauth_token = OAuthToken.objects.create(
             app=app_,
             user=user_,
@@ -298,13 +301,13 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
         )
 
         request = self.factory.get(
-            '/',
+            '/oauth/testcase',
             {
                 'client_secret': app_.client_secret,
                 'token': oauth_token.token
             }
         )
-        response = self.dec_view(request)
+        response = test_timetable_request(request)
 
         self.assertEqual(response.status_code, 200)
 

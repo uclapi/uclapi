@@ -89,6 +89,7 @@ class Students(models.Model):
         db_table = '"CMIS_OWNER"."STUDENTS"'
         _DATABASE = 'roombookings'
 
+
 class StudentsA(models.Model):
     id = models.AutoField(primary_key=True)
     setid = models.TextField(max_length=10)
@@ -137,6 +138,7 @@ class StudentsA(models.Model):
     class Meta:
         _DATABASE = 'gencache'
 
+
 class StudentsB(models.Model):
     id = models.AutoField(primary_key=True)
     setid = models.TextField(max_length=10)
@@ -184,6 +186,7 @@ class StudentsB(models.Model):
 
     class Meta:
         _DATABASE = 'gencache'
+
 
 class Sites(models.Model):
     setid = models.TextField(max_length=10)
