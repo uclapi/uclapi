@@ -230,3 +230,38 @@ def how_many_seconds_until_midnight():
         day=tomorrow.day, hour=0, minute=0, second=0
     )
     return (midnight - datetime.datetime.now()).seconds
+
+
+def _get_bookings_for_room(bookings, siteid, roomid):
+    bookings_for_room = []
+    for booking in bookings:
+        if (
+            booking["roomid"] == roomid and
+            booking["siteid"] == siteid
+        ):
+            bookings_for_room.append(booking)
+    return bookings_for_room
+
+
+def _filter_for_free_rooms(all_rooms, bookings):
+    """
+    Find all rooms which don't have any bookings.
+    Args:
+        bookings: All the bookings made in the time period
+        we want to find free rooms in.
+        all_rooms: All available rooms.
+    """
+    free_rooms = []
+
+    for idx, room in enumerate(all_rooms):
+        bookings_for_room = _get_bookings_for_room(
+            bookings,
+            room["siteid"],
+            room["roomid"]
+        )
+
+        # Room hasn't been booked in the give time period
+        if not bookings_for_room:
+            free_rooms.append(room)
+
+    return free_rooms
