@@ -314,7 +314,7 @@ def uclapi_protected_endpoint(personal_data=False, required_scopes=[]):
                     personal_data
                 )
                 if isinstance(general_token_check, JsonResponse):
-                    return JsonResponse
+                    return general_token_check
 
                 token = general_token_check
 
