@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
-from django.http import JsonResponse
 
 from common.decorators import uclapi_protected_endpoint
+from common.helpers import PrettyJsonResponse as JsonResponse
 
 import os
 import requests
@@ -9,12 +9,12 @@ import requests
 
 @api_view(['GET'])
 @uclapi_protected_endpoint()
-def people(request):
+def people(request, *args, **kwargs):
     if "query" not in request.GET:
         response = JsonResponse({
             "ok": False,
             "error": "No query provided."
-        })
+        }, rate_limiting_data=kwargs)
         response.status_code = 400
         return response
 
@@ -46,4 +46,4 @@ def people(request):
     return JsonResponse({
         "ok": True,
         "people": people
-    })
+    }, rate_limiting_data=kwargs)
