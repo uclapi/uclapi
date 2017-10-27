@@ -1,21 +1,26 @@
-from django.shortcuts import render
+import os
 import requests
 import xml.etree.ElementTree
-from roombookings.helpers import PrettyJsonResponse as JsonResponse
+
 from rest_framework.decorators import api_view
+
 from roombookings.decorators import does_token_exist
+
+from roombookings.helpers import PrettyJsonResponse as JsonResponse
+
 
 @api_view(["GET"])
 @does_token_exist
 def get_pc_availability(request):
-    r = requests.get("https://campusm.ucl.ac.uk/clusterpc_services/presentation_services_v1/pc_availability_v1.xml")
+    r = requests.get(os.environ.get("PCA_LINK"))
     try:
-        e =  xml.etree.ElementTree.fromstring(r.content.decode())
+        e = xml.etree.ElementTree.fromstring(r.content.decode())
     except xml.etree.ElementTree.ParseError:
         return JsonResponse({
             "ok": False,
             "error": "Couldn't parse the availability data"
         })
+
     data = []
     for pc in e.findall("room"):
         _ = pc.get
@@ -33,6 +38,7 @@ def get_pc_availability(request):
             "total_seats": _("seats"),
             "info": _("info")
         })
+
     return JsonResponse({
         "ok": True,
         "data": data
