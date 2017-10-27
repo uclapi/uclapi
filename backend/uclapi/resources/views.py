@@ -10,7 +10,7 @@ from rest_framework.decorators import api_view
 
 
 @api_view(['GET'])
-# @uclapi_protected_endpoint()
+@uclapi_protected_endpoint()
 def get_pc_availability(request, *args, **kwargs):
     try:
         r = requests.get(os.environ["PCA_LINK"])
