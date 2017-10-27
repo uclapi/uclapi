@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'roombookings',
     'oauth',
     'timetable',
+    'common',
     'opbeat.contrib.django',
     'raven.contrib.django.raven_compat',
     'corsheaders'

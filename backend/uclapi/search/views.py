@@ -1,22 +1,20 @@
 from rest_framework.decorators import api_view
-from django.http import JsonResponse
 
-from roombookings.decorators import does_token_exist, log_api_call, throttle
+from common.decorators import uclapi_protected_endpoint
+from common.helpers import PrettyJsonResponse as JsonResponse
 
 import os
 import requests
 
 
 @api_view(['GET'])
-@does_token_exist
-@throttle
-@log_api_call
-def people(request):
+@uclapi_protected_endpoint()
+def people(request, *args, **kwargs):
     if "query" not in request.GET:
         response = JsonResponse({
             "ok": False,
             "error": "No query provided."
-        })
+        }, rate_limiting_data=kwargs)
         response.status_code = 400
         return response
 
@@ -48,4 +46,4 @@ def people(request):
     return JsonResponse({
         "ok": True,
         "people": people
-    })
+    }, rate_limiting_data=kwargs)

@@ -1,7 +1,13 @@
 from django.db import models
-from .app_helpers import generate_api_token, generate_app_id, \
-    generate_app_client_id, generate_app_client_secret, \
-    generate_temp_api_token, generate_secret
+from .app_helpers import (
+    generate_app_id,
+    generate_app_client_id,
+    generate_app_client_secret,
+    generate_temp_api_token,
+    generate_secret
+)
+
+from common.helpers import generate_api_token
 
 from oauth.models import OAuthScope
 
