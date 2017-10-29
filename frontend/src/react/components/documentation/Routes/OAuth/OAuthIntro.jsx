@@ -33,6 +33,8 @@ export default class OAuthIntro extends React.Component {
             If you want to add a “Sign In With UCL” button to your website, which looks like this:
           </p>
 
+          <img width={"100%"} src={window.staticURL + 'signInWithUCLAPI.png'}/>
+
           <p>
             you can copy the following the following code: <br />
             where <code>CLIENT_ID</code> and <code>STATE</code> should be replaced by <code>client_id</code> of your app and a random <code>state</code>.
