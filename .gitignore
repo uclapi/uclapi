@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#SQL_dump
+Full_DDL.sql
+
 # C extensions
 *.so
 
@@ -115,8 +118,6 @@ node_modules
 
 # Django static files
 static/
-!backend/uclapi/dashboard/static/
-!backend/uclapi/oauth/static/
 
 # Redis
 dump.rdb

@@ -23,5 +23,7 @@ urlpatterns = [
     url(r'^roombookings/', include('roombookings.urls')),
     url(r'^docs', documentation),
     url(r'^oauth/', include('oauth.urls')),
-    url(r'^$', get_started)
+    url(r'^timetable/', include('timetable.urls')),
+    url(r'^search/', include('search.urls')),
+    url(r'^$', get_started),
 ]

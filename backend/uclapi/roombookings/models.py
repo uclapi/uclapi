@@ -153,3 +153,12 @@ class Location(models.Model):
     class Meta:
         _DATABASE = 'default'
         unique_together = ('siteid', 'roomid')
+
+
+class SiteLocation(models.Model):
+    siteid = models.CharField(max_length=40)
+    lat = models.CharField(max_length=30)
+    lng = models.CharField(max_length=30)
+
+    class Meta:
+        _DATABASE = 'default'

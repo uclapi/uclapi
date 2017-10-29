@@ -1,4 +1,4 @@
-# uclapi [![Build Status](https://travis-ci.org/uclapi/uclapi.svg?branch=master)](https://travis-ci.org/uclapi/uclapi) [![codecov](https://codecov.io/gh/uclapi/uclapi/branch/master/graph/badge.svg)](https://codecov.io/gh/uclapi/uclapi)
+# UCL API [![Build Status](https://travis-ci.org/uclapi/uclapi.svg?branch=master)](https://travis-ci.org/uclapi/uclapi) [![Build Status](https://jenkins.uclapi.com/buildStatus/icon?job=UCLAPI)](https://jenkins.uclapi.com/job/UCLAPI/) [![codecov](https://codecov.io/gh/uclapi/uclapi/branch/master/graph/badge.svg)](https://codecov.io/gh/uclapi/uclapi)
 UCL API Main Repository
 
 ## Setting Up and Building
@@ -199,6 +199,8 @@ pushd uclapi/backend/uclapi
 ./manage.py migrate --database gencache
 ./manage.py create_lock
 ./manage.py update_gencache
+./manage.py create_timetable_lock
+./manage.py update_timetable_gencache
 deactivate
 popd
 ```
@@ -231,4 +233,4 @@ If those commands work you should be able to navigate to `http://localhost:8000/
 ## Testing
 We're an amazing project, so obviously we have tests :sparkles:  
 Make sure you have the requirements installed in your virtual environment, `cd` into `backend/uclapi` and then run :  
-`python manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner'`
+`python manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner' --settings=uclapi.settings_mocked`

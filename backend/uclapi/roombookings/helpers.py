@@ -4,19 +4,14 @@ import datetime
 import json
 from datetime import timedelta
 
-import django.http
 import pytz
 from django.core.exceptions import FieldError, ObjectDoesNotExist
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 import ciso8601
 
-from .models import BookingA, BookingB, Location, Lock, PageToken
-
-
-class PrettyJsonResponse(django.http.JsonResponse):
-    def __init__(self, data):
-        super().__init__(data, json_dumps_params={'indent': 4})
+from common.helpers import PrettyJsonResponse
+from .models import BookingA, BookingB, Location, Lock, PageToken, SiteLocation
 
 
 def _create_page_token(query, pagination):
@@ -61,7 +56,7 @@ def _paginated_result(query, page_number, pagination):
     try:
         lock = Lock.objects.all()[0]
         curr = BookingA if not lock.bookingA else BookingB
-        all_bookings = curr.objects.filter(**query)
+        all_bookings = curr.objects.filter(**query).order_by('startdatetime')
     except FieldError:
         return {
             "error": "something wrong with encoded query params"
@@ -154,9 +149,19 @@ def _serialize_rooms(room_set):
                 "lat": location.lat,
                 "lng": location.lng
             }
-        except ObjectDoesNotExist:
-            # no location for this room, leave out
-            pass
+        except Location.DoesNotExist:
+            # no location for this room, try building
+            try:
+                location = SiteLocation.objects.get(
+                    siteid=room.siteid
+                )
+                room_to_add['location']['coordinates'] = {
+                    "lat": location.lat,
+                    "lng": location.lng
+                }
+            except SiteLocation.DoesNotExist:
+                # no location for this room
+                pass
 
         rooms.append(room_to_add)
     return rooms
@@ -205,16 +210,16 @@ def _kloppify(date_string, date):
         return date_string + "+00:00"
 
 
-def _return_json_bookings(bookings):
+def _return_json_bookings(bookings, rate_limiting_data=None):
     if "error" in bookings:
         return PrettyJsonResponse({
             "ok": False,
             "error": bookings["error"]
-        })
+        }, rate_limiting_data)
 
     bookings["ok"] = True
 
-    return PrettyJsonResponse(bookings)
+    return PrettyJsonResponse(bookings, rate_limiting_data)
 
 
 def how_many_seconds_until_midnight():

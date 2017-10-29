@@ -1,4 +1,4 @@
-from roombookings.helpers import PrettyJsonResponse
+from common.helpers import PrettyJsonResponse
 from .models import App, User
 from dashboard.tasks import keen_add_event_task as keen_add_event
 import requests

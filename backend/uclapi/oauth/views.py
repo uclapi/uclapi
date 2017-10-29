@@ -14,12 +14,13 @@ from django.views.decorators.csrf import (csrf_exempt, csrf_protect,
 from dashboard.models import App, User
 from dashboard.tasks import keen_add_event_task as keen_add_event
 from roombookings.helpers import PrettyJsonResponse
-from uclapi.settings import REDIS_UCLAPI_HOST
 
 from .app_helpers import generate_random_verification_code
-from .decorators import oauth_token_check
 from .models import OAuthToken
 from .scoping import Scopes
+
+from uclapi.settings import REDIS_UCLAPI_HOST
+from common.decorators import uclapi_protected_endpoint
 
 
 # The endpoint that creates a Shibboleth login and redirects the user to it
@@ -315,16 +316,16 @@ def userallow(request):
     # Just in case they've tried to be super clever and host multiple apps with
     # the same callback URL, we'll provide the client ID along with the state
     return redirect(
-            app.callback_url + "?result=allowed&code=" + code + "&client_id=" +
-            app.client_id + "&state=" + state
-        )
+        app.callback_url + "?result=allowed&code=" + code + "&client_id=" +
+        app.client_id + "&state=" + state
+    )
 
 
 def token(request):
     try:
-        code = request.GET.get("code")
-        client_id = request.GET.get("client_id")
-        client_secret = request.GET.get("client_secret")
+        code = request.GET["code"]
+        client_id = request.GET["client_id"]
+        client_secret = request.GET["client_secret"]
     except KeyError:
         response = PrettyJsonResponse({
             "ok": False,
@@ -451,7 +452,7 @@ def token(request):
     return PrettyJsonResponse(oauth_data)
 
 
-@oauth_token_check([])
+@uclapi_protected_endpoint(personal_data=True)
 def userdata(request, *args, **kwargs):
     token = kwargs['token']
 
@@ -464,7 +465,7 @@ def userdata(request, *args, **kwargs):
         "department": token.user.department,
         "upi": token.user.employee_id,
         "scope_number": token.scope.scope_number
-    })
+    }, rate_limiting_data=kwargs)
 
 
 def scope_map(request):
@@ -475,7 +476,7 @@ def scope_map(request):
     return PrettyJsonResponse(scope_map)
 
 
-@oauth_token_check([])
+@uclapi_protected_endpoint(personal_data=True)
 def token_test(request, *args, **kwargs):
     s = Scopes()
 
@@ -490,4 +491,4 @@ def token_test(request, *args, **kwargs):
             pretty_print=False
         ),
         "scope_number": token.scope.scope_number
-    })
+    }, rate_limiting_data=kwargs)

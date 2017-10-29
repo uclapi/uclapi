@@ -55,10 +55,13 @@ class AuthoriseApp extends React.Component {
                   <li>Your Email Address ({this.state.data.user.email})</li>
                   <li>Your Department ({this.state.data.user.department})</li>
                   <li>Your UPI ({this.state.data.user.upi})</li>
+                  {this.state.data.scopes.map(scope => (
+                    <li key={scope.name}>{scope.description}</li>
+                  ))}
               </ul>
             </div>
             <form method="post" action="/oauth/user/allow" className={formButton}>
-              <button type="submit" className="pure-button pure-button-primary padded">Authorise hackathon</button>
+              <button type="submit" className="pure-button pure-button-primary padded">Authorise {this.state.data.app_name}</button>
               <input type="hidden" name="signed_app_data" value={this.state.data.signed_data}/>
               <input type="hidden" name="csrfmiddlewaretoken" value={Cookies.get('csrftoken')}/>
             </form>

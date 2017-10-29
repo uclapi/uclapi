@@ -16,7 +16,9 @@
 
 
 class Scopes:
-    SCOPE_MAP = {}
+    SCOPE_MAP = {
+        "timetable": (1, "Personal Timetable"),
+    }
 
     def __init__(self, scope_map=None):
         if scope_map:
