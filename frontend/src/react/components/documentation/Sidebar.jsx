@@ -71,6 +71,30 @@ export default class Sidebar extends React.Component {
           />
 
           <ListItem
+            href="#oauth"
+            primaryText="OAuth"
+            primaryTogglesNestedList={true}
+            nestedItems={[
+              <ListItem
+                primaryText="Meta"
+                href="#oauth/meta"
+              />,
+              <ListItem
+                primaryText="Authorise"
+                href="#oauth/authorise"
+              />,
+              <ListItem
+                primaryText="Token"
+                href="#oauth/token"
+              />,
+              <ListItem
+                primaryText="User Data"
+                href="#oauth/user/data"
+              />,
+            ]}
+          />
+
+          <ListItem
             href="#roombookings"
             primaryText="Room Bookings"
             primaryTogglesNestedList={true}

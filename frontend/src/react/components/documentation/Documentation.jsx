@@ -5,6 +5,11 @@ import SectionHeader from './SectionHeader.jsx';
 import Welcome from './Meta/Welcome.jsx';
 import VersionInformation from './Meta/VersionInformation.jsx';
 
+import OAuthIntro from './Routes/OAuth/OAuthIntro.jsx';
+import Authorise from './Routes/OAuth/Authorise.jsx';
+import Token from './Routes/OAuth/Token.jsx';
+import UserData from './Routes/OAuth/UserData.jsx';
+
 import RoomBookingsVersionHeader from './Routes/RoomBookings/VersionHeader.jsx';
 import GetRooms from './Routes/RoomBookings/GetRooms.jsx';
 import GetBookings from './Routes/RoomBookings/GetBookings.jsx';
@@ -18,6 +23,7 @@ import GetInvolved from './GetInvolved/GetInvolved.jsx';
 import LanguageTabs from './LanguageTabs.jsx';
 import Sidebar from './Sidebar.jsx';
 
+
 export default class DocumentationComponent extends React.Component {
 
     render () {
@@ -27,6 +33,12 @@ export default class DocumentationComponent extends React.Component {
           <LanguageTabs>
             <Welcome />
             <VersionInformation />
+
+            <SectionHeader link="oauth" title="OAuth" />
+            <OAuthIntro />
+            <Authorise />
+            <Token />
+            <UserData />
 
             <SectionHeader link="roombookings" title="Room Bookings" />
             <RoomBookingsVersionHeader />
