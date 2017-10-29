@@ -15,13 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from dashboard.views import get_started, documentation
+from dashboard.views import documentation, get_started
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^dashboard/', include('dashboard.urls')),
-    url(r'^roombookings/', include('roombookings.urls')),
     url(r'^docs', documentation),
+    url(r'^roombookings/', include('roombookings.urls')),
     url(r'^oauth/', include('oauth.urls')),
     url(r'^timetable/', include('timetable.urls')),
     url(r'^search/', include('search.urls')),
