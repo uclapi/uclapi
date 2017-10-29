@@ -167,13 +167,20 @@ def get_equipment(request, *args, **kwargs):
 
 
 @api_view(['GET'])
-# @does_token_exist
-# @throttle
-# @log_api_call
+@uclapi_protected_endpoint()
 def free_rooms(request, *args, **kwargs):
     request_params = {}
     request_params['startdatetime__gte'] = request.GET.get('start_datetime')
     request_params['finishdatetime__lte'] = request.GET.get('end_datetime')
+
+    if (
+        not request_params['startdatetime__gte'] or
+        not request_params['finishdatetime__lte']
+    ):
+        return PrettyJsonResponse({
+            "ok": False,
+            "error": "start_datetime or end_datetime not provided"
+        })
 
     is_parsed = True
 
