@@ -127,6 +127,22 @@ export default class Sidebar extends React.Component {
           />
 
           <ListItem
+            href="#timetable"
+            primaryText="Timetable"
+            primaryTogglesNestedList={true}
+            nestedItems={[
+              <ListItem
+                primaryText="Get Personal Timetable"
+                href="#timetable/personal"
+              />,
+              <ListItem
+                primaryText="Get Timetable By Modules"
+                href="#timetable/bymodule"
+              />,
+            ]}
+          />
+
+          <ListItem
             primaryText="Get Involved"
             href="#getInvolved"
           />

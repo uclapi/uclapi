@@ -18,6 +18,10 @@ import GetEquiment from './Routes/RoomBookings/GetEquipment.jsx';
 import SearchVersionHeader from './Routes/Search/VersionHeader.jsx';
 import GetPeople from './Routes/Search/GetPeople.jsx';
 
+import TimetableVersionHeader from './Routes/Timetable/VersionHeader.jsx';
+import GetPersonalTimetable from './Routes/Timetable/GetPersonalTimetable.jsx';
+import GetTimetableByModules from './Routes/Timetable/GetTimetableByModules.jsx';
+
 import GetInvolved from './GetInvolved/GetInvolved.jsx';
 
 import LanguageTabs from './LanguageTabs.jsx';
@@ -49,6 +53,11 @@ export default class DocumentationComponent extends React.Component {
             <SectionHeader link="search" title="Search" />
             <SearchVersionHeader />
             <GetPeople />
+
+            <SectionHeader link="timetable" title="Timetable" />
+            <TimetableVersionHeader />
+            <GetPersonalTimetable />
+            <GetTimetableByModules />
 
             <GetInvolved />
           </LanguageTabs>
