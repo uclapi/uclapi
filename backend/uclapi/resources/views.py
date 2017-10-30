@@ -15,18 +15,24 @@ def get_pc_availability(request, *args, **kwargs):
     try:
         r = requests.get(os.environ["PCA_LINK"])
     except requests.exceptions.MissingSchema:
-        return JsonResponse({
+        resp = JsonResponse({
             "ok": False,
-            "error": "Couldn't get the availability data. Try again later"
+            "error": ("Could not retrieve availability data."
+                      " Please try again later or contact us for support.")
         }, rate_limiting_data=kwargs)
+        resp.status_code = 400
+        return resp
 
     try:
         e = etree.fromstring(r.content)
     except (ValueError, etree.XMLSyntaxError):
-        return JsonResponse({
+        resp = JsonResponse({
             "ok": False,
-            "error": "Couldn't parse the availability data"
+            "error": ("Could not parse the desktop availability data."
+                      " Please try again later or contact us for support.")
         }, rate_limiting_data=kwargs)
+        resp.status_code = 400
+        return resp
 
     data = []
     for pc in e.findall("room"):
