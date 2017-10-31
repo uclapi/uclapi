@@ -50,7 +50,7 @@ class Command(BaseCommand):
             cursor = connections['gencache'].cursor()
             cursor.execute(
                 "TRUNCATE TABLE {} RESTART IDENTITY;".format(
-                        "roombookings_" + c[tbu].__name__.lower()))
+                        "timetable_" + c[tbu].__name__.lower()))
 
             c[tbu].objects.using('gencache').bulk_create(
                 new_objs,
