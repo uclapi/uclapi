@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
+from django.db import connections
 
 from timetable.models import \
     Timetable, TimetableA, TimetableB, \
@@ -45,7 +46,12 @@ class Command(BaseCommand):
                         map(lambda k: (k, getattr(obj, k)),
                             map(lambda l: l.name, obj._meta.get_fields())))
                 ))
-            c[tbu].objects.all().delete()
+
+            cursor = connections['gencache'].cursor()
+            cursor.execute(
+                "TRUNCATE TABLE {} RESTART IDENTITY;".format(
+                        "roombookings_" + c[tbu].__name__.lower()))
+
             c[tbu].objects.using('gencache').bulk_create(
                 new_objs,
                 batch_size=5000
