@@ -13,7 +13,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 import ciso8601
 
 from common.helpers import PrettyJsonResponse
-from .models import BookingA, BookingB, Location, Lock, PageToken, SiteLocation
+from .models import BookingA, BookingB, Location, Lock, SiteLocation
 from .api_helpers import generate_token
 
 from uclapi.settings import REDIS_UCLAPI_HOST
