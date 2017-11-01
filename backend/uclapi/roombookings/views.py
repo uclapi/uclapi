@@ -167,8 +167,8 @@ def get_equipment(request, *args, **kwargs):
 
 
 @api_view(['GET'])
-@uclapi_protected_endpoint()
-def free_rooms(request, *args, **kwargs):
+# @uclapi_protected_endpoint()
+def get_free_rooms(request, *args, **kwargs):
     request_params = {}
     request_params['startdatetime__gte'] = request.GET.get('start_datetime')
     request_params['finishdatetime__lte'] = request.GET.get('end_datetime')
@@ -180,7 +180,7 @@ def free_rooms(request, *args, **kwargs):
         return PrettyJsonResponse({
             "ok": False,
             "error": "start_datetime or end_datetime not provided"
-        })
+        }, rate_limiting_data=kwargs)
 
     is_parsed = True
 
@@ -194,7 +194,7 @@ def free_rooms(request, *args, **kwargs):
         return PrettyJsonResponse({
             "ok": False,
             "error": "date/time isn't formatted as suggested in the docs"
-        })
+        }, rate_limiting_data=kwargs)
 
     # Rounding down start date to start of day
     request_params["startdatetime__gte"] = _round_date(start)
@@ -205,7 +205,7 @@ def free_rooms(request, *args, **kwargs):
     # Pagination Logic
     # maxing out results_per_page to get all the bookings in one page
     results_per_page = 100000
-    request_params = dict((k, v) for k, v in request_params.items() if v)
+    request_params = {k: v for k, v in request_params.items() if v}
     request_params["setid"] = settings.ROOMBOOKINGS_SETID
     request_params["bookabletype"] = "CB"
     page_token = _create_page_token(request_params, results_per_page)
@@ -226,4 +226,4 @@ def free_rooms(request, *args, **kwargs):
         "ok": True,
         "count": len(free_rooms),
         "free_rooms": free_rooms
-    })
+    }, rate_limiting_data=kwargs)
