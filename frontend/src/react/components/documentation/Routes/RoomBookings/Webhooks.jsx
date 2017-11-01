@@ -145,7 +145,7 @@ export default class GetEquiment extends React.Component {
           <Topic
             activeLanguage={this.props.activeLanguage}
             codeExamples={challengeEventExample}>
-            <h2>challenge event</h2>
+            <h2 id="webhook/challenge-event">challenge event</h2>
             <p>
               You’ll receive this event when you first input or alter your webhook URL. It exists to make sure that the URL you entered is under your control. The JSON data sent to you contains a <code>challenge</code> parameter. You need to set up your code to respond promptly with a JSON object containing only the challenge parameter.
             </p>
@@ -154,7 +154,7 @@ export default class GetEquiment extends React.Component {
           <Topic
             activeLanguage={this.props.activeLanguage}
             codeExamples={bookingsChangedExample}>
-            <h2>bookings_changed event</h2>
+            <h2 id="webhook/bookings_changed-event">bookings_changed event</h2>
             <p>
               You’ll receive this event when a booking was either added or removed. You can see an example on the right.
 A <code>bookings_changed</code> event contains at least either one <code>bookings_added</code> or <code>bookings_removed</code> key, but not necessarily both.

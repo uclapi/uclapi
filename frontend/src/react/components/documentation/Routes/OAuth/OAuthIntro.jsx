@@ -40,7 +40,7 @@ export default class OAuthIntro extends React.Component {
             where <code>CLIENT_ID</code> and <code>STATE</code> should be replaced by <code>client_id</code> of your app and a random <code>state</code>.
           </p>
 
-          <h1>Scopes</h1>
+          <h1 id="oauth/scopes">Scopes</h1>
           <p>
             OAuth scopes specify how your app needs to access a UCL user’s account. As an app developer, you set the desired scopes in the <a href="https://uclapi.com/dashboard">API Dashboard</a>. When a user is responding to your authorisation request, the requested scopes will be displayed to the user.
           </p>
