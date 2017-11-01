@@ -50,7 +50,7 @@ def get_rooms(request, *args, **kwargs):
 
 
 @api_view(['GET'])
-@uclapi_protected_endpoint()
+# @uclapi_protected_endpoint()
 def get_bookings(request, *args, **kwargs):
     # if page_token exists, dont look for query
     page_token = request.GET.get('page_token')
