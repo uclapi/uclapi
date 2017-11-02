@@ -298,7 +298,7 @@ class WebHookRequestViewTests(TestCase):
             content["message"],
             "Ownership of webhook can't be verified."
             "Make sure to follow the documentation: "
-            "https://docs.uclapi.com/#challenge-event"
+            "https://uclapi.com/docs#webhook/challenge-event"
         )
 
     @patch("dashboard.webhook_views.verify_ownership", lambda *args: True)

@@ -8,7 +8,7 @@ class OAuth extends React.Component {
   render() {
     return (
       <div>
-        <a href="https://docs.uclapi.com">Read about how OAuth works</a>.<br/><br/>
+        <a href="https://uclapi.com/docs">Read about how OAuth works</a>.<br/><br/>
         Client ID
         <CopyField val={this.props.clientId}/>
         Client Secret
@@ -22,7 +22,7 @@ class OAuth extends React.Component {
         />
         <h4>OAuth Scope</h4>
         <em>
-          <a href="https://docs.uclapi.com/update-me-to-real-value">Scopes documentation</a>
+          <a href="https://uclapi.com/docs#oauth/scopes">Scopes documentation</a>
         </em>
         <OAuthScopesForm
           scopes={this.props.scopes}

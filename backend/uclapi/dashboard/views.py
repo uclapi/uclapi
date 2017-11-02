@@ -161,3 +161,8 @@ def get_started(request):
             'logged_in': str(logged_in)
         }
     })
+
+
+@ensure_csrf_cookie
+def documentation(request):
+    return render(request, 'documentation.html')
