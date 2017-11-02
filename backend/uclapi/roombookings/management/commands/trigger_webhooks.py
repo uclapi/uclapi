@@ -57,7 +57,7 @@ class Command(BaseCommand):
                     (
                         webhook.contact == '' or
                         # mimick SQL 'like'
-                        webhook.contact in booking["contact"]
+                        webhook.contact in str(booking["contact"])
                     )
                 )
             output = {
@@ -66,13 +66,17 @@ class Command(BaseCommand):
                 "verification_secret": webhook.verification_secret
             }
             if "iterable_item_added" in ddiff:
-                output["bookings_added"] = list(filter(
+                bookings_added = list(filter(
                     webhook_filter, ddiff["iterable_item_added"].values()
                 ))
+                if bookings_added != []:
+                    output["bookings_added"] = bookings_added
             if "iterable_item_removed" in ddiff:
-                output["bookings_removed"] = list(filter(
+                bookings_removed = list(filter(
                     webhook_filter, ddiff["iterable_item_removed"].values()
                 ))
+                if bookings_removed != []:
+                    output["bookings_removed"] = bookings_removed
 
             return output
 
