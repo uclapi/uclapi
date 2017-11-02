@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'^oauth/', include('oauth.urls')),
     url(r'^timetable/', include('timetable.urls')),
     url(r'^search/', include('search.urls')),
+    url(r'^resources/', include('resources.urls')),
     url(r'^$', get_started),
 ]
