@@ -18,6 +18,7 @@ from .api_helpers import generate_token
 
 from uclapi.settings import REDIS_UCLAPI_HOST
 
+TOKEN_EXPIRY_TIME = 30 * 60
 
 def _create_page_token(query, pagination):
     r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
@@ -27,7 +28,7 @@ def _create_page_token(query, pagination):
         "query": json.dumps(query, default=str),
     }
     page_token = generate_token()
-    r.set(page_token, json.dumps(page_data), ex=30*60)
+    r.set(page_token, json.dumps(page_data), ex=TOKEN_EXPIRY_TIME)
     return page_token
 
 
@@ -41,7 +42,7 @@ def _get_paginated_bookings(page_token):
         }
 
     page_data["current_page"] += 1
-    r.set(page_token, json.dumps(page_data))
+    r.set(page_token, json.dumps(page_data), ex=TOKEN_EXPIRY_TIME)
 
     pagination = page_data["pagination"]
     query = json.loads(page_data["query"])
