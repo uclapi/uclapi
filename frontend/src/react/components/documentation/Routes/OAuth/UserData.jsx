@@ -17,15 +17,13 @@ print(r.json())`,
 
   shell: `curl https://uclapi.com/oauth/user/data?client_secret=secret&token=uclapi-user-abd-def-ghi-jkl`,
 
-  javascript: `import requests
-
-params = {
-  "token": "uclapi-user-abd-def-ghi-jkl",
-  "client_secret": "secret",
-}
-r = requests.get("https://uclapi.com/oauth/token", params=params)
-print(r.json())
-`
+  javascript: `fetch("https://uclapi.com/oauth/user/data?client_secret=secret&token=uclapi-user-abd-def-ghi-jkl")
+.then((response) => {
+  return response.json()
+})
+.then((json) => {
+  console.log(json);
+})`
 }
 
 let response = `{
