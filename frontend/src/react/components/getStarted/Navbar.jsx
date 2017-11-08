@@ -61,7 +61,7 @@ export default class Navbar extends React.Component {
         <a href={"/"}>
           <FlatButton label="Home" className="active" style={styles.flatButton}/>
         </a>
-        <a href={"https://docs.uclapi.com"}>
+        <a href={"/docs/"}>
           <FlatButton label="Documentation" style={styles.flatButton}/>
         </a>
         <a href={"/dashboard/"}>
@@ -76,7 +76,7 @@ export default class Navbar extends React.Component {
           <a href={"/"}>
             <FlatButton label="Home" className="active" style={styles.flatButton}/>
           </a>
-          <a href={"https://docs.uclapi.com"}>
+          <a href={"/docs/"}>
             <FlatButton label="Documentation" style={styles.flatButton}/>
           </a>
           <a href={"/dashboard/"}>
@@ -96,7 +96,7 @@ export default class Navbar extends React.Component {
             <a href={"/"}>
               <MenuItem onTouchTap={this.handleToggle}>Home</MenuItem>
             </a>
-            <a href={"https://docs.uclapi.com"}>
+            <a href={"/docs/"}>
               <MenuItem onTouchTap={this.handleToggle}>Documentation</MenuItem>
             </a>
             <a href={"/dashboard/"}>
@@ -116,7 +116,7 @@ export default class Navbar extends React.Component {
               <a href={"/"}>
                 <MenuItem onTouchTap={this.handleToggle}>Home</MenuItem>
               </a>
-              <a href={"https://docs.uclapi.com"}>
+              <a href={"/docs/"}>
                 <MenuItem onTouchTap={this.handleToggle}>Documentation</MenuItem>
               </a>
               <a href={"/dashboard/"}>

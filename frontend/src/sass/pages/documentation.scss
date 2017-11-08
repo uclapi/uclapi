@@ -1,0 +1,151 @@
+@import '../includes/helpers';
+
+
+body {
+  margin: 0px;
+  font-family: 'Source Sans Pro', sans-serif;
+  color: #4c555a;
+  background: #FFFFFF;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
+  margin-top: 0px;
+  margin-bottom: 20px;
+  color: #333333;
+}
+
+h2 {
+  font-size: 18px;
+  font-weight: 400;
+  font-family: 'Roboto', sans-serif;
+  margin-top: 0px;
+  margin-bottom: 20px;
+  color: #333333;
+}
+
+p {
+  font-size: 16px;
+  line-height: 26px;
+}
+
+.warning {
+  font-size: 14px;
+  line-height: 26px;
+  background-color: #C97A7E;
+  padding: 10px;
+  border-radius: 8px;
+  color: black;
+}
+
+.text {
+  padding: 20px;
+}
+
+.code {
+  // background: #282A36;
+  background: #2D3134;
+  padding: 20px;
+  overflow-x: auto;
+  font-size: 14px;
+}
+
+.tab {
+  margin-left: 256px;
+  position: fixed;
+  top: 0;
+  width: calc(100% - 256px);
+
+  h1 {
+    margin-bottom: 0px;
+  }
+}
+
+.main {
+  margin-top: 48px;
+  margin-left: 256px;
+}
+
+code {
+  font-size: 12px;
+  font-family: 'Source Code Pro', monospace;
+  background-color: rgba(0,0,0,0.05);
+}
+
+.table {
+  font-size: 14px;
+
+  h1 {
+    color: #939da3;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e1e8ed;
+    font-weight: 500;
+  }
+
+  .cell {
+    border-bottom: 1px solid #f0f4f7;
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+    .col, .col8, .col4 {
+      padding: 10px;
+    }
+
+    p {
+      line-height: 21px;
+      font-size: 14px;
+      margin: 0px;
+    }
+
+    .attribute {
+      text-align: right;
+      p {
+        margin-bottom: 2px;
+      }
+    }
+
+    .required {
+      color: #ffae54;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+
+    .optional {
+      color: #939da3;
+      font-size: 10px;
+    }
+
+    .extra {
+      color: #939da3;
+    }
+
+    code {
+      font-size: 10px;
+    }
+  }
+}
+
+.sectionHeader {
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 0px;
+  border-top: 1px solid #e4e4e4;
+  border-bottom: 1px solid #e4e4e4;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.sidebarLogo {
+  img {
+    width: 30px;
+    margin-right: 10px;
+    margin-bottom: -5px;
+  }
+
+  vertical-align: middle;
+}

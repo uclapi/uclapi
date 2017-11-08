@@ -9,11 +9,21 @@ from rest_framework.test import APIRequestFactory
 from django.conf import settings
 from django_mock_queries.query import MockSet, MockModel
 
+from redis import StrictRedis
+
 from dashboard.models import App, TemporaryToken, User
 
-from .helpers import (_filter_for_free_rooms, _localize_time,
-                      PrettyJsonResponse, _parse_datetime,
-                      _round_date, _serialize_equipment)
+
+from uclapi.settings import REDIS_UCLAPI_HOST
+
+from .helpers import (_create_page_token,
+                      _filter_for_free_rooms,
+                      _localize_time,
+                      PrettyJsonResponse,
+                      _parse_datetime,
+                      _round_date,
+                      _serialize_equipment,
+                      TOKEN_EXPIRY_TIME)
 from .models import Lock, Room
 
 from .views import get_bookings
@@ -392,7 +402,6 @@ class DoesTokenExistTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-
 class RoundDateTestCase(SimpleTestCase):
     def test_round_down(self):
         time_string = "2017-10-25T03:36:45+00:00"
@@ -422,3 +431,32 @@ class FilterFreeRoomsTestCase(SimpleTestCase):
         ]
         result = _filter_for_free_rooms(rooms, [], start, end)
         self.assertEqual(result, rooms)
+
+class CreateRedisPageTokenTest(TestCase):
+    def test_create_page_token(self):
+        query = {"test": "test_data"}
+        pagination = 'pagination_data'
+        page_token = _create_page_token(
+            query,
+            pagination
+        )
+
+        r = StrictRedis(host=REDIS_UCLAPI_HOST)
+
+        ttl = int(r.ttl(page_token))
+        self.assertTrue(ttl <= TOKEN_EXPIRY_TIME)
+
+        data = json.loads(r.get(page_token).decode('ascii'))
+        self.assertEqual(
+            data["current_page"],
+            0
+        )
+        self.assertEqual(
+            data["pagination"],
+            pagination
+        )
+        query_decoded = json.loads(data["query"])
+        self.assertEqual(
+            query_decoded["test"],
+            "test_data"
+        )

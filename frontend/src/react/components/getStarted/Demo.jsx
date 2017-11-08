@@ -360,7 +360,6 @@ export default class Demo extends React.Component {
 
   constructor(props) {
     super(props);
-
     // let rootURL = 'http://localhost:8000';
 
     // if (process.env.NODE_ENV === 'production') {

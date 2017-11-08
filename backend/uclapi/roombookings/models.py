@@ -127,23 +127,6 @@ class Equipment(models.Model):
         _DATABASE = 'roombookings'
 
 
-class PageToken(models.Model):
-    page_token = models.CharField(
-                    max_length=2000,
-                    unique=True,
-                    default=generate_token)
-    pagination = models.IntegerField(default=20)
-    query = models.CharField(max_length=100000)
-    curr_page = models.IntegerField(default=0)
-    last_updated = models.DateTimeField(auto_now=True)
-
-    def get_query(self):
-        return json.loads(self.query)
-
-    class Meta:
-        _DATABASE = 'default'
-
-
 class Location(models.Model):
     siteid = models.CharField(max_length=40)
     roomid = models.CharField(max_length=40)

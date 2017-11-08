@@ -5,40 +5,50 @@ import json
 from datetime import timedelta
 
 import pytz
+import redis
+
 from django.core.exceptions import FieldError, ObjectDoesNotExist
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 import ciso8601
 
 from common.helpers import PrettyJsonResponse
-from .models import BookingA, BookingB, Location, Lock, PageToken, SiteLocation
+from .models import BookingA, BookingB, Location, Lock, SiteLocation
+from .api_helpers import generate_token
 
+from uclapi.settings import REDIS_UCLAPI_HOST
+
+TOKEN_EXPIRY_TIME = 30 * 60
 
 def _create_page_token(query, pagination):
-    page = PageToken(
-        pagination=pagination,
-        query=json.dumps(query, default=str)
-    )
-    page.save()
-    return page.page_token
+    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    page_data = {
+        "current_page": 0,
+        "pagination": pagination,
+        "query": json.dumps(query, default=str),
+    }
+    page_token = generate_token()
+    r.set(page_token, json.dumps(page_data), ex=TOKEN_EXPIRY_TIME)
+    return page_token
 
 
 def _get_paginated_bookings(page_token):
+    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
     try:
-        page = PageToken.objects.get(page_token=page_token)
-    except ObjectDoesNotExist:
+        page_data = json.loads(r.get(page_token).decode('ascii'))
+    except (AttributeError, json.decoder.JSONDecodeError):
         return {
             "error": "Page token does not exist"
         }
 
-    page.curr_page += 1
-    page.save()
+    page_data["current_page"] += 1
+    r.set(page_token, json.dumps(page_data), ex=TOKEN_EXPIRY_TIME)
 
-    pagination = page.pagination
-    query = page.get_query()
+    pagination = page_data["pagination"]
+    query = json.loads(page_data["query"])
     bookings, is_last_page = _paginated_result(
         query,
-        page.curr_page,
+        page_data["current_page"],
         pagination
     )
 
@@ -56,7 +66,7 @@ def _paginated_result(query, page_number, pagination):
     try:
         lock = Lock.objects.all()[0]
         curr = BookingA if not lock.bookingA else BookingB
-        all_bookings = curr.objects.filter(**query)
+        all_bookings = curr.objects.filter(**query).order_by('startdatetime')
     except FieldError:
         return {
             "error": "something wrong with encoded query params"
@@ -224,8 +234,7 @@ def _kloppify(date_string, date):
 
     if (local_time.localize(date).dst() > timedelta(0)):
         return date_string + "+01:00"
-    else:
-        return date_string + "+00:00"
+    return date_string + "+00:00"
 
 
 def _return_json_bookings(bookings, rate_limiting_data=None):
