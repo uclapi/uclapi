@@ -45,7 +45,7 @@ def get_pc_availability(request, *args, **kwargs):
                 "longitude": _("longitude"),
                 "building_name": _("buildingName"),
                 "address": _("buildingAddress"),
-                "postcode": _("buildingPostCode")
+                "postcode": _("buildingPostcode")
             },
             "free_seats": _("free"),
             "total_seats": _("seats"),
