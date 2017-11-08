@@ -23,6 +23,9 @@ import TimetableVersionHeader from './Routes/Timetable/VersionHeader.jsx';
 import GetPersonalTimetable from './Routes/Timetable/GetPersonalTimetable.jsx';
 import GetTimetableByModules from './Routes/Timetable/GetTimetableByModules.jsx';
 
+import ResourcesVersionHeader from './Routes/Resources/VersionHeader.jsx';
+import DesktopAvailability from './Routes/Resources/DesktopAvailability.jsx';
+
 import GetInvolved from './GetInvolved/GetInvolved.jsx';
 
 import LanguageTabs from './LanguageTabs.jsx';
@@ -60,6 +63,10 @@ export default class DocumentationComponent extends React.Component {
             <TimetableVersionHeader />
             <GetPersonalTimetable />
             <GetTimetableByModules />
+
+            <SectionHeader link="resources" title="Resources" />
+            <ResourcesVersionHeader />
+            <DesktopAvailability />
 
             <GetInvolved />
           </LanguageTabs>
