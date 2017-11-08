@@ -1,0 +1,23 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+
+  <title>UCL API Marketplace</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link rel="stylesheet" href="{% static "css/marketplace.css" %}" type="text/css" />
+
+</head>
+
+
+<body>
+  <h1>Marketplace</h1>
+	<script>
+    window.staticURL = {% static "" %}
+  </script>
+	<div class="app"></div>
+  <script src="{% static "js/marketplace.js" %}"></script>
+
+</body>
+</html>
