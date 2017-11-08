@@ -2,6 +2,7 @@ import os
 
 from django.core.management.base import BaseCommand
 from django.conf import settings
+from django.db import connections
 
 import cx_Oracle
 from roombookings.models import BookingA, BookingB, Lock
@@ -38,7 +39,10 @@ class Command(BaseCommand):
 
         self.stdout.write("Flushing the clone table...")
         # flush the table
-        curr.objects.using("gencache").all().delete()
+        cursor = connections['gencache'].cursor()
+        cursor.execute(
+            "TRUNCATE TABLE {} RESTART IDENTITY;".format(
+                    "roombookings_" + curr.__name__.lower()))
 
         self.stdout.write(
             "Dumping all the data from Oracle into a new list..."

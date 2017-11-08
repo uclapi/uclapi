@@ -8,7 +8,7 @@ import {cyan500, cyan700,
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import GetStartedComponent from '../components/getStarted/getStarted.jsx';
+import DocumentationComponent from '../components/documentation/Documentation.jsx';
 
 
 // const muiTheme = getMuiTheme({
@@ -53,12 +53,12 @@ const muiTheme = getMuiTheme({
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 
-class GetStarted extends React.Component {
+class Documentation extends React.Component {
 
   render () {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <GetStartedComponent />
+        <DocumentationComponent />
       </MuiThemeProvider>
     )
   }
@@ -66,6 +66,6 @@ class GetStarted extends React.Component {
 }
 
 ReactDOM.render(
-  <GetStarted />,
+  <Documentation />,
   document.querySelector('.app')
 );

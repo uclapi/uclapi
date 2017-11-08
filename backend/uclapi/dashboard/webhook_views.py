@@ -104,7 +104,7 @@ def edit_webhook(request):
                 "message": (
                     "Ownership of webhook can't be verified."
                     "Make sure to follow the documentation: "
-                    "https://docs.uclapi.com/#challenge-event"
+                    "https://uclapi.com/docs#webhook/challenge-event"
                 )
             })
             response.status_code = 400
