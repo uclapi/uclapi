@@ -14,6 +14,7 @@ import RoomBookingsVersionHeader from './Routes/RoomBookings/VersionHeader.jsx';
 import GetRooms from './Routes/RoomBookings/GetRooms.jsx';
 import GetBookings from './Routes/RoomBookings/GetBookings.jsx';
 import GetEquiment from './Routes/RoomBookings/GetEquipment.jsx';
+import GetFreeRooms from './Routes/RoomBookings/GetFreeRooms.jsx';
 import Webhooks from './Routes/RoomBookings/Webhooks.jsx';
 
 import SearchVersionHeader from './Routes/Search/VersionHeader.jsx';
@@ -50,6 +51,7 @@ export default class DocumentationComponent extends React.Component {
             <GetRooms />
             <GetBookings />
             <GetEquiment />
+            <GetFreeRooms />
             <Webhooks />
 
             <SectionHeader link="search" title="Search" />
