@@ -13,20 +13,22 @@ from redis import StrictRedis
 
 from dashboard.models import App, TemporaryToken, User
 
+from .helpers import (
+    _create_page_token,
+    _filter_for_free_rooms,
+    _localize_time,
+    _parse_datetime,
+    _round_date,
+    _serialize_equipment,
+    PrettyJsonResponse,
+    TOKEN_EXPIRY_TIME
+)
 
-from uclapi.settings import REDIS_UCLAPI_HOST
-
-from .helpers import (_create_page_token,
-                      _filter_for_free_rooms,
-                      _localize_time,
-                      PrettyJsonResponse,
-                      _parse_datetime,
-                      _round_date,
-                      _serialize_equipment,
-                      TOKEN_EXPIRY_TIME)
 from .models import Lock, Room
 
 from .views import get_bookings
+
+from uclapi.settings import REDIS_UCLAPI_HOST
 
 
 class FakeModelClass:
@@ -402,6 +404,7 @@ class DoesTokenExistTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+
 class RoundDateTestCase(SimpleTestCase):
     def test_round_down(self):
         time_string = "2017-10-25T03:36:45+00:00"
@@ -431,6 +434,7 @@ class FilterFreeRoomsTestCase(SimpleTestCase):
         ]
         result = _filter_for_free_rooms(rooms, [], start, end)
         self.assertEqual(result, rooms)
+
 
 class CreateRedisPageTokenTest(TestCase):
     def test_create_page_token(self):
