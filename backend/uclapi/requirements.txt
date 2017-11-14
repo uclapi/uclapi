@@ -38,7 +38,7 @@ psycogreen==1.0
 psycopg2==2.7.1
 pycryptodome==3.4.6
 pyparsing==2.2.0
-python-dateutil==2.6.0
+python-dateutil==2.6.1
 pytz==2017.3
 raven==6.3.0
 redis==2.10.6
