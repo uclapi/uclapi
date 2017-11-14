@@ -3,7 +3,7 @@ amqp==2.2.2
 appdirs==1.4.3
 async-timeout==1.2.1
 billiard==3.5.0.3
-celery==4.0.2
+celery==4.1.0
 certifi==2017.11.5
 chardet==3.0.4
 ciso8601==1.0.3
