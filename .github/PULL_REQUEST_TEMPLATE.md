@@ -5,10 +5,7 @@ For example: Changes the way we retrieve bookings.
 
 - [ ] Is this code complete?
 - [ ] Are tests done/modified?
-
-## 📃 Link to PR updating documentation (if applicable)
-
-https://github.com/uclapi/apiDocs/pulls
+- [ ] Are docs written for this PR? (if applicable)
 
 ## 🚨 Is this a breaking change for API clients?
 Yes/No
