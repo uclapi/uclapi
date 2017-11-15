@@ -12,7 +12,7 @@ export default class VersionHeader extends React.Component {
         <Topic
           noExamples={true}>
           <p>
-            The base url is <code>https://uclapi.com/search/</code>
+            The base url is <code>https://uclapi.com/resources/</code>
           </p>
           <Table>
             <Cell

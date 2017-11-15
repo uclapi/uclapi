@@ -66,7 +66,7 @@ export default class GetEquiment extends React.Component {
           <Topic
             activeLanguage={this.props.activeLanguage}
             codeExamples={codeExamples}>
-            <h1 id="search/people">Get desktop availability.</h1>
+            <h1 id="resources/desktop_availability">Get desktop availability.</h1>
             <p>
               This endpoint returns number of desktops and how many are free at the time of making the request.
             </p>

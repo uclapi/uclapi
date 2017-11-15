@@ -145,6 +145,18 @@ export default class Sidebar extends React.Component {
               />,
             ]}
           />
+          
+          <ListItem
+            href="#resources"
+            primaryText="Resources"
+            primaryTogglesNestedList={true}
+            nestedItems={[
+              <ListItem
+                primaryText="Get Desktop availability"
+                href="#resources/desktop_availability"
+              />,
+            ]}
+          />
 
           <ListItem
             primaryText="Get Involved"
