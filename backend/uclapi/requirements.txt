@@ -9,7 +9,7 @@ chardet==3.0.4
 ciso8601==1.0.3
 contextlib2==0.5.5
 cx-Oracle==6.0.3
-decorator==4.0.11
+decorator==4.1.2
 deepdiff==3.3.0
 Django==1.11.7
 django-cors-headers==2.1.0
