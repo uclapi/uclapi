@@ -77,7 +77,7 @@ export default class GetBookings extends React.Component {
                 name="token"
                 requirement="required"
                 example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
-                description="Authentication token" />
+                description="Authentication token." />
               <Cell
                 name="roomname"
                 requirement="optional"
@@ -156,7 +156,7 @@ export default class GetBookings extends React.Component {
                 name="count"
                 extra="int"
                 example="1197"
-                description="Total number of bookings matching the query. The count field will only be in the first response to a query" />
+                description="Total number of bookings matching the query. The count field will only be in the first response to a query." />
             </Table>
           </Topic>
 
@@ -172,7 +172,7 @@ export default class GetBookings extends React.Component {
                 description="Gets returned when you supply an invalid token." />
               <Cell
                 name="date/time isn't formatted as suggested in the docs"
-                description="Passed datetime parameter does not conform to the ISO8601 format" />
+                description="Passed datetime parameter does not conform to the ISO8601 format." />
               <Cell
                 name="results_per_page should be an integer"
                 description="results_per_page should always be an integer." />

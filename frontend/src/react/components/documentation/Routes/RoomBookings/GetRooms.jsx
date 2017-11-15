@@ -87,7 +87,7 @@ export default class GetRooms extends React.Component {
                 name="token"
                 requirement="required"
                 example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
-                description="Authentication token" />
+                description="Authentication token." />
               <Cell
                 name="roomname"
                 requirement="optional"
