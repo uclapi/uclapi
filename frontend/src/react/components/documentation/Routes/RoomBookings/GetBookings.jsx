@@ -72,7 +72,7 @@ export default class GetBookings extends React.Component {
               It returns a paginated list of bookings. Note: This endpoint only returns publicly displayed bookings. Departmental bookings are not included.
             </p>
             <Table
-              name="Query Pararmeters">
+              name="Query Parameters">
               <Cell
                 name="token"
                 requirement="required"
