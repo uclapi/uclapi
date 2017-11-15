@@ -205,7 +205,7 @@ export default class GetEquiment extends React.Component {
                 name="No token provided"
                 description="Gets returned when you have not supplied a token in your request." />
               <Cell
-                name="OAuth oken does not exist"
+                name="OAuth token does not exist"
                 description="Gets returned when you supply an invalid token." />
               <Cell
                 name="No module ids provided."
