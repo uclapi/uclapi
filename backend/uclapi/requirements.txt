@@ -45,7 +45,7 @@ redis==2.10.6
 requests==2.18.1
 requests-file==1.4.2
 setproctitle==1.1.10
-six==1.10.0
+six==1.11.0
 tldextract==2.1.0
 urllib3==1.22
 validators==0.12.0
