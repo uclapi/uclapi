@@ -126,7 +126,7 @@ export default class GetEquiment extends React.Component {
               name="Response">
               <Cell
                 name="location"
-                extra="dict"
+                extra="object"
                 example="JSON Object"
                 description="Location of details of the timetable event." />
               <Cell
@@ -166,7 +166,7 @@ export default class GetEquiment extends React.Component {
                 description="End time of the event." />
               <Cell
                 name="module"
-                extra="dict"
+                extra="object"
                 example="JSON Object"
                 description="Json object containing module details." />
               <Cell
