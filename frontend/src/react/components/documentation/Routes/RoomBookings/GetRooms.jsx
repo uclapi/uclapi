@@ -82,7 +82,7 @@ export default class GetRooms extends React.Component {
               </i>
             </p>
             <Table
-              name="Query Pararmeters">
+              name="Query Parameters">
               <Cell
                 name="token"
                 requirement="required"
