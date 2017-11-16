@@ -120,7 +120,7 @@ export default class GetEquiment extends React.Component {
               This endpoint will create a timetable for the module ids provided and return the yearly calendar.
             </p>
             <p>
-              The <code>timetable</code> field contains a map where dates are mapped to event objects.
+              The <code>timetable</code> field contains an object where dates are mapped to event objects.
             </p>
             <Table
               name="Response">
