@@ -1,0 +1,43 @@
+@import '../includes/helpers';
+
+$primary-color: #0b3954;
+$secondary-color: #f4f4f4;
+
+
+body {
+  margin: 0px;
+  font-family: 'Roboto', sans-serif;
+  color: #333333;
+  background: #F4F4F4;
+}
+
+h1 {
+  font-size: 36px;
+  font-weight: lighter;
+  margin-top: 0px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 28px;
+  font-weight: lighter;
+}
+
+.category {
+  padding-right: 100px;
+  padding-left: 100px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.apps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.app {
+  margin: 10px;
+  min-width: 200px;
+  width: 25%;
+}
