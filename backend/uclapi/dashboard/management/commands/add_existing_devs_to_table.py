@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand
 
-from roombookings.models import Lock
 from dashboard.models import User, Developer
 
 
