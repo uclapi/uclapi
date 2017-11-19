@@ -44,7 +44,7 @@ def shibboleth_callback(request):
         )
 
         new_user.save()
-        add_user_to_mailing_list(new_user.email, new_user.given_name)
+        add_user_to_mailing_list(new_user.email, new_user.full_name)
 
         request.session["user_id"] = new_user.id
         keen_add_event.delay("signup", {
