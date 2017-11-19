@@ -398,7 +398,5 @@ def add_user_to_mailing_list(email, name):
             os.environ["MAILCHIMP_API_KEY"])
     }
 
-    r = requests.post(
+    requests.post(
         os.environ["MAILCHIMP_ENDPOINT"], data=data, headers=headers)
-
-    

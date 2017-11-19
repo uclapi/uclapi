@@ -13,4 +13,3 @@ class Command(BaseCommand):
         users = User.objects.filter(agreement=True)
         for user in users:
             add_user_to_mailing_list(user.email, user.given_name)
-
