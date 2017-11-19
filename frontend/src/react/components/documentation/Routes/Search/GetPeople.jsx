@@ -102,7 +102,7 @@ export default class GetEquiment extends React.Component {
                 name="status"
                 extra="string"
                 example="Staff"
-                description="Tells us whether the person is a student of member of staff."/>
+                description="Tells us whether the person is a student or member of staff."/>
               <Cell
                 name="department"
                 extra="string"
