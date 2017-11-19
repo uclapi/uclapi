@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
 from uclapi.settings import FAIR_USE_POLICY
 
-from .models import App, User, TemporaryToken
+from .models import App, User, TemporaryToken, Developer
 from oauth.scoping import Scopes
 
 from .tasks import keen_add_event_task as keen_add_event
@@ -43,6 +43,7 @@ def shibboleth_callback(request):
         )
 
         new_user.save()
+        Developer(user=new_user).save()
         request.session["user_id"] = new_user.id
         keen_add_event.delay("signup", {
             "id": new_user.id,

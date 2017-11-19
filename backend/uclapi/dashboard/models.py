@@ -32,6 +32,13 @@ class User(models.Model):
         _DATABASE = 'default'
 
 
+class Developer(models.Model):
+    user = models.OneToOneField('User')
+
+    class Meta:
+        _DATABASE = 'default'
+
+
 class App(models.Model):
 
     id = models.CharField(
