@@ -1,4 +1,6 @@
 import json
+import os
+import requests
 
 from dashboard.tasks import keen_add_event_task as keen_add_event
 from oauth.scoping import Scopes
@@ -379,3 +381,22 @@ def update_scopes(request):
             "success": True,
             "message": "Scope successfully changed",
         })
+
+
+def add_user_to_mailing_list(email, name):
+    data = {
+        "email_address": email,
+        "status": "subscribed",
+        "merge_fields": {
+            "EMAIL": email,
+            "FNAME": name
+        }
+    }
+
+    headers = {
+        "Authorization": "apikey {}".format(os.environ["MAILCHIMP_API_KEY"])
+    }
+
+    r = requests.post(os.environ["MAILCHIMP_ENDPOINT"], data=data, headers=headers)
+
+    
