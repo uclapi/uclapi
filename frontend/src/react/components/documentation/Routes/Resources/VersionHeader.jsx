@@ -17,7 +17,7 @@ export default class VersionHeader extends React.Component {
           <Table>
             <Cell
               name="Version Header"
-              example="uclapi-roombookings-version" />
+              example="uclapi-resources-version" />
             <Cell
               name="Latest Version"
               example="1" />

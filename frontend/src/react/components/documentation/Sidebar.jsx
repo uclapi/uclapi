@@ -153,7 +153,7 @@ export default class Sidebar extends React.Component {
             nestedItems={[
               <ListItem
                 primaryText="Get Desktop availability"
-                href="#resources/desktop_availability"
+                href="#resources/desktops"
               />,
             ]}
           />

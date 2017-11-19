@@ -11,14 +11,14 @@ let codeExamples = {
 params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
 }
-r = requests.get("https://uclapi.com/resources/desktop_availability", params=params)
+r = requests.get("https://uclapi.com/resources/desktops", params=params)
 print(r.json())`,
 
-  shell: `curl https://uclapi.com/resources/desktop_availability \
+  shell: `curl https://uclapi.com/resources/desktops \
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb
 `,
 
-  javascript: `fetch("https://uclapi.com/resources/desktop_availability?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
+  javascript: `fetch("https://uclapi.com/resources/desktops?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
 .then((response) => {
   return response.json()
 })
@@ -66,7 +66,7 @@ export default class GetEquiment extends React.Component {
           <Topic
             activeLanguage={this.props.activeLanguage}
             codeExamples={codeExamples}>
-            <h1 id="resources/desktop_availability">Get desktop availability.</h1>
+            <h1 id="resources/desktops">Get desktop availability.</h1>
             <p>
               This endpoint returns number of desktops and how many are free at the time of making the request.
             </p>
@@ -147,7 +147,7 @@ export default class GetEquiment extends React.Component {
               name="Errors">
               <Cell
                 name="Could not parse the desktop availability data. Please try again later or contact us for support"
-                description="We don't currently have the upto date data. Wait a while before you make next request." />
+                description="We don't currently have the up to date data. Wait a while before you make next request." />
             </Table>
           </Topic>
         </div>
