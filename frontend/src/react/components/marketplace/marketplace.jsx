@@ -1,6 +1,9 @@
 import React from 'react';
 
+import Intro from "./Intro.jsx";
 import Category from "./Category.jsx";
+import CategoryList from './CategoryList.jsx';
+import FeaturedApps from './FeaturedApps.jsx';
 
 
 let testCategories = [
@@ -96,17 +99,33 @@ export default class MarketplaceComponent extends React.Component {
     render () {
       return (
         <div>
-          <h1>Marketplace</h1>
-          <div className="categories">
-            {
-              testCategories.map((category) => {
-                return <Category
-                    name={category.name}
-                    description={category.description}
-                    apps={category.apps}/>;
-              })
-            }
+          <Intro />
+          <FeaturedApps />
+
+          <div className="container">
+            <div className="row">
+
+              <div className="col4">
+                <CategoryList />
+              </div>
+
+              <div className="col8">
+                <div className="categories">
+                  {
+                    testCategories.map((category, i) => {
+                      return <Category
+                          key={i}
+                          name={category.name}
+                          description={category.description}
+                          apps={category.apps}/>;
+                    })
+                  }
+                </div>
+              </div>
+
+            </div>
           </div>
+
         </div>
       )
     }

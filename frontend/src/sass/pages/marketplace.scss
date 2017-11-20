@@ -23,11 +23,21 @@ h2 {
   font-weight: lighter;
 }
 
+.intro {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  text-align: center;
+}
+
+.featuredApps {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  color: white;
+  background: $primary-color;
+}
+
 .category {
-  padding-right: 100px;
-  padding-left: 100px;
-  margin-right: auto;
-  margin-left: auto;
+
 }
 
 .apps {

@@ -47,5 +47,5 @@ class Marketplace extends React.Component {
 
 ReactDOM.render(
   <Marketplace />,
-  document.querySelector('.app')
+  document.querySelector('#root')
 );
