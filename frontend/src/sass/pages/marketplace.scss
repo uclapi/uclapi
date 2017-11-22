@@ -25,9 +25,10 @@ h2 {
 }
 
 .intro {
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding-top: 80px;
   text-align: center;
+  // come up with nice background
+  // https://www.wecraftapps.com/
   background: $tertiary-color;
   color: white;
 
@@ -47,10 +48,36 @@ h2 {
   padding-top: 40px;
   padding-bottom: 40px;
   color: white;
-  background: $primary-color;
+
+  .col4 {
+    display: table-cell;
+    background: #292D32;
+    margin-right: 20px;
+    margin-left: 20px;
+    padding: 40px;
+    border-radius: 10px;
+  }
 
   .featuredApp {
+    text-align: center;
 
+    img {
+      width: 100px;
+    }
+
+    h1 {
+      font-weight: 300;
+      font-size: 26px;
+      margin: 0;
+      padding-top: 20px;
+    }
+
+    p {
+      max-width: 300px;
+      margin: 6px auto;
+      font-weight: 300;
+      font-size: 14px;
+    }
   }
 }
 

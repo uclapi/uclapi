@@ -10,15 +10,9 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="featuredApp">
-        <Card>
-          <CardMedia>
-            <img src={this.props.logo} alt="" />
-          </CardMedia>
-          <CardTitle title={this.props.name} subtitle={this.props.description}/>
-          <CardActions>
-            <FlatButton label="Get It" />
-          </CardActions>
-        </Card>
+        <img src={this.props.logo} />
+        <h1>{this.props.name}</h1>
+        <p>{this.props.description}</p>
       </div>
     )
   }

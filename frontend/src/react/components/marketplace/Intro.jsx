@@ -1,5 +1,6 @@
 import React from 'react';
 
+import FeaturedApps from './FeaturedApps.jsx';
 
 export default class Intro extends React.Component {
 
@@ -10,6 +11,7 @@ export default class Intro extends React.Component {
           <h1>UCL Marketplace</h1>
           <p>Apps to improve student life at UCL</p>
         </div>
+        <FeaturedApps />
       </div>
     )
   }

@@ -100,7 +100,6 @@ export default class MarketplaceComponent extends React.Component {
       return (
         <div>
           <Intro />
-          <FeaturedApps />
 
           <div className="container">
             <div className="row">
