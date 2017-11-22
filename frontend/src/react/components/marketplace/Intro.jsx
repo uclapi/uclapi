@@ -7,7 +7,8 @@ export default class Intro extends React.Component {
     return (
       <div className="intro">
         <div className="container">
-          <h1>Marketplace</h1>
+          <h1>UCL Marketplace</h1>
+          <p>Apps to improve student life at UCL</p>
         </div>
       </div>
     )

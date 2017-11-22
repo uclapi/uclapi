@@ -7,15 +7,15 @@ let categories = [
     link: "#slack"
   },
   {
-    name: "Slack Apps",
+    name: "Android",
     link: "#slack"
   },
   {
-    name: "Slack Apps",
+    name: "Timetable",
     link: "#slack"
   },
   {
-    name: "Slack Apps",
+    name: "Productivity",
     link: "#slack"
   }
 ]

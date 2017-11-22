@@ -2,6 +2,7 @@
 
 $primary-color: #0b3954;
 $secondary-color: #f4f4f4;
+$tertiary-color: #454545;
 
 
 body {
@@ -27,6 +28,19 @@ h2 {
   padding-top: 40px;
   padding-bottom: 40px;
   text-align: center;
+  background: $tertiary-color;
+  color: white;
+
+  h1 {
+    font-size: 68px;
+    font-weight: 300;
+  }
+
+  p {
+    font-size: 26px;
+    opacity: 0.5;
+    font-weight: 300;
+  }
 }
 
 .featuredApps {
@@ -34,20 +48,67 @@ h2 {
   padding-bottom: 40px;
   color: white;
   background: $primary-color;
+
+  .featuredApp {
+
+  }
 }
 
-.category {
+.categories {
+  padding-left: 40px;
+  border-left: 2px #e1e4e8 solid;
 
+  .category {
+    padding-bottom: 40px;
+
+    h1 {
+      font-weight: 500;
+      margin-top: 30px;
+      font-size: 40px;
+    }
+  }
+}
+
+.categoryList {
+  padding-right: 40px;
+
+  h2 {
+    font-weight: 500;
+    font-size: 40px;
+    padding-left: 30px;
+  }
+
+  a {
+    display: block;
+    width: 100%;
+    font-size: 20px;
+    text-decoration: none;
+    color: #586069;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    padding-left: 30px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  a:hover {
+    background: #eaecef;
+  }
+
+  .categoryItem {
+    width: 100%;
+    margin-bottom: 5px;
+  }
 }
 
 .apps {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  // justify-content: center;
 }
 
 .app {
   margin: 10px;
-  min-width: 200px;
-  width: 25%;
+  min-width: 100px;
+  width: 30%;
 }

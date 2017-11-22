@@ -105,11 +105,11 @@ export default class MarketplaceComponent extends React.Component {
           <div className="container">
             <div className="row">
 
-              <div className="col4">
+              <div className="col2">
                 <CategoryList />
               </div>
 
-              <div className="col8">
+              <div className="col10">
                 <div className="categories">
                   {
                     testCategories.map((category, i) => {
