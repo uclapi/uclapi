@@ -324,6 +324,21 @@ class WebHookRequestViewTests(TestCase):
         self.assertTrue(content["ok"])
         self.assertEqual(content["message"], "Webhook sucessfully changed.")
 
+    # @patch("dashboard.webhook_views.verify_ownership", lambda *args: True)
+    # @patch("dashboard.webhook_views.is_url_safe", lambda *args: True)
+    # @patch("keen.add_event", lambda *args: None)
+    # def test_test_webhook_webhook_not_enabled(self):
+    #     request = self.factory.post(
+    #         '/',
+    #         {
+    #             'app_id': self.app1.id, 'siteid': 2, 'roomid': 2,
+    #             'contact': 2, 'url': "http://new"
+    #         }
+    #     )
+    #     request.session = {'user_id': self.user1.id}
+    #
+    #     response = test_webhook(request)
+
 
 class VerifyOwnershipTestCase(TestCase):
     def mocked_request_correct_challenge_behaviour(*args, **kwargs):
@@ -442,3 +457,6 @@ class RefreshVerifcationSecretViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(content["ok"])
         self.assertTrue("new_secret" in content.keys())
+
+
+class RefreshVerifcationSecretViewTests(TestCase):
