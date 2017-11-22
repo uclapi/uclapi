@@ -23,12 +23,17 @@ class Webhook extends React.Component {
       loading: false,
       error: '',
       webhookUpdateSuccess: '',
-      changesMade: false
+      changesMade: false,
+      webhookTest: {
+        loading: false,
+        message: '',
+      }
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.updateVerificationSecret = this.updateVerificationSecret.bind(this);
+    this.testWebhook = this.testWebhook.bind(this);
   }
 
   handleSubmit(e) {
@@ -116,6 +121,35 @@ class Webhook extends React.Component {
       });
   }
 
+  testWebhook(e) {
+    e.preventDefault();
+    this.setState({ webhookTest: { loading: true }});
+
+    fetch('dashboard/api/webhook/test/', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': Cookies.get('csrftoken')
+      },
+      body: `app_id=${this.props.appId}`
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((json) => {
+        this.setState({
+          webhookTest: {
+            loading: false,
+            message: json.message,
+          }
+        });
+        setTimeout(() => {
+          this.setState({ webhookTest: { message: '' } });
+        }, 3000);
+      });
+  }
+
   render() {
     return (
       <div className="webhook">
@@ -184,6 +218,15 @@ class Webhook extends React.Component {
             <label>{this.state.webhookUpdateSuccess}</label>
             <br />
             <label>{this.state.error}</label>
+            <br />
+            <button
+              onClick={this.testWebhook}
+              disabled={this.state.loading || this.state.changesMade || this.state.webhookTest.loading}
+              className="pure-button"
+            >
+              {'Test webhook'}
+            </button>
+            <label>{this.state.webhookTest.message}</label>
           </fieldset>
         </form>
       </div>
