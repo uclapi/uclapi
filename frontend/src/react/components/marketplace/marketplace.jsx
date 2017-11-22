@@ -13,12 +13,12 @@ let testCategories = [
     "apps": [
       {
         "name": "Roombot",
-        "description": "Find room bookings for your society",
+        "description": "Find room bookings for your society, Find room bookings for your society",
         "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
       },
       {
         "name": "Roombot",
-        "description": "Find room bookings for your society",
+        "description": "Find room bookings for your society, Find room bookings for your society",
         "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
       },
       {

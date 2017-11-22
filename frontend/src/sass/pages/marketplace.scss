@@ -62,9 +62,17 @@ h2 {
     padding-bottom: 40px;
 
     h1 {
-      font-weight: 500;
+      font-weight: 700;
       margin-top: 30px;
-      font-size: 40px;
+      margin-bottom: 10px;
+      font-size: 26px;
+    }
+
+    h2 {
+      color: #586069;
+      margin-top: 0px;
+      font-size: 20px;
+      font-weight: 400;
     }
   }
 }
@@ -74,21 +82,20 @@ h2 {
 
   h2 {
     font-weight: 500;
-    font-size: 40px;
+    font-size: 26px;
     padding-left: 30px;
   }
 
   a {
     display: block;
     width: 100%;
-    font-size: 20px;
+    font-size: 16px;
     text-decoration: none;
     color: #586069;
     padding-top: 14px;
     padding-bottom: 14px;
     padding-left: 30px;
     border-radius: 10px;
-    margin-bottom: 10px;
   }
 
   a:hover {
@@ -108,7 +115,8 @@ h2 {
 }
 
 .app {
-  margin: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
   min-width: 100px;
-  width: 30%;
+  width: 45%;
 }
