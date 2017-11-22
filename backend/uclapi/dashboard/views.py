@@ -147,19 +147,43 @@ def dashboard(request):
 
 @ensure_csrf_cookie
 def get_started(request):
-    logged_in = True
+    # logged_in = True
+    #
+    # try:
+    #     request.session["user_id"]
+    # except KeyError:
+    #     logged_in = False
+    #
+    # temp_token = TemporaryToken.objects.create()
+    # return render(request, 'getStarted.html', {
+    #     'initial_data': {
+    #         'temp_token': temp_token.api_token,
+    #         'logged_in': str(logged_in)
+    #     }
+    # })
 
-    try:
-        request.session["user_id"]
-    except KeyError:
-        logged_in = False
+    from oauth.scoping import Scopes
+    s = Scopes()
 
-    temp_token = TemporaryToken.objects.create()
-    return render(request, 'getStarted.html', {
-        'initial_data': {
-            'temp_token': temp_token.api_token,
-            'logged_in': str(logged_in)
-        }
+    page_data = {
+        "app_name": "Test app",
+        "creator": "Jane Doe",
+        "client_id": "12345.12345",
+        "state": "best-state",
+        "scopes": s.scope_dict(2),
+        "user": {
+            "full_name": "Wilhelm Klopp",
+            "cn": "zceiwhs",
+            "email": "will@ucl.ac.uk",
+            "department": "School of Management",
+            "upi": "WHSKL66"
+        },
+        "signed_data": "signed803458903459803045"
+    }
+
+    initial_data = json.dumps(page_data, cls=DjangoJSONEncoder)
+    return render(request, 'permissions.html', {
+        'initial_data': initial_data
     })
 
 

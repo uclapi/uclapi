@@ -20,5 +20,6 @@ urlpatterns = [
     url(
         r'api/webhook/refreshsecret/$',
         webhook_views.refresh_verification_secret
-    )
+    ),
+    url(r'api/webhook/test/$', webhook_views.test_webhook),
 ]
