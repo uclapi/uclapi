@@ -104,16 +104,16 @@ class Webhook extends React.Component {
       },
       body: `app_id=${this.props.appId}`
     })
-    .then((res) => {
-      return res.json();
-    })
-    .then((json) => {
-      if(json.ok) {
-        this.setState({ verificationSecret: json.new_secret });
-      } else {
-        throw new Error(`Verification Secret could not be updated.\nMessage: ${json.message}`);
-      }
-    });
+      .then((res) => {
+        return res.json();
+      })
+      .then((json) => {
+        if(json.ok) {
+          this.setState({ verificationSecret: json.new_secret });
+        } else {
+          throw new Error(`Verification Secret could not be updated.\nMessage: ${json.message}`);
+        }
+      });
   }
 
   render() {
