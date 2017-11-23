@@ -2,19 +2,21 @@ import json
 import os
 from distutils.util import strtobool
 
+import redis
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import redirect, render
 from django.utils.http import quote
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
-from uclapi.settings import FAIR_USE_POLICY
+from uclapi.settings import FAIR_USE_POLICY, REDIS_UCLAPI_HOST
 
+from .app_helpers import generate_temp_api_token
 from .models import App, User, TemporaryToken
 from oauth.scoping import Scopes
 
 from .tasks import keen_add_event_task as keen_add_event
-
 
 @csrf_exempt
 def shibboleth_callback(request):
@@ -154,7 +156,9 @@ def get_started(request):
     except KeyError:
         logged_in = False
 
-    temp_token = TemporaryToken.objects.create()
+    token_date = {
+        "api_token": generate_temp_api_token()
+    }
     return render(request, 'getStarted.html', {
         'initial_data': {
             'temp_token': temp_token.api_token,
