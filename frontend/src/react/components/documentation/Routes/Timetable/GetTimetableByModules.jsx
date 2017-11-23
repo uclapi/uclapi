@@ -93,12 +93,12 @@ export default class GetEquiment extends React.Component {
             </p>
 
             <Table
-              name="Query Pararmeters">
+              name="Query Parameters">
               <Cell
                 name="token"
                 requirement="required"
                 example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
-                description="Authentication token" />
+                description="Authentication token." />
               <Cell
                 name="client_secret"
                 requirement="required"
@@ -133,7 +133,7 @@ export default class GetEquiment extends React.Component {
                 name="address"
                 extra="array"
                 example={`["29 Gordon Sq", "London", "WC1H 0PP"]`}
-                description="Address represented as an array" />
+                description="Address represented as an array." />
               <Cell
                 name="name"
                 extra="string"
@@ -205,7 +205,7 @@ export default class GetEquiment extends React.Component {
                 name="No token provided"
                 description="Gets returned when you have not supplied a token in your request." />
               <Cell
-                name="OAuth oken does not exist"
+                name="OAuth token does not exist"
                 description="Gets returned when you supply an invalid token." />
               <Cell
                 name="No module ids provided."

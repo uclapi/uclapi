@@ -70,17 +70,17 @@ export default class GetEquiment extends React.Component {
             </p>
 
             <Table
-              name="Query Pararmeters">
+              name="Query Parameters">
               <Cell
                 name="token"
                 requirement="required"
                 example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
-                description="Authentication token" />
+                description="Authentication token." />
               <Cell
                 name="query"
                 requirement="required"
                 example="Jane"
-                description="Name of the person you are searching for" />
+                description="Name of the person you are searching for." />
             </Table>
           </Topic>
 
