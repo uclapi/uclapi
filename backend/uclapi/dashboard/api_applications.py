@@ -1,5 +1,4 @@
 import json
-import requests
 
 from dashboard.tasks import keen_add_event_task as keen_add_event
 from oauth.scoping import Scopes
