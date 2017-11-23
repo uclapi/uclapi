@@ -105,13 +105,13 @@ export default class GetPersonalTimetable extends React.Component {
             codeExamples={responseCodeExample}>
             <h2>Response</h2>
             <p>
-              The timetable field contains a map where dates are mapped to event objects.
+              The timetable field contains an object where dates are mapped to event objects.
             </p>
             <Table
               name="Response">
               <Cell
                 name="location"
-                extra="dict"
+                extra="object"
                 example="JSON Object"
                 description="Location of details of the timetable event." />
               <Cell
@@ -151,7 +151,7 @@ export default class GetPersonalTimetable extends React.Component {
                 description="End time of the event." />
               <Cell
                 name="module"
-                extra="dict"
+                extra="object"
                 example="JSON Object"
                 description="Json object containing module details." />
               <Cell
