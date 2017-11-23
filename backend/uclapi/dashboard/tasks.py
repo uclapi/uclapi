@@ -42,7 +42,7 @@ def add_user_to_mailing_list_task(email, name):
         add_user_to_mailing_list(email, name)
     except Exception as e:
         return "Couldn't add {} ({}) to the mailing list: {}".format(
-            name, email, str(e)    
+            name, email, str(e)
         )
 
 
