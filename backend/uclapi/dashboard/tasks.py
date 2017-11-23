@@ -1,7 +1,7 @@
 from __future__ import absolute_import
-import keen
 
-from .api_applications import add_user_to_mailing_list
+import keen
+import requests
 
 from celery import shared_task
 
@@ -44,3 +44,22 @@ def add_user_to_mailing_list_task(email, name):
         return "Couldn't add {} ({}) to the mailing list: {}".format(
             name, email, str(e)    
         )
+
+
+def add_user_to_mailing_list(email, name):
+    data = {
+        "email_address": email,
+        "status": "subscribed",
+        "merge_fields": {
+            "EMAIL": email,
+            "FNAME": name
+        }
+    }
+
+    headers = {
+        "Authorization": "apikey {}".format(
+            os.environ["MAILCHIMP_API_KEY"])
+    }
+
+    requests.post(
+        os.environ["MAILCHIMP_ENDPOINT"], data=data, headers=headers)

@@ -2,7 +2,7 @@ import json
 import os
 import requests
 
-from dashboard.tasks import keen_add_event_task as keen_add_event
+from .tasks import keen_add_event_task as keen_add_event
 from oauth.scoping import Scopes
 from common.helpers import PrettyJsonResponse
 

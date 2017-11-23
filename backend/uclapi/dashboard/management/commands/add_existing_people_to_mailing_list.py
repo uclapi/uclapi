@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from dashboard.models import User
-from dashboard.api_applications import add_user_to_mailing_list
+from dashboard.tasks import add_user_to_mailing_list
 
 
 class Command(BaseCommand):
