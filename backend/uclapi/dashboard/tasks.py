@@ -1,6 +1,8 @@
 from __future__ import absolute_import
 import keen
 
+from .api_applications import add_user_to_mailing_list
+
 from celery import shared_task
 
 
@@ -32,3 +34,13 @@ def keen_add_event_task(title, data):
                 title + 'Please check your internet connection.'
 
     return 'Keen added a new event titled ' + title
+
+
+@shared_task
+def add_user_to_mailing_list_task(email, name):
+    try:
+        add_user_to_mailing_list(email, name)
+    except Exception as e:
+        return "Couldn't add {} ({}) to the mailing list: {}".format(
+            name, email, str(e)    
+        )
