@@ -156,12 +156,15 @@ def get_started(request):
     except KeyError:
         logged_in = False
 
-    token_date = {
-        "api_token": generate_temp_api_token()
+    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+
+    token_data = {
+        "api_token": generate_temp_api_token(),
+        "uses": 0
     }
     return render(request, 'getStarted.html', {
         'initial_data': {
-            'temp_token': temp_token.api_token,
+            'temp_token': token_data["api_token"],
             'logged_in': str(logged_in)
         }
     })
