@@ -47,12 +47,12 @@ export default class OAuthIntro extends React.Component {
 
           <h1>OAuth Workflow</h1>
           <p>If your application wants to use OAuth, you must set a callback URL in the dashboard. Then the app should follow this procedure:</p>
-          <p>1. Send a request to <code>https://uclapi.com/oauth/authorise</code> with <code>state</code> and the application’s client_id.</p>
+          <p>1. Send a request to <code>https://uclapi.com/oauth/authorise</code> with <code>state</code> and the application’s <code>client_id</code>.</p>
           <p>2. The user will need to log in with their UCL credentials on the UCL Single Sign-on website (if not logged in already).</p>
           <p>3. The user will be allowed to either authorise or deny the application, based on the OAuth scope requested. If the application is authorised, the callback URL receives <code>client_id</code>, <code>state</code> (specified in 1.), <code>result</code>, and <code>code</code>.</p>
 
           <p>If the application is denied, the callback URL receives <code>result</code> and <code>state</code>, and no private data will be provided to the application.</p>
-          <p>1. To receive the OAuth user token (for performing actions on user’s behalf), we require <code>code</code> (from 3.), <code>client_id</code>, and <code>client_secret</code>. These should then be set to <code>https://uclapi.com/oauth/token</code>, which will return a response containing <code>state</code>, <code>ok</code>, <code>client_id</code>, <code>token</code> (OAuth user token), and <code>scope</code> (scopes the app can access on the user’s behalf).</p>
+          <p>1. To receive the OAuth user token (for performing actions on user’s behalf), we require <code>code</code> (from 3.), <code>client_id</code>, and <code>client_secret</code>. These should then be sent to <code>https://uclapi.com/oauth/token</code>, which will return a response containing <code>state</code>, <code>ok</code>, <code>client_id</code>, <code>token</code> (OAuth user token), and <code>scope</code> (scopes the app can access on the user’s behalf).</p>
         </Topic>
       )
     }
