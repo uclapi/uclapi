@@ -57,7 +57,7 @@ export default class Token extends React.Component {
             </p>
 
             <Table
-              name="Query Pararmeters">
+              name="Query Parameters">
               <Cell
                 name="client_id"
                 requirement="required"
