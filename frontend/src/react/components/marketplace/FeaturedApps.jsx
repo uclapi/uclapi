@@ -3,25 +3,37 @@ import React from 'react';
 import FeaturedApp from './FeaturedApp.jsx';
 
 
-let featuredApps = [
-  {
-    "name": "Roombot",
-    "description": "Find room bookings for your society, Find room bookings for your society",
-    "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
-  },
-  {
-    "name": "Roombot",
-    "description": "Find room bookings for your society, Find room bookings for your society",
-    "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
-  },
-  {
-    "name": "Roombot",
-    "description": "Find room bookings for your society",
-    "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
-  }
-]
-
 export default class Category extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    let featuredApps = this.getRandom(this.props.allApps, 3);
+
+    this.state = {
+      featuredApps,
+    }
+  }
+
+  getRandom(arr, n) {
+    if (arr.length < n) {
+      return arr;
+    }
+
+    let result = [], taken = [];
+
+    while (n > 0) {
+      let x = Math.floor(Math.random() * arr.length);
+
+      if (taken.indexOf(x) === -1) {
+        result.push(arr[x]);
+        taken.push(x);
+        n -= 1;
+      }
+    }
+
+    return result;
+  }
 
   render() {
     return (
@@ -29,7 +41,7 @@ export default class Category extends React.Component {
         <div className="container">
           <div className="row">
             {
-              featuredApps.map((app, i) => {
+              this.state.featuredApps.map((app, i) => {
                 return (
                   <div key={i} className="col4">
                     <FeaturedApp

@@ -6,7 +6,7 @@ import CategoryList from './CategoryList.jsx';
 import FeaturedApps from './FeaturedApps.jsx';
 
 
-let testCategories = [
+let categories = [
   {
     "name": "Slack Apps",
     "description": "Apps for your slack groups",
@@ -94,12 +94,18 @@ let testCategories = [
 ]
 
 
+let allApps = [];
+
+for (let i=0; i < categories.length; i++) {
+  allApps = allApps.concat(categories[i].apps);
+}
+
 export default class MarketplaceComponent extends React.Component {
 
     render () {
       return (
         <div>
-          <Intro />
+          <Intro allApps={allApps} />
 
           <div className="container">
             <div className="row">
@@ -111,7 +117,7 @@ export default class MarketplaceComponent extends React.Component {
               <div className="col10">
                 <div className="categories">
                   {
-                    testCategories.map((category, i) => {
+                    categories.map((category, i) => {
                       return <Category
                           key={i}
                           name={category.name}

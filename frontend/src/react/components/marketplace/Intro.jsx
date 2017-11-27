@@ -11,7 +11,7 @@ export default class Intro extends React.Component {
           <h1>UCL Marketplace</h1>
           <p>Apps to improve student life at UCL</p>
         </div>
-        <FeaturedApps />
+        <FeaturedApps allApps={this.props.allApps} />
       </div>
     )
   }
