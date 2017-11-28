@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import {cyan500, cyan700,
   pinkA200, grey100, grey300, grey400,
   grey500, white, darkBlack, fullBlack,
@@ -9,6 +10,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import MarketplaceComponent from '../components/marketplace/marketplace.jsx';
+import AppPageComponent from '../components/marketplace/AppPage/AppPage.jsx';
 
 
 const muiTheme = getMuiTheme({
@@ -45,7 +47,32 @@ class Marketplace extends React.Component {
 
 }
 
+class AppPage extends React.Component {
+
+  render () {
+    return (
+      <MuiThemeProvider muiTheme={muiTheme}>
+        <AppPageComponent {...this.props} />
+      </MuiThemeProvider>
+    )
+  }
+
+}
+
+const Main = () => (
+  <main>
+    <Switch>
+      <Route exact path='/marketplace' component={Marketplace}/>
+      <Route path='/marketplace/:appId' render={(props) => (
+        <AppPage appId={props.match.params.appId} />
+      )}/>
+    </Switch>
+  </main>
+)
+
 ReactDOM.render(
-  <Marketplace />,
+  <BrowserRouter>
+    <Main />
+  </BrowserRouter>,
   document.querySelector('#root')
 );
