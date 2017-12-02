@@ -87,7 +87,7 @@ def throttle_api_call(token, token_type):
         cache_key = token.user.email
         limit = 10000
     elif token_type == 'general-temp':
-        cache_key = token["api_token"]
+        cache_key = token + "-key"  # token as a key is already used.
         limit = 10
     elif token_type == 'oauth':
         cache_key = token.user.email
@@ -171,9 +171,7 @@ def _check_temp_token_issues(token_code, personal_data, request_path, page_token
 
     r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
 
-    try:
-        temp_token = json.loads(r.get(token_code).decode('ascii'))
-    except (AttributeError, json.decoder.JSONDecodeError):
+    if not r.get(token_code):
         response = JsonResponse({
             "ok": False,
             "error": "Temporary token is either invalid or expired."
@@ -199,7 +197,7 @@ def _check_temp_token_issues(token_code, personal_data, request_path, page_token
         })
         response.status_code = 400
         return response
-
+    print("No problem found with temp token")
     # No issues, so return the temporary token
     return temp_token
 

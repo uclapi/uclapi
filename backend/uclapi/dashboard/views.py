@@ -158,16 +158,13 @@ def get_started(request):
 
     r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
 
-    token_data = {
-        "api_token": generate_temp_api_token(),
-        "uses": 0
-    }
-
-    r.set(token_data["api_token"], json.dumps(token_data))
-
+    token = generate_temp_api_token()
+    r.set(token, "", 60 * 5)  # Limit is implemented inside throttle,
+                              # So no value is required.
+    print(token)
     return render(request, 'getStarted.html', {
         'initial_data': {
-            'temp_token': token_data["api_token"],
+            'temp_token': token,
             'logged_in': str(logged_in)
         }
     })
