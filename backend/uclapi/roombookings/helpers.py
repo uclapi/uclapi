@@ -150,6 +150,7 @@ def _serialize_rooms(room_set):
                 ]
             }
         }
+
         try:
             location = Location.objects.get(
                 siteid=room.siteid,

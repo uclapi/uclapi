@@ -1,6 +1,7 @@
 import datetime
 import re
 import redis
+import json
 
 from functools import wraps
 
@@ -86,7 +87,7 @@ def throttle_api_call(token, token_type):
         cache_key = token.user.email
         limit = 10000
     elif token_type == 'general-temp':
-        cache_key = token.api_token
+        cache_key = token["api_token"]
         limit = 10
     elif token_type == 'oauth':
         cache_key = token.user.email
@@ -168,14 +169,14 @@ def _check_temp_token_issues(token_code, personal_data, request_path, page_token
         response.status_code = 400
         return response
 
+    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+
     try:
-        temp_token = TemporaryToken.objects.get(
-            api_token=token_code
-        )
-    except TemporaryToken.DoesNotExist:
+        temp_token = json.loads(r.get(token_code).decode('ascii'))
+    except (AttributeError, json.decoder.JSONDecodeError):
         response = JsonResponse({
             "ok": False,
-            "error": "Invalid temporary token."
+            "error": "Temporary token is either invalid or expired."
         })
         response.status_code = 400
         return response
@@ -195,18 +196,6 @@ def _check_temp_token_issues(token_code, personal_data, request_path, page_token
             "ok": False,
             "error":
                 "Temporary token can only return one booking."
-        })
-        response.status_code = 400
-        return response
-
-    # Check if TemporaryToken is still valid
-    existed = datetime.datetime.now() - temp_token.created
-
-    if existed.seconds > 300:
-        temp_token.delete()  # Delete expired token
-        response = JsonResponse({
-            "ok": False,
-            "error": "Temporary token expired."
         })
         response.status_code = 400
         return response

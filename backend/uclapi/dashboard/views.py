@@ -162,6 +162,9 @@ def get_started(request):
         "api_token": generate_temp_api_token(),
         "uses": 0
     }
+
+    r.set(token_data["api_token"], json.dumps(token_data))
+
     return render(request, 'getStarted.html', {
         'initial_data': {
             'temp_token': token_data["api_token"],
