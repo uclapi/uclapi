@@ -8,18 +8,18 @@ export default class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { shadow: 1 }
+    this.state = { shadow: 0 }
 
     this.onMouseOver = this.onMouseOver.bind(this);
     this.onMouseOut = this.onMouseOut.bind(this);
   }
 
   onMouseOver() {
-    this.setState({ shadow: 3 });
+    this.setState({ shadow: 2 });
   }
 
   onMouseOut() {
-    this.setState({ shadow: 1 });
+    this.setState({ shadow: 0 });
   }
 
   render() {
@@ -28,7 +28,11 @@ export default class App extends React.Component {
         <Card
           zDepth={this.state.shadow}
           onMouseOver={this.onMouseOver}
-          onMouseOut={this.onMouseOut}>
+          onMouseOut={this.onMouseOut}
+          style={{
+            "borderRadius": "10px",
+            "border": "1px solid #e4e4e4"
+          }}>
           <CardHeader
             title={this.props.name}
             subtitle={this.props.description}
@@ -40,9 +44,8 @@ export default class App extends React.Component {
             }
 
             titleStyle={{
-              "fontSize": "16px",
-              "color": "#143C55",
-              "fontWeight": 500
+              "fontSize": "18px",
+              "fontWeight": 700
             }}
             subtitleStyle={{
               "fontSize": "14px",

@@ -1,4 +1,5 @@
 import React from 'react';
+import Paper from 'material-ui/Paper';
 
 import App from './App.jsx';
 
@@ -7,7 +8,7 @@ export default class Category extends React.Component {
 
   render() {
     return (
-      <div className="category">
+      <Paper className="category" zDepth={1}>
         <h1>{this.props.name}</h1>
         <h2>{this.props.description}</h2>
         <div className="apps">
@@ -17,7 +18,7 @@ export default class Category extends React.Component {
             })
           }
         </div>
-      </div>
+      </Paper>
     )
   }
 
