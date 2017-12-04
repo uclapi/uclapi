@@ -150,3 +150,31 @@ h2 {
   min-width: 100px;
   width: 45%;
 }
+
+.appPage {
+
+  .col3, .col9 {
+    padding: 20px;
+  }
+
+  img {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  .left {
+    img {
+      display: block;
+      width: 100%
+    }
+
+    .btn {
+      width: 100%;
+    }
+  }
+
+  .right {
+
+  }
+}
