@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from uclapi.settings import FAIR_USE_POLICY, REDIS_UCLAPI_HOST
 
 from .app_helpers import generate_temp_api_token
-from .models import App, User, TemporaryToken
+from .models import App, User
 from oauth.scoping import Scopes
 
 from .tasks import keen_add_event_task as keen_add_event
