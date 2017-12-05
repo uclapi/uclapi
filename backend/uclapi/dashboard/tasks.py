@@ -1,6 +1,5 @@
 from __future__ import absolute_import
 import keen
-# im dumb
 from celery import shared_task
 
 
