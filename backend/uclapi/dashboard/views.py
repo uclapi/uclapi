@@ -161,7 +161,6 @@ def get_started(request):
     token = generate_temp_api_token()
     r.set(token, "LIMIT", 60 * 5)  # Limit is implemented inside throttle,
                                     # So no value is required.
-    print(token)
     return render(request, 'getStarted.html', {
         'initial_data': {
             'temp_token': token,

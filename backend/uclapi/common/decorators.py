@@ -86,7 +86,8 @@ def throttle_api_call(token, token_type):
         cache_key = token.user.email
         limit = 10000
     elif token_type == 'general-temp':
-        cache_key = token + "-key"  # token as a key is already used.
+        # token as a key is already used.
+        cache_key = token + "-key"
         limit = 10
     elif token_type == 'oauth':
         cache_key = token.user.email
