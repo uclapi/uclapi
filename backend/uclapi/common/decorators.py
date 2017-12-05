@@ -1,7 +1,6 @@
 import datetime
 import re
 import redis
-import json
 
 from functools import wraps
 
