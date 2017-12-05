@@ -199,7 +199,7 @@ def _check_temp_token_issues(token_code, personal_data, request_path, page_token
         return response
     print("No problem found with temp token")
     # No issues, so return the temporary token
-    return temp_token
+    return token_code
 
 
 def _check_general_token_issues(token_code, personal_data):
