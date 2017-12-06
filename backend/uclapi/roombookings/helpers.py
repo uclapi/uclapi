@@ -100,6 +100,24 @@ def _localize_time(time_string):
     return ret_time.replace(tzinfo=None)
 
 
+def _round_date(time_string, up=False):
+    """
+    Rounds the datetime to the nearest day.
+    Rounds down by default until up is passed as True in which case
+    it rounds up
+    """
+    date = datetime.date(
+        time_string.year,
+        time_string.month,
+        time_string.day
+    )
+
+    if up:
+        date += datetime.timedelta(days=1)
+
+    return date
+
+
 def _parse_datetime(start_time, end_time, search_date):
     parsed_start_time, parsed_end_time = None, None
     try:
@@ -239,3 +257,61 @@ def how_many_seconds_until_midnight():
         day=tomorrow.day, hour=0, minute=0, second=0
     )
     return (midnight - datetime.datetime.now()).seconds
+
+
+def _create_map_of_overlapping_bookings(bookings, start, end):
+    """
+    Creates map of room to bookings where each booking overlaps
+    with the given time range
+    """
+    bookings_map = {}
+
+    for booking in bookings:
+        booking_start = _localize_time(booking["start_time"])
+        booking_end = _localize_time(booking["end_time"])
+
+        if _overlaps(
+            start1=booking_start,
+            end1=booking_end,
+            start2=start,
+            end2=end
+        ):
+            roomid, siteid = booking["roomid"], booking["siteid"]
+            bookings_map[(roomid, siteid)] = bookings_map.get(
+                (roomid, siteid), []
+            ) + [booking]
+
+    return bookings_map
+
+
+def _overlaps(start1, end1, start2, end2):
+    """
+    takes 4 datetimes
+    checks if they overlap
+    """
+    return max(start1, start2) < min(end1, end2)
+
+
+def _filter_for_free_rooms(all_rooms, bookings, start, end):
+    """
+    Find all rooms which don't have any bookings.
+    Args:
+        all_rooms: All available rooms.
+        bookings: All the bookings made in the days of the given time period
+        start: Start time for free rooms
+        end: End time for free rooms
+    """
+    rooms_with_bookings = list(all_rooms)
+    bookings_map = _create_map_of_overlapping_bookings(bookings, start, end)
+
+    free_rooms = []
+    for room in rooms_with_bookings:
+        roomid, siteid = room["roomid"], room["siteid"]
+        if (
+            (roomid, siteid) not in bookings_map
+            or not bookings_map[(roomid, siteid)]
+        ):
+            # if room doesn't have any overlapping bookings
+            free_rooms.append(room)
+
+    return free_rooms

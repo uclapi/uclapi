@@ -112,6 +112,10 @@ export default class Sidebar extends React.Component {
                 href="#roombookings/equipment"
               />,
               <ListItem
+                primaryText="Get Free Rooms"
+                href="#roombookings/freerooms"
+              />,
+              <ListItem
                 primaryText="Webhooks"
                 href="#roombookings/webhooks"
               />,
