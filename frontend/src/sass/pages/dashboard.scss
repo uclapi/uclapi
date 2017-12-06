@@ -28,6 +28,10 @@ body {
   background-color: rgba(234, 237, 241, 1);
 }
 
+input {
+  color: #000;
+}
+
 .webhook {
   form:not(:first-child) {
     .pure-g > div {

@@ -58,7 +58,7 @@ export default class UserData extends React.Component {
             </p>
 
             <Table
-              name="Query Pararmeters">
+              name="Query Parameters">
               <Cell
                 name="token"
                 requirement="required"
