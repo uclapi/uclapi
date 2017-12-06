@@ -70,17 +70,17 @@ export default class GetEquiment extends React.Component {
             </p>
 
             <Table
-              name="Query Pararmeters">
+              name="Query Parameters">
               <Cell
                 name="token"
                 requirement="required"
                 example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
-                description="Authentication token" />
+                description="Authentication token." />
               <Cell
                 name="query"
                 requirement="required"
                 example="Jane"
-                description="Name of the person you are searching for" />
+                description="Name of the person you are searching for." />
             </Table>
           </Topic>
 
@@ -89,28 +89,30 @@ export default class GetEquiment extends React.Component {
             codeExamples={responseCodeExample}>
             <h2>Response</h2>
             <p>
-              The equipment field contains a list of equipment items. This list can have a different length depending on the room, and it can also be empty.
-            </p>
-            <p>
-              Each equipment item contains a type, a description, and the number of units.
+            The people field contains a list of people that match your query.
             </p>
             <Table
               name="Response">
               <Cell
-                name="type"
+                name="name"
                 extra="string"
-                example="FE"
-                description="The type of equipment. Either Fixed Equipment (FE) or Fixed Feature (FF)." />
+                example="Jane Doe"
+                description="The name of the person."/>
               <Cell
-                name="description"
+                name="status"
                 extra="string"
-                example="Managed PC"
-                description="What the piece of equipment actually is." />
+                example="Staff"
+                description="Tells us whether the person is a student or member of staff."/>
               <Cell
-                name="units"
-                extra="int"
-                example="1"
-                description="The number of times this piece of equipment exists in the room." />
+                name="department"
+                extra="string"
+                example="UCL Medical School"
+                description="The department the student studies or works under."/>
+              <Cell
+                name="email"
+                extra="string"
+                example="jane.doe.17@ucl.ac.uk"
+                description="The email of the person."/>
             </Table>
           </Topic>
 

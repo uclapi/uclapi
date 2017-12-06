@@ -6,7 +6,7 @@ billiard==3.5.0.3
 celery==4.1.0
 certifi==2017.11.5
 chardet==3.0.4
-ciso8601==1.0.3
+ciso8601==1.0.5
 contextlib2==0.5.5
 cx-Oracle==6.0.3
 decorator==4.1.2
@@ -15,7 +15,7 @@ Django==1.11.7
 django-cors-headers==2.1.0
 django-db-geventpool==1.21
 django-dotenv==1.4.1
-django-mock-queries==1.0.2
+django-mock-queries==1.0.5
 djangorestframework==3.7.3
 freezegun==0.3.9
 funcsigs==1.0.2
@@ -36,7 +36,7 @@ packaging==16.8
 pbr==3.1.1
 psycogreen==1.0
 psycopg2==2.7.3.2
-pycryptodome==3.4.6
+pycryptodome==3.4.7
 pyparsing==2.2.0
 python-dateutil==2.6.1
 pytz==2017.3
@@ -50,4 +50,4 @@ tldextract==2.2.0
 urllib3==1.22
 validators==0.12.0
 vine==1.1.4
-yarl==0.14.0
+yarl==0.14.2

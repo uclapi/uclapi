@@ -43,38 +43,38 @@ class Webhook extends React.Component {
         'X-CSRFToken': Cookies.get('csrftoken')
       },
       body: `url=${this.state.url}` +
-      `&siteid=${this.state.siteid}` +
-      `&roomid=${this.state.roomid}` +
-      `&contact=${this.state.contact}` +
+      `&siteid=${this.state.siteid ? this.state.siteid : '' }` +
+      `&roomid=${this.state.roomid ? this.state.roomid : '' }` +
+      `&contact=${this.state.contact ? this.state.contact : '' }` +
       `&app_id=${this.props.appId}`
     })
-    .then((res) => {
-      return res.json();
-    })
-    .then((json) => {
-      this.setState({ loading: false });
-      if (json.ok) {
-        this.setState({
-          webhookEnabled: true,
-          webhookUpdateSuccess: '  ✅' ,
-          savedDbState: {
-            url: json.url,
-            roomid: json.roomid,
-            siteid: json.siteid,
-            contact: json.contact,
-          },
-          changesMade: false,
-        });
-        setTimeout(() => {
-          this.setState({ webhookUpdateSuccess: '' });
-        }, 3000);
-      } else {
-        this.setState({ error: `Error: ${json.message}` });
-      }
-    })
-    .catch(() => {
-      this.setState({ loading: false, error: 'Error: An unexpected error ocurred.'});
-    });
+      .then((res) => {
+        return res.json();
+      })
+      .then((json) => {
+        this.setState({ loading: false });
+        if (json.ok) {
+          this.setState({
+            webhookEnabled: true,
+            webhookUpdateSuccess: '  ✅' ,
+            savedDbState: {
+              url: json.url,
+              roomid: json.roomid,
+              siteid: json.siteid,
+              contact: json.contact,
+            },
+            changesMade: false,
+          });
+          setTimeout(() => {
+            this.setState({ webhookUpdateSuccess: '' });
+          }, 3000);
+        } else {
+          this.setState({ error: `Error: ${json.message}` });
+        }
+      })
+      .catch(() => {
+        this.setState({ loading: false, error: 'Error: An unexpected error ocurred.'});
+      });
   }
 
   handleChange(e) {

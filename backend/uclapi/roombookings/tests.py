@@ -13,16 +13,22 @@ from redis import StrictRedis
 
 from dashboard.models import App, TemporaryToken, User
 
-from uclapi.settings import REDIS_UCLAPI_HOST
+from .helpers import (
+    _create_page_token,
+    _filter_for_free_rooms,
+    _localize_time,
+    _parse_datetime,
+    _round_date,
+    _serialize_equipment,
+    PrettyJsonResponse,
+    TOKEN_EXPIRY_TIME
+)
 
-from .helpers import (PrettyJsonResponse,
-                      _parse_datetime,
-                      _serialize_equipment,
-                      _create_page_token,
-                      TOKEN_EXPIRY_TIME)
 from .models import Lock, Room
 
 from .views import get_bookings
+
+from uclapi.settings import REDIS_UCLAPI_HOST
 
 
 class FakeModelClass:
@@ -397,6 +403,37 @@ class DoesTokenExistTestCase(TestCase):
         response = get_bookings(request)
 
         self.assertEqual(response.status_code, 200)
+
+
+class RoundDateTestCase(SimpleTestCase):
+    def test_round_down(self):
+        time_string = "2017-10-25T03:36:45+00:00"
+        round_down = _round_date(_localize_time(time_string))
+        date = datetime.date(2017, 10, 25)
+        self.assertEqual(round_down, date)
+
+    def test_round_up(self):
+        time_string = "2017-10-25T03:36:45+00:00"
+        round_down = _round_date(_localize_time(time_string), up=True)
+        date = datetime.date(2017, 10, 26)
+        self.assertEqual(round_down, date)
+
+
+class FilterFreeRoomsTestCase(SimpleTestCase):
+    def test_empty_rooms_and_bookings(self):
+        start = datetime.date(2017, 10, 25)
+        end = datetime.date(2017, 10, 26)
+        result = _filter_for_free_rooms([], [], start, end)
+        self.assertEqual(result, [])
+
+    def test_empty_bookings(self):
+        start = datetime.date(2017, 10, 25)
+        end = datetime.date(2017, 10, 26)
+        rooms = [
+            {"roomid": 1, "siteid": 1},
+        ]
+        result = _filter_for_free_rooms(rooms, [], start, end)
+        self.assertEqual(result, rooms)
 
 
 class CreateRedisPageTokenTest(TestCase):

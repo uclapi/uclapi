@@ -9,14 +9,16 @@ let codeExamples = {
   python: `import requests
 
 params = {
-  "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
+  "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
+  "start_datetime": "2017-10-25T03:36:45+00:00",
+  "end_datetime": "2017-10-25T23:36:45+00:00"
 }
-r = requests.get("https://uclapi.com/roombookings/rooms", params=params)
+r = requests.get("https://uclapi.com/roombookings/freerooms", params=params)
 print(r.json())`,
 
-  shell: `curl https://uclapi.com/roombookings/rooms?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb`,
+  shell: `curl https://uclapi.com/roombookings/rooms?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&start_datetime=2017-10-25T03:36:45+00:00&end_datetime=2017-10-25T23:36:45+00:00`,
 
-  javascript: `fetch("https://uclapi.com/roombookings/rooms?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
+  javascript: `fetch("https://uclapi.com/roombookings/rooms?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&start_datetime=2017-10-25T03:36:45+00:00&end_datetime=2017-10-25T23:36:45+00:00")
 .then((response) => {
   return response.json()
 })
@@ -27,28 +29,24 @@ print(r.json())`,
 
 let response = `{
   "ok": true,
-  "rooms": [
+  "free_rooms": [
     {
-      "roomname": "Wilkins Building (Main Building) Portico",
-      "roomid": "Z4",
-      "siteid": "005",
-      "sitename": "Main Building",
-      "capacity": 50,
-      "classification": "SS",
-      "automated": "N",
+      "siteid": "014",
       "location": {
-        "coordinates": {
-          "lat": "51.524699",
-          "lng": "-0.13366"
-        },
         "address": [
           "Gower Street",
           "London",
           "WC1E 6BT",
           ""
         ]
-      }
-    }
+      },
+      "classification": "ER",
+      "sitename": "Front Lodges",
+      "roomname": "North Lodge 001",
+      "automated": "N",
+      "roomid": "001",
+      "capacity": 10
+    },
     ...
   ]
 }
@@ -61,7 +59,7 @@ let responseCodeExample = {
 }
 
 
-export default class GetRooms extends React.Component {
+export default class GetFreeRooms extends React.Component {
 
     render () {
       return (
@@ -69,12 +67,12 @@ export default class GetRooms extends React.Component {
           <Topic
             activeLanguage={this.props.activeLanguage}
             codeExamples={codeExamples}>
-            <h1 id="roombookings/rooms">Get Rooms</h1>
+            <h1 id="roombookings/freerooms">Get Rooms</h1>
             <p>
-              Endpoint: <code>https://uclapi.com/roombookings/rooms</code>
+              Endpoint: <code>https://uclapi.com/roombookings/freerooms</code>
             </p>
             <p>
-              This endpoint returns rooms and information about them. If you don’t specify any query parameters besides the token, all rooms will be returned.
+              Given a start time and an end time, this endpoint returns all rooms which are free in that time range.
             </p>
             <p>
               <i>
@@ -82,42 +80,22 @@ export default class GetRooms extends React.Component {
               </i>
             </p>
             <Table
-              name="Query Parameters">
+              name="Query Pararmeters">
               <Cell
                 name="token"
                 requirement="required"
                 example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
-                description="Authentication token." />
+                description="Authentication token" />
               <Cell
-                name="roomname"
-                requirement="optional"
-                example="Torrington (1-19) 433"
-                description="The name of the room. It often includes the name of the site (building) as well." />
+                name="start_datetime"
+                requirement="required"
+                example="2011-03-06T03:36:45+00:00"
+                description="Start datetime of the time range. Follows the ISO 8601 formatting standard." />
               <Cell
-                name="roomid"
-                requirement="optional"
-                example="433"
-                description="The room ID (not to be confused with the roomname)." />
-              <Cell
-                name="siteid"
-                requirement="optional"
-                example="086"
-                description="Every room is inside a site (building). All sites have IDs." />
-              <Cell
-                name="sitename"
-                requirement="optional"
-                example="Torrington Place, 1-19"
-                description="Every site (building) has a name. In some cases this is contained in the roomname as well." />
-              <Cell
-                name="classification"
-                requirement="optional"
-                example="CR"
-                description="The type of room. LT = Lecture Theatre, CR = Classroom, SS = Social Space, PC1 = Public Cluster." />
-              <Cell
-                name="capacity"
-                requirement="optional"
-                example="55"
-                description="Every room has a set capacity of how many people can fit inside it. When supplied, all rooms with the given capacity or greater will be returned." />
+                name="end_datetime"
+                requirement="required"
+                example="2011-03-06T03:36:45+00:00"
+                description="End datetime of the time range. Follows the ISO 8601 formatting standard." />
             </Table>
           </Topic>
 
@@ -126,8 +104,7 @@ export default class GetRooms extends React.Component {
             codeExamples={responseCodeExample}>
             <h2>Response</h2>
             <p>
-              The room field contains a list of rooms that match your query.
-              If no filters are applied, all rooms will be returned.
+              The free_rooms field contains all rooms that are free in the given time range.
             </p>
             <Table
               name="Response">
@@ -185,7 +162,10 @@ coordinates contains a lat and lng key with the latitude and longitude of the ro
               <Cell
                 name="Token does not exist"
                 description="Gets returned when you supply an invalid token." />
-              </Table>
+              <Cell
+                name="start_datetime or end_datetime not provided"
+                description="Gets returned when you don't supply a start datetime or an end datetime" />
+            </Table>
           </Topic>
         </div>
       )

@@ -112,6 +112,10 @@ export default class Sidebar extends React.Component {
                 href="#roombookings/equipment"
               />,
               <ListItem
+                primaryText="Get Free Rooms"
+                href="#roombookings/freerooms"
+              />,
+              <ListItem
                 primaryText="Webhooks"
                 href="#roombookings/webhooks"
               />,
@@ -142,6 +146,18 @@ export default class Sidebar extends React.Component {
               <ListItem
                 primaryText="Get Timetable By Modules"
                 href="#timetable/bymodule"
+              />,
+            ]}
+          />
+          
+          <ListItem
+            href="#resources"
+            primaryText="Resources"
+            primaryTogglesNestedList={true}
+            nestedItems={[
+              <ListItem
+                primaryText="Get Desktop availability"
+                href="#resources/desktops"
               />,
             ]}
           />
