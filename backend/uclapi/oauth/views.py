@@ -20,7 +20,7 @@ from .models import OAuthToken
 from .scoping import Scopes
 
 from uclapi.settings import REDIS_UCLAPI_HOST
-from common.decorators import uclapi_protected_endpoint
+from common.decorators import uclapi_protected_endpoint, get_var
 
 
 # The endpoint that creates a Shibboleth login and redirects the user to it
@@ -320,13 +320,13 @@ def userallow(request):
         app.client_id + "&state=" + state
     )
 
-
+@csrf_exempt
 def token(request):
-    try:
-        code = request.GET["code"]
-        client_id = request.GET["client_id"]
-        client_secret = request.GET["client_secret"]
-    except KeyError:
+    code = get_var(request, "code")
+    client_id = get_var(request, "client_id")
+    client_secret = get_var(request, "client_secret")
+
+    if not code or not client_id or not client_secret:
         response = PrettyJsonResponse({
             "ok": False,
             "error": ("The client did not provide"
