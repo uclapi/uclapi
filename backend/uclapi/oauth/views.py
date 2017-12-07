@@ -320,6 +320,7 @@ def userallow(request):
         app.client_id + "&state=" + state
     )
 
+
 @csrf_exempt
 def token(request):
     code = get_var(request, "code")
