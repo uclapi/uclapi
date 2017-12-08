@@ -24,16 +24,21 @@ class OccupEyeApi():
         self.deployment_name = os.environ["OCCUPEYE_DEPLOYMENT_NAME"]
         self.base_url = os.environ["OCCUPEYE_BASE_URL"]
 
-        self.access_token = self.r.get("occupeye:access_token")
-        self.access_token_expiry = int(self.r.get("occupeye:access_token_expiry"))
-
         # If either of those variables come up false, make sure
         # we have an access token before we continue.
         # We don't want to do anything manually in test mode to avoid
         # hitting environment variables we may not have yet.
-        if not test_mode:
+        if test_mode:
+            self.access_token = None
+            self.access_token_expiry = None
+        else:
+            self.access_token = self.r.get("occupeye:access_token")
+            self.access_token_expiry = int(self.r.get("occupeye:access_token_expiry"))
             if not self.access_token or not self.access_token_expiry:
                 self.get_token()
+
+    def _str2bool(self, v):
+        return v.lower() in ("yes", "true", "t", "1")
 
     def get_token(self):
         url = self.base_url + "/token"
@@ -126,8 +131,15 @@ class OccupEyeApi():
         surveys = []
 
         for id in survey_ids:
+            survey_data = self.r.hgetall("occupeye:surveys:" + id)
             surveys.append(
-                self.r.hgetall("occupeye:surveys:" + id)
+                {
+                    "id": int(survey_data["id"]),
+                    "name": survey_data["name"],
+                    "active": self._str2bool(survey_data["active"]),
+                    "start_time": survey_data["start_time"],
+                    "end_time": survey_data["end_time"]
+                }
             )
 
         return surveys
