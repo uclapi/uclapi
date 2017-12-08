@@ -26,6 +26,7 @@ def get_rooms(request, *args, **kwargs):
         rate_limiting_data=kwargs
     )
 
+
 @api_view(["GET"])
 @uclapi_protected_endpoint(personal_data=False)
 @occupeye_api_request()

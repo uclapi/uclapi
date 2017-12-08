@@ -17,6 +17,7 @@ class BadOccupEyeRequest(Exception):
     """
     pass
 
+
 class OccupEyeApi():
     """
     Python API for the Cad-Capture OccupEye backend.
@@ -291,6 +292,9 @@ class OccupEyeApi():
             self._cache_image(image_id)
 
         image_b64 = self.r.get("occupeye:image:{}:base64".format(image_id))
-        content_type = self.r.get("occupeye:image:{}:content_type".format(image_id))
+        content_type = self.r.get(
+            "occupeye:image:{}:content_type".format(image_id)
+        )
 
         return (image_b64, content_type)
+
