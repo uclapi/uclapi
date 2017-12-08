@@ -12,12 +12,12 @@ export default class VersionHeader extends React.Component {
         <Topic
           noExamples={true}>
           <p>
-            The base url is <code>https://uclapi.com/search/</code>
+            The base url is <code>https://uclapi.com/resources/</code>
           </p>
           <Table>
             <Cell
               name="Version Header"
-              example="uclapi-search-version" />
+              example="uclapi-resources-version" />
             <Cell
               name="Latest Version"
               example="1" />

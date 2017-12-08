@@ -6,10 +6,11 @@ from django.conf import settings
 from .helpers import (PrettyJsonResponse, _create_page_token,
                       _get_paginated_bookings, _parse_datetime,
                       _return_json_bookings, _serialize_equipment,
-                      _serialize_rooms)
+                      _serialize_rooms, _filter_for_free_rooms, _round_date)
 from .models import BookingA, BookingB, Equipment, Lock, Room
 
 from common.decorators import uclapi_protected_endpoint
+
 
 @api_view(['GET'])
 @uclapi_protected_endpoint()
@@ -162,4 +163,67 @@ def get_equipment(request, *args, **kwargs):
     return PrettyJsonResponse({
         "ok": True,
         "equipment": _serialize_equipment(equipment)
+    }, rate_limiting_data=kwargs)
+
+
+@api_view(['GET'])
+# @uclapi_protected_endpoint()
+def get_free_rooms(request, *args, **kwargs):
+    request_params = {}
+    request_params['startdatetime__gte'] = request.GET.get('start_datetime')
+    request_params['finishdatetime__lte'] = request.GET.get('end_datetime')
+
+    if (
+        not request_params['startdatetime__gte'] or
+        not request_params['finishdatetime__lte']
+    ):
+        return PrettyJsonResponse({
+            "ok": False,
+            "error": "start_datetime or end_datetime not provided"
+        }, rate_limiting_data=kwargs)
+
+    is_parsed = True
+
+    start, end, is_parsed = _parse_datetime(
+        request_params['startdatetime__gte'],
+        request_params['finishdatetime__lte'],
+        None
+    )
+
+    if not is_parsed:
+        return PrettyJsonResponse({
+            "ok": False,
+            "error": "date/time isn't formatted as suggested in the docs"
+        }, rate_limiting_data=kwargs)
+
+    # Rounding down start date to start of day
+    request_params["startdatetime__gte"] = _round_date(start)
+
+    # Rounding up end date to start of next day
+    request_params["finishdatetime__lte"] = _round_date(end, up=True)
+
+    # Pagination Logic
+    # maxing out results_per_page to get all the bookings in one page
+    results_per_page = 100000
+    request_params = {k: v for k, v in request_params.items() if v}
+    request_params["setid"] = settings.ROOMBOOKINGS_SETID
+    request_params["bookabletype"] = "CB"
+    page_token = _create_page_token(request_params, results_per_page)
+
+    # All bookings in the given time period
+    bookings = _get_paginated_bookings(page_token)["bookings"]
+
+    # All available rooms
+    all_rooms = Room.objects.using("roombookings").filter(
+        setid=settings.ROOMBOOKINGS_SETID,
+        bookabletype='CB'
+    )
+    all_rooms = _serialize_rooms(all_rooms)
+
+    free_rooms = _filter_for_free_rooms(all_rooms, bookings, start, end)
+
+    return PrettyJsonResponse({
+        "ok": True,
+        "count": len(free_rooms),
+        "free_rooms": free_rooms
     }, rate_limiting_data=kwargs)
