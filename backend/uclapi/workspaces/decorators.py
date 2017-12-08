@@ -7,8 +7,9 @@ def occupeye_api_request():
         @wraps(view_func)
         def wrapped(request, *args, **kwargs):
             api = OccupEyeApi()
-
-            kwargs['api'] = api
+            # Make the API objects available to the function this
+            # decorator is attached to
+            kwargs['OccupEyeApi'] = api
 
             return view_func(request, *args, **kwargs)
         return wrapped
