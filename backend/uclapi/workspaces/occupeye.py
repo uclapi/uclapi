@@ -59,9 +59,19 @@ class OccupEyeApi():
                 self.get_token()
 
     def _str2bool(self, v):
+        """
+        Converts a string representation of a boolean
+        into an actual boolean object. This is used
+        to convert the boolean strings from Redis into
+        actual bool objects.
+        """
         return v.lower() in ("yes", "true", "t", "1")
 
     def get_token(self):
+        """
+        Gets a fresh OAuth 2.0 Bearer token based on the
+        username and password stored in the environment.
+        """
         url = self.base_url + "/token"
         body = {
             "Grant_type": "password",
@@ -84,6 +94,9 @@ class OccupEyeApi():
         self.r.set("occupeye:access_token_expiry", self.access_token_expiry)
 
     def token_valid(self):
+        """
+        Checks if the token exists and has not expired.
+        """
         if not self.access_token:
             return False
 
@@ -94,12 +107,22 @@ class OccupEyeApi():
         return True
 
     def get_bearer_token(self):
+        """
+        If a token is valid, it returns the Bearer string
+        used in the Authorization header.
+        """
         if not self.token_valid():
             self.get_token()
 
         return "Bearer " + self.access_token
 
     def _cache_maps_for_survey(self, survey_id):
+        """
+        Every Survey (e.g. building) at UCL is comprised of many
+        maps. A map may be a floor or wing. This function
+        will cache data about those maps in Redis so that it
+        can be quickly retrieved later.
+        """
         survey_maps_key = "occupeye:surveys:{}:maps".format(
             survey_id
         )
@@ -147,6 +170,11 @@ class OccupEyeApi():
         pipeline.execute()
 
     def _cache_survey_data(self):
+        """
+        This function will cache all surveys (e.g. buildings) in
+        the OccupEye system. It makes use of the _cache_maps_for_survey
+        helper function above to tie all maps to surveys.
+        """
         # Use a Redis Pipeline to ensure that all the data is inserted together
         # and atomically
         pipeline = self.r.pipeline()
@@ -189,6 +217,12 @@ class OccupEyeApi():
         pipeline.execute()
 
     def get_surveys(self):
+        """
+        Serialises all surveys and maps to a dictionary
+        object that can be returned to the user. If the
+        requisite data does not exist in Redis, it is cached using
+        the helper functions above, then returned from the cache.
+        """
         if self.r.llen("occupeye:surveys") == 0:
             # The data is not in the cache, so cache it.
             self._cache_survey_data()
@@ -239,6 +273,10 @@ class OccupEyeApi():
         return surveys
 
     def _cache_image(self, image_id):
+        """
+        Downloads map images from the API and stores their
+        base64 representation and associated data type in Redis.
+        """
         headers = {
             "Authorization": self.get_bearer_token()
         }
@@ -280,6 +318,9 @@ class OccupEyeApi():
         pipeline.execute()
 
     def get_image(self, image_id):
+        """
+        Pulls an Image ID requested by the user from Redis.
+        """
         try:
             image_id_int = int(image_id)
             image_id = str(image_id_int)
@@ -298,3 +339,10 @@ class OccupEyeApi():
 
         return (image_b64, content_type)
 
+    def _cache_sensors_for_map(self, map_id):
+        """
+        Caches a list of every sensor associated with the
+        Map ID requested.
+        """
+        #TODO: implement this (after dinner?!)
+        pass
