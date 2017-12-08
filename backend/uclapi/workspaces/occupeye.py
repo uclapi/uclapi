@@ -1,11 +1,21 @@
 import json
 import os
+from base64 import b64encode
 from time import time as time_now
 import redis
 import requests
 
 from django.conf import settings
 
+
+class BadOccupEyeRequest(Exception):
+    """
+    Custom exception for when any CadCap API request fails.
+    This should only be raised by endpoints that could contain
+    user-entered data, so that we can give them an error telling
+    them that the data they gave us is bad.
+    """
+    pass
 
 class OccupEyeApi():
     """
@@ -14,6 +24,9 @@ class OccupEyeApi():
     """
     # Keep general survey data around in the cache for a day
     SURVEY_TTL = 3600
+
+    # Keep image data in the cache for two days
+    IMAGE_TTL = 7200
 
     def __init__(self, test_mode=False):
         self.r = redis.StrictRedis(
@@ -223,3 +236,61 @@ class OccupEyeApi():
             survey["maps"] = survey_maps
             surveys.append(survey)
         return surveys
+
+    def _cache_image(self, image_id):
+        headers = {
+            "Authorization": self.get_bearer_token()
+        }
+        url = "{}/api/images/{}?deployment={}".format(
+            self.base_url,
+            image_id,
+            self.deployment_name
+        )
+        try:
+            request = requests.get(
+                url=url,
+                headers=headers,
+                stream=True
+            )
+            content_type = request.headers['Content-Type']
+        except:
+            raise BadOccupEyeRequest
+
+        raw_image = request.content
+        image_b64 = b64encode(raw_image)
+
+        pipeline = self.r.pipeline()
+        pipeline.set(
+            "occupeye:image:{}:base64".format(image_id),
+            image_b64
+        )
+        pipeline.expire(
+            "occupeye:image:{}:base64".format(image_id),
+            self.IMAGE_TTL
+        )
+        pipeline.set(
+            "occupeye:image:{}:content_type".format(image_id),
+            content_type
+        )
+        pipeline.expire(
+            "occupeye:image:{}:content_type".format(image_id),
+            self.IMAGE_TTL
+        )
+        pipeline.execute()
+
+    def get_image(self, image_id):
+        try:
+            image_id_int = int(image_id)
+            image_id = str(image_id_int)
+        except ValueError:
+            # We were not given an integer so something weird is going on.
+            # We must abort to save ourselves.
+            raise BadOccupEyeRequest
+
+        if not self.r.exists("occupeye:image:{}:base64".format(image_id)):
+            self._cache_image(image_id)
+
+        image_b64 = self.r.get("occupeye:image:{}:base64".format(image_id))
+        content_type = self.r.get("occupeye:image:{}:content_type".format(image_id))
+
+        return (image_b64, content_type)
