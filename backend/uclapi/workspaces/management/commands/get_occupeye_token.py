@@ -6,6 +6,7 @@ from django.conf import settings
 
 from workspaces.occupeye import OccupEyeApi
 
+
 class Command(BaseCommand):
     help = 'Gets a Cad-Capture OccupEye OAuth token and places it into Redis'
 

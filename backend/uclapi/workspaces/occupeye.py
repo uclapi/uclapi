@@ -14,6 +14,7 @@ class OccupEyeApi():
     """
     # Keep survey data around in the cache for an hour
     SURVEY_TTL = 3600
+
     def __init__(self, test_mode=False):
         self.r = redis.StrictRedis(
             host=settings.REDIS_UCLAPI_HOST,
@@ -62,7 +63,9 @@ class OccupEyeApi():
         response = json.loads(request.text)
 
         self.access_token = response["access_token"]
-        self.access_token_expiry = int(time_now()) + int(response["expires_in"])
+        self.access_token_expiry = int(time_now()) + int(
+            response["expires_in"]
+        )
         self.r.set("occupeye:access_token", self.access_token)
         self.r.set("occupeye:access_token_expiry", self.access_token_expiry)
 

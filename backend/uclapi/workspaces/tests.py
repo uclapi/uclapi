@@ -8,6 +8,7 @@ from django.test import TestCase
 
 from .occupeye import OccupEyeApi
 
+
 class OccupEyeApiTestCase(TestCase):
     def setUp(self):
         self.r = redis.StrictRedis(
@@ -110,7 +111,7 @@ class OccupEyeApiTestCase(TestCase):
             surveys[0]["end_time"],
             "12:00"
         )
-        
+
         self.assertEqual(
             surveys[1]["id"],
             9992
