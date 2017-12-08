@@ -33,7 +33,13 @@ class OccupEyeApi():
             self.access_token_expiry = None
         else:
             self.access_token = self.r.get("occupeye:access_token")
-            self.access_token_expiry = int(self.r.get("occupeye:access_token_expiry"))
+
+            access_token_expiry = self.r.get("occupeye:access_token_expiry")
+            # We can only cast this value to an int if we know it's not None
+            if access_token_expiry:
+                self.access_token_expiry = int(access_token_expiry)
+            else:
+                self.access_token_expiry = None
             if not self.access_token or not self.access_token_expiry:
                 self.get_token()
 
