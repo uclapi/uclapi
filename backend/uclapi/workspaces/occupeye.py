@@ -12,7 +12,7 @@ class OccupEyeApi():
     Python API for the Cad-Capture OccupEye backend.
     Data is cached as much as possible in Redis for performance.
     """
-    # Keep survey data around in the cache for an hour
+    # Keep general survey data around in the cache for a day
     SURVEY_TTL = 3600
 
     def __init__(self, test_mode=False):
@@ -85,6 +85,53 @@ class OccupEyeApi():
 
         return "Bearer " + self.access_token
 
+    def _cache_maps_for_survey(self, survey_id):
+        survey_maps_key = "occupeye:surveys:{}:maps".format(
+            survey_id
+        )
+        pipeline = self.r.pipeline()
+        headers = {
+            "Authorization": self.get_bearer_token()
+        }
+        url = "{}/api/Maps/?deployment={}&surveyid={}".format(
+            self.base_url,
+            self.deployment_name,
+            survey_id
+        )
+        request = requests.get(
+            url=url,
+            headers=headers
+        )
+        survey_maps_data = request.json()
+
+        pipeline.delete(survey_maps_key)
+        for survey_map in survey_maps_data:
+            survey_map_id = "occupeye:surveys:{}:maps:{}".format(
+                survey_id,
+                str(survey_map["MapID"])
+            )
+            pipeline.hmset(
+                survey_map_id,
+                {
+                    "id": survey_map["MapID"],
+                    "name": survey_map["MapName"],
+                    "image_id": survey_map["ImageID"]
+                }
+            )
+            pipeline.rpush(
+                survey_maps_key,
+                survey_map["MapID"]
+            )
+            pipeline.expire(
+                survey_map_id,
+                self.SURVEY_TTL
+            )
+        pipeline.expire(
+            survey_maps_key,
+            self.SURVEY_TTL
+        )
+        pipeline.execute()
+
     def _cache_survey_data(self):
         # Use a Redis Pipeline to ensure that all the data is inserted together
         # and atomically
@@ -121,6 +168,8 @@ class OccupEyeApi():
             # We prepend to the list of Surveys because the API returns
             # a list of surveys where the ID decrements
             pipeline.lpush("occupeye:surveys", str(survey["SurveyID"]))
+            # Cache all maps for this survey for later use
+            self._cache_maps_for_survey(survey["SurveyID"])
 
         pipeline.expire("occupeye:surveys", self.SURVEY_TTL)
         pipeline.execute()
@@ -141,14 +190,36 @@ class OccupEyeApi():
 
         for id in survey_ids:
             survey_data = self.r.hgetall("occupeye:surveys:" + id)
-            surveys.append(
-                {
-                    "id": int(survey_data["id"]),
-                    "name": survey_data["name"],
-                    "active": self._str2bool(survey_data["active"]),
-                    "start_time": survey_data["start_time"],
-                    "end_time": survey_data["end_time"]
-                }
+            survey = {
+                "id": int(survey_data["id"]),
+                "name": survey_data["name"],
+                "active": self._str2bool(survey_data["active"]),
+                "start_time": survey_data["start_time"],
+                "end_time": survey_data["end_time"]
+            }
+            survey_map_ids_list = "occupeye:surveys:{}:maps".format(
+                id
             )
-
+            survey_map_ids = self.r.lrange(
+                survey_map_ids_list,
+                0,
+                self.r.llen(survey_map_ids_list)
+            )
+            survey_maps = []
+            for survey_map_id in survey_map_ids:
+                survey_map = self.r.hgetall(
+                    "occupeye:surveys:{}:maps:{}".format(
+                        id,
+                        survey_map_id
+                    )
+                )
+                survey_maps.append(
+                    {
+                       "id": int(survey_map["id"]),
+                       "name": survey_map["name"],
+                       "image_id": int(survey_map["image_id"])
+                    }
+                )
+            survey["maps"] = survey_maps
+            surveys.append(survey)
         return surveys
