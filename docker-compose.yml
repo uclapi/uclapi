@@ -32,7 +32,9 @@ services:
       - db
       - cache
       - redis
+    env_file: ./backend/uclapi/.env
     environment: 
+        DOCKER: "yes"
         DB_UCLAPI_NAME: uclapi_default
         DB_UCLAPI_HOST: db
         DB_UCLAPI_USERNAME: uclapi_default
