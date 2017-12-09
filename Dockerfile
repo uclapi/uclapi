@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:xenial
 RUN ["mkdir", "uclapi"]
 WORKDIR ./uclapi
 ADD ./scripts/setup.sh ./scripts/setup.sh
