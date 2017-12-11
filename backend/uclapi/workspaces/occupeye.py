@@ -521,9 +521,9 @@ class OccupEyeApi():
                 # HW ID. If we have data on it, we assume we can use the cache.
                 # If not, we retrieve all the latest data.
                 first_sensor_status_key = (
-                    "occupeye:surveys:{}:maps:{}:sensors:{}:status"
-                ).format(survey_id, map_id, sensor_hw_ids[0])
-                if not self.r.get(first_sensor_status_key):
+                    "occupeye:surveys:{}:sensors:{}:status"
+                ).format(survey_id, sensor_hw_ids[0])
+                if not self.r.hgetall(first_sensor_status_key):
                     self._cache_all_survey_sensor_states(survey_id)
 
                 for sensor_id in sensor_hw_ids:
