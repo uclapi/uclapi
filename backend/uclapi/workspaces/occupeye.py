@@ -340,7 +340,6 @@ class OccupEyeApi():
 
         return (image_b64, content_type)
 
-
     def _cache_all_survey_sensor_states(self, survey_id):
         """
         Caches all sensors in a survey, including their latest states
@@ -366,7 +365,7 @@ class OccupEyeApi():
             sensor_data_key = "occupeye:surveys:{}:sensors:{}:data".format(
                 survey_id,
                 sensor_data["HardwareID"]
-            )            
+            )
             pipeline.hmset(
                 sensor_data_key,
                 {
@@ -419,10 +418,6 @@ class OccupEyeApi():
             headers=headers
         )
         all_map_sensors_data = request.json()
-
-        survey_sensors_key = "occupeye:surveys:{}:sensors".format(
-            survey_id
-        )
 
         pipeline = self.r.pipeline()
         map_sensors_list_key = "occupeye:surveys:{}:maps:{}:sensors".format(
@@ -551,7 +546,7 @@ class OccupEyeApi():
             )
             pipeline.execute()
             map_data["sensors"] = sensors
-            
+
             data["maps"].append(map_data)
 
         return data

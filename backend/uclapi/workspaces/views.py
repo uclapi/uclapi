@@ -88,6 +88,7 @@ def get_image(request, *args, **kwargs):
         response.status_code = 400
         return response
 
+
 @api_view(["GET"])
 @uclapi_protected_endpoint(personal_data=False)
 def get_survey_sensors(request, *args, **kwargs):
