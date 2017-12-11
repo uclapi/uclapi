@@ -8,15 +8,16 @@ from common.helpers import (
     RateLimitHttpResponse as HttpResponse
 )
 
-from .decorators import occupeye_api_request
-from .occupeye import BadOccupEyeRequest
+from .occupeye import (
+    OccupEyeApi,
+    BadOccupEyeRequest
+)
 
 
 @api_view(["GET"])
 @uclapi_protected_endpoint(personal_data=False)
-@occupeye_api_request()
 def get_rooms(request, *args, **kwargs):
-    api = kwargs['OccupEyeApi']
+    api = OccupEyeApi()
     response_data = {
         "ok": True,
         "rooms": api.get_surveys()
@@ -31,7 +32,7 @@ def get_rooms(request, *args, **kwargs):
 @uclapi_protected_endpoint(personal_data=False)
 @occupeye_api_request()
 def get_image(request, *args, **kwargs):
-    api = kwargs['OccupEyeApi']
+    api = OccupEyeApi()
     try:
         image_id = request.GET['image_id']
     except KeyError:
@@ -50,9 +51,9 @@ def get_image(request, *args, **kwargs):
     except BadOccupEyeRequest:
         response = JsonResponse({
             "ok": False,
-            "error": "Either the Image ID you requested does "
+            "error": ("Either the Image ID you requested does "
                      "not exist, or an internal error occured "
-                     "that prevented it from being retrieved."
+                     "that prevented it from being retrieved.")
         }, rate_limiting_data=kwargs)
         response.status_code = 400
         return response
@@ -77,8 +78,8 @@ def get_image(request, *args, **kwargs):
     else:
         response = JsonResponse({
             "ok": False,
-            "error": "You specified a response format that "
-                     "was not either raw or base64."
+            "error": ("You specified a response format that "
+                     "was not either raw or base64.")
         }, rate_limiting_data=kwargs)
         response.status_code = 400
         return response

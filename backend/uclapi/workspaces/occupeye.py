@@ -24,10 +24,10 @@ class OccupEyeApi():
     Data is cached as much as possible in Redis for performance.
     """
     # Keep general survey data around in the cache for a day
-    SURVEY_TTL = 3600
+    SURVEY_TTL = 86400
 
     # Keep image data in the cache for two days
-    IMAGE_TTL = 7200
+    IMAGE_TTL = 172800
 
     def __init__(self, test_mode=False):
         self.r = redis.StrictRedis(
@@ -236,8 +236,8 @@ class OccupEyeApi():
 
         surveys = []
 
-        for id in survey_ids:
-            survey_data = self.r.hgetall("occupeye:surveys:" + id)
+        for survey_id in survey_ids:
+            survey_data = self.r.hgetall("occupeye:surveys:" + survey_id)
             survey = {
                 "id": int(survey_data["id"]),
                 "name": survey_data["name"],
@@ -246,7 +246,7 @@ class OccupEyeApi():
                 "end_time": survey_data["end_time"]
             }
             survey_map_ids_list = "occupeye:surveys:{}:maps".format(
-                id
+                survey_id
             )
             survey_map_ids = self.r.lrange(
                 survey_map_ids_list,
@@ -257,7 +257,7 @@ class OccupEyeApi():
             for survey_map_id in survey_map_ids:
                 survey_map = self.r.hgetall(
                     "occupeye:surveys:{}:maps:{}".format(
-                        id,
+                        survey_id,
                         survey_map_id
                     )
                 )
@@ -321,12 +321,9 @@ class OccupEyeApi():
         """
         Pulls an Image ID requested by the user from Redis.
         """
-        try:
-            image_id_int = int(image_id)
-            image_id = str(image_id_int)
-        except ValueError:
-            # We were not given an integer so something weird is going on.
-            # We must abort to save ourselves.
+        # We must ensure that only digits are passed into the code
+        # to prevent Redis injection attacks.
+        if not image_id.isdigit():
             raise BadOccupEyeRequest
 
         if not self.r.exists("occupeye:image:{}:base64".format(image_id)):
