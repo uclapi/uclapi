@@ -31,7 +31,6 @@ def get_rooms(request, *args, **kwargs):
 @api_view(["GET"])
 @uclapi_protected_endpoint(personal_data=False)
 def get_image(request, *args, **kwargs):
-    api = OccupEyeApi()
     try:
         image_id = request.GET['image_id']
     except KeyError:
@@ -41,6 +40,8 @@ def get_image(request, *args, **kwargs):
         }, rate_limiting_data=kwargs)
         response.status_code = 400
         return response
+
+    api = OccupEyeApi()
 
     try:
         (
@@ -86,3 +87,43 @@ def get_image(request, *args, **kwargs):
         }, rate_limiting_data=kwargs)
         response.status_code = 400
         return response
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(personal_data=False)
+def get_survey_sensors(request, *args, **kwargs):
+    try:
+        survey_id = request.GET["survey_id"]
+    except KeyError:
+        response = JsonResponse({
+            "ok": False,
+            "error": "Please specify a survey_id."
+        })
+        response.status_code = 400
+        return response
+
+    # Check if state data should be returned
+    try:
+        return_states = request.GET["return_states"].lower() == "true"
+    except KeyError:
+        return_states = False
+
+    api = OccupEyeApi()
+    try:
+        data = api.get_survey_sensors(
+            survey_id,
+            return_states=return_states
+        )
+    except BadOccupEyeRequest:
+        response = JsonResponse({
+            "ok": False,
+            "error": "The survey_id you specified was not valid."
+        })
+        response.status_code = 400
+        return response
+
+    response = JsonResponse({
+        "ok": True,
+        "survey_id": survey_id,
+        "maps": data["maps"]
+    })
+    return response
