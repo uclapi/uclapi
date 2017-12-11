@@ -30,7 +30,6 @@ def get_rooms(request, *args, **kwargs):
 
 @api_view(["GET"])
 @uclapi_protected_endpoint(personal_data=False)
-@occupeye_api_request()
 def get_image(request, *args, **kwargs):
     api = OccupEyeApi()
     try:
@@ -51,9 +50,11 @@ def get_image(request, *args, **kwargs):
     except BadOccupEyeRequest:
         response = JsonResponse({
             "ok": False,
-            "error": ("Either the Image ID you requested does "
-                     "not exist, or an internal error occured "
-                     "that prevented it from being retrieved.")
+            "error": (
+                "Either the Image ID you requested does "
+                "not exist, or an internal error occured "
+                "that prevented it from being retrieved."
+            )
         }, rate_limiting_data=kwargs)
         response.status_code = 400
         return response
@@ -78,8 +79,10 @@ def get_image(request, *args, **kwargs):
     else:
         response = JsonResponse({
             "ok": False,
-            "error": ("You specified a response format that "
-                     "was not either raw or base64.")
+            "error": (
+                "You specified a response format that "
+                "was not either raw or base64."
+            )
         }, rate_limiting_data=kwargs)
         response.status_code = 400
         return response
