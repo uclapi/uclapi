@@ -6,7 +6,8 @@ from common.helpers import PrettyJsonResponse as JsonResponse
 
 from .models import Lock, Course, Depts, ModuleA, ModuleB
 
-from .app_helpers import get_student_timetable, get_custom_timetable
+from .app_helpers import get_student_timetable, get_custom_timetable, \
+    get_paginated_personal_timetable
 
 from common.decorators import uclapi_protected_endpoint
 
@@ -18,6 +19,12 @@ _SETID = settings.ROOMBOOKINGS_SETID
 def get_personal_timetable(request, *args, **kwargs):
     token = kwargs['token']
     user = token.user
+
+    # each page will be n number of days.
+    page_token = request.GET.get("page_token")
+    if page_token:
+        timetable, ok = paginated_personal_timetable(page_token)
+
     try:
         date_filter = request.GET["date_filter"]
         timetable = get_student_timetable(user.employee_id, date_filter)

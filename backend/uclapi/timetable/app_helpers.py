@@ -46,14 +46,11 @@ def _get_cache(model_name):
 
 
 def _get_student_by_upi(upi):
-    print("Getting student by UPI: " + upi)
     students = _get_cache("students")
     # Assume the current Set ID due to caching
     upi_upper = upi.upper()
     student = students.objects.filter(
-        qtype2=upi_upper
-    )[0]
-    print("Got student")
+        qtype2=upi_upper)[0]
     return student
 
 
@@ -83,6 +80,31 @@ def _get_lecturer_details(lecturer_upi):
     return details
 
 
+def _construct_event_object(event, date, module):
+    date_str = date.strftime("%Y-%m-%d")
+    return {
+        "start_time": event.starttime,
+        "end_time": event.finishtime,
+        "duration": event.duration,
+        "module": {
+            "module_code": event.linkcode,
+            "module_id": event.moduleid,
+            "course_owner": event.owner,
+            "lecturer": _get_lecturer_details(event.lecturerid),
+            "name": "Unknown"
+        },
+        "location": _get_location_details(
+            event.siteid,
+            event.roomid
+        ),
+        "session_type": event.moduletype,
+        "session_type_str": _get_session_type_str(
+            event.moduletype
+        ),
+        "session_group": module.modgrpcode
+    }, date_str    
+
+
 def _get_timetable_events(student_modules):
     print("Getting timetabled events")
     if not _week_map:
@@ -100,28 +122,8 @@ def _get_timetable_events(student_modules):
         )
         for event in events_data:
             for date in _get_real_dates(event):
-                date_str = date.strftime("%Y-%m-%d")
-                event_data = {
-                    "start_time": event.starttime,
-                    "end_time": event.finishtime,
-                    "duration": event.duration,
-                    "module": {
-                        "module_code": event.linkcode,
-                        "module_id": event.moduleid,
-                        "course_owner": event.owner,
-                        "lecturer": _get_lecturer_details(event.lecturerid),
-                        "name": "Unknown"
-                    },
-                    "location": _get_location_details(
-                        event.siteid,
-                        event.roomid
-                    ),
-                    "session_type": event.moduletype,
-                    "session_type_str": _get_session_type_str(
-                        event.moduletype
-                    ),
-                    "session_group": module.modgrpcode
-                }
+
+                event_data, date_str = _construct_event_object(event, date, module)
 
                 if event.moduleid not in _module_name_cache:
                     try:
@@ -162,34 +164,9 @@ def _get_timetable_events_module_list(module_list):
         events_data = timetable.objects.filter(
             moduleid=module.moduleid
         )
-        print("Count of events data:")
-        print(events_data.count())
         for event in events_data:
-            print(event)
             for date in _get_real_dates(event):
-                print(date)
-                date_str = date.strftime("%Y-%m-%d")
-                event_data = {
-                    "start_time": event.starttime,
-                    "end_time": event.finishtime,
-                    "duration": event.duration,
-                    "module": {
-                        "module_code": event.linkcode,
-                        "module_id": event.moduleid,
-                        "course_owner": event.owner,
-                        "lecturer": _get_lecturer_details(event.lecturerid),
-                        "name": module.name
-                    },
-                    "location": _get_location_details(
-                        event.siteid,
-                        event.roomid
-                    ),
-                    "session_type": event.moduletype,
-                    "session_type_str": _get_session_type_str(
-                        event.moduletype
-                    ),
-                    "session_group": event.modgrpcode
-                }
+                event_data, date_str = _construct_event_object(event, date, module)
                 if date_str not in returned_timetable:
                     returned_timetable[date_str] = []
                 returned_timetable[date_str].append(event_data)
