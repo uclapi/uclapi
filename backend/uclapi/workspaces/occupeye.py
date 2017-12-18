@@ -69,7 +69,7 @@ class OccupEyeApi():
         to convert the boolean strings from Redis into
         actual bool objects.
         """
-        return v.lower() in ("yes", "true", "t", "1")
+        return str(v).lower() in ("yes", "true", "t", "1")
 
     def get_token(self):
         """
@@ -255,7 +255,7 @@ class OccupEyeApi():
             survey_map_ids = self.r.lrange(
                 survey_map_ids_list,
                 0,
-                self.r.llen(survey_map_ids_list)
+                self.r.llen(survey_map_ids_list) - 1
             )
             survey_maps = []
             for survey_map_id in survey_map_ids:
@@ -340,6 +340,88 @@ class OccupEyeApi():
 
         return (image_b64, content_type)
 
+    def _get_survey_sensor_max_timestamp(self, survey_id):
+        """
+        Gets the last time the sensor data for the given survey
+        was updated. This is delivered back with sensor data
+        so that developers can see how recent the data is.
+        This is especially important given how much data we
+        cache.
+        """
+        headers = {
+            "Authorization": self.get_bearer_token()
+        }
+        url = "{}/api/SurveyMaxMessageTime/{}?deployment={}".format(
+            self.base_url,
+            survey_id,
+            self.deployment_name
+        )
+        request = requests.get(
+            url=url,
+            headers=headers
+        )
+        # The response has the timeestamp surrounded in double
+        # quotes, so we strip those away.
+        max_sensor_timestamp = request.text.replace('"', '')
+        return max_sensor_timestamp
+
+    def _cache_survey_sensor_data(self, survey_id):
+        """
+        Caches attribute data about all sensors in a survey
+        without matching them to a map.
+        This uses the /SurveyDevices endpoint.
+        When we actually deliver data to the developer we group
+        it by map (so that it is actually useful), so this function
+        does not create any lists of sensors (we just cache data
+        about each one by ID)
+        """
+        headers = {
+            "Authorization": self.get_bearer_token()
+        }
+        url = "{}/api/SurveyDevices/?deployment={}&surveyid={}".format(
+            self.base_url,
+            self.deployment_name,
+            survey_id
+        )
+        request = requests.get(
+            url=url,
+            headers=headers
+        )
+        all_sensors_data = request.json()
+        pipeline = self.r.pipeline()
+        survey_sensors_key = "occupeye:surveys:{}:sensors".format(survey_id)
+        pipeline.delete(survey_sensors_key)
+
+        for sensor_data in all_sensors_data:
+            sensor_data_key = (
+                "occupeye:surveys:{}:sensors:{}:data"
+            ).format(survey_id, sensor_data["HardwareID"])
+
+            pipeline.hmset(sensor_data_key, {
+                "survey_id": sensor_data["SurveyID"],
+                "hardware_id": sensor_data["HardwareID"],
+                "survey_device_id": sensor_data["SurveyDeviceID"],
+                "host_address": sensor_data["HostAddress"],
+                "pir_address": sensor_data["PIRAddress"],
+                "device_type": sensor_data["DeviceType"],
+                "location": sensor_data["Location"],
+                "description_1": sensor_data["Description1"],
+                "description_2": sensor_data["Description2"],
+                "description_3": sensor_data["Description3"],
+                "room_id": sensor_data["RoomID"],
+                "room_name": sensor_data["RoomName"],
+                "share_id": sensor_data["ShareID"],
+                "floor": self._str2bool(sensor_data["Floor"]),
+                "room_type": sensor_data["RoomType"],
+                "building_name": sensor_data["Building"],
+                "room_description": sensor_data["RoomDescription"]
+            })
+            pipeline.rpush(survey_sensors_key, sensor_data["HardwareID"])
+            pipeline.expire(sensor_data_key, self.SURVEY_TTL)
+
+        pipeline.expire(survey_sensors_key, self.SURVEY_TTL)
+        pipeline.execute()
+
     def _cache_all_survey_sensor_states(self, survey_id):
         """
         Caches all sensors in a survey, including their latest states
@@ -358,22 +440,7 @@ class OccupEyeApi():
         )
         all_sensors_data = request.json()
         pipeline = self.r.pipeline()
-        pipeline.delete(
-            "occupeye:surveys:{}:sensors".format(survey_id)
-        )
         for sensor_data in all_sensors_data:
-            sensor_data_key = "occupeye:surveys:{}:sensors:{}:data".format(
-                survey_id,
-                sensor_data["HardwareID"]
-            )
-            pipeline.hmset(
-                sensor_data_key,
-                {
-                    "hardware_id": sensor_data["HardwareID"],
-                    "sensor_id": sensor_data["SensorID"],
-                }
-            )
-
             sensor_status_key = "occupeye:surveys:{}:sensors:{}:status".format(
                 survey_id,
                 sensor_data["HardwareID"]
@@ -381,22 +448,23 @@ class OccupEyeApi():
             pipeline.hmset(
                 sensor_status_key,
                 {
-                    "id": sensor_data["HardwareID"],
+                    "hardware_id": sensor_data["HardwareID"],
                     "last_trigger_type": sensor_data["LastTriggerType"],
                     "last_trigger_timestamp": sensor_data["LastTriggerTime"]
                 }
             )
-            pipeline.rpush(
-                "occupeye:surveys:{}:sensors".format(survey_id),
-                sensor_data["HardwareID"]
-            )
-            pipeline.expire(sensor_data_key, self.SURVEY_TTL)
             pipeline.expire(sensor_status_key, self.SENSOR_STATUS_TTL)
 
-        pipeline.expire(
-            "occupeye:surveys:{}:sensors".format(survey_id),
-            self.SURVEY_TTL
+        max_timestamp_key = (
+            "occupeye:surveys:{}:sensors:max_timestamp"
+        ).format(survey_id)
+        max_timestamp_value = self._get_survey_sensor_max_timestamp(survey_id)
+
+        pipeline.set(
+            max_timestamp_key,
+            max_timestamp_value
         )
+        pipeline.expire(max_timestamp_key, self.SENSOR_STATUS_TTL)
 
         pipeline.execute()
 
@@ -441,7 +509,7 @@ class OccupEyeApi():
             pipeline.hmset(
                 properties_key,
                 {
-                    "id": map_sensor_data["HardwareID"],
+                    "hardware_id": map_sensor_data["HardwareID"],
                     "x_pos": map_sensor_data["X"],
                     "y_pos": map_sensor_data["Y"]
                 }
@@ -480,10 +548,44 @@ class OccupEyeApi():
         maps = self.r.lrange(
             maps_key,
             0,
-            self.r.llen(maps_key)
+            self.r.llen(maps_key) - 1
         )
 
-        data = {"maps": []}
+        survey_data_key = "occupeye:surveys:{}".format(survey_id)
+        survey_data = self.r.hgetall(survey_data_key)
+
+        data = {
+            "maps": [],
+            "survey_id": survey_data["id"],
+            "survey_name": survey_data["name"]
+        }
+
+        all_survey_sensors_key = (
+            "occupeye:surveys:{}:sensors"
+        ).format(survey_id)
+        # If we do not have the data for each survey's sensor then
+        # we should go ahead and cache that.
+        if not self.r.exists(all_survey_sensors_key):
+            self._cache_survey_sensor_data(survey_id)
+
+        survey_sensors_ids = self.r.lrange(
+            all_survey_sensors_key,
+            0,
+            self.r.llen(all_survey_sensors_key)
+        )
+        pipeline = self.r.pipeline()
+
+        # Dictionary with the general :data for for every sensor
+        # in the survey with no regard for map
+        survey_sensors_data = dict()
+        for sensor_id in survey_sensors_ids:
+            sensor_data_key = (
+                "occupeye:surveys:{}:sensors:{}:data"
+            ).format(survey_id, sensor_id)
+            pipeline.hgetall(sensor_data_key)
+
+        for sensor_data in pipeline.execute():
+            survey_sensors_data[sensor_data["hardware_id"]] = sensor_data
 
         for map_id in maps:
             map_sensors_key = "occupeye:surveys:{}:maps:{}:sensors".format(
@@ -496,14 +598,13 @@ class OccupEyeApi():
             sensor_hw_ids = self.r.lrange(
                 map_sensors_key,
                 0,
-                self.r.llen(map_sensors_key)
+                self.r.llen(map_sensors_key) - 1
             )
 
             sensors = OrderedDict()
 
-            pipeline = self.r.pipeline()
-
             # Get sensor properties requests into a pipeline
+            # Whilst at it, grab the :data from survey_sensors_data
             for sensor_id in sensor_hw_ids:
                 sensor_properties_key = (
                     "occupeye:surveys:{}:maps:{}:sensors:{}:properties"
@@ -512,7 +613,11 @@ class OccupEyeApi():
 
             # Now execute that pipeline
             for result in pipeline.execute():
-                sensors[result['id']] = result
+                hw_id = result['hardware_id']
+                if hw_id in survey_sensors_data:
+                    sensors[hw_id] = {**result, **survey_sensors_data[hw_id]}
+                else:
+                    sensors[hw_id] = result
 
             # Now do the same thing again if states were requested
             if return_states:
@@ -534,10 +639,11 @@ class OccupEyeApi():
 
                 for result in pipeline.execute():
                     if result:
-                        sensors[result['id']][
+                        hw_id = result['hardware_id']
+                        sensors[hw_id][
                             "last_trigger_timestamp"
                         ] = result["last_trigger_timestamp"]
-                        sensors[result['id']][
+                        sensors[hw_id][
                             "last_trigger_type"
                         ] = result["last_trigger_type"]
 
@@ -549,4 +655,37 @@ class OccupEyeApi():
 
             data["maps"].append(map_data)
 
+        if return_states:
+            max_timestamp_key = (
+                "occupeye:surveys:{}:sensors:max_timestamp"
+            ).format(survey_id)
+            data["most_recent_timestamp"] = self.r.get(max_timestamp_key)
+
         return data
+
+    def get_max_survey_timestamp(self, survey_id):
+        """
+        Get the highest timestamp of any sensor in the OccupEye system.
+        This is a shortcut for developers to check whether any data has
+        changed.
+        If the data is returned from Redis then it will be in sync
+        with the internal cache. If it has to be re-cached into
+        Redis by this endpoint then the data has come from OccupEye
+        which means there will be no other cached data.
+        I have added this explanation just in case we end up scratching
+        our heads over this at a later date!
+        """
+        if not survey_id.isdigit():
+            raise BadOccupEyeRequest
+
+        max_timestamp_key = (
+            "occupeye:surveys:{}:sensors:max_timestamp"
+        ).format(survey_id)
+
+        max_timestamp_cached = self.r.get(max_timestamp_key)
+        if max_timestamp_cached:
+            return (int(survey_id), max_timestamp_cached)
+        else:
+            max_timestamp = self._get_survey_sensor_max_timestamp(survey_id)
+            self.r.set(max_timestamp_key, max_timestamp)
+            return (int(survey_id), max_timestamp)

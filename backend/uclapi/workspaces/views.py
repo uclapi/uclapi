@@ -1,17 +1,11 @@
 from base64 import b64decode
 
+from common.decorators import uclapi_protected_endpoint
+from common.helpers import PrettyJsonResponse as JsonResponse
+from common.helpers import RateLimitHttpResponse as HttpResponse
 from rest_framework.decorators import api_view
 
-from common.decorators import uclapi_protected_endpoint
-from common.helpers import (
-    PrettyJsonResponse as JsonResponse,
-    RateLimitHttpResponse as HttpResponse
-)
-
-from .occupeye import (
-    OccupEyeApi,
-    BadOccupEyeRequest
-)
+from .occupeye import BadOccupEyeRequest, OccupEyeApi
 
 
 @api_view(["GET"])
@@ -124,7 +118,42 @@ def get_survey_sensors(request, *args, **kwargs):
 
     response = JsonResponse({
         "ok": True,
-        "survey_id": survey_id,
-        "maps": data["maps"]
+        **data
     })
+    return response
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(personal_data=False)
+def get_survey_max_timestamp(request, *args, **kwargs):
+    try:
+        survey_id = request.GET["survey_id"]
+    except KeyError:
+        response = JsonResponse({
+            "ok": False,
+            "error": "Please specify a survey_id."
+        })
+        response.status_code = 400
+        return response
+
+    api = OccupEyeApi()
+    try:
+        (
+            survey_id_int,
+            max_timestamp
+        ) = api.get_max_survey_timestamp(survey_id)
+    except BadOccupEyeRequest:
+        response = JsonResponse({
+            "ok": False,
+            "error": "The survey_id you specified was not valid."
+        })
+        response.status_code = 400
+        return response
+
+    response = JsonResponse({
+        "ok": True,
+        "survey_id": survey_id_int,
+        "last_updated": max_timestamp
+    }, rate_limiting_data=kwargs)
+
     return response
