@@ -14,7 +14,7 @@ export default class Category extends React.Component {
         <div className="apps">
           {
             this.props.apps.map((app, i) => {
-              return <App name={app.name} key={i} logo={app.logo} description={app.description} />;
+              return <App {...app} />;
             })
           }
         </div>

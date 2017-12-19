@@ -25,34 +25,36 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="app">
-        <Card
-          zDepth={this.state.shadow}
-          onMouseOver={this.onMouseOver}
-          onMouseOut={this.onMouseOut}
-          style={{
-            "borderRadius": "10px",
-            "border": "1px solid #e4e4e4"
-          }}>
-          <CardHeader
-            title={this.props.name}
-            subtitle={this.props.description}
-            avatar={
-              <Avatar
-                src={this.props.logo}
-                size={60}
-              />
-            }
+        <a href={"/marketplace/" + this.props.id}>
+          <Card
+            zDepth={this.state.shadow}
+            onMouseOver={this.onMouseOver}
+            onMouseOut={this.onMouseOut}
+            style={{
+              "borderRadius": "10px",
+              "border": "1px solid #e4e4e4"
+            }}>
+            <CardHeader
+              title={this.props.name}
+              subtitle={this.props.description}
+              avatar={
+                <Avatar
+                  src={this.props.logo}
+                  size={60}
+                />
+              }
 
-            titleStyle={{
-              "fontSize": "18px",
-              "fontWeight": 700
-            }}
-            subtitleStyle={{
-              "fontSize": "14px",
-              "fontWeight": 400
-            }}
-          />
-        </Card>
+              titleStyle={{
+                "fontSize": "18px",
+                "fontWeight": 700
+              }}
+              subtitleStyle={{
+                "fontSize": "14px",
+                "fontWeight": 400
+              }}
+            />
+          </Card>
+        </a>
       </div>
     )
   }
