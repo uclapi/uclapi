@@ -3,7 +3,7 @@ import React from 'react';
 import FeaturedApp from './FeaturedApp.jsx';
 
 
-export default class Category extends React.Component {
+export default class FeaturedApps extends React.Component {
 
   constructor(props) {
     super(props);

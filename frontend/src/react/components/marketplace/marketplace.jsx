@@ -1,111 +1,45 @@
 import React from 'react';
 
+import allApps from './allApps.jsx';
 import Intro from "./Intro.jsx";
 import Category from "./Category.jsx";
 import CategoryList from './CategoryList.jsx';
 import FeaturedApps from './FeaturedApps.jsx';
 
 
-let categories = [
-  {
-    "name": "Slack Apps",
-    "description": "Apps for your slack groups",
-    "apps": [
-      {
-        "name": "Roombot",
-        "description": "Find room bookings for your society, Find room bookings for your society",
-        "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
-      },
-      {
-        "name": "Roombot",
-        "description": "Find room bookings for your society, Find room bookings for your society",
-        "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
-      },
-      {
-        "name": "Roombot",
-        "description": "Find room bookings for your society",
-        "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
-      }
-    ]
+let categories = {
+  "timetable": {
+    name: "Timetable",
+    description: "Apps for timetable",
+    apps: []
   },
-  {
-    "name": "Slack Apps",
-    "description": "Apps for your slack groups",
-    "apps": [
-      {
-        "name": "Roombot",
-        "description": "Find room bookings for your society",
-        "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
-      },
-      {
-        "name": "Roombot",
-        "description": "Find room bookings for your society",
-        "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
-      },
-      {
-        "name": "Roombot",
-        "description": "Find room bookings for your society",
-        "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
-      }
-    ]
+  "search": {
+    name: "Search",
+    description: "Apps for search",
+    apps: []
   },
-  {
-    "name": "Slack Apps",
-    "description": "Apps for your slack groups",
-    "apps": [
-      {
-        "name": "Roombot",
-        "description": "Find room bookings for your society",
-        "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
-      },
-      {
-        "name": "Roombot",
-        "description": "Find room bookings for your society",
-        "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
-      },
-      {
-        "name": "Roombot",
-        "description": "Find room bookings for your society",
-        "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
-      }
-    ]
-  },
-  {
-    "name": "Slack Apps",
-    "description": "Apps for your slack groups",
-    "apps": [
-      {
-        "name": "Roombot",
-        "description": "Find room bookings for your society",
-        "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
-      },
-      {
-        "name": "Roombot",
-        "description": "Find room bookings for your society",
-        "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
-      },
-      {
-        "name": "Roombot",
-        "description": "Find room bookings for your society",
-        "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png"
-      }
-    ]
+};
+
+let allAppsValues = Object.values(allApps);
+
+for (let i=0; i<allAppsValues.length; i++) {
+  if (categories[allAppsValues[i].category]) {
+    categories[allAppsValues[i].category].apps.push(allAppsValues[i])
   }
-]
-
-
-let allApps = [];
-
-for (let i=0; i < categories.length; i++) {
-  allApps = allApps.concat(categories[i].apps);
+  else {
+    console.log(allApps[i].category, categories[allApps[i].category]);
+  }
 }
+
+categories = Object.values(categories);
+console.log(categories);
 
 export default class MarketplaceComponent extends React.Component {
 
     render () {
       return (
         <div>
-          <Intro allApps={allApps} />
+          <Intro allApps={Object.values(allApps)} />
 
           <div className="container">
             <div className="row">
