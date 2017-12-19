@@ -15,9 +15,6 @@ export default class AppPageComponent extends React.Component {
     this.state = {
       app: allApps[this.props.appId]
     }
-
-    console.log(this.props);
-    console.log("app", this.state.app);
   }
 
   render() {
