@@ -45,18 +45,14 @@ export default class MarketplaceComponent extends React.Component {
             <div className="row">
 
               <div className="col2">
-                <CategoryList />
+                <CategoryList categories={categories} />
               </div>
 
               <div className="col10">
                 <div className="categories">
                   {
                     categories.map((category, i) => {
-                      return <Category
-                          key={i}
-                          name={category.name}
-                          description={category.description}
-                          apps={category.apps}/>;
+                      return <Category key={i} {...category} />;
                     })
                   }
                 </div>

@@ -9,7 +9,7 @@ export default class Category extends React.Component {
   render() {
     return (
       <Paper className="category" zDepth={1}>
-        <h1>{this.props.name}</h1>
+        <h1 id={this.props.name}>{this.props.name}</h1>
         <h2>{this.props.description}</h2>
         <div className="apps">
           {
