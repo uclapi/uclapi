@@ -32,7 +32,6 @@ for (let i=0; i<allAppsValues.length; i++) {
 }
 
 categories = Object.values(categories);
-console.log(categories);
 
 export default class MarketplaceComponent extends React.Component {
 

@@ -22,18 +22,20 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <Paper
-        className="featuredApp"
-        zDepth={this.state.shadow}
-        onMouseOver={this.onMouseOver}
-        onMouseOut={this.onMouseOut}
-        style={{
-          "borderRadius": "10px"
-        }}>
-        <img src={this.props.logo} />
-        <h1>{this.props.name}</h1>
-        <p>{this.props.description}</p>
-      </Paper>
+      <a href={"/marketplace/" + this.props.id}>
+        <Paper
+          className="featuredApp"
+          zDepth={this.state.shadow}
+          onMouseOver={this.onMouseOver}
+          onMouseOut={this.onMouseOut}
+          style={{
+            "borderRadius": "10px"
+          }}>
+          <img src={this.props.logo} />
+          <h1>{this.props.name}</h1>
+          <p>{this.props.description}</p>
+        </Paper>
+      </a>
     )
   }
 

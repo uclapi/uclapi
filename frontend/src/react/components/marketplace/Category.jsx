@@ -14,7 +14,7 @@ export default class Category extends React.Component {
         <div className="apps">
           {
             this.props.apps.map((app, i) => {
-              return <App {...app} />;
+              return <App key={i} {...app} />;
             })
           }
         </div>

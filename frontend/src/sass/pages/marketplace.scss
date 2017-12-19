@@ -57,7 +57,11 @@ h2 {
     margin-left: 20px;
   }
 
-  .featuredApp {
+  a {
+    text-decoration: none;
+  }
+
+  a > .featuredApp {
     width: 100%;
     height: 100%;
     text-align: center;

@@ -44,11 +44,7 @@ export default class FeaturedApps extends React.Component {
               this.state.featuredApps.map((app, i) => {
                 return (
                   <div key={i} className="col4">
-                    <FeaturedApp
-                      name={app.name}
-                      logo={app.logo}
-                      description={app.description}
-                    />
+                    <FeaturedApp {...app} />
                   </div>
                 )
               })
