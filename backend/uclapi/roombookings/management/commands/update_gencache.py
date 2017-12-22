@@ -48,7 +48,7 @@ class Command(BaseCommand):
         self.stdout.write(
             "Dumping all the data from Oracle into a new list..."
         )
-        
+
         batch_size = 5000
         running_total = 0
 
