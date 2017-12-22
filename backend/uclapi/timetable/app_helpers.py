@@ -285,7 +285,7 @@ def get_student_timetable(upi, date_filter=None):
     )
     timetable_key = "timetable:personal:{}".format(upi)
     if not r.exists(timetable_key):
-        self._cache_student_timetable(upi)
+        _cache_student_timetable(upi)
     data = r.get("timetable:personal:{}".format(upi))
     student_events = json.loads(data)
 
