@@ -9,7 +9,6 @@ import cx_Oracle
 from roombookings.models import BookingA, BookingB, Lock
 from django.core.management import call_command
 
-from pympler import asizeof, classtracker
 
 class Command(BaseCommand):
 
