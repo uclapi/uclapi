@@ -1,4 +1,7 @@
 import datetime
+import json
+
+import redis
 
 from django.conf import settings
 
@@ -84,7 +87,6 @@ def _get_lecturer_details(lecturer_upi):
 
 
 def _get_timetable_events(student_modules):
-    print("Getting timetabled events")
     if not _week_map:
         _map_weeks()
 
@@ -93,7 +95,6 @@ def _get_timetable_events(student_modules):
 
     student_timetable = {}
     for module in student_modules:
-        print("Getting data for Module ID " + module.moduleid)
         events_data = timetable.objects.filter(
             moduleid=module.moduleid,
             modgrpcode=module.modgrpcode
@@ -138,7 +139,6 @@ def _get_timetable_events(student_modules):
                 if date_str not in student_timetable:
                     student_timetable[date_str] = []
                 student_timetable[date_str].append(event_data)
-    print("Got timetabled events")
     return student_timetable
 
 
@@ -258,14 +258,37 @@ def _get_location_details(siteid, roomid):
     return _rooms_cache[cache_id]
 
 
-def get_student_timetable(upi, date_filter=None):
-    print("*** GETTING STUDENT TIMETABLE FOR UPI " + upi + " ***")
+def _cache_student_timetable(upi):
+    r = redis.StrictRedis(
+        host=settings.REDIS_UCLAPI_HOST,
+        charset="utf-8",
+        decode_responses=True
+    )
     student = _get_student_by_upi(upi)
-    print("Getting modules....")
     student_modules = _get_student_modules(student)
-    print("Getting events...")
     student_events = _get_timetable_events(student_modules)
-    print("Returning events...")
+    timetable_key = "timetable:personal:{}".format(upi)
+    # Store a JSON representation of the timetable in
+    # Redis and let it stay cached for twelve hours
+    r.set(
+        timetable_key,
+        json.dumps(student_events),
+        ex=43200
+    )
+
+
+def get_student_timetable(upi, date_filter=None):
+    r = redis.StrictRedis(
+        host=settings.REDIS_UCLAPI_HOST,
+        charset="utf-8",
+        decode_responses=True
+    )
+    timetable_key = "timetable:personal:{}".format(upi)
+    if not r.exists(timetable_key):
+        self._cache_student_timetable(upi)
+    data = r.get("timetable:personal:{}".format(upi))
+    student_events = json.loads(data)
+
     if date_filter:
         if date_filter in student_events:
             filtered_student_events = {
