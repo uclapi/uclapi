@@ -18,6 +18,11 @@ let categories = {
     description: "Apps for search",
     apps: []
   },
+  "productivity": {
+    name: "Productivity",
+    description: "Apps for productivity",
+    apps: []
+  },
 };
 
 let allAppsValues = Object.values(allApps);

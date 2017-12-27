@@ -32,6 +32,19 @@ export default class Left extends React.Component {
         />
       )
     }
+
+    if (this.props.app.iosLink) {
+      buttons.push(
+        <RaisedButton
+          key={3}
+          label="iOS"
+          backgroundColor="#537DB0"
+          labelColor={"#ffffff"}
+          className="btn"
+          href={this.props.app.iosLink}
+        />
+      )
+    }
     return (
       <div className="left">
         <img className="logo" src={this.props.app.logo} />
