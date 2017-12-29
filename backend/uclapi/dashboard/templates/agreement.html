@@ -5,8 +5,9 @@
 
   <title>UCL API Fairuse Policy Agreement</title>
 
-	<link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/grids-responsive-min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/grids-responsive-min.css">
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link rel="stylesheet" href="{% static "css/agreement.css" %}" type="text/css" />
 </head>
@@ -18,7 +19,7 @@
       <h1>Fair use policy</h1>
       <div class="card flexCentre">
         <form class="pure-form pure-form-stacked" action="/dashboard/" method="post">{% csrf_token %}
-					<fieldset>
+          <fieldset>
             <div class="well left">
               {% autoescape off %}
               {% for line in fair_use%}
@@ -30,8 +31,8 @@
             <br>
             <button type="submit" class="pure-button pure-button-primary">I Agree</button>
             {% if error%}<p class="error">{{error}}</p>{% endif%}
-					</fieldset>
-				</form>
+          </fieldset>
+        </form>
       </div>
     </div>
     <div class="pure-u-md-1-4"></div>
