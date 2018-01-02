@@ -26,6 +26,7 @@ h2 {
 
 .intro {
   padding-top: 80px;
+  padding-bottom: 20px;
   text-align: center;
   background: linear-gradient(rgba(67, 67, 67, 0.6), rgba(67, 67, 67, 0.6)), url("/static/marketplace_bg.png");
   background-size: cover;
@@ -178,17 +179,12 @@ h2 {
     padding-left: 20px;
   }
 
-  img {
-    width: 100%;
-    display: block;
-    margin-bottom: 20px;
-  }
-
   .left {
 
     img {
       display: block;
-      width: 100%
+      width: 100%;
+      margin-bottom: 20px;
     }
 
     .btn {
@@ -199,7 +195,25 @@ h2 {
 
   .right {
     h1 {
-      font-weight: 400;
+      font-weight: 600;
+    }
+
+    .imgWrapper {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    img {
+      width: 45%;
+      height: 40%;
+      margin: 0 auto;
+      display: block;
+      margin-bottom: 40px;
+    }
+
+    p {
+      font-size: 20px;
+      margin-bottom: 40px;
     }
   }
 }

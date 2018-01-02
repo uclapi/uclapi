@@ -8,9 +8,11 @@ export default class Right extends React.Component {
       <div className="right">
         <h1>{this.props.app.name}</h1>
         <p>{this.props.app.detailedDescription}</p>
-        {this.props.app.screenshots.map((link, i) => (
-          <img src={link} key={i} />
-        ))}
+        <div className="imgWrapper">
+          {this.props.app.screenshots.map((link, i) => (
+            <img src={link} key={i} />
+          ))}
+        </div>
       </div>
     )
   }
