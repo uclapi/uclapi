@@ -88,12 +88,30 @@ h2 {
   }
 }
 
+.categoryList {
+  padding-top: 40px;
+  padding-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  a {
+    text-decoration: none;
+    color: #ffffff;
+    padding: 10px 20px 10px 20px;
+    border-radius: 20px;
+    display: inline;
+    margin-right: 20px;
+  }
+}
+
 .categories {
-  border-left: 2px #e1e4e8 solid;
 
   .category {
     margin: 20px;
     margin-bottom: 40px;
+    margin-left: 0px;
+    margin-right: 0px;
     padding: 30px;
     padding-bottom: 10px;
 
@@ -111,40 +129,7 @@ h2 {
       font-weight: 400;
     }
   }
-}
 
-.categoryList {
-  padding-right: 40px;
-
-  h2 {
-    margin: 0;
-    padding-top: 50px;
-    font-weight: 700;
-    font-size: 26px;
-    padding-left: 30px;
-    padding-bottom: 10px;
-  }
-
-  a {
-    display: block;
-    width: 100%;
-    font-size: 16px;
-    text-decoration: none;
-    color: #586069;
-    padding-top: 14px;
-    padding-bottom: 14px;
-    padding-left: 30px;
-    border-radius: 10px;
-  }
-
-  a:hover {
-    background: #eaecef;
-  }
-
-  .categoryItem {
-    width: 100%;
-    margin-bottom: 5px;
-  }
 }
 
 .apps {
@@ -157,7 +142,7 @@ h2 {
   margin-right: 10px;
   margin-bottom: 14px;
   min-width: 100px;
-  width: 48%;
+  width: 32%;
 }
 
 .appPage {

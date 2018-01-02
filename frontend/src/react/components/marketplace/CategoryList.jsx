@@ -10,14 +10,18 @@ export default class CategoryList extends React.Component {
   render() {
     return (
       <div className="categoryList">
-        <h2>Categories</h2>
         {
           this.props.categories.map((item, i) => {
-            return (<div key={i}>
-              <a href={"#" + item.name}>
+            return (
+              <a
+                href={"#" + item.name}
+                key={i}
+                style={{
+                  backgroundColor: item.color
+                }}>
                 {item.name}
               </a>
-            </div>)
+            )
           })
         }
       </div>

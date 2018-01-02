@@ -11,16 +11,19 @@ let categories = {
   "timetable": {
     name: "Timetable",
     description: "Apps for timetable",
+    color: "#80D8FF",
     apps: []
   },
   "search": {
     name: "Search",
     description: "Apps for search",
+    color: "#CDDC39",
     apps: []
   },
   "productivity": {
     name: "Productivity",
     description: "Apps for productivity",
+    color: "#FF9800",
     apps: []
   },
 };
@@ -46,22 +49,13 @@ export default class MarketplaceComponent extends React.Component {
           <Intro allApps={Object.values(allApps)} />
 
           <div className="container">
-            <div className="row">
-
-              <div className="col2">
-                <CategoryList categories={categories} />
-              </div>
-
-              <div className="col10">
-                <div className="categories">
-                  {
-                    categories.map((category, i) => {
-                      return <Category key={i} {...category} />;
-                    })
-                  }
-                </div>
-              </div>
-
+            <CategoryList categories={categories} />
+            <div className="categories">
+              {
+                categories.map((category, i) => {
+                  return <Category key={i} {...category} />;
+                })
+              }
             </div>
           </div>
 
