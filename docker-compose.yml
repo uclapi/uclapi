@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+        POSTGRES_USER: uclapi_default
+        POSTGRES_PASSWORD: test
+  cache:
+    image: postgres
+    restart: always
+    ports:
+      - "5432"
+    environment:
+        POSTGRES_USER: uclapi_gencache
+        POSTGRES_PASSWORD: test
+  redis: 
+    image: redis
+    restart: always
+    ports: 
+      - "6379"
+  web:
+    build: .
+    volumes:
+      - .:/uclapi
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - cache
+      - redis
+    env_file: ./backend/uclapi/.env
+    environment: 
+        DOCKER: "yes"
+        DB_UCLAPI_NAME: uclapi_default
+        DB_UCLAPI_HOST: db
+        DB_UCLAPI_USERNAME: uclapi_default
+        DB_UCLAPI_PASSWORD: test
+        DB_CACHE_NAME: uclapi_gencache
+        DB_CACHE_HOST: cache
+        DB_CACHE_USERNAME: uclapi_gencache
+        DB_CACHE_PASSWORD: test
+        REDIS_UCLAPI_HOST: redis
+        PYTHONUNBUFFERED: 0
+        SECRET_KEY: "j=&)+b&8_ndj%d)qtwp&r-ob6u8-f)mp8r!sw%gwu_14xm7j81"
