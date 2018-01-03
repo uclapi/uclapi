@@ -3,7 +3,7 @@ apt-get update
 apt-get -y install git curl libpq-dev libpq5 libpython3-dev \
     python3 python3-pip python3-virtualenv python-virtualenv \
     unzip virtualenv libaio1 build-essential libpcre3 \
-    libpcre3-dev wget sed \
+    libpcre3-dev wget sed
 
 # Oracle Version
 ORACLE_VERSION=12_2
