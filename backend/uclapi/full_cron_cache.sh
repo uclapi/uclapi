@@ -1,0 +1,17 @@
+#!/bin/bash
+echo -n "RAM CACHE AT "
+date
+
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+
+export ORACLE_HOME=/opt/oracle/instantclient_12_2
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME
+ldconfig
+pushd /web/uclapi/backend/uclapi
+. venv/bin/activate
+./manage.py update_gencache
+./manage.py update_timetable_gencache
+
+echo "RAM CACHE DONE"
+echo
+popd

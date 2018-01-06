@@ -1,4 +1,7 @@
 import datetime
+import json
+
+import redis
 
 from django.conf import settings
 
@@ -12,6 +15,8 @@ from .models import Lock, StudentsA, StudentsB, \
     RoomsA, RoomsB, \
     SitesA, SitesB, \
     ModuleA, ModuleB
+
+from .tasks import cache_student_timetable
 
 _SETID = settings.ROOMBOOKINGS_SETID
 
@@ -84,7 +89,6 @@ def _get_lecturer_details(lecturer_upi):
 
 
 def _get_timetable_events(student_modules):
-    print("Getting timetabled events")
     if not _week_map:
         _map_weeks()
 
@@ -93,7 +97,6 @@ def _get_timetable_events(student_modules):
 
     student_timetable = {}
     for module in student_modules:
-        print("Getting data for Module ID " + module.moduleid)
         events_data = timetable.objects.filter(
             moduleid=module.moduleid,
             modgrpcode=module.modgrpcode
@@ -138,7 +141,6 @@ def _get_timetable_events(student_modules):
                 if date_str not in student_timetable:
                     student_timetable[date_str] = []
                 student_timetable[date_str].append(event_data)
-    print("Got timetabled events")
     return student_timetable
 
 
@@ -259,13 +261,22 @@ def _get_location_details(siteid, roomid):
 
 
 def get_student_timetable(upi, date_filter=None):
-    print("*** GETTING STUDENT TIMETABLE FOR UPI " + upi + " ***")
-    student = _get_student_by_upi(upi)
-    print("Getting modules....")
-    student_modules = _get_student_modules(student)
-    print("Getting events...")
-    student_events = _get_timetable_events(student_modules)
-    print("Returning events...")
+    r = redis.StrictRedis(
+        host=settings.REDIS_UCLAPI_HOST,
+        charset="utf-8",
+        decode_responses=True
+    )
+    timetable_key = "timetable:personal:{}".format(upi)
+    if r.exists(timetable_key):
+        data = r.get(timetable_key)
+        student_events = json.loads(data)
+    else:
+        student = _get_student_by_upi(upi)
+        student_modules = _get_student_modules(student)
+        student_events = _get_timetable_events(student_modules)
+        # Celery task to cache for the next request
+        cache_student_timetable.delay(upi, student_events)
+
     if date_filter:
         if date_filter in student_events:
             filtered_student_events = {
