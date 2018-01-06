@@ -268,7 +268,7 @@ def get_student_timetable(upi, date_filter=None):
     )
     timetable_key = "timetable:personal:{}".format(upi)
     if r.exists(timetable_key):
-        data = r.get("timetable:personal:{}".format(upi))
+        data = r.get(timetable_key)
         student_events = json.loads(data)
     else:
         student = _get_student_by_upi(upi)
