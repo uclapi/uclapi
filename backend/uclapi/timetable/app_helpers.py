@@ -16,6 +16,8 @@ from .models import Lock, StudentsA, StudentsB, \
     SitesA, SitesB, \
     ModuleA, ModuleB
 
+from .tasks import cache_student_timetable
+
 _SETID = settings.ROOMBOOKINGS_SETID
 
 _week_map = {}
@@ -258,25 +260,6 @@ def _get_location_details(siteid, roomid):
     return _rooms_cache[cache_id]
 
 
-def _cache_student_timetable(upi):
-    r = redis.StrictRedis(
-        host=settings.REDIS_UCLAPI_HOST,
-        charset="utf-8",
-        decode_responses=True
-    )
-    student = _get_student_by_upi(upi)
-    student_modules = _get_student_modules(student)
-    student_events = _get_timetable_events(student_modules)
-    timetable_key = "timetable:personal:{}".format(upi)
-    # Store a JSON representation of the timetable in
-    # Redis and let it stay cached for twelve hours
-    r.set(
-        timetable_key,
-        json.dumps(student_events),
-        ex=43200
-    )
-
-
 def get_student_timetable(upi, date_filter=None):
     r = redis.StrictRedis(
         host=settings.REDIS_UCLAPI_HOST,
@@ -284,10 +267,15 @@ def get_student_timetable(upi, date_filter=None):
         decode_responses=True
     )
     timetable_key = "timetable:personal:{}".format(upi)
-    if not r.exists(timetable_key):
-        _cache_student_timetable(upi)
-    data = r.get("timetable:personal:{}".format(upi))
-    student_events = json.loads(data)
+    if r.exists(timetable_key):
+        data = r.get("timetable:personal:{}".format(upi))
+        student_events = json.loads(data)
+    else:
+        student = _get_student_by_upi(upi)
+        student_modules = _get_student_modules(student)
+        student_events = _get_timetable_events(student_modules)
+        # Celery task to cache for the next request
+        cache_student_timetable.delay(upi, student_events)
 
     if date_filter:
         if date_filter in student_events:
