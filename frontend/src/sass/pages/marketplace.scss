@@ -99,10 +99,17 @@ h2 {
   a {
     text-decoration: none;
     color: #ffffff;
-    padding: 10px 20px 10px 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 12px 24px 12px 24px;
     border-radius: 20px;
     display: inline;
     margin-right: 20px;
+    box-shadow: 0 7px 14px rgba(0,0,0,.1), 0 3px 6px rgba(0,0,0,.08);
+  }
+
+  a:hover {
+    transform: translateY(-1px);
   }
 }
 
