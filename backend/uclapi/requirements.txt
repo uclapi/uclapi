@@ -50,4 +50,4 @@ tldextract==2.2.0
 urllib3==1.22
 validators==0.12.0
 vine==1.1.4
-yarl==0.16.0
+yarl==0.18.0
