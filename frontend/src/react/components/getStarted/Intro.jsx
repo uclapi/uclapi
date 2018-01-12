@@ -1,20 +1,20 @@
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import Jumbotron from './Jumbotron.jsx';
-
 
 export default class Intro extends React.Component {
 
   render() {
     return (
-      <Jumbotron>
-        <h1>UCL API</h1>
-        <h3>Getting Started Guide</h3>
-        <a href={"/dashboard/"}>
-          <RaisedButton label="Start Building" primary={true} />
-        </a>
-      </Jumbotron>
+      <div className="intro">
+        <div className="container">
+          <h1>UCL API</h1>
+          <h2>UCL API is a <b>student-built</b> platform for <b>student developers</b> to improve the <b>student experience</b> of everyone at UCL.</h2>
+          <a href={"/dashboard/"}>
+            <RaisedButton label="Start Building" primary={true} />
+          </a>
+        </div>
+      </div>
     )
   }
 

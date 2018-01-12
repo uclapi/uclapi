@@ -1,18 +1,18 @@
 @import '../includes/helpers';
 
-$primary-color: #0b3954;
+$primary-color: #313537;
 $secondary-color: #f4f4f4;
 
 body {
   margin: 0px;
-  font-family: 'Roboto', sans-serif;
-  color: #333333;
-  background: #F4F4F4;
+  font-family: 'Source Sans Pro', sans-serif;
+  background: $primary-color;
+  color: #ffffff;
 }
 
 h1 {
   font-size: 36px;
-  font-weight: lighter;
+  font-weight: bold;
   margin-top: 0px;
   margin-bottom: 20px;
 }
@@ -42,37 +42,24 @@ h3 {
   }
 }
 
-.tagline {
-  background: $primary-color;
-  color: $secondary-color;
-  padding-bottom: 0;
-  padding-top: 120px;
+.intro {
+  padding-top: 140px;
+  padding-bottom: 140px;
+  background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("/static/logoCover2.png");
+  background-size: cover;
+  background-position: 50%;
   text-align: center;
 
   h2 {
-    margin: 0;
-  }
-
-  .container {
-    max-width: 800px;
+    max-width: 900px;
+    margin: 20px auto;
   }
 }
 
-.jumbotron {
-  padding-top: 120px;
-  padding-bottom: 120px;
-  color: white;
-  background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("/static/logoCover.png");
-  background-size: cover;
-  background-position: 50%;
-
-  h1 {
-    font-weight: bold;
-  }
-
-  .container {
-    max-width: 970px;
-  }
+.goal {
+  padding-top: 100px;
+  padding-bottom: 100px;
+  text-align: center;
 
   a {
     color: white;
@@ -105,25 +92,13 @@ h3 {
   border: 2px solid white;
 }
 
-.examples {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.example {
-  margin: 10px;
-  min-width: 200px;
-  width: 25%;
-}
-
 code {
   font-family: 'Source Code Pro', monospace;
   font-size: 14px;
 }
 
 .footer {
-  background-color: #0B3954;
+  background-color: $primary-color;
   padding-top: 60px;
   padding-bottom: 40px;
   color: white;
