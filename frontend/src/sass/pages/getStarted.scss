@@ -30,6 +30,11 @@ h3 {
 
 .navbar {
   padding-left: 60px !important;
+  padding-right: 60px !important;
+
+  a {
+    margin-right: 10px !important;
+  }
 
   img {
     width: 45px;
@@ -43,8 +48,8 @@ h3 {
 }
 
 .intro {
-  padding-top: 140px;
-  padding-bottom: 140px;
+  padding-top: 200px;
+  padding-bottom: 200px;
   background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("/static/logoCover2.png");
   background-size: cover;
   background-position: 50%;
@@ -66,12 +71,22 @@ h3 {
   }
 }
 
+.marketplace {
+  padding-top: 200px;
+  padding-bottom: 200px;
+  text-align: center;
+  background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("/static/marketplace_bg.png");
+  background-size: cover;
+  background-position: 20%;
+}
+
 .demo {
   display: flex;
   flex-wrap: wrap;
   min-height: 300px;
 
   .text {
+    color: $primary-color;
     background: white;
     flex: 2 200px;
     padding-right: 15px;
