@@ -4,7 +4,7 @@ import Intro from './Intro.jsx';
 import Goal from './Goal.jsx';
 import Demo from './Demo.jsx';
 import Marketplace from './Marketplace.jsx';
-import Footer from './Footer.jsx';
+import Blog from './Blog.jsx';
 
 
 export default class GetStartedComponent extends React.Component {
@@ -13,10 +13,10 @@ export default class GetStartedComponent extends React.Component {
       return (
         <div>
           <Intro />
-          <Goal />
           <Demo />
+          <Goal />
           <Marketplace />
-          <Footer />
+          <Blog />
         </div>
       )
     }

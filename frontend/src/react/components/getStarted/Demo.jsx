@@ -461,7 +461,7 @@ fetch(
       <div className="demo">
 
         <div className="text">
-          <h2>Get Today's Bookings for a Room</h2>
+          <h2>Try out the Room Bookings API</h2>
           <AutoComplete fullWidth={true} floatingLabelText="Room Name" filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} dataSource={rooms} onNewRequest={this.getSchedule}/>
         </div>
 

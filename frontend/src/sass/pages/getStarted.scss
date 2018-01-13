@@ -2,6 +2,7 @@
 
 $primary-color: #313537;
 $secondary-color: #f4f4f4;
+$highlight-color: #B18453;
 
 body {
   margin: 0px;
@@ -29,25 +30,6 @@ h3 {
   max-width: 1000px;
   margin: 20px auto;
   font-weight: 400;
-}
-
-.navbar {
-  padding-left: 60px !important;
-  padding-right: 60px !important;
-
-  a {
-    margin-right: 10px !important;
-  }
-
-  img {
-    width: 45px;
-    padding-right: 10px;
-  }
-
-  .active span {
-    font-weight: bold !important;
-    text-decoration: underline;
-  }
 }
 
 .intro {
@@ -101,12 +83,12 @@ h3 {
     background: #282A36;
     flex: 3 200px;
     overflow-y: auto;
-  }
-}
 
-.code hr {
-  margin: 0px;
-  border: 2px solid white;
+    hr {
+      margin: 0px;
+      border: 2px solid white;
+    }
+  }
 }
 
 code {
@@ -114,42 +96,27 @@ code {
   font-size: 14px;
 }
 
-.footer {
-  background-color: $primary-color;
+.blog {
   padding-top: 60px;
   padding-bottom: 40px;
-  color: white;
 
-  .container {
-    max-width: 800px;
+  h1 a {
+    color: $highlight-color;
   }
 
-  h1 {
+  .container > a {
+    text-decoration: none;
+    display: block;
     font-weight: lighter;
-    text-align: center;
     margin-top: 0px;
     margin-bottom: 60px;
-  }
-
-  h3 {
-    color: #555a72;
-    letter-spacing: .15em;
-    font-weight: 500;
-    text-transform: uppercase;
-    font-size: 11px;
-    margin-bottom: 10px;
-  }
-
-  a {
-    color: rgba(255,255,255,.65);
-    font-size: 18px;
-    display: block;
-    text-decoration: none;
-    margin-bottom: 14px;
+    color: white;
+    font-size: 36px;
+    margin: 40px auto;
   }
 
   a:hover {
-    color: white;
+    color: $highlight-color;
     text-decoration: underline;
   }
 }
