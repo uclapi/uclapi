@@ -439,6 +439,48 @@ class Depts(models.Model):
         _DATABASE = 'roombookings'
 
 
+class DeptsA(models.Model):
+    id = models.AutoField(primary_key=True)
+    deptid = models.TextField(max_length=10)
+    name = models.TextField(max_length=250)
+    category = models.TextField(max_length=10)
+    type = models.TextField(max_length=10)
+    linkcode = models.TextField(max_length=20)
+    headofdepartment = models.TextField(max_length=50)
+    headphone = models.TextField(max_length=50)
+    address1 = models.TextField(max_length=50)
+    address2 = models.TextField(max_length=50)
+    address3 = models.TextField(max_length=50)
+    address4 = models.TextField(max_length=50)
+    admincontact = models.TextField(max_length=50)
+    adminphone = models.TextField(max_length=50)
+    lecturerid = models.TextField(max_length=10)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class DeptsB(models.Model):
+    id = models.AutoField(primary_key=True)
+    deptid = models.TextField(max_length=10)
+    name = models.TextField(max_length=250)
+    category = models.TextField(max_length=10)
+    type = models.TextField(max_length=10)
+    linkcode = models.TextField(max_length=20)
+    headofdepartment = models.TextField(max_length=50)
+    headphone = models.TextField(max_length=50)
+    address1 = models.TextField(max_length=50)
+    address2 = models.TextField(max_length=50)
+    address3 = models.TextField(max_length=50)
+    address4 = models.TextField(max_length=50)
+    admincontact = models.TextField(max_length=50)
+    adminphone = models.TextField(max_length=50)
+    lecturerid = models.TextField(max_length=10)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
 class Weekmapstring(models.Model):
     setid = models.TextField(max_length=10)
     weekid = models.BigIntegerField(null=True, blank=True)

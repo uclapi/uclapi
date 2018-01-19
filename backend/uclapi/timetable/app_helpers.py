@@ -2,20 +2,14 @@ import datetime
 import json
 
 import redis
-
 from django.conf import settings
-
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import Lock, StudentsA, StudentsB, \
-    Stumodules, TimetableA, TimetableB, \
-    WeekmapnumericA, WeekmapnumericB, \
-    WeekstructureA, WeekstructureB, \
-    LecturerA, LecturerB, \
-    RoomsA, RoomsB, \
-    SitesA, SitesB, \
-    ModuleA, ModuleB
-
+from .models import (DeptsA, DeptsB, LecturerA, LecturerB, Lock, ModuleA,
+                     ModuleB, RoomsA, RoomsB, SitesA, SitesB, StudentsA,
+                     StudentsB, Stumodules, TimetableA, TimetableB,
+                     WeekmapnumericA, WeekmapnumericB, WeekstructureA,
+                     WeekstructureB)
 from .tasks import cache_student_timetable
 
 _SETID = settings.ROOMBOOKINGS_SETID
@@ -31,10 +25,11 @@ _session_type_map = {
 
 _rooms_cache = {}
 
-_module_name_cache = {}
+_department_name_cache = {}
 
 
 def _get_cache(model_name):
+    """Returns the cache bucket for the requested model name"""
     models = {
         "module": [ModuleA, ModuleB],
         "students": [StudentsA, StudentsB],
@@ -43,7 +38,8 @@ def _get_cache(model_name):
         "weekstructure": [WeekstructureA, WeekstructureB],
         "lecturer": [LecturerA, LecturerB],
         "rooms": [RoomsA, RoomsB],
-        "sites": [SitesA, SitesB]
+        "sites": [SitesA, SitesB],
+        "departments": [DeptsA, DeptsB]
     }
     lock = Lock.objects.all()[0]
     model = models[model_name][0] if lock.a else models[model_name][1]
@@ -51,56 +47,87 @@ def _get_cache(model_name):
 
 
 def _get_student_by_upi(upi):
-    print("Getting student by UPI: " + upi)
+    """Returns a StudentA or StudentB object by UPI"""
     students = _get_cache("students")
     # Assume the current Set ID due to caching
     upi_upper = upi.upper()
     student = students.objects.filter(
         qtype2=upi_upper
     )[0]
-    print("Got student")
     return student
 
 
 def _get_student_modules(student):
-    print("Getting student modules for student: " + student.qtype2)
+    """Returns all Stumodules object by for a given student"""
     raw_query = 'SELECT * FROM CMIS_OWNER.STUMODULES WHERE SETID=\'LIVE-17-18\' AND studentid=\'{}\''.format(  # NOQA
         student.studentid
     )
     student_modules = list(Stumodules.objects.raw(raw_query))
-    print("Got student modules for student: " + student.qtype2)
     return student_modules
 
 
+def _get_full_department_name(department_code):
+    """Converts a department code, such as COMPS_ENG, into a full name
+    such as Computer Science"""
+    if department_code in _department_name_cache:
+        return _department_name_cache[department_code]
+    else:
+        departments = _get_cache("departments")
+        try:
+            dept = departments.objects.get(deptid=department_code)
+            _department_name_cache[department_code] = dept.name
+            return dept.name
+        except ObjectDoesNotExist:
+            return "Unknown"
+
+
 def _get_lecturer_details(lecturer_upi):
+    """Returns a lecturer's name and email address from their UPI"""
     lecturers = _get_cache("lecturer")
     details = {
-        "name": "unknown",
-        "email": "unknown"
+        "name": "Unknown",
+        "email": "Unknown",
+        "department_id": "Unknown",
+        "department_name": "Unknown"
     }
     try:
         lecturer = lecturers.objects.get(lecturerid=lecturer_upi)
-        details["name"] = lecturer.name
-        details["email"] = lecturer.linkcode + "@ucl.ac.uk"
     except ObjectDoesNotExist:
         pass
+
+    details["name"] = lecturer.name
+    details["email"] = lecturer.linkcode + "@ucl.ac.uk"
+
+    if lecturer.owner:
+        details["department_id"] = lecturer.owner
+        details["department_name"] = _get_full_department_name(lecturer.owner)
 
     return details
 
 
-def _get_timetable_events(student_modules):
+def _get_timetable_events(full_modules, stumodules):
+    """Gets a dictionary of timetabled events.
+    If stumodules=True then assume full_modules = [Stumodules]
+    If stumodules=False then assume full_modules [ModuleA] or [ModuleB]"""
     if not _week_map:
         _map_weeks()
 
     timetable = _get_cache("timetable")
     modules = _get_cache("module")
 
-    student_timetable = {}
-    for module in student_modules:
-        events_data = timetable.objects.filter(
-            moduleid=module.moduleid,
-            modgrpcode=module.modgrpcode
-        )
+    full_timetable = {}
+    for module in full_modules:
+        if stumodules:
+            events_data = timetable.objects.filter(
+                moduleid=module.moduleid,
+                modgrpcode=module.modgrpcode
+            )
+            module_data = modules.objects.get(moduleid=module.moduleid)
+        else:
+            events_data = timetable.objects.filter(
+                moduleid=module.moduleid
+            )
+            module_data = module
         for event in events_data:
             for date in _get_real_dates(event):
                 date_str = date.strftime("%Y-%m-%d")
@@ -109,11 +136,12 @@ def _get_timetable_events(student_modules):
                     "end_time": event.finishtime,
                     "duration": event.duration,
                     "module": {
-                        "module_code": event.linkcode,
                         "module_id": event.moduleid,
-                        "course_owner": event.owner,
-                        "lecturer": _get_lecturer_details(event.lecturerid),
-                        "name": "Unknown"
+                        "department_id": event.owner,
+                        "department_name": _get_full_department_name(
+                            event.owner
+                        ),
+                        "name": module_data.name
                     },
                     "location": _get_location_details(
                         event.siteid,
@@ -122,33 +150,40 @@ def _get_timetable_events(student_modules):
                     "session_type": event.moduletype,
                     "session_type_str": _get_session_type_str(
                         event.moduletype
-                    ),
-                    "session_group": module.modgrpcode
+                    )
                 }
 
-                if event.moduleid not in _module_name_cache:
-                    try:
-                        module_data = modules.objects.get(
-                            moduleid=event.moduleid
-                        )
-                        _module_name_cache[event.moduleid] = module_data.name
-                    except ObjectDoesNotExist:
-                        _module_name_cache[event.moduleid] = "Unknown"
+                # If this is student module data, add in the group code
+                # because we have that field in Stumodules
+                if stumodules:
+                    event_data["session_group"] = module.modgrpcode
 
-                event_data["module"]["name"] = _module_name_cache[
-                    event.moduleid
-                ]
-                if date_str not in student_timetable:
-                    student_timetable[date_str] = []
-                student_timetable[date_str].append(event_data)
-    return student_timetable
+                # Check if the event's Lecturer ID exists.
+                # if not, we use the Lecturer ID associated with the module
+                # as a whole.
+                # It's an ugly hack, but works around not all timetabled
+                # lectures having the Lecturer ID field filled as they should.
+                # We assume therefore that if the lecturer isn't specified then
+                # the class is to be led by the module's owner.
+                if event.lecturerid.strip():
+                    event_data["module"]["lecturer"] = _get_lecturer_details(
+                        event.lecturerid
+                    )
+                else:
+                    event_data["module"]["lecturer"] = _get_lecturer_details(
+                        module_data.lecturerid
+                    )
+
+                if date_str not in full_timetable:
+                    full_timetable[date_str] = []
+                full_timetable[date_str].append(event_data)
+    return full_timetable
 
 
 def _get_timetable_events_module_list(module_list):
     if not _week_map:
         _map_weeks()
 
-    timetable = _get_cache("timetable")
     modules = _get_cache("module")
 
     full_modules = []
@@ -159,47 +194,10 @@ def _get_timetable_events_module_list(module_list):
         except ObjectDoesNotExist:
             return False
 
-    returned_timetable = {}
-    for module in full_modules:
-        events_data = timetable.objects.filter(
-            moduleid=module.moduleid
-        )
-        print("Count of events data:")
-        print(events_data.count())
-        for event in events_data:
-            print(event)
-            for date in _get_real_dates(event):
-                print(date)
-                date_str = date.strftime("%Y-%m-%d")
-                event_data = {
-                    "start_time": event.starttime,
-                    "end_time": event.finishtime,
-                    "duration": event.duration,
-                    "module": {
-                        "module_code": event.linkcode,
-                        "module_id": event.moduleid,
-                        "course_owner": event.owner,
-                        "lecturer": _get_lecturer_details(event.lecturerid),
-                        "name": module.name
-                    },
-                    "location": _get_location_details(
-                        event.siteid,
-                        event.roomid
-                    ),
-                    "session_type": event.moduletype,
-                    "session_type_str": _get_session_type_str(
-                        event.moduletype
-                    ),
-                    "session_group": event.modgrpcode
-                }
-                if date_str not in returned_timetable:
-                    returned_timetable[date_str] = []
-                returned_timetable[date_str].append(event_data)
-    return returned_timetable
+    return _get_timetable_events(full_modules, False)
 
 
 def _map_weeks():
-    print("Mapping weeks")
     weekmapnumeric = _get_cache("weekmapnumeric")
     weekstructure = _get_cache("weekstructure")
     week_nums = weekmapnumeric.objects.all()
@@ -212,7 +210,6 @@ def _map_weeks():
         if week.weekid not in _week_map:
             _week_map[week.weekid] = []
         _week_map[week.weekid].append(week.weeknumber)
-    print("Weeks mapped successfully")
 
 
 def _get_real_dates(slot):
@@ -273,7 +270,7 @@ def get_student_timetable(upi, date_filter=None):
     else:
         student = _get_student_by_upi(upi)
         student_modules = _get_student_modules(student)
-        student_events = _get_timetable_events(student_modules)
+        student_events = _get_timetable_events(student_modules, True)
         # Celery task to cache for the next request
         cache_student_timetable.delay(upi, student_events)
 
