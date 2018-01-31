@@ -167,7 +167,7 @@ def get_equipment(request, *args, **kwargs):
 
 
 @api_view(['GET'])
-# @uclapi_protected_endpoint()
+@uclapi_protected_endpoint()
 def get_free_rooms(request, *args, **kwargs):
     request_params = {}
     request_params['startdatetime__gte'] = request.GET.get('start_datetime')
