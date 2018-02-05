@@ -192,10 +192,10 @@ def _get_timetable_events(full_modules, stumodules):
                     # because we have that field in Stumodules
                     if stumodules:
                         event_data["session_group"] = event.modgrpcode
-                        if module.modgrpcode != '':
+                        if event.modgrpcode != '':
                             event_data["session_title"] = "{} ({})".format(
                                 module_data.name,
-                                module_data.modgrpcode
+                                event.modgrpcode
                             )
 
                     # Check if the module timetable event's Lecturer ID
