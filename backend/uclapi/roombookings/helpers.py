@@ -66,7 +66,9 @@ def _paginated_result(query, page_number, pagination):
     try:
         lock = Lock.objects.all()[0]
         curr = BookingA if not lock.bookingA else BookingB
-        all_bookings = curr.objects.filter(bookabletype='CB', **query).order_by('startdatetime')
+        all_bookings = curr.objects.filter(
+            bookabletype='CB', **query
+        ).order_by('startdatetime')
     except FieldError:
         return {
             "error": "something wrong with encoded query params"
