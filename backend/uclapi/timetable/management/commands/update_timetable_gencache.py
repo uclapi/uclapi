@@ -45,7 +45,9 @@ class Command(BaseCommand):
             ))
             # Only pulls in objects which apply to this year's Set ID
             if table_data[3]:
-                objs = table_data[0].objects.filter(setid=settings.ROOMBOOKINGS_SETID)
+                objs = table_data[0].objects.filter(
+                    setid=settings.ROOMBOOKINGS_SETID
+                )
             else:
                 objs = table_data[0].objects.all()
 
@@ -65,10 +67,9 @@ class Command(BaseCommand):
                 )
             )
 
-            table_data[destination_table_index].objects.using('gencache').bulk_create(
-                new_objs,
-                batch_size=5000
-            )
+            table_data[destination_table_index].objects.using(
+                'gencache'
+            ).bulk_create(new_objs, batch_size=5000)
 
         print("Inverting lock")
         lock.a, lock.b = not lock.a, not lock.b
