@@ -25,9 +25,10 @@ _week_map = {}
 _week_num_date_map = {}
 
 _session_type_map = {
+    "EX": "Examination",
     "L": "Lecture",
+    "P": "Practical",
     "PBL": "Problem Based Learning",
-    "P": "Practical"
 }
 
 _rooms_cache = {}
@@ -53,13 +54,19 @@ def _get_cache(model_name):
     }
     if model_name in timetable_models:
         timetable_lock = Lock.objects.all()[0]
-        model = timetable_models[model_name][0] if timetable_lock.a else timetable_models[model_name][1]
+        if timetable_lock.a:
+            model = timetable_models[model_name][0]
+        else:
+            model = timetable_models[model_name][1]
     elif model_name in roombookings_models:
         roombooking_lock = RBLock.objects.all()[0]
-        model = roombookings_models[model_name][0] if roombooking_lock.bookingA else roombookings_models[model_name][1]
+        if roombooking_lock.bookingA:
+            model = roombookings_models[model_name][0]
+        else:
+            model = roombookings_models[model_name][1]
     else:
         raise Exception("Unknown model requested from cache")
-    
+
     return model
 
 
@@ -123,9 +130,11 @@ def _get_lecturer_details(lecturer_upi):
 
 
 def _get_timetable_events(full_modules, stumodules):
-    """Gets a dictionary of timetabled events.
+    """
+    Gets a dictionary of timetabled events.
     If stumodules=True then assume full_modules = [Stumodules]
-    If stumodules=False then assume full_modules [ModuleA] or [ModuleB]"""
+    If stumodules=False then assume full_modules [ModuleA] or [ModuleB]
+    """
     if not _week_map:
         _map_weeks()
 
@@ -152,10 +161,9 @@ def _get_timetable_events(full_modules, stumodules):
         for event in events_data:
             event_bookings = bookings.objects.filter(slotid=event.slotid)
             if len(event_bookings) == 0:
-                # We have to trust the data in the event because no rooms are booked
-                # for some weird reason.
+                # We have to trust the data in the event because
+                # no rooms are booked for some weird reason.
                 for date in _get_real_dates(event):
-                    date_str = date.strftime("%Y-%m-%d")
                     event_data = {
                         "start_time": event.starttime,
                         "end_time": event.finishtime,
@@ -190,25 +198,22 @@ def _get_timetable_events(full_modules, stumodules):
                                 module_data.modgrpcode
                             )
 
-                    # Check if the module timetable event's Lecturer ID exists.
-                    # if not, we use the Lecturer ID associated with the module
-                    # as a whole.
-                    # It's an ugly hack, but works around not all timetabled
-                    # lectures having the Lecturer ID field filled as they should.
-                    # We assume therefore that if the lecturer isn't specified then
-                    # the class is to be led by the module's owner.
+                    # Check if the module timetable event's Lecturer ID
+                    # exists. If not, we use the Lecturer ID associated
+                    # with the module as a whole. It's an ugly hack, but
+                    # it works around not all timetabled lectures having
+                    # the Lecturer ID field filled as they should.
+                    # We assume therefore that if the lecturer isn't
+                    # specified then the class is to be led by the
+                    # module's owner.
                     if event.lecturerid.strip():
-                        event_data["module"]["lecturer"] = _get_lecturer_details(
-                            event.lecturerid
-                        )
+                        event_data["module"]["lecturer"] = \
+                            _get_lecturer_details(event.lecturerid)
                     else:
-                        event_data["module"]["lecturer"] = _get_lecturer_details(
-                            module_data.lecturerid
-                        )
+                        event_data["module"]["lecturer"] = \
+                            _get_lecturer_details(module_data.lecturerid)
 
-                    # date_stamp = datetime.datetime.strptime(booking.startdatetime, "%Y-%m-%d %H:%M:%S")
-                    # date_str = date_stamp.strptime("%Y-%m-%d")
-                    date_str = booking.startdatetime.strftime("%Y-%m-%d")
+                    date_str = date.strftime("%Y-%m-%d")
                     if date_str not in full_timetable:
                         full_timetable[date_str] = []
                     full_timetable[date_str].append(event_data)
@@ -244,24 +249,21 @@ def _get_timetable_events(full_modules, stumodules):
                     if stumodules:
                         event_data["session_group"] = module.modgrpcode
 
-                    # Check if the module timetable event's Lecturer ID exists.
-                    # if not, we use the Lecturer ID associated with the module
-                    # as a whole.
-                    # It's an ugly hack, but works around not all timetabled
-                    # lectures having the Lecturer ID field filled as they should.
-                    # We assume therefore that if the lecturer isn't specified then
-                    # the class is to be led by the module's owner.
+                    # Check if the module timetable event's Lecturer ID
+                    # exists. If not, we use the Lecturer ID associated
+                    # with the module as a whole. It's an ugly hack, but
+                    # it works around not all timetabled lectures having
+                    # the Lecturer ID field filled as they should.
+                    # We assume therefore that if the lecturer isn't
+                    # specified then the class is to be led by the
+                    # module's owner.
                     if event.lecturerid.strip():
-                        event_data["module"]["lecturer"] = _get_lecturer_details(
-                            event.lecturerid
-                        )
+                        event_data["module"]["lecturer"] = \
+                            _get_lecturer_details(event.lecturerid)
                     else:
-                        event_data["module"]["lecturer"] = _get_lecturer_details(
-                            module_data.lecturerid
-                        )
+                        event_data["module"]["lecturer"] = \
+                            _get_lecturer_details(module_data.lecturerid)
 
-                    # date_stamp = datetime.datetime.strptime(booking.startdatetime, "%Y-%m-%d %H:%M:%S")
-                    # date_str = date_stamp.strptime("%Y-%m-%d")
                     date_str = booking.startdatetime.strftime("%Y-%m-%d")
                     if date_str not in full_timetable:
                         full_timetable[date_str] = []
