@@ -689,3 +689,52 @@ class OccupEyeApi():
             max_timestamp = self._get_survey_sensor_max_timestamp(survey_id)
             self.r.set(max_timestamp_key, max_timestamp)
             return (int(survey_id), max_timestamp)
+
+    def feed_cache(self):
+        """
+        Function called by the Django management command to feed the Redis
+        cache with as much 24-hour valid information as possible. This
+        code should be run at night so that commands during the day are quicker.
+        It can also be run during the day if the code is updated or we are
+        notified of any significant changes to Cad-Cap that require a refresh
+        during the day.
+        """
+        self._cache_survey_data()
+        survey_ids = self.r.lrange(
+            "occupeye:surveys",
+            0,
+            self.r.llen("occupeye:surveys") - 1
+        )
+        # Cache all the latest surveys
+        for survey_id in survey_ids:
+            # Cache a list of every map in the survey
+            self._cache_maps_for_survey(survey_id)
+            # Cache the data for every sensor in the survey
+            self._cache_survey_sensor_data(survey_id)    
+
+            # Get a list of every map in the survey based on the the result of
+            # running _cache_maps_for_survey above
+            survey_maps_key = "occupeye:surveys:{}:maps".format(
+                survey_id
+            )
+            survey_map_ids = self.r.lrange(
+                survey_maps_key,
+                0,
+                self.r.llen(survey_maps_key) - 1
+            )
+            # Cache data for every map within every survey
+            for survey_map_id in survey_map_ids:
+                survey_map = self.r.hgetall(
+                    "occupeye:surveys:{}:maps:{}".format(
+                        survey_id,
+                        survey_map_id
+                    )
+                )
+                # Cache the base64 representation of the raw image for the survey
+                image_id = int(survey_map["image_id"])
+                self._cache_image(image_id)
+                # Cache a list of every sensor in every map
+                self._cache_sensors_for_map(survey_id, survey_map_id)
+
+            
+            self._cache_all_survey_sensor_states(survey_id)
