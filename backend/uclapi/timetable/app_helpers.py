@@ -9,7 +9,9 @@ from django.db.models import Q
 from roombookings.models import (
     Lock as RBLock,
     BookingA,
-    BookingB
+    BookingB,
+    Location,
+    SiteLocation
 )
 
 from .models import (DeptsA, DeptsB, LecturerA, LecturerB, Lock, ModuleA,
@@ -319,6 +321,30 @@ def _get_session_type_str(session_type):
         return "Unknown"
 
 
+def _get_location_coordinates(siteid, roomid):
+    # First try and get the specific room's location
+    try:
+        location = Location.objects.get(
+            siteid=siteid,
+            roomid=roomid
+        )
+        return location.lat, location.lng
+    except Location.DoesNotExist:
+        pass
+
+    # Now try and get the building's location
+    try:
+        location = SiteLocation.objects.get(
+            siteid=siteid
+        )
+        return location.lat, location.lng
+    except SiteLocation.DoesNotExist:
+        pass
+
+    # Now just bail
+    return None, None
+
+
 def _get_location_details(siteid, roomid):
     if not roomid:
         return {}
@@ -334,6 +360,7 @@ def _get_location_details(siteid, roomid):
             site = sites.objects.filter(siteid=siteid)[0]
         except IndexError:
             return {}
+        lat, lng = _get_location_coordinates(siteid, roomid)
         _rooms_cache[cache_id] = {
             "name": room.name,
             "capacity": room.capacity,
@@ -341,10 +368,16 @@ def _get_location_details(siteid, roomid):
             "address": [
                 site.address1,
                 site.address2,
-                site.address3
+                site.address3,
+                site.address4
             ],
-            "site_name": site.sitename
+            "site_name": site.sitename,
+            "coordinates": {
+                "lat": lat,
+                "lng": lng
+            }
         }
+
     return _rooms_cache[cache_id]
 
 
