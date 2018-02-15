@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import os
 import sys
-import dotenv
+from common.helpers import read_dotenv
 
 if __name__ == "__main__":
-    dotenv.read_dotenv()
+    read_dotenv()
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "uclapi.settings")
 
     try:

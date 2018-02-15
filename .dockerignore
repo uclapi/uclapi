@@ -81,8 +81,8 @@ celerybeat-schedule
 # macOS binary files
 .DS_Store
 
-# dotenv
-.env
+# NOT excluding the dotenv file because of how the execution works
+# .env
 
 # virtualenv
 venv/
@@ -122,14 +122,5 @@ static/
 # Redis
 dump.rdb
 
-# Private files
-/scripts/uclfw.rules
-/scripts/shibboleth/attribute-map.xml
-/scripts/shibboleth/attribute-policy.xml
-/scripts/shibboleth/idp-ucl-metadata.xml
-/scripts/shibboleth/shibboleth2.prod.xml
-/scripts/shibboleth/shibboleth2.staging.xml
-/scripts/shibboleth/sp-cert.prod.pem
-/scripts/shibboleth/sp-cert.staging.pem
-/scripts/shibboleth/sp-key.prod.pem
-/scripts/shibboleth/sp-key.staging.pem
+# UCL API venv
+backend/uclapi/venv/
