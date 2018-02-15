@@ -141,7 +141,7 @@ class Command(BaseCommand):
 
             elif site_id == "RUS26":
 
-                 location, created = SiteLocation.objects.get_or_create(
+                location, created = SiteLocation.objects.get_or_create(
                     siteid=site_id
                 )
                 location.lat = "51.521831"
