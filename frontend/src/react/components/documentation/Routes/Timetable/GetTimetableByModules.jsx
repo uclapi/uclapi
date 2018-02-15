@@ -140,20 +140,55 @@ export default class GetEquiment extends React.Component {
                 example="Gordon House 106"
                 description="Room name of the timetable event." />
               <Cell
-                name="sitename"
+                name="site_name"
                 extra="string"
                 example="Gordon House"
-                description="Name of the site where the event is happening." />
+                description="Name of the site / building where the event is happening." />
               <Cell
                 name="type"
                 extra="string"
                 example="CB"
-                description="Type of the room eg., Lecture Theatre, etc." />
+                description="Type of the room eg., Centrally Bookable (CB) or Departmentally Bookable (DB)." />
               <Cell
                 name="capacity"
                 extra="int"
                 example="100"
-                description="Capacity of the room." />
+                description="Capacity of the room (e.g. how many seats are in a lecture theatre, or how many can be sat at tables in a flat space)." />
+              <Cell
+                name="module"
+                extra="object"
+                example={`{"module_id": "COMP3011", name": "Functional Programming", "department_id": "COMPS_ENG", "department_name": "Computer Science", "lecturer": {"name": "CLACK, Chris (Dr)", "department_id": "COMPS_ENG", "department_name": "Computer Science", "email": "REDACTED@ucl.ac.uk"}}`}
+                description="Information about the module as a whole, including its lead lecturer"/>
+              <Cell
+                name="module_id"
+                extra="string"
+                example="COMP3011"
+                description="Module ID." />
+              <Cell
+                name="name"
+                extra="string"
+                example="Functional Programming"
+                description="Module name." />
+              <Cell
+                name="department_id"
+                extra="string"
+                example="COMPS_ENG"
+                description="Department the module comes under." />
+              <Cell
+                name="department_name"
+                extra="string"
+                example="Computer Science"
+                description="Human readable department name that owns the module." />
+              <Cell
+                name="lecturer"
+                extra="object"
+                example={`"lecturer": {"name": "CLACK, Chris (Dr)", "department_id": "COMPS_ENG", "department_name": "Computer Science", "email": "REDACTED@ucl.ac.uk"}`}
+                description="Information about the main course leader / lecturer, and what their home department is. Note that the course lead may not run every lecture, so in timetable apps you should use the contact field listed below." />
+              <Cell
+                name="duration"
+                extra="int"
+                example="120"
+                description="Duration of the event in minutes." />
               <Cell
                 name="start_time"
                 extra="string"
@@ -165,35 +200,25 @@ export default class GetEquiment extends React.Component {
                 example="18:00:00"
                 description="End time of the event." />
               <Cell
-                name="module"
-                extra="object"
-                example="JSON Object"
-                description="Json object containing module details." />
-              <Cell
-                name="module_id"
+                name="session_type"
                 extra="string"
-                example="COMP3058"
-                description="Module id." />
+                example="L"
+                description="ID of the type of session, e.g. L = Lecture, PBL = Problem Based Learning. These come from UCL's internal database, and are provided in case a new session type that we are not aware of is in the timetable. See session_type_str below." />
               <Cell
-                name="name"
+                name="session_type_str"
                 extra="string"
-                example="HUNTER, Anthony (Prof)"
-                description="Name of the lecturer." />
+                example="Lecture"
+                description="Type of event such as Lecture, Problem Based Learning, Practical, etc. If the session_type has not been recognised by us then this will have the value Unknown." />
               <Cell
-                name="name"
+                name="session_group"
                 extra="string"
-                example="Artificial Intelligence and Neural Computing"
-                description="Module name." />
+                example="LAB A"
+                description="Used for lab groups, or other types of small group activity that does not involve the whole cohort. When the whole cohort is invited (e.g. lectures) this value is a blank string." />
               <Cell
-                name="course_owner"
+                name="contact"
                 extra="string"
-                example="COMPS_ENG"
-                description="Department the module comes under." />
-              <Cell
-                name="duration"
-                extra="int"
-                example="120"
-                description="Duration of the event." />
+                example="Prof Robin Hirsch"
+                description="The name associated with the individual room booking. This is the most likely candidate for the person taking the session or lecture. This name is also the most human-readable. Apps should display this value as the lecturer for any given booking, and only use the lecturer information given in the module{lecturer{}} dictionary to reference the course lead or owner." />
             </Table>
           </Topic>
 
