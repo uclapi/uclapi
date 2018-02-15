@@ -139,6 +139,15 @@ class Command(BaseCommand):
                 location.lng = "-0.133098"
                 location.save()
 
+            elif site_id == "RUS26":
+
+                location, created = SiteLocation.objects.get_or_create(
+                    siteid=site_id
+                )
+                location.lat = "51.521831"
+                location.lng = "-0.128202"
+                location.save()
+
             else:
 
                 if searchObj:
