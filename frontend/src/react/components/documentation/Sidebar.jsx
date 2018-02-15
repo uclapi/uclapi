@@ -163,6 +163,30 @@ export default class Sidebar extends React.Component {
           />
 
           <ListItem
+            href="#workspaces"
+            primaryText="Workspaces"
+            primaryTogglesNestedList={true}
+            nestedItems={[
+              <ListItem
+                primaryText="Get Rooms"
+                href="#workspaces/rooms"
+              />,
+              <ListItem
+                primaryText="Get Sensors"
+                href="#workspaces/sensors"
+              />,
+              <ListItem
+                primaryText="Get Last Sensor Updates"
+                href="#workspaces/sensorsLastUpdated"
+              />,
+              <ListItem
+                primaryText="Get Map Image"
+                href="#workspaces/image"
+              />
+            ]}
+          />
+
+          <ListItem
             primaryText="Get Involved"
             href="#getInvolved"
           />

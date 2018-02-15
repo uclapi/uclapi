@@ -27,6 +27,9 @@ import GetTimetableByModules from './Routes/Timetable/GetTimetableByModules.jsx'
 import ResourcesVersionHeader from './Routes/Resources/VersionHeader.jsx';
 import DesktopAvailability from './Routes/Resources/DesktopAvailability.jsx';
 
+import WorkspacesGetRooms from './Routes/Workspaces/GetRooms.jsx';
+import WorkspacesGetSensors from './Routes/Workspaces/GetSensors.jsx';
+
 import GetInvolved from './GetInvolved/GetInvolved.jsx';
 
 import LanguageTabs from './LanguageTabs.jsx';
@@ -69,6 +72,10 @@ export default class DocumentationComponent extends React.Component {
             <SectionHeader link="resources" title="Resources" />
             <ResourcesVersionHeader />
             <DesktopAvailability />
+
+            <SectionHeader link="workspaces" title="Workspaces" />
+            <WorkspacesGetRooms />
+            <WorkspacesGetSensors />
 
             <GetInvolved />
           </LanguageTabs>
