@@ -28,8 +28,7 @@ class Command(BaseCommand):
 
         select_query = (
             'SELECT * FROM "CMIS_UCLAPI_V_BOOKINGS"'
-            ' WHERE (bookabletype = \'CB\' AND setid'
-            ' = \'{}\')'.format(settings.ROOMBOOKINGS_SETID)
+            ' WHERE (setid = \'{}\')'.format(settings.ROOMBOOKINGS_SETID)
         )
 
         cur.execute(select_query)
