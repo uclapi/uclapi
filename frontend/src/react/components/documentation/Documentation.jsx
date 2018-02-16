@@ -29,6 +29,8 @@ import DesktopAvailability from './Routes/Resources/DesktopAvailability.jsx';
 
 import WorkspacesGetRooms from './Routes/Workspaces/GetRooms.jsx';
 import WorkspacesGetSensors from './Routes/Workspaces/GetSensors.jsx';
+import WorkspacesGetLastSensorUpdate from './Routes/Workspaces/GetLastSensorUpdate.jsx';
+import WorkspacesGetImage from './Routes/Workspaces/GetImage.jsx';
 
 import GetInvolved from './GetInvolved/GetInvolved.jsx';
 
@@ -76,6 +78,8 @@ export default class DocumentationComponent extends React.Component {
             <SectionHeader link="workspaces" title="Workspaces" />
             <WorkspacesGetRooms />
             <WorkspacesGetSensors />
+            <WorkspacesGetLastSensorUpdate />
+            <WorkspacesGetImage />
 
             <GetInvolved />
           </LanguageTabs>

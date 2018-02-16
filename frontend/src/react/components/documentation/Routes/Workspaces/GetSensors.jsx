@@ -16,12 +16,12 @@ params = {
 r = requests.get("https://uclapi.com/workspaces/sensors", params=params)
 print(r.json())`,
 
-  shell: `curl -X GET https://uclapi.com/timetable/bymodule \
+  shell: `curl -X GET https://uclapi.com/workspaces/sensors \
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \
 -d survey_id=46 \
 -d return_states=true`,
 
-  javascript: `fetch("https://uclapi.com/timetable/bymodule?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=46&return_states=true",
+  javascript: `fetch("https://uclapi.com/workspaces/sensors?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=46&return_states=true",
 {
     method: "GET",
 })
