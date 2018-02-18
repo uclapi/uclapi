@@ -74,8 +74,14 @@ h3 {
   min-height: 300px;
 
   .text {
+    h2 {
+      font-weight: lighter;
+      font-size: 36px;
+    }
+
     color: $primary-color;
     background: white;
+    // background: #D7CCC8;
     flex: 2 200px;
     padding-right: 15px;
     padding-left: 60px;
@@ -122,5 +128,39 @@ code {
   a:hover {
     color: $highlight-color;
     text-decoration: underline;
+  }
+}
+
+.apis {
+  padding-top: 60px;
+  padding-bottom: 40px;
+  background: #D7CCC8;
+  // color: $primary-color;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+
+  h1 {
+    color: $primary-color;
+  }
+
+  p {
+    font-size: 18px;
+    color: #8D6E63;
+  }
+
+  .api {
+
+    h1 {
+      font-weight: 400;
+    }
+
+    display: inline-block;
+    margin: 10px;
+    min-width: 200px;
+    width: 30%;
+    padding: 20px;
   }
 }
