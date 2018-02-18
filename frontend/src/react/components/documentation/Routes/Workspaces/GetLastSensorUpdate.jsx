@@ -86,7 +86,7 @@ export default class WorkspacesGetLastSensorUpdate extends React.Component {
                             name="survey_id"
                             extra="integer"
                             example="46"
-                            description="The ID of the library/survey/room that was requested in the query parameter." />
+                            description="The ID of the library/survey that was requested in the query parameter." />
                         <Cell
                             name="last_updated"
                             extra="ISO8601 timestamp"

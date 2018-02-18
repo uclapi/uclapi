@@ -10,13 +10,13 @@ let codeExamples = {
 params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
 }
-r = requests.get("https://uclapi.com/workspaces/rooms", params=params)
+r = requests.get("https://uclapi.com/workspaces/surveys", params=params)
 print(r.json())`,
 
-  shell: `curl -X GET https://uclapi.com/workspaces/rooms \
+  shell: `curl -X GET https://uclapi.com/workspaces/surveys \
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb`,
 
-  javascript: `fetch("https://uclapi.com/workspaces/rooms?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
+  javascript: `fetch("https://uclapi.com/workspaces/surveys?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
 .then((response) => {
   return response.json()
 })
@@ -27,7 +27,7 @@ print(r.json())`,
 
 let response = `{
     "ok": true,
-    "rooms": [
+    "surveys": [
         {
             "active": true,
             "maps": [
@@ -62,19 +62,19 @@ let responseCodeExample = {
     shell: response
 }
 
-export default class WorkspacesGetRooms extends React.Component {
+export default class WorkspacesGetSurveys extends React.Component {
     render() {
         return (
             <div>
                 <Topic
                     activeLanguage={this.props.activeLanguage}
                     codeExamples={codeExamples}>
-                    <h1 id="workspaces/rooms">Get Rooms</h1>
+                    <h1 id="workspaces/surveys">Get Surveys</h1>
                     <p>
-                        Endpoint: <code>https://uclapi.com/workspaces/rooms</code>
+                        Endpoint: <code>https://uclapi.com/workspaces/surveys</code>
                     </p>
                     <p>
-                        This endpoint returns all UCL libraries with the Cad-Capture devices fitted to the seats. Each library is known as a 'survey', as it is a survey of the building. Within each survey/room there are multiple 'maps', each of which corresponds to a section such as a level, wing or separated library work area. Each sensor is tied to a specific map, and each map belongs to a survey.
+                        This endpoint returns all UCL libraries with the Cad-Capture devices fitted to the seats. Each library is known as a 'survey', as it is a survey of the building. Within each survey there are multiple 'maps', each of which corresponds to a section such as a level, wing or separated library work area. Each sensor is tied to a specific map, and each map belongs to a survey.
                     </p>
 
                     <Table
@@ -91,7 +91,7 @@ export default class WorkspacesGetRooms extends React.Component {
                     codeExamples={responseCodeExample}>
                     <h2>Response</h2>
                     <p>
-                        The rooms key contains a list of dictionaries, each of which corresponds to a room survey with seating sensors attached. Each survey has a number of maps, corresponding to the regions within the room, such as a different floor or wing.
+                        The surveys key contains a list of dictionaries, each of which corresponds to a library survey with seating sensors attached. Each survey has a number of maps, corresponding to the regions within the library, such as a different floor or wing.
                     </p>
                     <Table
                         name="Response">
@@ -99,7 +99,7 @@ export default class WorkspacesGetRooms extends React.Component {
                             name="active"
                             extra="boolean"
                             example="true"
-                            description="Whether the room is active and working." />
+                            description="Whether the survey is active and working." />
                         <Cell
                             name="start_time"
                             extra="string"

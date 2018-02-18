@@ -168,8 +168,8 @@ export default class Sidebar extends React.Component {
             primaryTogglesNestedList={true}
             nestedItems={[
               <ListItem
-                primaryText="Get Rooms"
-                href="#workspaces/rooms"
+                primaryText="Get Surveys"
+                href="#workspaces/surveys"
               />,
               <ListItem
                 primaryText="Get Sensors"

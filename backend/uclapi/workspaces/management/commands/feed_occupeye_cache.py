@@ -1,14 +1,12 @@
 from django.core.management.base import BaseCommand
 
-import redis
-
-from django.conf import settings
-
 from workspaces.occupeye import OccupEyeApi
 
 
 class Command(BaseCommand):
-    help = 'Feeds the OccupEye data into Redis so that response times are quicker'
+    help = (
+        'Feeds the OccupEye data into Redis so that response times are quicker'
+    )
 
     def handle(self, *args, **options):
         print("Running OccupEye Caching Operation")

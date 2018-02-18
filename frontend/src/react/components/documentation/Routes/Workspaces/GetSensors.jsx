@@ -128,7 +128,7 @@ export default class WorkspacesGetSensors extends React.Component {
                             name="survey_id"
                             extra="integer"
                             example="46"
-                            description="The ID of the library/survey/room that was requested in the query parameter." />
+                            description="The ID of the library/survey that was requested in the query parameter." />
                         <Cell
                             name="maps"
                             extra="list"

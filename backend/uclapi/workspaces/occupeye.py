@@ -54,7 +54,6 @@ class OccupEyeApi():
             self.access_token = self.r.get("occupeye:access_token")
 
             access_token_expiry = self.r.get("occupeye:access_token_expiry")
-            # We can only cast this value to an int if we know it's not None
             if access_token_expiry:
                 self.access_token_expiry = int(access_token_expiry)
             else:
@@ -83,16 +82,16 @@ class OccupEyeApi():
             "Password": os.environ["OCCUPEYE_PASSWORD"]
         }
 
-        request = requests.post(
+        response = requests.post(
             url=url,
             data=body
         )
 
-        response = json.loads(request.text)
+        response_data = json.loads(response.text)
 
-        self.access_token = response["access_token"]
+        self.access_token = response_data["access_token"]
         self.access_token_expiry = int(time_now()) + int(
-            response["expires_in"]
+            response_data["expires_in"]
         )
         self.r.set("occupeye:access_token", self.access_token)
         self.r.set("occupeye:access_token_expiry", self.access_token_expiry)
@@ -192,11 +191,11 @@ class OccupEyeApi():
             self.base_url,
             self.deployment_name
         )
-        request = requests.get(
+        response = requests.get(
             url=url,
             headers=headers
         )
-        surveys_data = request.json()
+        surveys_data = response.json()
 
         for survey in surveys_data:
             survey_key = "occupeye:surveys:" + str(survey["SurveyID"])
@@ -290,16 +289,16 @@ class OccupEyeApi():
             self.deployment_name
         )
         try:
-            request = requests.get(
+            response = requests.get(
                 url=url,
                 headers=headers,
                 stream=True
             )
-            content_type = request.headers['Content-Type']
+            content_type = response.headers['Content-Type']
         except:
             raise BadOccupEyeRequest
 
-        raw_image = request.content
+        raw_image = response.content
         image_b64 = b64encode(raw_image)
 
         pipeline = self.r.pipeline()
@@ -356,13 +355,13 @@ class OccupEyeApi():
             survey_id,
             self.deployment_name
         )
-        request = requests.get(
+        response = requests.get(
             url=url,
             headers=headers
         )
         # The response has the timeestamp surrounded in double
         # quotes, so we strip those away.
-        max_sensor_timestamp = request.text.replace('"', '')
+        max_sensor_timestamp = response.text.replace('"', '')
         return max_sensor_timestamp
 
     def _cache_survey_sensor_data(self, survey_id):
@@ -383,11 +382,11 @@ class OccupEyeApi():
             self.deployment_name,
             survey_id
         )
-        request = requests.get(
+        response = requests.get(
             url=url,
             headers=headers
         )
-        all_sensors_data = request.json()
+        all_sensors_data = response.json()
         pipeline = self.r.pipeline()
         survey_sensors_key = "occupeye:surveys:{}:sensors".format(survey_id)
         pipeline.delete(survey_sensors_key)
@@ -434,11 +433,11 @@ class OccupEyeApi():
             survey_id,
             self.deployment_name
         )
-        request = requests.get(
+        response = requests.get(
             url=url,
             headers=headers
         )
-        all_sensors_data = request.json()
+        all_sensors_data = response.json()
         pipeline = self.r.pipeline()
         for sensor_data in all_sensors_data:
             sensor_status_key = "occupeye:surveys:{}:sensors:{}:status".format(
@@ -481,11 +480,11 @@ class OccupEyeApi():
             map_id,
             self.deployment_name
         )
-        request = requests.get(
+        response = requests.get(
             url=url,
             headers=headers
         )
-        all_map_sensors_data = request.json()
+        all_map_sensors_data = response.json()
 
         pipeline = self.r.pipeline()
         map_sensors_list_key = "occupeye:surveys:{}:maps:{}:sensors".format(

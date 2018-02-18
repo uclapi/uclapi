@@ -10,11 +10,11 @@ from .occupeye import BadOccupEyeRequest, OccupEyeApi
 
 @api_view(["GET"])
 @uclapi_protected_endpoint(personal_data=False)
-def get_rooms(request, *args, **kwargs):
+def get_surveys(request, *args, **kwargs):
     api = OccupEyeApi()
     response_data = {
         "ok": True,
-        "rooms": api.get_surveys()
+        "surveys": api.get_surveys()
     }
     return JsonResponse(
         response_data,
@@ -54,9 +54,7 @@ def get_image(request, *args, **kwargs):
         response.status_code = 400
         return response
 
-    image_format = request.GET.get("image_format")
-    if not image_format:
-        image_format = "base64"
+    image_format = request.GET.get("image_format", "base64")
 
     if image_format == "raw":
         return HttpResponse(

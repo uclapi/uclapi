@@ -57,7 +57,7 @@ export default class WorkspacesGetImage extends React.Component {
                         Endpoint: <code>https://uclapi.com/workspaces/image</code>
                     </p>
                     <p>
-                        This endpoint gets the image specified by the passed in image_id. Image IDs are provided by the /workspaces/rooms endpoint within the array of maps. Each map has an image.
+                        This endpoint gets the image specified by the passed in image_id. Image IDs are provided by the <code>/workspaces/surveys</code> endpoint within the array of maps. Each map has an image.
                     </p>
 
                     <Table
