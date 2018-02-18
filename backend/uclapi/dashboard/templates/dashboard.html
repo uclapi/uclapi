@@ -5,8 +5,9 @@
 
   <title>UCL API Dashboard</title>
 
-	<link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/grids-responsive-min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/grids-responsive-min.css">
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link rel="stylesheet" href="{% static "css/dashboard.css" %}" type="text/css" />
 
@@ -15,11 +16,11 @@
 
 <body>
 
-	<script>
+  <script>
     window.initialData = {{ initial_data|safe }};
     window.staticURL = {% static "" %}
   </script>
-	<div class="app"></div>
+  <div class="app"></div>
   <script src="{% static "js/dashboard.js" %}"></script>
   <script src="https://use.fontawesome.com/c70d56d6fc.js"></script>
 

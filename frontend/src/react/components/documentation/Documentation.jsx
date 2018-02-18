@@ -14,6 +14,7 @@ import RoomBookingsVersionHeader from './Routes/RoomBookings/VersionHeader.jsx';
 import GetRooms from './Routes/RoomBookings/GetRooms.jsx';
 import GetBookings from './Routes/RoomBookings/GetBookings.jsx';
 import GetEquiment from './Routes/RoomBookings/GetEquipment.jsx';
+import GetFreeRooms from './Routes/RoomBookings/GetFreeRooms.jsx';
 import Webhooks from './Routes/RoomBookings/Webhooks.jsx';
 
 import SearchVersionHeader from './Routes/Search/VersionHeader.jsx';
@@ -22,6 +23,9 @@ import GetPeople from './Routes/Search/GetPeople.jsx';
 import TimetableVersionHeader from './Routes/Timetable/VersionHeader.jsx';
 import GetPersonalTimetable from './Routes/Timetable/GetPersonalTimetable.jsx';
 import GetTimetableByModules from './Routes/Timetable/GetTimetableByModules.jsx';
+
+import ResourcesVersionHeader from './Routes/Resources/VersionHeader.jsx';
+import DesktopAvailability from './Routes/Resources/DesktopAvailability.jsx';
 
 import GetInvolved from './GetInvolved/GetInvolved.jsx';
 
@@ -50,6 +54,7 @@ export default class DocumentationComponent extends React.Component {
             <GetRooms />
             <GetBookings />
             <GetEquiment />
+            <GetFreeRooms />
             <Webhooks />
 
             <SectionHeader link="search" title="Search" />
@@ -60,6 +65,10 @@ export default class DocumentationComponent extends React.Component {
             <TimetableVersionHeader />
             <GetPersonalTimetable />
             <GetTimetableByModules />
+
+            <SectionHeader link="resources" title="Resources" />
+            <ResourcesVersionHeader />
+            <DesktopAvailability />
 
             <GetInvolved />
           </LanguageTabs>

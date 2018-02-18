@@ -19,6 +19,7 @@
   },
   "homepage": "https://uclapi.com",
   "dependencies": {
+    "ajv": "^5.5.1",
     "aphrodite": "^1.2.4",
     "envify": "^4.0.0",
     "glamor": "^2.20.40",

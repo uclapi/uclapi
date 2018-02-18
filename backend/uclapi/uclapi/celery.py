@@ -8,8 +8,7 @@ from django.conf import settings
 from raven.contrib.celery import register_signal as raven_register_signal, \
     register_logger_signal as raven_register_logger_signal
 
-from dotenv import read_dotenv
-
+from common.helpers import read_dotenv
 
 read_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
 

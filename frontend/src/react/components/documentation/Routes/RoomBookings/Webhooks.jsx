@@ -136,7 +136,7 @@ export default class GetEquiment extends React.Component {
             activeLanguage={this.props.activeLanguage}
             codeExamples={eventsResponseExample}>
             <h2>Events</h2>
-            <p>Whenever you receive data on your webhook we call that an “event”. At the moment there are 2 events: <code>challenge</code> and <code>booking_changed</code></p>
+            <p>Whenever you receive data on your webhook we call that an “event”. At the moment there are 2 events: <code>challenge</code> and <code>bookings_changed</code>.</p>
             <p>
               Events are always delivered as POST requests to your webhook URL. The data will be JSON inside the body of the POST request. Every event will contain at least 3 components: <code>service</code>, <code>name</code>, <code>verification_secret</code>. You can see an example on the right.
             </p>
@@ -147,7 +147,7 @@ export default class GetEquiment extends React.Component {
             codeExamples={challengeEventExample}>
             <h2 id="webhook/challenge-event">challenge event</h2>
             <p>
-              You’ll receive this event when you first input or alter your webhook URL. It exists to make sure that the URL you entered is under your control. The JSON data sent to you contains a <code>challenge</code> parameter. You need to set up your code to respond promptly with a JSON object containing only the challenge parameter.
+              You’ll receive this event when you first input or alter your webhook URL. It exists to make sure that the URL you entered is under your control. The JSON data sent to you contains a <code>challenge</code> parameter. You need to set up your code to respond promptly with a JSON object containing only the <code>challenge</code> parameter.
             </p>
           </Topic>
 
