@@ -39,6 +39,7 @@ matrix:
           - npm install
         script:
           - gulp artifact
+          - cd ../artifact
           - tar czvf ../${TRAVIS_BUILD_NUMBER}.tar.gz ./*
         addons:
           artifacts:
