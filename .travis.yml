@@ -47,3 +47,4 @@ matrix:
               - ${TRAVIS_BUILD_NUMBER}.tar.gz
             target_paths:
               - /artifacts/
+
