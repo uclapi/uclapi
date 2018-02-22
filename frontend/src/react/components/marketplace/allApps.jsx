@@ -1,82 +1,36 @@
+import React from 'react';
+
+
 const allApps = {
-  "slack": {
-    "name": "Slack",
-    "id": "slack",
-    "category": "timetable",
-    "description": "Form your slack team now",
-    "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png",
-    "detailedDescription": "When your team needs to kick off a project, hire a new employee, deploy some code, review a sales contract, finalize next year's budget, measure an A/B test, plan your next office opening, and more, Slack has you covered.",
-    "developerContact": "github.com/ani",
-    "webLink": "https://slack.com",
-    "androidLink": "https://slack.com",
-    "iosLink": "https://slack.com",
+  "uclroombuddy": {
+    "name": "UCL Room Buddy",
+    "id": "uclroombuddy",
+    "category": "roombookings",
+    "description": "Find the closest free room at UCL",
+    "logo": "/static/roombuddylogo.png",
+    "detailedDescription": (<p>
+      Finding a place to get your work done can be hard. Every place you've thought of is somehow already filled up; the libraries, the study pods, the benches outside the Print Room Café...
+<br/>
+<br/>
+
+Room Buddy makes use of UCL API to find and direct you to open study spaces that aren't widely known. These rooms are scarcely booked up for timetables and sit waiting for you to grace them with your glory.
+<br/>
+<br/>
+
+It's simple: install the app, sign in with your UCL ID, and get going to the closest available space to your current location!
+<br/>
+<br/>
+
+UCL Room Buddy was built with the UCL API, which gives student developers programmatic access to UCL's data in order to improve the UCL experience for everyone. Learn more at https://uclapi.com
+<br/>
+<br/>
+Want to contribute to room buddy? Submit a pull request: <a href="https://github.com/uclapi/room-buddy">https://github.com/uclapi/room-buddy</a> </p>),
+    "developerContact": "https://github.com/wilhelmklopp",
+    "androidLink": "https://play.google.com/store/apps/details?id=com.uclapi.uclroombuddy",
     "screenshots": [
-      "http://cdn.technologyadvice.com/wp-content/uploads/2017/02/slack-screenshot.png",
-      "http://cdn.technologyadvice.com/wp-content/uploads/2017/02/slack-screenshot.png"
-    ]
-  },
-  "slack2": {
-    "name": "Slack",
-    "id": "slack2",
-    "category": "timetable",
-    "description": "Form your slack team now",
-    "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png",
-    "detailedDescription": "When your team needs to kick off a project, hire a new employee, deploy some code, review a sales contract, finalize next year's budget, measure an A/B test, plan your next office opening, and more, Slack has you covered.",
-    "developerContact": "github.com/ani",
-    "webLink": "https://slack.com",
-    "androidLink": "https://slack.com",
-    "iosLink": "https://slack.com",
-    "screenshots": [
-      "http://cdn.technologyadvice.com/wp-content/uploads/2017/02/slack-screenshot.png",
-      "http://cdn.technologyadvice.com/wp-content/uploads/2017/02/slack-screenshot.png"
-    ]
-  },
-  "slack3": {
-    "name": "Slack",
-    "id": "slack3",
-    "category": "search",
-    "description": "Form your slack team now",
-    "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png",
-    "detailedDescription": "When your team needs to kick off a project, hire a new employee, deploy some code, review a sales contract, finalize next year's budget, measure an A/B test, plan your next office opening, and more, Slack has you covered.",
-    "developerContact": "github.com/ani",
-    "webLink": "https://slack.com",
-    "androidLink": "https://slack.com",
-    "iosLink": "https://slack.com",
-    "screenshots": [
-      "http://cdn.technologyadvice.com/wp-content/uploads/2017/02/slack-screenshot.png",
-      "http://cdn.technologyadvice.com/wp-content/uploads/2017/02/slack-screenshot.png"
-    ]
-  },
-  "slack4": {
-    "name": "Slack",
-    "id": "slack4",
-    "category": "timetable",
-    "description": "Form your slack team now",
-    "logo": "https://a.slack-edge.com/436da/marketing/img/meta/app-256.png",
-    "detailedDescription": "When your team needs to kick off a project, hire a new employee, deploy some code, review a sales contract, finalize next year's budget, measure an A/B test, plan your next office opening, and more, Slack has you covered.",
-    "developerContact": "github.com/ani",
-    "webLink": "https://slack.com",
-    "androidLink": "https://slack.com",
-    "iosLink": "https://slack.com",
-    "screenshots": [
-      "http://cdn.technologyadvice.com/wp-content/uploads/2017/02/slack-screenshot.png",
-      "http://cdn.technologyadvice.com/wp-content/uploads/2017/02/slack-screenshot.png"
-    ]
-  },
-  "pocket": {
-    "name": "Pocket",
-    "id": "pocket",
-    "category": "productivity",
-    "description": "Store articles to read later.",
-    "logo": "https://www.library.cmu.edu/sites/drupal-live.library.cmu.edu/files/Pocket_0.png",
-    "detailedDescription": "When your team needs to kick off a project, hire a new employee, deploy some code, review a sales contract, finalize next year's budget, measure an A/B test, plan your next office opening, and more, Slack has you covered.",
-    "developerContact": "github.com/ani",
-    "webLink": "https://slack.com",
-    "androidLink": "https://slack.com",
-    "iosLink": "https://slack.com",
-    "screenshots": [
-      "http://gregorymancuso.com/wp-content/uploads/2012/12/Pocket-app-for-iPhone-Android_Screenshots-to-save_Images.jpg",
-      "http://gregorymancuso.com/wp-content/uploads/2012/12/Pocket-app-for-iPhone-Android_Screenshots-to-save_Images.jpg"
+      "/static/roombuddy_screenshot1.png",
+      "/static/roombuddy_screenshot2.png",
+      "/static/roombuddy_screenshot3.png",
     ]
   },
 }
