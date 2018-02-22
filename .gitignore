@@ -133,3 +133,6 @@ dump.rdb
 /scripts/shibboleth/sp-cert.staging.pem
 /scripts/shibboleth/sp-key.prod.pem
 /scripts/shibboleth/sp-key.staging.pem
+
+# Artifact Build Directory
+/artifact
