@@ -39,12 +39,7 @@ def keen_add_event_task(title, data):
 
 @shared_task
 def add_user_to_mailing_list_task(email, name):
-    try:
-        add_user_to_mailing_list(email, name)
-    except Exception as e:
-        return "Couldn't add {} ({}) to the mailing list: {}".format(
-            name, email, str(e)
-        )
+    add_user_to_mailing_list(email, name)
 
 
 def add_user_to_mailing_list(email, name):
@@ -63,4 +58,4 @@ def add_user_to_mailing_list(email, name):
     }
 
     requests.post(
-        os.environ["MAILCHIMP_ENDPOINT"], data=data, headers=headers)
+        os.environ["MAILCHIMP_ENDPOINT"], json=data, headers=headers)

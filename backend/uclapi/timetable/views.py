@@ -79,7 +79,7 @@ def get_departments(request, *args, **kwargs):
         depts["departments"].append({
             "department_id": dept.deptid,
             "name": dept.name
-        }, rate_limiting_data=kwargs)
+        })
     return JsonResponse(depts, rate_limiting_data=kwargs)
 
 

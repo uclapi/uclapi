@@ -12,6 +12,7 @@ from timetable.models import \
     Module, ModuleA, ModuleB, \
     Weekmapstring, WeekmapstringA, WeekmapstringB, \
     Students, StudentsA, StudentsB, \
+    Depts, DeptsA, DeptsB, \
     Lock
 
 
@@ -20,28 +21,40 @@ class Command(BaseCommand):
     help = 'Clones timetable related dbs to speed up queries'
 
     def handle(self, *args, **options):
-        classes = [
-            (Module, ModuleA, ModuleB),
-            (Timetable, TimetableA, TimetableB),
-            (Weekstructure, WeekstructureA, WeekstructureB),
-            (Weekmapnumeric, WeekmapnumericA, WeekmapnumericB),
-            (Weekmapstring, WeekmapstringA, WeekmapstringB),
-            (Lecturer, LecturerA, LecturerB),
-            (Rooms, RoomsA, RoomsB),
-            (Sites, SitesA, SitesB),
-            (Students, StudentsA, StudentsB)
+        # Table format: (OracleTable, BucketA, BucketB, HasSetID)
+        tables = [
+            (Module, ModuleA, ModuleB, True),
+            (Timetable, TimetableA, TimetableB, True),
+            (Weekstructure, WeekstructureA, WeekstructureB, True),
+            (Weekmapnumeric, WeekmapnumericA, WeekmapnumericB, True),
+            (Weekmapstring, WeekmapstringA, WeekmapstringB, True),
+            (Lecturer, LecturerA, LecturerB, True),
+            (Rooms, RoomsA, RoomsB, True),
+            (Sites, SitesA, SitesB, True),
+            (Students, StudentsA, StudentsB, True),
+            (Depts, DeptsA, DeptsB, False)
         ]
 
         lock = Lock.objects.all()[0]
-        tbu = 2 if lock.a else 1
+        destination_table_index = 2 if lock.a else 1
 
-        for c in classes:
-            # get all current year objects
-            objs = c[0].objects.filter(setid=settings.ROOMBOOKINGS_SETID)
+        for table_data in tables:
+            print("Inserting contents of {} into {}".format(
+                table_data[0].__name__,
+                table_data[destination_table_index].__name__
+            ))
+            # Only pulls in objects which apply to this year's Set ID
+            if table_data[3]:
+                objs = table_data[0].objects.filter(
+                    setid=settings.ROOMBOOKINGS_SETID
+                )
+            else:
+                objs = table_data[0].objects.all()
+
             # choose the bucket to be updated.
             new_objs = []
             for obj in objs:
-                new_objs.append(c[tbu](
+                new_objs.append(table_data[destination_table_index](
                     **dict(
                         map(lambda k: (k, getattr(obj, k)),
                             map(lambda l: l.name, obj._meta.get_fields())))
@@ -49,12 +62,15 @@ class Command(BaseCommand):
 
             cursor = connections['gencache'].cursor()
             cursor.execute(
-                "TRUNCATE TABLE {} RESTART IDENTITY;".format(
-                        "timetable_" + c[tbu].__name__.lower()))
-
-            c[tbu].objects.using('gencache').bulk_create(
-                new_objs,
-                batch_size=5000
+                "TRUNCATE TABLE timetable_{} RESTART IDENTITY;".format(
+                        table_data[destination_table_index].__name__.lower()
+                )
             )
+
+            table_data[destination_table_index].objects.using(
+                'gencache'
+            ).bulk_create(new_objs, batch_size=5000)
+
+        print("Inverting lock")
         lock.a, lock.b = not lock.a, not lock.b
         lock.save()
