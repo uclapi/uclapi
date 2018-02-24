@@ -167,8 +167,10 @@ def get_survey_sensors_summary(request, *args, **kwargs):
     except BadOccupEyeRequest:
         response = JsonResponse({
             "ok": False,
-            "error": "One or more of the survey_ids you requested is not valid."
-        })
+            "error": (
+                "One or more of the survey_ids you requested is not valid."
+            )
+        }, rate_limiting_data=kwargs)
         response.status_code = 400
         return response
 
