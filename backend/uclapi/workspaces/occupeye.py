@@ -691,7 +691,13 @@ class OccupEyeApi():
             self.r.set(max_timestamp_key, max_timestamp)
             return (int(survey_id), max_timestamp)
 
-    def _get_survey_sensors_data_worker(self, survey_id, survey_name, lock, data_dict):
+    def _get_survey_sensors_data_worker(
+        self,
+        survey_id,
+        survey_name,
+        lock,
+        shared_dict
+    ):
         survey_data = {
             "id": survey_id,
             "name": survey_name,
@@ -717,7 +723,7 @@ class OccupEyeApi():
 
             survey_data["maps"].append(map_data)
         lock.acquire()
-        data_dict[survey_id] = survey_data
+        shared_dict[survey_id] = survey_data
         lock.release()
 
     def get_survey_sensors_summary(self, survey_ids):
