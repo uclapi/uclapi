@@ -723,6 +723,14 @@ class OccupEyeApi():
             survey_data["maps"].append(map_data)
         shared_dict[survey_id] = survey_data
 
+    def _chunk_list(self, l, chunk_size):
+        """
+        Splits a list into even chunks.
+        https://stackoverflow.com/a/312464/5297057
+        """
+        for i in range(0, len(l), chunk_size):
+            yield l[i:i+chunk_size]
+
     def get_survey_sensors_summary(self, survey_ids):
         """
         Gets a summary of every survey, map and the sensor counts within them.
@@ -761,10 +769,12 @@ class OccupEyeApi():
                 args=(survey["id"], survey["name"], sensors_data_dict, )
             )
             threads.append(p)
-            p.start()
 
-        for thread in threads:
-            thread.join()
+        for chunk in self._chunk_list(threads, int(os.environ["OCCUPEYE_THREAD_LIMIT"])):
+            for p in chunk:
+                p.start()
+            for p in chunk:
+                p.join()
 
         return sensors_data_dict.values()
 
