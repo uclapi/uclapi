@@ -17,10 +17,11 @@ function getFilePath(fileName) {
     // UCL API Base Directory Path
     var baseDir = path.resolve(__dirname, '../../../');
     var fileModule = fileModules[fileName];
-    return path.join(baseDir, "artifact", "frontend", fileModule, fileName + '.js');
+    // return path.join(baseDir, "artifact", "frontend", fileModule, fileName + '.js');
+    return path.join(baseDir, "artifact", "frontend", fileModule);
 }
 
-function removeExtentionAndPath(file, extension){
+function removeExtensionAndPath(file, extension){
   var extStart = file.indexOf('.' + extension);
   var fileStart = file.lastIndexOf('/');
   return file.slice(fileStart + 1, extStart);
@@ -28,7 +29,7 @@ function removeExtentionAndPath(file, extension){
 
 function browserified(filename) {
   var b = browserify(filename);
-  var fileNoExt = removeExtentionAndPath(filename, 'jsx');
+  var fileNoExt = removeExtensionAndPath(filename, 'jsx');
   var p = getFilePath(fileNoExt);
   b.bundle()
     .on('error', gutil.log)
