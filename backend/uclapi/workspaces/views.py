@@ -155,3 +155,26 @@ def get_survey_max_timestamp(request, *args, **kwargs):
     }, rate_limiting_data=kwargs)
 
     return response
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(personal_data=False)
+def get_survey_sensors_summary(request, *args, **kwargs):
+    survey_ids = request.GET.get("survey_ids", None)
+    api = OccupEyeApi()
+    try:
+        data = api.get_survey_sensors_summary(survey_ids)
+    except BadOccupEyeRequest:
+        response = JsonResponse({
+            "ok": False,
+            "error": "One or more of the survey_ids you requested is not valid."
+        })
+        response.status_code = 400
+        return response
+
+    response = JsonResponse({
+        "ok": True,
+        "surveys": data
+    }, rate_limiting_data=kwargs)
+
+    return response

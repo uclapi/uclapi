@@ -3,6 +3,7 @@ import os
 from base64 import b64encode
 from collections import OrderedDict
 from time import time as time_now
+from multiprocessing import Lock, Manager, Process
 import redis
 import requests
 
@@ -531,8 +532,9 @@ class OccupEyeApi():
         """
         # Check whether the Survey ID requested is actually
         # an integer.
-        if not survey_id.isdigit():
-            raise BadOccupEyeRequest
+        if isinstance(survey_id, str):
+            if not survey_id.isdigit():
+                raise BadOccupEyeRequest
 
         maps_key = "occupeye:surveys:{}:maps".format(survey_id)
         # Check if we have a list of maps for this survey
@@ -688,6 +690,83 @@ class OccupEyeApi():
             max_timestamp = self._get_survey_sensor_max_timestamp(survey_id)
             self.r.set(max_timestamp_key, max_timestamp)
             return (int(survey_id), max_timestamp)
+
+    def _get_survey_sensors_data_worker(self, survey_id, survey_name, lock, shared_dict):
+        survey_data = {
+            "id": survey_id,
+            "name": survey_name,
+            "maps": []
+        }
+        sensors = self.get_survey_sensors(survey_id, True)
+        for survey_map in sensors["maps"]:
+            map_data = {
+                "id": survey_map["id"],
+                "name": survey_map["name"],
+                "sensors_absent": 0,
+                "sensors_occupied": 0,
+                "sensors_other": 0
+            }
+            for hw_id, sensor in survey_map["sensors"].items():
+                if "last_trigger_type" in sensor:
+                    if sensor["last_trigger_type"] == "Absent":
+                        map_data["sensors_absent"] += 1
+                    elif sensor["last_trigger_type"] == "Occupied":
+                        map_data["sensors_occupied"] += 1
+                    else:
+                        map_data["sensors_other"] += 1
+
+            survey_data["maps"].append(map_data)
+        lock.acquire()
+        shared_dict[survey_id] = survey_data
+        lock.release()
+
+    def get_survey_sensors_summary(self, survey_ids):
+        """
+        Gets a summary of every survey, map and the sensor counts within them.
+        """
+        surveys_data = self.get_surveys()
+
+        if survey_ids:
+            try:
+                survey_ids_list = [int(x) for x in survey_ids.split(',')]
+            except ValueError:
+                raise BadOccupEyeRequest
+        else:
+            survey_ids_list = None
+
+        filtered_surveys = []
+
+        if survey_ids_list:
+            for survey in surveys_data:
+                if survey["id"] in survey_ids_list:
+                    filtered_surveys.append(survey)
+        else:
+            filtered_surveys = surveys_data
+
+        if survey_ids_list:
+            if len(filtered_surveys) != len(survey_ids_list):
+                raise BadOccupEyeRequest
+
+        data = []
+
+        lock = Lock()
+        threads = []
+
+        manager = Manager()
+        sensors_data_dict = manager.dict()
+
+        for survey in filtered_surveys:
+            p = Process(
+                target=self._get_survey_sensors_data_worker,
+                args=(survey["id"], survey["name"], lock, sensors_data_dict, )
+            )
+            threads.append(p)
+            p.start()
+
+        for thread in threads:
+            thread.join()
+
+        return sensors_data_dict.values()
 
     def feed_cache(self):
         """
