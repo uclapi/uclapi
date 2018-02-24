@@ -3,7 +3,7 @@ import os
 from base64 import b64encode
 from collections import OrderedDict
 from time import time as time_now
-from multiprocessing import Lock, Manager, Process
+from multiprocessing import Manager, Process
 import redis
 import requests
 
@@ -695,7 +695,6 @@ class OccupEyeApi():
         self,
         survey_id,
         survey_name,
-        lock,
         shared_dict
     ):
         survey_data = {
@@ -722,9 +721,7 @@ class OccupEyeApi():
                         map_data["sensors_other"] += 1
 
             survey_data["maps"].append(map_data)
-        lock.acquire()
         shared_dict[survey_id] = survey_data
-        lock.release()
 
     def get_survey_sensors_summary(self, survey_ids):
         """
@@ -753,7 +750,6 @@ class OccupEyeApi():
             if len(filtered_surveys) != len(survey_ids_list):
                 raise BadOccupEyeRequest
 
-        lock = Lock()
         threads = []
 
         manager = Manager()
@@ -762,7 +758,7 @@ class OccupEyeApi():
         for survey in filtered_surveys:
             p = Process(
                 target=self._get_survey_sensors_data_worker,
-                args=(survey["id"], survey["name"], lock, sensors_data_dict, )
+                args=(survey["id"], survey["name"], sensors_data_dict, )
             )
             threads.append(p)
             p.start()
