@@ -1,34 +1,51 @@
-language: python
-python:
-  - "3.5"
-dist: trusty
-sudo: required
-cache: pip
-services:
-  - postgresql
-  - redis-server
-install:
-  - (sed '/cx.*/d' ./backend/uclapi/requirements.txt) | xargs -n 1 pip3 install
-  - pip3 install codecov
-before_script:
-  # Install Oracle Instant Client
-  - sudo apt-get install libaio-dev libaio1 unzip wget build-essential libpq-dev libpq5
-  - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
-  - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
-  - sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip
-  - sudo unzip instantclient-sdk-linux.x64-12.2.0.1.0.zip
-  - cd instantclient_12_2
-  - sudo ln -s libclntsh.so.12.1 libclntsh.so
-  - sudo ln -s libocci.so.12.1 libocci.so
-  - export ORACLE_HOME=$(pwd)
-  - export DYLD_LIBRARY_PATH=DYLD_LIBRARY_PATH:$ORACLE_HOME
-  - export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME
-  # Install cx_Oracle (which depends on Oracle IC)
-  - cd ./../backend/uclapi
-  - pip3 install $(cat requirements.txt | grep "cx-Oracle")
-script:
-  - python ./manage.py migrate
-  # codecov.io
-  - coverage run --source='.' --omit='*migrations*' manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner' --settings=uclapi.settings_mocked
-after_success:
-  - codecov
+matrix:
+  include:
+      - language: python
+        python:
+          - "3.5"
+        dist: trusty
+        sudo: required
+        cache: pip
+        services:
+          - postgresql
+          - redis-server
+        install:
+          - (sed '/cx.*/d' ./backend/uclapi/requirements.txt) | xargs -n 1 pip3 install
+          - pip3 install codecov
+        before_script:
+          - sudo apt-get install libaio-dev libaio1 unzip wget build-essential libpq-dev libpq5
+          - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
+          - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
+          - sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip
+          - sudo unzip instantclient-sdk-linux.x64-12.2.0.1.0.zip
+          - cd instantclient_12_2
+          - sudo ln -s libclntsh.so.12.1 libclntsh.so
+          - sudo ln -s libocci.so.12.1 libocci.so
+          - export ORACLE_HOME=$(pwd)
+          - export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME
+          - cd ./../backend/uclapi
+          - pip3 install $(cat requirements.txt | grep "cx-Oracle")
+        script:
+          - python ./manage.py migrate
+          - coverage run --source='.' --omit='*migrations*' manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner' --settings=uclapi.settings_mocked
+        after_scucess:
+          - codecov
+      - language: node_js
+        node_js:
+          - "8"
+        before_script:
+          - cd ./frontend
+          - npm install -g gulp
+          - npm install
+        script:
+          - gulp artifact
+          - cd ../artifact
+          - tar czvf ../${TRAVIS_BUILD_NUMBER}.tar.gz ./*
+        addons:
+          artifacts:
+            s3_region: "eu-west-2"
+            paths:
+              - ${TRAVIS_BUILD_NUMBER}.tar.gz
+            target_paths:
+              - /artifacts/
+
