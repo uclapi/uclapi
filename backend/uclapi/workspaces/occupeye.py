@@ -770,7 +770,8 @@ class OccupEyeApi():
             )
             threads.append(p)
 
-        for chunk in self._chunk_list(threads, int(os.environ["OCCUPEYE_THREAD_LIMIT"])):
+        thread_limit = int(os.environ["OCCUPEYE_THREAD_LIMIT"])
+        for chunk in self._chunk_list(threads, thread_limit):
             for p in chunk:
                 p.start()
             for p in chunk:
