@@ -64,7 +64,8 @@ INSTALLED_APPS = [
     'common',
     'opbeat.contrib.django',
     'raven.contrib.django.raven_compat',
-    'corsheaders'
+    'corsheaders',
+    'workspaces'
 ]
 
 MIDDLEWARE = [
