@@ -35,7 +35,7 @@ class OccupEyeApi():
     SENSOR_STATUS_TTL = 60
 
     def __init__(self, test_mode=False):
-        self.r = redis.StrictRedis(
+        self._redis = redis.StrictRedis(
             host=settings.REDIS_UCLAPI_HOST,
             charset="utf-8",
             decode_responses=True
@@ -52,9 +52,11 @@ class OccupEyeApi():
             self.access_token = None
             self.access_token_expiry = None
         else:
-            self.access_token = self.r.get("occupeye:access_token")
+            self.access_token = self._redis.get("occupeye:access_token")
 
-            access_token_expiry = self.r.get("occupeye:access_token_expiry")
+            access_token_expiry = self._redis.get(
+                "occupeye:access_token_expiry"
+            )
             if access_token_expiry:
                 self.access_token_expiry = int(access_token_expiry)
             else:
@@ -94,8 +96,14 @@ class OccupEyeApi():
         self.access_token_expiry = int(time_now()) + int(
             response_data["expires_in"]
         )
-        self.r.set("occupeye:access_token", self.access_token)
-        self.r.set("occupeye:access_token_expiry", self.access_token_expiry)
+        self._redis.set(
+            "occupeye:access_token",
+            self.access_token
+        )
+        self._redis.set(
+            "occupeye:access_token_expiry",
+            self.access_token_expiry
+        )
 
     def token_valid(self):
         """
@@ -130,7 +138,7 @@ class OccupEyeApi():
         survey_maps_key = "occupeye:surveys:{}:maps".format(
             survey_id
         )
-        pipeline = self.r.pipeline()
+        pipeline = self._redis.pipeline()
         headers = {
             "Authorization": self.get_bearer_token()
         }
@@ -181,7 +189,7 @@ class OccupEyeApi():
         """
         # Use a Redis Pipeline to ensure that all the data is inserted together
         # and atomically
-        pipeline = self.r.pipeline()
+        pipeline = self._redis.pipeline()
         # Ensure that the list of occupeye surveys has actually been cleared
         pipeline.delete("occupeye:surveys")
 
@@ -227,21 +235,21 @@ class OccupEyeApi():
         requisite data does not exist in Redis, it is cached using
         the helper functions above, then returned from the cache.
         """
-        if self.r.llen("occupeye:surveys") == 0:
+        if self._redis.llen("occupeye:surveys") == 0:
             # The data is not in the cache, so cache it.
             self._cache_survey_data()
 
         # Now we know we have the data cached, we can serve it
-        survey_ids = self.r.lrange(
+        survey_ids = self._redis.lrange(
             "occupeye:surveys",
             0,
-            self.r.llen("occupeye:surveys") - 1
+            self._redis.llen("occupeye:surveys") - 1
         )
 
         surveys = []
 
         for survey_id in survey_ids:
-            survey_data = self.r.hgetall("occupeye:surveys:" + survey_id)
+            survey_data = self._redis.hgetall("occupeye:surveys:" + survey_id)
             survey = {
                 "id": int(survey_data["id"]),
                 "name": survey_data["name"],
@@ -252,14 +260,14 @@ class OccupEyeApi():
             survey_map_ids_list = "occupeye:surveys:{}:maps".format(
                 survey_id
             )
-            survey_map_ids = self.r.lrange(
+            survey_map_ids = self._redis.lrange(
                 survey_map_ids_list,
                 0,
-                self.r.llen(survey_map_ids_list) - 1
+                self._redis.llen(survey_map_ids_list) - 1
             )
             survey_maps = []
             for survey_map_id in survey_map_ids:
-                survey_map = self.r.hgetall(
+                survey_map = self._redis.hgetall(
                     "occupeye:surveys:{}:maps:{}".format(
                         survey_id,
                         survey_map_id
@@ -302,7 +310,7 @@ class OccupEyeApi():
         raw_image = response.content
         image_b64 = b64encode(raw_image)
 
-        pipeline = self.r.pipeline()
+        pipeline = self._redis.pipeline()
         pipeline.set(
             "occupeye:image:{}:base64".format(image_id),
             image_b64
@@ -330,11 +338,13 @@ class OccupEyeApi():
         if not image_id.isdigit():
             raise BadOccupEyeRequest
 
-        if not self.r.exists("occupeye:image:{}:base64".format(image_id)):
+        if not self._redis.exists("occupeye:image:{}:base64".format(image_id)):
             self._cache_image(image_id)
 
-        image_b64 = self.r.get("occupeye:image:{}:base64".format(image_id))
-        content_type = self.r.get(
+        image_b64 = self._redis.get(
+            "occupeye:image:{}:base64".format(image_id)
+        )
+        content_type = self._redis.get(
             "occupeye:image:{}:content_type".format(image_id)
         )
 
@@ -388,7 +398,7 @@ class OccupEyeApi():
             headers=headers
         )
         all_sensors_data = response.json()
-        pipeline = self.r.pipeline()
+        pipeline = self._redis.pipeline()
         survey_sensors_key = "occupeye:surveys:{}:sensors".format(survey_id)
         pipeline.delete(survey_sensors_key)
 
@@ -439,7 +449,7 @@ class OccupEyeApi():
             headers=headers
         )
         all_sensors_data = response.json()
-        pipeline = self.r.pipeline()
+        pipeline = self._redis.pipeline()
         for sensor_data in all_sensors_data:
             sensor_status_key = "occupeye:surveys:{}:sensors:{}:status".format(
                 survey_id,
@@ -487,7 +497,7 @@ class OccupEyeApi():
         )
         all_map_sensors_data = response.json()
 
-        pipeline = self.r.pipeline()
+        pipeline = self._redis.pipeline()
         map_sensors_list_key = "occupeye:surveys:{}:maps:{}:sensors".format(
             survey_id,
             map_id
@@ -538,22 +548,22 @@ class OccupEyeApi():
 
         maps_key = "occupeye:surveys:{}:maps".format(survey_id)
         # Check if we have a list of maps for this survey
-        if not self.r.llen(maps_key):
+        if not self._redis.llen(maps_key):
             self._cache_survey_data()
 
         # If the data still doesn't exist, the map probably doesn't
         # exist, so raise an error.
-        if not self.r.llen(maps_key):
+        if not self._redis.llen(maps_key):
             raise BadOccupEyeRequest
 
-        maps = self.r.lrange(
+        maps = self._redis.lrange(
             maps_key,
             0,
-            self.r.llen(maps_key) - 1
+            self._redis.llen(maps_key) - 1
         )
 
         survey_data_key = "occupeye:surveys:{}".format(survey_id)
-        survey_data = self.r.hgetall(survey_data_key)
+        survey_data = self._redis.hgetall(survey_data_key)
 
         data = {
             "maps": [],
@@ -566,15 +576,15 @@ class OccupEyeApi():
         ).format(survey_id)
         # If we do not have the data for each survey's sensor then
         # we should go ahead and cache that.
-        if not self.r.exists(all_survey_sensors_key):
+        if not self._redis.exists(all_survey_sensors_key):
             self._cache_survey_sensor_data(survey_id)
 
-        survey_sensors_ids = self.r.lrange(
+        survey_sensors_ids = self._redis.lrange(
             all_survey_sensors_key,
             0,
-            self.r.llen(all_survey_sensors_key)
+            self._redis.llen(all_survey_sensors_key)
         )
-        pipeline = self.r.pipeline()
+        pipeline = self._redis.pipeline()
 
         # Dictionary with the general :data for for every sensor
         # in the survey with no regard for map
@@ -593,13 +603,13 @@ class OccupEyeApi():
                 survey_id,
                 map_id
             )
-            if not self.r.llen(map_sensors_key):
+            if not self._redis.llen(map_sensors_key):
                 self._cache_sensors_for_map(survey_id, map_id)
 
-            sensor_hw_ids = self.r.lrange(
+            sensor_hw_ids = self._redis.lrange(
                 map_sensors_key,
                 0,
-                self.r.llen(map_sensors_key) - 1
+                self._redis.llen(map_sensors_key) - 1
             )
 
             sensors = OrderedDict()
@@ -629,7 +639,7 @@ class OccupEyeApi():
                 first_sensor_status_key = (
                     "occupeye:surveys:{}:sensors:{}:status"
                 ).format(survey_id, sensor_hw_ids[0])
-                if not self.r.hgetall(first_sensor_status_key):
+                if not self._redis.hgetall(first_sensor_status_key):
                     self._cache_all_survey_sensor_states(survey_id)
 
                 for sensor_id in sensor_hw_ids:
@@ -648,7 +658,7 @@ class OccupEyeApi():
                             "last_trigger_type"
                         ] = result["last_trigger_type"]
 
-            map_data = self.r.hgetall(
+            map_data = self._redis.hgetall(
                 "occupeye:surveys:{}:maps:{}".format(survey_id, map_id)
             )
             pipeline.execute()
@@ -660,7 +670,7 @@ class OccupEyeApi():
             max_timestamp_key = (
                 "occupeye:surveys:{}:sensors:max_timestamp"
             ).format(survey_id)
-            data["most_recent_timestamp"] = self.r.get(max_timestamp_key)
+            data["most_recent_timestamp"] = self._redis.get(max_timestamp_key)
 
         return data
 
@@ -683,12 +693,12 @@ class OccupEyeApi():
             "occupeye:surveys:{}:sensors:max_timestamp"
         ).format(survey_id)
 
-        max_timestamp_cached = self.r.get(max_timestamp_key)
+        max_timestamp_cached = self._redis.get(max_timestamp_key)
         if max_timestamp_cached:
             return (int(survey_id), max_timestamp_cached)
         else:
             max_timestamp = self._get_survey_sensor_max_timestamp(survey_id)
-            self.r.set(max_timestamp_key, max_timestamp)
+            self._redis.set(max_timestamp_key, max_timestamp)
             return (int(survey_id), max_timestamp)
 
     def _get_survey_sensors_data_worker(
@@ -790,10 +800,10 @@ class OccupEyeApi():
         during the day.
         """
         self._cache_survey_data()
-        survey_ids = self.r.lrange(
+        survey_ids = self._redis.lrange(
             "occupeye:surveys",
             0,
-            self.r.llen("occupeye:surveys") - 1
+            self._redis.llen("occupeye:surveys") - 1
         )
         # Cache all the latest surveys
         for survey_id in survey_ids:
@@ -807,14 +817,14 @@ class OccupEyeApi():
             survey_maps_key = "occupeye:surveys:{}:maps".format(
                 survey_id
             )
-            survey_map_ids = self.r.lrange(
+            survey_map_ids = self._redis.lrange(
                 survey_maps_key,
                 0,
-                self.r.llen(survey_maps_key) - 1
+                self._redis.llen(survey_maps_key) - 1
             )
             # Cache data for every map within every survey
             for survey_map_id in survey_map_ids:
-                survey_map = self.r.hgetall(
+                survey_map = self._redis.hgetall(
                     "occupeye:surveys:{}:maps:{}".format(
                         survey_id,
                         survey_map_id
