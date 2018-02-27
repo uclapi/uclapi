@@ -126,17 +126,17 @@ export default class WorkspacesGetSurveys extends React.Component {
                             example={`[{"image_id": 79, "name": "Level 3", "id": 73}, ...]`}
                             description="List of maps corresponding to regions within the library's survey." />
                         <Cell
-                            name="maps/name"
+                            name="maps[n][name]"
                             extra="string"
                             example="Level 3"
                             description="The name of the mapped section of the library's survey, such as a level, room or wing." />
                         <Cell
-                            name="maps/image_id"
+                            name="maps[n][image_id]"
                             extra="integer"
                             example="79"
                             description="The ID of the map's image. This can be used to download a CAD drawing of the map." />
                         <Cell
-                            name="maps/id"
+                            name="maps[n][id]"
                             extra="integer"
                             example="73"
                             description="The map's ID." />

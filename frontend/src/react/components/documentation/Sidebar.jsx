@@ -176,8 +176,8 @@ export default class Sidebar extends React.Component {
                 href="#workspaces/sensors"
               />,
               <ListItem
-                primaryText="Get Last Sensor Updates"
-                href="#workspaces/sensors/last_updated"
+                primaryText="Get Last Sensor Update"
+                href="#workspaces/sensors/lastupdated"
               />,
               <ListItem
                 primaryText="Get Sensors Summary"

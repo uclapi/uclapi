@@ -135,22 +135,22 @@ export default class WorkspacesGetSensors extends React.Component {
                             example={`[{"sensors": [ "585001": { sensor_data_here }, ... ], "name": "Level 3", "id": 73, "image_id": 79}, ... ]`}
                             description="A list of every map within the survey, within which there is information on that map and every sensor it has in a list of dictionaries." />
                         <Cell
-                            name="maps/id"
+                            name="maps[n][id]"
                             extra="integer"
                             example="73"
                             description="The map's unique ID" />
                         <Cell
-                            name="maps/name"
+                            name="maps[n][name]"
                             extra="string"
                             example="Level 3"
                             description="A human-readable name for the section of the library that the map corresponds to" />
                         <Cell
-                            name="maps/image_id"
+                            name="maps[n][image_id]"
                             extra="integer"
                             example="73"
                             description="The map's image ID to download the CAD drawing" />
                         <Cell
-                            name="maps/sensors"
+                            name="maps[n][sensors]"
                             extra="object"
                             example={`{"584001": {
                                 "description_2": "",
@@ -177,42 +177,42 @@ export default class WorkspacesGetSensors extends React.Component {
                             }, ... }`}
                             description="An object containing dictionaries, each of which corresponds to a sensor. The key is the sensor's unique ID, and the value is a dictionary of data about that sensor." />
                         <Cell
-                            name="maps/sensors/x/building_name"
+                            name="maps[n][sensors][n][building_name]"
                             extra="string"
                             example=""
                             description="A short but human-readable name of the room that the sensor is in." />
                         <Cell
-                            name="maps/sensors/x/device_type"
+                            name="maps[n][sensors][n][device_type]"
                             extra="string"
                             example="Desk"
                             description="Type of seat. Usually this is Desk." />
                         <Cell
-                            name="maps/sensors/x/floor"
+                            name="maps[n][sensors][n][floor]"
                             extra="string (boolean)"
                             example="False"
                             description="Whether the device is on the floor" />
                         <Cell
-                            name="maps/sensors/x/last_trigger_timestamp"
+                            name="maps[n][sensors][n][last_trigger_timestamp]"
                             extra="ISO8601 timestamp"
                             example="2018-02-15T22:42:28+00:00"
                             description="The last time that this sensor's update value was recorded. NB: only returned when return_states=true." />
                         <Cell
-                            name="maps/sensors/x/last_trigger_type"
+                            name="maps[n][sensors][n][last_trigger_type]"
                             extra="string"
                             example="Occupied"
                             description="Whether somebody is using the seat. Possible values are Absent and Occupied. NB: only returned when return_states=true." />
                         <Cell
-                            name="maps/sensors/x/hardware_id"
+                            name="maps[n][sensors][n][hardware_id]"
                             extra="string"
                             example="584001"
                             description="A unique ID for the sensor." />
                         <Cell
-                            name="maps/sensors/x/x_pos"
+                            name="maps[n][sensors][n][x_pos]"
                             extra="string (float)"
                             example="32432.0"
                             description="The X coordinate position of the sensor on the map." />
                         <Cell
-                            name="maps/sensors/x/y_pos"
+                            name="maps[n][sensors][n][y_pos]"
                             extra="string (float)"
                             example="14893.0"
                             description="The Y coordinate position of the sensor on the map." />

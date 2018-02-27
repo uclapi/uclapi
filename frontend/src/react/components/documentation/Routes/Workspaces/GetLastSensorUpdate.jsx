@@ -12,14 +12,14 @@ params = {
   "survey_id": "46"
 }
 
-r = requests.get("https://uclapi.com/workspaces/sensors/last_updated", params=params)
+r = requests.get("https://uclapi.com/workspaces/sensors/lastupdated", params=params)
 print(r.json())`,
 
-  shell: `curl -X GET https://uclapi.com/workspaces/sensors/last_updated \
+  shell: `curl -X GET https://uclapi.com/workspaces/sensors/lastupdated \
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \
 -d survey_id=46`,
 
-  javascript: `fetch("https://uclapi.com/workspaces/sensors/last_updated?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=46",
+  javascript: `fetch("https://uclapi.com/workspaces/sensors/lastupdated?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=46",
 {
     method: "GET",
 })
@@ -50,9 +50,9 @@ export default class WorkspacesGetLastSensorUpdate extends React.Component {
                 <Topic
                     activeLanguage={this.props.activeLanguage}
                     codeExamples={codeExamples}>
-                    <h1 id="workspaces/sensors/last_updated">Get Last Sensor Update by Survey</h1>
+                    <h1 id="workspaces/sensors/lastupdated">Get Last Sensor Update by Survey</h1>
                     <p>
-                        Endpoint: <code>https://uclapi.com/workspaces/sensors/last_updated</code>
+                        Endpoint: <code>https://uclapi.com/workspaces/sensors/lastupdated</code>
                     </p>
                     <p>
                         This endpoint replies with the timestamp of the last time the sensor data was updated for a given survey. This allows integrations that poll the API to save on request time by only requesting the full set of sensor information for a survey once it has been updated.
