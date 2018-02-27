@@ -1,11 +1,13 @@
 import json
 import os
+
+import redis
+import requests
+
 from base64 import b64encode
 from collections import OrderedDict
 from time import time as time_now
 from multiprocessing import Manager, Process
-import redis
-import requests
 
 from django.conf import settings
 
