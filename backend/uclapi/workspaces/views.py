@@ -46,9 +46,8 @@ def get_image(request, *args, **kwargs):
         response = JsonResponse({
             "ok": False,
             "error": (
-                "Either the Image ID you requested does "
-                "not exist, or an internal error occured "
-                "that prevented it from being retrieved."
+                "The image with the ID you requested "
+                "does not exist."
             )
         }, rate_limiting_data=kwargs)
         response.status_code = 400
