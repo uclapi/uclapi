@@ -179,3 +179,65 @@ def get_survey_sensors_summary(request, *args, **kwargs):
     }, rate_limiting_data=kwargs)
 
     return response
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(personal_data=False)
+def get_historical_time_data(request, *args, **kwargs):
+    api = OccupEyeApi()
+    survey_ids = request.GET.get("survey_ids", None)
+    try:
+        day_count = request.GET["days"]
+    except KeyError:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "You did not specify how many days of historical data "
+                "should be returned. Valid options are: "
+            ) + str(api.VALID_HISTORICAL_DATA_DAYS)
+        }, rate_limiting_data=kwargs)
+        response.status_code = 400
+        return response
+
+    if not day_count.isdigit():
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "You did not specify an integer number of days of "
+                "historical days. Valid options are: "
+            ) + str(api.VALID_HISTORICAL_DATA_DAYS)
+        }, rate_limiting_data=kwargs)
+        response.status_code = 400
+        return response
+
+    day_count = int(day_count)
+
+    if day_count not in api.VALID_HISTORICAL_DATA_DAYS:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "You did not specify a valid number of days of "
+                "historical days. Valid options are: "
+            ) + str(api.VALID_HISTORICAL_DATA_DAYS)
+        }, rate_limiting_data=kwargs)
+        response.status_code = 400
+        return response
+
+    try:
+        data = api.get_historical_time_usage_data(survey_ids, day_count)
+    except BadOccupEyeRequest:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "One or more of the survey_ids you requested is not valid."
+            )
+        }, rate_limiting_data=kwargs)
+        response.status_code = 400
+        return response
+
+    response = JsonResponse({
+        "ok": True,
+        "surveys": data
+    }, rate_limiting_data=kwargs)
+
+    return response
