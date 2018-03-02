@@ -819,8 +819,6 @@ class OccupEyeApi():
             "Authorization": self.get_bearer_token()
         }
 
-        url = self.base_url + "/api/Query"
-
         url = (
             "{}/api/Query?"
             "Deployment={}&"
