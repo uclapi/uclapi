@@ -25,8 +25,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# This value should be set by the UCLAPI_PRODUCTION environment variable anyway.
-# If in production, debug should be false
+# This value should be set by the UCLAPI_PRODUCTION environment
+# variable anyway. If in production, debug should be false.
 DEBUG = not strtobool(os.environ.get("UCLAPI_PRODUCTION"))
 
 ALLOWED_HOSTS = ["localhost"]
@@ -40,7 +40,10 @@ if os.environ.get("UCLAPI_DOMAIN"):
 if strtobool(os.environ.get("UCLAPI_RUNNING_ON_AWS_ELB")):
     EC2_PRIVATE_IP = None
     try:
-        EC2_PRIVATE_IP = requests.get("http://169.254.169.254/latest/meta-data/local-ipv4", timeout=0.01).text
+        EC2_PRIVATE_IP = requests.get(
+            "http://169.254.169.254/latest/meta-data/local-ipv4",
+            timeout=0.01
+        ).text
     except requests.exceptions.RequestException:
         pass
 
@@ -156,16 +159,16 @@ RAVEN_CONFIG = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',  # noqa
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',  # noqa
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',  # noqa
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',  # noqa
     },
 ]
 
@@ -198,7 +201,11 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/roombookings/.*$'
 
 # Fair use policy
-with open(os.path.join(BASE_DIR, 'uclapi/UCLAPIAcceptableUsePolicy.txt'), 'r', encoding='utf-8') as fp:
+fair_use_policy_path = os.path.join(
+    BASE_DIR,
+    'uclapi/UCLAPIAcceptableUsePolicy.txt'
+)
+with open(fair_use_policy_path, 'r', encoding='utf-8') as fp:
     FAIR_USE_POLICY = list(fp)
 
 REDIS_UCLAPI_HOST = os.environ["REDIS_UCLAPI_HOST"]
@@ -211,3 +218,49 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 
 ROOMBOOKINGS_SETID = 'LIVE-17-18'
+
+# S3 file storage settings
+# There are three scenarios to consider:
+# 1) Local development
+#    In local dev,  AWS_S3_STATICS = False
+#                   AWS_S3_STATICS_CREDENTIALS_ENABLED = False
+#    These allow you to use local statics using /static/ in the
+#    same way as you would normally.
+# 2) Production
+#    In prod,       AWS_S3_STATICS = True
+#                   AWS_S3_STATICS_CREDENTIALS_ENABLED = False
+#    This means that S3 statics will be used, but no creds are
+#    needed on the boxes because web servers should never do
+#    uploads to the remote S3 bucket.
+# 3) Deployment
+#    In deployment, AWS_S3_STATICS = True
+#                   AWS_S3_STATICS_CREDENTIALS_ENABLED = True
+#    This will be done either from CI/CD or from the computer
+#    of a person who has permission to upload new statics to
+#    S3.
+
+if strtobool(os.environ.get("AWS_S3_STATICS", "False")):
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    AWS_STORAGE_BUCKET_NAME = os.environ["AWS_S3_BUCKET_NAME"]
+    AWS_LOCATION = os.environ["AWS_S3_BUCKET_PATH"]
+    AWS_S3_REGION_NAME = os.environ["AWS_S3_REGION"]
+
+    # This is a hack to not require AWS Access Credentials
+    # when the system is running in the Cloud. This avoids us from
+    # needing to store AWS credentials.
+    # https://github.com/jschneier/django-storages/issues/254#issuecomment-329813295  # noqa
+    AWS_S3_CUSTOM_DOMAIN = "{}.s3.amazonaws.com".format(
+        AWS_STORAGE_BUCKET_NAME
+    )
+
+    # If credentials are enabled, collectstatic can do uploads
+    if strtobool(os.environ["AWS_S3_STATICS_CREDENTIALS_ENABLED"]):
+        AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
+        AWS_SECRET_ACCESS_KEY = os.environ["AWS_ACCESS_SECRET"]
+        AWS_S3_OBJECT_PARAMETERS = {
+            'CacheControl': 'max-age=86400',
+        }
+        AWS_S3_ENCRYPTION = False
+    else:
+        AWS_QUERYSTRING_AUTH = False
