@@ -819,6 +819,8 @@ class OccupEyeApi():
             "Authorization": self.get_bearer_token()
         }
 
+        url = self.base_url + "/api/Query"
+
         url = (
             "{}/api/Query?"
             "Deployment={}&"
@@ -830,11 +832,6 @@ class OccupEyeApi():
             "EndTime=24%3A00&"
             "GroupBy[]=TriggerDate&"
             "GroupBy[]=TimeSlot&"
-            "WeekDays[]=Monday&"
-            "WeekDays[]=Tuesday&"
-            "WeekDays[]=Wednesday&"
-            "WeekDays[]=Thursday&"
-            "WeekDays[]=Friday&"
         ).format(
             self.base_url,
             self.deployment_name,
