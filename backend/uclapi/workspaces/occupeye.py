@@ -6,6 +6,7 @@ import requests
 
 from base64 import b64encode
 from collections import OrderedDict
+from datetime import datetime, timedelta
 from time import time as time_now
 from multiprocessing import Manager, Process
 
@@ -35,6 +36,9 @@ class OccupEyeApi():
 
     # Keep sensor data in the cache for a minute
     SENSOR_STATUS_TTL = 60
+
+    # Valid historical time periods
+    VALID_HISTORICAL_DATA_DAYS = [1, 7, 30]
 
     def __init__(self, test_mode=False):
         self._redis = redis.StrictRedis(
@@ -743,12 +747,7 @@ class OccupEyeApi():
         for i in range(0, len(l), chunk_size):
             yield l[i:i+chunk_size]
 
-    def get_survey_sensors_summary(self, survey_ids):
-        """
-        Gets a summary of every survey, map and the sensor counts within them.
-        """
-        surveys_data = self.get_surveys()
-
+    def _survey_ids_to_surveys(self, surveys_data, survey_ids):
         if survey_ids:
             try:
                 survey_ids_list = [int(x) for x in survey_ids.split(',')]
@@ -769,6 +768,19 @@ class OccupEyeApi():
         if survey_ids_list:
             if len(filtered_surveys) != len(survey_ids_list):
                 raise BadOccupEyeRequest
+
+        return filtered_surveys
+
+    def get_survey_sensors_summary(self, survey_ids):
+        """
+        Gets a summary of every survey, map and the sensor counts within them.
+        """
+        surveys_data = self.get_surveys()
+
+        filtered_surveys = self._survey_ids_to_surveys(
+            surveys_data,
+            survey_ids
+        )
 
         threads = []
 
@@ -791,6 +803,103 @@ class OccupEyeApi():
 
         return sensors_data_dict.values()
 
+    def _cache_historical_time_usage_data(self, survey_id, day_count):
+        """
+        Function to cache in Redis the historical usage data over each 10
+        minute time period.
+        day_count is the number of days of historical data (from including
+        yesterday, but not including today) to cache.
+        E.g. if you cache on Tuesday for 7 days, all the data from
+        last Sunday to Monday (e.g. yesterday) inclusive will be cached.
+        This is to support apps which show historical survey usage data.
+        """
+        end_date = datetime.now() - timedelta(days=1)
+        start_date = end_date - timedelta(days=day_count - 1)
+        headers = {
+            "Authorization": self.get_bearer_token()
+        }
+
+        url = (
+            "{}/api/Query?"
+            "Deployment={}&"
+            "startdate={}&"
+            "enddate={}&"
+            "SurveyID={}&"
+            "QueryType=ByDateTime&"
+            "StartTime=00%3A00&"
+            "EndTime=24%3A00&"
+            "GroupBy[]=TriggerDate&"
+            "GroupBy[]=TimeSlot&"
+            "WeekDays[]=Monday&"
+            "WeekDays[]=Tuesday&"
+            "WeekDays[]=Wednesday&"
+            "WeekDays[]=Thursday&"
+            "WeekDays[]=Friday&"
+        ).format(
+            self.base_url,
+            self.deployment_name,
+            start_date.strftime("%Y-%m-%d"),
+            end_date.strftime("%Y-%m-%d"),
+            survey_id
+        )
+
+        request = requests.get(url, headers=headers)
+        response = request.json()
+
+        slots = {}
+
+        for result in response:
+            if result["TimeSlot"] in slots:
+                slots[result["TimeSlot"]]["CountOcc"] += result["CountOcc"]
+                slots[result["TimeSlot"]]["Results"] += 1
+            else:
+                slot_data = {
+                    "CountOcc": result["CountOcc"],
+                    "CountTotal": result["CountTotal"],
+                    "Results": 1
+                }
+                slots[result["TimeSlot"]] = slot_data
+
+        data = {}
+        for key, value in slots.items():
+            average = value["CountOcc"] // value["Results"]
+            data[key] = {
+                "sensors_absent": value["CountTotal"] - average,
+                "sensors_occupied": average,
+                "sensors_total": value["CountTotal"]
+            }
+
+        self._redis.set(
+            "occupeye:query:timeaverage:{}:{}".format(survey_id, day_count),
+            json.dumps(data, sort_keys=True)
+        )
+
+    def get_historical_time_usage_data(self, survey_ids, day_count):
+        surveys_data = self.get_surveys()
+
+        filtered_surveys = self._survey_ids_to_surveys(
+            surveys_data,
+            survey_ids
+        )
+
+        data = []
+
+        for survey in filtered_surveys:
+            averages = json.loads(
+                self._redis.get("occupeye:query:timeaverage:{}:{}".format(
+                    survey["id"],
+                    day_count
+                ))
+            )
+            survey_data = {
+                "survey_id": survey["id"],
+                "name": survey["name"],
+                "averages": averages
+            }
+            data.append(survey_data)
+
+        return data
+
     def feed_cache(self):
         """
         Function called by the Django management command to feed the Redis
@@ -808,7 +917,9 @@ class OccupEyeApi():
             self._redis.llen("occupeye:surveys") - 1
         )
         # Cache all the latest surveys
+        print("[+] Surveys")
         for survey_id in survey_ids:
+            print("==> Survey ID: " + survey_id)
             # Cache a list of every map in the survey
             self._cache_maps_for_survey(survey_id)
             # Cache the data for every sensor in the survey
@@ -838,5 +949,12 @@ class OccupEyeApi():
                 self._cache_image(image_id)
                 # Cache a list of every sensor in every map
                 self._cache_sensors_for_map(survey_id, survey_map_id)
+
+            # Cache all the historical data for the last x days
+            for day_count in self.VALID_HISTORICAL_DATA_DAYS:
+                self._cache_historical_time_usage_data(
+                    survey_id,
+                    day_count
+                )
 
             self._cache_all_survey_sensor_states(survey_id)
