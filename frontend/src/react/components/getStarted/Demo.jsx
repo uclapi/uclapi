@@ -2,7 +2,7 @@ import React from 'react';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import AutoComplete from 'material-ui/AutoComplete';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import {dracula} from 'react-syntax-highlighter/dist/styles';
+import {dracula} from 'react-syntax-highlighter/styles/prism';
 import RaisedButton from 'material-ui/RaisedButton';
 import 'whatwg-fetch';
 

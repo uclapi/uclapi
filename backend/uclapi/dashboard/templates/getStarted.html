@@ -5,6 +5,7 @@
 
   <title>UCL API</title>
 
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900" rel="stylesheet">
   <link rel="stylesheet" href="{% static "css/getStarted.css" %}" type="text/css" />
@@ -14,11 +15,11 @@
 
 <body>
 
-	<script>
+  <script>
     window.initialData = {{ initial_data|safe }};
     window.staticURL = {% static "" %}
   </script>
-	<div class="app"></div>
+  <div class="app"></div>
   <script src="{% static "js/getStarted.js" %}"></script>
   <script src="https://use.fontawesome.com/c70d56d6fc.js"></script>
 

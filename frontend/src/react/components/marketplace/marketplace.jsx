@@ -8,16 +8,10 @@ import FeaturedApps from './FeaturedApps.jsx';
 
 
 let categories = {
-  "timetable": {
-    name: "Timetable",
-    description: "Apps for timetable",
+  "roombookings": {
+    name: "Room Bookings",
+    description: "Apps to deal with rooms at UCL",
     color: "#80D8FF",
-    apps: []
-  },
-  "search": {
-    name: "Search",
-    description: "Apps for search",
-    color: "#CDDC39",
     apps: []
   },
   "productivity": {

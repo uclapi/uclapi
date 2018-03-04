@@ -39,7 +39,7 @@ def get_pc_availability(request, *args, **kwargs):
         _ = pc.get
         data.append({
             "location": {
-                "room_name": _("location"),
+                "roomname": _("location"),
                 "room_id": _("rid"),
                 "latitude": _("latitude"),
                 "longitude": _("longitude"),

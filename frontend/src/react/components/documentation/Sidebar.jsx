@@ -112,6 +112,10 @@ export default class Sidebar extends React.Component {
                 href="#roombookings/equipment"
               />,
               <ListItem
+                primaryText="Get Free Rooms"
+                href="#roombookings/freerooms"
+              />,
+              <ListItem
                 primaryText="Webhooks"
                 href="#roombookings/webhooks"
               />,
@@ -143,6 +147,46 @@ export default class Sidebar extends React.Component {
                 primaryText="Get Timetable By Modules"
                 href="#timetable/bymodule"
               />,
+            ]}
+          />
+          
+          <ListItem
+            href="#resources"
+            primaryText="Resources"
+            primaryTogglesNestedList={true}
+            nestedItems={[
+              <ListItem
+                primaryText="Get Desktop availability"
+                href="#resources/desktops"
+              />,
+            ]}
+          />
+
+          <ListItem
+            href="#workspaces"
+            primaryText="Workspaces"
+            primaryTogglesNestedList={true}
+            nestedItems={[
+              <ListItem
+                primaryText="Get Surveys"
+                href="#workspaces/surveys"
+              />,
+              <ListItem
+                primaryText="Get Sensors"
+                href="#workspaces/sensors"
+              />,
+              <ListItem
+                primaryText="Get Last Sensor Update"
+                href="#workspaces/sensors/lastupdated"
+              />,
+              <ListItem
+                primaryText="Get Sensors Summary"
+                href="#workspaces/sensors/summary"
+              />,
+              <ListItem
+                primaryText="Get Map Image"
+                href="#workspaces/image"
+              />
             ]}
           />
 

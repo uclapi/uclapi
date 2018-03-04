@@ -1,5 +1,8 @@
 from __future__ import absolute_import
+
+import os
 import keen
+import requests
 
 from celery import shared_task
 
@@ -32,3 +35,27 @@ def keen_add_event_task(title, data):
                 title + 'Please check your internet connection.'
 
     return 'Keen added a new event titled ' + title
+
+
+@shared_task
+def add_user_to_mailing_list_task(email, name):
+    add_user_to_mailing_list(email, name)
+
+
+def add_user_to_mailing_list(email, name):
+    data = {
+        "email_address": email,
+        "status": "subscribed",
+        "merge_fields": {
+            "EMAIL": email,
+            "FNAME": name
+        }
+    }
+
+    headers = {
+        "Authorization": "apikey {}".format(
+            os.environ["MAILCHIMP_API_KEY"])
+    }
+
+    requests.post(
+        os.environ["MAILCHIMP_ENDPOINT"], json=data, headers=headers)
