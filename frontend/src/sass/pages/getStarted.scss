@@ -2,6 +2,7 @@
 
 $primary-color: #313537;
 $secondary-color: #f4f4f4;
+$accent-color: #434343;
 $highlight-color: #B18453;
 
 body {
@@ -46,6 +47,7 @@ h3 {
 }
 
 .goal {
+  // background: $accent-color;
   padding-top: 100px;
   padding-bottom: 100px;
   text-align: center;
@@ -135,7 +137,7 @@ code {
   padding-top: 60px;
   padding-bottom: 40px;
   background: #D7CCC8;
-  // color: $primary-color;
+  // background: white;
 
   display: flex;
   flex-wrap: wrap;
@@ -144,16 +146,21 @@ code {
 
   h1 {
     color: $primary-color;
+    // color: white;
   }
 
   p {
     font-size: 18px;
     color: #8D6E63;
+    // color: #e4e4e4
+    // color: $accent-color;
   }
 
   .api {
 
     h1 {
+      color: $primary-color;
+      // color: white;
       font-weight: 400;
     }
 

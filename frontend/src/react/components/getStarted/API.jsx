@@ -24,13 +24,11 @@ export default class API extends React.Component {
     return (
       <a href={this.props.link} key={this.props.k}>
         <Paper
+          key={this.props.k}
           className="api"
           zDepth={this.state.shadow}
           onMouseOver={this.onMouseOver}
           onMouseOut={this.onMouseOut}
-          // style={{
-          //   "borderRadius": "10px"
-          // }}
           >
           <h1>{this.props.name}</h1>
           <p>{this.props.description}</p>

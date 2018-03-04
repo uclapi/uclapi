@@ -2,7 +2,7 @@ import React from 'react';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import AutoComplete from 'material-ui/AutoComplete';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import {dracula} from 'react-syntax-highlighter/styles/prism';
+import {androidstudio} from 'react-syntax-highlighter/styles/hljs';
 import RaisedButton from 'material-ui/RaisedButton';
 import 'whatwg-fetch';
 
@@ -451,7 +451,7 @@ fetch(
     if (this.state.schedule) {
       response = <div>
         <hr/>
-        <SyntaxHighlighter language={"javascript"} style={dracula}>
+        <SyntaxHighlighter language={"javascript"} style={androidstudio}>
           {this.state.schedule}
         </SyntaxHighlighter>
       </div>;
@@ -470,7 +470,7 @@ fetch(
             {this.getLanguages().map((language, index) => (
               <Tab key={index} label={language.name}>
                 <div>
-                  <SyntaxHighlighter language={language.name} style={dracula}>{language.code}</SyntaxHighlighter>
+                  <SyntaxHighlighter language={language.name} style={androidstudio}>{language.code}</SyntaxHighlighter>
                 </div>
               </Tab>
             ))}
