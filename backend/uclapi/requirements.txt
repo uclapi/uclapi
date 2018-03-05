@@ -37,7 +37,7 @@ mock==2.0.0
 model-mommy==1.5.1
 multidict==3.3.2
 opbeat==3.6.1
-packaging==16.8
+packaging==17.1
 pbr==3.1.1
 psycogreen==1.0
 psycopg2==2.7.4
