@@ -18,7 +18,7 @@ Django==1.11.7
 django-cors-headers==2.1.0
 django-db-geventpool==1.21
 django-dotenv==1.4.2
-django-mock-queries==1.0.6
+django-mock-queries==1.0.7
 django-storages==1.6.5
 djangorestframework==3.7.7
 docutils==0.14
