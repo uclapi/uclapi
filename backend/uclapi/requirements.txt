@@ -1,7 +1,4 @@
-aiohttp==3.0.6
 amqp==2.2.2
-async-timeout==2.0.0
-attrs==17.4.0
 billiard==3.5.0.3
 boto3==1.6.3
 botocore==1.9.3
@@ -19,13 +16,13 @@ django-mock-queries==1.0.7
 django-storages==1.6.5
 djangorestframework==3.7.7
 docutils==0.14
+eventlet==0.22.1
 freezegun==0.3.9
 gevent==1.2.2
 greenlet==0.4.13
 grequests==0.3.0
 gunicorn==19.7.1
 idna==2.6
-idna-ssl==1.0.0
 jmespath==0.9.3
 jsonpickle==0.9.6
 keen==0.5.1
@@ -33,7 +30,6 @@ kombu==4.1.0
 lxml==4.1.1
 mock==2.0.0
 model-mommy==1.5.1
-multidict==4.1.0
 opbeat==3.6.1
 pbr==3.1.1
 psycopg2-binary==2.7.4
@@ -51,4 +47,3 @@ tldextract==2.2.0
 urllib3==1.22
 validators==0.12.1
 vine==1.1.4
-yarl==1.1.1
