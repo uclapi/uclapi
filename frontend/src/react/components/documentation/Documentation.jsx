@@ -27,6 +27,13 @@ import GetTimetableByModules from './Routes/Timetable/GetTimetableByModules.jsx'
 import ResourcesVersionHeader from './Routes/Resources/VersionHeader.jsx';
 import DesktopAvailability from './Routes/Resources/DesktopAvailability.jsx';
 
+import WorkspacesGetSurveys from './Routes/Workspaces/GetSurveys.jsx';
+import WorkspacesGetSensors from './Routes/Workspaces/GetSensors.jsx';
+import WorkspacesGetLastSensorUpdate from './Routes/Workspaces/GetLastSensorUpdate.jsx';
+import WorkspacesGetHistoricalTimeData from './Routes/Workspaces/GetSensorHistoricalTimeData.jsx';
+import WorkspaceGetSensorsSummary from './Routes/Workspaces/GetSensorSummary.jsx';
+import WorkspacesGetImage from './Routes/Workspaces/GetImage.jsx';
+
 import GetInvolved from './GetInvolved/GetInvolved.jsx';
 
 import LanguageTabs from './LanguageTabs.jsx';
@@ -69,6 +76,14 @@ export default class DocumentationComponent extends React.Component {
             <SectionHeader link="resources" title="Resources" />
             <ResourcesVersionHeader />
             <DesktopAvailability />
+
+            <SectionHeader link="workspaces" title="Workspaces" />
+            <WorkspacesGetSurveys />
+            <WorkspacesGetSensors />
+            <WorkspacesGetHistoricalTimeData />
+            <WorkspacesGetLastSensorUpdate />
+            <WorkspaceGetSensorsSummary />
+            <WorkspacesGetImage />
 
             <GetInvolved />
           </LanguageTabs>

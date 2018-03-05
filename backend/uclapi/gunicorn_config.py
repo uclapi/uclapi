@@ -7,9 +7,7 @@ bind = "127.0.0.1:9000"
 workers = multiprocessing.cpu_count() * 4 + 1
 threads = multiprocessing.cpu_count() * 4
 
-# Using gevent because of the long blocking calls to the Oracle database
-# aiohtto stopped supporting gunicorn / wsgi, hence the switch to gevent
-worker_class = "gevent"
+worker_class = "sync"
 
 daemon = False
 
