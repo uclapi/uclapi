@@ -16,7 +16,7 @@ decorator==4.2.1
 deepdiff==3.3.0
 Django==1.11.7
 django-cors-headers==2.1.0
-django-db-geventpool==1.21
+django-db-geventpool==2
 django-dotenv==1.4.2
 django-mock-queries==1.0.7
 django-storages==1.6.5
