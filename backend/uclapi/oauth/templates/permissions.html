@@ -18,7 +18,7 @@
 
   <script>
     window.initialData = {{ initial_data|safe }};
-    window.staticURL = {% static "" %}
+    window.staticURL = "{% static "" %}";
   </script>
   <div class="app"></div>
   <script src="{% static "js/authorise.js" %}"></script>

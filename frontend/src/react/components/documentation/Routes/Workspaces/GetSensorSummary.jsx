@@ -156,7 +156,8 @@ export default class WorkspacesGetSensorsSummary extends React.Component {
                                         ]
                                     },
                                     ...
-                            }`}
+                                ]
+                            `}
                             description="A list of survey objects, each of which contains a list of maps with associated sensor counts." />
                         
                         <Cell
