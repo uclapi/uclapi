@@ -1,3 +1,28 @@
+// 404 page
+.notFound {
+  height: 100vh;
+  width: 100vw;
+	background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("/static/logoCover2.png");
+  background-size: cover;
+  background-position: 50%;
+	color: white;
+  display: table;
+
+  .text {
+    display: table-cell;
+    vertical-align: middle;
+
+    h1 {
+      font-size: 120px;
+      font-weight: bolder;
+    }
+
+    h2 {
+      font-size: 34px;
+    }
+  }
+}
+
 // New Classes for use with material-ui
 .container {
   padding-right: 15px;
@@ -21,6 +46,12 @@
   }
 }
 
+@media (min-width: 1900px) {
+  .container {
+    width: 1400px;
+  }
+}
+
 .row {
 	display: flex;
 	flex-wrap: wrap;
@@ -34,12 +65,20 @@
   flex: 2;
 }
 
+.col3 {
+  flex: 2;
+}
+
 .col4 {
   flex: 4;
 }
 
 .col8 {
   flex: 8;
+}
+
+.col9 {
+  flex: 10;
 }
 
 .col10 {
