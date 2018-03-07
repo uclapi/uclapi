@@ -27,4 +27,4 @@ ldconfig
 
 # Go-Go-Gadget Gunicorn!
 echo "Booting gunicorn..."
-exec venv/bin/gunicorn -c gunicorn_config.py uclapi.wsgi
+exec sudo -u ubuntu venv/bin/gunicorn -c gunicorn_config.py uclapi.wsgi
