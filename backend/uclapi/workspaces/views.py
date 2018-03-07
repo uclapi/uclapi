@@ -3,10 +3,12 @@ from base64 import b64decode
 from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse
 from common.helpers import RateLimitHttpResponse as HttpResponse
+
+from django.http import HttpResponse
 from rest_framework.decorators import api_view
 
 from .occupeye import BadOccupEyeRequest, OccupEyeApi
-
+from .image_builder import ImageBuilder
 
 @api_view(["GET"])
 @uclapi_protected_endpoint(personal_data=False)
@@ -24,7 +26,7 @@ def get_surveys(request, *args, **kwargs):
 
 @api_view(["GET"])
 @uclapi_protected_endpoint(personal_data=False)
-def get_image(request, *args, **kwargs):
+def get_map_image(request, *args, **kwargs):
     try:
         image_id = request.GET['image_id']
     except KeyError:
@@ -239,5 +241,45 @@ def get_historical_time_data(request, *args, **kwargs):
         "ok": True,
         "surveys": data
     }, rate_limiting_data=kwargs)
+
+    return response
+
+@api_view(['GET'])
+@uclapi_protected_endpoint(personal_data=False)
+def get_live_map(request, *args, **kwargs):
+    try:
+        survey_id = request.GET["survey_id"]
+        map_id = request.GET["map_id"]
+    except KeyError:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "You must provide a Survey ID and a Map ID "
+                "to get a live sensor status image."
+            )
+        }, rate_limiting_data=kwargs)
+        response.status_code = 400
+        return response
+
+    try:
+        ib = ImageBuilder(survey_id, map_id)
+    except BadOccupEyeRequest:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "Either the IDs you sent were not "
+                "integers, or they do not exist."
+            )
+        }, rate_limiting_data=kwargs)
+        response.status_code = 400
+        return response
+
+    map_svg = ib.get_live_map()
+
+    response = HttpResponse(
+        map_svg,
+        content_type="image/svg+xml"
+    )
+    response["Content-Length"] = len(map_svg)
 
     return response

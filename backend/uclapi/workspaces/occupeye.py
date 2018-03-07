@@ -298,7 +298,13 @@ class OccupEyeApi():
         headers = {
             "Authorization": self.get_bearer_token()
         }
-        url = "{}/api/images/{}?deployment={}".format(
+        # Cache images capped at 1000x1000 so that the maths works
+        # when we generate SVG files.
+        # The main Cad-Cap web UI does this.
+        url = (
+            "{}/api/images/{}?deployment={}"
+            "&max_width=1000&max_height=1000"
+        ).format(
             self.base_url,
             image_id,
             self.deployment_name
@@ -534,6 +540,34 @@ class OccupEyeApi():
                 properties_key,
                 self.SURVEY_TTL
             )
+
+        map_vmax_x_key = "occupeye:surveys:{}:maps:{}:VMaxX".format(
+            survey_id,
+            map_id
+        )
+        map_vmax_y_key = "occupeye:surveys:{}:maps:{}:VMaxY".format(
+            survey_id,
+            map_id
+        )
+        map_viewbox = "occupeye:surveys:{}:maps:{}:viewbox".format(
+            survey_id,
+            map_id
+        )
+        pipeline.set(
+            map_vmax_x_key,
+            all_map_sensors_data["VMaxX"],
+            ex=self.SURVEY_TTL
+        )
+        pipeline.set(
+            map_vmax_y_key,
+            all_map_sensors_data["VMaxY"],
+            ex=self.SURVEY_TTL
+        )
+        pipeline.set(
+            map_viewbox,
+            all_map_sensors_data["ViewBox"],
+            ex=self.SURVEY_TTL
+        )
 
         pipeline.expire(
             map_sensors_list_key,
@@ -894,6 +928,36 @@ class OccupEyeApi():
             data.append(survey_data)
 
         return data
+
+    def get_survey_image_map_data(self, survey_id, map_id):
+        """
+        Gets information needed by the Image Builder to create a
+        .SVG file showing the state of every library sensor
+        """
+        map_vmax_x_key = "occupeye:surveys:{}:maps:{}:VMaxX".format(
+            survey_id,
+            map_id
+        )
+        map_vmax_y_key = "occupeye:surveys:{}:maps:{}:VMaxY".format(
+            survey_id,
+            map_id
+        )
+        map_viewbox = "occupeye:surveys:{}:maps:{}:viewbox".format(
+            survey_id,
+            map_id
+        )
+        map_vmax_x = self._redis.get(map_vmax_x_key)
+        map_vmax_y = self._redis.get(map_vmax_y_key)
+        map_viewbox = self._redis.get(map_viewbox)
+
+        data = {
+            "VMaxX": map_vmax_x,
+            "VMaxY": map_vmax_y,
+            "ViewBox": map_viewbox
+        }  
+
+        return data
+
 
     def feed_cache(self):
         """
