@@ -33,6 +33,7 @@ import WorkspacesGetLastSensorUpdate from './Routes/Workspaces/GetLastSensorUpda
 import WorkspacesGetHistoricalTimeData from './Routes/Workspaces/GetSensorHistoricalTimeData.jsx';
 import WorkspaceGetSensorsSummary from './Routes/Workspaces/GetSensorSummary.jsx';
 import WorkspacesGetImage from './Routes/Workspaces/GetImage.jsx';
+import WorkspacesGetLiveImage from './Routes/Workspaces/GetLiveImage.jsx';
 
 import GetInvolved from './GetInvolved/GetInvolved.jsx';
 
@@ -84,6 +85,7 @@ export default class DocumentationComponent extends React.Component {
             <WorkspacesGetLastSensorUpdate />
             <WorkspaceGetSensorsSummary />
             <WorkspacesGetImage />
+            <WorkspacesGetLiveImage />
 
             <GetInvolved />
           </LanguageTabs>

@@ -36,12 +36,21 @@ class ImageBuilder():
         )
         self._survey_id = survey_id
         self._map_id = map_id
-        self._absent_colour = "#ABE00C"
-        self._occupied_colour = "#FFC90E"
+
+        # Set the defaults
+        self.set_colours()
+        self.set_image_scale()
+        self.set_circle_radius()
 
     def set_colours(self, absent="#ABE00C", occupied="#FFC90E"):
         self._absent_colour = absent
         self._occupied_colour = occupied
+
+    def set_image_scale(self, image_scale=0.02):
+        self._image_scale = image_scale
+
+    def set_circle_radius(self, circle_radius=128):
+        self._circle_radius = circle_radius
 
     def get_live_map(self):
         map_data = self._api.get_survey_image_map_data(
@@ -58,7 +67,11 @@ class ImageBuilder():
             nsmap=nsmap
         )
         viewport = etree.SubElement(svg, "g")
-        viewport.attrib["transform"] = "scale(0.02, 0.02)"
+        scale = "scale({}, {})".format(
+            self._image_scale,
+            self._image_scale
+        )
+        viewport.attrib["transform"] = scale
         base_map = etree.SubElement(viewport, "image")
         base_map.attrib["width"] = map_data["VMaxX"]
         base_map.attrib["height"] = map_data["VMaxY"]
@@ -93,7 +106,7 @@ class ImageBuilder():
                 sensor_data["y_pos"]
             )
             circle = etree.SubElement(node, "circle")
-            circle.attrib["r"] = "128"
+            circle.attrib["r"] = str(self._circle_radius)
             if sensor_data["last_trigger_type"] == "Absent":
                 circle.attrib["fill"] = self._absent_colour
             else:

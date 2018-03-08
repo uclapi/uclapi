@@ -279,6 +279,16 @@ def get_live_map(request, *args, **kwargs):
         "#FFC90E"
     )
 
+    image_scale_str = request.GET.get(
+        "image_scale",
+        "0.02"
+    )
+
+    circle_radius_str = request.GET.get(
+        "circle_radius",
+        "128"
+    )
+
     if not re.match(colour_pattern, absent_colour) or \
        not re.match(colour_pattern, occupied_colour):
         response = JsonResponse({
@@ -287,6 +297,34 @@ def get_live_map(request, *args, **kwargs):
                 "The custom colours you specfied did not match "
                 "the format of HTML hex colours. Colours must "
                 "either be in the format #ABC or #ABCDEF."
+            )
+        }, rate_limiting_data=kwargs)
+        response.status_code = 400
+        return response
+
+    try:
+        image_scale = float(image_scale_str)
+    except ValueError:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "The scale you specified is not valid. It "
+                "must be a floating point number, such as 1 "
+                "or 0.02."
+            )
+        }, rate_limiting_data=kwargs)
+        response.status_code = 400
+        return response
+
+    try:
+        circle_radius = float(circle_radius_str)
+    except ValueError:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "The circle radiuus you specified is not valid. "
+                "It must be a floating point number, such as 128 or "
+                "100.5."
             )
         }, rate_limiting_data=kwargs)
         response.status_code = 400
@@ -305,8 +343,16 @@ def get_live_map(request, *args, **kwargs):
         response.status_code = 400
         return response
 
-    ib.set_colours(absent_colour, occupied_colour)
-
+    ib.set_colours(
+        absent=absent_colour,
+        occupied=occupied_colour
+    )
+    ib.set_circle_radius(
+        circle_radius=circle_radius
+    )
+    ib.set_image_scale(
+        image_scale=image_scale
+    )
     map_svg = ib.get_live_map()
 
     response = HttpResponse(
