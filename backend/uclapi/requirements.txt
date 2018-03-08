@@ -33,7 +33,7 @@ model-mommy==1.5.1
 opbeat==3.6.1
 pbr==3.1.1
 psycopg2-binary==2.7.4
-pycryptodome==3.4.11
+pycryptodome==3.5.0
 python-dateutil==2.6.1
 pytz==2018.3
 raven==6.6.0
