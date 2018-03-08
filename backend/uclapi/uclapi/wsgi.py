@@ -22,6 +22,10 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "uclapi.settings")
 
 # Patch the socket libraries to work properly
 # This is crucial for multiprocessing to work
-eventlet.monkey_patch()
+# We only do this if the environment variable
+# to not patch doesn't exist.
+# This is because the patch breaks runserver.
+if os.environ.get("EVENTLET_NOPATCH") != 'True':
+    eventlet.monkey_patch()
 
 application = get_wsgi_application()

@@ -1,12 +1,15 @@
+import re
+
 from base64 import b64decode
 
 from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse
 from common.helpers import RateLimitHttpResponse as HttpResponse
+
 from rest_framework.decorators import api_view
 
 from .occupeye import BadOccupEyeRequest, OccupEyeApi
-
+from .image_builder import ImageBuilder
 
 @api_view(["GET"])
 @uclapi_protected_endpoint(personal_data=False)
@@ -24,7 +27,7 @@ def get_surveys(request, *args, **kwargs):
 
 @api_view(["GET"])
 @uclapi_protected_endpoint(personal_data=False)
-def get_image(request, *args, **kwargs):
+def get_map_image(request, *args, **kwargs):
     try:
         image_id = request.GET['image_id']
     except KeyError:
@@ -239,5 +242,124 @@ def get_historical_time_data(request, *args, **kwargs):
         "ok": True,
         "surveys": data
     }, rate_limiting_data=kwargs)
+
+    return response
+
+
+@api_view(['GET'])
+@uclapi_protected_endpoint(personal_data=False)
+def get_live_map(request, *args, **kwargs):
+    try:
+        survey_id = request.GET["survey_id"]
+        map_id = request.GET["map_id"]
+    except KeyError:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "You must provide a Survey ID and a Map ID "
+                "to get a live sensor status image."
+            )
+        }, rate_limiting_data=kwargs)
+        response.status_code = 400
+        return response
+
+    # Thank you Stack Overflow
+    # https://stackoverflow.com/a/1636354/5297057
+    colour_pattern = re.compile(
+        "^#(?:[0-9a-fA-F]{3}){1,2}$"
+    )
+
+    absent_colour = request.GET.get(
+        "absent_colour",
+        "#ABE00C"
+    )
+
+    occupied_colour = request.GET.get(
+        "occupied_colour",
+        "#FFC90E"
+    )
+
+    image_scale_str = request.GET.get(
+        "image_scale",
+        "0.02"
+    )
+
+    circle_radius_str = request.GET.get(
+        "circle_radius",
+        "128"
+    )
+
+    if not re.match(colour_pattern, absent_colour) or \
+       not re.match(colour_pattern, occupied_colour):
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "The custom colours you specfied did not match "
+                "the format of HTML hex colours. Colours must "
+                "either be in the format #ABC or #ABCDEF."
+            )
+        }, rate_limiting_data=kwargs)
+        response.status_code = 400
+        return response
+
+    try:
+        image_scale = float(image_scale_str)
+    except ValueError:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "The scale you specified is not valid. It "
+                "must be a floating point number, such as 1 "
+                "or 0.02."
+            )
+        }, rate_limiting_data=kwargs)
+        response.status_code = 400
+        return response
+
+    try:
+        circle_radius = float(circle_radius_str)
+    except ValueError:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "The circle radiuus you specified is not valid. "
+                "It must be a floating point number, such as 128 or "
+                "100.5."
+            )
+        }, rate_limiting_data=kwargs)
+        response.status_code = 400
+        return response
+
+    try:
+        ib = ImageBuilder(survey_id, map_id)
+    except BadOccupEyeRequest:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "Either the IDs you sent were not "
+                "integers, or they do not exist."
+            )
+        }, rate_limiting_data=kwargs)
+        response.status_code = 400
+        return response
+
+    ib.set_colours(
+        absent=absent_colour,
+        occupied=occupied_colour
+    )
+    ib.set_circle_radius(
+        circle_radius=circle_radius
+    )
+    ib.set_image_scale(
+        image_scale=image_scale
+    )
+    map_svg = ib.get_live_map()
+
+    response = HttpResponse(
+        map_svg,
+        content_type="image/svg+xml",
+        rate_limiting_data=kwargs
+    )
+    response["Content-Length"] = len(map_svg)
 
     return response
