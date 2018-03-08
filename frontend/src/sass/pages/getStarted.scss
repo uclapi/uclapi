@@ -2,7 +2,7 @@
 
 $primary-color: #313537;
 $secondary-color: #f4f4f4;
-$accent-color: #434343;
+$accent-color: #8D6E63;
 $highlight-color: #B18453;
 
 body {
@@ -136,38 +136,43 @@ code {
 .apis {
   padding-top: 60px;
   padding-bottom: 40px;
-  background: #D7CCC8;
-  // background: white;
-
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  background: $accent-color;
   text-align: center;
 
   h1 {
-    color: $primary-color;
-    // color: white;
+    color: white;
   }
 
   p {
     font-size: 18px;
-    color: #8D6E63;
-    // color: #e4e4e4
-    // color: $accent-color;
+    color: $accent-color;
+  }
+
+  .apiContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .api {
+    min-width: 400px;
+    margin: 10px;
+    width: 30%;
+
+    a {
+      text-decoration: none;
+      display: block;
+      height: 100%;
+    }
 
     h1 {
       color: $primary-color;
-      // color: white;
       font-weight: 400;
     }
 
-    display: inline-block;
-    margin: 10px;
-    min-width: 200px;
-    width: 30%;
-    padding: 20px;
+    .apiPaper {
+      height: 100%;
+      padding: 20px;
+    }
   }
 }

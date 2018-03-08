@@ -22,18 +22,19 @@ export default class API extends React.Component {
 
   render() {
     return (
-      <a href={this.props.link} key={this.props.k}>
-        <Paper
-          key={this.props.k}
-          className="api"
-          zDepth={this.state.shadow}
-          onMouseOver={this.onMouseOver}
-          onMouseOut={this.onMouseOut}
-          >
-          <h1>{this.props.name}</h1>
-          <p>{this.props.description}</p>
-        </Paper>
-      </a>
+      <div className="api">
+        <a href={this.props.link}>
+          <Paper
+            zDepth={this.state.shadow}
+            onMouseOver={this.onMouseOver}
+            onMouseOut={this.onMouseOut}
+            className="apiPaper"
+            >
+            <h1>{this.props.name}</h1>
+            <p>{this.props.description}</p>
+          </Paper>
+        </a>
+      </div>
     )
   }
 
