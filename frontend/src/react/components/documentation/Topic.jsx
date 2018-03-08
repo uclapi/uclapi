@@ -1,6 +1,6 @@
 import React from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import { dracula } from 'react-syntax-highlighter/styles/prism';
+import {androidstudio} from 'react-syntax-highlighter/styles/hljs';
 
 
 /*
@@ -51,7 +51,7 @@ export default class Topic extends React.Component {
             (!this.props.noExamples) ? (
               <SyntaxHighlighter
                 language={this.props.activeLanguage}
-                style={dracula}
+                style={androidstudio}
                 customStyle={customStyle}>
                 {this.props.codeExamples[
                   this.props.activeLanguage
