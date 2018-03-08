@@ -954,7 +954,7 @@ class OccupEyeApi():
             "VMaxX": map_vmax_x,
             "VMaxY": map_vmax_y,
             "ViewBox": map_viewbox
-        }  
+        }
 
         return data
 
