@@ -282,7 +282,7 @@ def get_live_map(request, *args, **kwargs):
 
     if not re.match(colour_pattern, absent_colour) or \
        not re.match(colour_pattern, occupied_colour):
-        response = sonResponse({
+        response = JsonResponse({
             "ok": False,
             "error": (
                 "The custom colours you specfied did not match "
