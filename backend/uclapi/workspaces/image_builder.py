@@ -5,6 +5,7 @@ from django.conf import settings
 
 from .occupeye import OccupEyeApi, BadOccupEyeRequest
 
+
 class ImageBuilder():
     """
     Builds an SVG image with live sensor statuses/
@@ -17,6 +18,13 @@ class ImageBuilder():
             raise BadOccupEyeRequest
 
         self._api = OccupEyeApi()
+
+        if not self._api.check_survey_exists(survey_id):
+            raise BadOccupEyeRequest
+
+        if not self._api.check_map_exists(survey_id, map_id):
+            raise BadOccupEyeRequest
+
         self._redis = redis.StrictRedis(
             host=settings.REDIS_UCLAPI_HOST,
             charset="utf-8",
@@ -31,11 +39,9 @@ class ImageBuilder():
         self._absent_colour = "#ABE00C"
         self._occupied_colour = "#FFC90E"
 
-
     def set_colours(self, absent="#ABE00C", occupied="#FFC90E"):
         self._absent_colour = absent
         self._occupied_colour = occupied
-
 
     def get_live_map(self):
         map_data = self._api.get_survey_image_map_data(
@@ -65,9 +71,11 @@ class ImageBuilder():
         (b64_data, content_type) = self._api.get_image(
             map_data["image_id"]
         )
-        base_map.attrib["{http://www.w3.org/1999/xlink}href"] = "data:{};base64,{}".format(
-            content_type,
-            b64_data
+        base_map.attrib["{http://www.w3.org/1999/xlink}href"] = (
+            "data:{};base64,{}".format(
+                content_type,
+                b64_data
+            )
         )
         bubble_overlay = etree.SubElement(viewport, "g")
 
@@ -79,7 +87,7 @@ class ImageBuilder():
                 break
 
         for sensor_id, sensor_data in the_map["sensors"].items():
-            node = etree.SubElement(viewport, "g")
+            node = etree.SubElement(bubble_overlay, "g")
             node.attrib["transform"] = "translate({},{})".format(
                 sensor_data["x_pos"],
                 sensor_data["y_pos"]

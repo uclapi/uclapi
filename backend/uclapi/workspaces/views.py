@@ -1,3 +1,5 @@
+import re
+
 from base64 import b64decode
 
 from common.decorators import uclapi_protected_endpoint
@@ -244,6 +246,7 @@ def get_historical_time_data(request, *args, **kwargs):
 
     return response
 
+
 @api_view(['GET'])
 @uclapi_protected_endpoint(personal_data=False)
 def get_live_map(request, *args, **kwargs):
@@ -261,6 +264,35 @@ def get_live_map(request, *args, **kwargs):
         response.status_code = 400
         return response
 
+    # Thank you Stack Overflow
+    # https://stackoverflow.com/a/1636354/5297057
+    colour_pattern = re.compile(
+        "^#(?:[0-9a-fA-F]{3}){1,2}$"
+    )
+
+    absent_colour = request.GET.get(
+        "absent_colour",
+        "#ABE00C"
+    )
+
+    occupied_colour = request.GET.get(
+        "occupied_colour",
+        "#FFC90E"
+    )
+
+    if not re.match(colour_pattern, absent_colour) or \
+       not re.match(colour_pattern, occupied_colour):
+        response = sonResponse({
+            "ok": False,
+            "error": (
+                "The custom colours you specfied did not match "
+                "the format of HTML hex colours. Colours must "
+                "either be in the format #ABC or #ABCDEF."
+            )
+        }, rate_limiting_data=kwargs)
+        response.status_code = 400
+        return response
+
     try:
         ib = ImageBuilder(survey_id, map_id)
     except BadOccupEyeRequest:
@@ -273,6 +305,8 @@ def get_live_map(request, *args, **kwargs):
         }, rate_limiting_data=kwargs)
         response.status_code = 400
         return response
+
+    ib.set_colours(absent_colour, occupied_colour)
 
     map_svg = ib.get_live_map()
 

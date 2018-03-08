@@ -958,6 +958,16 @@ class OccupEyeApi():
 
         return data
 
+    def check_survey_exists(self, survey_id):
+        survey_data_key = "occupeye:surveys:{}".format(survey_id)
+        return self._redis.exists(survey_data_key)
+
+    def check_map_exists(self, survey_id, map_id):
+        map_data_key = "occupeye:surveys:{}:maps:{}".format(
+            survey_id,
+            map_id
+        )
+        return self._redis.exists(map_data_key)
 
     def feed_cache(self):
         """
