@@ -6,7 +6,6 @@ from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse
 from common.helpers import RateLimitHttpResponse as HttpResponse
 
-from django.http import HttpResponse
 from rest_framework.decorators import api_view
 
 from .occupeye import BadOccupEyeRequest, OccupEyeApi
@@ -312,7 +311,8 @@ def get_live_map(request, *args, **kwargs):
 
     response = HttpResponse(
         map_svg,
-        content_type="image/svg+xml"
+        content_type="image/svg+xml",
+        rate_limiting_data=kwargs
     )
     response["Content-Length"] = len(map_svg)
 
