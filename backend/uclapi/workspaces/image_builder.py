@@ -3,7 +3,8 @@ import redis
 from lxml import etree
 from django.conf import settings
 
-from .occupeye import OccupEyeApi, BadOccupEyeRequest
+from .occupeye.api import OccupEyeApi
+from .occupeye.exceptions import BadOccupEyeRequest
 
 
 class ImageBuilder():
@@ -19,9 +20,6 @@ class ImageBuilder():
 
         self._api = OccupEyeApi()
 
-        if not self._api.check_survey_exists(survey_id):
-            raise BadOccupEyeRequest
-
         if not self._api.check_map_exists(survey_id, map_id):
             raise BadOccupEyeRequest
 
@@ -31,8 +29,8 @@ class ImageBuilder():
             decode_responses=True
         )
         self._sensors = self._api.get_survey_sensors(
-            survey_id,
-            return_states=True
+            survey_id
+            # return_states=True
         )
         self._survey_id = survey_id
         self._map_id = map_id
@@ -107,6 +105,7 @@ class ImageBuilder():
             )
             circle = etree.SubElement(node, "circle")
             circle.attrib["r"] = str(self._circle_radius)
+            print(sensor_data)
             if sensor_data["last_trigger_type"] == "Absent":
                 circle.attrib["fill"] = self._absent_colour
             else:

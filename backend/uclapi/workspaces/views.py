@@ -8,8 +8,11 @@ from common.helpers import RateLimitHttpResponse as HttpResponse
 
 from rest_framework.decorators import api_view
 
-from .occupeye import BadOccupEyeRequest, OccupEyeApi
+# from .occupeye import BadOccupEyeRequest, OccupEyeApi
+from .occupeye.api import OccupEyeApi
+from .occupeye.exceptions import BadOccupEyeRequest
 from .image_builder import ImageBuilder
+
 
 @api_view(["GET"])
 @uclapi_protected_endpoint(personal_data=False)
@@ -96,17 +99,17 @@ def get_survey_sensors(request, *args, **kwargs):
         response.status_code = 400
         return response
 
-    # Check if state data should be returned
-    try:
-        return_states = request.GET["return_states"].lower() == "true"
-    except KeyError:
-        return_states = False
+    # # Check if state data should be returned
+    # try:
+    #     return_states = request.GET["return_states"].lower() == "true"
+    # except KeyError:
+    #     return_states = False
 
     api = OccupEyeApi()
     try:
         data = api.get_survey_sensors(
-            survey_id,
-            return_states=return_states
+            survey_id
+            # return_states=return_states
         )
     except BadOccupEyeRequest:
         response = JsonResponse({
