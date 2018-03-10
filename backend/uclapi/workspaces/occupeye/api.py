@@ -279,7 +279,7 @@ class OccupEyeApi():
                 "sensors_occupied": 0,
                 "sensors_other": 0
             }
-            for hw_id, sensor in survey_map["sensors"].items():
+            for _, sensor in survey_map["sensors"].items():
                 if "last_trigger_type" in sensor:
                     if sensor["last_trigger_type"] == "Absent":
                         map_data["sensors_absent"] += 1
