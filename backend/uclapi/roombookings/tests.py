@@ -289,7 +289,10 @@ class DoesTokenExistTestCase(TestCase):
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
         self.assertFalse(content["ok"])
-        self.assertEqual(content["error"], "Temporary token is either invalid or expired.")
+        self.assertEqual(
+            content["error"],
+            "Temporary token is either invalid or expired."
+        )
 
     @booking_objects
     @bookinga_objects
