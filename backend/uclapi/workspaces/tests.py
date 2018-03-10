@@ -6,7 +6,12 @@ import redis
 from django.conf import settings
 from django.test import TestCase
 
-from .occupeye import OccupEyeApi
+from .occupeye.api import OccupEyeApi
+from .occupeye.constants import OccupEyeConstants
+from .occupeye.token import (
+    get_bearer_token,
+    token_valid
+)
 
 
 class OccupEyeApiTestCase(TestCase):
@@ -16,40 +21,55 @@ class OccupEyeApiTestCase(TestCase):
             charset="utf-8",
             decode_responses=True
         )
+        self._consts = OccupEyeConstants()
 
         # Ensure we have no tokens in Redis yet
-        self.r.delete("occupeye:access_token")
-        self.r.delete("occupeye:access_token_expiry")
+        self.r.delete(
+            self._consts.ACCESS_TOKEN_KEY
+        )
+        self.r.delete(
+            self._consts.ACCESS_TOKEN_EXPIRY_KEY
+        )
 
         # Instantiate the OccupEye API in test mode
-        self.api = OccupEyeApi(test_mode=True)
+        self.api = OccupEyeApi()
 
     def test_tokens_empty(self):
         # The Redis get functions should return None values
-        self.assertEqual(self.api.access_token, None)
-        self.assertEqual(self.api.access_token_expiry, None)
+        self.assertEqual(
+            self.r.get(self._consts.ACCESS_TOKEN_KEY),
+            None
+        )
+        self.assertEqual(
+            self.r.get(self._consts.ACCESS_TOKEN_EXPIRY_KEY),
+            None
+        )
 
     def test_token_expiry(self):
-        self.api.access_token = "blahblah"
-        self.api.access_token_expiry = 1
+        access_token = "blahblah"
+        access_token_expiry = 1
         self.assertFalse(
-            self.api.token_valid()
+            token_valid(access_token, access_token_expiry)
         )
         # 1st January 2100. I'd be honoured if this code is still
         # being run 83 years from now!
-        self.api.access_token_expiry = 4102444800
+        access_token_expiry = 4102444800
         self.assertTrue(
-            self.api.token_valid()
+            token_valid(access_token, access_token_expiry)
         )
 
     def test_bearer_token_generator(self):
         # Generate a random token then check that the bearer string
         # is properly formed
         random_data = hexlify(os.urandom(30)).decode()
-        self.api.access_token = random_data
-        self.api.access_token_expiry = 4102444800
+        access_token = random_data
+        access_token_expiry = 4102444800
         self.assertEqual(
-            self.api.get_bearer_token(),
+            get_bearer_token(
+                access_token,
+                access_token_expiry,
+                self._consts
+            ),
             "Bearer " + random_data
         )
 

@@ -9,8 +9,8 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
-        print("Running OccupEye Caching Operation")
+        print("Running Mini OccupEye Caching Operation")
         print("[+] Feeding Cache")
         cache = OccupeyeCache()
-        cache.feed_cache(full=True)
+        cache.feed_cache(full=False)
         print("Done!")
