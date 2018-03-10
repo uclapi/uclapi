@@ -24,15 +24,6 @@ def authenticated_request(url, bearer):
     return r.json()
 
 
-def chunk_list(l, chunk_size):
-        """
-        Splits a list into even chunks.
-        https://stackoverflow.com/a/312464/5297057
-        """
-        for i in range(0, len(l), chunk_size):
-            yield l[i:i+chunk_size]
-
-
 def survey_ids_to_surveys(surveys_data, survey_ids):
         if survey_ids:
             try:

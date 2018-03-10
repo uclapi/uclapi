@@ -1,7 +1,6 @@
 import json
 
 from collections import OrderedDict
-from multiprocessing import Manager, Process
 
 import redis
 
@@ -10,7 +9,6 @@ from django.conf import settings
 from .constants import OccupEyeConstants
 from .exceptions import BadOccupEyeRequest
 from .utils import (
-    chunk_list,
     str2bool,
     survey_ids_to_surveys
 )
@@ -301,17 +299,7 @@ class OccupEyeApi():
             survey_ids
         )
 
-        # Only one survey requested, so serve straight from cache
-        if len(filtered_surveys) == 1:
-            cache_key = self._const.SUMMARY_CACHE_SURVEY.format(
-                filtered_surveys[0]["id"]
-            )
-            data = json.loads(
-                self._redis.get(cache_key)
-            )
-            return data
-
-        # Now check whether every survey was requested
+        # Check whether every survey was requested
         if len(filtered_surveys) == len(surveys_data):
             # Since the list is de-duplicated and clean, we can return
             # data for all surveys straight from the cache
@@ -320,29 +308,21 @@ class OccupEyeApi():
             )
             return data
 
-        # If we got to this point, it's essenially a cache miss.
-        # Grab the data as normal.
+        # If we got here, the user specified one or more survey_ids.
+        # Combine the cache data to service the request.
 
-        # The quasi-thread pool technique is used because talking to Redis
-        # this much means a lot of blocking calls.
-        # To optimise the blocking calls, several are run in parallel.
-        threads = []
-        manager = Manager()
-        sensors_data_dict = manager.dict()
+        summary_list = []
         for survey in filtered_surveys:
-            p = Process(
-                target=self._get_survey_sensors_data_worker,
-                args=(survey["id"], survey["name"], sensors_data_dict, )
+            survey_id = int(survey["id"])
+            cache_key = self._const.SUMMARY_CACHE_SURVEY.format(
+                survey_id
             )
-            threads.append(p)
+            survey_data = json.loads(
+                self._redis.get(cache_key)
+            )
+            summary_list.extend(survey_data)
 
-        for chunk in chunk_list(threads, self._const.THREAD_LIMIT):
-            for p in chunk:
-                p.start()
-            for p in chunk:
-                p.join()
-
-        return sensors_data_dict.values()
+        return summary_list
 
     def get_historical_time_usage_data(self, survey_ids, day_count):
         surveys_data = self.get_surveys()
