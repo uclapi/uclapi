@@ -10,7 +10,7 @@ export default class Right extends React.Component {
         {this.props.app.detailedDescription}
         <div className="imgWrapper">
           {this.props.app.screenshots.map((link, i) => (
-            <img src={link} key={i} />
+            <img src={window.staticURL + link} key={i} />
           ))}
         </div>
       </div>
