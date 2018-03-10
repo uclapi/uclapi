@@ -32,7 +32,7 @@ class RelativeDate extends React.Component {
 
 
 RelativeDate.propTypes = {
-  date: PropTypes.string.isRequired,
+  date: PropTypes.string,
   label: PropTypes.string
 };
 

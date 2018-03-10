@@ -102,7 +102,7 @@ class AppList extends React.Component {
 }
 
 AppList.propTypes = {
-  apps: PropTypes.array.isRequired
+  apps: PropTypes.array
 };
 
 export default AppList;

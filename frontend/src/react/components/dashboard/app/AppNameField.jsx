@@ -48,10 +48,10 @@ class AppNameField extends EditableTextField {
 }
 
 AppNameField.propTypes = {
-  origValue: PropTypes.string.isRequired,
-  update: PropTypes.func.isRequired,
-  appId: PropTypes.string.isRequired,
-  setError: PropTypes.func.isRequired,
+  origValue: PropTypes.string,
+  update: PropTypes.func,
+  appId: PropTypes.string,
+  setError: PropTypes.func,
 };
 
 export default AppNameField;

@@ -101,12 +101,12 @@ class CopyActionField extends CopyField {
 }
 
 CopyField.propTypes = {
-  val: PropTypes.string.isRequired
+  val: PropTypes.string
 };
 
 CopyActionField.propTypes = {
-  action: PropTypes.func.isRequired,
-  icon: PropTypes.string.isRequired
+  action: PropTypes.func,
+  icon: PropTypes.string
 };
 
 export {

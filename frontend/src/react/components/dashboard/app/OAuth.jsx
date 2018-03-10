@@ -37,11 +37,11 @@ class OAuth extends React.Component {
 }
 
 OAuth.propTypes = {
-  appId: PropTypes.string.isRequired,
-  clientId: PropTypes.string.isRequired,
-  clientSecret: PropTypes.string.isRequired,
-  callbackUrl: PropTypes.string.isRequired,
-  scopes: PropTypes.arrayOf(PropTypes.object).isRequired
+  appId: PropTypes.string,
+  clientId: PropTypes.string,
+  clientSecret: PropTypes.string,
+  callbackUrl: PropTypes.string,
+  scopes: PropTypes.arrayOf(PropTypes.object)
 };
 
 export default OAuth;

@@ -133,26 +133,26 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  name: PropTypes.string.isRequired,
-  appId: PropTypes.string.isRequired,
-  appKey: PropTypes.string.isRequired,
-  created: PropTypes.string.isRequired,
-  updated: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  appId: PropTypes.string,
+  appKey: PropTypes.string,
+  created: PropTypes.string,
+  updated: PropTypes.string,
   webhook: PropTypes.shape({
-    verification_secret: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-    siteid: PropTypes.string.isRequired,
-    roomid: PropTypes.string.isRequired,
-    contact: PropTypes.string.isRequired,
+    verification_secret: PropTypes.string,
+    url: PropTypes.string,
+    siteid: PropTypes.string,
+    roomid: PropTypes.string,
+    contact: PropTypes.string,
   }),
   oauth: PropTypes.shape({
-    client_id: PropTypes.string.isRequired,
-    client_secret: PropTypes.string.isRequired,
-    callback_url: PropTypes.string.isRequired,
-    scopes: PropTypes.arrayOf(PropTypes.object).isRequired
+    client_id: PropTypes.string,
+    client_secret: PropTypes.string,
+    callback_url: PropTypes.string,
+    scopes: PropTypes.arrayOf(PropTypes.object)
   }),
-  update: PropTypes.func.isRequired,
-  remove: PropTypes.func.isRequired,
+  update: PropTypes.func,
+  remove: PropTypes.func,
 };
 
 export {App};

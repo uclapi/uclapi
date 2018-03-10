@@ -75,7 +75,7 @@ class OAuthCallbackField extends React.Component {
 
 OAuthCallbackField.propTypes = {
   callbackUrl: PropTypes.string,
-  appId: PropTypes.string.isRequired,
+  appId: PropTypes.string,
   setError: PropTypes.func
 };
 

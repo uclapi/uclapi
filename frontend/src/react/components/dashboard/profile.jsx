@@ -11,8 +11,8 @@ class Profile extends React.Component {
 }
 
 Profile.propTypes = {
-  name: PropTypes.string.isRequired,
-  cn: PropTypes.string.isRequired
+  name: PropTypes.string,
+  cn: PropTypes.string
 };
 
 export default Profile;

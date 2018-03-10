@@ -45,9 +45,9 @@ class DeleteButton extends React.Component {
 }
 
 DeleteButton.propTypes = {
-  appId: PropTypes.string.isRequired,
-  remove: PropTypes.func.isRequired,
-  setError: PropTypes.func.isRequired
+  appId: PropTypes.string,
+  remove: PropTypes.func,
+  setError: PropTypes.func
 };
 
 export default DeleteButton;

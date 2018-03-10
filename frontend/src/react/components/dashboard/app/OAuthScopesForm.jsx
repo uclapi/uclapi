@@ -86,8 +86,8 @@ class OAuthScopesForm extends React.Component {
 }
 
 OAuthScopesForm.propTypes = {
-  scopes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  appId: PropTypes.string.isRequired,
+  scopes: PropTypes.arrayOf(PropTypes.object),
+  appId: PropTypes.string,
   setError: PropTypes.func
 };
 
