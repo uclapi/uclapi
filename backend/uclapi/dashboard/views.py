@@ -2,8 +2,6 @@ import json
 import os
 from distutils.util import strtobool
 
-import redis
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import redirect, render
@@ -11,9 +9,9 @@ from django.utils.http import quote
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
 from oauth.scoping import Scopes
-from uclapi.settings import FAIR_USE_POLICY, REDIS_UCLAPI_HOST
+from uclapi.settings import FAIR_USE_POLICY
 
-from .app_helpers import generate_temp_api_token
+from .app_helpers import get_temp_token
 from .models import App, User, TemporaryToken
 from .tasks import add_user_to_mailing_list_task, \
                    keen_add_event_task as keen_add_event
@@ -158,11 +156,7 @@ def get_started(request):
     except KeyError:
         logged_in = False
 
-    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
-
-    token = generate_temp_api_token()
-    r.set(token, "LIMIT", 60 * 5)  # Limit is implemented inside throttle,
-                                    # So no value is required.
+        token = get_temp_token()
     return render(request, 'getStarted.html', {
         'initial_data': {
             'temp_token': token,

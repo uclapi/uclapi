@@ -2,13 +2,24 @@ from binascii import hexlify
 from random import SystemRandom
 
 from common.helpers import generate_api_token
+from uclapi.settings import REDIS_UCLAPI_HOST
 
 import os
+import redis
 import textwrap
 import validators
 
 def generate_temp_api_token():
     return generate_api_token("temp")
+
+
+def get_temp_token():
+    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+
+    token = generate_temp_api_token()
+    # Limit is implemented inside throttle, so no value is required.
+    r.set(token, "LIMIT", 60 * 5)
+    return token
 
 
 def generate_app_id():

@@ -11,7 +11,8 @@ from django_mock_queries.query import MockSet, MockModel
 
 from redis import StrictRedis
 
-from dashboard.models import App, TemporaryToken, User
+from dashboard.models import App, User
+from dashboard.app_helpers import get_temp_token
 
 from .helpers import (
     _create_page_token,
@@ -238,24 +239,11 @@ class DoesTokenExistTestCase(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
 
-        # This fixes a bug when the `test_temp_token_valid` test would fail
-        TemporaryToken.objects.all().delete()
-
         # General temporary token for tests
-        self.token = TemporaryToken.objects.create()
-        self.token.save()
-
-        # An expired token for the expiry test
-        self.expired_token = TemporaryToken.objects.create()
-        self.expired_token.save()
-        self.expired_token.created = datetime.datetime(
-            2010, 10, 10, 10, 10, 10
-        )
-        self.expired_token.save()
+        self.token = get_temp_token()
 
         # A valid token to use later
-        self.valid_token = TemporaryToken.objects.create()
-        self.valid_token.save()
+        self.valid_token = get_temp_token()
 
         # Standard Token data
         self.user_ = User.objects.create(cn="test", employee_id=7357)
@@ -301,14 +289,14 @@ class DoesTokenExistTestCase(TestCase):
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
         self.assertFalse(content["ok"])
-        self.assertEqual(content["error"], "Invalid temporary token.")
+        self.assertEqual(content["error"], "Temporary token is either invalid or expired.")
 
     @booking_objects
     @bookinga_objects
     @bookingb_objects
     @lock_objects
     def test_temp_token_wrong_path(self):
-        request = self.factory.get('/a/path', {'token': self.token.api_token})
+        request = self.factory.get('/a/path', {'token': self.token})
         response = get_bookings(request)
 
         content = json.loads(response.content.decode())
@@ -327,7 +315,7 @@ class DoesTokenExistTestCase(TestCase):
         request = self.factory.get(
             '/roombookings/bookings',
             {
-                'token': self.token.api_token,
+                'token': self.token,
                 'page_token': 'next_page_comes_here'
             }
         )
@@ -347,7 +335,7 @@ class DoesTokenExistTestCase(TestCase):
     @lock_objects
     def test_temp_token_overused(self):
         request = self.factory.get(
-            '/roombookings/bookings', {'token': self.token.api_token}
+            '/roombookings/bookings', {'token': self.token}
         )
         for _ in repeat(None, 11):
             response = get_bookings(request)
@@ -364,29 +352,9 @@ class DoesTokenExistTestCase(TestCase):
     @bookinga_objects
     @bookingb_objects
     @lock_objects
-    def test_temp_token_expired(self):
-        request = self.factory.get(
-            '/roombookings/bookings', {
-                'token': self.expired_token.api_token
-            }
-        )
-        response = get_bookings(request)
-
-        content = json.loads(response.content.decode())
-        self.assertEqual(response.status_code, 400)
-        self.assertFalse(content["ok"])
-        self.assertEqual(
-            content["error"],
-            "Temporary token expired."
-        )
-
-    @booking_objects
-    @bookinga_objects
-    @bookingb_objects
-    @lock_objects
     def test_temp_token_valid(self):
         request = self.factory.get(
-            '/roombookings/bookings', {'token': self.valid_token.api_token}
+            '/roombookings/bookings', {'token': self.valid_token}
         )
         response = get_bookings(request)
         self.assertEqual(response.status_code, 200)

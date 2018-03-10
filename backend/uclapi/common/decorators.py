@@ -197,7 +197,6 @@ def _check_temp_token_issues(token_code, personal_data, request_path, page_token
         })
         response.status_code = 400
         return response
-    print("No problem found with temp token")
     # No issues, so return the temporary token
     return token_code
 
