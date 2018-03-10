@@ -7,7 +7,7 @@ const allApps = {
     "id": "uclroombuddy",
     "category": "roombookings",
     "description": "Find the closest free room at UCL",
-    "logo": "/static/roombuddylogo.png",
+    "logo": "roombuddylogo.png",
     "detailedDescription": (<p>
       Finding a place to get your work done can be hard. Every place you've thought of is somehow already filled up; the libraries, the study pods, the benches outside the Print Room Café...
 <br/>
@@ -28,9 +28,9 @@ Want to contribute to room buddy? Submit a pull request: <a href="https://github
     "developerContact": "https://github.com/wilhelmklopp",
     "androidLink": "https://play.google.com/store/apps/details?id=com.uclapi.uclroombuddy",
     "screenshots": [
-      "/static/roombuddy_screenshot1.png",
-      "/static/roombuddy_screenshot2.png",
-      "/static/roombuddy_screenshot3.png",
+      "roombuddy_screenshot1.png",
+      "roombuddy_screenshot2.png",
+      "roombuddy_screenshot3.png",
     ]
   },
 }
