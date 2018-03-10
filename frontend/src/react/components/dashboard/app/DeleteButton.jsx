@@ -1,4 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
+
 import defaultHeaders from './defaultHeaders.js';
 
 
@@ -40,5 +43,11 @@ class DeleteButton extends React.Component {
     );
   }
 }
+
+DeleteButton.propTypes = {
+  appId: PropTypes.string.isRequired,
+  remove: PropTypes.func.isRequired,
+  setError: PropTypes.func.isRequired
+};
 
 export default DeleteButton;

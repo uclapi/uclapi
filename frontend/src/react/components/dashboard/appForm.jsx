@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
 
 class AppForm extends React.Component {
@@ -66,5 +67,11 @@ class AppForm extends React.Component {
     </div>;
   }
 }
+
+AppForm.propTypes = {
+  add: PropTypes.func.isRequired,
+  close: PropTypes.func.isRequired
+};
+
 
 export {AppForm};

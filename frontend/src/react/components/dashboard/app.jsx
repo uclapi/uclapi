@@ -1,15 +1,16 @@
 import React from 'react';
 import 'whatwg-fetch';
+import PropTypes from 'prop-types';
 import Collapse, { Panel } from 'rc-collapse';
 import { StyleSheet, css } from 'aphrodite';
 
 import {CopyActionField} from './copyField.jsx';
 import RelativeDate from './relativeDate.jsx';
-import AppNameField from './../app/AppNameField.jsx';
-import DeleteButton from './../app/DeleteButton.jsx';
-import defaultHeaders from './../app/defaultHeaders.js';
-import OAuth from './../app/OAuth.jsx';
-import Webhook from './../app/Webhook.jsx';
+import AppNameField from './app/AppNameField.jsx';
+import DeleteButton from './app/DeleteButton.jsx';
+import defaultHeaders from './app/defaultHeaders.js';
+import OAuth from './app/OAuth.jsx';
+import Webhook from './app/Webhook.jsx';
 
 const styles = StyleSheet.create({
   timestamps: {
@@ -130,5 +131,28 @@ class App extends React.Component {
     </div>;
   }
 }
+
+App.propTypes = {
+  name: PropTypes.string.isRequired,
+  appId: PropTypes.string.isRequired,
+  appKey: PropTypes.string.isRequired,
+  created: PropTypes.string.isRequired,
+  updated: PropTypes.string.isRequired,
+  webhook: PropTypes.shape({
+    verification_secret: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    siteid: PropTypes.string.isRequired,
+    roomid: PropTypes.string.isRequired,
+    contact: PropTypes.string.isRequired,
+  }),
+  oauth: PropTypes.shape({
+    client_id: PropTypes.string.isRequired,
+    client_secret: PropTypes.string.isRequired,
+    callback_url: PropTypes.string.isRequired,
+    scopes: PropTypes.arrayOf(PropTypes.object).isRequired
+  }),
+  update: PropTypes.func.isRequired,
+  remove: PropTypes.func.isRequired,
+};
 
 export {App};

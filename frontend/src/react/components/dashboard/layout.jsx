@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Navbar from './navbar.jsx';
 
 class Layout extends React.Component {
@@ -15,5 +16,9 @@ class Layout extends React.Component {
     </div>;
   }
 }
+
+Layout.propTypes = {
+  children: PropTypes.node
+};
 
 export default Layout;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class EditableTextField extends React.Component {
   constructor(props){
@@ -59,5 +60,9 @@ class EditableTextField extends React.Component {
   }
 
 }
+
+EditableTextField.propTypes = {
+  origValue: PropTypes.string
+};
 
 export {EditableTextField};

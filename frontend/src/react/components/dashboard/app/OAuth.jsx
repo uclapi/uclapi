@@ -1,5 +1,7 @@
 import React from 'react';
-import {CopyField} from './../dashboard/copyField.jsx';
+import PropTypes from 'prop-types';
+
+import {CopyField} from './../copyField.jsx';
 import OAuthScopesForm from './OAuthScopesForm.jsx';
 import OAuthCallbackField from './OAuthCallbackField.jsx';
 
@@ -33,5 +35,13 @@ class OAuth extends React.Component {
     );
   }
 }
+
+OAuth.propTypes = {
+  appId: PropTypes.string.isRequired,
+  clientId: PropTypes.string.isRequired,
+  clientSecret: PropTypes.string.isRequired,
+  callbackUrl: PropTypes.string.isRequired,
+  scopes: PropTypes.arrayOf(PropTypes.object).isRequired
+};
 
 export default OAuth;

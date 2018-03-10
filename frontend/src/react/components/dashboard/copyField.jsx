@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class CopyField extends React.Component {
   constructor(props){
@@ -98,6 +99,15 @@ class CopyActionField extends CopyField {
     );
   }
 }
+
+CopyField.propTypes = {
+  val: PropTypes.string.isRequired
+};
+
+CopyActionField.propTypes = {
+  action: PropTypes.func.isRequired,
+  icon: PropTypes.string.isRequired
+};
 
 export {
   CopyField,

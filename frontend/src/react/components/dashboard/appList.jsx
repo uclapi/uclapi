@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import 'whatwg-fetch';
 import Modal from 'react-modal';
@@ -99,5 +100,9 @@ class AppList extends React.Component {
     </div>;
   }
 }
+
+AppList.propTypes = {
+  apps: PropTypes.array.isRequired
+};
 
 export default AppList;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class Profile extends React.Component {
   render () {
@@ -8,5 +9,10 @@ class Profile extends React.Component {
     </div>;
   }
 }
+
+Profile.propTypes = {
+  name: PropTypes.string.isRequired,
+  cn: PropTypes.string.isRequired
+};
 
 export default Profile;

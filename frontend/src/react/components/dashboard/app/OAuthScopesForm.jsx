@@ -1,5 +1,6 @@
 import React from 'react';
 import update from 'immutability-helper';
+import PropTypes from 'prop-types';
 
 import defaultHeaders from './defaultHeaders.js';
 
@@ -83,5 +84,11 @@ class OAuthScopesForm extends React.Component {
   }
 
 }
+
+OAuthScopesForm.propTypes = {
+  scopes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  appId: PropTypes.string.isRequired,
+  setError: PropTypes.func
+};
 
 export default OAuthScopesForm;
