@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 
 from workspaces.occupeye.cache import OccupeyeCache
 
+
 class Command(BaseCommand):
     help = (
         'Feeds the OccupEye data into Redis so that response times are quicker'

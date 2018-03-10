@@ -8,6 +8,7 @@ import requests
 
 from django.conf import settings
 
+from .api import OccupEyeApi
 from .constants import OccupEyeConstants
 from .exceptions import BadOccupEyeRequest
 from .token import get_bearer_token
@@ -374,6 +375,67 @@ class OccupeyeCache():
             json.dumps(data, sort_keys=True)
         )
 
+    def cache_common_summaries(self):
+        """
+        Function to cache common JSON results for /sensors/summary.
+        This function can take up to two seconds to run for the whole
+        lot, so it makes sense to cache the individual libraries
+        and the endpoint for every survey.
+        """
+        survey_ids = self._redis.lrange(
+            self._const.SURVEYS_LIST_KEY,
+            0,
+            self._redis.llen(self._const.SURVEYS_LIST_KEY)
+        )
+        surveys = []
+        api = OccupEyeApi()
+        for survey_id in survey_ids:
+            survey_redis_data = self._redis.hgetall(
+                self._const.SURVEY_DATA_KEY.format(survey_id)
+            )
+            survey_data = {
+                "id": survey_id,
+                "name": survey_redis_data["name"],
+                "maps": []
+            }
+
+            sensors = api.get_survey_sensors(survey_id)
+            for survey_map in sensors["maps"]:
+                map_data = {
+                    "id": survey_map["id"],
+                    "name": survey_map["name"],
+                    "sensors_absent": 0,
+                    "sensors_occupied": 0,
+                    "sensors_other": 0
+                }
+                for hw_id, sensor in survey_map["sensors"].items():
+                    if "last_trigger_type" in sensor:
+                        if sensor["last_trigger_type"] == "Absent":
+                            map_data["sensors_absent"] += 1
+                        elif sensor["last_trigger_type"] == "Occupied":
+                            map_data["sensors_occupied"] += 1
+                        else:
+                            map_data["sensors_other"] += 1
+
+                survey_data["maps"].append(map_data)
+                # Now cache this in Redis
+                # Cache inside a list to match the outer format
+                self._redis.set(
+                    self._const.SUMMARY_CACHE_SURVEY.format(survey_id),
+                    json.dumps(
+                        [
+                            {**survey_data}
+                        ]
+                    )
+                )
+            surveys.append(survey_data)
+
+        # Now we have summary information for every survey
+        self._redis.set(
+            self._const.SUMMARY_CACHE_ALL_SURVEYS,
+            json.dumps(surveys)
+        )
+
     def feed_cache(self, full):
         """
         Function called by the Django management command to feed the Redis
@@ -435,3 +497,5 @@ class OccupeyeCache():
                     )
 
             self.cache_all_survey_sensor_states(survey_id)
+        print("[+] Summaries")
+        self.cache_common_summaries()

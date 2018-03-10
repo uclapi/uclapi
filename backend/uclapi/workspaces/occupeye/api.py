@@ -301,6 +301,31 @@ class OccupEyeApi():
             survey_ids
         )
 
+        # Only one survey requested, so serve straight from cache
+        if len(filtered_surveys) == 1:
+            cache_key = self._const.SUMMARY_CACHE_SURVEY.format(
+                filtered_surveys[0]["id"]
+            )
+            data = json.loads(
+                self._redis.get(cache_key)
+            )
+            return data
+
+        # Now check whether every survey was requested
+        if len(filtered_surveys) == len(surveys_data):
+            # Since the list is de-duplicated and clean, we can return
+            # data for all surveys straight from the cache
+            data = json.loads(
+                self._redis.get(self._const.SUMMARY_CACHE_ALL_SURVEYS)
+            )
+            return data
+
+        # If we got to this point, it's essenially a cache miss.
+        # Grab the data as normal.
+
+        # The quasi-thread pool technique is used because talking to Redis
+        # this much means a lot of blocking calls.
+        # To optimise the blocking calls, several are run in parallel.
         threads = []
         manager = Manager()
         sensors_data_dict = manager.dict()
@@ -316,9 +341,6 @@ class OccupEyeApi():
                 p.start()
             for p in chunk:
                 p.join()
-
-        # for survey in filtered_surveys:
-        #     self._get_survey_sensors_data_worker(survey["id"], survey["name"], sensors_data_dict)
 
         return sensors_data_dict.values()
 

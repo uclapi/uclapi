@@ -39,6 +39,9 @@ class OccupEyeConstants():
     SURVEY_MAP_VMAX_Y_KEY = "occupeye:surveys:{}:maps:{}:VMaxY"
     SURVEY_MAP_VIEWBOX_KEY = "occupeye:surveys:{}:maps:{}:viewbox"
 
+    SUMMARY_CACHE_SURVEY = "occupeye:summaries:{}"
+    SUMMARY_CACHE_ALL_SURVEYS = "occupeye:summaries:all"
+
     IMAGE_BASE64_KEY = "occupeye:image:{}:base64"
     IMAGE_CONTENT_TYPE_KEY = "occupeye:image:{}:content_type"
 
