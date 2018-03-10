@@ -10,6 +10,7 @@ from rest_framework.decorators import api_view
 
 # from .occupeye import BadOccupEyeRequest, OccupEyeApi
 from .occupeye.api import OccupEyeApi
+from .occupeye.constants import OccupEyeConstants
 from .occupeye.exceptions import BadOccupEyeRequest
 from .image_builder import ImageBuilder
 
@@ -191,6 +192,7 @@ def get_survey_sensors_summary(request, *args, **kwargs):
 @uclapi_protected_endpoint(personal_data=False)
 def get_historical_time_data(request, *args, **kwargs):
     api = OccupEyeApi()
+    consts = OccupEyeConstants()
     survey_ids = request.GET.get("survey_ids", None)
     try:
         day_count = request.GET["days"]
@@ -200,7 +202,7 @@ def get_historical_time_data(request, *args, **kwargs):
             "error": (
                 "You did not specify how many days of historical data "
                 "should be returned. Valid options are: "
-            ) + str(api.VALID_HISTORICAL_DATA_DAYS)
+            ) + str(consts.VALID_HISTORICAL_DATA_DAYS)
         }, rate_limiting_data=kwargs)
         response.status_code = 400
         return response
@@ -211,20 +213,20 @@ def get_historical_time_data(request, *args, **kwargs):
             "error": (
                 "You did not specify an integer number of days of "
                 "historical days. Valid options are: "
-            ) + str(api.VALID_HISTORICAL_DATA_DAYS)
+            ) + str(consts.VALID_HISTORICAL_DATA_DAYS)
         }, rate_limiting_data=kwargs)
         response.status_code = 400
         return response
 
     day_count = int(day_count)
 
-    if day_count not in api.VALID_HISTORICAL_DATA_DAYS:
+    if day_count not in consts.VALID_HISTORICAL_DATA_DAYS:
         response = JsonResponse({
             "ok": False,
             "error": (
                 "You did not specify a valid number of days of "
                 "historical days. Valid options are: "
-            ) + str(api.VALID_HISTORICAL_DATA_DAYS)
+            ) + str(consts.VALID_HISTORICAL_DATA_DAYS)
         }, rate_limiting_data=kwargs)
         response.status_code = 400
         return response
