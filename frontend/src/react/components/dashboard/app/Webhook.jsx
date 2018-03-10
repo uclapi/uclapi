@@ -1,5 +1,6 @@
 import React from 'react';
 import Cookies from 'js-cookie';
+import PropTypes from 'prop-types';
 
 import { CopyActionField } from './../copyField.jsx';
 
@@ -192,12 +193,12 @@ class Webhook extends React.Component {
 }
 
 Webhook.propTypes = {
-  url: React.PropTypes.string.isRequired,
-  siteid: React.PropTypes.string.isRequired,
-  roomid: React.PropTypes.string.isRequired,
-  contact: React.PropTypes.string.isRequired,
-  verification_secret: React.PropTypes.string.isRequired,
-  appId: React.PropTypes.string.isRequired,
+  url: PropTypes.string,
+  siteid: PropTypes.string,
+  roomid: PropTypes.string,
+  contact: PropTypes.string,
+  verification_secret: PropTypes.string,
+  appId: PropTypes.string,
 };
 
 export default Webhook;

@@ -1,5 +1,6 @@
 import React from 'react';
 import 'whatwg-fetch';
+import PropTypes from 'prop-types';
 import Collapse, { Panel } from 'rc-collapse';
 import { StyleSheet, css } from 'aphrodite';
 
@@ -132,26 +133,26 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  name: React.PropTypes.string.isRequired,
-  appId: React.PropTypes.string.isRequired,
-  appKey: React.PropTypes.string.isRequired,
-  created: React.PropTypes.string.isRequired,
-  updated: React.PropTypes.string.isRequired,
-  webhook: React.PropTypes.shape({
-    verification_secret: React.PropTypes.string.isRequired,
-    url: React.PropTypes.string.isRequired,
-    siteid: React.PropTypes.string.isRequired,
-    roomid: React.PropTypes.string.isRequired,
-    contact: React.PropTypes.string.isRequired,
+  name: PropTypes.string,
+  appId: PropTypes.string,
+  appKey: PropTypes.string,
+  created: PropTypes.string,
+  updated: PropTypes.string,
+  webhook: PropTypes.shape({
+    verification_secret: PropTypes.string,
+    url: PropTypes.string,
+    siteid: PropTypes.string,
+    roomid: PropTypes.string,
+    contact: PropTypes.string,
   }),
-  oauth: React.PropTypes.shape({
-    client_id: React.PropTypes.string.isRequired,
-    client_secret: React.PropTypes.string.isRequired,
-    callback_url: React.PropTypes.string.isRequired,
-    scopes: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
+  oauth: PropTypes.shape({
+    client_id: PropTypes.string,
+    client_secret: PropTypes.string,
+    callback_url: PropTypes.string,
+    scopes: PropTypes.arrayOf(PropTypes.object)
   }),
-  update: React.PropTypes.func.isRequired,
-  remove: React.PropTypes.func.isRequired,
+  update: PropTypes.func,
+  remove: PropTypes.func,
 };
 
 export {App};
