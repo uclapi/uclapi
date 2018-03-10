@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Cookies from 'js-cookie';
-import Navbar from '../components/navbar.jsx';
+import Navbar from '../components/dashboard/navbar.jsx';
 import { css } from 'glamor';
 
 const appName = css({

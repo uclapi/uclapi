@@ -1,82 +1,73 @@
 @import '../includes/helpers';
 
-$primary-color: #0b3954;
+$primary-color: #313537;
 $secondary-color: #f4f4f4;
+$accent-color: #8D6E63;
+$highlight-color: #B18453;
 
 body {
   margin: 0px;
-  font-family: 'Roboto', sans-serif;
-  color: #333333;
-  background: #F4F4F4;
+  font-family: 'Source Sans Pro', sans-serif;
+  background: $primary-color;
+  color: #ffffff;
 }
 
 h1 {
-  font-size: 36px;
-  font-weight: lighter;
+  font-size: 42px;
+  font-weight: bold;
   margin-top: 0px;
   margin-bottom: 20px;
 }
 
 h2 {
   font-size: 28px;
-  font-weight: lighter;
+  max-width: 900px;
+  margin: 20px auto;
+  font-weight: 400;
 }
 
 h3 {
   font-size: 20px;
-  margin-top: 0px;
-  font-weight: lighter;
+  max-width: 1000px;
+  margin: 20px auto;
+  font-weight: 400;
 }
 
-.navbar {
-  padding-left: 60px !important;
-
-  img {
-    width: 45px;
-    padding-right: 10px;
-  }
-
-  .active span {
-    font-weight: bold !important;
-    text-decoration: underline;
-  }
-}
-
-.tagline {
-  background: $primary-color;
-  color: $secondary-color;
-  padding-bottom: 0;
-  padding-top: 120px;
-  text-align: center;
-
-  h2 {
-    margin: 0;
-  }
-
-  .container {
-    max-width: 800px;
-  }
-}
-
-.jumbotron {
-  padding-top: 120px;
-  padding-bottom: 120px;
-  color: white;
-  background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("/static/logoCover.png");
+.intro {
+  padding-top: 200px;
+  padding-bottom: 200px;
+  background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("/static/logoCover2.png");
   background-size: cover;
   background-position: 50%;
+  text-align: center;
 
-  h1 {
-    font-weight: bold;
+  a {
+    margin-right: 20px;
   }
+}
 
-  .container {
-    max-width: 970px;
-  }
+.goal {
+  // background: $accent-color;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  text-align: center;
 
   a {
     color: white;
   }
+}
+
+.marketplace {
+  padding-top: 200px;
+  padding-bottom: 200px;
+  text-align: center;
+  // background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("/static/marketplace_bg.png");
+  // background-size: cover;
+  background: linear-gradient(rgba(67, 67, 67, 0.6), rgba(67, 67, 67, 0.6)), #11B57A url("/static/lineUCL.svg");
+  background-size: auto 100%;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  // background-position: 20%;
 }
 
 .demo {
@@ -85,7 +76,14 @@ h3 {
   min-height: 300px;
 
   .text {
+    h2 {
+      font-weight: lighter;
+      font-size: 36px;
+    }
+
+    color: $primary-color;
     background: white;
+    // background: #D7CCC8;
     flex: 2 200px;
     padding-right: 15px;
     padding-left: 60px;
@@ -97,24 +95,12 @@ h3 {
     background: #282A36;
     flex: 3 200px;
     overflow-y: auto;
+
+    hr {
+      margin: 0px;
+      border: 2px solid white;
+    }
   }
-}
-
-.code hr {
-  margin: 0px;
-  border: 2px solid white;
-}
-
-.examples {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.example {
-  margin: 10px;
-  min-width: 200px;
-  width: 25%;
 }
 
 code {
@@ -122,42 +108,71 @@ code {
   font-size: 14px;
 }
 
-.footer {
-  background-color: #0B3954;
+.blog {
   padding-top: 60px;
   padding-bottom: 40px;
-  color: white;
 
-  .container {
-    max-width: 800px;
+  h1 a {
+    color: $highlight-color;
   }
 
-  h1 {
+  .container > a {
+    text-decoration: none;
+    display: block;
     font-weight: lighter;
-    text-align: center;
     margin-top: 0px;
     margin-bottom: 60px;
-  }
-
-  h3 {
-    color: #555a72;
-    letter-spacing: .15em;
-    font-weight: 500;
-    text-transform: uppercase;
-    font-size: 11px;
-    margin-bottom: 10px;
-  }
-
-  a {
-    color: rgba(255,255,255,.65);
-    font-size: 18px;
-    display: block;
-    text-decoration: none;
-    margin-bottom: 14px;
+    color: white;
+    font-size: 36px;
+    margin: 40px auto;
   }
 
   a:hover {
-    color: white;
+    color: $highlight-color;
     text-decoration: underline;
+  }
+}
+
+.apis {
+  padding-top: 60px;
+  padding-bottom: 40px;
+  background: $accent-color;
+  text-align: center;
+
+  h1 {
+    color: white;
+  }
+
+  p {
+    font-size: 18px;
+    color: $accent-color;
+  }
+
+  .apiContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .api {
+    min-width: 400px;
+    margin: 10px;
+    width: 30%;
+
+    a {
+      text-decoration: none;
+      display: block;
+      height: 100%;
+    }
+
+    h1 {
+      color: $primary-color;
+      font-weight: 400;
+    }
+
+    .apiPaper {
+      height: 100%;
+      padding: 20px;
+    }
   }
 }

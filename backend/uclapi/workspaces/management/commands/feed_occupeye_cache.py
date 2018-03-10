@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from workspaces.occupeye import OccupEyeApi
+from workspaces.occupeye.cache import OccupeyeCache
 
 
 class Command(BaseCommand):
@@ -10,9 +10,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         print("Running OccupEye Caching Operation")
-        print("[+] Getting Key")
-        api = OccupEyeApi()
-        api.get_token()
         print("[+] Feeding Cache")
-        api.feed_cache()
+        cache = OccupeyeCache()
+        cache.feed_cache(full=True)
         print("Done!")
