@@ -17,7 +17,6 @@ class OccupEyeConstants():
     BASE_URL = os.environ["OCCUPEYE_BASE_URL"]
     USERNAME = os.environ["OCCUPEYE_USERNAME"]
     PASSWORD = os.environ["OCCUPEYE_PASSWORD"]
-    THREAD_LIMIT = int(os.environ["OCCUPEYE_THREAD_LIMIT"])
 
     # Redis Keys
     ACCESS_TOKEN_KEY = "occupeye:access_token"
