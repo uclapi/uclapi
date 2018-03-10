@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class EditableTextField extends React.Component {
   constructor(props){
@@ -21,21 +22,21 @@ class EditableTextField extends React.Component {
       {this.state.editing ? (
         <form className="pure-form" onSubmit={this.handleSubmit}>
           <fieldset>
-            <input 
+            <input
               type="text"
               autoFocus
               placeholder={this.props.origValue}
               value={this.state.value}
               onChange={this.handleChange}
             />
-            <button 
-              type="submit" 
-              className="padded pure-button pure-button-primary" 
+            <button
+              type="submit"
+              className="padded pure-button pure-button-primary"
               onClick={this.handleSubmit}
             >
               Submit
             </button>
-            <button 
+            <button
               type="button"
               className="padded pure-button button-error"
               onClick={()=>this.setState({editing:false})}
@@ -43,7 +44,7 @@ class EditableTextField extends React.Component {
               Cancel
             </button>
           </fieldset>
-        </form> 
+        </form>
       ):(
         <div>
           <h2 style={{display:'inline', verticalAlign: 'middle'}}>{this.props.origValue}</h2>
@@ -61,7 +62,7 @@ class EditableTextField extends React.Component {
 }
 
 EditableTextField.propTypes = {
-  origValue: React.PropTypes.string
+  origValue: PropTypes.string
 };
 
 export {EditableTextField};

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import defaultHeaders from './defaultHeaders.js';
 
@@ -73,9 +74,9 @@ class OAuthCallbackField extends React.Component {
 }
 
 OAuthCallbackField.propTypes = {
-  callbackUrl: React.PropTypes.string,
-  appId: React.PropTypes.string.isRequired,
-  setError: React.PropTypes.func
+  callbackUrl: PropTypes.string,
+  appId: PropTypes.string,
+  setError: PropTypes.func
 };
 
 export default OAuthCallbackField;
