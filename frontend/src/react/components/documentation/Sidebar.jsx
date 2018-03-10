@@ -189,7 +189,11 @@ export default class Sidebar extends React.Component {
               />,
               <ListItem
                 primaryText="Get Map Image"
-                href="#workspaces/image"
+                href="#workspaces/images/map"
+              />,
+              <ListItem
+                primaryText="Get Live Map Image"
+                href="#workspaces/images/map/live"
               />
             ]}
           />

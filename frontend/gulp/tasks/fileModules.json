@@ -3,5 +3,6 @@
   "agreement": "dashboard",
   "dashboard": "dashboard",
   "documentation": "dashboard",
-  "getStarted": "dashboard"
+  "getStarted": "dashboard",
+  "marketplace": "marketplace"
 }

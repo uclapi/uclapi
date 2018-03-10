@@ -1,13 +1,11 @@
 import React from 'react';
 
-import Navbar from './Navbar.jsx';
 import Intro from './Intro.jsx';
-import Tagline from './Tagline.jsx';
 import Goal from './Goal.jsx';
+import APIs from './APIs.jsx';
 import Demo from './Demo.jsx';
-import Examples from './Examples.jsx';
-import Hackathon from './Hackathon.jsx';
-import Footer from './Footer.jsx';
+import Marketplace from './Marketplace.jsx';
+import Blog from './Blog.jsx';
 
 
 export default class GetStartedComponent extends React.Component {
@@ -15,14 +13,12 @@ export default class GetStartedComponent extends React.Component {
     render () {
       return (
         <div>
-          <Navbar />
           <Intro />
-          <Tagline />
           <Goal />
+          <APIs />
           <Demo />
-          <Examples />
-          <Hackathon />
-          <Footer />
+          <Blog />
+          <Marketplace />
         </div>
       )
     }
