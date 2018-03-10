@@ -1,7 +1,7 @@
 amqp==2.2.2
 billiard==3.5.0.3
-boto3==1.6.5
-botocore==1.9.5
+boto3==1.6.6
+botocore==1.9.6
 celery==4.1.0
 certifi==2018.1.18
 chardet==3.0.4
@@ -33,7 +33,7 @@ model-mommy==1.5.1
 opbeat==3.6.1
 pbr==3.1.1
 psycopg2-binary==2.7.4
-pycryptodome==3.5.0
+pycryptodome==3.5.1
 python-dateutil==2.6.1
 pytz==2018.3
 raven==6.6.0
