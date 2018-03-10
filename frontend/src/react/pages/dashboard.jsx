@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Layout from '../components/layout.jsx';
-import Profile from '../components/profile.jsx';
-import AppList from '../components/appList.jsx';
+import Layout from '../components/dashboard/layout.jsx';
+import Profile from '../components/dashboard/profile.jsx';
+import AppList from '../components/dashboard/appList.jsx';
 import moment from 'moment';
 
 class Dashboard extends React.Component {

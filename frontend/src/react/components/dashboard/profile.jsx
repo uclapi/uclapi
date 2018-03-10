@@ -9,9 +9,4 @@ class Profile extends React.Component {
   }
 }
 
-Profile.propTypes = {
-  name: React.PropTypes.string.isRequired,
-  cn: React.PropTypes.string.isRequired
-};
-
 export default Profile;

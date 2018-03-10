@@ -29,9 +29,4 @@ class RelativeDate extends React.Component {
   }
 }
 
-RelativeDate.propTypes = {
-  date: React.PropTypes.string.isRequired,
-  label: React.PropTypes.string
-};
-
 export default RelativeDate;

@@ -67,9 +67,4 @@ class AppForm extends React.Component {
   }
 }
 
-AppForm.propTypes = {
-  add: React.PropTypes.func.isRequired,
-  close: React.PropTypes.func.isRequired
-};
-
 export {AppForm};

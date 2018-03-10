@@ -100,8 +100,4 @@ class AppList extends React.Component {
   }
 }
 
-AppList.propTypes = {
-  apps: React.PropTypes.array.isRequired
-};
-
 export default AppList;

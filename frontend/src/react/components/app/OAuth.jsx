@@ -1,5 +1,5 @@
 import React from 'react';
-import {CopyField} from './../copyField.jsx';
+import {CopyField} from './../dashboard/copyField.jsx';
 import OAuthScopesForm from './OAuthScopesForm.jsx';
 import OAuthCallbackField from './OAuthCallbackField.jsx';
 
@@ -8,7 +8,7 @@ class OAuth extends React.Component {
   render() {
     return (
       <div>
-        <a href="https://uclapi.com/docs">Read about how OAuth works</a>.<br/><br/>
+        <a href="/docs">Read about how OAuth works</a>.<br/><br/>
         Client ID
         <CopyField val={this.props.clientId}/>
         Client Secret
@@ -22,7 +22,7 @@ class OAuth extends React.Component {
         />
         <h4>OAuth Scope</h4>
         <em>
-          <a href="https://uclapi.com/docs#oauth/scopes">Scopes documentation</a>
+          <a href="/docs#oauth/scopes">Scopes documentation</a>
         </em>
         <OAuthScopesForm
           scopes={this.props.scopes}
@@ -33,13 +33,5 @@ class OAuth extends React.Component {
     );
   }
 }
-
-OAuth.propTypes = {
-  appId: React.PropTypes.string.isRequired,
-  clientId: React.PropTypes.string.isRequired,
-  clientSecret: React.PropTypes.string.isRequired,
-  callbackUrl: React.PropTypes.string.isRequired,
-  scopes: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
-};
 
 export default OAuth;

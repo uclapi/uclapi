@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { EditableTextField } from './../editableTextField.jsx';
+import { EditableTextField } from './../dashboard/editableTextField.jsx';
 import defaultHeaders from './defaultHeaders.js';
 
 class AppNameField extends EditableTextField {
@@ -44,12 +44,5 @@ class AppNameField extends EditableTextField {
     });
   }
 }
-
-AppNameField.propTypes = {
-  origValue: React.PropTypes.string.isRequired,
-  update: React.PropTypes.func.isRequired,
-  appId: React.PropTypes.string.isRequired,
-  setError: React.PropTypes.func.isRequired,
-};
 
 export default AppNameField;

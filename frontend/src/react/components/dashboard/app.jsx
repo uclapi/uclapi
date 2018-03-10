@@ -5,11 +5,11 @@ import { StyleSheet, css } from 'aphrodite';
 
 import {CopyActionField} from './copyField.jsx';
 import RelativeDate from './relativeDate.jsx';
-import AppNameField from './app/AppNameField.jsx';
-import DeleteButton from './app/DeleteButton.jsx';
-import defaultHeaders from './app/defaultHeaders.js';
-import OAuth from './app/OAuth.jsx';
-import Webhook from './app/Webhook.jsx';
+import AppNameField from './../app/AppNameField.jsx';
+import DeleteButton from './../app/DeleteButton.jsx';
+import defaultHeaders from './../app/defaultHeaders.js';
+import OAuth from './../app/OAuth.jsx';
+import Webhook from './../app/Webhook.jsx';
 
 const styles = StyleSheet.create({
   timestamps: {
@@ -130,28 +130,5 @@ class App extends React.Component {
     </div>;
   }
 }
-
-App.propTypes = {
-  name: React.PropTypes.string.isRequired,
-  appId: React.PropTypes.string.isRequired,
-  appKey: React.PropTypes.string.isRequired,
-  created: React.PropTypes.string.isRequired,
-  updated: React.PropTypes.string.isRequired,
-  webhook: React.PropTypes.shape({
-    verification_secret: React.PropTypes.string.isRequired,
-    url: React.PropTypes.string.isRequired,
-    siteid: React.PropTypes.string.isRequired,
-    roomid: React.PropTypes.string.isRequired,
-    contact: React.PropTypes.string.isRequired,
-  }),
-  oauth: React.PropTypes.shape({
-    client_id: React.PropTypes.string.isRequired,
-    client_secret: React.PropTypes.string.isRequired,
-    callback_url: React.PropTypes.string.isRequired,
-    scopes: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
-  }),
-  update: React.PropTypes.func.isRequired,
-  remove: React.PropTypes.func.isRequired,
-};
 
 export {App};

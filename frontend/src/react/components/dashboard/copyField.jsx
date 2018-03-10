@@ -60,10 +60,6 @@ class CopyField extends React.Component {
   }
 }
 
-CopyField.propTypes = {
-  val: React.PropTypes.string.isRequired
-};
-
 class CopyActionField extends CopyField {
 
   render(){
@@ -102,11 +98,6 @@ class CopyActionField extends CopyField {
     );
   }
 }
-
-CopyActionField.propTypes = {
-  action: React.PropTypes.func.isRequired,
-  icon: React.PropTypes.string.isRequired
-};
 
 export {
   CopyField,

@@ -72,10 +72,4 @@ class OAuthCallbackField extends React.Component {
   }
 }
 
-OAuthCallbackField.propTypes = {
-  callbackUrl: React.PropTypes.string,
-  appId: React.PropTypes.string.isRequired,
-  setError: React.PropTypes.func
-};
-
 export default OAuthCallbackField;
