@@ -167,7 +167,7 @@ export default class WorkspacesGetSensorsSummary extends React.Component {
                             description="The name of the survey (library)." />
                         <Cell
                             name="surveys[n][id]"
-                            extra="string"
+                            extra="integer"
                             example="72"
                             description="The survey's ID." />
                         <Cell
