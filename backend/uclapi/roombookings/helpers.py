@@ -20,6 +20,30 @@ from uclapi.settings import REDIS_UCLAPI_HOST
 
 TOKEN_EXPIRY_TIME = 30 * 60
 
+ROOM_TYPE_MAP = {
+    "AN": "Anechoic Chamber",
+    "CI": "Clinic Room",
+    "CF": "Catering Facilities"
+    "CFE": "Cafe",
+    "CL": "Cloakroom",
+    "CR": "Classroom",
+    "ER": "Equipment Room",
+    "IN": "Installation",
+    "LA": "Laboratory",
+    "LB": "Library",
+    "LT": "Lecture Theatre",
+    "MR": "Meeting Room",
+    "OF": "Office",
+    "PC1": "Public Cluster",
+    "PC2": "Public Cluster - Tutorial",
+    "PC3": "Public Cluster - Students",
+    "RC": "Reverberation Chamber",
+    "SS": "Social Space",
+    "STU": "Studio",
+    "TH": "Theatre"
+}
+
+
 def _create_page_token(query, pagination):
     r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
     page_data = {
@@ -151,6 +175,10 @@ def _parse_datetime(start_time, end_time, search_date):
 def _serialize_rooms(room_set):
     rooms = []
     for room in room_set:
+        if room.roomclass in ROOM_TYPE_MAP:
+            classification_str = ROOM_TYPE_MAP[room.roomclass]
+        else:
+            classification_str = "Unknown Room Type"
         room_to_add = {
             "roomname": room.roomname,
             "roomid": room.roomid,
@@ -158,6 +186,7 @@ def _serialize_rooms(room_set):
             "sitename": room.sitename,
             "capacity": room.capacity,
             "classification": room.roomclass,
+            "classification_str": classification_str,
             "automated": room.automated,
             "location": {
                 "address": [
