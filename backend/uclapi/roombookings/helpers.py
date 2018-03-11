@@ -7,7 +7,7 @@ from datetime import timedelta
 import pytz
 import redis
 
-from django.core.exceptions import FieldError, ObjectDoesNotExist
+from django.core.exceptions import FieldError
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 import ciso8601
@@ -23,7 +23,7 @@ TOKEN_EXPIRY_TIME = 30 * 60
 ROOM_TYPE_MAP = {
     "AN": "Anechoic Chamber",
     "CI": "Clinic Room",
-    "CF": "Catering Facilities"
+    "CF": "Catering Facilities",
     "CFE": "Cafe",
     "CL": "Cloakroom",
     "CR": "Classroom",
@@ -40,7 +40,7 @@ ROOM_TYPE_MAP = {
     "RC": "Reverberation Chamber",
     "SS": "Social Space",
     "STU": "Studio",
-    "TH": "Theatre"
+    "TH": "Theatre",
 }
 
 
@@ -337,8 +337,8 @@ def _filter_for_free_rooms(all_rooms, bookings, start, end):
     for room in rooms_with_bookings:
         roomid, siteid = room["roomid"], room["siteid"]
         if (
-            (roomid, siteid) not in bookings_map
-            or not bookings_map[(roomid, siteid)]
+            (roomid, siteid) not in bookings_map or
+            not bookings_map[(roomid, siteid)]
         ):
             # if room doesn't have any overlapping bookings
             free_rooms.append(room)
