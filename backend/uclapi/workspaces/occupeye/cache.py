@@ -394,7 +394,7 @@ class OccupeyeCache():
                 self._const.SURVEY_DATA_KEY.format(survey_id)
             )
             survey_data = {
-                "id": survey_id,
+                "id": int(survey_id),
                 "name": survey_redis_data["name"],
                 "maps": []
             }
@@ -402,7 +402,7 @@ class OccupeyeCache():
             sensors = api.get_survey_sensors(survey_id)
             for survey_map in sensors["maps"]:
                 map_data = {
-                    "id": survey_map["id"],
+                    "id": int(survey_map["id"]),
                     "name": survey_map["name"],
                     "sensors_absent": 0,
                     "sensors_occupied": 0,

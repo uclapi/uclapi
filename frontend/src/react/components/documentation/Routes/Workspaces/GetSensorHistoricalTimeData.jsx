@@ -177,7 +177,7 @@ export default class WorkspacesGetSensorHistoricalTimeData extends React.Compone
                             description="The name of the survey (library)." />
                         <Cell
                             name="surveys[n][id]"
-                            extra="string"
+                            extra="integer"
                             example="72"
                             description="The survey's ID." />
                         <Cell
@@ -201,17 +201,17 @@ export default class WorkspacesGetSensorHistoricalTimeData extends React.Compone
                             description="An object which contains every ten minute time period in a day. The first time period is 00:00:00, and the last one is 23:50:00. Each time period specifies a total number of sensors, a number of absent sensors (e.g. unoccupied seats) and occupied sensors representing seats that are in use." />
                         <Cell
                             name="surveys[n][averages][t][sensors_absent]"
-                            extra="string"
+                            extra="integer"
                             example="291"
                             description="The average number of free seats at time t." />
                         <Cell
                             name="surveys[n][averages][t][sensors_occupied]"
-                            extra="string"
+                            extra="integer"
                             example="324"
                             description="The average number of used seats at time t." />
                         <Cell
                             name="surveys[n][averages][t][sensors_total]"
-                            extra="string"
+                            extra="integer"
                             example="324"
                             description="The total number of used seats at time t." />
                     </Table>
