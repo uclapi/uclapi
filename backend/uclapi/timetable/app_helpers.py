@@ -38,7 +38,7 @@ _rooms_cache = {}
 _department_name_cache = {}
 
 
-def _get_cache(model_name):
+def get_cache(model_name):
     """Returns the cache bucket for the requested model name"""
     timetable_models = {
         "module": [ModuleA, ModuleB],
@@ -72,9 +72,9 @@ def _get_cache(model_name):
     return model
 
 
-def _get_student_by_upi(upi):
+def get_student_by_upi(upi):
     """Returns a StudentA or StudentB object by UPI"""
-    students = _get_cache("students")
+    students = get_cache("students")
     # Assume the current Set ID due to caching
     upi_upper = upi.upper()
     student = students.objects.filter(
@@ -98,7 +98,7 @@ def _get_full_department_name(department_code):
     if department_code in _department_name_cache:
         return _department_name_cache[department_code]
     else:
-        departments = _get_cache("departments")
+        departments = get_cache("departments")
         try:
             dept = departments.objects.get(deptid=department_code)
             _department_name_cache[department_code] = dept.name
@@ -109,7 +109,7 @@ def _get_full_department_name(department_code):
 
 def _get_lecturer_details(lecturer_upi):
     """Returns a lecturer's name and email address from their UPI"""
-    lecturers = _get_cache("lecturer")
+    lecturers = get_cache("lecturer")
     details = {
         "name": "Unknown",
         "email": "Unknown",
@@ -140,10 +140,10 @@ def _get_timetable_events(full_modules, stumodules):
     if not _week_map:
         _map_weeks()
 
-    timetable = _get_cache("timetable")
-    modules = _get_cache("module")
+    timetable = get_cache("timetable")
+    modules = get_cache("module")
 
-    bookings = _get_cache("booking")
+    bookings = get_cache("booking")
 
     full_timetable = {}
     for module in full_modules:
@@ -277,7 +277,7 @@ def _get_timetable_events_module_list(module_list):
     if not _week_map:
         _map_weeks()
 
-    modules = _get_cache("module")
+    modules = get_cache("module")
 
     full_modules = []
 
@@ -291,8 +291,8 @@ def _get_timetable_events_module_list(module_list):
 
 
 def _map_weeks():
-    weekmapnumeric = _get_cache("weekmapnumeric")
-    weekstructure = _get_cache("weekstructure")
+    weekmapnumeric = get_cache("weekmapnumeric")
+    weekstructure = get_cache("weekstructure")
     week_nums = weekmapnumeric.objects.all()
     week_strs = weekstructure.objects.all()
 
@@ -353,8 +353,8 @@ def _get_location_details(siteid, roomid):
 
     cache_id = siteid + "___" + roomid
     if cache_id not in _rooms_cache:
-        rooms = _get_cache("rooms")
-        sites = _get_cache("sites")
+        rooms = get_cache("rooms")
+        sites = get_cache("sites")
         try:
             room = rooms.objects.filter(roomid=roomid, siteid=siteid)[0]
             site = sites.objects.filter(siteid=siteid)[0]
@@ -392,7 +392,7 @@ def get_student_timetable(upi, date_filter=None):
         data = r.get(timetable_key)
         student_events = json.loads(data)
     else:
-        student = _get_student_by_upi(upi)
+        student = get_student_by_upi(upi)
         student_modules = _get_student_modules(student)
         student_events = _get_timetable_events(student_modules, True)
         # Celery task to cache for the next request

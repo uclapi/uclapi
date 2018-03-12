@@ -9,6 +9,7 @@ import OAuthIntro from './Routes/OAuth/OAuthIntro.jsx';
 import Authorise from './Routes/OAuth/Authorise.jsx';
 import Token from './Routes/OAuth/Token.jsx';
 import UserData from './Routes/OAuth/UserData.jsx';
+import StudentNumber from './Routes/OAuth/StudentNumber.jsx';
 
 import RoomBookingsVersionHeader from './Routes/RoomBookings/VersionHeader.jsx';
 import GetRooms from './Routes/RoomBookings/GetRooms.jsx';
@@ -56,6 +57,7 @@ export default class DocumentationComponent extends React.Component {
             <Authorise />
             <Token />
             <UserData />
+            <StudentNumber />
 
             <SectionHeader link="roombookings" title="Room Bookings" />
             <RoomBookingsVersionHeader />

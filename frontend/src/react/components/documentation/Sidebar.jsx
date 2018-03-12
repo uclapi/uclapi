@@ -91,6 +91,10 @@ export default class Sidebar extends React.Component {
                 primaryText="User Data"
                 href="#oauth/user/data"
               />,
+              <ListItem
+                primaryText="Student Number"
+                href="#oauth/user/studentnumber"
+              />
             ]}
           />
 
