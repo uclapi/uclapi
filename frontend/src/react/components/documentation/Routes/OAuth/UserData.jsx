@@ -12,7 +12,7 @@ params = {
   "token": "uclapi-user-abd-def-ghi-jkl",
   "client_secret": "secret",
 }
-r = requests.get("https://uclapi.com/oauth/token", params=params)
+r = requests.get("https://uclapi.com/oauth/user/data", params=params)
 print(r.json())`,
 
   shell: `curl https://uclapi.com/oauth/user/data?client_secret=secret&token=uclapi-user-abd-def-ghi-jkl`,
@@ -35,6 +35,7 @@ let response = `{
     "given_name": "Full",
     "upi": "fname12",
     "scope_number": 0,
+    "is_student": true
 }`
 
 let responseCodeExample = {
@@ -123,6 +124,11 @@ export default class UserData extends React.Component {
               extra="int"
               example="0"
               description="Scopes the application has access to on behalf of the user." />
+            <Cell
+              name="is_student"
+              extra="boolean"
+              example="true"
+              description="Whether the user is a student in this academic year." />
             </Table>
           </Topic>
 
