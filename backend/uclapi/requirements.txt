@@ -36,7 +36,7 @@ psycopg2-binary==2.7.4
 pycryptodome==3.5.1
 python-dateutil==2.7.0
 pytz==2018.3
-raven==6.6.0
+raven==6.7.0
 redis==2.10.6
 requests==2.18.4
 requests-file==1.4.3
