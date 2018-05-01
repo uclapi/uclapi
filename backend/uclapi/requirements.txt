@@ -21,7 +21,7 @@ freezegun==0.3.10
 gevent==1.2.2
 greenlet==0.4.13
 grequests==0.3.0
-gunicorn==19.7.1
+gunicorn==19.8.1
 idna==2.6
 jmespath==0.9.3
 jsonpickle==0.9.6
