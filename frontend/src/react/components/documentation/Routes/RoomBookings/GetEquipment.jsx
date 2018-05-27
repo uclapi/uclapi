@@ -80,12 +80,12 @@ export default class GetEquiment extends React.Component {
                 description="Authentication token." />
               <Cell
                 name="roomid"
-                requirement="optional"
+                requirement="required"
                 example="433"
                 description="The room ID (not to be confused with the roomname)." />
               <Cell
                 name="siteid"
-                requirement="optional"
+                requirement="required"
                 example="086"
                 description="Every room is inside a site (building). All sites have IDs." />
             </Table>
