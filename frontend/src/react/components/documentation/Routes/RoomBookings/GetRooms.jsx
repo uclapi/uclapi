@@ -35,7 +35,7 @@ let response = `{
       "sitename": "Main Building",
       "capacity": 50,
       "classification": "SS",
-      "classification_str": "Social Space",
+      "classification_name": "Social Space",
       "automated": "N",
       "location": {
         "coordinates": {
@@ -115,11 +115,6 @@ export default class GetRooms extends React.Component {
                 example="SS"
                 description="The room type ID." />
               <Cell
-                name="classification_str"
-                extra="string"
-                example="Social Space"
-                description="A human-readable version of the room type. AN = Anechoic Chamber, CI = Clinic Room, CF = Catering Facilities CFE = Cafe, CL = Cloakroom, CR = Classroom, ER = Equipment Room, IN = Installation, LA = Laboratory, LB = Library, LT = Lecture Theatre, MR = Meeting Room, OF = Office, PC1 = Public Cluster, PC2 = Public Cluster - Tutorial, PC3 = Public Cluster - Students, RC = Reverberation Chamber, SS = Social Space, STU = Studio, TH = Theatre. If the room type is unknown, this value will be set to 'Unknown Room Type'." />
-              <Cell
                 name="capacity"
                 requirement="optional"
                 example="55"
@@ -168,7 +163,7 @@ export default class GetRooms extends React.Component {
                 example="SS"
                 description="The room type ID." />
               <Cell
-                name="classification_str"
+                name="classification_name"
                 extra="string"
                 example="Social Space"
                 description="A human-readable version of the room type. AN = Anechoic Chamber, CI = Clinic Room, CF = Catering Facilities CFE = Cafe, CL = Cloakroom, CR = Classroom, ER = Equipment Room, IN = Installation, LA = Laboratory, LB = Library, LT = Lecture Theatre, MR = Meeting Room, OF = Office, PC1 = Public Cluster, PC2 = Public Cluster - Tutorial, PC3 = Public Cluster - Students, RC = Reverberation Chamber, SS = Social Space, STU = Studio, TH = Theatre. If the room type is unknown, this value will be set to 'Unknown Room Type'." />

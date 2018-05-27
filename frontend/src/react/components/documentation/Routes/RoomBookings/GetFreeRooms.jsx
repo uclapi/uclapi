@@ -41,7 +41,7 @@ let response = `{
         ]
       },
       "classification": "ER",
-      "classification_str": "Equipment Room",
+      "classification_name": "Equipment Room",
       "sitename": "Front Lodges",
       "roomname": "North Lodge 001",
       "automated": "N",

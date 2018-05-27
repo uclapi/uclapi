@@ -175,10 +175,12 @@ def _parse_datetime(start_time, end_time, search_date):
 def _serialize_rooms(room_set):
     rooms = []
     for room in room_set:
-        if room.roomclass in ROOM_TYPE_MAP:
-            classification_str = ROOM_TYPE_MAP[room.roomclass]
-        else:
-            classification_str = "Unknown Room Type"
+        # Maps room classification to a textual version
+        # e.g. LT => Lecture Theatre
+        classification_name = ROOM_TYPE_MAP.get(
+            room.roomclass,
+            "Unknown Room Type"
+        )
         room_to_add = {
             "roomname": room.roomname,
             "roomid": room.roomid,
@@ -186,7 +188,7 @@ def _serialize_rooms(room_set):
             "sitename": room.sitename,
             "capacity": room.capacity,
             "classification": room.roomclass,
-            "classification_str": classification_str,
+            "classification_name": classification_name,
             "automated": room.automated,
             "location": {
                 "address": [
