@@ -58,7 +58,10 @@ let response = `{
                     "id": "71"
                 }
             ],
-            "id": 45
+            "id": 45,
+            "sensors_absent": 219,
+            "sensors_occupied": 104,
+            "sensors_other": 0
         },
         {
             "name": "UCL Institute of Education Library",
@@ -85,7 +88,10 @@ let response = `{
                     "id": "75"
                 }
             ],
-            "id": 46
+            "id": 46,
+            "sensors_absent": 147,
+            "sensors_occupied": 177,
+            "sensors_other": 2
         }
     ],
     "ok": true
@@ -135,7 +141,10 @@ export default class WorkspacesGetSensorsSummary extends React.Component {
                     codeExamples={responseCodeExample}>
                     <h2>Response</h2>
                     <p>
-                        This endpoint will return a list with every survey requested, and its associated maps. Within each map is a count of absent (e.g. free) and occupied seats.
+                        This endpoint will return a list with every survey requested, and its associated maps. Within each map is a count of absent (e.g. free) and occupied seats. The endpoint also returns the total number of seats in each library that are absent or occupied.
+                    </p>
+                    <p>
+                        If your application or integration is designed to inform students of the total number of free seats in a library please ensure you use the survey total figures. This is because many sensors have not yet been assigned to maps on our data provider's system which means that relying only on map counts will leave many seats unaccounted for. We are actively working with our data provider to rectify this, and we apologise for any inconvenience caused.
                     </p>
                     <Table
                         name="Response">
@@ -156,12 +165,15 @@ export default class WorkspacesGetSensorsSummary extends React.Component {
                                                 "sensors_occupied": 64
                                             },
                                             ...
-                                        ]
+                                        ],
+                                        "sensors_absent": 219,
+                                        "sensors_occupied": 104,
+                                        "sensors_other": 0
                                     },
                                     ...
                                 ]
                             `}
-                            description="A list of survey objects, each of which contains a list of maps with associated sensor counts." />
+                            description="A list of survey objects, each of which contains a list of maps with associated sensor counts, as well as library sensor totals." />
                         
                         <Cell
                             name="surveys[n][name]"
@@ -173,6 +185,21 @@ export default class WorkspacesGetSensorsSummary extends React.Component {
                             extra="integer"
                             example="72"
                             description="The survey's ID." />
+                        <Cell
+                            name="surveys[n][sensors_absent]"
+                            extra="integer"
+                            example="219"
+                            description="Number of free seats in the whole library, including all rooms and floors." />
+                        <Cell
+                            name="surveys[n][sensors_occupied]"
+                            extra="integer"
+                            example="104"
+                            description="Number of taken / occupied seats in the whole library, including all rooms and floors." />
+                        <Cell
+                            name="surveys[n][sensors_other]"
+                            extra="integer"
+                            example="0"
+                            description="Number of library seats with an unknown status. This is usually zero." />
                         <Cell
                             name="surveys[n][maps]"
                             extra="list"

@@ -405,8 +405,55 @@ class OccupeyeCache():
             survey_data = {
                 "id": int(survey_id),
                 "name": survey_redis_data["name"],
-                "maps": []
+                "maps": [],
+                "sensors_absent": 0,
+                "sensors_occupied": 0,
+                "sensors_other": 0
             }
+
+            '''
+            Begin Hotfix
+
+            Cache data for the survey as a whole. This is to fix a bug in
+            OccupEye and this code should be removed as soon as the map data
+            returns every sensor in a survey. For longevity, once this code
+            is removed, the map data should update the survey_data totals
+            instead.
+            '''
+            all_sensors = self._redis.lrange(
+                self._const.SURVEY_SENSORS_LIST_KEY.format(survey_id),
+                0,
+                self._redis.llen(
+                    self._const.SURVEY_SENSORS_LIST_KEY.format(survey_id)
+                )
+            )
+            for sensor_hw_id in all_sensors:
+                sensor_map = self._redis.hgetall(
+                    self._const.SURVEY_SENSOR_STATUS_KEY.format(
+                        survey_id,
+                        sensor_hw_id
+                    )
+                )
+                if (
+                    "last_trigger_type" not in sensor_map or
+                    "last_trigger_timestamp" not in sensor_map
+                ):
+                    continue
+                try:
+                    occupied = is_sensor_occupied(
+                        sensor_map["last_trigger_type"],
+                        sensor_map["last_trigger_timestamp"]
+                    )
+                    if occupied:
+                        survey_data["sensors_occupied"] += 1
+                    else:
+                        survey_data["sensors_absent"] += 1
+                except OccupEyeOtherSensorState:
+                    survey_data["sensors_other"] += 1
+
+            '''
+            End of Hotfix
+            '''
 
             sensors = api.get_survey_sensors(survey_id)
             for survey_map in sensors["maps"]:
@@ -419,11 +466,16 @@ class OccupeyeCache():
                 }
                 for hw_id, sensor in survey_map["sensors"].items():
                     if "last_trigger_type" in sensor:
-                        if sensor["last_trigger_type"] == "Absent":
-                            map_data["sensors_absent"] += 1
-                        elif sensor["last_trigger_type"] == "Occupied":
-                            map_data["sensors_occupied"] += 1
-                        else:
+                        try:
+                            occupied = is_sensor_occupied(
+                                sensor["last_trigger_type"],
+                                sensor["last_trigger_timestamp"]
+                            )
+                            if occupied:
+                                map_data["sensors_occupied"] += 1
+                            else:
+                                map_data["sensors_absent"] += 1
+                        except OccupEyeOtherSensorState:
                             map_data["sensors_other"] += 1
 
                 survey_data["maps"].append(map_data)
