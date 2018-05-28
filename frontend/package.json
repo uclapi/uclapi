@@ -28,7 +28,7 @@
     "material-ui": "^0.20.1",
     "moment": "^2.21.0",
     "prop-types": "^15.6.1",
-    "rc-collapse": "^1.8.0",
+    "rc-collapse": "^1.9.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
