@@ -10,7 +10,7 @@ from django.conf import settings
 
 from .api import OccupEyeApi
 from .constants import OccupEyeConstants
-from .exceptions import BadOccupEyeRequest, OccupEyeOtherSensorState
+from .exceptions import OccupEyeOtherSensorState
 from .token import get_bearer_token
 from .utils import (
     authenticated_request,
@@ -121,15 +121,12 @@ class OccupeyeCache():
             "Authorization": self.bearer_token
         }
         url = self._const.URL_IMAGE.format(image_id)
-        try:
-            response = requests.get(
-                url=url,
-                headers=headers,
-                stream=True
-            )
-            content_type = response.headers['Content-Type']
-        except:
-            raise BadOccupEyeRequest
+        response = requests.get(
+            url=url,
+            headers=headers,
+            stream=True
+        )
+        content_type = response.headers['Content-Type']
 
         raw_image = response.content
         image_b64 = b64encode(raw_image)
