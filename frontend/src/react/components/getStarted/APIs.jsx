@@ -7,37 +7,37 @@ import API from './API.jsx';
 let apis = [
   {
     name: "/oauth",
-    description: "Enable people to sign in using UCL accounts",
+    description: "Let your users sign in with their UCL credentials",
     link: "/docs#oauth",
     color: "#F44336"
   },
   {
     name: "/roombookings",
-    description: "Get details about all bookable rooms at UCL",
+    description: "Get details of all bookable rooms at UCL",
     link: "/docs#roombookings",
     color: "#673AB7"
   },
   {
     name: "/search",
-    description: "Find details of people at UCL",
+    description: "Find people at UCL",
     link: "/docs#search",
     color: "#2196F3"
   },
   {
     name: "/timetable",
-    description: "Access all the timetables at UCL",
+    description: "Access personal and module timetables",
     link: "/docs#timetable",
     color: "#00BCD4"
   },
   {
     name: "/resources",
-    description: "Find how many desktops are currently available",
+    description: "Find out how many UCL desktops are free",
     link: "/docs#resources",
     color: "#CDDC39"
   },
   {
     name: "/workspaces",
-    description: "Find how many busy the libraries are",
+    description: "See how busy the libraries are right now",
     link: "/docs#workspaces",
     color: "#009688"
   },
