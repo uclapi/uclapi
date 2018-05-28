@@ -111,6 +111,9 @@ export default class WorkspacesGetSensorsSummary extends React.Component {
                     <p>
                         This endpoint summarises, with a one-minute accuracy, the number of seats within each library region that are free and occupied. It is best suited to integrations which show cumulative, live data. Developers can use this endpoint to avoid making many parallel or sequential requests to fetch survey sensor counts.
                     </p>
+                    <p>
+                        This endpoint takes into account UCL's <a href="https://www.ucl.ac.uk/library/sites/seats/study-space-availability-faqs">thirty minute rule</a>, which allows students to leave their seat unattended for up to thirty minutes at a time (e.g. to use the bathroom or get food). This means that the Summary endpoint may return a lower number of available seats when compared to reality if many students leave the library within a short period of time. The UCL Library's website and the UCL Go! mobile application both follow this rule, so your app or integration should have parity with first party data sources by using the UCL API.
+                    </p>
 
                     <Table
                         name="Query Parameters">

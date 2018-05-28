@@ -10,10 +10,11 @@ from django.conf import settings
 
 from .api import OccupEyeApi
 from .constants import OccupEyeConstants
-from .exceptions import BadOccupEyeRequest
+from .exceptions import BadOccupEyeRequest, OccupEyeOtherSensorState
 from .token import get_bearer_token
 from .utils import (
     authenticated_request,
+    is_sensor_occupied,
     str2bool
 )
 
@@ -243,7 +244,18 @@ class OccupeyeCache():
             sensor_status_key = (
                 self._const.SURVEY_SENSOR_STATUS_KEY
             ).format(survey_id, hardware_id)
+
+            try:
+                occupied_state = is_sensor_occupied(
+                    sensor_data["LastTriggerType"],
+                    sensor_data["LastTriggerTime"]
+                )
+            except OccupEyeOtherSensorState:
+                # This is a rare case, so just set it to False.
+                # Easier than expecting our clients to deal with null
+                occupied_state = False
             pipeline.hmset(sensor_status_key, {
+                "occupied": occupied_state,
                 "hardware_id": sensor_data["HardwareID"],
                 "last_trigger_type": sensor_data["LastTriggerType"],
                 "last_trigger_timestamp": sensor_data["LastTriggerTime"]

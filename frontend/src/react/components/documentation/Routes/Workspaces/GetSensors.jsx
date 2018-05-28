@@ -59,7 +59,8 @@ let response = `{
                     "description_1": "",
                     "hardware_id": "584001",
                     "pir_address": "1",
-                    "last_trigger_timestamp": "2018-02-15T22:42:28+00:00"
+                    "last_trigger_timestamp": "2018-02-15T22:42:28+00:00",
+                    "occupied": true
                 },
                 ...
             },
@@ -173,7 +174,8 @@ export default class WorkspacesGetSensors extends React.Component {
                                 "description_1": "",
                                 "hardware_id": "584001",
                                 "pir_address": "1",
-                                "last_trigger_timestamp": "2018-02-15T22:42:28+00:00"
+                                "last_trigger_timestamp": "2018-02-15T22:42:28+00:00",
+                                "occupied": true
                             }, ... }`}
                             description="An object containing dictionaries, each of which corresponds to a sensor. The key is the sensor's unique ID, and the value is a dictionary of data about that sensor." />
                         <Cell
@@ -200,12 +202,19 @@ export default class WorkspacesGetSensors extends React.Component {
                             name="maps[n][sensors][n][last_trigger_type]"
                             extra="string"
                             example="Occupied"
-                            description="Whether somebody is using the seat. Possible values are Absent and Occupied. NB: only returned when return_states=true." />
+                            description="The last event the sensor recorded. Possible known values are Absent and Occupied, but this is not guaranteed. NB: only returned when return_states=true." />
+                        <Cell
+                            name="maps[n][sensors][n][occupied]"
+                            extra="boolean"
+                            example="true"
+                            description="Whether the seat is occupied or not. This takes into account UCL's thirty minute rule, so it's possible that the seat could have been marked as absent a few minutes ago, but this value is still set to true, as UCL allows students to leave their seat unattended for up to thirty minutes at a time (e.g. to use the bathroom or get food). Integrations that provide live seating information to students should use this value so as to have parity with the UCL Library seating policy and the UCL Library website. NB: only returned when return_states=true." />
+                        
                         <Cell
                             name="maps[n][sensors][n][hardware_id]"
                             extra="string"
                             example="584001"
                             description="A unique ID for the sensor." />
+                        
                         <Cell
                             name="maps[n][sensors][n][x_pos]"
                             extra="string (float)"
