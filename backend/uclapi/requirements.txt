@@ -29,7 +29,7 @@ keen==0.5.1
 kombu==4.2.0
 lxml==4.2.1
 mock==2.0.0
-model-mommy==1.5.1
+model-mommy==1.6.0
 opbeat==3.6.1
 pbr==4.0.3
 psycopg2-binary==2.7.4
