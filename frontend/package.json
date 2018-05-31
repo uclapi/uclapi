@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Dashboard for the UCL API",
   "scripts": {
-    "start": "NODE_ENV=development gulp",
-    "build": "NODE_ENV=production webpack-cli",
-    "production": "NODE_ENV=production gulp production",
+    "start": "NODE_ENV=development webpack-dev-server --open --config webpack.dev.js",
+    "build": "NODE_ENV=production webpack-cli --config webpack.dev.js",
+    "production": "NODE_ENV=production webpack-cli --config webpack.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -53,10 +53,13 @@
     "gulp-strip-debug": "^3.0.0",
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.8",
+    "mini-css-extract-plugin": "^0.4.0",
     "node-sass": "^4.9.0",
+    "optimize-css-assets-webpack-plugin": "^4.0.2",
     "react-modal": "^3.4.4",
     "sass-loader": "^7.0.1",
     "style-loader": "^0.21.0",
+    "uglifyjs-webpack-plugin": "^1.2.5",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "vinyl-transform": "^1.0.0",

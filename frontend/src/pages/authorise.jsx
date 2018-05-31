@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import Navbar from '../components/dashboard/navbar.jsx';
 import { css } from 'glamor';
 
-import './../sass/authorise.scss';
+import './../sass/dashboard.scss';
 
 const appName = css({
   fontWeight: 'bold',
