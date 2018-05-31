@@ -1,3 +1,78 @@
+@import './helpers';
+
+html,
+button,
+input,
+select,
+textarea,
+.pure-g [class *= "pure-u"] {
+  font-family: 'Roboto', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: 'Roboto', sans-serif;
+}
+
+.content{
+  margin-top: 78px;
+  margin-bottom: 30px;
+}
+
+$navbarHeight: 60px;
+
+.navbar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+  height: $navbarHeight;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  @include boxShadow(1);
+
+  img{
+    height: $navbarHeight - 15px;;
+    margin-left: 25px;
+  }
+
+  .logoText{
+    display: inline;
+    margin: 10px;
+    font-size: 2em;
+  }
+}
+
+.centered {
+  text-align: center;
+}
+
+body {
+  background-color: rgba(234, 237, 241, 1);
+}
+
+input {
+  color: #000;
+}
+
+.webhook {
+  form:not(:first-child) {
+    .pure-g > div {
+      :not(:first-child) {
+        margin-top: 10px;
+      }
+
+      :last-child {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
 $grey: #d9d9d9;
 $light-grey: #f7f7f7;
 $light-grey-2: #f3f3f3;
