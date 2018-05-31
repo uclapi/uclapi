@@ -4,7 +4,7 @@
   "description": "Dashboard for the UCL API",
   "scripts": {
     "start": "NODE_ENV=development gulp",
-    "build": "NODE_ENV=production gulp build ",
+    "build": "NODE_ENV=production webpack-cli",
     "production": "NODE_ENV=production gulp production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -37,10 +37,12 @@
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "babelify": "^8.0.0",
     "browserify": "^16.2.2",
+    "css-loader": "^0.28.11",
     "eslint": "^4.19.1",
     "eslint-plugin-react": "^7.8.2",
     "glob": "^7.1.2",
@@ -51,10 +53,14 @@
     "gulp-strip-debug": "^3.0.0",
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.8",
+    "node-sass": "^4.9.0",
     "react-modal": "^3.4.4",
+    "sass-loader": "^7.0.1",
+    "style-loader": "^0.21.0",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
-    "vinyl-transform": "^1.0.0"
+    "vinyl-transform": "^1.0.0",
+    "webpack-cli": "^2.1.4"
   },
   "browserify": {
     "transform": [

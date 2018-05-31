@@ -5,6 +5,8 @@ import Profile from '../components/dashboard/profile.jsx';
 import AppList from '../components/dashboard/appList.jsx';
 import moment from 'moment';
 
+import './../sass/dashboard.scss';
+
 class Dashboard extends React.Component {
   constructor (props) {
     super(props);
