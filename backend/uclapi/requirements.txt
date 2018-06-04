@@ -44,5 +44,5 @@ setproctitle==1.1.10
 six==1.11.0
 tldextract==2.2.0
 urllib3==1.22
-validators==0.12.1
+validators==0.12.2
 vine==1.1.4
