@@ -26,9 +26,19 @@ class Command(BaseCommand):
 
         cur = con.cursor()
 
+        """
+        Our service is only concerned with the current academic year,
+        so for 17/18 we would need to ensure the Set ID is LIVE-17-18.
+        We generally only offer centrally bookable (CB) rooms but we also
+        serve data from the Institute of Child Health (ICH), which has two
+        Site IDs:
+        238: UCL GOSICH - 30 Guildford Street
+        240: UCL GOSICH - Wolfson Centre
+        """
         select_query = (
             'SELECT * FROM "CMIS_UCLAPI_V_BOOKINGS"'
             ' WHERE (setid = \'{}\')'.format(settings.ROOMBOOKINGS_SETID)
+            ' AND (bookabletype = \'CB\' OR siteid = 238 OR siteid = 240)'
         )
 
         cur.execute(select_query)
