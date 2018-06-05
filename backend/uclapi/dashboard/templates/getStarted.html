@@ -19,7 +19,11 @@
     window.staticURL = "{% static "" %}";
   </script>
   <div class="app"></div>
-  <script src="{% static "js/getStarted.js" %}"></script>
+  {% if WEBPACK_SERVE %}
+      <script src="http://localhost:8080/js/getStarted.js"></script>
+  {% else %}
+    <script src="{% static "js/getStarted.js" %}"></script>
+  {% endif %}
   <script src="https://use.fontawesome.com/c70d56d6fc.js"></script>
 
 </body>

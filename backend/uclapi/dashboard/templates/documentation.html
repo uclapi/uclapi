@@ -18,7 +18,11 @@
     window.staticURL = "{% static "" %}";
   </script>
 	<div class="app"></div>
-  <script src="{% static "js/documentation.js" %}"></script>
+  {% if WEBPACK_SERVE %}
+      <script src="http://localhost:8080/js/documentation.js"></script>
+  {% else %}
+    <script src="{% static "js/documentation.js" %}"></script>
+  {% endif %}
 
 </body>
 </html>

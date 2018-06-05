@@ -25,11 +25,11 @@ module.exports = {
     ]
   },
   entry: {
-    './../backend/uclapi/dashboard/static/js/getStarted': entryPointsPathPrefix + '/getStarted.jsx',
-    './../backend/uclapi/dashboard/static/js/documentation': entryPointsPathPrefix + '/documentation.jsx',
-    './../backend/uclapi/dashboard/static/js/dashboard': entryPointsPathPrefix + '/dashboard.jsx',
-    './../backend/uclapi/marketplace/static/js/marketplace': entryPointsPathPrefix + '/marketplace.jsx',
-    './../backend/uclapi/oauth/static/js/authorise': entryPointsPathPrefix + '/authorise.jsx',
+    'js/getStarted': entryPointsPathPrefix + '/getStarted.jsx',
+    'js/documentation': entryPointsPathPrefix + '/documentation.jsx',
+    'js/dashboard': entryPointsPathPrefix + '/dashboard.jsx',
+    'js/marketplace': entryPointsPathPrefix + '/marketplace.jsx',
+    'js/authorise': entryPointsPathPrefix + '/authorise.jsx',
   },
   output: {
     path: path.resolve(__dirname),

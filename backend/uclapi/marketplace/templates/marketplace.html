@@ -14,7 +14,11 @@
     window.staticURL = "{% static "" %}";
   </script>
 	<div id="root"></div>
-  <script src="{% static "js/marketplace.js" %}"></script>
+  {% if WEBPACK_SERVE %}
+      <script src="http://localhost:8080/js/marketplace.js"></script>
+  {% else %}
+    <script src="{% static "js/marketplace.js" %}"></script>
+  {% endif %}
 </body>
 
 </html>
