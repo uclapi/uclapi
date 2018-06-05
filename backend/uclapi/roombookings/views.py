@@ -34,7 +34,7 @@ def get_rooms(request, *args, **kwargs):
     # - All ICH rooms (Site IDs 238 and 240)
     all_rooms = Room.objects.using("roombookings").filter(
         Q(setid=settings.ROOMBOOKINGS_SETID),
-        Q(bookabletype='CB') | Q(siteid=238) | Q(siteid=240)
+        Q(bookabletype='CB') | Q(siteid="238") | Q(siteid="240")
     )
 
     # no filters provided, return all rooms serialised
@@ -217,7 +217,7 @@ def get_free_rooms(request, *args, **kwargs):
     # - All ICH rooms (Site IDs 238 and 240)
     all_rooms = Room.objects.using("roombookings").filter(
         Q(setid=settings.ROOMBOOKINGS_SETID),
-        Q(bookabletype='CB') | Q(siteid=238) | Q(siteid=240)
+        Q(bookabletype='CB') | Q(siteid="238") | Q(siteid="240")
     )
     all_rooms = _serialize_rooms(all_rooms)
 
