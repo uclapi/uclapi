@@ -10,15 +10,8 @@
 </head>
 
 <body>
-	<script>
-    window.staticURL = "{% static "" %}";
-  </script>
 	<div id="root"></div>
-  {% if WEBPACK_SERVE %}
-      <script src="http://localhost:8080/js/marketplace.js"></script>
-  {% else %}
-    <script src="{% static "js/marketplace.js" %}"></script>
-  {% endif %}
+  <script src="{% static "js/marketplace.js" %}"></script>
 </body>
 
 </html>

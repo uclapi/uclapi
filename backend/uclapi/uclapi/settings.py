@@ -103,7 +103,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'uclapi.context_processors.global_settings',
             ],
         },
     },
@@ -195,11 +194,8 @@ WEBPACK_SERVE = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'http://localhost:8080/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "images"),
-]
 
 # Cross Origin settings
 CORS_ORIGIN_ALLOW_ALL = True

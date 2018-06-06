@@ -36,7 +36,7 @@ h3 {
 .intro {
   padding-top: 200px;
   padding-bottom: 200px;
-  background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("/static/logoCover2.png");
+  background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("./../images/logoCover2.png");
   background-size: cover;
   background-position: 50%;
   text-align: center;
@@ -61,13 +61,10 @@ h3 {
   padding-top: 200px;
   padding-bottom: 200px;
   text-align: center;
-  // background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("/static/marketplace_bg.png");
-  // background-size: cover;
-  background: linear-gradient(rgba(67, 67, 67, 0.6), rgba(67, 67, 67, 0.6)), #11B57A url("/static/lineUCL.svg");
+  background: linear-gradient(rgba(67, 67, 67, 0.6), rgba(67, 67, 67, 0.6)), #11B57A url("./../images/lineUCL.svg");
   background-size: auto 100%;
   background-position: 50%;
   background-repeat: no-repeat;
-  // background-position: 20%;
 }
 
 .demo {

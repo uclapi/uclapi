@@ -47,7 +47,7 @@ export default class Left extends React.Component {
     }
     return (
       <div className="left">
-        <img className="logo" src={window.staticURL + this.props.app.logo} />
+        <img className="logo" src={this.props.app.logo} />
         { buttons }
         <br />
         <p>Contact Developer at <a href={this.props.app.developerContact}>{this.props.app.developerContact}</a></p>

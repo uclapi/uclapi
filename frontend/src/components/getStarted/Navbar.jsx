@@ -9,6 +9,8 @@ import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import ActionMenu from 'material-ui/svg-icons/navigation/menu';
 
+import apiLogo from './../../images/simpleAPILogoWhite.svg';
+
 
 export default class Navbar extends React.Component {
 
@@ -52,7 +54,7 @@ export default class Navbar extends React.Component {
   }
 
   render() {
-    const Logo = (<img src={window.staticURL + 'simpleAPILogoWhite.svg'}/>)
+    const Logo = (<img src={apiLogo}/>)
 
     const styles = getStyles(this.props, this.context);
 

@@ -28,10 +28,8 @@ h2 {
   padding-top: 80px;
   padding-bottom: 20px;
   text-align: center;
-  background: linear-gradient(rgba(67, 67, 67, 0.6), rgba(67, 67, 67, 0.6)), url("/static/marketplace_bg.png");
+  background: linear-gradient(rgba(67, 67, 67, 0.6), rgba(67, 67, 67, 0.6)), url("./../images/marketplace_bg.png");
   background-size: cover;
-  // background: #11B57A;
-  // background-repeat: no-repeat;
   background-position: 50%;
   color: white;
 

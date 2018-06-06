@@ -39,7 +39,7 @@ export default class App extends React.Component {
               subtitle={this.props.description}
               avatar={
                 <Avatar
-                  src={window.staticURL + this.props.logo}
+                  src={this.props.logo}
                   size={60}
                 />
               }

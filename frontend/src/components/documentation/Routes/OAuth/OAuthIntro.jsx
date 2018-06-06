@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Topic from './../../Topic.jsx';
+import signInButton from './../../../../images/signInWithUCLAPI.png';
 
 
 let codeExamples = {
@@ -33,7 +34,7 @@ export default class OAuthIntro extends React.Component {
             If you want to add a “Sign In With UCL” button to your website, which looks like this:
           </p>
 
-          <img width={"100%"} src={window.staticURL + 'signInWithUCLAPI.png'}/>
+          <img width={"100%"} src={signInButton}/>
 
           <p>
             you can copy the following the following code: <br />

@@ -5,6 +5,7 @@ import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
 import MenuItem from 'material-ui/MenuItem';
 import {spacing, typography, zIndex} from 'material-ui/styles';
+import apiLogo from './../../images/simpleAPILogoWhite.svg';
 
 /*
   Got this entire thing from
@@ -51,7 +52,7 @@ export default class Sidebar extends React.Component {
         open={true}>
         <div style={styles.logo}>
           <span className="sidebarLogo">
-            <img src={window.staticURL + 'simpleAPILogoWhite.svg'}/>
+            <img src={apiLogo}/>
             UCL API
           </span>
         </div>
@@ -153,7 +154,7 @@ export default class Sidebar extends React.Component {
               />,
             ]}
           />
-          
+
           <ListItem
             href="#resources"
             primaryText="Resources"

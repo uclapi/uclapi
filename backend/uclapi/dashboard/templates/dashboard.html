@@ -17,14 +17,9 @@
 
   <script>
     window.initialData = {{ initial_data|safe }};
-    window.staticURL = "{% static "" %}";
   </script>
   <div class="app"></div>
-  {% if WEBPACK_SERVE %}
-      <script src="http://localhost:8080/js/dashboard.js"></script>
-  {% else %}
-    <script src="{% static "js/dashboard.js" %}"></script>
-  {% endif %}
+  <script src="{% static "js/dashboard.js" %}"></script>
   <script src="https://use.fontawesome.com/c70d56d6fc.js"></script>
 
 </body>

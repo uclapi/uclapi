@@ -31,7 +31,7 @@ export default class App extends React.Component {
           style={{
             "borderRadius": "10px"
           }}>
-          <img src={window.staticURL + this.props.logo} />
+          <img src={this.props.logo} />
           <h1>{this.props.name}</h1>
           <p>{this.props.description}</p>
         </Paper>
