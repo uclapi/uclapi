@@ -21,12 +21,13 @@ module.exports = {
         ]
       },
       {
-        test: /\.(jpg|png|svg)$/,
+        test: /\.(jpg|jpeg|png|svg)$/,
         loader: 'url-loader'
       },
     ]
   },
   entry: {
+    'js/about': entryPointsPathPrefix + '/about.jsx',
     'js/getStarted': entryPointsPathPrefix + '/getStarted.jsx',
     'js/documentation': entryPointsPathPrefix + '/documentation.jsx',
     'js/dashboard': entryPointsPathPrefix + '/dashboard.jsx',

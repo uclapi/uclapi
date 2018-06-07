@@ -1,0 +1,62 @@
+@import './helpers';
+
+
+body {
+  margin: 0px;
+  font-family: 'Source Sans Pro', sans-serif;
+  background: #f4f4f4;
+  color: #ffffff;
+  background-size: cover;
+  background-position: 50%;
+  background-attachment: fixed;
+}
+
+.personContainer {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+  padding-top:60px;
+  justify-content: center;
+}
+
+a {
+  text-decoration: none;
+}
+
+.personCard {
+  margin-right: 30px;
+  margin-bottom: 30px;
+  min-width: 300px;
+  width: 30%;
+
+  h2, h3 {
+    font-weight: normal;
+  }
+
+  .paper {
+    padding: 20px;
+    text-align: center;
+
+    img {
+      border-radius: 50%;
+      width: 200px;
+    }
+  }
+}
+
+.wilContainer {
+  background: linear-gradient(rgba(67, 67, 67, 0.3), rgba(67, 67, 67, 0.3)), url("./../images/wil_bg.jpg");
+  margin: 0px;
+  padding-top: 40px;
+  background-size: cover;
+  height: 800px;
+
+  h1 {
+    margin-top: 40px;
+    font-weight: bold;
+  }
+
+  p {
+    font-size: 20px;
+  }
+}
