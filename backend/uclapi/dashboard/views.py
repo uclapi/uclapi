@@ -167,5 +167,10 @@ def get_started(request):
 
 
 @ensure_csrf_cookie
+def about(request):
+    return render(request, 'about.html')
+
+
+@ensure_csrf_cookie
 def documentation(request):
     return render(request, 'documentation.html')

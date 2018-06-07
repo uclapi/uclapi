@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from dashboard.views import documentation, get_started
+from dashboard.views import about, documentation, get_started
 from marketplace.views import marketplace
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^about', about),
     url(r'^dashboard/', include('dashboard.urls')),
     url(r'^docs', documentation),
     url(r'^marketplace', marketplace),
