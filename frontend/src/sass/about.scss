@@ -11,11 +11,19 @@ body {
   background-attachment: fixed;
 }
 
+.pcContainer {
+  padding-top:60px;
+
+  h1 {
+    color: #313537;
+    text-align: center;
+  }
+}
+
 .personContainer {
   display: flex;
   flex-wrap: wrap;
   padding: 20px;
-  padding-top:60px;
   justify-content: center;
 }
 
@@ -58,5 +66,21 @@ a {
 
   p {
     font-size: 20px;
+  }
+}
+
+.navbar {
+  padding-left: 60px !important;
+  padding-right: 40px !important;
+  padding-top: 8px !important;
+
+  img {
+    width: 45px;
+    padding-right: 10px;
+  }
+
+  .active span {
+    font-weight: bold !important;
+    text-decoration: underline;
   }
 }

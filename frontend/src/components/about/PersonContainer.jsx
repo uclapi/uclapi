@@ -60,11 +60,11 @@ export default class PersonContainer extends React.Component {
 
   render () {
     return (
-      <div className="container">
+      <div className="container pcContainer">
+        <h1>The Rest</h1>
         <div className="personContainer">
           {
             team.map((person, i) => {
-              console.log(i);
               return <PersonCard key={i} {...person} />;
             })
           }
