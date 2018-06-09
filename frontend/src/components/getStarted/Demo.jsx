@@ -403,10 +403,10 @@ print(r.json())`
         "code": `const token = "${window.initialData.temp_token}";
 
 fetch(
-  "https://uclapi.com/roombookings/bookings?token=",
-  token,
-  "&results_per_page=1", ${this.state.roomNameMap.javascript}
-  "&date=" + ${now.toISOString().substring(0, 10).replace(/-/g, "")}
+  "https://uclapi.com/roombookings/bookings?token="
+  + token
+  + "&results_per_page=1" ${this.state.roomNameMap.javascript}
+  + "&date=" + "${now.toISOString().substring(0, 10).replace(/-/g, "")}"
 ).then((response) => {
   return response.json()
 })
@@ -426,7 +426,7 @@ fetch(
   getSchedule(roomName) {
     this.state.roomNameMap = {
       'python': `\n  "roomname": "${roomName}",`,
-      'javascript': `\n  "&roomname=${roomName}",`,
+      'javascript': `\n  + "&roomname=${roomName}"`,
       'bash': `\\ \n-d roomname='${roomName}'`
     }
 

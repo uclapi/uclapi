@@ -180,8 +180,11 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
-STATIC_URL = '/static/'
+# The default Static URL is /static/ which is fine for when statics
+# have been built and placed into their respective folders.
+# To do local development with webpack, set the STATIC_URL env
+# value to http://localhost:8080
+STATIC_URL = os.environ.get("STATIC_URL", '/static/')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Cross Origin settings
