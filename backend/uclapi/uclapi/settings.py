@@ -141,13 +141,6 @@ DATABASES = {
 
 DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
 
-# analytics
-OPBEAT = {
-    'ORGANIZATION_ID': os.environ.get("OPBEAT_ORG_ID"),
-    'APP_ID': os.environ.get("OPBEAT_APP_ID"),
-    'SECRET_TOKEN': os.environ.get("OPBEAT_SECRET_TOKEN")
-}
-
 RAVEN_CONFIG = {
     'dsn': os.environ.get("SENTRY_DSN"),
 }
