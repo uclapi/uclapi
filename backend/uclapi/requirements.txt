@@ -30,7 +30,6 @@ kombu==4.2.1
 lxml==4.2.1
 mock==2.0.0
 model-mommy==1.6.0
-opbeat==3.6.1
 pbr==4.0.3
 psycopg2-binary==2.7.4
 pycryptodome==3.6.1

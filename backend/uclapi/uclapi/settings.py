@@ -66,14 +66,12 @@ INSTALLED_APPS = [
     'oauth',
     'timetable',
     'common',
-    'opbeat.contrib.django',
     'raven.contrib.django.raven_compat',
     'corsheaders',
     'workspaces'
 ]
 
 MIDDLEWARE = [
-    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
