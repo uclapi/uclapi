@@ -66,14 +66,12 @@ INSTALLED_APPS = [
     'oauth',
     'timetable',
     'common',
-    'opbeat.contrib.django',
     'raven.contrib.django.raven_compat',
     'corsheaders',
     'workspaces'
 ]
 
 MIDDLEWARE = [
-    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -142,13 +140,6 @@ DATABASES = {
 }
 
 DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
-
-# analytics
-OPBEAT = {
-    'ORGANIZATION_ID': os.environ.get("OPBEAT_ORG_ID"),
-    'APP_ID': os.environ.get("OPBEAT_APP_ID"),
-    'SECRET_TOKEN': os.environ.get("OPBEAT_SECRET_TOKEN")
-}
 
 RAVEN_CONFIG = {
     'dsn': os.environ.get("SENTRY_DSN"),
