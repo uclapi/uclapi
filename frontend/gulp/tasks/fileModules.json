@@ -1,8 +1,0 @@
-{
-  "authorise": "oauth",
-  "agreement": "dashboard",
-  "dashboard": "dashboard",
-  "documentation": "dashboard",
-  "getStarted": "dashboard",
-  "marketplace": "marketplace"
-}
