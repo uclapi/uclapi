@@ -187,10 +187,6 @@ USE_L10N = True
 
 USE_TZ = False
 
-# set it to True when developing using webpack-serve
-# so that static files are fetched from http://localhost:8080/
-WEBPACK_SERVE = True
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
