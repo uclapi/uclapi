@@ -32,7 +32,7 @@ mock==2.0.0
 model-mommy==1.6.0
 pbr==4.0.4
 psycopg2-binary==2.7.4
-pycryptodome==3.6.1
+pycryptodome==3.6.2
 python-dateutil==2.7.3
 pytz==2018.4
 raven==6.9.0
