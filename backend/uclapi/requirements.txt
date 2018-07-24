@@ -34,7 +34,7 @@ pbr==4.0.4
 pycryptodome==3.6.4
 psycopg2-binary==2.7.5
 python-dateutil==2.7.3
-pytz==2018.4
+pytz==2018.5
 raven==6.9.0
 redis==2.10.6
 requests==2.19.1
