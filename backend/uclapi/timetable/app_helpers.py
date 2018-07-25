@@ -16,9 +16,10 @@ from roombookings.models import (
 
 from .models import (DeptsA, DeptsB, LecturerA, LecturerB, Lock, ModuleA,
                      ModuleB, RoomsA, RoomsB, SitesA, SitesB, StudentsA,
-                     StudentsB, Stumodules, TimetableA, TimetableB,
-                     WeekmapnumericA, WeekmapnumericB, WeekstructureA,
-                     WeekstructureB)
+                     StudentsB, StumodulesA, StumodulesB,  TimetableA,
+                     TimetableB, WeekmapnumericA, WeekmapnumericB,
+                     WeekstructureA, WeekstructureB,
+                     CminstancesA, CminstancesB)
 from .tasks import cache_student_timetable
 
 _SETID = settings.ROOMBOOKINGS_SETID
@@ -49,7 +50,9 @@ def get_cache(model_name):
         "lecturer": [LecturerA, LecturerB],
         "rooms": [RoomsA, RoomsB],
         "sites": [SitesA, SitesB],
-        "departments": [DeptsA, DeptsB]
+        "departments": [DeptsA, DeptsB],
+        "stumodules": [StumodulesA, StumodulesB],
+        "cminstances": [CminstancesA, CminstancesB],
     }
     roombookings_models = {
         "booking": [BookingA, BookingB]
@@ -85,10 +88,8 @@ def get_student_by_upi(upi):
 
 def _get_student_modules(student):
     """Returns all Stumodules object by for a given student"""
-    raw_query = 'SELECT * FROM CMIS_OWNER.STUMODULES WHERE SETID=\'LIVE-17-18\' AND studentid=\'{}\''.format(  # NOQA
-        student.studentid
-    )
-    student_modules = list(Stumodules.objects.raw(raw_query))
+    stumodules = get_cache("stumodules")
+    student_modules = stumodules.objects.filter(studentid=student.studentid)
     return student_modules
 
 
