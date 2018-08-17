@@ -1,6 +1,6 @@
 amqp==2.3.2
 billiard==3.5.0.4
-boto3==1.7.63
+boto3==1.7.79
 botocore==1.10.63
 celery==4.2.1
 certifi==2018.4.16
