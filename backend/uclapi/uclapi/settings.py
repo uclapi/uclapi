@@ -208,7 +208,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 
-ROOMBOOKINGS_SETID = 'LIVE-17-18'
+ROOMBOOKINGS_SETID = 'LIVE-18-19'
 
 # S3 file storage settings
 # There are three scenarios to consider:
