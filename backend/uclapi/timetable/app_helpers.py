@@ -14,6 +14,7 @@ from roombookings.models import (
     SiteLocation
 )
 
+from .amp import ModuleInstance
 from .models import (DeptsA, DeptsB, LecturerA, LecturerB, Lock, ModuleA,
                      ModuleB, RoomsA, RoomsB, SitesA, SitesB, StudentsA,
                      StudentsB, StumodulesA, StumodulesB,  TimetableA,
@@ -120,7 +121,7 @@ def _get_lecturer_details(lecturer_upi):
     try:
         lecturer = lecturers.objects.get(lecturerid=lecturer_upi)
     except ObjectDoesNotExist:
-        pass
+        return details
 
     details["name"] = lecturer.name
     details["email"] = lecturer.linkcode + "@ucl.ac.uk"
@@ -130,6 +131,17 @@ def _get_lecturer_details(lecturer_upi):
         details["department_name"] = _get_full_department_name(lecturer.owner)
 
     return details
+
+
+def _get_instance_details(instid):
+    cminstances = get_cache("cminstances")
+    instance_data = cminstances.objects.get(instid=instid)
+    instance = ModuleInstance(instance_data.instcode)
+    return {
+        "delivery": instance.delivery.get_delivery(),
+        "periods": instance.periods.get_periods(),
+        "instance_code": instance_data.instcode
+    }
 
 
 def _get_timetable_events(full_modules, stumodules):
@@ -153,14 +165,20 @@ def _get_timetable_events(full_modules, stumodules):
             # Also include general lecture events (via the or operator)
             events_data = timetable.objects.filter(
                 Q(modgrpcode=module.modgrpcode) | Q(modgrpcode=''),
-                moduleid=module.moduleid
+                moduleid=module.moduleid,
+                instid=module.instid
             )
-            module_data = modules.objects.get(moduleid=module.moduleid)
+            module_data = modules.objects.get(
+                moduleid=module.moduleid,
+                instid=module.instid
+            )
         else:
             events_data = timetable.objects.filter(
-                moduleid=module.moduleid
+                moduleid=module.moduleid,
+                instid=module.instid
             )
             module_data = module
+        instance_data = _get_instance_details(module.instid)
         for event in events_data:
             event_bookings = bookings.objects.filter(slotid=event.slotid)
             if len(event_bookings) == 0:
@@ -188,7 +206,8 @@ def _get_timetable_events(full_modules, stumodules):
                         "session_type_str": _get_session_type_str(
                             event.moduletype
                         ),
-                        "contact": "Unknown"
+                        "contact": "Unknown",
+                        "instance": instance_data
                     }
 
                     # If this is student module data, add in the group code
@@ -279,13 +298,26 @@ def _get_timetable_events_module_list(module_list):
         _map_weeks()
 
     modules = get_cache("module")
+    cminstances = get_cache("cminstances")
 
     full_modules = []
 
     for module in module_list:
         try:
-            full_modules.append(modules.objects.get(moduleid=module))
-        except ObjectDoesNotExist:
+            if "-" in module and len(module) > 9:
+                # An instance was requested, so filter by it
+                hyphen_pos = module.index('-')
+                instcode = module[hyphen_pos + 1:]
+                instid = cminstances.objects.filter(instcode=instcode)[0].instid
+                full_modules.append(modules.objects.get(
+                    moduleid=module[:hyphen_pos],
+                    instid=instid
+                ))
+            else:
+                for m in modules.objects.filter(moduleid=module):
+                    full_modules.append(m)
+            # full_modules.append(modules.objects.filter(moduleid=module))
+        except (ObjectDoesNotExist, ValueError):
             return False
 
     return _get_timetable_events(full_modules, False)
@@ -427,3 +459,29 @@ def get_custom_timetable(modules, date_filter=None):
             return filtered_events
         return events
     return None
+
+
+def get_departmental_modules(department_id):
+    modules = get_cache("module")
+    instances = get_cache("cminstances")
+    dept_modules = {}
+    for module in modules.objects.filter(owner=department_id, setid=_SETID):
+        instance_data = _get_instance_details(module.instid)
+
+        if module.moduleid not in dept_modules:
+            dept_modules[module.moduleid] = {
+                "module_id": module.moduleid,
+                "name": module.name,
+                "class_size": module.csize,
+                "instances": []
+            }
+
+        dept_modules[module.moduleid]['instances'].append({
+            "full_module_id": "{}-{}".format(
+                module.moduleid,
+                instance_data['instance_code']
+            ),
+            ** instance_data
+        })
+
+    return dept_modules

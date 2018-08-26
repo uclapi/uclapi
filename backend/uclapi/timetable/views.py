@@ -6,7 +6,11 @@ from common.helpers import PrettyJsonResponse as JsonResponse
 
 from .models import Lock, Course, Depts, ModuleA, ModuleB
 
-from .app_helpers import get_student_timetable, get_custom_timetable
+from .app_helpers import (
+    get_custom_timetable,
+    get_student_timetable, 
+    get_departmental_modules
+)
 
 from common.decorators import uclapi_protected_endpoint
 
@@ -128,15 +132,9 @@ def get_department_modules(request, *args, **kwargs):
         response.status_code = 400
         return response
 
-    modules = {"ok": True, "modules": []}
-    lock = Lock.objects.all()[0]
-    m = ModuleA if lock.a else ModuleB
-    for module in m.objects.filter(owner=department_id, setid=_SETID):
-        modules["modules"].append({
-            "module_id": module.moduleid,
-            "name": module.name,
-            "module_code": module.linkcode,
-            "class_size": module.csize
-        })
+    modules = {
+        "ok": True,
+        "modules": get_departmental_modules(department_id)
+    }
 
     return JsonResponse(modules, rate_limiting_data=kwargs)

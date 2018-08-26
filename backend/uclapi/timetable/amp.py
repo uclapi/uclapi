@@ -28,6 +28,12 @@ class ModuleDelivery:
         self.fheq_level = int(delivery_code[1])
         self.undergraduate = delivery_code[2] == 'U'
 
+    def get_delivery(self):
+        return {
+            "fheq_level": self.fheq_level,
+            "is_undergraduate": self.undergraduate
+        }
+
 
 class ModulePeriods:
     # Default Attributes
