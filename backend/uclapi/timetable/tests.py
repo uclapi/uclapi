@@ -241,19 +241,19 @@ class AmpCodeParsing(SimpleTestCase):
 
     def test_invalid_code_1(self):
         with self.assertRaises(InvalidAMPCodeException):
-            instance = ModuleInstance("Z6P-T1")
+            _ = ModuleInstance("Z6P-T1")
 
     def test_invalid_code_2(self):
         with self.assertRaises(InvalidAMPCodeException):
-            instance = ModuleInstance("AA1P-T1")
+            _ = ModuleInstance("AA1P-T1")
 
     def test_invalid_code_3(self):
         with self.assertRaises(InvalidAMPCodeException):
-            instance = ModuleInstance("A7P-T5")
+            _ = ModuleInstance("A7P-T5")
 
     def test_invalid_code_4(self):
         with self.assertRaises(InvalidAMPCodeException):
-            instance = ModuleInstance("A6U-Z2")
+            _ = ModuleInstance("A6U-Z2")
 
     def test_batch_amp_codes(self):
         test_codes = [
@@ -848,4 +848,4 @@ class AmpCodeParsing(SimpleTestCase):
         ]
         for code in test_codes:
             # We should not get an error for any of these codes
-            instance = ModuleInstance(code)
+            _ = ModuleInstance(code)
