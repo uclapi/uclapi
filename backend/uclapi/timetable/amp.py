@@ -99,9 +99,13 @@ class ModulePeriods:
             elif periods_code == 'T4':
                 self.term_4 = True
             else:
-                raise InvalidAMPCodeException("AMP Periods Code contained an invalid term element")
+                raise InvalidAMPCodeException(
+                    "AMP Periods Code contained an invalid term element"
+                )
         else:
-            raise InvalidAMPCodeException("An invalid AMP code was found: " + periods_code)
+            raise InvalidAMPCodeException(
+                "An invalid AMP code was found: " + periods_code
+            )
 
     def get_periods(self):
         return {
