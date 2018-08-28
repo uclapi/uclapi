@@ -4,12 +4,13 @@ from rest_framework.decorators import api_view
 
 from common.helpers import PrettyJsonResponse as JsonResponse
 
-from .models import Lock, Course, Depts, ModuleA, ModuleB
+from .models import Course
 
 from .app_helpers import (
     get_custom_timetable,
-    get_student_timetable, 
-    get_departmental_modules
+    get_departmental_modules,
+    get_departments,
+    get_student_timetable,
 )
 
 from common.decorators import uclapi_protected_endpoint
@@ -19,7 +20,7 @@ _SETID = settings.ROOMBOOKINGS_SETID
 
 @api_view(["GET"])
 @uclapi_protected_endpoint(personal_data=True, required_scopes=['timetable'])
-def get_personal_timetable(request, *args, **kwargs):
+def get_personal_timetable_endpoint(request, *args, **kwargs):
     token = kwargs['token']
     user = token.user
     try:
@@ -37,7 +38,7 @@ def get_personal_timetable(request, *args, **kwargs):
 
 @api_view(["GET"])
 @uclapi_protected_endpoint()
-def get_modules_timetable(request, *args, **kwargs):
+def get_modules_timetable_endpoint(request, *args, **kwargs):
     module_ids = request.GET.get("modules")
     if module_ids is None:
         return JsonResponse({
@@ -77,22 +78,20 @@ def get_modules_timetable(request, *args, **kwargs):
 
 @api_view(["GET"])
 @uclapi_protected_endpoint()
-def get_departments(request, *args, **kwargs):
+def get_departments_endpoint(request, *args, **kwargs):
     """
     Returns all departments at UCL
     """
-    depts = {"ok": True, "departments": []}
-    for dept in Depts.objects.all():
-        depts["departments"].append({
-            "department_id": dept.deptid,
-            "name": dept.name
-        })
-    return JsonResponse(depts, rate_limiting_data=kwargs)
+    departments = {
+        "ok": True,
+        "departments": get_departments()
+    }
+    return JsonResponse(departments, rate_limiting_data=kwargs)
 
 
 @api_view(["GET"])
 @uclapi_protected_endpoint()
-def get_department_courses(request, *args, **kwargs):
+def get_department_courses_endpoint(request, *args, **kwargs):
     """
     Returns all the courses in UCL with relevant ID
     """
@@ -118,7 +117,7 @@ def get_department_courses(request, *args, **kwargs):
 
 @api_view(["GET"])
 @uclapi_protected_endpoint()
-def get_department_modules(request, *args, **kwargs):
+def get_department_modules_endpoint(request, *args, **kwargs):
     """
     Returns all modules taught by a particular department.
     """

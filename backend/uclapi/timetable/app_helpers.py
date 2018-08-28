@@ -308,7 +308,9 @@ def _get_timetable_events_module_list(module_list):
                 # An instance was requested, so filter by it
                 hyphen_pos = module.index('-')
                 instcode = module[hyphen_pos + 1:]
-                instid = cminstances.objects.filter(instcode=instcode)[0].instid
+                instid = cminstances.objects.filter(
+                    instcode=instcode
+                )[0].instid
                 full_modules.append(modules.objects.get(
                     moduleid=module[:hyphen_pos],
                     instid=instid
@@ -463,7 +465,6 @@ def get_custom_timetable(modules, date_filter=None):
 
 def get_departmental_modules(department_id):
     modules = get_cache("module")
-    instances = get_cache("cminstances")
     dept_modules = {}
     for module in modules.objects.filter(owner=department_id, setid=_SETID):
         instance_data = _get_instance_details(module.instid)
@@ -485,3 +486,14 @@ def get_departmental_modules(department_id):
         })
 
     return dept_modules
+
+
+def get_departments():
+    depts = get_cache("departments")
+    departments = []
+    for dept in depts.objects.all():
+        departments.append({
+            "department_id": dept.deptid,
+            "name": dept.name
+        })
+    return departments

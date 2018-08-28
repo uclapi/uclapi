@@ -70,7 +70,9 @@ class ModulePeriods:
                 self.summer_school_1 = True
                 self.summer_school_2 = True
             else:
-                raise InvalidAMPCodeException("An invalid AMP code was found: " + periods_code)
+                raise InvalidAMPCodeException(
+                    "An invalid AMP code was found: " + periods_code
+                )
         elif periods_code[0] == 'T':
             # Normal classes start with a T for Term
             if periods_code == 'T1':
