@@ -472,7 +472,6 @@ def get_departmental_modules(department_id):
             dept_modules[module.moduleid] = {
                 "module_id": module.moduleid,
                 "name": module.name,
-                "class_size": module.csize,
                 "instances": []
             }
 
@@ -481,6 +480,7 @@ def get_departmental_modules(department_id):
                 module.moduleid,
                 instance_data['instance_code']
             ),
+            "class_size": module.csize,
             ** instance_data
         })
 
