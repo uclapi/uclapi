@@ -10,7 +10,6 @@ let codeExamples = {
 
 params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
-  "client_secret": "secret"
   "modules": "COMP0030,COMP0133-A7U-T1"
 }
 
@@ -19,10 +18,9 @@ print(r.json())`,
 
   shell: `curl -X GET https://uclapi.com/timetable/bymodule \
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \
--d client_secret=secret \
 -d modules=COMP0030,COMP0133-A7U-T1`,
 
-  javascript: `fetch("https://uclapi.com/timetable/bymodule?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&client_secret=secret&modules=COMP0030,COMP0133-A7U-T1",
+  javascript: `fetch("https://uclapi.com/timetable/bymodule?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&modules=COMP0030,COMP0133-A7U-T1",
 {
     method: "GET",
 })
