@@ -12,13 +12,14 @@
     "type": "git",
     "url": "git+https://github.com/uclapi/uclapi.git"
   },
-  "author": "Henry Mortimer",
+  "author": "UCL API",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/uclapi/uclapi/issues"
   },
   "homepage": "https://uclapi.com",
   "dependencies": {
+    "ajv": "^6.5.3",
     "aphrodite": "^2.2.3",
     "glamor": "^2.20.40",
     "immutability-helper": "^2.7.1",
@@ -27,18 +28,18 @@
     "moment": "^2.22.1",
     "prop-types": "^15.6.2",
     "rc-collapse": "^1.10.0",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
+    "react": "^16.3.3",
+    "react-dom": "^16.3.3",
     "react-router-dom": "^4.3.1",
     "react-syntax-highlighter": "^8.0.1",
     "react-tap-event-plugin": "^3.0.2",
     "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
     "babelify": "^8.0.0",
     "css-loader": "^1.0.0",
     "file-loader": "^2.0.0",
