@@ -39,7 +39,7 @@
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.0",
+    "babel-loader": "^8.0.2",
     "babelify": "^8.0.0",
     "css-loader": "^1.0.0",
     "file-loader": "^2.0.0",
