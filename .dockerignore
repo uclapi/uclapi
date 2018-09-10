@@ -81,8 +81,9 @@ celerybeat-schedule
 # macOS binary files
 .DS_Store
 
-# NOT excluding the dotenv file because of how the execution works
-# .env
+# Excluding the dotenv file because we use real environment variables now
+.env
+*.env
 
 # virtualenv
 venv/
@@ -123,4 +124,10 @@ static/
 dump.rdb
 
 # UCL API venv
-backend/uclapi/venv/
+backend/uclapi/venv
+
+# Git history
+.git/
+
+# Frontend (this is served up by S3)
+frontend/

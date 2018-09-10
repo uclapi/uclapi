@@ -1,15 +1,31 @@
 version: '3'
 
 services:
-  web:
+  nginx:
+    image: 127.0.0.1:5000/uclapi_nginx
     build:
       context: .
-      dockerfile: prod.Dockerfile
+      dockerfile: nginx.Dockerfile
     ports:
       - "80:80"
       - "443:443"
-    env_file: ./backend/uclapi/.env
-    environment: 
-        DOCKER: "yes"
-        DOCKER_DEPLOYMENT: "prod"
-        PYTHONUNBUFFERED: 0
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+    links:
+      - django
+
+  django:
+    image: 127.0.0.1:5000/uclapi_django
+    build:
+      context: .
+      dockerfile: prod.Dockerfile
+      args:
+        environment: prod
+    ports:
+      - "9000:9000"
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure

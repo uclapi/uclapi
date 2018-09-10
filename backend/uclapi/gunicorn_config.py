@@ -1,6 +1,6 @@
 import multiprocessing
 
-bind = "127.0.0.1:9000"
+bind = "0.0.0.0:9000"
 
 # The recommended number of workers is 2 * cores + 1
 workers = multiprocessing.cpu_count() * 2 + 1
