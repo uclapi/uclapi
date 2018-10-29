@@ -37,7 +37,7 @@ python-dateutil==2.7.3
 pytz==2018.5
 raven==6.9.0
 redis==2.10.6
-requests==2.19.1
+requests==2.20.0
 requests-file==1.4.3
 setproctitle==1.1.10
 six==1.11.0
