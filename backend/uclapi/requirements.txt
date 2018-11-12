@@ -24,7 +24,7 @@ grequests==0.3.0
 gunicorn==19.9.0
 idna==2.7
 jmespath==0.9.3
-jsonpickle==0.9.6
+jsonpickle==1.0
 keen==0.5.1
 kombu==4.2.1
 lxml==4.2.5
