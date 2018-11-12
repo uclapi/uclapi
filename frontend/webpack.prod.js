@@ -4,7 +4,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-const os = require('os')
+const os = require('os');
 
 var entryPointsPathPrefix = './src/pages';
 
@@ -72,7 +72,7 @@ if (os.platform == "linux" && os.release().indexOf("Microsoft") != -1) {
       cache: true,
       sourceMap: true
     })
-  )
+  );
 } else {
   module.exports.optimization.minimizer.push(
     new UglifyJsPlugin({
@@ -80,8 +80,8 @@ if (os.platform == "linux" && os.release().indexOf("Microsoft") != -1) {
       sourceMap: true,
       parallel: true
     })
-  )
+  );
 }
 module.exports.optimization.minimizer.push(
   new OptimizeCSSAssetsPlugin({})
-)
+);
