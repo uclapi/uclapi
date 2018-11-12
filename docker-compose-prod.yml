@@ -1,11 +1,13 @@
-version: '3'
+version: "3.1"
 
 services:
   nginx:
-    image: 127.0.0.1:5000/uclapi_nginx
+    image: docker-master:5000/uclapi_nginx
     build:
       context: .
       dockerfile: nginx.Dockerfile
+      args:
+        environment: staging
     ports:
       - "80:80"
       - "443:443"
@@ -13,11 +15,23 @@ services:
       replicas: 2
       restart_policy:
         condition: on-failure
+      # Constrain Nginx to only run on worker nodes which are exposed via ELB
+      placement:
+        constraints: [node.role == worker]
     links:
       - django
+    secrets:
+      - idp-ucl-metadata-xml
+      - shibboleth2-prod-xml
+      - sp-cert-prod-pem
+      - sp-key-prod-pem
+      - shibboleth2-staging-xml
+      - sp-cert-staging-pem
+      - sp-key-staging-pem
+      - uclfw-rules
 
   django:
-    image: 127.0.0.1:5000/uclapi_django
+    image: docker-master:5000/uclapi_django
     build:
       context: .
       dockerfile: prod.Dockerfile
@@ -26,6 +40,34 @@ services:
     ports:
       - "9000:9000"
     deploy:
-      replicas: 2
+      replicas: 4
       restart_policy:
         condition: on-failure
+      # Constrain Django to also only run on worker nodes to avoid latency
+      placement:
+        constraints: [node.role == worker]
+    secrets:
+      - prod-env
+      - staging-env
+
+secrets:
+  idp-ucl-metadata-xml:
+    file: ./scripts/shibboleth/idp-ucl-metadata.xml
+  shibboleth2-prod-xml:
+    file: ./scripts/shibboleth/shibboleth2.prod.xml
+  sp-cert-prod-pem:
+    file: ./scripts/shibboleth/sp-cert.prod.pem
+  sp-key-prod-pem:
+    file: ./scripts/shibboleth/sp-key.prod.pem
+  shibboleth2-staging-xml:
+    file: ./scripts/shibboleth/shibboleth2.staging.xml
+  sp-cert-staging-pem:
+    file: ./scripts/shibboleth/sp-cert.staging.pem
+  sp-key-staging-pem:
+    file: ./scripts/shibboleth/sp-key.staging.pem
+  uclfw-rules:
+    file: ./scripts/uclfw.rules
+  prod-env:
+    file: ./backend/uclapi/prod.env
+  staging-env:
+    file: ./backend/uclapi/staging.env

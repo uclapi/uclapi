@@ -134,3 +134,4 @@ dump.rdb
 /scripts/shibboleth/sp-key.prod.pem
 /scripts/shibboleth/sp-key.staging.pem
 /backend/uclapi/prod.env
+/backend/uclapi/staging.env

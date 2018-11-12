@@ -12,7 +12,7 @@ RUN rm -rf /web/uclapi/backend/uclapi/*.env && \
     rm -f /web/uclapi/backend/uclapi/.env
 
 WORKDIR /web/uclapi
-COPY ./scripts/uclfw.rules  uclfw.rules
+RUN ln -s /run/secrets/uclfw-rules uclfw.rules
 COPY ./scripts/setup.sh     setup.sh
 COPY ./scripts/prod.sh      prod.sh
 COPY ./scripts/prodrun.sh   prodrun.sh
@@ -32,6 +32,6 @@ RUN ["bash", "/web/uclapi/prod.sh"]
 # This is required for now because Supervisor inherits the
 # environment variables from init/upstart/systemd and not
 # the shell.
-COPY ./backend/uclapi/${environment}.env        /web/uclapi/backend/uclapi/.env
+RUN ln -s /run/secrets/${environment}-env        /web/uclapi/backend/uclapi/.env
 
 CMD ["bash", "/web/uclapi/prodrun.sh"]

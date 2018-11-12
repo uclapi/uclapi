@@ -4,6 +4,7 @@ FROM ubuntu:18.04
 ### Variables
 ###
 ARG NGINX_VERSION=1.14.0
+ARG environment
 
 ###
 ### Build the image
@@ -73,7 +74,6 @@ COPY ./scripts/shibboleth/bindingTemplate.html      /etc/shibboleth/
 COPY ./scripts/shibboleth/console.logger            /etc/shibboleth/
 COPY ./scripts/shibboleth/discoveryTemplate.html    /etc/shibboleth/
 COPY ./scripts/shibboleth/globalLogout.html         /etc/shibboleth/
-COPY ./scripts/shibboleth/idp-ucl-metadata.xml      /etc/shibboleth/
 COPY ./scripts/shibboleth/localLogout.html          /etc/shibboleth/
 COPY ./scripts/shibboleth/metadataError.html        /etc/shibboleth/
 COPY ./scripts/shibboleth/native.logger             /etc/shibboleth/
@@ -87,10 +87,11 @@ COPY ./scripts/shibboleth/sslError.html             /etc/shibboleth/
 COPY ./scripts/shibboleth/syslog.logger             /etc/shibboleth/
 COPY ./scripts/shibboleth/upgrade.xsl               /etc/shibboleth/
 
-# Install custom prod Shibboleth configuration files
-COPY ./scripts/shibboleth/shibboleth2.prod.xml      /etc/shibboleth/shibboleth2.xml
-COPY ./scripts/shibboleth/sp-cert.prod.pem          /etc/shibboleth/sp-cert.pem
-COPY ./scripts/shibboleth/sp-key.prod.pem           /etc/shibboleth/sp-key.pem
+# Set up secrets
+RUN ln -s /run/secrets/idp-ucl-metadata-xml             /etc/shibboleth/idp-ucl-metadata.xml && \
+    ln -s /run/secrets/shibboleth2-${environment}-xml   /etc/shibboleth/shibboleth2.xml && \
+    ln -s /run/secrets/sp-cert-${environment}-pem       /etc/shibboleth/sp-cert.pem && \
+    ln -s /run/secrets/sp-key-${environment}-pem        /etc/shibboleth/sp-key.pem
 
 # New supervisor config that uses a local port instead of a Unix socket to fix
 # issues with Docker
