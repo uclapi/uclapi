@@ -42,6 +42,6 @@ requests-file==1.4.3
 setproctitle==1.1.10
 six==1.11.0
 tldextract==2.2.0
-urllib3==1.23
+urllib3==1.24.1
 validators==0.12.2
 vine==1.1.4
