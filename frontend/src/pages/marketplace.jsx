@@ -6,7 +6,6 @@ import {cyan500, cyan700,
   grey500, white, darkBlack, fullBlack,
 } from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import MarketplaceComponent from '../components/marketplace/marketplace.jsx';
@@ -32,10 +31,6 @@ const muiTheme = getMuiTheme({
     shadowColor: fullBlack,
   },
 });
-
-
-// Needed for onTouchTap
-injectTapEventPlugin();
 
 class Marketplace extends React.Component {
 
