@@ -10,14 +10,7 @@ var entryPointsPathPrefix = './src/pages';
 
 module.exports = {
   optimization: {
-    minimizer: [
-      // new UglifyJsPlugin({
-      //   cache: true,
-      //   parallel: true,
-      //   sourceMap: true // set to true if you want JS source maps
-      // }),
-      // new OptimizeCSSAssetsPlugin({})
-    ]
+    minimizer: []  // This list is built below as per platform requirements
   },
   plugins: [
     new UglifyJsPlugin({
