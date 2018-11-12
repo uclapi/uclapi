@@ -6,7 +6,6 @@ import {cyan500, cyan700,
   white, darkBlack, fullBlack,
 } from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import GetStartedComponent from '../components/getStarted/getStarted.jsx';
 
@@ -29,11 +28,6 @@ const muiTheme = getMuiTheme({
     shadowColor: fullBlack,
   },
 });
-
-
-// Needed for onTouchTap
-// http://stackoverflow.com/a/34015469/988941
-injectTapEventPlugin();
 
 class GetStarted extends React.Component {
 

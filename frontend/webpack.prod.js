@@ -4,18 +4,13 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
+const os = require('os');
+
 var entryPointsPathPrefix = './src/pages';
 
 module.exports = {
   optimization: {
-    minimizer: [
-      new UglifyJsPlugin({
-        cache: true,
-        parallel: true,
-        sourceMap: true // set to true if you want JS source maps
-      }),
-      new OptimizeCSSAssetsPlugin({})
-    ]
+    minimizer: []  // This list is built below as per platform requirements
   },
   plugins: [
     new UglifyJsPlugin({
@@ -60,3 +55,26 @@ module.exports = {
     filename: '[name].js'
   }
 };
+
+// Do not enable parallelisation for Windows Subsystem for Linux
+// https://github.com/webpack-contrib/uglifyjs-webpack-plugin/issues/302
+// https://stackoverflow.com/a/44356310/5297057
+if (os.platform == "linux" && os.release().indexOf("Microsoft") != -1) {
+  module.exports.optimization.minimizer.push(
+    new UglifyJsPlugin({
+      cache: true,
+      sourceMap: true
+    })
+  );
+} else {
+  module.exports.optimization.minimizer.push(
+    new UglifyJsPlugin({
+      cache: true,
+      sourceMap: true,
+      parallel: true
+    })
+  );
+}
+module.exports.optimization.minimizer.push(
+  new OptimizeCSSAssetsPlugin({})
+);
