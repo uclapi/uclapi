@@ -33,7 +33,7 @@ model-mommy==1.6.0
 pbr==5.1.1
 pycryptodome==3.7.0
 psycopg2-binary==2.7.6.1
-python-dateutil==2.7.3
+python-dateutil==2.7.5
 pytz==2018.7
 raven==6.9.0
 redis==2.10.6
