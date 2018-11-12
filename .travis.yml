@@ -12,7 +12,7 @@ install:
   - pip3 install codecov
 before_script:
   # Install Oracle Instant Client
-  - sudo apt-get install libaio-dev libaio1 unzip wget build-essential libpq-dev libpq5
+  - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
   - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
   - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
   - sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip

@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'tokens/test$', views.token_test),
     url(r'user/allow$', views.userallow),
     url(r'user/deny$', views.userdeny),
-    url(r'user/data$', views.userdata)
+    url(r'user/data$', views.userdata),
+    url(r'user/studentnumber$', views.get_student_number),
 ]

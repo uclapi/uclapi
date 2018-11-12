@@ -4,7 +4,8 @@ from lxml import etree
 from django.conf import settings
 
 from .occupeye.api import OccupEyeApi
-from .occupeye.exceptions import BadOccupEyeRequest
+from .occupeye.exceptions import BadOccupEyeRequest, OccupEyeOtherSensorState
+from .occupeye.utils import is_sensor_occupied
 
 
 class ImageBuilder():
@@ -105,10 +106,19 @@ class ImageBuilder():
             )
             circle = etree.SubElement(node, "circle")
             circle.attrib["r"] = str(self._circle_radius)
-            print(sensor_data)
-            if sensor_data["last_trigger_type"] == "Absent":
-                circle.attrib["fill"] = self._absent_colour
-            else:
+            try:
+                occupied = is_sensor_occupied(
+                    sensor_data["last_trigger_type"],
+                    sensor_data["last_trigger_timestamp"]
+                )
+            except OccupEyeOtherSensorState:
+                # If the sensor is in a strange state just treat
+                # it as a free space.
+                occupied = False
+
+            if occupied:
                 circle.attrib["fill"] = self._occupied_colour
+            else:
+                circle.attrib["fill"] = self._absent_colour
 
         return etree.tostring(svg, pretty_print=True)

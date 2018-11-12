@@ -7,8 +7,9 @@ import redis
 from django.conf import settings
 
 from .constants import OccupEyeConstants
-from .exceptions import BadOccupEyeRequest
+from .exceptions import BadOccupEyeRequest, OccupEyeOtherSensorState
 from .utils import (
+    is_sensor_occupied,
     str2bool,
     survey_ids_to_surveys
 )
@@ -216,6 +217,14 @@ class OccupEyeApi():
                     sensors[hw_id][
                         "last_trigger_type"
                     ] = result["last_trigger_type"]
+                    try:
+                        occupied = is_sensor_occupied(
+                            result["last_trigger_type"],
+                            result["last_trigger_timestamp"]
+                        )
+                    except OccupEyeOtherSensorState:
+                        occupied = False
+                    sensors[hw_id]["occupied"] = occupied
 
             map_data_key = self._const.SURVEY_MAP_DATA_KEY.format(
                 survey_id,
@@ -278,13 +287,25 @@ class OccupEyeApi():
                 "sensors_other": 0
             }
             for _, sensor in survey_map["sensors"].items():
-                if "last_trigger_type" in sensor:
-                    if sensor["last_trigger_type"] == "Absent":
-                        map_data["sensors_absent"] += 1
-                    elif sensor["last_trigger_type"] == "Occupied":
+                # We only care about sensors with a trigger event.
+                # Without this, the data is useless (and probably bogus)
+                # so we gracefully skip over it and hope for the best.
+                if "last_trigger_type" not in sensor:
+                    continue
+
+                try:
+                    sensor_occupied = is_sensor_occupied(
+                        sensor["last_trigger_type"],
+                        sensor["last_trigger_timestamp"]
+                    )
+                    if sensor_occupied:
                         map_data["sensors_occupied"] += 1
                     else:
-                        map_data["sensors_other"] += 1
+                        map_data["sensors_absent"] += 1
+                except OccupEyeOtherSensorState:
+                    # If the seat is neither occupied nor absent, consider
+                    # it to be in some other state
+                    map_data["sensors_other"] += 1
 
             survey_data["maps"].append(map_data)
         shared_dict[survey_id] = survey_data

@@ -4,8 +4,8 @@ This is the frontend for the uclapi.com dashboard. It is built using react and s
 
 ## Installation
 
-### Prerequisites 
-To build the frontend you need Node.js and npm installed. 
+### Prerequisites
+To build the frontend you need Node.js and npm installed.
 
 OSX:
 ``` Bash
@@ -31,7 +31,7 @@ Build:
 $ npm run build
 ```
 
-Build and watch (doesn't work on windows):
+Build and watch:
 ``` Bash
 $ npm start
 ```
@@ -46,9 +46,13 @@ To see the dashboard you must start the django server and fake shibboleth app (s
 
 ## Things to note
 
+## Webpack Serve
+We use `webpack-serve` for local development, so running `npm start` will launch
+the webpack development server on `http://localhost:8080`.
+
 ### Django templates
-Because we are serving the django templates there are certain things you need to consider. To pass data from django into the react app we serialise 
-the data into a json string then assign it as the global variable `window.initialData` so react can acess it. To gain access to static files 
+Because we are serving the django templates there are certain things you need to consider. To pass data from django into the react app we serialise
+the data into a json string then assign it as the global variable `window.initialData` so react can acess it. To gain access to static files
 we also create the `window.staticURL` global which stores the django static file base url.
 
 ### Creating new pages

@@ -3,17 +3,19 @@ import os
 
 import redis
 from django.core import signing
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.signing import TimestampSigner
 from django.shortcuts import redirect, render
 from django.utils.http import quote
-from django.views.decorators.csrf import (csrf_exempt, csrf_protect,
-                                          ensure_csrf_cookie)
+from django.views.decorators.csrf import (
+    csrf_exempt,
+    csrf_protect,
+    ensure_csrf_cookie
+)
 
 from dashboard.models import App, User
 from dashboard.tasks import keen_add_event_task as keen_add_event
-from roombookings.helpers import PrettyJsonResponse
+from timetable.app_helpers import get_student_by_upi
 
 from .app_helpers import generate_random_verification_code
 from .models import OAuthToken
@@ -21,6 +23,7 @@ from .scoping import Scopes
 
 from uclapi.settings import REDIS_UCLAPI_HOST
 from common.decorators import uclapi_protected_endpoint, get_var
+from common.helpers import PrettyJsonResponse
 
 
 # The endpoint that creates a Shibboleth login and redirects the user to it
@@ -456,8 +459,16 @@ def token(request):
 @uclapi_protected_endpoint(personal_data=True)
 def userdata(request, *args, **kwargs):
     token = kwargs['token']
+    print("Checking student status")
+    try:
+        get_student_by_upi(
+            token.user.employee_id
+        )
+        is_student = True
+    except IndexError:
+        is_student = False
 
-    return PrettyJsonResponse({
+    user_data = {
         "ok": True,
         "full_name": token.user.full_name,
         "email": token.user.email,
@@ -465,8 +476,15 @@ def userdata(request, *args, **kwargs):
         "cn": token.user.cn,
         "department": token.user.department,
         "upi": token.user.employee_id,
-        "scope_number": token.scope.scope_number
-    }, rate_limiting_data=kwargs)
+        "scope_number": token.scope.scope_number,
+        "is_student": is_student
+    }
+    print("Is student: " + str(is_student))
+
+    return PrettyJsonResponse(
+        user_data,
+        rate_limiting_data=kwargs
+    )
 
 
 def scope_map(request):
@@ -493,3 +511,32 @@ def token_test(request, *args, **kwargs):
         ),
         "scope_number": token.scope.scope_number
     }, rate_limiting_data=kwargs)
+
+
+@uclapi_protected_endpoint(
+    personal_data=True,
+    required_scopes=['student_number']
+)
+def get_student_number(request, *args, **kwargs):
+    token = kwargs['token']
+
+    try:
+        student_data = get_student_by_upi(
+            token.user.employee_id
+        )
+    except IndexError:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": "User is not a student."
+        }, rate_limiting_data=kwargs)
+        response.status_code = 400
+        return response
+
+    data = {
+        "ok": True,
+        "student_number": student_data.studentid
+    }
+    return PrettyJsonResponse(
+        data,
+        rate_limiting_data=kwargs
+    )

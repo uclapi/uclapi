@@ -43,6 +43,25 @@ class Command(BaseCommand):
         webhooks = Webhook.objects.all()
         #  assumption: list of webhooks will be longer than ddiff
 
+        num_bookings_added = 0
+        num_bookings_removed = 0
+        if "iterable_item_added" in ddiff:
+                num_bookings_added = len(
+                    ddiff["iterable_item_added"].values()
+                )
+
+        if "iterable_item_removed" in ddiff:
+                num_bookings_removed = len(
+                    ddiff["iterable_item_removed"].values()
+                )
+
+        self.stdout.write(
+            "{} bookings added\n{} bookings removed.".format(
+                num_bookings_added,
+                num_bookings_removed
+            )
+        )
+
         def webhook_map(webhook):
             def webhook_filter(booking):
                 return (
@@ -110,6 +129,9 @@ class Command(BaseCommand):
                         }
                     )
                 )
+        self.stdout.write(
+            "Triggering {} webhooks.".format(len(unsent_requests))
+        )
         grequests.map(unsent_requests)
 
         for webhook in webhooks_to_enact:
