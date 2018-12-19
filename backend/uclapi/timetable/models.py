@@ -1093,6 +1093,62 @@ class Stumodules(models.Model):
         _DATABASE = 'roombookings'
 
 
+class StumodulesA(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.TextField(max_length=10)
+    studentid = models.TextField(max_length=12)
+    deptid = models.TextField(max_length=10)
+    moduleid = models.TextField(max_length=12)
+    modgrpcode = models.TextField(max_length=10)
+    slotid = models.BigIntegerField(null=True, blank=True)
+    fixingrp = models.CharField(max_length=1)
+    modpart = models.TextField(max_length=10)
+    restype = models.TextField(max_length=10)
+    unitvalue = models.TextField(max_length=10)
+    classif = models.TextField(max_length=10)
+    papernum = models.BigIntegerField(null=True, blank=True)
+    modlevel = models.TextField(max_length=10)
+    inactive = models.CharField(max_length=1)
+    instid = models.BigIntegerField(null=True, blank=True)
+    courseid = models.TextField(max_length=12)
+    crsyear = models.BigIntegerField(null=True, blank=True)
+    semid = models.BigIntegerField(null=True, blank=True)
+    moddropped = models.CharField(max_length=1)
+    donotcount = models.CharField(max_length=1)
+    semrank = models.BigIntegerField(null=True, blank=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class StumodulesB(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.TextField(max_length=10)
+    studentid = models.TextField(max_length=12)
+    deptid = models.TextField(max_length=10)
+    moduleid = models.TextField(max_length=12)
+    modgrpcode = models.TextField(max_length=10)
+    slotid = models.BigIntegerField(null=True, blank=True)
+    fixingrp = models.CharField(max_length=1)
+    modpart = models.TextField(max_length=10)
+    restype = models.TextField(max_length=10)
+    unitvalue = models.TextField(max_length=10)
+    classif = models.TextField(max_length=10)
+    papernum = models.BigIntegerField(null=True, blank=True)
+    modlevel = models.TextField(max_length=10)
+    inactive = models.CharField(max_length=1)
+    instid = models.BigIntegerField(null=True, blank=True)
+    courseid = models.TextField(max_length=12)
+    crsyear = models.BigIntegerField(null=True, blank=True)
+    semid = models.BigIntegerField(null=True, blank=True)
+    moddropped = models.CharField(max_length=1)
+    donotcount = models.CharField(max_length=1)
+    semrank = models.BigIntegerField(null=True, blank=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
 class Features(models.Model):
     setid = models.TextField(max_length=10)
     featureid = models.TextField(max_length=10)
@@ -1145,6 +1201,52 @@ class Course(models.Model):
         managed = False
         db_table = '"CMIS_OWNER"."COURSE"'
         _DATABASE = 'roombookings'
+
+
+class Cminstances(models.Model):
+    setid = models.TextField(max_length=10)
+    instid = models.BigIntegerField(primary_key=True)
+    instcode = models.TextField(max_length=10, null=True, blank=True)
+    instname = models.TextField(max_length=40, null=True, blank=True)
+    linkcode = models.TextField(max_length=20, null=True, blank=True)
+    instrank = models.BigIntegerField(null=True, blank=True)
+    inststart = models.DateField(null=True, blank=True)
+    instfinish = models.DateField(null=True, blank=True)
+
+    class Meta:
+        managed = False
+        db_table = '"CMIS_OWNER"."CMINSTANCES"'
+        _DATABASE = 'roombookings'
+
+
+class CminstancesA(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.TextField(max_length=10)
+    instid = models.BigIntegerField(null=True, blank=True)
+    instcode = models.TextField(max_length=10, null=True, blank=True)
+    instname = models.TextField(max_length=40, null=True, blank=True)
+    linkcode = models.TextField(max_length=20, null=True, blank=True)
+    instrank = models.BigIntegerField(null=True, blank=True)
+    inststart = models.DateField(null=True, blank=True)
+    instfinish = models.DateField(null=True, blank=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class CminstancesB(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.TextField(max_length=10)
+    instid = models.BigIntegerField(null=True, blank=True)
+    instcode = models.TextField(max_length=10, null=True, blank=True)
+    instname = models.TextField(max_length=40, null=True, blank=True)
+    linkcode = models.TextField(max_length=20, null=True, blank=True)
+    instrank = models.BigIntegerField(null=True, blank=True)
+    inststart = models.DateField(null=True, blank=True)
+    instfinish = models.DateField(null=True, blank=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
 
 
 class Lock(models.Model):

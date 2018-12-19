@@ -4,6 +4,8 @@ class ModelRouter(object):
         self.gencache_model_names = [
             "bookinga",
             "bookingb",
+            "cminstancesa",
+            "cminstancesb",
             "lecturera",
             "lecturerb",
             "modulea",
@@ -22,6 +24,8 @@ class ModelRouter(object):
             "weekstructureb",
             "studentsa",
             "studentsb",
+            "stumodulesa",
+            "stumodulesb",
             "deptsa",
             "deptsb"
         ]

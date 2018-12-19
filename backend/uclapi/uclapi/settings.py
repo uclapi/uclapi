@@ -66,14 +66,12 @@ INSTALLED_APPS = [
     'oauth',
     'timetable',
     'common',
-    'opbeat.contrib.django',
     'raven.contrib.django.raven_compat',
     'corsheaders',
     'workspaces'
 ]
 
 MIDDLEWARE = [
-    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -143,13 +141,6 @@ DATABASES = {
 
 DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
 
-# analytics
-OPBEAT = {
-    'ORGANIZATION_ID': os.environ.get("OPBEAT_ORG_ID"),
-    'APP_ID': os.environ.get("OPBEAT_APP_ID"),
-    'SECRET_TOKEN': os.environ.get("OPBEAT_SECRET_TOKEN")
-}
-
 RAVEN_CONFIG = {
     'dsn': os.environ.get("SENTRY_DSN"),
 }
@@ -187,15 +178,14 @@ USE_L10N = True
 
 USE_TZ = False
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
-STATIC_URL = '/static/'
+# The default Static URL is /static/ which is fine for when statics
+# have been built and placed into their respective folders.
+# To do local development with webpack, set the STATIC_URL env
+# value to http://localhost:8080
+STATIC_URL = os.environ.get("STATIC_URL", '/static/')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "images"),
-]
 
 # Cross Origin settings
 CORS_ORIGIN_ALLOW_ALL = True
@@ -218,7 +208,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
 
-ROOMBOOKINGS_SETID = 'LIVE-17-18'
+ROOMBOOKINGS_SETID = 'LIVE-18-19'
 
 # S3 file storage settings
 # There are three scenarios to consider:

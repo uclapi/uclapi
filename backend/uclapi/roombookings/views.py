@@ -2,6 +2,7 @@ from functools import reduce
 
 from rest_framework.decorators import api_view
 from django.conf import settings
+from django.db.models import Q
 
 from .helpers import (PrettyJsonResponse, _create_page_token,
                       _get_paginated_bookings, _parse_datetime,
@@ -27,11 +28,14 @@ def get_rooms(request, *args, **kwargs):
     request_params['capacity__gte'] = request.GET.get('capacity')
     request_params['automated'] = request.GET.get('automated')
 
-    # webview available rooms
+    # Get available rooms:
+    # - Filtered by this academic year only
+    # - Anything centrally bookable
+    # - All ICH rooms (Site IDs 238 and 240)
     all_rooms = Room.objects.using("roombookings").filter(
-            setid=settings.ROOMBOOKINGS_SETID,
-            bookabletype='CB'
-        )
+        Q(setid=settings.ROOMBOOKINGS_SETID),
+        Q(bookabletype='CB') | Q(siteid="238") | Q(siteid="240")
+    )
 
     # no filters provided, return all rooms serialised
     if not reduce(lambda x, y: x or y, request_params.values()):
@@ -114,10 +118,6 @@ def get_bookings(request, *args, **kwargs):
 
     # filter the query dict
     request_params = dict((k, v) for k, v in request_params.items() if v)
-
-    # global filters
-    request_params["setid"] = settings.ROOMBOOKINGS_SETID
-    request_params["bookabletype"] = "CB"
 
     # create a database entry for token
     page_token = _create_page_token(request_params, results_per_page)
@@ -206,17 +206,18 @@ def get_free_rooms(request, *args, **kwargs):
     # maxing out results_per_page to get all the bookings in one page
     results_per_page = 100000
     request_params = {k: v for k, v in request_params.items() if v}
-    request_params["setid"] = settings.ROOMBOOKINGS_SETID
-    request_params["bookabletype"] = "CB"
     page_token = _create_page_token(request_params, results_per_page)
 
     # All bookings in the given time period
     bookings = _get_paginated_bookings(page_token)["bookings"]
 
-    # All available rooms
+    # Get available rooms:
+    # - Filtered by this academic year only
+    # - Anything centrally bookable
+    # - All ICH rooms (Site IDs 238 and 240)
     all_rooms = Room.objects.using("roombookings").filter(
-        setid=settings.ROOMBOOKINGS_SETID,
-        bookabletype='CB'
+        Q(setid=settings.ROOMBOOKINGS_SETID),
+        Q(bookabletype='CB') | Q(siteid="238") | Q(siteid="240")
     )
     all_rooms = _serialize_rooms(all_rooms)
 

@@ -7,7 +7,7 @@ from datetime import timedelta
 import pytz
 import redis
 
-from django.core.exceptions import FieldError, ObjectDoesNotExist
+from django.core.exceptions import FieldError
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 import ciso8601
@@ -19,6 +19,30 @@ from .api_helpers import generate_token
 from uclapi.settings import REDIS_UCLAPI_HOST
 
 TOKEN_EXPIRY_TIME = 30 * 60
+
+ROOM_TYPE_MAP = {
+    "AN": "Anechoic Chamber",
+    "CI": "Clinic Room",
+    "CF": "Catering Facilities",
+    "CFE": "Cafe",
+    "CL": "Cloakroom",
+    "CR": "Classroom",
+    "ER": "Equipment Room",
+    "IN": "Installation",
+    "LA": "Laboratory",
+    "LB": "Library",
+    "LT": "Lecture Theatre",
+    "MR": "Meeting Room",
+    "OF": "Office",
+    "PC1": "Public Cluster",
+    "PC2": "Public Cluster - Tutorial",
+    "PC3": "Public Cluster - Students",
+    "RC": "Reverberation Chamber",
+    "SS": "Social Space",
+    "STU": "Studio",
+    "TH": "Theatre",
+}
+
 
 def _create_page_token(query, pagination):
     r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
@@ -151,6 +175,12 @@ def _parse_datetime(start_time, end_time, search_date):
 def _serialize_rooms(room_set):
     rooms = []
     for room in room_set:
+        # Maps room classification to a textual version
+        # e.g. LT => Lecture Theatre
+        classification_name = ROOM_TYPE_MAP.get(
+            room.roomclass,
+            "Unknown Room Type"
+        )
         room_to_add = {
             "roomname": room.roomname,
             "roomid": room.roomid,
@@ -158,6 +188,7 @@ def _serialize_rooms(room_set):
             "sitename": room.sitename,
             "capacity": room.capacity,
             "classification": room.roomclass,
+            "classification_name": classification_name,
             "automated": room.automated,
             "location": {
                 "address": [
@@ -309,8 +340,8 @@ def _filter_for_free_rooms(all_rooms, bookings, start, end):
     for room in rooms_with_bookings:
         roomid, siteid = room["roomid"], room["siteid"]
         if (
-            (roomid, siteid) not in bookings_map
-            or not bookings_map[(roomid, siteid)]
+            (roomid, siteid) not in bookings_map or
+            not bookings_map[(roomid, siteid)]
         ):
             # if room doesn't have any overlapping bookings
             free_rooms.append(room)
