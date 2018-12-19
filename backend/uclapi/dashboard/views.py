@@ -156,7 +156,7 @@ def get_started(request):
     except KeyError:
         logged_in = False
 
-        token = get_temp_token()
+    token = get_temp_token()
     return render(request, 'getStarted.html', {
         'initial_data': {
             'temp_token': token,
