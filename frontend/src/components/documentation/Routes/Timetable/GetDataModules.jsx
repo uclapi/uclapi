@@ -10,6 +10,7 @@ let codeExamples = {
 
 params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
+  "client_secret": "secret",
   "department": "COMPS_ENG"
 }
 r = requests.get("https://uclapi.com/timetable/data/modules", params=params)
@@ -17,9 +18,10 @@ print(r.json())`,
 
   shell: `curl -X GET https://uclapi.com/timetable/data/modules \
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \
+-d client_secret=secret \
 -d department=COMPS_ENG`,
 
-  javascript: `fetch("https://uclapi.com/timetable/data/modules?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&department=COMPS_ENG")
+  javascript: `fetch("https://uclapi.com/timetable/data/modules?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&client_secret=secret&department=COMPS_ENG")
 .then((response) => {
   return response.json()
 })
@@ -127,11 +129,16 @@ export default class GetDataModules extends React.Component {
                 requirement="required"
                 example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
                 description="Authentication token." />
-            <Cell
-                name="department"
-                requirement="required"
-                example="COMPS_ENG"
-                description="The department ID available from /data/departments." />
+              <Cell
+              name="client_secret"
+              requirement="required"
+              example="mysecret"
+              description="Client secret of the authenticating app." />
+              <Cell
+                  name="department"
+                  requirement="required"
+                  example="COMPS_ENG"
+                  description="The department ID available from /data/departments." />
             </Table>
           </Topic>
 
@@ -273,6 +280,12 @@ export default class GetDataModules extends React.Component {
               <Cell
                 name="OAuth token does not exist."
                 description="Gets returned when you supply an invalid token." />
+              <Cell
+                name="No Client Secret Provided."
+                description="Gets returned when you have not supplied a client_secret in your request." />
+              <Cell
+                name="Client Secret incorrect."
+                description="Gets returned when the client secret was incorrect." />
             </Table>
           </Topic>
         </div>

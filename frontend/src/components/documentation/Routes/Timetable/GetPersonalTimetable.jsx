@@ -230,6 +230,12 @@ export default class GetPersonalTimetable extends React.Component {
               <Cell
                 name="Student does not have any assigned timetables."
                 description="Gets returned when the user the token belongs to does not have any timetable assigned." />
+              <Cell
+                name="No Client Secret Provided."
+                description="Gets returned when you have not supplied a client_secret in your request." />
+              <Cell
+                name="Client Secret incorrect."
+                description="Gets returned when the client secret was incorrect." />
             </Table>
           </Topic>
         </div>

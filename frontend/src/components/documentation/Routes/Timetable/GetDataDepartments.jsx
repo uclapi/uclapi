@@ -9,15 +9,17 @@ let codeExamples = {
   python: `import requests
 
 params = {
-  "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
+  "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
+  "client_secret": "secret"
 }
 r = requests.get("https://uclapi.com/timetable/data/departments", params=params)
 print(r.json())`,
 
   shell: `curl -X GET https://uclapi.com/timetable/data/departments \
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb`,
+-d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \
+-d client_secret=secret`,
 
-  javascript: `fetch("https://uclapi.com/timetable/data/departments?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
+  javascript: `fetch("https://uclapi.com/timetable/data/departments?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&client_secret=secret")
 .then((response) => {
   return response.json()
 })
@@ -74,6 +76,11 @@ export default class GetDataDepartments extends React.Component {
                 requirement="required"
                 example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
                 description="Authentication token." />
+              <Cell
+                name="client_secret"
+                requirement="required"
+                example="mysecret"
+                description="Client secret of the authenticating app." />
             </Table>
           </Topic>
 
@@ -114,6 +121,12 @@ export default class GetDataDepartments extends React.Component {
               <Cell
                 name="OAuth token does not exist."
                 description="Gets returned when you supply an invalid token." />
+              <Cell
+                name="No Client Secret Provided."
+                description="Gets returned when you have not supplied a client_secret in your request." />
+              <Cell
+                name="Client Secret incorrect."
+                description="Gets returned when the client secret was incorrect." />
             </Table>
           </Topic>
         </div>
