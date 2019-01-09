@@ -298,7 +298,7 @@ def userallow(request):
 
     code = generate_random_verification_code()
 
-    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
 
     verification_data = {
         "client_id": app.client_id,
@@ -339,7 +339,7 @@ def token(request):
         response.status_code = 400
         return response
 
-    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
     try:
         data_json = r.get(code).decode('ascii')
 

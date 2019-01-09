@@ -24,7 +24,7 @@ class OccupEyeApi():
     """
 
     def __init__(self):
-        self._redis = redis.StrictRedis(
+        self._redis = redis.Redis(
             host=settings.REDIS_UCLAPI_HOST,
             charset="utf-8",
             decode_responses=True

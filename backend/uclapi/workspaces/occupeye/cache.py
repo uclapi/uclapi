@@ -21,7 +21,7 @@ from .utils import (
 
 class OccupeyeCache():
     def __init__(self):
-        self._redis = redis.StrictRedis(
+        self._redis = redis.Redis(
             host=settings.REDIS_UCLAPI_HOST,
             charset="utf-8",
             decode_responses=True
@@ -98,7 +98,7 @@ class OccupeyeCache():
                 survey_key,
                 {
                     "id": survey["SurveyID"],
-                    "active": survey["Active"],
+                    "active": str(survey["Active"]),
                     "name": survey["Name"],
                     "start_time": survey["StartTime"],
                     "end_time": survey["EndTime"]
@@ -203,20 +203,20 @@ class OccupeyeCache():
                 "survey_id": sensor_data["SurveyID"],
                 "hardware_id": sensor_data["HardwareID"],
                 "survey_device_id": sensor_data["SurveyDeviceID"],
-                "host_address": sensor_data["HostAddress"],
-                "pir_address": sensor_data["PIRAddress"],
-                "device_type": sensor_data["DeviceType"],
-                "location": sensor_data["Location"],
-                "description_1": sensor_data["Description1"],
-                "description_2": sensor_data["Description2"],
-                "description_3": sensor_data["Description3"],
+                "host_address": str(sensor_data["HostAddress"]),
+                "pir_address": str(sensor_data["PIRAddress"]),
+                "device_type": str(sensor_data["DeviceType"]),
+                "location": str(sensor_data["Location"]),
+                "description_1": str(sensor_data["Description1"]),
+                "description_2": str(sensor_data["Description2"]),
+                "description_3": str(sensor_data["Description3"]),
                 "room_id": sensor_data["RoomID"],
-                "room_name": sensor_data["RoomName"],
-                "share_id": sensor_data["ShareID"],
-                "floor": str2bool(sensor_data["Floor"]),
-                "room_type": sensor_data["RoomType"],
-                "building_name": sensor_data["Building"],
-                "room_description": sensor_data["RoomDescription"]
+                "room_name": str(sensor_data["RoomName"]),
+                "share_id": str(sensor_data["ShareID"]),
+                "floor": str(str2bool(sensor_data["Floor"])),
+                "room_type": str(sensor_data["RoomType"]),
+                "building_name": str(sensor_data["Building"]),
+                "room_description": str(sensor_data["RoomDescription"])
             })
 
             pipeline.rpush(
@@ -252,7 +252,7 @@ class OccupeyeCache():
                 # Easier than expecting our clients to deal with null
                 occupied_state = False
             pipeline.hmset(sensor_status_key, {
-                "occupied": occupied_state,
+                "occupied": str(occupied_state),
                 "hardware_id": sensor_data["HardwareID"],
                 "last_trigger_type": sensor_data["LastTriggerType"],
                 "last_trigger_timestamp": sensor_data["LastTriggerTime"]

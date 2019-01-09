@@ -24,7 +24,7 @@ class ImageBuilder():
         if not self._api.check_map_exists(survey_id, map_id):
             raise BadOccupEyeRequest
 
-        self._redis = redis.StrictRedis(
+        self._redis = redis.Redis(
             host=settings.REDIS_UCLAPI_HOST,
             charset="utf-8",
             decode_responses=True
