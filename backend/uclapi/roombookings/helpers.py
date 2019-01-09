@@ -45,7 +45,7 @@ ROOM_TYPE_MAP = {
 
 
 def _create_page_token(query, pagination):
-    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
     page_data = {
         "current_page": 0,
         "pagination": pagination,
@@ -57,7 +57,7 @@ def _create_page_token(query, pagination):
 
 
 def _get_paginated_bookings(page_token):
-    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
     try:
         page_data = json.loads(r.get(page_token).decode('ascii'))
     except (AttributeError, json.decoder.JSONDecodeError):

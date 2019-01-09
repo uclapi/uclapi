@@ -16,7 +16,7 @@ from .occupeye.token import (
 
 class OccupEyeApiTestCase(TestCase):
     def setUp(self):
-        self.r = redis.StrictRedis(
+        self.r = redis.Redis(
             host=settings.REDIS_UCLAPI_HOST,
             charset="utf-8",
             decode_responses=True
@@ -85,7 +85,7 @@ class OccupEyeApiTestCase(TestCase):
             "occupeye:surveys:9991",
             {
                 "id": 9991,
-                "active": True,
+                "active": str(True),
                 "name": "test survey 1",
                 "start_time": "10:00",
                 "end_time": "12:00"
@@ -95,7 +95,7 @@ class OccupEyeApiTestCase(TestCase):
             "occupeye:surveys:9992",
             {
                 "id": 9992,
-                "active": False,
+                "active": str(False),
                 "name": "test survey 2",
                 "start_time": "09:00",
                 "end_time": "17:00"

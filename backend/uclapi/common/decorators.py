@@ -97,7 +97,7 @@ def throttle_api_call(token, token_type):
     else:
         raise UclApiIncorrectTokenTypeException
 
-    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
     count_data = r.get(cache_key)
 
     secs = how_many_seconds_until_midnight()

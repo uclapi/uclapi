@@ -3,13 +3,13 @@ import json
 import unittest.mock
 from itertools import chain, repeat
 
+import redis
+
 from django.core.management import call_command
 from django.test import SimpleTestCase, TestCase
 from rest_framework.test import APIRequestFactory
 from django.conf import settings
 from django_mock_queries.query import MockSet, MockModel
-
-from redis import StrictRedis
 
 from dashboard.models import App, TemporaryToken, User
 
@@ -445,9 +445,15 @@ class CreateRedisPageTokenTest(TestCase):
             pagination
         )
 
-        r = StrictRedis(host=REDIS_UCLAPI_HOST)
+        r = redis.Redis(host=REDIS_UCLAPI_HOST)
 
-        ttl = int(r.ttl(page_token))
+        ttl = r.ttl(page_token)
+
+        # Python Redis 3.0+ now always returns an int
+        # If it returns:
+        # -1: The key has no TTL set
+        # -2: The key does not exist
+        self.assertTrue(ttl > 0)
         self.assertTrue(ttl <= TOKEN_EXPIRY_TIME)
 
         data = json.loads(r.get(page_token).decode('ascii'))
