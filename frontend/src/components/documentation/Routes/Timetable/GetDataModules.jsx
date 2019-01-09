@@ -42,7 +42,8 @@ let response = `
                     "class_size": 15,
                     "delivery": {
                         "fheq_level": 6,
-                        "is_undergraduate": true
+                        "is_undergraduate": true,
+                        "student_type": "Campus-based, numeric mark scheme"
                     },
                     "periods": {
                         "teaching_periods": {
@@ -195,6 +196,11 @@ export default class GetDataModules extends React.Component {
                 extra="boolean"
                 example="true"
                 description="Whether the course instance is for undergraduate (true) students or postgraduate (false) students." />
+              <Cell
+                name="modules[n][instances][i][delivery][student_type]"
+                extra="string"
+                example="Campus-based, numeric mark scheme"
+                description="The type of student and assessment pattern available for that course. There are five options: 'Campus-based, numeric mark scheme', 'Campus-based, non-numeric mark scheme', 'Distance learner, numeric mark scheme', 'Distance learner, non-numeric mark scheme' and 'MBBS Resit'." />
               <Cell
                 name="modules[n][instances][i][periods]"
                 extra="dictionary"
