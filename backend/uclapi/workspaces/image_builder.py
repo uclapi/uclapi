@@ -72,8 +72,13 @@ class ImageBuilder():
         )
         viewport.attrib["transform"] = scale
         base_map = etree.SubElement(viewport, "image")
-        base_map.attrib["width"] = map_data["VMaxX"]
-        base_map.attrib["height"] = map_data["VMaxY"]
+        
+        # ViewBox data looks like this: 0 0 12345 67890
+        # We care about the last two numbers, the width and height
+        viewbox_data = map_data["ViewBox"].split(" ")
+        base_map.attrib["width"] = viewbox_data[2]
+        base_map.attrib["height"] = viewbox_data[3]
+
         map_data = self._redis.hgetall(
             "occupeye:surveys:{}:maps:{}".format(
                 self._survey_id,
