@@ -26,7 +26,7 @@ idna==2.7
 jmespath==0.9.3
 jsonpickle==1.0
 keen==0.5.1
-kombu==4.2.1
+kombu==4.2.2
 lxml==4.2.5
 mock==2.0.0
 model-mommy==1.6.0
