@@ -352,24 +352,29 @@ class OccupeyeCache():
             url,
             self.bearer_token
         )
-        
+
         slots = {}
 
         for result in response:
             # There are some hacks here on the CountOcc parameter
-            # This is because, for unknown reasons, sometimes OccupEye returns a None
-            # result, instead of a 0. We're excluding it here to prevent some nasty
-            # TypeErrors from causing us issues during caching.
+            # This is because, for unknown reasons, sometimes OccupEye
+            # returns a None result, instead of a 0. We're excluding it
+            # here to prevent some nasty TypeErrors from causing us
+            # issues during caching.
             if result["TimeSlot"] in slots:
                 if result["CountOcc"] is not None:
                     slots[result["TimeSlot"]]["CountOcc"] += result["CountOcc"]
                 slots[result["TimeSlot"]]["Results"] += 1
             else:
                 slot_data = {
-                    "CountOcc": 0 if result["CountOcc"] is None else result["CountOcc"],
                     "CountTotal": result["CountTotal"],
                     "Results": 1
                 }
+                if result["CountOcc"] is None:
+                    slot_data["CountOcc"] = 0
+                else:
+                    slot_data["CountOcc"] = result["CountOcc"]
+
                 slots[result["TimeSlot"]] = slot_data
 
         data = {}

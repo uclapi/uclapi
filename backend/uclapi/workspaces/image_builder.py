@@ -72,7 +72,7 @@ class ImageBuilder():
         )
         viewport.attrib["transform"] = scale
         base_map = etree.SubElement(viewport, "image")
-        
+
         # ViewBox data looks like this: 0 0 12345 67890
         # We care about the last two numbers, the width and height
         viewbox_data = map_data["ViewBox"].split(" ")
