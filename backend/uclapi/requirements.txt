@@ -27,7 +27,7 @@ jmespath==0.9.3
 jsonpickle==1.0
 keen==0.5.1
 kombu==4.2.2.post1
-lxml==4.2.5
+lxml==4.3.0
 mock==2.0.0
 model-mommy==1.6.0
 pbr==5.1.1
