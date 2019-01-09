@@ -22,7 +22,7 @@ freezegun==0.3.11
 greenlet==0.4.15
 grequests==0.3.0
 gunicorn==19.9.0
-idna==2.7
+idna==2.8
 jmespath==0.9.3
 jsonpickle==1.0
 keen==0.5.1
