@@ -40,7 +40,7 @@ redis==3.0.1
 requests==2.21.0
 requests-file==1.4.3
 setproctitle==1.1.10
-six==1.11.0
+six==1.12.0
 tldextract==2.2.0
 urllib3==1.24.1
 validators==0.12.4
