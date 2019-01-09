@@ -347,6 +347,7 @@ class OccupeyeCache():
             end_date.strftime("%Y-%m-%d"),
             survey_id
         )
+
         response = authenticated_request(
             url,
             self.bearer_token
@@ -355,15 +356,25 @@ class OccupeyeCache():
         slots = {}
 
         for result in response:
+            # There are some hacks here on the CountOcc parameter
+            # This is because, for unknown reasons, sometimes OccupEye
+            # returns a None result, instead of a 0. We're excluding it
+            # here to prevent some nasty TypeErrors from causing us
+            # issues during caching.
             if result["TimeSlot"] in slots:
-                slots[result["TimeSlot"]]["CountOcc"] += result["CountOcc"]
+                if result["CountOcc"] is not None:
+                    slots[result["TimeSlot"]]["CountOcc"] += result["CountOcc"]
                 slots[result["TimeSlot"]]["Results"] += 1
             else:
                 slot_data = {
-                    "CountOcc": result["CountOcc"],
                     "CountTotal": result["CountTotal"],
                     "Results": 1
                 }
+                if result["CountOcc"] is None:
+                    slot_data["CountOcc"] = 0
+                else:
+                    slot_data["CountOcc"] = result["CountOcc"]
+
                 slots[result["TimeSlot"]] = slot_data
 
         data = {}
