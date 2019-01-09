@@ -3,7 +3,7 @@ billiard==3.5.0.4
 boto3==1.9.42
 botocore==1.12.42
 celery==4.2.1
-certifi==2018.10.15
+certifi==2018.11.29
 chardet==3.0.4
 ciso8601==2.1.1
 cx-Oracle==7.0.0
