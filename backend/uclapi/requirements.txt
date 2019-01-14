@@ -1,4 +1,4 @@
-amqp==2.3.2
+amqp==2.4.0
 billiard==3.5.0.5
 boto3==1.9.75
 botocore==1.12.75
