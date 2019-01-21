@@ -22,7 +22,7 @@ class Command(BaseCommand):
         api = OccupEyeApi()
         api.get_token()
 
-        r = redis.StrictRedis(host=settings.REDIS_UCLAPI_HOST)
+        r = redis.Redis(host=settings.REDIS_UCLAPI_HOST)
 
         if not options['silent']:
             print("New token {} expires at {}".format(

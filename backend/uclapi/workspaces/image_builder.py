@@ -24,7 +24,7 @@ class ImageBuilder():
         if not self._api.check_map_exists(survey_id, map_id):
             raise BadOccupEyeRequest
 
-        self._redis = redis.StrictRedis(
+        self._redis = redis.Redis(
             host=settings.REDIS_UCLAPI_HOST,
             charset="utf-8",
             decode_responses=True
@@ -72,8 +72,13 @@ class ImageBuilder():
         )
         viewport.attrib["transform"] = scale
         base_map = etree.SubElement(viewport, "image")
-        base_map.attrib["width"] = map_data["VMaxX"]
-        base_map.attrib["height"] = map_data["VMaxY"]
+
+        # ViewBox data looks like this: 0 0 12345 67890
+        # We care about the last two numbers, the width and height
+        viewbox_data = map_data["ViewBox"].split(" ")
+        base_map.attrib["width"] = viewbox_data[2]
+        base_map.attrib["height"] = viewbox_data[3]
+
         map_data = self._redis.hgetall(
             "occupeye:surveys:{}:maps:{}".format(
                 self._survey_id,

@@ -417,7 +417,7 @@ def _get_location_details(siteid, roomid):
 
 
 def get_student_timetable(upi, date_filter=None):
-    r = redis.StrictRedis(
+    r = redis.Redis(
         host=settings.REDIS_UCLAPI_HOST,
         charset="utf-8",
         decode_responses=True

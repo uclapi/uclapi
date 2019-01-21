@@ -146,6 +146,9 @@ export default class WorkspacesGetSensorHistoricalTimeData extends React.Compone
                     <p>
                         Please note that the counts below may not perfectly add up. This is because we perform an integer division calculation to get an average based on multiple days' worth of data, so you may encounter off-by-one errors if you check that `sensors_absent` + `sensors_occupied` == `sensors_total`. Please do not be alarmed by this! However, if you do get large, unexplained differences do let us know so that we can look into it.
                     </p>
+                    <p>
+                        Please note further that there are some rare situations where the data source we use may have historical data missing. Sitautions that can cause this include new libraries being added which do not yet have historical data available, and situations where data has not properly been saved by our data provider. In cases like this, our response to your app will include an empty `averages` object with no times within it. Your code should account for this possibility by checking whether each time period is actually present. If time periods are missing your application should alert the user to data being missing and fail gracefully.
+                    </p>
 
                     <Table
                         name="Response">
@@ -198,7 +201,7 @@ export default class WorkspacesGetSensorHistoricalTimeData extends React.Compone
                                     ...
                                 }
                             `}
-                            description="An object which contains every ten minute time period in a day. The first time period is 00:00:00, and the last one is 23:50:00. Each time period specifies a total number of sensors, a number of absent sensors (e.g. unoccupied seats) and occupied sensors representing seats that are in use." />
+                            description="An object which contains every ten minute time period in a day. The first time period is 00:00:00, and the last one is 23:50:00. Each time period specifies a total number of sensors, a number of absent sensors (e.g. unoccupied seats) and occupied sensors representing seats that are in use. This object can sometimes be empty if the requested data is not available for some reason. Whilst this is rare, your app should be prepared for this and therefore be able to inform the user that the data they requested is unavailable at this time." />
                         <Cell
                             name="surveys[n][averages][t][sensors_absent]"
                             extra="integer"
