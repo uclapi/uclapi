@@ -86,8 +86,7 @@ def throttle_api_call(token, token_type):
         cache_key = token.user.email
         limit = 10000
     elif token_type == 'general-temp':
-        # token as a key is already used.
-        cache_key = token + "-key"
+        cache_key = token
         limit = 10
     elif token_type == 'oauth':
         cache_key = token.user.email
@@ -169,7 +168,7 @@ def _check_temp_token_issues(token_code, personal_data, request_path, page_token
         response.status_code = 400
         return response
 
-    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
 
     if not r.get(token_code):
         response = JsonResponse({
@@ -289,6 +288,9 @@ def uclapi_protected_endpoint(personal_data=False, required_scopes=[]):
                 # This is a horrible hack to force the temporary
                 # token to always return only 1 booking
                 # Courtesy of: https://stackoverflow.com/a/38372217/825916
+                # We make the GET data mutable first, then inject the
+                # results_per_page parameter so that there can only
+                # be one result returned.
                 request.GET._mutable = True
                 request.GET['results_per_page'] = 1
 

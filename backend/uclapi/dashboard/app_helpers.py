@@ -14,11 +14,12 @@ def generate_temp_api_token():
 
 
 def get_temp_token():
-    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
 
     token = generate_temp_api_token()
-    # Limit is implemented inside throttle, so no value is required.
-    r.set(token, "LIMIT", 60 * 5)
+    # We initialise a new temporary token and set it to 1
+    # as it is generated at its first usage.
+    r.set(token, 1, 600)
     return token
 
 
