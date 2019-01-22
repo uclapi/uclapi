@@ -1,5 +1,16 @@
 # UCL API [![Build Status](https://travis-ci.org/uclapi/uclapi.svg?branch=master)](https://travis-ci.org/uclapi/uclapi) [![codecov](https://codecov.io/gh/uclapi/uclapi/branch/master/graph/badge.svg)](https://codecov.io/gh/uclapi/uclapi)
-UCL API Main Repository
+
+## What is the UCL API?
+UCL API is a **student-built** platform for **student developers** to improve the **student experience** of everyone at UCL.
+
+### Our Goal
+Create a ridiculously simple, documentation first, and comprehensive API around UCL's digital services and establish an ecosystem of third party UCL apps and services that use the API.
+
+### Interested in using it?
+Find out more at our [website](https://uclapi.com)
+
+### Interested in helping build it?
+Read on more to find out how to setup and build the API. From here you can start writing your own changes and submitting them, read our [Contribution Guide](CONTRIBUTING.md) to learn more about how you can contribute.
 
 ## Setting Up and Building
 This will walk you through setting yourself up a local development environment. This is different to if you want to deploy this into production, but luckily we have an internal set of installation scripts for this. Therefore, this guide will not walk you through, for example, getting Gunicorn or Nginx running. This is for simply getting an environment up that can be used to develop the API. Testing with Nginx and Gunicorn is done in staging prior to a production deployment.
