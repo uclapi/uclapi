@@ -8,14 +8,13 @@ from django.shortcuts import redirect, render
 from django.utils.http import quote
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
+from oauth.scoping import Scopes
 from uclapi.settings import FAIR_USE_POLICY
 
-from .models import App, User, TemporaryToken
-from .tasks import add_user_to_mailing_list_task
-from oauth.scoping import Scopes
-
-from .tasks import keen_add_event_task as keen_add_event
-
+from .app_helpers import get_temp_token
+from .models import App, User
+from .tasks import add_user_to_mailing_list_task, \
+                   keen_add_event_task as keen_add_event
 
 @csrf_exempt
 def shibboleth_callback(request):
@@ -157,10 +156,10 @@ def get_started(request):
     except KeyError:
         logged_in = False
 
-    temp_token = TemporaryToken.objects.create()
+    token = get_temp_token()
     return render(request, 'getStarted.html', {
         'initial_data': {
-            'temp_token': temp_token.api_token,
+            'temp_token': token,
             'logged_in': str(logged_in)
         }
     })

@@ -86,7 +86,7 @@ def throttle_api_call(token, token_type):
         cache_key = token.user.email
         limit = 10000
     elif token_type == 'general-temp':
-        cache_key = token.api_token
+        cache_key = token
         limit = 10
     elif token_type == 'oauth':
         cache_key = token.user.email
@@ -168,14 +168,12 @@ def _check_temp_token_issues(token_code, personal_data, request_path, page_token
         response.status_code = 400
         return response
 
-    try:
-        temp_token = TemporaryToken.objects.get(
-            api_token=token_code
-        )
-    except TemporaryToken.DoesNotExist:
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
+
+    if not r.get(token_code):
         response = JsonResponse({
             "ok": False,
-            "error": "Invalid temporary token."
+            "error": "Temporary token is either invalid or expired."
         })
         response.status_code = 400
         return response
@@ -198,21 +196,8 @@ def _check_temp_token_issues(token_code, personal_data, request_path, page_token
         })
         response.status_code = 400
         return response
-
-    # Check if TemporaryToken is still valid
-    existed = datetime.datetime.now() - temp_token.created
-
-    if existed.seconds > 300:
-        temp_token.delete()  # Delete expired token
-        response = JsonResponse({
-            "ok": False,
-            "error": "Temporary token expired."
-        })
-        response.status_code = 400
-        return response
-
     # No issues, so return the temporary token
-    return temp_token
+    return token_code
 
 
 def _check_general_token_issues(token_code, personal_data):
@@ -303,6 +288,9 @@ def uclapi_protected_endpoint(personal_data=False, required_scopes=[]):
                 # This is a horrible hack to force the temporary
                 # token to always return only 1 booking
                 # Courtesy of: https://stackoverflow.com/a/38372217/825916
+                # We make the GET data mutable first, then inject the
+                # results_per_page parameter so that there can only
+                # be one result returned.
                 request.GET._mutable = True
                 request.GET['results_per_page'] = 1
 
