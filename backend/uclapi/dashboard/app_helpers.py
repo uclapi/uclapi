@@ -2,13 +2,25 @@ from binascii import hexlify
 from random import SystemRandom
 
 from common.helpers import generate_api_token
+from uclapi.settings import REDIS_UCLAPI_HOST
 
 import os
+import redis
 import textwrap
 import validators
 
 def generate_temp_api_token():
     return generate_api_token("temp")
+
+
+def get_temp_token():
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
+
+    token = generate_temp_api_token()
+    # We initialise a new temporary token and set it to 1
+    # as it is generated at its first usage.
+    r.set(token, 1, 600)
+    return token
 
 
 def generate_app_id():

@@ -54,11 +54,8 @@ def get_modules_timetable_endpoint(request, *args, **kwargs):
             "error": "Invalid module IDs provided."
         }, rate_limiting_data=kwargs)
 
-    try:
-        date_filter = request.GET["date_filter"]
-        custom_timetable = get_custom_timetable(modules, date_filter)
-    except KeyError:
-        custom_timetable = get_custom_timetable(modules)
+    date_filter = request.GET.get("date_filter")
+    custom_timetable = get_custom_timetable(modules, date_filter)
 
     if custom_timetable:
         response_json = {
