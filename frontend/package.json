@@ -25,7 +25,7 @@
     "immutability-helper": "^2.9.0",
     "js-cookie": "^2.2.0",
     "material-ui": "^0.20.2",
-    "moment": "^2.23.0",
+    "moment": "^2.24.0",
     "prop-types": "^15.6.2",
     "rc-collapse": "^1.10.2",
     "react": "^16.7.0",
