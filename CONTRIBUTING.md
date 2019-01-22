@@ -24,9 +24,15 @@ In case you suspect you find a vulnerability in the API, please refrain from cre
 * **Describe the current behavior** and **explain which behavior you expected to see instead** and why.
 * **Explain why this enhancement would be useful** to our API users.
 
-### Pull requests
+### Pull requests (PRs) and their role in submitting enhancements
+* Open a new branch to work on your feature/bug-fix.
+* Commit your changes to this new branch.
+* When its ready to merge, make sure to fast-forward it to be up to date with the master branch.
+* Open your PR.
 * Fill in [the required PR template](.uclapi/PULL_REQUEST_TEMPLATE.md).
-* Do not include issue numbers in the PR title.
+* Do not include issue numbers in the PR title, instead refrence them at the bottom of the description saying "Closes #xx".
+* Wait for it to pass automated checks and a code review.
+* Celebrate your first contribution to the UCL API project!
 
 ## Style guides
 Our codebase consists out of multiple languages (JavaScript for front-end, Python for back-end). You should try to follow the best guidelines for the language, meaning:
