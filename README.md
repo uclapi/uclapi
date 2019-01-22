@@ -5,7 +5,7 @@ UCL API Main Repository
 This will walk you through setting yourself up a local development environment. This is different to if you want to deploy this into production, but luckily we have an internal set of installation scripts for this. Therefore, this guide will not walk you through, for example, getting Gunicorn or Nginx running. This is for simply getting an environment up that can be used to develop the API. Testing with Nginx and Gunicorn is done in staging prior to a production deployment.
 
 ### Requirements
-We only support development under Linux. macOS is unofficially supported, and we have some instructions below on how to get the Oracle Instant Client working on macOS. All Windows developers can and should use Bash on Ubuntu on Windows under Windows 10 (Creators Update) for testing, as the environment is Ubuntu 16.04.2 LTS; this is exactly the distribution and version of Linux that we use on both our Staging and Production web servers.
+We only support development under Linux. macOS is unofficially supported, and we have some instructions below on how to get the Oracle Instant Client working on macOS. All Windows developers can and should use Bash on Ubuntu on Windows under Windows 10 for testing, as the environment is Ubuntu 18.04.1 LTS; this is exactly the distribution and version of Linux that we use on both our Staging and Production web servers. Make sure you are installing Ubuntu (This defaults to the most recent LTS release) or Ubuntu 18.04 from the window store, although you should have no issues with the 16.04 version we cannot guarantee this.
 
 Note that since the Creators Update (which includes 16.04.2; if you have not upgraded from Ubuntu 14 then there are tutorials online to do this) we have experienced zero issues building and running under Bash on Ubuntu on Windows.
 
@@ -24,7 +24,7 @@ sudo service redis-server start
 ```
 
 ### Set up Oracle (Linux)
-```
+```bash
 # Oracle Version
 ORACLE_VERSION=12_2
 ORACLE_SO_VERSION=12.1
@@ -115,7 +115,33 @@ git clone https://github.com/uclapi/uclapi
 git clone https://github.com/uclapi/fakeshibboleth
 ```
 
+### Quick Note on using virtual environments
+
+Virtual environments allow us to easily switch between python versions and the pip packages we have installed. They are entered with the following commands:
+
+```
+Linux: . venv/bin/activate 
+Windows: \venv\Scripts\activate
+```
+
+You can tell you're in one by the first letters of a terminal/cmd prompt. The line should start with the name of your virtual environment for example 
+
+```
+(venv)Your-Computer:your_project UserName$ 
+```
+
+Once inside anything we run runs with this environments version of python. This must be done whenever using our project and so before running *manage.py* or other python files remember to be in the virtual environment.
+
+Finally to exit this you simply type
+
+```
+deactivate
+```
+
 ### Set up a virtual environment for UCL API
+
+The following commands enter the uclapi back-end directory, creates a virtual environment with python 3, activates it and then installs all the requirements then returns to the working directory.
+
 ```
 pushd uclapi/backend/uclapi
 virtualenv --python=python3 venv
@@ -134,6 +160,9 @@ env ARCHFLAGS="-arch x86_64" pip install cx_Oracle
 Once this command completes you should be able to go ahead and try `pip install -r requirements.txt` again to fetch the rest of the dependencies. Note also that you will need the XCode command line tools installed in order to compile the Python native dependencies like `cx_Oracle`. You can get the Xcode tools by running `xcode-select --install`, and then pressing the resultant `Install` button. You can also accept the Apple Xcode licence agreement by running `sudo xcodebuild -license accept`. After this you should be able to install `cx_Oracle`. You may also need the Xcode command line tools installed to get `git` and the various Python tools installed, too. Alternatively, most of these tools can be obtained from [Homebrew](https://brew.sh) or [MacPorts](https://www.macports.org/).
 
 ### Set up a virtual environment for Fake Shibboleth
+
+The following terminal commands do the same as the commands in the above section just repeated in another directory.
+
 ```
 pushd fakeshibboleth
 virtualenv --python=python3 venv
@@ -146,6 +175,10 @@ popd
 ### Install PostgreSQL
 Setting this up will vary based on your operating system. It is perfectly possible to just use the Windows version of Postgres and run it under Windows whilst running the rest of the code under Linux. If you are working on Linux or macOS directly then you should install PostgreSQL and then reset the `postgres` account password to one you know and can save in the .env later.
 
+#### Create the required tables
+
+Now we have PostgreSQL installed we can create some empty tables so we can complete the migrations later. There are two required, uclapi_default, and uclapi_gencache if you are using the environment variables below. These can be created by accessing the postgreSQL command prompt with the command ```psql``` and then running ```create database uclapi_default;``` and then ```create database uclapi_gencache;``` 
+
 ### Configure the environment variables in .env
 Firstly, `cp uclapi/backend/uclapi/.env.example uclapi/backend/uclapi/.env`.
 
@@ -157,6 +190,7 @@ SHIBBOLETH_ROOT=http://localhost:8001
 UCLAPI_PRODUCTION=False
 UCLAPI_DOMAIN=localhost:8000
 UCLAPI_RUNNING_ON_AWS_ELB=False
+FORBIDDEN_CALLBACK_URLS=uclapi.com;staging.ninja
 
 DB_UCLAPI_NAME=uclapi_default
 DB_UCLAPI_USERNAME=postgres
@@ -184,10 +218,13 @@ KEEN_WRITE_KEY=
 SENTRY_DSN=
 
 REDIS_UCLAPI_HOST=localhost
+
+AWS_S3_STATICS=False
 ```
 
 ### Run Database Migrations, Create Lock and Populate Cache
-**Note that the cache filling can only ever work if you are within the UCL network and have database access credentials.**
+**Note that the cache filling can only ever work if you are within the UCL network and have database access credentials. Note also that it is normal for updating the timetable cache to take a while about 5-10 minutes.**
+
 ```
 pushd uclapi/backend/uclapi
 . venv/bin/activate
@@ -228,5 +265,5 @@ If those commands work you should be able to navigate to `http://localhost:8000/
 
 ## Testing
 We're an amazing project, so obviously we have tests :sparkles:  
-Make sure you have the requirements installed in your virtual environment, `cd` into `backend/uclapi` and then run :  
+Make sure you have the requirements installed in your virtual environment (and you have activated it) , `cd` into `backend/uclapi` and then run :  
 `python manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner' --settings=uclapi.settings_mocked`
