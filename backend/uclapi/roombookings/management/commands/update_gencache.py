@@ -117,8 +117,8 @@ class Command(BaseCommand):
         self.stdout.write("Updated a bucket!")
 
         wr = open("time.txt", 'w')
-        cache_expires = datetime.now(pytz.utc)+timedelta(minutes=20) 
-        wr.write(cache_expires.strftime("%a, %d %b %Y %X %Z"))
+        cache_expires = datetime.now(pytz.utc)+timedelta(minutes=20)
+        wr.write(cache_expires.strftime("%a, %d %b %Y %X %Z")) #HTTP date format
         wr.close()
 
         gc.collect()
