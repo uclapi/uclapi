@@ -9,6 +9,10 @@ import cx_Oracle
 from roombookings.models import BookingA, BookingB, Lock
 from django.core.management import call_command
 
+from datetime import datetime
+from datetime import timedelta
+
+import pytz
 
 class Command(BaseCommand):
 
@@ -111,5 +115,10 @@ class Command(BaseCommand):
         lock.save()
 
         self.stdout.write("Updated a bucket!")
+
+        wr = open("time.txt", 'w')
+        wr.write((datetime.now(pytz.utc)+timedelta(minutes=20)).strftime("%a, %d %b %Y %X %Z"))
+        wr.close()
+
         gc.collect()
         call_command('trigger_webhooks')

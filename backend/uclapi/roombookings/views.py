@@ -129,8 +129,10 @@ def get_bookings(request, *args, **kwargs):
     curr = BookingA if not lock.bookingA else BookingB
 
     bookings["count"] = curr.objects.filter(**request_params).count()
-
-    return _return_json_bookings(bookings, rate_limiting_data=kwargs)
+    response = _return_json_bookings(bookings, rate_limiting_data=kwargs)
+    with open("time.txt") as file:
+        response["Expires"] = file.read()
+    return response
 
 
 @api_view(['GET'])
