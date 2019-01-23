@@ -133,8 +133,6 @@ def get_bookings(request, *args, **kwargs):
     if os.path.exists("time.txt"):
         with open("time.txt") as file:
             response["Expires"] = file.read()
-    else:
-        #print("Cache hasn't been run yet")
     return response
 
 
