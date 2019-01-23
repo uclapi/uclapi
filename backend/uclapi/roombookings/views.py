@@ -130,8 +130,11 @@ def get_bookings(request, *args, **kwargs):
 
     bookings["count"] = curr.objects.filter(**request_params).count()
     response = _return_json_bookings(bookings, rate_limiting_data=kwargs)
-    with open("time.txt") as file:
-        response["Expires"] = file.read()
+    if os.path.exists("time.txt"):
+        with open("time.txt") as file:
+            response["Expires"] = file.read()
+    else:
+        #print("Cache hasn't been run yet")
     return response
 
 
