@@ -245,6 +245,13 @@ if strtobool(os.environ.get("AWS_S3_STATICS", "False")):
         AWS_STORAGE_BUCKET_NAME
     )
 
+    # We set the default ACL data on all stacks we upload to public-read
+    # so that the files are world readable.
+    # This is required for the statics to be served up directly.
+    # Often this is a security risk, but in this case it's
+    # actually required to serve the website.
+    AWS_DEFAULT_ACL = "public-read"
+
     # If credentials are enabled, collectstatic can do uploads
     if strtobool(os.environ["AWS_S3_STATICS_CREDENTIALS_ENABLED"]):
         AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
