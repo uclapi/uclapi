@@ -118,7 +118,8 @@ class Command(BaseCommand):
 
         wr = open("time.txt", 'w')
         cache_expires = datetime.now(pytz.utc)+timedelta(minutes=20)
-        wr.write(cache_expires.strftime("%a, %d %b %Y %X %Z")) #HTTP date format
+        # Convert and write HTTP date format
+        wr.write(cache_expires.strftime("%a, %d %b %Y %X %Z"))
         wr.close()
 
         gc.collect()
