@@ -47,4 +47,4 @@ We use [Hound CI](https://houndci.com) to automatically check PR's for style-gui
 * Try to limit the commit message to 50 characters or less. You can always use multiple lines.
 
 ## Closing remarks
-This document was inspired by [CONTRIBUTING.md in atom/atom](https://github.com/atom/atom/blob/master/CONTRIBUTING.md) repository.
+This document was inspired by the [CONTRIBUTING.md in atom/atom](https://github.com/atom/atom/blob/master/CONTRIBUTING.md) repository.
