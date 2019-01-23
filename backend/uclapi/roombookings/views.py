@@ -1,5 +1,7 @@
 from functools import reduce
 
+from os import path
+
 from rest_framework.decorators import api_view
 from django.conf import settings
 from django.db.models import Q
@@ -130,7 +132,7 @@ def get_bookings(request, *args, **kwargs):
 
     bookings["count"] = curr.objects.filter(**request_params).count()
     response = _return_json_bookings(bookings, rate_limiting_data=kwargs)
-    if os.path.exists("time.txt"):
+    if path.exists("time.txt"):
         with open("time.txt") as file:
             response["Expires"] = file.read()
     return response
