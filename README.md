@@ -230,6 +230,7 @@ SENTRY_DSN=
 
 REDIS_UCLAPI_HOST=localhost
 
+STATIC_URL=http://localhost:8080/
 AWS_S3_STATICS=False
 EVENTLET_NOPATCH=True
 ```
