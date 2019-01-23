@@ -26,7 +26,7 @@ sudo apt-get -y install git curl libpq-dev libpq5 libpython3-dev \
     python3 python3-pip python3-virtualenv python-virtualenv \
     unzip virtualenv libaio1 build-essential libpcre3 \
     libpcre3-dev wget sed \
-    redis-server
+    redis-server nodejs npm
 ```
 
 ### Start Redis
@@ -231,6 +231,7 @@ SENTRY_DSN=
 REDIS_UCLAPI_HOST=localhost
 
 AWS_S3_STATICS=False
+EVENTLET_NOPATCH=True
 ```
 
 ### Run Database Migrations, Create Lock and Populate Cache
@@ -249,8 +250,11 @@ deactivate
 popd
 ```
 
+### Installing Front-End npm Packages
+To install these you simply run the command ```npm install``` in the ```uclapi/frontend``` directory! More details can be found [here](frontend/README.md)
+
 ## Running the API Locally
-Running the API locally requires two shells open: one for Fake Shibboleth and one for the API.
+Running the API locally requires three shells open: one for Fake Shibboleth and one for the API and an optional third for the front-end.
 **Note that API requests can only ever work if you are within the UCL network and have database access credentials.**
 
 ### Start Dependencies
@@ -269,6 +273,12 @@ cd fakeshibboleth
 cd uclapi/backend/uclapi
 . venv/bin/activate
 ./manage.py runserver
+```
+
+### Starting the front-end (Shell 3)
+```
+cd uclapi/frontend
+npm start
 ```
 
 ### Give it a go!
