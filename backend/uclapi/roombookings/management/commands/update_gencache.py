@@ -1,10 +1,12 @@
 import gc
 import os
 
+import redis
+from common.helpers import LOCAL_TIMEZONE
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.db import connections
-
+from datetime import datetime, timedelta
 import cx_Oracle
 from roombookings.models import BookingA, BookingB, Lock
 from django.core.management import call_command
@@ -112,4 +114,18 @@ class Command(BaseCommand):
 
         self.stdout.write("Updated a bucket!")
         gc.collect()
+        print("Connecting to Redis")
+        self._redis = redis.Redis(
+            host=settings.REDIS_UCLAPI_HOST,
+            charset="utf-8",
+            decode_responses=True
+        )
+        print("Setting Last-Modified key")
+        last_modified_key = "http:headers:Last-Modified:gencache"
+
+        current_timestamp = datetime.now(LOCAL_TIMEZONE).isoformat(
+            timespec='seconds'
+        )
+        self._redis.set(last_modified_key, current_timestamp)
+
         call_command('trigger_webhooks')

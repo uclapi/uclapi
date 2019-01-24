@@ -1,7 +1,9 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.db import connections
-
+from datetime import datetime, timedelta
+import redis
+from common.helpers import LOCAL_TIMEZONE
 from timetable.models import \
     Timetable, TimetableA, TimetableB, \
     Weekstructure, WeekstructureA, WeekstructureB, \
@@ -78,3 +80,16 @@ class Command(BaseCommand):
         print("Inverting lock")
         lock.a, lock.b = not lock.a, not lock.b
         lock.save()
+        print("Connecting to Redis")
+        self._redis = redis.Redis(
+            host=settings.REDIS_UCLAPI_HOST,
+            charset="utf-8",
+            decode_responses=True
+        )
+        print("Setting Last-Modified key")
+        last_modified_key = "http:headers:Last-Modified:timetable_gencache"
+
+        current_timestamp = datetime.now(LOCAL_TIMEZONE).isoformat(
+            timespec='seconds'
+        )
+        self._redis.set(last_modified_key, current_timestamp)
