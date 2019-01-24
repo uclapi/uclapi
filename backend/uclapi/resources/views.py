@@ -19,7 +19,7 @@ def get_pc_availability(request, *args, **kwargs):
             "ok": False,
             "error": ("Could not retrieve availability data."
                       " Please try again later or contact us for support.")
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         resp.status_code = 400
         return resp
 
@@ -30,7 +30,7 @@ def get_pc_availability(request, *args, **kwargs):
             "ok": False,
             "error": ("Could not parse the desktop availability data."
                       " Please try again later or contact us for support.")
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         resp.status_code = 400
         return resp
 
@@ -55,4 +55,4 @@ def get_pc_availability(request, *args, **kwargs):
     return JsonResponse({
         "ok": True,
         "data": data
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)

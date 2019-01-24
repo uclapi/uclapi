@@ -33,7 +33,7 @@ def get_personal_timetable_endpoint(request, *args, **kwargs):
         "ok": True,
         "timetable": timetable
     }
-    return JsonResponse(response, rate_limiting_data=kwargs)
+    return JsonResponse(response, custom_header_data=kwargs)
 
 
 @api_view(["GET"])
@@ -44,7 +44,7 @@ def get_modules_timetable_endpoint(request, *args, **kwargs):
         return JsonResponse({
             "ok": False,
             "error": "No module IDs provided."
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
 
     try:
         modules = module_ids.split(',')
@@ -52,7 +52,7 @@ def get_modules_timetable_endpoint(request, *args, **kwargs):
         return JsonResponse({
             "ok": False,
             "error": "Invalid module IDs provided."
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
 
     date_filter = request.GET.get("date_filter")
     custom_timetable = get_custom_timetable(modules, date_filter)
@@ -62,13 +62,13 @@ def get_modules_timetable_endpoint(request, *args, **kwargs):
             "ok": True,
             "timetable": custom_timetable
         }
-        return JsonResponse(response_json, rate_limiting_data=kwargs)
+        return JsonResponse(response_json, custom_header_data=kwargs)
     else:
         response_json = {
             "ok": False,
             "error": "One or more invalid Module IDs supplied."
         }
-        response = JsonResponse(response_json, rate_limiting_data=kwargs)
+        response = JsonResponse(response_json, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -83,7 +83,7 @@ def get_departments_endpoint(request, *args, **kwargs):
         "ok": True,
         "departments": get_departments()
     }
-    return JsonResponse(departments, rate_limiting_data=kwargs)
+    return JsonResponse(departments, custom_header_data=kwargs)
 
 
 @api_view(["GET"])
@@ -98,7 +98,7 @@ def get_department_courses_endpoint(request, *args, **kwargs):
         response = JsonResponse({
             "ok": False,
             "error": "Supply a Department ID using the department parameter."
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -109,7 +109,7 @@ def get_department_courses_endpoint(request, *args, **kwargs):
             "course_id": course.courseid,
             "years": course.numyears
         })
-    return JsonResponse(courses, rate_limiting_data=kwargs)
+    return JsonResponse(courses, custom_header_data=kwargs)
 
 
 @api_view(["GET"])
@@ -124,7 +124,7 @@ def get_department_modules_endpoint(request, *args, **kwargs):
         response = JsonResponse({
             "ok": False,
             "error": "Supply a Department ID using the department parameter."
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -133,4 +133,4 @@ def get_department_modules_endpoint(request, *args, **kwargs):
         "modules": get_departmental_modules(department_id)
     }
 
-    return JsonResponse(modules, rate_limiting_data=kwargs)
+    return JsonResponse(modules, custom_header_data=kwargs)

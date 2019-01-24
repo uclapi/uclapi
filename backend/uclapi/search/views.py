@@ -14,7 +14,7 @@ def people(request, *args, **kwargs):
         response = JsonResponse({
             "ok": False,
             "error": "No query provided."
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -46,4 +46,4 @@ def people(request, *args, **kwargs):
     return JsonResponse({
         "ok": True,
         "people": people
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)

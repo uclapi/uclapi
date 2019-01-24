@@ -42,7 +42,7 @@ def get_rooms(request, *args, **kwargs):
         return PrettyJsonResponse({
             "ok": True,
             "rooms": _serialize_rooms(all_rooms)
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
 
     request_params = dict((k, v) for k, v in request_params.items() if v)
 
@@ -51,7 +51,7 @@ def get_rooms(request, *args, **kwargs):
     return PrettyJsonResponse({
         "ok": True,
         "rooms": _serialize_rooms(filtered_rooms)
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)
 
 
 @api_view(['GET'])
@@ -61,7 +61,7 @@ def get_bookings(request, *args, **kwargs):
     page_token = request.GET.get('page_token')
     if page_token:
         bookings = _get_paginated_bookings(page_token)
-        return _return_json_bookings(bookings, rate_limiting_data=kwargs)
+        return _return_json_bookings(bookings, custom_header_data=kwargs)
 
     # query params
     request_params = {}
@@ -85,7 +85,7 @@ def get_bookings(request, *args, **kwargs):
         return PrettyJsonResponse({
             "ok": False,
             "error": "results_per_page should be an integer"
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
 
     results_per_page = results_per_page if results_per_page < 1000 else 1000
 
@@ -114,7 +114,7 @@ def get_bookings(request, *args, **kwargs):
         return PrettyJsonResponse({
             "ok": False,
             "error": "date/time isn't formatted as suggested in the docs"
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
 
     # filter the query dict
     request_params = dict((k, v) for k, v in request_params.items() if v)
@@ -130,7 +130,7 @@ def get_bookings(request, *args, **kwargs):
 
     bookings["count"] = curr.objects.filter(**request_params).count()
 
-    return _return_json_bookings(bookings, rate_limiting_data=kwargs)
+    return _return_json_bookings(bookings, custom_header_data=kwargs)
 
 
 @api_view(['GET'])
@@ -143,7 +143,7 @@ def get_equipment(request, *args, **kwargs):
         response = PrettyJsonResponse({
             "ok": False,
             "error": "No roomid supplied"
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -151,7 +151,7 @@ def get_equipment(request, *args, **kwargs):
         response = PrettyJsonResponse({
             "ok": False,
             "error": "No siteid supplied"
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -163,7 +163,7 @@ def get_equipment(request, *args, **kwargs):
     return PrettyJsonResponse({
         "ok": True,
         "equipment": _serialize_equipment(equipment)
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)
 
 
 @api_view(['GET'])
@@ -180,7 +180,7 @@ def get_free_rooms(request, *args, **kwargs):
         return PrettyJsonResponse({
             "ok": False,
             "error": "start_datetime or end_datetime not provided"
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
 
     is_parsed = True
 
@@ -194,7 +194,7 @@ def get_free_rooms(request, *args, **kwargs):
         return PrettyJsonResponse({
             "ok": False,
             "error": "date/time isn't formatted as suggested in the docs"
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
 
     # Rounding down start date to start of day
     request_params["startdatetime__gte"] = _round_date(start)
@@ -227,4 +227,4 @@ def get_free_rooms(request, *args, **kwargs):
         "ok": True,
         "count": len(free_rooms),
         "free_rooms": free_rooms
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)

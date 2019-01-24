@@ -25,7 +25,7 @@ def get_surveys(request, *args, **kwargs):
     }
     return JsonResponse(
         response_data,
-        rate_limiting_data=kwargs
+        custom_header_data=kwargs
     )
 
 
@@ -38,7 +38,7 @@ def get_map_image(request, *args, **kwargs):
         response = JsonResponse({
             "ok": False,
             "error": "No Image ID provided."
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -56,7 +56,7 @@ def get_map_image(request, *args, **kwargs):
                 "The image with the ID you requested "
                 "does not exist."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -65,7 +65,7 @@ def get_map_image(request, *args, **kwargs):
     if image_format == "raw":
         return HttpResponse(
             content=b64decode(image_b64),
-            rate_limiting_data=kwargs,
+            custom_header_data=kwargs,
             content_type=content_type
         )
     elif image_format == "base64":
@@ -73,7 +73,7 @@ def get_map_image(request, *args, **kwargs):
             "ok": True,
             "content_type": content_type,
             "data": image_b64
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         return response
     else:
         response = JsonResponse({
@@ -82,7 +82,7 @@ def get_map_image(request, *args, **kwargs):
                 "You specified a response format that "
                 "was not either raw or base64."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -158,7 +158,7 @@ def get_survey_max_timestamp(request, *args, **kwargs):
         "ok": True,
         "survey_id": survey_id_int,
         "last_updated": max_timestamp
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)
 
     return response
 
@@ -176,14 +176,14 @@ def get_survey_sensors_summary(request, *args, **kwargs):
             "error": (
                 "One or more of the survey_ids you requested is not valid."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
     response = JsonResponse({
         "ok": True,
         "surveys": data
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)
 
     return response
 
@@ -203,7 +203,7 @@ def get_historical_time_data(request, *args, **kwargs):
                 "You did not specify how many days of historical data "
                 "should be returned. Valid options are: "
             ) + str(consts.VALID_HISTORICAL_DATA_DAYS)
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -214,7 +214,7 @@ def get_historical_time_data(request, *args, **kwargs):
                 "You did not specify an integer number of days of "
                 "historical days. Valid options are: "
             ) + str(consts.VALID_HISTORICAL_DATA_DAYS)
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -227,7 +227,7 @@ def get_historical_time_data(request, *args, **kwargs):
                 "You did not specify a valid number of days of "
                 "historical days. Valid options are: "
             ) + str(consts.VALID_HISTORICAL_DATA_DAYS)
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -239,14 +239,14 @@ def get_historical_time_data(request, *args, **kwargs):
             "error": (
                 "One or more of the survey_ids you requested is not valid."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
     response = JsonResponse({
         "ok": True,
         "surveys": data
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)
 
     return response
 
@@ -264,7 +264,7 @@ def get_live_map(request, *args, **kwargs):
                 "You must provide a Survey ID and a Map ID "
                 "to get a live sensor status image."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -303,7 +303,7 @@ def get_live_map(request, *args, **kwargs):
                 "the format of HTML hex colours. Colours must "
                 "either be in the format #ABC or #ABCDEF."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -317,7 +317,7 @@ def get_live_map(request, *args, **kwargs):
                 "must be a floating point number, such as 1 "
                 "or 0.02."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -331,7 +331,7 @@ def get_live_map(request, *args, **kwargs):
                 "It must be a floating point number, such as 128 or "
                 "100.5."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -344,7 +344,7 @@ def get_live_map(request, *args, **kwargs):
                 "Either the IDs you sent were not "
                 "integers, or they do not exist."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -363,7 +363,7 @@ def get_live_map(request, *args, **kwargs):
     response = HttpResponse(
         map_svg,
         content_type="image/svg+xml",
-        rate_limiting_data=kwargs
+        custom_header_data=kwargs
     )
     response["Content-Length"] = len(map_svg)
 
