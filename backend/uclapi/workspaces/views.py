@@ -16,7 +16,10 @@ from .image_builder import ImageBuilder
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False)
+@uclapi_protected_endpoint(
+    personal_data=False,
+    last_modified_redis_key='Workspaces'
+)
 def get_surveys(request, *args, **kwargs):
     api = OccupEyeApi()
     response_data = {
@@ -30,7 +33,10 @@ def get_surveys(request, *args, **kwargs):
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False)
+@uclapi_protected_endpoint(
+    personal_data=False,
+    last_modified_redis_key='Workspaces'
+)
 def get_map_image(request, *args, **kwargs):
     try:
         image_id = request.GET['image_id']
@@ -88,7 +94,10 @@ def get_map_image(request, *args, **kwargs):
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False)
+@uclapi_protected_endpoint(
+    personal_data=False,
+    last_modified_redis_key='Workspaces'
+)
 def get_survey_sensors(request, *args, **kwargs):
     try:
         survey_id = request.GET["survey_id"]
@@ -128,7 +137,10 @@ def get_survey_sensors(request, *args, **kwargs):
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False)
+@uclapi_protected_endpoint(
+    personal_data=False,
+    last_modified_redis_key='Workspaces'
+)
 def get_survey_max_timestamp(request, *args, **kwargs):
     try:
         survey_id = request.GET["survey_id"]
@@ -164,7 +176,10 @@ def get_survey_max_timestamp(request, *args, **kwargs):
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False)
+@uclapi_protected_endpoint(
+    personal_data=False,
+    last_modified_redis_key='Workspaces'
+)
 def get_survey_sensors_summary(request, *args, **kwargs):
     survey_ids = request.GET.get("survey_ids", None)
     api = OccupEyeApi()
@@ -189,7 +204,10 @@ def get_survey_sensors_summary(request, *args, **kwargs):
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False)
+@uclapi_protected_endpoint(
+    personal_data=False,
+    last_modified_redis_key='Workspaces'
+)
 def get_historical_time_data(request, *args, **kwargs):
     api = OccupEyeApi()
     consts = OccupEyeConstants()
@@ -252,7 +270,10 @@ def get_historical_time_data(request, *args, **kwargs):
 
 
 @api_view(['GET'])
-@uclapi_protected_endpoint(personal_data=False)
+@uclapi_protected_endpoint(
+    personal_data=False,
+    last_modified_redis_key='Workspaces'
+)
 def get_live_map(request, *args, **kwargs):
     try:
         survey_id = request.GET["survey_id"]
