@@ -1,3 +1,4 @@
+import datetime
 import os
 import textwrap
 
@@ -10,6 +11,9 @@ from dotenv import read_dotenv as rd
 def read_dotenv(path=None):
     if not os.environ.get('DOCKER') == "yes":
         rd(path)
+
+
+LOCAL_TIMEZONE = datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo
 
 
 CUSTOM_HEADERS = [
