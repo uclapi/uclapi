@@ -15,8 +15,8 @@ params = {
 r = requests.get("https://uclapi.com/timetable/personal", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/timetable/personal
--d token=uclapi-user-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb 
+  shell: `curl -G https://uclapi.com/timetable/personal \\
+-d token=uclapi-user-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d client_secret=secret`,
 
   javascript: `fetch("https://uclapi.com/timetable/personal?token=uclapi-user-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&client_secret=secret")

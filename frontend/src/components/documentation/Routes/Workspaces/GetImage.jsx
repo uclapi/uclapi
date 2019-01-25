@@ -16,8 +16,8 @@ params = {
 r = requests.get("https://uclapi.com/workspaces/images/map", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/workspaces/images/map
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb
+  shell: `curl -G https://uclapi.com/workspaces/images/map \\
+-d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d image_id=79 \
 -d image_format=base64`,
 

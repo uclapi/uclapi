@@ -15,7 +15,8 @@ params = {
 r = requests.get("https://uclapi.com/oauth/user/data", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/oauth/user/data -d client_secret=secret \
+  shell: `curl -G https://uclapi.com/oauth/user/data \
+-d client_secret=secret \\
 -d token=uclapi-user-abd-def-ghi-jkl`,
 
   javascript: `fetch("https://uclapi.com/oauth/user/data?client_secret=secret&token=uclapi-user-abd-def-ghi-jkl")

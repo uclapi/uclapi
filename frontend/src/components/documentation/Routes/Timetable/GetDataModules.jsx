@@ -15,8 +15,8 @@ params = {
 r = requests.get("https://uclapi.com/timetable/data/modules", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/timetable/data/modules
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb 
+  shell: `curl -G https://uclapi.com/timetable/data/modules \\
+-d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d department=COMPS_ENG`,
 
   javascript: `fetch("https://uclapi.com/timetable/data/modules?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&department=COMPS_ENG")

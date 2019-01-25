@@ -18,7 +18,7 @@ print(r.json())`,
 
   shell: `curl -G https://uclapi.com/oauth/token \
 -d code=mysecretcode \
--d client_id=123.456
+-d client_id=123.456 \\
 -d client_secret=secret`,
 
   javascript: `fetch("https://uclapi.com/oauth/token?code=mysecretcode&client_id=123.456&client_secret=secret")
