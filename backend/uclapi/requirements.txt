@@ -15,6 +15,7 @@ django-dotenv==1.4.2
 django-mock-queries==2.1.1
 django-storages==1.7.1
 djangorestframework==3.9.1
+django-webpack-loader==0.6.0
 docutils==0.14
 eventlet==0.24.1
 gevent==1.4.0

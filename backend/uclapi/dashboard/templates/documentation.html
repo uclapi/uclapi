@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
-
+  {% render_bundle 'documentation' css %}
 </head>
 
 
@@ -17,6 +17,6 @@
 	<script>
   </script>
 	<div class="app"></div>
-  <script src="{% static "js/documentation.js" %}"></script>
+  {% render_bundle 'documentation' js %}
 </body>
 </html>

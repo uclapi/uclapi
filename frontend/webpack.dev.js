@@ -1,8 +1,14 @@
 const path = require('path');
+const BundleTracker = require('webpack-bundle-tracker');
 
 var entryPointsPathPrefix = './src/pages';
 
 module.exports = {
+  plugins: [
+    new BundleTracker({
+      filename: '../backend/uclapi/webpack-stats.json'
+    })
+  ],
   module: {
     rules: [
       {
@@ -27,14 +33,14 @@ module.exports = {
     ]
   },
   entry: {
-    'js/getStarted': entryPointsPathPrefix + '/getStarted.jsx',
-    'js/documentation': entryPointsPathPrefix + '/documentation.jsx',
-    'js/dashboard': entryPointsPathPrefix + '/dashboard.jsx',
-    'js/marketplace': entryPointsPathPrefix + '/marketplace.jsx',
-    'js/authorise': entryPointsPathPrefix + '/authorise.jsx',
+    getStarted: entryPointsPathPrefix + '/getStarted.jsx',
+    documentation: entryPointsPathPrefix + '/documentation.jsx',
+    dashboard: entryPointsPathPrefix + '/dashboard.jsx',
+    marketplace: entryPointsPathPrefix + '/marketplace.jsx',
+    authorise: entryPointsPathPrefix + '/authorise.jsx',
   },
   output: {
-    path: path.resolve(__dirname),
+    path: path.resolve(__dirname, '../backend/uclapi/dashboard/static/'),
     filename: '[name].js'
   }
 };

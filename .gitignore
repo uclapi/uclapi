@@ -133,3 +133,9 @@ dump.rdb
 /scripts/shibboleth/sp-cert.staging.pem
 /scripts/shibboleth/sp-key.prod.pem
 /scripts/shibboleth/sp-key.staging.pem
+
+# use NPM not yarn
+yarn.lock
+
+# django-webpack-loader
+webpack-stats.json

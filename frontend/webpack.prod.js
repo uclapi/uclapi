@@ -3,6 +3,7 @@ const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const BundleTracker = require('webpack-bundle-tracker');
 
 const os = require('os');
 
@@ -18,6 +19,9 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
      'process.env.NODE_ENV': JSON.stringify('production')
+    }),
+    new BundleTracker({
+      filename: '../backend/uclapi/webpack-stats.json'
     })
   ],
   module: {
@@ -44,15 +48,15 @@ module.exports = {
     ]
   },
   entry: {
-    './../backend/uclapi/dashboard/static/js/getStarted': entryPointsPathPrefix + '/getStarted.jsx',
-    './../backend/uclapi/dashboard/static/js/documentation': entryPointsPathPrefix + '/documentation.jsx',
-    './../backend/uclapi/dashboard/static/js/dashboard': entryPointsPathPrefix + '/dashboard.jsx',
-    './../backend/uclapi/marketplace/static/js/marketplace': entryPointsPathPrefix + '/marketplace.jsx',
-    './../backend/uclapi/oauth/static/js/authorise': entryPointsPathPrefix + '/authorise.jsx',
+    getStarted: entryPointsPathPrefix + '/getStarted.jsx',
+    documentation: entryPointsPathPrefix + '/documentation.jsx',
+    dashboard: entryPointsPathPrefix + '/dashboard.jsx',
+    marketplace: entryPointsPathPrefix + '/marketplace.jsx',
+    authorise: entryPointsPathPrefix + '/authorise.jsx',
   },
   output: {
-    path: path.resolve(__dirname),
-    filename: '[name].js'
+    path: path.resolve(__dirname, '../backend/uclapi/dashboard/static/'),
+    filename: '[name]-[hash].js'
   }
 };
 
