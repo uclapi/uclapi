@@ -14,7 +14,7 @@ params = {
 r = requests.get("https://uclapi.com/timetable/data/departments", params=params)
 print(r.json())`,
 
-  shell: `curl -X GET https://uclapi.com/timetable/data/departments \
+  shell: `curl -G https://uclapi.com/timetable/data/departments 
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb`,
 
   javascript: `fetch("https://uclapi.com/timetable/data/departments?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
@@ -40,7 +40,7 @@ let response = `{
                 "name": "Space and Climate Physics"
             },
             ...
-        ]    
+        ]
     }
 }`
 

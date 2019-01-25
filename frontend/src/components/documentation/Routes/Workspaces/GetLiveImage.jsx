@@ -16,9 +16,9 @@ params = {
 r = requests.get("https://uclapi.com/workspaces/images/map/live", params=params)
 print(r.json())`,
 
-  shell: `curl -X GET https://uclapi.com/workspaces/images/map/live \
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \
--d survey_id=22
+  shell: `curl -G https://uclapi.com/workspaces/images/map/live
+-d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb
+-d survey_id=22 \
 -d map_id=3`,
 
   javascript: `fetch("https://uclapi.com/workspaces/images/map/live?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=22&map_id=3",
@@ -110,7 +110,7 @@ export default class WorkspacesGetLiveImage extends React.Component {
                             name="occupied_colour"
                             requirement="optional"
                             example="#FFC90E"
-                            description="The colour of the circle designating a taken, or occupied, seat. This must be provided as a hex colour code, including the preceeding # symbol. The default is #FFC90E." />                        
+                            description="The colour of the circle designating a taken, or occupied, seat. This must be provided as a hex colour code, including the preceeding # symbol. The default is #FFC90E." />
                     </Table>
                 </Topic>
 

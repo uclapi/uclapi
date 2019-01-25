@@ -16,8 +16,8 @@ params = {
 r = requests.get("https://uclapi.com/workspaces/sensors", params=params)
 print(r.json())`,
 
-  shell: `curl -X GET https://uclapi.com/workspaces/sensors \
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \
+  shell: `curl -G https://uclapi.com/workspaces/sensors
+-d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb
 -d survey_id=46 \
 -d return_states=true`,
 
@@ -208,13 +208,13 @@ export default class WorkspacesGetSensors extends React.Component {
                             extra="boolean"
                             example="true"
                             description="Whether the seat is occupied or not. This takes into account UCL's thirty minute rule, so it's possible that the seat could have been marked as absent a few minutes ago, but this value is still set to true, as UCL allows students to leave their seat unattended for up to thirty minutes at a time (e.g. to use the bathroom or get food). Integrations that provide live seating information to students should use this value so as to have parity with the UCL Library seating policy and the UCL Library website. NB: only returned when return_states=true." />
-                        
+
                         <Cell
                             name="maps[n][sensors][n][hardware_id]"
                             extra="string"
                             example="584001"
                             description="A unique ID for the sensor." />
-                        
+
                         <Cell
                             name="maps[n][sensors][n][x_pos]"
                             extra="string (float)"
