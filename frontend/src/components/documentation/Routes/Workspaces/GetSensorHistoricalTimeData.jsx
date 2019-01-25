@@ -16,9 +16,9 @@ params = {
 r = requests.get("https://uclapi.com/workspaces/sensors/averages/time", params=params)
 print(r.json())`,
 
-  shell: `curl -X GET https://uclapi.com/workspaces/sensors/averages/time \
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \
--d days=30,
+  shell: `curl -G https://uclapi.com/workspaces/sensors/averages/time \\
+-d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
+-d days=30 \
 -d survey_ids=46,45`,
 
   javascript: `fetch("https://uclapi.com/workspaces/sensors/averages/time?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&days=40&survey_ids=46,45",
@@ -172,7 +172,7 @@ export default class WorkspacesGetSensorHistoricalTimeData extends React.Compone
                                 ]
                             `}
                             description="A list of survey objects, each of which contains metadata and average occupancy data for that library." />
-                        
+
                         <Cell
                             name="surveys[n][name]"
                             extra="string"

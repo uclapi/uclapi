@@ -15,8 +15,8 @@ params = {
 r = requests.get("https://uclapi.com/timetable/data/modules", params=params)
 print(r.json())`,
 
-  shell: `curl -X GET https://uclapi.com/timetable/data/modules \
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \
+  shell: `curl -G https://uclapi.com/timetable/data/modules \\
+-d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d department=COMPS_ENG`,
 
   javascript: `fetch("https://uclapi.com/timetable/data/modules?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&department=COMPS_ENG")
@@ -175,7 +175,7 @@ export default class GetDataModules extends React.Component {
                 extra="string"
                 example="A6U-T1"
                 description="A code that, when combined with a module code, forms the 'full_module_id' field above. This data is used to calculate the delivery and periods information that is also provided via JSON. Concatenating the module_id, a hyphen and the instance_code forms the full_module_id field." />
-            
+
             <Cell
                 name="modules[n][instances][i][class_size]"
                 extra="integer"

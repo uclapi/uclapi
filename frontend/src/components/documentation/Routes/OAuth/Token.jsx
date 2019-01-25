@@ -16,7 +16,10 @@ params = {
 r = requests.get("https://uclapi.com/oauth/token", params=params)
 print(r.json())`,
 
-  shell: `curl https://uclapi.com/oauth/token?code=mysecretcode&client_id=123.456&client_secret=secret`,
+  shell: `curl -G https://uclapi.com/oauth/token \
+-d code=mysecretcode \
+-d client_id=123.456 \\
+-d client_secret=secret`,
 
   javascript: `fetch("https://uclapi.com/oauth/token?code=mysecretcode&client_id=123.456&client_secret=secret")
 .then((response) => {
