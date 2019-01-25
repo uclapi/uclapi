@@ -34,6 +34,17 @@ export default class Welcome extends React.Component {
           <p>
             If you would like your rate limit to be increased, contact us at isd.apiteam@ucl.ac.uk
           </p>
+
+          <h2 id="api-expiry-times">API Data Freshness</h2>
+          <p>
+            Data from the API is cached on the server. The date when this cache happened is stored in the Last-Modified header.
+          </p>
+          <p>
+            This allows you to judge if you think the data is stale or not. Therefore allowing you to know if you have the most recent bookings for example or if there might be ones not in the most recent cache.
+          </p>
+          <p>
+            If you notice this date is severly out of date, please let us know at isd.apiteam@ucl.ac.uk.
+          </p>
         </Topic>
       )
     }
