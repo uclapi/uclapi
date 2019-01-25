@@ -37,7 +37,7 @@ export default class Welcome extends React.Component {
 
           <h2 id="api-expiry-times">API Data Freshness</h2>
           <p>
-            Data from the API is cached on the server. The date when this cache happened is stored in the Last-Modified header.
+            Data from the API is cached on the server. Bookings and timetable data is updated every 20 minutes and workspaces every 2 minutes. The date when this cache happened is stored in the Last-Modified header.
           </p>
           <p>
             This allows you to judge if you think the data is stale or not. Therefore allowing you to know if you have the most recent bookings for example or if there might be ones not in the most recent cache.
