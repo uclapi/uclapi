@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Dashboard for the UCL API",
   "scripts": {
-    "start": "NODE_ENV=development webpack --config ./webpack.dev.js --watch --progress --colors",
+    "start": "NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors",
     "build": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors",
     "production": "NODE_ENV=production webpack --config webpack.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1"
