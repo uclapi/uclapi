@@ -19,7 +19,8 @@ _SETID = settings.ROOMBOOKINGS_SETID
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=True,
+@uclapi_protected_endpoint(
+    personal_data=True,
     required_scopes=['timetable'],
     last_modified_redis_key='timetable_gencache'
 )
