@@ -269,6 +269,7 @@ def _get_last_modified_header(redis_key=None):
 
     return last_modified
 
+
 def uclapi_protected_endpoint(
     personal_data=False,
     required_scopes=[],
