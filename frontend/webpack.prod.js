@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const BundleTracker = require('webpack-bundle-tracker');
 
@@ -30,13 +30,10 @@ module.exports = {
     new webpack.DefinePlugin({
      'process.env.NODE_ENV': JSON.stringify('production')
     }),
-    // Common chunking for CSS/SCSS is poor
-    // Imports are duplicated: https://github.com/webpack-contrib/sass-loader/issues/145
-    // The resulting files are unreasonably large due to repeated code
-    // new MiniCssExtractPlugin({
-    //   filename: "[name]-[contenthash].css",
-    //   chunkFilename: "[id]-[contenthash].css"
-    // }),
+    new MiniCssExtractPlugin({
+      filename: "[name]-[contenthash].css",
+      chunkFilename: "[id]-[contenthash].css"
+    }),
     new BundleTracker({
       filename: '../backend/uclapi/webpack-stats.json'
     }),
@@ -54,18 +51,14 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          // MiniCssExtractPlugin.loader,
-          { loader: "style-loader" },
+          MiniCssExtractPlugin.loader,
           { loader: "css-loader" },
           { loader: "sass-loader" }
         ]
       },
       {
         test: /\.(jpg|png|svg)$/,
-        loader: 'file-loader',
-        options: {
-          publicPath: 'static'
-        }
+        loader: 'file-loader'
       },
     ]
   },
