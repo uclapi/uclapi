@@ -50,7 +50,7 @@ def authorise(request):
         response.status_code = 400
         return response
 
-    if app.callback_url is None:
+    if app.callback_url is None or app.callback_url.strip() == "":
         response = PrettyJsonResponse({
             "ok": False,
             "error": "No callback URL set for this app."
