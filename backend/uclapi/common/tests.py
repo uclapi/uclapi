@@ -476,6 +476,7 @@ class OAuthTokenCheckerTest(TestCase):
 
 class LastModifiedHeaderTestCase(TestCase):
     base_redis_key = "http:headers:Last-Modified:"
+
     def test_redis_case_1(self):
         redis_key = self.base_redis_key + __name__
         r = redis.Redis(host=REDIS_UCLAPI_HOST)
@@ -573,7 +574,9 @@ class LastModifiedHeaderTestCase(TestCase):
         )
 
     def test_redis_nonexistent_1(self):
-        last_modified_header = _get_last_modified_header("NONEXISTENTDONOTUSEABCXYZ")
+        last_modified_header = _get_last_modified_header(
+            "NONEXISTENTDONOTUSEABCXYZ"
+        )
         current_time = datetime.datetime.utcnow()
         last_modified_timestamp = datetime.datetime.strptime(
             last_modified_header,

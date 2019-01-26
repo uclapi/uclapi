@@ -13,7 +13,11 @@ def read_dotenv(path=None):
         rd(path)
 
 
-LOCAL_TIMEZONE = datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo
+LOCAL_TIMEZONE = (
+    datetime.datetime.now(datetime.timezone.utc)
+    .astimezone()
+    .tzinfo
+)
 
 
 CUSTOM_HEADERS = [
@@ -39,7 +43,7 @@ class PrettyJsonResponse(JsonResponse):
 class RateLimitHttpResponse(HttpResponse):
     def __init__(self, content=b'', custom_header_data=None, *args, **kwargs):
         super().__init__(content, *args, **kwargs)
-        
+
         # Adds custom headers from a passed view kwargs
         if custom_header_data:
             for header in CUSTOM_HEADERS:

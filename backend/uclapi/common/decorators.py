@@ -230,6 +230,7 @@ def _check_general_token_issues(token_code, personal_data):
     # No issues, so return the token
     return token
 
+
 def _get_last_modified_header(redis_key=None):
     # Default last modified is the UTC time now
     last_modified = format_datetime(
@@ -246,7 +247,7 @@ def _get_last_modified_header(redis_key=None):
     r = redis.Redis(host=REDIS_UCLAPI_HOST)
     redis_key = "http:headers:Last-Modified:" + redis_key
     value = r.get(redis_key)
-    
+
     if value:
         # Convert the Redis bytes response to a string.
         value = value.decode('utf-8')

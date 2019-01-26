@@ -455,6 +455,7 @@ def token(request):
 
     return PrettyJsonResponse(oauth_data)
 
+
 @uclapi_protected_endpoint(
     personal_data=True,
     last_modified_redis_key="timetable_gencache"

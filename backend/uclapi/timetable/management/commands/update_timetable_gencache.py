@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.db import connections
-from datetime import datetime, timedelta
+from datetime import datetime
 import redis
 from common.helpers import LOCAL_TIMEZONE
 from timetable.models import \

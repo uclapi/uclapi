@@ -6,7 +6,7 @@ from common.helpers import LOCAL_TIMEZONE
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.db import connections
-from datetime import datetime, timedelta
+from datetime import datetime
 import cx_Oracle
 from roombookings.models import BookingA, BookingB, Lock
 from django.core.management import call_command
