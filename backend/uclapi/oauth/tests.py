@@ -370,8 +370,10 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
                 'state': 1
             }
         )
-        #TestCase.setenv('SHIBBOLETH_ROOT','FakeShibDirectory')
-        k=unittest.mock.patch.dict(os.environ,{'SHIBBOLETH_ROOT':'FakeShibDirectory'})
+        k = unittest.mock.patch.dict(
+            os.environ,
+            {'SHIBBOLETH_ROOT': 'FakeShibDirectory'}
+        )
         k.start()
         response = authorise(request)
         k.stop()
