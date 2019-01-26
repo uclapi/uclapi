@@ -4,12 +4,6 @@ import textwrap
 from binascii import hexlify
 
 from django.http import JsonResponse, HttpResponse
-from dotenv import read_dotenv as rd 
-
-
-def read_dotenv(path=None):
-    if not os.environ.get('DOCKER') == "yes":
-        rd(path)
 
 
 class PrettyJsonResponse(JsonResponse):
