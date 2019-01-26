@@ -6,6 +6,7 @@ const BundleTracker = require('webpack-bundle-tracker');
 var entryPointsPathPrefix = './src/pages';
 
 module.exports = {
+  mode: 'development',
   optimization: {
     minimizer: []  // This list is built below as per platform requirements
   },

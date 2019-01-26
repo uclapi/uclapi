@@ -10,6 +10,7 @@ const os = require('os');
 var entryPointsPathPrefix = './src/pages';
 
 module.exports = {
+  mode: 'production',
   optimization: {
     minimizer: [],  // This list is built below as per platform requirements
     splitChunks: {
