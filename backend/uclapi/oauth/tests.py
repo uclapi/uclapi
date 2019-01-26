@@ -12,7 +12,7 @@ from dashboard.models import App, User
 from .app_helpers import generate_random_verification_code
 from .models import OAuthScope, OAuthToken
 from .scoping import Scopes
-
+from .views import authorise
 
 @uclapi_protected_endpoint(personal_data=True, required_scopes=["timetable"])
 def test_timetable_request(request, *args, **kwargs):
@@ -310,6 +310,59 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
         response = test_timetable_request(request)
 
         self.assertEqual(response.status_code, 200)
+
+    def test_no_parameters(self):
+        request = self.factory.get(
+            '/oauth/authorise',
+            {
+            }
+        )
+        try:
+            response = authorise(request)
+            content = json.loads(response.content.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                content["error"],
+                "incorrect parameters supplied"
+            )
+        except json.decoder.JSONDecodeError:
+            self.fail("Got through to authorize page (This shouldn't happen!)")
+
+    def test_no_app(self):
+        request = self.factory.get(
+            '/oauth/authorise',
+            {
+                'client_id': "1",
+                'state': "1"
+            }
+        )
+        try:
+            response = authorise(request)
+            content = json.loads(response.content.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                content["error"],
+                "App does not exist for client id"
+            )
+        except json.decoder.JSONDecodeError:
+            self.fail("Got through to authorize page (This shouldn't happen!)")
+
+    def test_auth_flow_works(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App",callback_url="www.validCallBackUrl?.com")
+        request = self.factory.get(
+            '/oauth/authorise',
+            {
+                'client_id': app_.client_id,
+                'state': 1
+            }
+        )
+        response = authorise(request)
+        self.assertEqual(response.status_code, 302)
 
 
 class AppHelpersTestCase(TestCase):
