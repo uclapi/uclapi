@@ -333,7 +333,7 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
                 content["error"],
                 "No callback URL set for this app."
             )
-        except:
+        except json.decoder.JSONDecodeError:
             self.fail("Got through to authorize page with no callback URL set")
 
 
