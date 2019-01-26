@@ -94,17 +94,17 @@ def shibcallback(request):
     try:
         # Expire our signed tokens after five minutes for added security
         appdata = signer.unsign(appdata_signed, max_age=300)
-    except signing.BadSignature:
-        response = PrettyJsonResponse({
-            "ok": False,
-            "error": "Bad signature. Please try login again."
-        })
-        response.status_code = 400
-        return response
     except signing.SignatureExpired:
         response = PrettyJsonResponse({
             "ok": False,
             "error": "Signature has expired. Please try login again."
+        })
+        response.status_code = 400
+        return response
+    except signing.BadSignature:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": "Bad signature. Please try login again."
         })
         response.status_code = 400
         return response

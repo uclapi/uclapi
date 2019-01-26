@@ -4,6 +4,7 @@ import os
 
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
+from django.core import signing
 
 from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse
@@ -13,13 +14,16 @@ from dashboard.models import App, User
 from .app_helpers import generate_random_verification_code
 from .models import OAuthScope, OAuthToken
 from .scoping import Scopes
-from .views import authorise
+from .views import authorise,shibcallback
 
 @uclapi_protected_endpoint(personal_data=True, required_scopes=["timetable"])
 def test_timetable_request(request, *args, **kwargs):
     return JsonResponse({
         "ok": True
     }, rate_limiting_data=kwargs)
+
+def unsign(data,max_age):
+    raise signing.SignatureExpired
 
 class ScopingTestCase(TestCase):
     test_scope_map = {
@@ -372,6 +376,52 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
         response = authorise(request)
         k.stop()
         self.assertEqual(response.status_code, 302)
+
+    def test_no_signed_data(self):
+        request = self.factory.get(
+            '/oauth/shibcallback',
+            {
+            }
+        )
+        response = shibcallback(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["error"],
+            "No signed app data returned from Shibboleth."
+            " Please use the authorise endpoint."
+        )
+
+    def test_invalid_signed_data(self):
+        request = self.factory.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': "invalid"
+            }
+        )
+        response = shibcallback(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["error"],
+            "Bad signature. Please try login again."
+        )
+
+    @unittest.mock.patch('django.core.signing.TimestampSigner.unsign', side_effect=unsign)
+    def test_expired_signature(self,TimestampSigner):
+        request = self.factory.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': "invalid"
+            }
+        )
+        response = shibcallback(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["error"],
+            "Signature has expired. Please try login again."
+        )
 
 
 class AppHelpersTestCase(TestCase):
