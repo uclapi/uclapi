@@ -6,7 +6,8 @@
     "start": "NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors",
     "build": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors",
     "production": "NODE_ENV=production webpack --config webpack.prod.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "profile": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors --profile --json > stats.json"
   },
   "repository": {
     "type": "git",

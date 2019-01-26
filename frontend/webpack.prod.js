@@ -62,7 +62,10 @@ module.exports = {
       },
       {
         test: /\.(jpg|png|svg)$/,
-        loader: 'url-loader'
+        loader: 'file-loader',
+        options: {
+          publicPath: 'static'
+        }
       },
     ]
   },
