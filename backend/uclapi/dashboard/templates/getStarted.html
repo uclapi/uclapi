@@ -6,9 +6,8 @@
   <title>UCL API</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900" rel="stylesheet">
-  {% render_bundle 'getStarted' css %}
+  {% render_bundle 'getStarted' 'css' %}
 </head>
 
 
@@ -19,6 +18,7 @@
   </script>
   <div class="app"></div>
   <script src="https://use.fontawesome.com/c70d56d6fc.js"></script>
-  {% render_bundle 'getStarted' js %}
+  {% render_bundle 'vendors' 'js' %}
+  {% render_bundle 'getStarted' 'js' %}
 </body>
 </html>
