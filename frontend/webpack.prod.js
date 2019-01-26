@@ -11,7 +11,17 @@ var entryPointsPathPrefix = './src/pages';
 
 module.exports = {
   optimization: {
-    minimizer: []  // This list is built below as per platform requirements
+    minimizer: [],  // This list is built below as per platform requirements
+    splitChunks: {
+      name: false,
+      cacheGroups: {
+        vendors: {
+          chunks: 'all',
+          name: 'vendors',
+          test: /[\\/]node_modules[\\/]/,
+        },
+      },
+    },
   },
   plugins: [
     new UglifyJsPlugin({
@@ -20,9 +30,14 @@ module.exports = {
     new webpack.DefinePlugin({
      'process.env.NODE_ENV': JSON.stringify('production')
     }),
+    new MiniCssExtractPlugin({
+      filename: "[name]-[contenthash].css",
+      chunkFilename: "[id]-[contenthash].css"
+    }),
     new BundleTracker({
       filename: '../backend/uclapi/webpack-stats.json'
-    })
+    }),
+    new webpack.HashedModuleIdsPlugin()
   ],
   module: {
     rules: [
@@ -36,7 +51,7 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          { loader: "style-loader" },
+          MiniCssExtractPlugin.loader,
           { loader: "css-loader" },
           { loader: "sass-loader" }
         ]
@@ -53,10 +68,11 @@ module.exports = {
     dashboard: entryPointsPathPrefix + '/dashboard.jsx',
     marketplace: entryPointsPathPrefix + '/marketplace.jsx',
     authorise: entryPointsPathPrefix + '/authorise.jsx',
+    vendors: ['react']
   },
   output: {
     path: path.resolve(__dirname, '../backend/uclapi/dashboard/static/'),
-    filename: '[name]-[hash].js'
+    filename: '[name]-[contenthash].js'
   }
 };
 
