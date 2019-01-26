@@ -58,8 +58,7 @@
     "vinyl-transform": "^1.0.0",
     "webpack": "^4.29.0",
     "webpack-bundle-tracker": "^0.4.2-beta",
-    "webpack-cli": "^3.2.1",
-    "webpack-serve": "^2.0.3"
+    "webpack-cli": "^3.2.1"
   },
   "browserify": {
     "transform": [
