@@ -14,7 +14,7 @@ from dashboard.models import App, User
 from .app_helpers import generate_random_verification_code
 from .models import OAuthScope, OAuthToken
 from .scoping import Scopes
-from .views import authorise,shibcallback
+from .views import authorise, shibcallback
 
 @uclapi_protected_endpoint(personal_data=True, required_scopes=["timetable"])
 def test_timetable_request(request, *args, **kwargs):
@@ -22,7 +22,8 @@ def test_timetable_request(request, *args, **kwargs):
         "ok": True
     }, rate_limiting_data=kwargs)
 
-def unsign(data,max_age):
+
+def unsign(data, max_age):
     raise signing.SignatureExpired
 
 class ScopingTestCase(TestCase):
@@ -370,10 +371,8 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
                 'state': 1
             }
         )
-        k = unittest.mock.patch.dict(
-            os.environ,
-            {'SHIBBOLETH_ROOT': 'FakeShibDirectory'}
-        )
+        #TestCase.setenv('SHIBBOLETH_ROOT','FakeShibDirectory')
+        k=unittest.mock.patch.dict(os.environ,{'SHIBBOLETH_ROOT':'FakeShibDirectory'})
         k.start()
         response = authorise(request)
         k.stop()
@@ -409,8 +408,11 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             "Bad signature. Please try login again."
         )
 
-    @unittest.mock.patch('django.core.signing.TimestampSigner.unsign', side_effect=unsign)
-    def test_expired_signature(self,TimestampSigner):
+    @unittest.mock.patch(
+        'django.core.signing.TimestampSigner.unsign',
+        side_effect=unsign
+    )
+    def test_expired_signature(self, TimestampSigner):
         request = self.factory.get(
             '/oauth/shibcallback',
             {
