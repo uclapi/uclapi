@@ -353,7 +353,11 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             cn="test",
             given_name="Test Test"
         )
-        app_ = App.objects.create(user=user_, name="An App",callback_url="www.validCallBackUrl?.com")
+        app_ = App.objects.create(
+            user=user_,
+            name="An App",
+            callback_url="www.validCallBackUrl?.com"
+        )
         request = self.factory.get(
             '/oauth/authorise',
             {
