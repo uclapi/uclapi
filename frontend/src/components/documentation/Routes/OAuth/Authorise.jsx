@@ -15,7 +15,9 @@ params = {
 r = requests.get("https://uclapi.com/oauth/authorise", params=params)
 print(r.json())`,
 
-  shell: `curl https://uclapi.com/oauth/authorise/?client_id=123.456&state=1`,
+  shell: `curl -G https://uclapi.com/oauth/authorise/ \
+-d client_id=123.456 \
+-d state=1`,
 
   javascript: `fetch("https://uclapi.com/oauth/authorise/?client_id=123.456&state=1")
 .then((response) => {
