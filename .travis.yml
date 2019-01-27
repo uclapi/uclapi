@@ -26,7 +26,8 @@ before_script:
   # Install cx_Oracle (which depends on Oracle IC)
   - cd ./../backend/uclapi
   - pip3 install $(cat requirements.txt | grep "cx-Oracle")
-  - cp webpack-stats.sample.json webpack-stats.json
+  - mkdir static
+  - cp webpack-stats.sample.json ./static/webpack-stats.json
 script:
   - python ./manage.py migrate
   # codecov.io
