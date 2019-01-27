@@ -50,17 +50,10 @@ def authorise(request):
         response.status_code = 400
         return response
 
-    if app.callback_url is None or app.callback_url.strip() == "":
+    if app.callback_url is None:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": (
-                "This app does not have a callback URL set. "
-                "If you are the developer of this app, "
-                "please ensure you have set a valid callback "
-                "URL for your application in the Dashboard. "
-                "If you are a user, please contact the app's "
-                "developer to rectify this."
-            )
+            "error": "No callback URL set for this app."
         })
         response.status_code = 400
         return response
@@ -105,8 +98,8 @@ def shibcallback(request):
         response = PrettyJsonResponse({
             "ok": False,
             "error": ("Login data has expired. Please attempt to log in "
-                      "again. If the issues persist please contact the UCL API "
-                      "Team to rectify this.")
+                      "again. If the issues persist please contact the "
+                      "UCL API Team to rectify this.")
         })
         response.status_code = 400
         return response

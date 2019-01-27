@@ -448,7 +448,7 @@ class RefreshVerifcationSecretViewTests(TestCase):
         self.assertTrue("new_secret" in content.keys())
 
 
-def post_request_only(self,url,view):
+def post_request_only(self, url, view):
     request = self.factory.get(
         url,
         {
@@ -463,7 +463,8 @@ def post_request_only(self,url,view):
         "Request is not of method POST"
     )
 
-def empty_get_request_only(self,url,view,error):
+
+def empty_get_request_only(self, url, view, error):
     request = self.factory.post(
         url,
         {
@@ -477,6 +478,7 @@ def empty_get_request_only(self,url,view,error):
         content["message"],
         error
     )
+
 
 class api_applicationsTestCase(TestCase):
     def setUp(self):
@@ -499,7 +501,7 @@ class api_applicationsTestCase(TestCase):
 
     def test_get_request_rejected(self):
         for url in self.functions:
-            post_request_only(self,url,self.functions[url][0])
+            post_request_only(self, url, self.functions[url][0])
 
     def test_missing_parameters(self):
         errors = (
