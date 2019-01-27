@@ -20,7 +20,9 @@ from django.conf import settings
 
 from common.helpers import read_dotenv
 
-read_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+read_dotenv(os.path.join(BASE_DIR, '.env'))
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "uclapi.settings")
 
@@ -37,7 +39,7 @@ if os.environ.get("EVENTLET_NOPATCH") != 'True':
 WEBPACK_STATS_URL = "https://{}/static/webpack-stats.json".format(
     settings.AWS_S3_CUSTOM_DOMAIN
 )
-WEBPACK_STATS_LOC = os.path.relpath('../static/webpack-stats.json')
+WEBPACK_STATS_LOC = os.path.join(BASE_DIR, "static", "webpack-stats.json")
 WEBPACK_STATS_MIN_AGE = 60
 
 should_download_webpack_stats = True
