@@ -317,6 +317,11 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+
+class ViewsTestCase(TestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+
     def test_no_parameters(self):
         request = self.factory.get(
             '/oauth/authorise',
