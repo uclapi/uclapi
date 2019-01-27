@@ -448,7 +448,7 @@ class RefreshVerifcationSecretViewTests(TestCase):
         self.assertTrue("new_secret" in content.keys())
 
 
-def post_request_only(self,url,view):
+def post_request_only(self, url, view):
     request = self.factory.get(
         url,
         {
@@ -480,10 +480,11 @@ class api_applicationsTestCase(TestCase):
         functions = {
             '/api/create/': create_app, '/api/rename/': delete_app,
             '/api/regen/': regenerate_app_token, '/api/delete/': rename_app,
-            '/api/setcallbackurl/': set_callback_url, '/api/updatescopes/': update_scopes
+            '/api/setcallbackurl/': set_callback_url,
+            '/api/updatescopes/': update_scopes
         }
         for url in functions:
-            post_request_only(self,url,functions[url])
+            post_request_only(self, url, functions[url])
 
     # Start of create_app section
 
