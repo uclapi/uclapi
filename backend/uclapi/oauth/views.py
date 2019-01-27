@@ -460,7 +460,10 @@ def token(request):
     return PrettyJsonResponse(oauth_data)
 
 
-@uclapi_protected_endpoint(personal_data=True)
+@uclapi_protected_endpoint(
+    personal_data=True,
+    last_modified_redis_key="timetable_gencache"
+)
 def userdata(request, *args, **kwargs):
     token = kwargs['token']
     print("Checking student status")
@@ -487,7 +490,7 @@ def userdata(request, *args, **kwargs):
 
     return PrettyJsonResponse(
         user_data,
-        rate_limiting_data=kwargs
+        custom_header_data=kwargs
     )
 
 
@@ -499,7 +502,10 @@ def scope_map(request):
     return PrettyJsonResponse(scope_map)
 
 
-@uclapi_protected_endpoint(personal_data=True)
+@uclapi_protected_endpoint(
+    personal_data=True,
+    last_modified_redis_key=None
+)
 def token_test(request, *args, **kwargs):
     s = Scopes()
 
@@ -514,12 +520,13 @@ def token_test(request, *args, **kwargs):
             pretty_print=False
         ),
         "scope_number": token.scope.scope_number
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)
 
 
 @uclapi_protected_endpoint(
     personal_data=True,
-    required_scopes=['student_number']
+    required_scopes=['student_number'],
+    last_modified_redis_key="timetable_gencache"
 )
 def get_student_number(request, *args, **kwargs):
     token = kwargs['token']
@@ -532,7 +539,7 @@ def get_student_number(request, *args, **kwargs):
         response = PrettyJsonResponse({
             "ok": False,
             "error": "User is not a student."
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -542,5 +549,5 @@ def get_student_number(request, *args, **kwargs):
     }
     return PrettyJsonResponse(
         data,
-        rate_limiting_data=kwargs
+        custom_header_data=kwargs
     )

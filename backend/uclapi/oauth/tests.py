@@ -20,7 +20,7 @@ from .views import authorise, shibcallback
 def test_timetable_request(request, *args, **kwargs):
     return JsonResponse({
         "ok": True
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)
 
 
 def unsign(data, max_age):

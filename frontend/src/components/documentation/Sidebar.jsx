@@ -67,6 +67,7 @@ export default class Sidebar extends React.Component {
               <ListItem primaryText="Welcome" href="#welcome" />,
               <ListItem primaryText="Get Your API Key" href="#get-api-key" />,
               <ListItem primaryText="API Rate Limits" href="#api-rate-limits" />,
+              <ListItem primaryText="API Data Freshness" href="#api-expiry-times" />,
               <ListItem primaryText="Version Information" href="#version-information" />,
             ]}
           />
