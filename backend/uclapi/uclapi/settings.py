@@ -68,7 +68,8 @@ INSTALLED_APPS = [
     'common',
     'raven.contrib.django.raven_compat',
     'corsheaders',
-    'workspaces'
+    'workspaces',
+    'webpack_loader'
 ]
 
 MIDDLEWARE = [
@@ -209,6 +210,17 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 
 ROOMBOOKINGS_SETID = 'LIVE-18-19'
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': '/',  # must end with slash
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+        'POLL_INTERVAL': 0.1,
+        'TIMEOUT': None,
+        'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
+    }
+}
 
 # S3 file storage settings
 # There are three scenarios to consider:
