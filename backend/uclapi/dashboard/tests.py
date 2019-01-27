@@ -12,7 +12,12 @@ from .models import App, User
 from .webhook_views import (
     edit_webhook, refresh_verification_secret, user_owns_app, verify_ownership
 )
-from .api_applications import get_user_by_id, create_app
+from dashboard.api_applications import (
+    create_app, delete_app, regenerate_app_token, rename_app, set_callback_url,
+    update_scopes, get_user_by_id
+)
+
+from .urls import urlpatterns
 
 class DashboardTestCase(TestCase):
     def setUp(self):
@@ -444,6 +449,22 @@ class RefreshVerifcationSecretViewTests(TestCase):
         self.assertTrue("new_secret" in content.keys())
 
 
+def post_request_only(self,url,view):
+    request = self.factory.get(
+        url,
+        {
+        }
+    )
+
+    response = view(request)
+    content = json.loads(response.content.decode())
+    self.assertEqual(response.status_code, 400)
+    self.assertEqual(
+        content["error"],
+        "Request is not of method POST"
+    )
+
+
 class api_applicationsTestCase(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
@@ -457,19 +478,15 @@ class api_applicationsTestCase(TestCase):
         self.assertEqual(get_user_by_id(user_.id), user_)
 
     def test_get_request_rejected(self):
-        request = self.factory.get(
-            '/api/create/',
-            {
-            }
-        )
+        functions = {
+            '/api/create/': create_app, '/api/rename/': delete_app,
+            '/api/regen/': regenerate_app_token, '/api/delete/': rename_app,
+            '/api/setcallbackurl/': set_callback_url, '/api/updatescopes/': update_scopes
+        }
+        for url in functions:
+            post_request_only(self,url,functions[url])
 
-        response = create_app(request)
-        content = json.loads(response.content.decode())
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            content["error"],
-            "Request is not of method POST"
-        )
+    # Start of create_app section
 
     def test_missing_parameters(self):
         request = self.factory.post(
