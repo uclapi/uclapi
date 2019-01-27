@@ -9,6 +9,7 @@ import redis
 import textwrap
 import validators
 
+
 def generate_temp_api_token():
     return generate_api_token("temp")
 

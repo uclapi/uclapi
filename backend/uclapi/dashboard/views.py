@@ -16,6 +16,7 @@ from .models import App, User
 from .tasks import add_user_to_mailing_list_task, \
                    keen_add_event_task as keen_add_event
 
+
 @csrf_exempt
 def shibboleth_callback(request):
     # should auth user login or signup
