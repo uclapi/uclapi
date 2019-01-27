@@ -14,7 +14,9 @@ from common.decorators import uclapi_protected_endpoint
 
 
 @api_view(['GET'])
-@uclapi_protected_endpoint()
+@uclapi_protected_endpoint(
+    last_modified_redis_key=None  # Served from Oracle directly
+)
 def get_rooms(request, *args, **kwargs):
     # add them to iterables so can be filtered without if-else
     request_params = {}
@@ -55,7 +57,9 @@ def get_rooms(request, *args, **kwargs):
 
 
 @api_view(['GET'])
-@uclapi_protected_endpoint()
+@uclapi_protected_endpoint(
+    last_modified_redis_key='gencache'  # Served from our cached Oracle view
+)
 def get_bookings(request, *args, **kwargs):
     # if page_token exists, dont look for query
     page_token = request.GET.get('page_token')
@@ -134,7 +138,9 @@ def get_bookings(request, *args, **kwargs):
 
 
 @api_view(['GET'])
-@uclapi_protected_endpoint()
+@uclapi_protected_endpoint(
+    last_modified_redis_key=None  # Served from Oracle directly
+)
 def get_equipment(request, *args, **kwargs):
     roomid = request.GET.get("roomid")
     siteid = request.GET.get("siteid")
@@ -167,7 +173,9 @@ def get_equipment(request, *args, **kwargs):
 
 
 @api_view(['GET'])
-@uclapi_protected_endpoint()
+@uclapi_protected_endpoint(
+    last_modified_redis_key='gencache'  # Real time calculation, cached data
+)
 def get_free_rooms(request, *args, **kwargs):
     request_params = {}
     request_params['startdatetime__gte'] = request.GET.get('start_datetime')

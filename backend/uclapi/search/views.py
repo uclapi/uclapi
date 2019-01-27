@@ -8,7 +8,9 @@ import requests
 
 
 @api_view(['GET'])
-@uclapi_protected_endpoint()
+@uclapi_protected_endpoint(
+    last_modified_redis_key=None  # Served directly from the backend Search API
+)
 def people(request, *args, **kwargs):
     if "query" not in request.GET:
         response = JsonResponse({
