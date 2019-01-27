@@ -8,7 +8,7 @@ from datetime import timezone
 from email.utils import format_datetime
 from functools import wraps
 
-from dashboard.models import App, TemporaryToken
+from dashboard.models import App
 from dashboard.tasks import keen_add_event_task as keen_add_event
 
 from oauth.models import OAuthToken
@@ -162,7 +162,12 @@ def _check_oauth_token_issues(token_code, client_secret, required_scopes):
     return token
 
 
-def _check_temp_token_issues(token_code, personal_data, request_path, page_token=None):
+def _check_temp_token_issues(
+    token_code,
+    personal_data,
+    request_path,
+    page_token=None
+):
     # The token is a generic one, so sanity check
     if personal_data:
         response = JsonResponse({

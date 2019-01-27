@@ -16,6 +16,7 @@ from .models import OAuthScope, OAuthToken
 from .scoping import Scopes
 from .views import authorise, shibcallback
 
+
 @uclapi_protected_endpoint(personal_data=True, required_scopes=["timetable"])
 def test_timetable_request(request, *args, **kwargs):
     return JsonResponse({
@@ -25,6 +26,7 @@ def test_timetable_request(request, *args, **kwargs):
 
 def unsign(data, max_age):
     raise signing.SignatureExpired
+
 
 class ScopingTestCase(TestCase):
     test_scope_map = {
