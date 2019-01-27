@@ -1,0 +1,11 @@
+{
+  "status": "done",
+  "chunks": {
+    "vendors": [],
+    "authorise": [],
+    "dashboard": [],
+    "documentation": [],
+    "getStarted": [],
+    "marketplace": []
+  }
+}

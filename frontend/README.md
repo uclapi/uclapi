@@ -63,4 +63,4 @@ Also, remember to add render statements to any new Django templates created if t
 4. Use `{% render_bundle 'x' 'js' %}` for JS assets
 
 ### Creating new pages
-When creating new pages, you must update the `webpack.dev.js` and `webpack.prod.js` to add a new entry point.
+When creating new pages, you must update the `webpack.dev.js` and `webpack.prod.js` to add a new entry point. Also remember to update `backend/uclapi/webpack-stats.sample.json` which is used when Travis runs the Django unit tests.
