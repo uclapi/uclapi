@@ -483,6 +483,11 @@ def empty_get_request_only(self, url, view, error):
 class api_applicationsTestCase(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
+
+        # self.functions maps urls to a tuple cotaining a view
+        # and a number relating to an error message from
+        # errors
+
         self.functions = {
             '/api/create/': (create_app, 0), '/api/rename/': (rename_app, 1),
             '/api/regen/': (regenerate_app_token, 2),
@@ -490,6 +495,11 @@ class api_applicationsTestCase(TestCase):
             '/api/setcallbackurl/': (set_callback_url, 2),
             '/api/updatescopes/': (update_scopes, 2)
         }
+        self.errors = (
+            "Request does not have name or user.",
+            "Request does not have app_id/new_name",
+            "Request does not have an app_id."
+        )
 
     def test_get_user_returns_correct_user(self):
         user_ = User.objects.create(
@@ -504,33 +514,13 @@ class api_applicationsTestCase(TestCase):
             post_request_only(self, url, self.functions[url][0])
 
     def test_missing_parameters(self):
-        errors = (
-            "Request does not have name or user.",
-            "Request does not have app_id/new_name",
-            "Request does not have an app_id."
-        )
         for url in self.functions:
             empty_get_request_only(
                 self,
                 url,
                 self.functions[url][0],
-                errors[self.functions[url][1]]
+                self.errors[self.functions[url][1]]
             )
-
-    def test_missing_parameters2(self):
-        request = self.factory.post(
-            '/api/create/',
-            {
-            }
-        )
-
-        response = create_app(request)
-        content = json.loads(response.content.decode())
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            content["message"],
-            "Request does not have name or user."
-        )
 
     # Start of create_app section
 
