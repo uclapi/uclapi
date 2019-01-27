@@ -12,6 +12,10 @@ from .models import App, User
 from .webhook_views import (
     edit_webhook, refresh_verification_secret, user_owns_app, verify_ownership
 )
+from dashboard.api_applications import (
+    create_app, delete_app, regenerate_app_token, rename_app, set_callback_url,
+    update_scopes, get_user_by_id
+)
 
 
 class DashboardTestCase(TestCase):
@@ -442,3 +446,131 @@ class RefreshVerifcationSecretViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(content["ok"])
         self.assertTrue("new_secret" in content.keys())
+
+
+def post_request_only(self, url, view):
+    request = self.factory.get(
+        url,
+        {
+        }
+    )
+
+    response = view(request)
+    content = json.loads(response.content.decode())
+    self.assertEqual(response.status_code, 400)
+    self.assertEqual(
+        content["error"],
+        "Request is not of method POST"
+    )
+
+
+def empty_get_request_only(self, url, view, error):
+    request = self.factory.post(
+        url,
+        {
+        }
+    )
+
+    response = view(request)
+    content = json.loads(response.content.decode())
+    self.assertEqual(response.status_code, 400)
+    self.assertEqual(
+        content["message"],
+        error
+    )
+
+
+class ApiApplicationsTestCase(TestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+
+        # self.functions maps urls to a tuple cotaining a view
+        # and a number relating to an error message from
+        # errors
+
+        self.functions = {
+            '/api/create/': (create_app, 0), '/api/rename/': (rename_app, 1),
+            '/api/regen/': (regenerate_app_token, 2),
+            '/api/delete/': (delete_app, 2),
+            '/api/setcallbackurl/': (set_callback_url, 2),
+            '/api/updatescopes/': (update_scopes, 2)
+        }
+        self.errors = (
+            "Request does not have name or user.",
+            "Request does not have app_id/new_name",
+            "Request does not have an app_id."
+        )
+
+    def test_get_user_returns_correct_user(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        self.assertEqual(get_user_by_id(user_.id), user_)
+
+    def test_get_request_rejected(self):
+        for url in self.functions:
+            post_request_only(self, url, self.functions[url][0])
+
+    def test_missing_parameters(self):
+        for url in self.functions:
+            empty_get_request_only(
+                self,
+                url,
+                self.functions[url][0],
+                self.errors[self.functions[url][1]]
+            )
+
+    # Start of create_app section
+
+    def test_app_creation_success(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        request = self.factory.post(
+            '/api/create/',
+            {
+                "name": "test_app"
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = create_app(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            content["message"],
+            "App sucessfully created"
+        )
+        self.assertTrue(len(App.objects.filter(
+            name="test_app",
+            user=user_,
+            deleted=False)) != 0)
+
+    # Start of rename_app section
+
+    def test_rename_not_existing_app(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        request = self.factory.post(
+            '/api/rename/',
+            {
+                "new_name": "test_app",
+                "app_id": 1
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = rename_app(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "App does not exist."
+        )

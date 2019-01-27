@@ -29,6 +29,7 @@ class ModelRouter(object):
             "deptsa",
             "deptsb"
         ]
+
     def db_for_read(self, model, **hints):
         return getattr(model._meta, "_DATABASE", "default")
 
@@ -36,7 +37,8 @@ class ModelRouter(object):
         return getattr(model._meta, "_DATABASE", "default")
 
     def allow_relation(self, obj1, obj2, **hints):
-        return obj1._state.db in self.managed_db_list and obj2._state.db in self.managed_db_list
+        return obj1._state.db in self.managed_db_list and \
+               obj2._state.db in self.managed_db_list
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
         if db == "default":

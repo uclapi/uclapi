@@ -269,16 +269,16 @@ def _kloppify(date_string, date):
     return date_string + "+00:00"
 
 
-def _return_json_bookings(bookings, rate_limiting_data=None):
+def _return_json_bookings(bookings, custom_header_data=None):
     if "error" in bookings:
         return PrettyJsonResponse({
             "ok": False,
             "error": bookings["error"]
-        }, rate_limiting_data)
+        }, custom_header_data)
 
     bookings["ok"] = True
 
-    return PrettyJsonResponse(bookings, rate_limiting_data)
+    return PrettyJsonResponse(bookings, custom_header_data)
 
 
 def how_many_seconds_until_midnight():
