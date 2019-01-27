@@ -480,7 +480,7 @@ def empty_get_request_only(self, url, view, error):
     )
 
 
-class api_applicationsTestCase(TestCase):
+class ApiApplicationsTestCase(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
 
@@ -513,7 +513,7 @@ class api_applicationsTestCase(TestCase):
         for url in self.functions:
             post_request_only(self, url, self.functions[url][0])
 
-    def test_missing_parameters_1(self):
+    def test_missing_parameters(self):
         for url in self.functions:
             empty_get_request_only(
                 self,
