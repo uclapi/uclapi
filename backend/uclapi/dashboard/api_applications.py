@@ -132,7 +132,7 @@ def regenerate_app_token(request):
     except KeyError:
         response = PrettyJsonResponse({
             "success": False,
-            "message": "Request does not have app_id."
+            "message": "Request does not an have app_id."
         })
         response.status_code = 400
         return response
@@ -183,7 +183,7 @@ def delete_app(request):
     except KeyError:
         response = PrettyJsonResponse({
             "success": False,
-            "message": "Request does not have app_id."
+            "message": "Request does not have an app_id."
         })
         response.status_code = 400
         return response
