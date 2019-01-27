@@ -502,7 +502,7 @@ class api_applicationsTestCase(TestCase):
             "Request does not have name or user."
         )
 
-    def test_missing_parameters(self):
+    def test_app_creation_success(self):
         user_ = User.objects.create(
             email="test@ucl.ac.uk",
             cn="test",
