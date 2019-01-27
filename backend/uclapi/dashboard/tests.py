@@ -254,8 +254,8 @@ class WebHookRequestViewTests(TestCase):
         self.assertEqual(
             content["message"],
             "Request is missing parameters. Should have app_id"
-            ", url, siteid, roomid, contact"
-            " as well as a sessionid cookie"
+            ", url, siteid, roomid, contact "
+            "as well as a sessionid cookie"
         )
 
     def test_edit_webhook_POST_user_does_not_own_app(self):
@@ -405,8 +405,8 @@ class RefreshVerifcationSecretViewTests(TestCase):
         self.assertFalse(content["ok"])
         self.assertEqual(
             content["message"],
-            "Request is missing parameters. Should have app_id"
-            " as well as a sessionid cookie"
+            "Request is missing parameters. Should have app_id "
+            "as well as a sessionid cookie"
         )
 
     def test_refresh_verification_secret_POST_user_does_not_own_app(self):
