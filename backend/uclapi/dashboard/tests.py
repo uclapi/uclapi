@@ -574,3 +574,44 @@ class ApiApplicationsTestCase(TestCase):
             content["message"],
             "App does not exist."
         )
+
+    def test_rename_success_app(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/rename/',
+            {
+                "new_name": "test_app",
+                "app_id": app_.id
+            }
+        )
+        request.session = {'user_id': user_.id}
+        self.assertTrue(len(App.objects.filter(
+            name="test_app",
+            user=user_,
+            deleted=False)) == 0)
+        self.assertTrue(len(App.objects.filter(
+            name="An App",
+            user=user_,
+            deleted=False)) != 0)
+        response = rename_app(request)
+        self.assertTrue(len(App.objects.filter(
+            name="test_app",
+            user=user_,
+            deleted=False)) != 0)
+        self.assertTrue(len(App.objects.filter(
+            name="An App",
+            user=user_,
+            deleted=False)) == 0)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            content["message"],
+            "App sucessfully renamed."
+        )
