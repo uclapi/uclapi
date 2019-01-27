@@ -376,10 +376,8 @@ class ViewsTestCase(TestCase):
                 'state': 1
             }
         )
-        k = unittest.mock.patch.dict(
-            os.environ,
-            {'SHIBBOLETH_ROOT': 'FakeShibDirectory'}
-        )
+        #TestCase.setenv('SHIBBOLETH_ROOT','FakeShibDirectory')
+        k=unittest.mock.patch.dict(os.environ,{'SHIBBOLETH_ROOT':'FakeShibDirectory'})
         k.start()
         response = authorise(request)
         k.stop()
@@ -412,7 +410,9 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             content["error"],
-            "Bad signature. Please try login again."
+            ("Bad signature. Please attempt to log in again."
+                      " If the issues persist please contact the UCL API"
+                      " Team to rectify this.")
         )
 
     @unittest.mock.patch(
@@ -431,7 +431,9 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             content["error"],
-            "Signature has expired. Please try login again."
+            ("Login data has expired. Please attempt to log in again."
+                      " If the issues persist please contact the UCL API"
+                      " Team to rectify this.")
         )
 
 
