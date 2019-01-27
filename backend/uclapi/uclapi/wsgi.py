@@ -8,9 +8,9 @@ https://docs.djangoproject.com/en/1.10/howto/deployment/wsgi/
 """
 
 import errno
-import fcntl
 import os
 import shutil
+import time
 import urllib.request
 
 import eventlet
@@ -38,18 +38,24 @@ WEBPACK_STATS_URL = "https://{}/static/webpack-stats.json".format(
     settings.AWS_S3_CUSTOM_DOMAIN
 )
 WEBPACK_STATS_LOC = os.path.relpath('../static/webpack-stats.json')
+WEBPACK_STATS_MIN_AGE = 60
 
-# Check if another gunicorn process is already
-# writing to the WebPack stats file
-try:
-    fcntl.flock(WEBPACK_STATS_LOC, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    with urllib.request.urlopen(WEBPACK_STATS_URL) as response:
+should_download_webpack_stats = True
+# First we check if the WebPack stats file is too recent.
+# If so, we don't even bother trying to overwrite it.
+if os.path.isfile(WEBPACK_STATS_LOC):
+    file_stats = os.stat(WEBPACK_STATS_LOC)
+    file_age = time.time() - file_stats.st_mtime
+    if file_age < WEBPACK_STATS_MIN_AGE:
+        should_download_webpack_stats = False
+
+if should_download_webpack_stats:
+    try:
         with open(WEBPACK_STATS_LOC, 'wb') as out_file:
-            shutil.copyfileobj(response, out_file)
-            fcntl.flock(WEBPACK_STATS_LOC, fcntl.LOCK_UN)
-except IOError as e:
-    if e.errno != errno.EAGAIN:
-        raise
-    pass
+            with urllib.request.urlopen(WEBPACK_STATS_URL) as response:
+                shutil.copyfileobj(response, out_file)
+    except IOError as e:
+        if e != errno.EACCES or e != errno.EAGAIN:
+            raise
 
 application = get_wsgi_application()
