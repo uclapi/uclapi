@@ -281,7 +281,7 @@ class GeneralTokenCheckerTest(TestCase):
             name="Test App"
         )
 
-    def check_personal_data(self):
+    def test_check_personal_data(self):
         result = _check_general_token_issues(
             self.valid_app.api_token,
             True
@@ -296,7 +296,7 @@ class GeneralTokenCheckerTest(TestCase):
             "Personal data requires OAuth."
         )
 
-    def check_nonexistent_token(self):
+    def test_check_nonexistent_token(self):
         result = _check_general_token_issues(
             "uclapi-blah-blah-blah",
             False
@@ -311,7 +311,7 @@ class GeneralTokenCheckerTest(TestCase):
             "Token does not exist."
         )
 
-    def check_all_ok(self):
+    def test_check_all_ok(self):
         result = _check_general_token_issues(
             self.valid_app.api_token,
             False
@@ -323,33 +323,33 @@ class GeneralTokenCheckerTest(TestCase):
 
 
 class GenerateApiTokenTest(TestCase):
-    def general_token_test(self):
+    def test_general_token_test(self):
         token = generate_api_token()
         self.assertEqual(
             len(token),
-            66
+            70
         )
         self.assertEqual(
             token[:7],
             "uclapi-"
         )
 
-    def temp_token_test(self):
+    def test_temp_token_test(self):
         token = generate_api_token("temp")
         self.assertEqual(
             len(token),
-            71
+            75
         )
         self.assertEqual(
             token[:12],
             "uclapi-temp-"
         )
 
-    def user_token_test(self):
+    def test_user_token_test(self):
         token = generate_api_token("user")
         self.assertEqual(
             len(token),
-            71
+            75
         )
         self.assertEqual(
             token[:12],
