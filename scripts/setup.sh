@@ -42,3 +42,4 @@ echo "/opt/oracle/instantclient_$ORACLE_VERSION" > /etc/ld.so.conf.d/oracle.conf
 ldconfig
 
 popd
+python3 update_medium.py
