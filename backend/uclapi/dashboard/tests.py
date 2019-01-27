@@ -545,7 +545,10 @@ class ApiApplicationsTestCase(TestCase):
             content["message"],
             "App sucessfully created"
         )
-        self.assertTrue(len(App.objects.filter(name="test_app", user=user_, deleted=False)) != 0)
+        self.assertTrue(len(App.objects.filter(
+            name="test_app",
+            user=user_,
+            deleted=False)) != 0)
 
     # Start of rename_app section
 
