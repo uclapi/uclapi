@@ -37,13 +37,13 @@ export default class Welcome extends React.Component {
 
           <h2 id="api-expiry-times">API Data Freshness</h2>
           <p>
-            Data from the API is cached on the server. Bookings and timetable data is updated every 20 minutes and workspaces every 2 minutes. The date when this cache happened is stored in the Last-Modified header.
+            Much of the data available from the API is served from cache. Bookings and Timetable data are updated every twenty minutes from UCL, and we update the Library Study Spaces (Workspaces) API every two minutes. The `Last-Modified` header will provide the time that the most recent caching operation completed in <a href="https://stackoverflow.com/a/21121453">RFC 2616</a> format. Endpoints that do not rely on cached data will return the current timestamp in this field instead.
           </p>
           <p>
-            This allows you to judge if you think the data is stale or not. Therefore allowing you to know if you have the most recent bookings for example or if there might be ones not in the most recent cache.
+            This allows your application to judge whether the data is stale, or might need refreshing. For example, if a booking is added to the database and the data you are using is more than twenty minutes old, it may be that the booking is not visible to you yet. Consider creating a fresh request in this case.
           </p>
           <p>
-            If you notice this date is severly out of date, please let us know at isd.apiteam@ucl.ac.uk.
+            If you notice that the `Last-Modified` timestamp you see is unreasonably old, please get in contact with us ASAP to report this as it may indicate very stale data and an issue at our end.
           </p>
         </Topic>
       )
