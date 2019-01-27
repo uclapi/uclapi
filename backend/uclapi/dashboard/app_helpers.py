@@ -15,7 +15,7 @@ def get_articles():
     articles = [["", ""], ["", ""], ["", ""]]
     for i in range(0, 3):
         articles[i][0] = r.get("Blog:item"+str(i)+":url").decode("utf-8")
-        articles[i][1] = r.get("Blog:item"+str(i)+":title").decode("utf-8") 
+        articles[i][1] = r.get("Blog:item"+str(i)+":title").decode("utf-8")
     return articles
 
 
