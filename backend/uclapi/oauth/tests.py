@@ -317,6 +317,38 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_no_callback_url(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+        request = self.factory.get(
+            '/oauth/authorise',
+            {
+                'client_id': app_.client_id,
+                'state': 1
+            }
+        )
+        try:
+            response = authorise(request)
+            content = json.loads(response.content.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                content["error"],
+                (
+                    "This app does not have a callback URL set. "
+                    "If you are the developer of this app, "
+                    "please ensure you have set a valid callback "
+                    "URL for your application in the Dashboard. "
+                    "If you are a user, please contact the app's "
+                    "developer to rectify this."
+                )
+            )
+        except json.decoder.JSONDecodeError:
+            self.fail("Got through to authorize page with no callback URL set")
+
 
 class ViewsTestCase(TestCase):
     def setUp(self):
