@@ -7,11 +7,11 @@ For more information on this file, see
 https://docs.djangoproject.com/en/1.10/howto/deployment/wsgi/
 """
 
-import os
-import urllib.request
-import shutil
-import fcntl
 import errno
+import fcntl
+import os
+import shutil
+import urllib.request
 
 import eventlet
 
@@ -39,8 +39,8 @@ WEBPACK_STATS_URL = "https://{}/static/webpack-stats.json".format(
 )
 WEBPACK_STATS_LOC = os.path.relpath('../static/webpack-stats.json')
 
-# check if another gunicorn process is
-# already writing to it
+# Check if another gunicorn process is already
+# writing to the WebPack stats file
 try:
     fcntl.flock(WEBPACK_STATS_LOC, fcntl.LOCK_EX | fcntl.LOCK_NB)
     with urllib.request.urlopen(WEBPACK_STATS_URL) as response:
