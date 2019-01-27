@@ -12,18 +12,18 @@ if __name__ == "__main__":
             file_data.append(line)
     medium_article_iterator = root.iter('item')
     for i in range(0, len(file_data)):
-        if  file_data[i].strip()[0:3] == "<a ":
+        if file_data[i].strip()[0:3] == "<a ":
             article = next(medium_article_iterator)
             for j in range(0, len(file_data[i])):
                 if file_data[i][j] != " ":
-                    whitespace = j
+                    buffer = j
                     break
-            file_data[i] = whitespace*" " + "<a href=\""+article[1].text+"\">"+"\n"
+            file_data[i] = buffer*" " + "<a href=\""+article[1].text+"\">\n"
             for j in range(0, len(file_data[i+1])):
                 if file_data[i+1][j] != " ":
-                    whitespace = j
+                    buffer = j
                     break
-            file_data[i+1] = whitespace*" " + article[0].text + "\n"
+            file_data[i+1] = buffer*" " + article[0].text + "\n"
 
     with open("../frontend/src/components/getStarted/Blog.jsx", "w") as f:
         for line in file_data:
