@@ -22,6 +22,8 @@ from dashboard.models import (
     User
 )
 
+from dashboard.app_helpers import get_temp_token
+
 from oauth.models import OAuthToken, OAuthScope
 from oauth.scoping import Scopes
 
@@ -146,11 +148,11 @@ class ThrottleApiCallTest(TestCase):
 
 class TempTokenCheckerTest(TestCase):
     def setUp(self):
-        self.valid_token = TemporaryToken.objects.create()
+        self.valid_token = get_temp_token()
 
-    def personal_data_requested(self):
+    def test_personal_data_requested(self):
         result = _check_temp_token_issues(
-            self.valid_token.token_code,
+            self.valid_token,
             True,
             "/roombookings/bookings",
             None
@@ -164,7 +166,7 @@ class TempTokenCheckerTest(TestCase):
             "Personal data requires OAuth."
         )
 
-    def token_does_not_exist(self):
+    def test_token_does_not_exist(self):
         invalid_token = "uclapi-temp-this-token-does-not-exist"
         result = _check_temp_token_issues(
             invalid_token,
@@ -178,12 +180,12 @@ class TempTokenCheckerTest(TestCase):
         self.assertFalse(data['ok'])
         self.assertEqual(
             data['error'],
-            "Invalid temporary token."
+            "Temporary token is either invalid or expired."
         )
 
-    def invalid_path_requested(self):
+    def test_invalid_path_requested(self):
         result = _check_temp_token_issues(
-            self.valid_token.token_code,
+            self.valid_token,
             False,
             "/roombookings/some_other_path",
             None
@@ -197,9 +199,9 @@ class TempTokenCheckerTest(TestCase):
             "Temporary token can only be used for /bookings."
         )
 
-    def page_token_provided(self):
+    def test_page_token_provided(self):
         result = _check_temp_token_issues(
-            self.valid_token.token_code,
+            self.valid_token,
             False,
             "/roombookings/bookings",
             "abcdefgXYZ"
@@ -213,12 +215,12 @@ class TempTokenCheckerTest(TestCase):
             "Temporary token can only return one booking."
         )
 
-    def expired_token_provided(self):
+    def test_expired_token_provided(self):
         expired_token = TemporaryToken.objects.create(
             created=datetime.datetime(2010, 1, 1, 1, 0)
         )
         result = _check_temp_token_issues(
-            expired_token.token_code,
+            expired_token.api_token,
             False,
             "/roombookings/bookings",
             None
@@ -229,19 +231,19 @@ class TempTokenCheckerTest(TestCase):
         self.assertFalse(data['ok'])
         self.assertEqual(
             data['error'],
-            "Temporary token expired."
+            "Temporary token is either invalid or expired."
         )
 
-    def all_passes(self):
+    def test_all_passes(self):
         result = _check_temp_token_issues(
-            self.valid_token.token_code,
+            self.valid_token,
             False,
             "/roombookings/bookings",
             None
         )
         self.assertEqual(
-            result.token_code,
-            self.valid_token.token_code
+            result,
+            self.valid_token
         )
 
 
