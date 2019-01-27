@@ -1,7 +1,11 @@
+import ciso8601
 import datetime
+import pytz
 import re
 import redis
 
+from datetime import timezone
+from email.utils import format_datetime
 from functools import wraps
 
 from dashboard.models import App, TemporaryToken
@@ -227,7 +231,50 @@ def _check_general_token_issues(token_code, personal_data):
     return token
 
 
-def uclapi_protected_endpoint(personal_data=False, required_scopes=[]):
+def _get_last_modified_header(redis_key=None):
+    # Default last modified is the UTC time now
+    last_modified = format_datetime(
+        datetime.datetime.utcnow().replace(tzinfo=timezone.utc),
+        usegmt=True
+    )
+
+    # If we haven't been passed a Redis key, we just return the
+    # current timeztamp as a last modified header.
+    if redis_key is None:
+        return last_modified
+
+    # We have been given a Redis key, so attempt to pull it from Redis
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
+    redis_key = "http:headers:Last-Modified:" + redis_key
+    value = r.get(redis_key)
+
+    if value:
+        # Convert the Redis bytes response to a string.
+        value = value.decode('utf-8')
+
+        # We need the UTC timezone so that we can convert to it.
+        utc_tz = pytz.timezone("UTC")
+
+        # Parse the ISO 8601 timestamp from Redis and represent it as UTC
+        utc_timestamp = ciso8601.parse_datetime(value).astimezone(utc_tz)
+
+        # Format the datetime object as per the HTTP Header RFC.
+        # We replace the inner tzinfo in the timestamp to force it to be a UTC
+        # timestamp as opposed to a naive one; this is a requirement for the
+        # format_datetime function.
+        last_modified = format_datetime(
+            utc_timestamp.replace(tzinfo=timezone.utc),
+            usegmt=True
+        )
+
+    return last_modified
+
+
+def uclapi_protected_endpoint(
+    personal_data=False,
+    required_scopes=[],
+    last_modified_redis_key='gencache'
+):
     def check_request(view_func):
         @wraps(view_func)
         def wrapped(request, *args, **kwargs):
@@ -335,6 +382,11 @@ def uclapi_protected_endpoint(personal_data=False, required_scopes=[]):
                 remaining,
                 reset_secs
             ) = throttle_api_call(token, kwargs['token_type'])
+
+            # Get last modified header
+            kwargs['Last-Modified'] = _get_last_modified_header(
+                last_modified_redis_key
+            )
 
             if throttled:
                 response = JsonResponse({

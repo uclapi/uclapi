@@ -18,7 +18,7 @@ from .views import authorise
 def test_timetable_request(request, *args, **kwargs):
     return JsonResponse({
         "ok": True
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)
 
 class ScopingTestCase(TestCase):
     test_scope_map = {
