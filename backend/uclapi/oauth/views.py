@@ -97,14 +97,14 @@ def shibcallback(request):
     except signing.SignatureExpired:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": "Signature has expired. Please try login again."
+            "error": "Login data has expired. Please attempt to log in again. If the issues persist please contact the UCL API Team to rectify this."
         })
         response.status_code = 400
         return response
     except signing.BadSignature:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": "Bad signature. Please try login again."
+            "error": "Bad signature. Please attempt to log in again. If the issues persist please contact the UCL API Team to rectify this."
         })
         response.status_code = 400
         return response
