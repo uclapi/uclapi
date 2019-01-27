@@ -9,15 +9,13 @@ import redis
 import textwrap
 import validators
 
-
 def get_articles():
     r = redis.Redis(host=REDIS_UCLAPI_HOST)
-    articles = [["", ""], ["", ""], ["", ""]]
-    for i in range(0, 3):
-        articles[i][0] = r.get("Blog:item"+str(i)+":url").decode("utf-8")
-        articles[i][1] = r.get("Blog:item"+str(i)+":title").decode("utf-8")
+    articles = [{},{},{}]
+    for i in range(0,3):
+        articles[i]['url'] = r.get("Blog:item"+str(i)+":url").decode("utf-8")
+        articles[i]['title'] = r.get("Blog:item"+str(i)+":title").decode("utf-8") 
     return articles
-
 
 def generate_temp_api_token():
     return generate_api_token("temp")

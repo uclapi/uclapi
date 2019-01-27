@@ -165,12 +165,7 @@ def get_started(request):
         'initial_data': {
             'temp_token': token,
             'logged_in': str(logged_in),
-            'url1': articles[0][0],
-            'url2': articles[1][0],
-            'url3': articles[2][0],
-            'title1': articles[0][1],
-            'title2': articles[1][1],
-            'title3': articles[2][1]
+            'medium_articles': articles
         }
     })
 
