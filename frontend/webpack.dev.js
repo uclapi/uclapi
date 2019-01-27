@@ -15,7 +15,7 @@ module.exports = {
       sourceMap: true
     }),
     new BundleTracker({
-      filename: '../backend/uclapi/webpack-stats.json'
+      filename: '../backend/uclapi/dashboard/static/webpack-stats.json'
     })
   ],
   module: {
