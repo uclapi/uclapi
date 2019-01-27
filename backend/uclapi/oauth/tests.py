@@ -410,9 +410,9 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             content["error"],
-            ("Bad signature. Please attempt to log in again."
-                      " If the issues persist please contact the UCL API"
-                      " Team to rectify this.")
+            ("Bad signature. Please attempt to log in again. "
+             "If the issues persist please contact the UCL API "
+             "Team to rectify this.")
         )
 
     @unittest.mock.patch(
@@ -431,9 +431,9 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             content["error"],
-            ("Login data has expired. Please attempt to log in again."
-                      " If the issues persist please contact the UCL API"
-                      " Team to rectify this.")
+            ("Login data has expired. Please attempt to log in again. "
+             "If the issues persist please contact the UCL API "
+             "Team to rectify this.")
         )
 
 
