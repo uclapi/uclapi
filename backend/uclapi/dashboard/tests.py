@@ -17,7 +17,6 @@ from dashboard.api_applications import (
     update_scopes, get_user_by_id
 )
 
-from .urls import urlpatterns
 
 class DashboardTestCase(TestCase):
     def setUp(self):
