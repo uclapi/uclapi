@@ -186,7 +186,12 @@ USE_TZ = False
 # To do local development with webpack, set the STATIC_URL env
 # value to http://localhost:8080
 STATIC_URL = os.environ.get("STATIC_URL", '/static/')
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# We need to specify a tuple of STATICFILES_DIRS instead of a
+# STATIC_ROOT so that collectstatic picks up the WebPack bundles
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 # Cross Origin settings
 CORS_ORIGIN_ALLOW_ALL = True
