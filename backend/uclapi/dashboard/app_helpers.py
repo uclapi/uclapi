@@ -16,7 +16,7 @@ def get_articles():
         redis_key_url = "Blog:item:{}:url".format(i)
         redis_key_title = "Blog:item:{}:title".format(i)
         articles[i]['url'] = r.get(redis_key_url).decode("utf-8")
-        articles[i]['title'] = r.get(redis_key_title).decode("utf-8") 
+        articles[i]['title'] = r.get(redis_key_title).decode("utf-8")
     return articles
 
 def generate_temp_api_token():
