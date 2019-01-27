@@ -53,7 +53,14 @@ def authorise(request):
     if app.callback_url is None or app.callback_url.strip() == "":
         response = PrettyJsonResponse({
             "ok": False,
-            "error": "No callback URL set for this app."
+            "error": (
+                "This app does not have a callback URL set. "
+                "If you are the developer of this app, "
+                "please ensure you have set a valid callback "
+                "URL for your application in the Dashboard. "
+                "If you are a user, please contact the app's "
+                "developer to rectify this."
+            )
         })
         response.status_code = 400
         return response

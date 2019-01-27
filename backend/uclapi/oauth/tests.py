@@ -331,7 +331,14 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
             self.assertEqual(response.status_code, 400)
             self.assertEqual(
                 content["error"],
-                "No callback URL set for this app."
+                (
+                    "This app does not have a callback URL set. "
+                    "If you are the developer of this app, "
+                    "please ensure you have set a valid callback "
+                    "URL for your application in the Dashboard. "
+                    "If you are a user, please contact the app's "
+                    "developer to rectify this."
+                )
             )
         except json.decoder.JSONDecodeError:
             self.fail("Got through to authorize page with no callback URL set")
