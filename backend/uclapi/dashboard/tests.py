@@ -513,7 +513,7 @@ class api_applicationsTestCase(TestCase):
         for url in self.functions:
             post_request_only(self, url, self.functions[url][0])
 
-    def test_missing_parameters(self):
+    def test_missing_parameters_1(self):
         for url in self.functions:
             empty_get_request_only(
                 self,
