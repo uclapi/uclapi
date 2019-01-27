@@ -84,6 +84,9 @@ celerybeat-schedule
 # dotenv
 .env
 
+# Other .env files
+*.env
+
 # virtualenv
 venv/
 ENV/

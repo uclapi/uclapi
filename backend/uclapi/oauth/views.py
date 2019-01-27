@@ -50,10 +50,17 @@ def authorise(request):
         response.status_code = 400
         return response
 
-    if app.callback_url is None:
+    if app.callback_url is None or app.callback_url.strip() == "":
         response = PrettyJsonResponse({
             "ok": False,
-            "error": "No callback URL set for this app."
+            "error": (
+                        "This app does not have a callback URL set. "
+                        "If you are the developer of this app, "
+                        "please ensure you have set a valid callback "
+                        "URL for your application in the Dashboard. "
+                        "If you are a user, please contact the app's "
+                        "developer to rectify this."
+                      )
         })
         response.status_code = 400
         return response
@@ -94,17 +101,21 @@ def shibcallback(request):
     try:
         # Expire our signed tokens after five minutes for added security
         appdata = signer.unsign(appdata_signed, max_age=300)
-    except signing.BadSignature:
-        response = PrettyJsonResponse({
-            "ok": False,
-            "error": "Bad signature. Please try login again."
-        })
-        response.status_code = 400
-        return response
     except signing.SignatureExpired:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": "Signature has expired. Please try login again."
+            "error": ("Login data has expired. Please attempt to log in "
+                      "again. If the issues persist please contact the "
+                      "UCL API Team to rectify this.")
+        })
+        response.status_code = 400
+        return response
+    except signing.BadSignature:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": ("Bad signature. Please attempt to log in again. "
+                      "If the issues persist please contact the UCL API "
+                      "Team to rectify this.")
         })
         response.status_code = 400
         return response
@@ -456,7 +467,10 @@ def token(request):
     return PrettyJsonResponse(oauth_data)
 
 
-@uclapi_protected_endpoint(personal_data=True)
+@uclapi_protected_endpoint(
+    personal_data=True,
+    last_modified_redis_key="timetable_gencache"
+)
 def userdata(request, *args, **kwargs):
     token = kwargs['token']
     print("Checking student status")
@@ -483,7 +497,7 @@ def userdata(request, *args, **kwargs):
 
     return PrettyJsonResponse(
         user_data,
-        rate_limiting_data=kwargs
+        custom_header_data=kwargs
     )
 
 
@@ -495,7 +509,10 @@ def scope_map(request):
     return PrettyJsonResponse(scope_map)
 
 
-@uclapi_protected_endpoint(personal_data=True)
+@uclapi_protected_endpoint(
+    personal_data=True,
+    last_modified_redis_key=None
+)
 def token_test(request, *args, **kwargs):
     s = Scopes()
 
@@ -510,12 +527,13 @@ def token_test(request, *args, **kwargs):
             pretty_print=False
         ),
         "scope_number": token.scope.scope_number
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)
 
 
 @uclapi_protected_endpoint(
     personal_data=True,
-    required_scopes=['student_number']
+    required_scopes=['student_number'],
+    last_modified_redis_key="timetable_gencache"
 )
 def get_student_number(request, *args, **kwargs):
     token = kwargs['token']
@@ -528,7 +546,7 @@ def get_student_number(request, *args, **kwargs):
         response = PrettyJsonResponse({
             "ok": False,
             "error": "User is not a student."
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -538,5 +556,5 @@ def get_student_number(request, *args, **kwargs):
     }
     return PrettyJsonResponse(
         data,
-        rate_limiting_data=kwargs
+        custom_header_data=kwargs
     )
