@@ -73,7 +73,7 @@ class HttpResponseTestCase(TestCase):
             custom_header_data=headers
         )
         for key in headers:
-            self.assertEqual(response[key],headers[key])
+            self.assertEqual(response[key], headers[key])
 
 
 class GetVarTestCase(TestCase):
