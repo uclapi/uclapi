@@ -483,8 +483,10 @@ class api_applicationsTestCase(TestCase):
         self.factory = APIRequestFactory()
         self.functions = {
             '/api/create/': (create_app, 0), '/api/rename/': (rename_app, 1),
-            '/api/regen/': (regenerate_app_token, 2), '/api/delete/': (delete_app, 2),
-            '/api/setcallbackurl/': (set_callback_url, 2), '/api/updatescopes/': (update_scopes, 2)
+            '/api/regen/': (regenerate_app_token, 2),
+            '/api/delete/': (delete_app, 2),
+            '/api/setcallbackurl/': (set_callback_url, 2),
+            '/api/updatescopes/': (update_scopes, 2)
         }
 
     def test_get_user_returns_correct_user(self):
@@ -506,9 +508,14 @@ class api_applicationsTestCase(TestCase):
             "Request does not have an app_id."
         )
         for url in self.functions:
-            empty_get_request_only(self,url,self.functions[url][0],self.functions[url][1])
+            empty_get_request_only(
+                self,
+                url,
+                self.functions[url][0],
+                errors[self.functions[url][1]]
+            )
 
-    def test_missing_parameters(self):
+    def test_missing_parameters2(self):
         request = self.factory.post(
             '/api/create/',
             {
