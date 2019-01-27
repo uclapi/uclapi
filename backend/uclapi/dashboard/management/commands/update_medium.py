@@ -1,4 +1,6 @@
 from django.core.management.base import BaseCommand
+from django.conf import settings
+import redis
 import xml.etree.ElementTree as ET
 from requests import get as rget
 
@@ -10,27 +12,17 @@ class Command(BaseCommand):
         print("Getting latest medium articles")
         response = rget(url="https://medium.com/feed/ucl-api")
         root = ET.fromstring(response.text)
-        file_data = []
-        print("Editing Blog.jsx")
-        with open("../../frontend/src/components/getStarted/Blog.jsx", "r") as f:
-            for line in f:
-                file_data.append(line)
         medium_article_iterator = root.iter('item')
-        for i in range(0, len(file_data)):
-            if file_data[i].strip()[0:3] == "<a ":
-                article = next(medium_article_iterator)
-                for j in range(0, len(file_data[i])):
-                    if file_data[i][j] != " ":
-                        buffer = j
-                        break
-                file_data[i] = buffer*" " + "<a href=\""+article[1].text+"\">\n"
-                for j in range(0, len(file_data[i+1])):
-                    if file_data[i+1][j] != " ":
-                        buffer = j
-                        break
-                file_data[i+1] = buffer*" " + article[0].text + "\n"
 
-        with open("../../frontend/src/components/getStarted/Blog.jsx", "w") as f:
-            for line in file_data:
-                f.write(line)
+        print("Connecting to Redis")
+        self._redis = redis.Redis(
+            host=settings.REDIS_UCLAPI_HOST,
+            charset="utf-8",
+            decode_responses=True
+        )
+        print("Setting Blog keys")
+        for i in range(0,3):
+            article = next(medium_article_iterator)
+            self._redis.set("Blog:item"+str(i)+":url", article[1].text)
+            self._redis.set("Blog:item"+str(i)+":title", article[0].text)
         print("Frontend updated to have latest medium blogs")

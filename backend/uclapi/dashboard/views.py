@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from oauth.scoping import Scopes
 from uclapi.settings import FAIR_USE_POLICY
 
-from .app_helpers import get_temp_token
+from .app_helpers import get_temp_token, get_articles
 from .models import App, User
 from .tasks import add_user_to_mailing_list_task, \
                    keen_add_event_task as keen_add_event
@@ -156,12 +156,21 @@ def get_started(request):
         request.session["user_id"]
     except KeyError:
         logged_in = False
+    articles = get_articles()
+
+
 
     token = get_temp_token()
     return render(request, 'getStarted.html', {
         'initial_data': {
             'temp_token': token,
-            'logged_in': str(logged_in)
+            'logged_in': str(logged_in),
+            'url1': articles[0][0],
+            'url2': articles[1][0],
+            'url3': articles[2][0],
+            'title1': articles[0][1],
+            'title2': articles[1][1],
+            'title3': articles[2][1]
         }
     })
 
