@@ -464,7 +464,7 @@ def post_request_only(self, url, view):
     )
 
 
-def empty_get_request_only(self, url, view, error):
+def empty_post_request_only(self, url, view, error):
     request = self.factory.post(
         url,
         {
@@ -479,6 +479,23 @@ def empty_get_request_only(self, url, view, error):
         error
     )
 
+def no_app_post_request(self, url, view, user_):
+
+    request = self.factory.post(
+        url,
+        {
+            "new_name": "test_app",
+            "app_id": 1
+        }
+    )
+    request.session = {'user_id': user_.id}
+    response = view(request)
+    content = json.loads(response.content.decode())
+    self.assertEqual(response.status_code, 400)
+    self.assertEqual(
+        content["message"],
+        "App does not exist."
+    )
 
 class ApiApplicationsTestCase(TestCase):
     def setUp(self):
@@ -515,12 +532,22 @@ class ApiApplicationsTestCase(TestCase):
 
     def test_missing_parameters(self):
         for url in self.functions:
-            empty_get_request_only(
+            empty_post_request_only(
                 self,
                 url,
                 self.functions[url][0],
                 self.errors[self.functions[url][1]]
             )
+
+    def test_app_does_not_exist(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        for url in self.functions:
+            if url == '/api/rename/' or url == '/api/delete/':
+                no_app_post_request(self, url, self.functions[url][0], user_)
 
     # Start of create_app section
 
