@@ -378,7 +378,7 @@ class ViewsTestCase(TestCase):
         )
         k = unittest.mock.patch.dict(
             os.environ,
-            {'SHIBBOLETH_ROOT':'FakeShibDirectory'}
+            {'SHIBBOLETH_ROOT': 'FakeShibDirectory'}
         )
         k.start()
         response = authorise(request)
