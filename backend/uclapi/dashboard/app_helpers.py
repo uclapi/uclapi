@@ -13,8 +13,10 @@ def get_articles():
     r = redis.Redis(host=REDIS_UCLAPI_HOST)
     articles = [{},{},{}]
     for i in range(0,3):
-        articles[i]['url'] = r.get("Blog:item"+str(i)+":url").decode("utf-8")
-        articles[i]['title'] = r.get("Blog:item"+str(i)+":title").decode("utf-8") 
+        redis_key_url = "Blog:item:{}:url".format(i)
+        redis_key_title = "Blog:item:{}:title".format(i)
+        articles[i]['url'] = r.get(redis_key_url).decode("utf-8")
+        articles[i]['title'] = r.get(redis_key_title).decode("utf-8") 
     return articles
 
 def generate_temp_api_token():
