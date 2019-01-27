@@ -479,7 +479,7 @@ def empty_post_request_only(self, url, view, error):
         error
     )
 
-    
+
 def no_app_post_request(self, url, view, user_):
 
     request = self.factory.post(
@@ -498,7 +498,7 @@ def no_app_post_request(self, url, view, user_):
         "App does not exist."
     )
 
-    
+
 class ApiApplicationsTestCase(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
