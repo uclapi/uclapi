@@ -4,6 +4,7 @@ from .decorators import (
     _check_general_token_issues,
     _check_oauth_token_issues,
     _check_temp_token_issues,
+    _get_last_modified_header,
     how_many_seconds_until_midnight,
     get_var,
     throttle_api_call,
@@ -27,8 +28,11 @@ from oauth.scoping import Scopes
 from freezegun import freeze_time
 from rest_framework.test import APIRequestFactory
 
+from uclapi.settings import REDIS_UCLAPI_HOST
+
 import datetime
 import json
+import redis
 
 
 class SecondsUntilMidnightTestCase(SimpleTestCase):
@@ -467,4 +471,101 @@ class OAuthTokenCheckerTest(TestCase):
         self.assertEqual(
             result.token,
             self.valid_oauth_token.token
+        )
+
+
+class LastModifiedHeaderTestCase(TestCase):
+    base_redis_key = "http:headers:Last-Modified:"
+
+    def test_redis_case_1(self):
+        redis_key = self.base_redis_key + __name__
+        r = redis.Redis(host=REDIS_UCLAPI_HOST)
+        r.set(
+            redis_key,
+            "2019-01-24T00:10:05+01:00"
+        )
+        last_modified_header = _get_last_modified_header(__name__)
+        self.assertEqual(
+            last_modified_header,
+            "Wed, 23 Jan 2019 23:10:05 GMT"
+        )
+        r.delete(redis_key)
+
+    def test_redis_case_2(self):
+        redis_key = self.base_redis_key + __name__
+        r = redis.Redis(host=REDIS_UCLAPI_HOST)
+        r.set(
+            redis_key,
+            "2019-01-24T00:10:05+00:00"
+        )
+        last_modified_header = _get_last_modified_header(__name__)
+        self.assertEqual(
+            last_modified_header,
+            "Thu, 24 Jan 2019 00:10:05 GMT"
+        )
+        r.delete(redis_key)
+
+    def test_redis_case_3(self):
+        redis_key = self.base_redis_key + __name__
+        r = redis.Redis(host=REDIS_UCLAPI_HOST)
+        r.set(
+            redis_key,
+            "2018-12-25T00:13:02-05:00"
+        )
+        last_modified_header = _get_last_modified_header(__name__)
+        self.assertEqual(
+            last_modified_header,
+            "Tue, 25 Dec 2018 05:13:02 GMT"
+        )
+        r.delete(redis_key)
+
+    def test_current_time_case_1(self):
+        last_modified_header = _get_last_modified_header()
+        current_time = datetime.datetime.utcnow()
+        last_modified_timestamp = datetime.datetime.strptime(
+            last_modified_header,
+            "%a, %d %b %Y %H:%M:%S GMT"
+        )
+
+        # We can't just assert that the timestamps will be exactly equal
+        # as we can't guarantee that the testcase will all run within
+        # one single second.
+
+        # Thank you, Stack Overflow!
+        # https://stackoverflow.com/a/4695663
+        margin = datetime.timedelta(seconds=3)
+
+        self.assertTrue(
+            (
+                last_modified_timestamp - margin
+                <=
+                current_time
+                <=
+                last_modified_timestamp + margin
+            )
+        )
+
+    def test_redis_nonexistent_1(self):
+        last_modified_header = _get_last_modified_header(
+            "NONEXISTENTDONOTUSEABCXYZ"
+        )
+        current_time = datetime.datetime.utcnow()
+        last_modified_timestamp = datetime.datetime.strptime(
+            last_modified_header,
+            "%a, %d %b %Y %H:%M:%S GMT"
+        )
+
+        # We use the same assertions as the one for the current timestamp
+        # as the key won't return any results.
+
+        margin = datetime.timedelta(seconds=3)
+
+        self.assertTrue(
+            (
+                last_modified_timestamp - margin
+                <=
+                current_time
+                <=
+                last_modified_timestamp + margin
+            )
         )

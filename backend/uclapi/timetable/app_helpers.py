@@ -164,7 +164,7 @@ def _get_timetable_events(full_modules, stumodules):
             # Get events for the lab group assigned
             # Also include general lecture events (via the or operator)
             events_data = timetable.objects.filter(
-                Q(modgrpcode=module.modgrpcode) | Q(modgrpcode='') | Q(modgrpcode=None),
+                Q(modgrpcode=module.modgrpcode) | Q(modgrpcode='') | Q(modgrpcode=None),  # noqa
                 moduleid=module.moduleid,
                 instid=module.instid
             )

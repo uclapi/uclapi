@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 import redis
 import requests
 
+from common.helpers import LOCAL_TIMEZONE
+
 from django.conf import settings
 
 from .api import OccupEyeApi
@@ -571,3 +573,13 @@ class OccupeyeCache():
             self.cache_all_survey_sensor_states(survey_id)
         print("[+] Summaries")
         self.cache_common_summaries()
+
+        print("[+] Setting Last-Modified key")
+        last_modified_key = "http:headers:Last-Modified:Workspaces"
+
+        current_timestamp = datetime.now(LOCAL_TIMEZONE).isoformat(
+            timespec='seconds'
+        )
+        self._redis.set(last_modified_key, current_timestamp)
+
+        print("[+] Done")

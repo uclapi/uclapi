@@ -1,8 +1,10 @@
 import json
 import unittest.mock
+import os
 
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
+from django.core import signing
 
 from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse
@@ -12,13 +14,19 @@ from dashboard.models import App, User
 from .app_helpers import generate_random_verification_code
 from .models import OAuthScope, OAuthToken
 from .scoping import Scopes
+from .views import authorise, shibcallback
 
 
 @uclapi_protected_endpoint(personal_data=True, required_scopes=["timetable"])
 def test_timetable_request(request, *args, **kwargs):
     return JsonResponse({
         "ok": True
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)
+
+
+def unsign(data, max_age):
+    raise signing.SignatureExpired
+
 
 class ScopingTestCase(TestCase):
     test_scope_map = {
@@ -310,6 +318,159 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
         response = test_timetable_request(request)
 
         self.assertEqual(response.status_code, 200)
+
+    def test_no_callback_url(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+        request = self.factory.get(
+            '/oauth/authorise',
+            {
+                'client_id': app_.client_id,
+                'state': 1
+            }
+        )
+        try:
+            response = authorise(request)
+            content = json.loads(response.content.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                content["error"],
+                (
+                    "This app does not have a callback URL set. "
+                    "If you are the developer of this app, "
+                    "please ensure you have set a valid callback "
+                    "URL for your application in the Dashboard. "
+                    "If you are a user, please contact the app's "
+                    "developer to rectify this."
+                )
+            )
+        except json.decoder.JSONDecodeError:
+            self.fail("Got through to authorize page with no callback URL set")
+
+
+class ViewsTestCase(TestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+
+    def test_no_parameters(self):
+        request = self.factory.get(
+            '/oauth/authorise',
+            {
+            }
+        )
+        try:
+            response = authorise(request)
+            content = json.loads(response.content.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                content["error"],
+                "incorrect parameters supplied"
+            )
+        except json.decoder.JSONDecodeError:
+            self.fail("Got through to authorize page (This shouldn't happen!)")
+
+    def test_no_app(self):
+        request = self.factory.get(
+            '/oauth/authorise',
+            {
+                'client_id': "1",
+                'state': "1"
+            }
+        )
+        try:
+            response = authorise(request)
+            content = json.loads(response.content.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                content["error"],
+                "App does not exist for client id"
+            )
+        except json.decoder.JSONDecodeError:
+            self.fail("Got through to authorize page (This shouldn't happen!)")
+
+    def test_auth_flow_works(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(
+            user=user_,
+            name="An App",
+            callback_url="www.validCallBackUrl?.com"
+        )
+        request = self.factory.get(
+            '/oauth/authorise',
+            {
+                'client_id': app_.client_id,
+                'state': 1
+            }
+        )
+        k = unittest.mock.patch.dict(
+            os.environ,
+            {'SHIBBOLETH_ROOT': 'FakeShibDirectory'}
+        )
+        k.start()
+        response = authorise(request)
+        k.stop()
+        self.assertEqual(response.status_code, 302)
+
+    def test_no_signed_data(self):
+        request = self.factory.get(
+            '/oauth/shibcallback',
+            {
+            }
+        )
+        response = shibcallback(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["error"],
+            "No signed app data returned from Shibboleth."
+            " Please use the authorise endpoint."
+        )
+
+    def test_invalid_signed_data(self):
+        request = self.factory.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': "invalid"
+            }
+        )
+        response = shibcallback(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["error"],
+            ("Bad signature. Please attempt to log in again. "
+             "If the issues persist please contact the UCL API "
+             "Team to rectify this.")
+        )
+
+    @unittest.mock.patch(
+        'django.core.signing.TimestampSigner.unsign',
+        side_effect=unsign
+    )
+    def test_expired_signature(self, TimestampSigner):
+        request = self.factory.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': "invalid"
+            }
+        )
+        response = shibcallback(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["error"],
+            ("Login data has expired. Please attempt to log in again. "
+             "If the issues persist please contact the UCL API "
+             "Team to rectify this.")
+        )
 
 
 class AppHelpersTestCase(TestCase):
