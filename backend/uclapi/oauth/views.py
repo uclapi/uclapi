@@ -84,8 +84,8 @@ def shibcallback(request):
     if not appdata_signed:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": ("No signed app data returned from Shibboleth."
-                      " Please use the authorise endpoint.")
+            "error": ("No signed app data returned from Shibboleth. "
+                      "Please use the authorise endpoint.")
         })
         response.status_code = 400
         return response
@@ -97,18 +97,18 @@ def shibcallback(request):
     except signing.SignatureExpired:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": ("Login data has expired. Please attempt to log in again."
-                      " If the issues persist please contact the UCL API"
-                      " Team to rectify this.")
+            "error": ("Login data has expired. Please attempt to log in again. "
+                      "If the issues persist please contact the UCL API "
+                      "Team to rectify this.")
         })
         response.status_code = 400
         return response
     except signing.BadSignature:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": ("Bad signature. Please attempt to log in again."
-                      " If the issues persist please contact the UCL API"
-                      " Team to rectify this.")
+            "error": ("Bad signature. Please attempt to log in again. "
+                      "If the issues persist please contact the UCL API"
+                      "Team to rectify this.")
         })
         response.status_code = 400
         return response
@@ -212,8 +212,8 @@ def userdeny(request):
     except:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": ("The signed data received was invalid."
-                      " Please try the login process again. "
+            "error": ("The signed data received was invalid. "
+                      "Please try the login process again. "
                       "If this issue persists, please contact support.")
         })
         response.status_code = 400
@@ -224,8 +224,8 @@ def userdeny(request):
     except:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": ("The JSON data was not in the expected format."
-                      " Please contact support.")
+            "error": ("The JSON data was not in the expected format. "
+                      "Please contact support.")
         })
         response.status_code = 400
         return response
@@ -271,9 +271,9 @@ def userallow(request):
     except (signing.BadSignature, KeyError):
         response = PrettyJsonResponse({
             "ok": False,
-            "error": ("The signed data received was invalid."
-                      " Please try the login process again."
-                      " If this issue persists, please contact support.")
+            "error": ("The signed data received was invalid. "
+                      "Please try the login process again. "
+                      "If this issue persists, please contact support.")
         })
         response.status_code = 400
         return response
@@ -283,8 +283,8 @@ def userallow(request):
     except ValueError:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": ("The JSON data was not in the expected format."
-                      " Please contact support.")
+            "error": ("The JSON data was not in the expected format. "
+                      "Please contact support.")
         })
         response.status_code = 400
         return response
@@ -350,8 +350,8 @@ def token(request):
     except:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": ("The code received was invalid, or has expired."
-                      " Please try again.")
+            "error": ("The code received was invalid, or has expired. "
+                      "Please try again.")
         })
         response.status_code = 400
         return response
