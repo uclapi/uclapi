@@ -1,8 +1,23 @@
+const os = require('os');
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const BundleTracker = require('webpack-bundle-tracker');
 
 var entryPointsPathPrefix = './src/pages';
 
 module.exports = {
+  mode: 'development',
+  optimization: {
+    minimizer: []  // This list is built below as per platform requirements
+  },
+  plugins: [
+    new UglifyJsPlugin({
+      sourceMap: true
+    }),
+    new BundleTracker({
+      filename: '../backend/uclapi/static/webpack-stats.json'
+    })
+  ],
   module: {
     rules: [
       {
@@ -27,14 +42,30 @@ module.exports = {
     ]
   },
   entry: {
-    'js/getStarted': entryPointsPathPrefix + '/getStarted.jsx',
-    'js/documentation': entryPointsPathPrefix + '/documentation.jsx',
-    'js/dashboard': entryPointsPathPrefix + '/dashboard.jsx',
-    'js/marketplace': entryPointsPathPrefix + '/marketplace.jsx',
-    'js/authorise': entryPointsPathPrefix + '/authorise.jsx',
+    getStarted: entryPointsPathPrefix + '/getStarted.jsx',
+    documentation: entryPointsPathPrefix + '/documentation.jsx',
+    dashboard: entryPointsPathPrefix + '/dashboard.jsx',
+    marketplace: entryPointsPathPrefix + '/marketplace.jsx',
+    authorise: entryPointsPathPrefix + '/authorise.jsx',
   },
   output: {
-    path: path.resolve(__dirname),
+    path: path.resolve(__dirname, '../backend/uclapi/static/'),
     filename: '[name].js'
   }
 };
+if (os.platform == "linux" && os.release().indexOf("Microsoft") != -1) {
+  module.exports.optimization.minimizer.push(
+    new UglifyJsPlugin({
+      cache: true,
+      sourceMap: true
+    })
+  );
+} else {
+  module.exports.optimization.minimizer.push(
+    new UglifyJsPlugin({
+      cache: true,
+      sourceMap: true,
+      parallel: true
+    })
+  );
+}

@@ -68,7 +68,8 @@ INSTALLED_APPS = [
     'common',
     'raven.contrib.django.raven_compat',
     'corsheaders',
-    'workspaces'
+    'workspaces',
+    'webpack_loader'
 ]
 
 MIDDLEWARE = [
@@ -178,15 +179,6 @@ USE_L10N = True
 
 USE_TZ = False
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.10/howto/static-files/
-# The default Static URL is /static/ which is fine for when statics
-# have been built and placed into their respective folders.
-# To do local development with webpack, set the STATIC_URL env
-# value to http://localhost:8080
-STATIC_URL = os.environ.get("STATIC_URL", '/static/')
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
 # Cross Origin settings
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/roombookings/.*$'
@@ -207,8 +199,13 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-
 ROOMBOOKINGS_SETID = 'LIVE-18-19'
+
+# We need to specify a tuple of STATICFILES_DIRS instead of a
+# STATIC_ROOT so that collectstatic picks up the WebPack bundles
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 # S3 file storage settings
 # There are three scenarios to consider:
@@ -262,3 +259,30 @@ if strtobool(os.environ.get("AWS_S3_STATICS", "False")):
         AWS_S3_ENCRYPTION = False
     else:
         AWS_QUERYSTRING_AUTH = False
+
+    # Since we are hosting on AWS, we should set the Static URL to it
+    STATIC_URL = "{}/{}".format(
+        AWS_S3_CUSTOM_DOMAIN,
+        AWS_LOCATION
+    )
+else:
+    # https://docs.djangoproject.com/en/1.10/howto/static-files/
+    # The default Static URL is /static/ which is fine for when statics
+    # have been built and placed into their respective folders.
+    STATIC_URL = os.environ.get("STATIC_URL", '/static/')
+
+# Set up the WebPack loader
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': './',  # must end with slash
+        'STATS_FILE': os.path.join(
+            BASE_DIR,
+            'static',
+            'webpack-stats.json'
+        ),
+        'POLL_INTERVAL': 0.1,
+        'TIMEOUT': None,
+        'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
+    }
+}
