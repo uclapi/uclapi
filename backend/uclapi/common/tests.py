@@ -541,10 +541,9 @@ class LastModifiedHeaderTestCase(TestCase):
                 <=
                 current_time
                 <=
-                last_modified_timestamp + margin 
+                last_modified_timestamp + margin
             )
         )
-
 
     def test_redis_nonexistent_1(self):
         last_modified_header = _get_last_modified_header(
