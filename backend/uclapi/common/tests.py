@@ -531,47 +531,20 @@ class LastModifiedHeaderTestCase(TestCase):
         # as we can't guarantee that the testcase will all run within
         # one single second.
 
-        self.assertEqual(
-            last_modified_timestamp.year,
-            current_time.year
-        )
-
-        self.assertEqual(
-            last_modified_timestamp.month,
-            current_time.month
-        )
-
-        self.assertEqual(
-            last_modified_timestamp.day,
-            current_time.day
-        )
-
-        self.assertEqual(
-            last_modified_timestamp.hour,
-            current_time.hour
-        )
-
-        possible_minutes = [
-            current_time.minute - 1,
-            current_time.minute,
-            current_time.minute + 1
-        ]
+        # Thank you, Stack Overflow!
+        # https://stackoverflow.com/a/4695663
+        margin = datetime.timedelta(seconds=3)
 
         self.assertTrue(
-            last_modified_timestamp.minute in possible_minutes
+            (
+                last_modified_timestamp - margin
+                <=
+                current_time
+                <=
+                last_modified_timestamp + margin 
+            )
         )
 
-        possible_seconds = [
-            current_time.second - 2,
-            current_time.second - 1,
-            current_time.second,
-            current_time.second + 1,
-            current_time.second + 2
-        ]
-
-        self.assertTrue(
-            last_modified_timestamp.second in possible_seconds
-        )
 
     def test_redis_nonexistent_1(self):
         last_modified_header = _get_last_modified_header(
@@ -586,44 +559,14 @@ class LastModifiedHeaderTestCase(TestCase):
         # We use the same assertions as the one for the current timestamp
         # as the key won't return any results.
 
-        self.assertEqual(
-            last_modified_timestamp.year,
-            current_time.year
-        )
-
-        self.assertEqual(
-            last_modified_timestamp.month,
-            current_time.month
-        )
-
-        self.assertEqual(
-            last_modified_timestamp.day,
-            current_time.day
-        )
-
-        self.assertEqual(
-            last_modified_timestamp.hour,
-            current_time.hour
-        )
-
-        possible_minutes = [
-            current_time.minute - 1,
-            current_time.minute,
-            current_time.minute + 1
-        ]
+        margin = datetime.timedelta(seconds=3)
 
         self.assertTrue(
-            last_modified_timestamp.minute in possible_minutes
-        )
-
-        possible_seconds = [
-            current_time.second - 2,
-            current_time.second - 1,
-            current_time.second,
-            current_time.second + 1,
-            current_time.second + 2
-        ]
-
-        self.assertTrue(
-            last_modified_timestamp.second in possible_seconds
+            (
+                last_modified_timestamp - margin
+                <=
+                current_time
+                <=
+                last_modified_timestamp + margin
+            )
         )
