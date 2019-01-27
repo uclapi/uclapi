@@ -12,7 +12,7 @@ from dashboard.models import App, User
 from .app_helpers import generate_random_verification_code
 from .models import OAuthScope, OAuthToken
 from .scoping import Scopes
-
+from .views import authorise
 
 @uclapi_protected_endpoint(personal_data=True, required_scopes=["timetable"])
 def test_timetable_request(request, *args, **kwargs):
@@ -310,6 +310,38 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
         response = test_timetable_request(request)
 
         self.assertEqual(response.status_code, 200)
+
+    def test_no_callback_url(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+        request = self.factory.get(
+            '/oauth/authorise',
+            {
+                'client_id': app_.client_id,
+                'state': 1
+            }
+        )
+        try:
+            response = authorise(request)
+            content = json.loads(response.content.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                content["error"],
+                (
+                    "This app does not have a callback URL set. "
+                    "If you are the developer of this app, "
+                    "please ensure you have set a valid callback "
+                    "URL for your application in the Dashboard. "
+                    "If you are a user, please contact the app's "
+                    "developer to rectify this."
+                )
+            )
+        except json.decoder.JSONDecodeError:
+            self.fail("Got through to authorize page with no callback URL set")
 
 
 class AppHelpersTestCase(TestCase):
