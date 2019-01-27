@@ -12,7 +12,7 @@ from .models import App, User
 from .webhook_views import (
     edit_webhook, refresh_verification_secret, user_owns_app, verify_ownership
 )
-
+from .api_applications import get_user_by_id, create_app
 
 class DashboardTestCase(TestCase):
     def setUp(self):
@@ -442,3 +442,46 @@ class RefreshVerifcationSecretViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(content["ok"])
         self.assertTrue("new_secret" in content.keys())
+
+
+class api_applicationsTestCase(TestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+
+    def test_get_user_returns_correct_user(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        self.assertEqual(get_user_by_id(user_.id), user_)
+
+    def test_get_request_rejected(self):
+        request = self.factory.get(
+            '/api/create/',
+            {
+            }
+        )
+
+        response = create_app(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["error"],
+            "Request is not of method POST"
+        )
+
+    def test_missing_parameters(self):
+        request = self.factory.post(
+            '/api/create/',
+            {
+            }
+        )
+
+        response = create_app(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "Request does not have name or user."
+        )
