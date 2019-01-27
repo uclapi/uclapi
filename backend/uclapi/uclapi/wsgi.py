@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/1.10/howto/deployment/wsgi/
 import os
 import urllib.request
 import shutil
+import fcntl
+import errno
 
 import eventlet
 
@@ -36,8 +38,18 @@ WEBPACK_STATS_URL = "https://{}/static/webpack-stats.json".format(
     settings.AWS_S3_CUSTOM_DOMAIN
 )
 WEBPACK_STATS_LOC = os.path.relpath('../static/webpack-stats.json')
-with urllib.request.urlopen(WEBPACK_STATS_URL) as response:
-    with open(WEBPACK_STATS_LOC, 'wb') as out_file:
-        shutil.copyfileobj(response, out_file)
+
+# check if another gunicorn process is
+# already writing to it
+try:
+    fcntl.flock(WEBPACK_STATS_LOC, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    with urllib.request.urlopen(WEBPACK_STATS_URL) as response:
+        with open(WEBPACK_STATS_LOC, 'wb') as out_file:
+            shutil.copyfileobj(response, out_file)
+            fcntl.flock(WEBPACK_STATS_LOC, fcntl.LOCK_UN)
+except IOError as e:
+    if e.errno != errno.EAGAIN:
+        raise
+    pass
 
 application = get_wsgi_application()
