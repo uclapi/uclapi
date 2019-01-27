@@ -36,7 +36,7 @@ module.exports = {
       chunkFilename: "[id]-[contenthash].css"
     }),
     new BundleTracker({
-      filename: '../backend/uclapi/dashboard/static/webpack-stats.json'
+      filename: '../backend/uclapi/static/webpack-stats.json'
     }),
     new webpack.HashedModuleIdsPlugin()
   ],
@@ -72,7 +72,7 @@ module.exports = {
     vendors: ['react'],
   },
   output: {
-    path: path.resolve(__dirname, '../backend/uclapi/dashboard/static/'),
+    path: path.resolve(__dirname, '../backend/uclapi/static/'),
     filename: '[name]-[contenthash].js'
   }
 };

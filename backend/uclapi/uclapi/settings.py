@@ -215,7 +215,10 @@ WEBPACK_LOADER = {
     'DEFAULT': {
         'CACHE': not DEBUG,
         'BUNDLE_DIR_NAME': '/',  # must end with slash
-        'STATS_FILE': os.path.join(BASE_DIR, 'dashboard/static/webpack-stats.json'),
+        'STATS_FILE': os.path.join(
+            BASE_DIR,
+            'static/webpack-stats.json'
+        ),
         'POLL_INTERVAL': 0.1,
         'TIMEOUT': None,
         'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
@@ -242,7 +245,7 @@ WEBPACK_LOADER = {
 #    of a person who has permission to upload new statics to
 #    S3.
 
-if strtobool(os.environ.get("AWS_S3_STATICS", "False")) or True:
+if strtobool(os.environ.get("AWS_S3_STATICS", "False")):
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     AWS_STORAGE_BUCKET_NAME = os.environ["AWS_S3_BUCKET_NAME"]

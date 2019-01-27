@@ -32,9 +32,12 @@ if os.environ.get("EVENTLET_NOPATCH") != 'True':
 
 # Download latest webpack-stats.json from S3
 # before starting WSGI
-WEBPACK_STATS_URL = "https://{}/static/webpack-stats.json".format(settings.AWS_S3_CUSTOM_DOMAIN)
-WEBPACK_STATS_LOC = os.path.relpath('../dashboard/static/webpack-stats.json')
-with urllib.request.urlopen(WEBPACK_STATS_URL) as response, open(WEBPACK_STATS_LOC, 'wb') as out_file:
-    shutil.copyfileobj(response, out_file)
+WEBPACK_STATS_URL = "https://{}/static/webpack-stats.json".format(
+    settings.AWS_S3_CUSTOM_DOMAIN
+)
+WEBPACK_STATS_LOC = os.path.relpath('../static/webpack-stats.json')
+with urllib.request.urlopen(WEBPACK_STATS_URL) as response:
+    with open(WEBPACK_STATS_LOC, 'wb') as out_file:
+        shutil.copyfileobj(response, out_file)
 
 application = get_wsgi_application()

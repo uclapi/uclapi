@@ -15,7 +15,7 @@ module.exports = {
       sourceMap: true
     }),
     new BundleTracker({
-      filename: '../backend/uclapi/dashboard/static/webpack-stats.json'
+      filename: '../backend/uclapi/static/webpack-stats.json'
     })
   ],
   module: {
@@ -49,7 +49,7 @@ module.exports = {
     authorise: entryPointsPathPrefix + '/authorise.jsx',
   },
   output: {
-    path: path.resolve(__dirname, '../backend/uclapi/dashboard/static/'),
+    path: path.resolve(__dirname, '../backend/uclapi/static/'),
     filename: '[name].js'
   }
 };
