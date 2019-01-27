@@ -24,6 +24,7 @@ class Command(BaseCommand):
         print("Setting Blog keys")
         for i in range(0, 3):
             article = next(medium_article_iterator)
-            self._redis.set("Blog:item"+str(i)+":url", article[1].text)
+            redis_key = "Blog:item:{}:url".format(i)
+            self._redis.set(redis_key, article[1].text)
             self._redis.set("Blog:item"+str(i)+":title", article[0].text)
         print("Frontend updated to have latest medium blogs")
