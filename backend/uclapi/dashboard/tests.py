@@ -485,3 +485,25 @@ class api_applicationsTestCase(TestCase):
             content["message"],
             "Request does not have name or user."
         )
+
+    def test_missing_parameters(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        request = self.factory.post(
+            '/api/create/',
+            {
+                "name": "test_app"
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = create_app(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            content["message"],
+            "App sucessfully created"
+        )
