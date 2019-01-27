@@ -4,7 +4,6 @@ import celery
 import os
 import raven
 
-from django.conf import settings
 from raven.contrib.celery import register_signal as raven_register_signal, \
     register_logger_signal as raven_register_logger_signal
 

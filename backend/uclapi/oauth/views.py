@@ -54,13 +54,13 @@ def authorise(request):
         response = PrettyJsonResponse({
             "ok": False,
             "error": (
-                "This app does not have a callback URL set. "
-                "If you are the developer of this app, "
-                "please ensure you have set a valid callback "
-                "URL for your application in the Dashboard. "
-                "If you are a user, please contact the app's "
-                "developer to rectify this."
-            )
+                        "This app does not have a callback URL set. "
+                        "If you are the developer of this app, "
+                        "please ensure you have set a valid callback "
+                        "URL for your application in the Dashboard. "
+                        "If you are a user, please contact the app's "
+                        "developer to rectify this."
+                      )
         })
         response.status_code = 400
         return response
@@ -101,17 +101,21 @@ def shibcallback(request):
     try:
         # Expire our signed tokens after five minutes for added security
         appdata = signer.unsign(appdata_signed, max_age=300)
-    except signing.BadSignature:
-        response = PrettyJsonResponse({
-            "ok": False,
-            "error": "Bad signature. Please try login again."
-        })
-        response.status_code = 400
-        return response
     except signing.SignatureExpired:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": "Signature has expired. Please try login again."
+            "error": ("Login data has expired. Please attempt to log in "
+                      "again. If the issues persist please contact the "
+                      "UCL API Team to rectify this.")
+        })
+        response.status_code = 400
+        return response
+    except signing.BadSignature:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": ("Bad signature. Please attempt to log in again. "
+                      "If the issues persist please contact the UCL API "
+                      "Team to rectify this.")
         })
         response.status_code = 400
         return response
