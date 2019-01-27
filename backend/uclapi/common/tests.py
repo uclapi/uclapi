@@ -13,7 +13,8 @@ from .decorators import (
 
 from .helpers import (
     generate_api_token,
-    PrettyJsonResponse as JsonResponse
+    PrettyJsonResponse as JsonResponse,
+    RateLimitHttpResponse as HttpResponse
 )
 
 from dashboard.models import (
@@ -57,6 +58,22 @@ class SecondsUntilMidnightTestCase(SimpleTestCase):
                     how_many_seconds_until_midnight(),
                     expected[idx]
                 )
+
+
+class HttpResponseTestCase(TestCase):
+    def test_check_headers_set(self):
+        headers = {
+            'Last-Modified': '1',
+            'X-RateLimit-Limit': '2',
+            'X-RateLimit-Remaining': '3',
+            'X-RateLimit-Retry-After': '4'
+        }
+        response = HttpResponse(
+            "hello",
+            custom_header_data=headers
+        )
+        for key in headers:
+            self.assertEqual(response[key],headers[key])
 
 
 class GetVarTestCase(TestCase):
