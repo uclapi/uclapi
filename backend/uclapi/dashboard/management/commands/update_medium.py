@@ -4,6 +4,7 @@ import redis
 import xml.etree.ElementTree as ET
 from requests import get as rget
 
+
 class Command(BaseCommand):
 
     help = 'Updates medium blogs on website'
@@ -23,6 +24,8 @@ class Command(BaseCommand):
         print("Setting Blog keys")
         for i in range(0,settings.MEDIUM_ARTICLE_QUANTITY):
             article = next(medium_article_iterator)
-            self._redis.set("Blog:item"+str(i)+":url", article[1].text)
-            self._redis.set("Blog:item"+str(i)+":title", article[0].text)
+            redis_key_url = "Blog:item:{}:url".format(i)
+            redis_key_title = "Blog:item:{}:title".format(i)
+            self._redis.set(redis_key_url, article[1].text)
+            self._redis.set(redis_key_title, article[0].text)
         print("Frontend updated to have latest medium blogs")
