@@ -21,7 +21,7 @@ class Command(BaseCommand):
             decode_responses=True
         )
         print("Setting Blog keys")
-        for i in range(0,3):
+        for i in range(0,settings.MEDIUM_ARTICLE_QUANTITY):
             article = next(medium_article_iterator)
             self._redis.set("Blog:item"+str(i)+":url", article[1].text)
             self._redis.set("Blog:item"+str(i)+":title", article[0].text)
