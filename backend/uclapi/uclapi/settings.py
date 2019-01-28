@@ -264,4 +264,4 @@ if strtobool(os.environ.get("AWS_S3_STATICS", "False")):
         AWS_QUERYSTRING_AUTH = False
 
 # This dictates how many Medium articles we scrape
-MEDIUM_ARTICLE_QUANTITY = 4
+MEDIUM_ARTICLE_QUANTITY = 3
