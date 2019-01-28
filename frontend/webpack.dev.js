@@ -12,7 +12,7 @@ var entryPointsPathPrefix = './src/pages';
 
 const publicPath = process.env.AWS_S3_STATICS
   ? `https://${process.env.AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${process.env.AWS_S3_BUCKET_PATH}`
-  : '/static/'
+  : '/static/';
 
 module.exports = {
   mode: 'development',
