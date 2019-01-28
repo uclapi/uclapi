@@ -1,8 +1,3 @@
-require('dotenv')
-  .config({
-    path: '../backend/uclapi/.env'
-  });
-
 const os = require('os');
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -10,9 +5,7 @@ const BundleTracker = require('webpack-bundle-tracker');
 
 var entryPointsPathPrefix = './src/pages';
 
-const publicPath = process.env.AWS_S3_STATICS
-  ? `https://${process.env.AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${process.env.AWS_S3_BUCKET_PATH}`
-  : '/static/';
+const publicPath = '/static/';
 
 module.exports = {
   mode: 'development',
