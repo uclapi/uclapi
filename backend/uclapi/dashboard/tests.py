@@ -21,10 +21,6 @@ from dashboard.api_applications import (
 
 
 class MediumArticleScraperTestCase(TestCase):
-    def setUp(self):
-        placeholder = "h"
-
-
     def test_articles_retrieved(self):
         medium_article_iterator = [
             {'title': 'a', 'url': 'b'},
@@ -43,7 +39,7 @@ class MediumArticleScraperTestCase(TestCase):
             self._redis.set(redis_key_url, article['url'])
             self._redis.set(redis_key_title, article['title'])
         articles = get_articles()
-        self.assertEqual(articles,medium_article_iterator)
+        self.assertEqual(articles, medium_article_iterator)
 
 
 class DashboardTestCase(TestCase):
