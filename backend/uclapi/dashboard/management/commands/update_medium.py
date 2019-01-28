@@ -22,7 +22,7 @@ class Command(BaseCommand):
             decode_responses=True
         )
         print("Setting Blog keys")
-        for i in range(0,settings.MEDIUM_ARTICLE_QUANTITY):
+        for i in range(0, settings.MEDIUM_ARTICLE_QUANTITY):
             article = next(medium_article_iterator)
             redis_key_url = "Blog:item:{}:url".format(i)
             redis_key_title = "Blog:item:{}:title".format(i)
