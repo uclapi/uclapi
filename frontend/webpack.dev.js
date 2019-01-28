@@ -5,6 +5,8 @@ const BundleTracker = require('webpack-bundle-tracker');
 
 var entryPointsPathPrefix = './src/pages';
 
+const publicPath = '/static/';
+
 module.exports = {
   mode: 'development',
   optimization: {
@@ -50,6 +52,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, '../backend/uclapi/static/'),
+    publicPath,
     filename: '[name].js'
   }
 };
