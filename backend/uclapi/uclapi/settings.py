@@ -260,7 +260,6 @@ if strtobool(os.environ.get("AWS_S3_STATICS", "False")):
     else:
         AWS_QUERYSTRING_AUTH = False
 
-        
     # Since we are hosting on AWS, we should set the Static URL to it
     STATIC_URL = "{}/{}".format(
         AWS_S3_CUSTOM_DOMAIN,
