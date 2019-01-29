@@ -133,7 +133,10 @@ class Command(BaseCommand):
             if payload["content"] != {} and webhook["url"] != "":
                 unsent_requests.append(
                     session.post(
-                        webhook["url"], json=payload, headers={"User-Agent": "uclapi-bot/1"}
+                        webhook["url"], json=payload, 
+                        headers={
+                            "User-Agent": "uclapi-bot/1"
+                        }
                     )
                 )
         self.stdout.write(
@@ -141,7 +144,9 @@ class Command(BaseCommand):
         )
         if("debug" in options):
             for i in unsent_requests:
-                self.stdout.write('response status {0}'.format(i.result().status_code))
+                self.stdout.write(
+                    'response status {0}'.format(i.result().status_code)
+                )
 
         for webhook in webhooks_to_enact:
             if webhook["payload"]["content"] != {}:
@@ -153,6 +158,6 @@ class Command(BaseCommand):
                     webhook=webhook_in_db,
                     payload=webhook["payload"]
                 )
-                #new_webhook_history_entry.save()
+                new_webhook_history_entry.save()
 
         self.stdout.write("Webhooks triggered.")
