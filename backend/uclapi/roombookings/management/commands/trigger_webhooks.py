@@ -133,7 +133,7 @@ class Command(BaseCommand):
             if payload["content"] != {} and webhook["url"] != "":
                 unsent_requests.append(
                     session.post(
-                        webhook["url"], json=payload, 
+                        webhook["url"], json=payload,
                         headers={
                             "User-Agent": "uclapi-bot/1"
                         }
