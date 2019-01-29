@@ -115,7 +115,7 @@ WSGI_APPLICATION = 'uclapi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django_postgrespool2',
         'NAME': os.environ.get("DB_UCLAPI_NAME"),
         'USER': os.environ.get("DB_UCLAPI_USERNAME"),
         'PASSWORD': os.environ.get("DB_UCLAPI_PASSWORD"),
@@ -138,6 +138,15 @@ DATABASES = {
         'HOST': os.environ.get("DB_CACHE_HOST"),
         'PORT': os.environ.get("DB_CACHE_PORT")
     }
+}
+
+# Max connections is pool_size + max_overflow
+# Will idle at pool_size connections, overflow are for spikes in traffic
+
+DATABASE_POOL_ARGS = {
+    'max_overflow': 15,
+    'pool_size': 5,
+    'recycle': 300
 }
 
 DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
@@ -286,3 +295,4 @@ WEBPACK_LOADER = {
         'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
     }
 }
+
