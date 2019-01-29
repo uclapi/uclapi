@@ -4,9 +4,7 @@ from roombookings.helpers import _serialize_bookings
 from dashboard.models import Webhook, WebhookTriggerHistory
 from datetime import datetime
 from deepdiff import DeepDiff
-import requests
 from django.utils import timezone
-import concurrent.futures as cf
 from requests_futures.sessions import FuturesSession
 
 
