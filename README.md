@@ -255,12 +255,13 @@ popd
 To install these you simply run the command ```npm install``` in the ```uclapi/frontend``` directory! More details can be found [here](frontend/README.md)
 
 ## Running the API Locally
-Running the API locally requires three shells open: one for Fake Shibboleth and one for the API and an optional third for the front-end.
+Running the API locally requires two shells open: one for Fake Shibboleth and one for the API
 **Note that API requests can only ever work if you are within the UCL network and have database access credentials.**
 
 ### Start Dependencies
 1. Ensure Postgres is running
 2. Start Redis: `sudo service redis-server start`
+3. Ensure the front end is build ``` cd uclapi/frontend && npm run build ```
 
 ### Starting Fake Shibboleth (Shell 1)
 ```
@@ -274,12 +275,6 @@ cd fakeshibboleth
 cd uclapi/backend/uclapi
 . venv/bin/activate
 ./manage.py runserver
-```
-
-### Starting the front-end (Shell 3)
-```
-cd uclapi/frontend
-npm start
 ```
 
 ### Give it a go!
