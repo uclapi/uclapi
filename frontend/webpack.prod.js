@@ -14,7 +14,7 @@ const os = require('os');
 
 var entryPointsPathPrefix = './src/pages';
 
-const publicPath = process.env.AWS_S3_STATICS
+const publicPath = process.env.AWS_S3_STATICS === 'True'
   ? `https://${process.env.AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${process.env.AWS_S3_BUCKET_PATH}`
   : '/static/';
 
