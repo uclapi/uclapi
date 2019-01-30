@@ -558,3 +558,8 @@ def get_student_number(request, *args, **kwargs):
         data,
         custom_header_data=kwargs
     )
+
+
+@ensure_csrf_cookie
+def appsettings(request):
+    return render(request, 'authDashboard.html')
