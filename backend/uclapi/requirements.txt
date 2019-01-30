@@ -21,7 +21,6 @@ eventlet==0.24.1
 gevent==1.4.0
 freezegun==0.3.11
 greenlet==0.4.15
-grequests==0.3.0
 gunicorn==19.9.0
 hiredis==1.0.0
 idna==2.8
