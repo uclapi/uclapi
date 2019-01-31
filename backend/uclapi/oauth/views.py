@@ -566,15 +566,22 @@ def appsettings(request):
     try:
         user_id = request.session["user_id"]
     except KeyError:
-        user_meta = {
+        meta = {
             "status" : "OFFLINE"
         }
 
-        initial_data = json.dumps(user_meta, cls=DjangoJSONEncoder)
+        initial_data = json.dumps(meta, cls=DjangoJSONEncoder)
         return render(request, 'appsettings.html', {
             'initial_data': initial_data
         })
 
     user = User.objects.get(id=user_id)
 
-    return render(request, 'appsettings.html')
+    meta = {
+        "status" : "OFFLINE"
+    }
+
+    initial_data = json.dumps(meta, cls=DjangoJSONEncoder)
+    return render(request, 'appsettings.html', {
+        'initial_data': initial_data
+    })

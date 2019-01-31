@@ -11,18 +11,6 @@ import './../sass/dashboard.scss';
 class AppSettings extends React.Component {
   constructor (props) {
     super(props);
-    window.initialData.apps.sort((a, b) => {
-      let dateA = moment(a.created);
-      let dateB = moment(b.created);
-
-      if(dateA.isBefore(dateB)){
-        return -1;
-      } else if (dateB.isBefore(dateA)){
-        return 1;
-      } else {
-        return 0;
-      }
-    });
     this.state = {data: window.initialData};
   }
   render () {
