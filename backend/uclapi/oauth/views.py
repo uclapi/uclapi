@@ -567,11 +567,7 @@ def appsettings(request):
         user_id = request.session["user_id"]
     except KeyError:
         user_meta = {
-            "name": "OFFLINE",
-            "cn": "XXX",
-            "department": "XXX",
-            "intranet_groups": "XXX",
-            "apps": []
+            "status" : "OFFLINE"
         }
 
         initial_data = json.dumps(user_meta, cls=DjangoJSONEncoder)

@@ -25,10 +25,18 @@ class AppSettings extends React.Component {
     this.state = {data: window.initialData};
   }
   render () {
-    return <div>
-      <Layout>
-      </Layout>
-    </div>;
+    if(this.props.status!="ONLINE") {
+      return <div>
+        <Layout>   
+          <LogInButton />
+        </Layout>
+      </div>;
+    } else {
+      return <div>
+        <Layout>   
+        </Layout>
+      </div>;
+    }
   }
 }
 
