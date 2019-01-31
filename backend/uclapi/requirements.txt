@@ -31,7 +31,7 @@ kombu==4.2.2.post1
 lxml==4.3.0
 mock==2.0.0
 model-mommy==1.6.0
-pbr==5.1.1
+pbr==5.1.2
 pycryptodome==3.7.3
 psycopg2-binary==2.7.7
 python-dateutil==2.7.5
