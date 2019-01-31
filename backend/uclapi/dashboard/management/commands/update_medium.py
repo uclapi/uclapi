@@ -21,11 +21,13 @@ class Command(BaseCommand):
             charset="utf-8",
             decode_responses=True
         )
+        pipe = self._redis.pipeline()
         print("Setting Blog keys")
         for i in range(0, settings.MEDIUM_ARTICLE_QUANTITY):
             article = next(medium_article_iterator)
             redis_key_url = "Blog:item:{}:url".format(i)
             redis_key_title = "Blog:item:{}:title".format(i)
-            self._redis.set(redis_key_url, article[1].text)
-            self._redis.set(redis_key_title, article[0].text)
+            pipe.set(redis_key_url, article[1].text)
+            pipe.set(redis_key_title, article[0].text)
+        pipe.execute()
         print("Frontend updated to have latest medium blogs")

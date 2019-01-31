@@ -13,13 +13,18 @@ import validators
 
 def get_articles():
     r = redis.Redis(host=REDIS_UCLAPI_HOST)
+    pipe = r.pipeline()
     articles = []
     for i in range(0, MEDIUM_ARTICLE_QUANTITY):
         articles.append({})
         redis_key_url = "Blog:item:{}:url".format(i)
         redis_key_title = "Blog:item:{}:title".format(i)
-        articles[i]['url'] = r.get(redis_key_url).decode("utf-8")
-        articles[i]['title'] = r.get(redis_key_title).decode("utf-8")
+        pipe.get(redis_key_url)
+        pipe.get(redis_key_title)
+    redis_response = pipe.execute()
+    for i in range(0,MEDIUM_ARTICLE_QUANTITY):
+        articles[i]['url'] = redis_response[i*2].decode("utf-8")
+        articles[i]['title'] = redis_response[i*2+1].decode("utf-8")
     return articles
 
 

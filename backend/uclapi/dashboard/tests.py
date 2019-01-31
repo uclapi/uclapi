@@ -36,13 +36,21 @@ class MediumArticleScraperTestCase(TestCase):
             charset="utf-8",
             decode_responses=True
         )
+        pipe = self._redis.pipeline()
         for i in range(0, len(medium_article_iterator)):
             article = medium_article_iterator[i]
             redis_key_url = "Blog:item:{}:url".format(i)
             redis_key_title = "Blog:item:{}:title".format(i)
-            self._redis.set(redis_key_url, article['url'])
-            self._redis.set(redis_key_title, article['title'])
+            pipe.set(redis_key_url, article['url'])
+            pipe.set(redis_key_title, article['title'])
+        pipe.execute()
         articles = get_articles()
+        for i in range(0, len(medium_article_iterator)):
+            redis_key_url = "Blog:item:{}:url".format(i)
+            redis_key_title = "Blog:item:{}:title".format(i)
+            pipe.delete(redis_key_url)
+            pipe.delete(redis_key_title)
+        pipe.execute()
         self.assertEqual(articles,medium_article_iterator)
 
 
