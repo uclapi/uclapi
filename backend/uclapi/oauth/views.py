@@ -562,4 +562,23 @@ def get_student_number(request, *args, **kwargs):
 
 @ensure_csrf_cookie
 def appsettings(request):
+    # Check whether the user is logged in
+    try:
+        user_id = request.session["user_id"]
+    except KeyError:
+        user_meta = {
+            "name": "OFFLINE",
+            "cn": "XXX",
+            "department": "XXX",
+            "intranet_groups": "XXX",
+            "apps": []
+        }
+
+        initial_data = json.dumps(user_meta, cls=DjangoJSONEncoder)
+        return render(request, 'appsettings.html', {
+            'initial_data': initial_data
+        })
+
+    user = User.objects.get(id=user_id)
+
     return render(request, 'appsettings.html')
