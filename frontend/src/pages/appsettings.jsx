@@ -26,7 +26,7 @@ class AppSettings extends React.Component {
     this.state = {data: window.initialData};
   }
   render () {
-    if(this.props.status!="ONLINE") {
+    if(this.state.data.status!="ONLINE") {
       return <div>
         <Layout>   
           <LogInButton />
