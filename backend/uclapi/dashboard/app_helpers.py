@@ -22,7 +22,7 @@ def get_articles():
         pipe.get(redis_key_url)
         pipe.get(redis_key_title)
     redis_response = pipe.execute()
-    for i in range(0,MEDIUM_ARTICLE_QUANTITY):
+    for i in range(0, MEDIUM_ARTICLE_QUANTITY):
         articles[i]['url'] = redis_response[i*2].decode("utf-8")
         articles[i]['title'] = redis_response[i*2+1].decode("utf-8")
     return articles
