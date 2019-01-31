@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Layout from '../components/dashboard/layout.jsx';
 import Profile from '../components/dashboard/profile.jsx';
 import AppList from '../components/dashboard/appList.jsx';
+import LogInButton from '../components/appsettings/loginbutton.jsx';
 import moment from 'moment';
 
 import './../sass/dashboard.scss';
