@@ -13,7 +13,6 @@ class LogInButton extends React.Component {
             <div class="well left">
             </div>
             <input id="remember" name="agreement" value="True" hidden></input>
-            <br>
             <button type="submit" class="pure-button pure-button-primary">Log In</button>
           </fieldset>
         </form>
@@ -24,8 +23,8 @@ class LogInButton extends React.Component {
   }
 }
 
-Layout.propTypes = {
-  children: PropTypes.node
+LogInButton.propTypes = {
+  status: PropTypes.string,
 };
 
 export default LogInButton;
