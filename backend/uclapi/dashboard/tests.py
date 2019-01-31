@@ -21,10 +21,6 @@ from dashboard.api_applications import (
 
 
 class MediumArticleScraperTestCase(TestCase):
-    def setUp(self):
-        placeholder = "h"
-
-
     def test_articles_retrieved(self):
         medium_article_iterator = [
             {'title': 'a', 'url': 'b'},
