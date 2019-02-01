@@ -12,7 +12,7 @@ class LogInButton extends React.Component {
             <div class="pure-u-md-1-4"></div>
             <div class="pure-u-1 pure-u-md-1-2 centered">
               <fieldset>
-                <button type="submit" class="pure-button pure-button-primary">Log In</button>
+                <button type="submit" class="pure-button pure-button-primary" action={this.props.url}>Log In</button>
               </fieldset>
             </div>
             <div class="pure-u-md-1-4"></div>
@@ -26,6 +26,7 @@ class LogInButton extends React.Component {
 
 LogInButton.propTypes = {
   status: PropTypes.string,
+  url: PropTypes.string
 };
 
 export default LogInButton;
