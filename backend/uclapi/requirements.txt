@@ -46,4 +46,4 @@ tldextract==2.2.0
 urllib3==1.24.1
 validators==0.12.4
 vine==1.2.0
--e git://github.com/uclapi/django-webpack-loader@master#egg=django-webpack-loader
+git+git://github.com/uclapi/django-webpack-loader@master#egg=django-webpack-loader
