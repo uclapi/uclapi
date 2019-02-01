@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Hub from '../components/appsettings/hub.jsx';
 import LogInButton from '../components/appsettings/loginbutton.jsx';
+import UserApps from '../components/userapps.jsx';
 import moment from 'moment';
 
 import './../sass/dashboard.scss';
@@ -21,7 +22,8 @@ class AppSettings extends React.Component {
       </div>;
     } else {
       return <div>
-        <Hub>   
+        <Hub> 
+          <UserApps fullname={this.state.data.fullname} />  
         </Hub>
       </div>;
     }

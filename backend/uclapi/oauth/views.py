@@ -559,6 +559,59 @@ def get_student_number(request, *args, **kwargs):
         custom_header_data=kwargs
     )
 
+@csrf_exempt
+def shibboleth_callback(request):
+    # should auth user login or signup
+    # then redirect to dashboard homepage
+    eppn = request.META['HTTP_EPPN']
+    groups = request.META['HTTP_UCLINTRANETGROUPS']
+    cn = request.META['HTTP_CN']
+    department = request.META['HTTP_DEPARTMENT']
+    given_name = request.META['HTTP_GIVENNAME']
+    display_name = request.META['HTTP_DISPLAYNAME']
+    employee_id = request.META['HTTP_EMPLOYEEID']
+
+    try:
+        user = User.objects.get(email=eppn)
+    except ObjectDoesNotExist:
+        # create a new user
+        new_user = User(
+            email=eppn,
+            full_name=display_name,
+            given_name=given_name,
+            department=department,
+            cn=cn,
+            raw_intranet_groups=groups,
+            employee_id=employee_id
+        )
+
+        new_user.save()
+        add_user_to_mailing_list_task.delay(new_user.email, new_user.full_name)
+
+        request.session["user_id"] = new_user.id
+        keen_add_event.delay("signup", {
+            "id": new_user.id,
+            "email": eppn,
+            "name": display_name
+        })
+    else:
+        # user exists already, update values
+        request.session["user_id"] = user.id
+        user.full_name = display_name
+        user.given_name = given_name
+        user.department = department
+        user.raw_intranet_groups = groups
+        user.employee_id = employee_id
+        user.save()
+
+        keen_add_event.delay("User data updated", {
+            "id": user.id,
+            "email": eppn,
+            "name": display_name
+        })
+
+    return redirect(appsettings)
+
 
 @ensure_csrf_cookie
 def appsettings(request):
@@ -566,26 +619,28 @@ def appsettings(request):
     try:
         user_id = request.session["user_id"]
     except KeyError:
-        meta = {
-            "status" : "OFFLINE"
-        }
-
+        # Build Shibboleth callback URL
         url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
         param = (request.build_absolute_uri(request.path) +
-                 "/")
+                 "user/login.callback")
         param = quote(param)
         url = url + param
 
+        meta = {
+            "status" : "OFFLINE",
+            "url" : url
+        }
+
         initial_data = json.dumps(meta, cls=DjangoJSONEncoder)
         return render(request, 'appsettings.html', {
-            'initial_data': initial_data,
-            'url': url
+            'initial_data': initial_data
         })
 
     user = User.objects.get(id=user_id)
 
     meta = {
-        "status" : "ONLINE"
+        "status" : "ONLINE",
+        "fullname": user.full_name
     }
 
     initial_data = json.dumps(meta, cls=DjangoJSONEncoder)
