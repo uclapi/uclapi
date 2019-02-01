@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Layout from '../components/dashboard/layout.jsx';
-import Profile from '../components/dashboard/profile.jsx';
-import AppList from '../components/dashboard/appList.jsx';
+import Hub from '../components/dashboard/hub.jsx';
 import LogInButton from '../components/appsettings/loginbutton.jsx';
 import moment from 'moment';
 
@@ -16,14 +14,14 @@ class AppSettings extends React.Component {
   render () {
     if(this.state.data.status!="ONLINE") {
       return <div>
-        <Layout>   
+        <Hub>   
           <LogInButton />
-        </Layout>
+        </Hub>
       </div>;
     } else {
       return <div>
-        <Layout>   
-        </Layout>
+        <Hub>   
+        </Hub>
       </div>;
     }
   }
