@@ -16,7 +16,7 @@ class AppSettings extends React.Component {
     if(this.state.data.status!="ONLINE") {
       return <div>
         <Hub>   
-          <LogInButton />
+          <LogInButton url={this.state.data.url} />
         </Hub>
       </div>;
     } else {

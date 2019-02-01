@@ -571,14 +571,15 @@ def appsettings(request):
         }
 
         url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
-        param = (request.build_absolute_uri(request.path))
+        param = (request.build_absolute_uri(request.path) +
+                 "/")
         param = quote(param)
         url = url + param
 
         initial_data = json.dumps(meta, cls=DjangoJSONEncoder)
         return render(request, 'appsettings.html', {
             'initial_data': initial_data,
-            'log_in_url': url
+            'url': url
         })
 
     user = User.objects.get(id=user_id)
