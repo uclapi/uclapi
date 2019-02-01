@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Hub from '../components/dashboard/hub.jsx';
+import Hub from '../components/appsettings/hub.jsx';
 import LogInButton from '../components/appsettings/loginbutton.jsx';
 import moment from 'moment';
 
 import './../sass/dashboard.scss';
+import './../sass/hub.scss';
 
 class AppSettings extends React.Component {
   constructor (props) {
