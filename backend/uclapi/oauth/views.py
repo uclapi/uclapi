@@ -638,10 +638,13 @@ def appsettings(request):
 
     user = User.objects.get(id=user_id)
 
+    s = Scopes()
+
     meta = {
         "status" : "ONLINE",
         "fullname": user.full_name,
-        "department": user.department
+        "department": user.department,
+        "scopes": s.get_all_scopes()
     }
 
     initial_data = json.dumps(meta, cls=DjangoJSONEncoder)
