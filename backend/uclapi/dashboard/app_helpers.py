@@ -2,8 +2,10 @@ from binascii import hexlify
 from random import SystemRandom
 
 from common.helpers import generate_api_token
-from uclapi.settings import REDIS_UCLAPI_HOST,\
-                            MEDIUM_ARTICLE_QUANTITY
+from uclapi.settings import (
+    MEDIUM_ARTICLE_QUANTITY,
+    REDIS_UCLAPI_HOST
+)
 
 import os
 import redis
