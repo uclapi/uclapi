@@ -201,6 +201,9 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 ROOMBOOKINGS_SETID = 'LIVE-18-19'
 
+# This dictates how many Medium articles we scrape
+MEDIUM_ARTICLE_QUANTITY = 3
+
 # We need to specify a tuple of STATICFILES_DIRS instead of a
 # STATIC_ROOT so that collectstatic picks up the WebPack bundles
 STATICFILES_DIRS = (
