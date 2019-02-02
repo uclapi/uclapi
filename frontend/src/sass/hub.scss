@@ -1,3 +1,5 @@
+@import './helpers';
+
 h1 {
     font-size: 60px;
     text-align: center;
@@ -8,4 +10,30 @@ h1 {
 }
 fieldset {
 	width: 100%;
+}
+
+$navbarHeight: 60px;
+
+.navbarconsistent {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+  height: $navbarHeight;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  background: url("../images/logoCover2.png");
+  display: flex;
+  align-items: center;
+
+  @include boxShadow(1);
+
+  img{
+    height: $navbarHeight - 15px;;
+    margin-left: 25px;
+  }
+  .logoTextWhite {
+	color: #FFFFFF;
+	display: inline;
+    margin: 10px;
+    font-size: 2em;
+  }
 }

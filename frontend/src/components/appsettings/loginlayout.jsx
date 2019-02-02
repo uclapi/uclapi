@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-class LogInButton extends React.Component {
+class LogInLayout extends React.Component {
   render () {
     return <div class="sign-in-form">
       <div class="pure-u-1">
@@ -24,8 +24,8 @@ class LogInButton extends React.Component {
   }
 }
 
-LogInButton.propTypes = {
+LogInLayout.propTypes = {
   url: PropTypes.string
 };
 
-export default LogInButton;
+export default LogInLayout;
