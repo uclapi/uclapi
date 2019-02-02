@@ -15,13 +15,11 @@ django-dotenv==1.4.2
 django-mock-queries==2.1.1
 django-storages==1.7.1
 djangorestframework==3.9.1
-django-webpack-loader==0.6.0
 docutils==0.14
 eventlet==0.24.1
 gevent==1.4.0
 freezegun==0.3.11
 greenlet==0.4.15
-grequests==0.3.0
 gunicorn==19.9.0
 hiredis==1.0.0
 idna==2.8
@@ -32,18 +30,20 @@ kombu==4.2.2.post1
 lxml==4.3.0
 mock==2.0.0
 model-mommy==1.6.0
-pbr==5.1.1
+pbr==5.1.2
 pycryptodome==3.7.3
 psycopg2-binary==2.7.7
 python-dateutil==2.7.5
 pytz==2018.9
 raven==6.10.0
-redis==3.0.1
+redis==3.1.0
 requests==2.21.0
 requests-file==1.4.3
+requests-futures==0.9.9
 setproctitle==1.1.10
 six==1.12.0
 tldextract==2.2.0
 urllib3==1.24.1
 validators==0.12.4
 vine==1.2.0
+-e git+git://github.com/uclapi/django-webpack-loader@master#egg=django-webpack-loader
