@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import NavbarConsistent from '../dashboard/navbarconsistent.jsx';
+import NavbarConsistent from './navbarconsistent.jsx';
 
 class Hub extends React.Component {
   render () {

@@ -1,5 +1,17 @@
 @import './helpers';
 
+$primary-color: #313537;
+$secondary-color: #f4f4f4;
+$accent-color: #8D6E63;
+$highlight-color: #B18453;
+
+body {
+  margin: 0px;
+  font-family: 'Source Sans Pro', sans-serif;
+  background: $primary-color;
+  color: #ffffff;
+}
+
 h1 {
     font-size: 60px;
     text-align: center;
@@ -20,7 +32,10 @@ $navbarHeight: 60px;
   width: 100%;
   position: fixed;
   top: 0;
-  background: url("../images/logoCover2.png");
+
+  background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("./../images/logoCover2.png");
+  background-position: 50% 0%;
+
   display: flex;
   align-items: center;
 
@@ -35,5 +50,16 @@ $navbarHeight: 60px;
 	display: inline;
     margin: 10px;
     font-size: 2em;
+  }
+}
+
+.loginlayout {
+  padding-top: 200px;
+  padding-bottom: 200px;
+  background: $primary-color;
+  text-align: center;
+
+  a {
+    margin-right: 20px;
   }
 }

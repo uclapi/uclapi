@@ -31,7 +31,6 @@ const muiTheme = getMuiTheme({
   },
 });
 
-import './../sass/dashboard.scss';
 import './../sass/hub.scss';
 
 class AppSettings extends React.Component {
