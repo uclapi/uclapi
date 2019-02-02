@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Switch from '@material-ui/core/Switch';
+import Switch from 'material-ui/core/Switch';
 
 class UserApps extends React.Component {
   render () {
