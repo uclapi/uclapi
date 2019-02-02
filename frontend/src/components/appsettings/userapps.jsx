@@ -22,7 +22,7 @@ class UserApps extends React.Component {
             <div className="app-permission-box">
               Put a button here
             </div>
-          </auth-app>
+          </div>
         </div>
       </div>
     </div>;
