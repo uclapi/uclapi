@@ -2,12 +2,32 @@ from binascii import hexlify
 from random import SystemRandom
 
 from common.helpers import generate_api_token
-from uclapi.settings import REDIS_UCLAPI_HOST
+from uclapi.settings import (
+    MEDIUM_ARTICLE_QUANTITY,
+    REDIS_UCLAPI_HOST
+)
 
 import os
 import redis
 import textwrap
 import validators
+
+
+def get_articles():
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
+    pipe = r.pipeline()
+    articles = []
+    for i in range(0, MEDIUM_ARTICLE_QUANTITY):
+        articles.append({})
+        redis_key_url = "Blog:item:{}:url".format(i)
+        redis_key_title = "Blog:item:{}:title".format(i)
+        pipe.get(redis_key_url)
+        pipe.get(redis_key_title)
+    redis_response = pipe.execute()
+    for i in range(0, MEDIUM_ARTICLE_QUANTITY):
+        articles[i]['url'] = redis_response[i*2].decode("utf-8")
+        articles[i]['title'] = redis_response[i*2+1].decode("utf-8")
+    return articles
 
 
 def generate_temp_api_token():
