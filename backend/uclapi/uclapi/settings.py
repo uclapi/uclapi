@@ -270,7 +270,9 @@ if strtobool(os.environ.get("AWS_S3_STATICS", "False")):
         'DEFAULT': {
             'CACHE': not DEBUG,
             'BUNDLE_DIR_NAME': './',  # must end with slash
-            'STATS_URL': "{}/webpack-stats.json".format(STATIC_URL),
+            'STATS_URL': "https://{}webpack-stats.json".format(
+                STATIC_URL
+            ),
             'POLL_INTERVAL': 0.1,
             'TIMEOUT': None,
             'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
