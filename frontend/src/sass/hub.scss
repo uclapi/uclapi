@@ -13,15 +13,24 @@ body {
 }
 
 h1 {
-    font-size: 60px;
-    text-align: center;
-    text-decoration: underline;
+  font-size: 42px;
+  font-weight: bold;
+  margin-top: 0px;
+  margin-bottom: 20px;
 }
-.pure-button {
-	font-size: 50px;
+
+h2 {
+  font-size: 28px;
+  max-width: 900px;
+  margin: 20px auto;
+  font-weight: 400;
 }
-fieldset {
-	width: 100%;
+
+h3 {
+  font-size: 20px;
+  max-width: 1000px;
+  margin: 20px auto;
+  font-weight: 400;
 }
 
 $navbarHeight: 60px;
@@ -53,13 +62,53 @@ $navbarHeight: 60px;
   }
 }
 
-.loginlayout {
-  padding-top: 200px;
-  padding-bottom: 200px;
+.log-in-layout {
+  padding-top: 25%;
   background: $primary-color;
   text-align: center;
 
   a {
     margin-right: 20px;
   }
+}
+
+.settings-holder { 
+  padding-top: 50px;
+  background: $primary-color;
+  text-align: center;
+}
+.settings-form {
+	width: 50%;
+	max-width: 600px;
+
+	position: relative;
+	margin: auto;
+}
+.settings-title {
+	width: 100%;
+}
+.card-settings {
+	width: 100%;
+	padding-left: 20px;
+	padding-top: 20px; padding-bottom: 20px;
+}
+.auth-app {
+    width: 100%;
+    height: 50px;
+}
+.app-information {
+	float: left;
+	position: relative;
+
+	height: 50px;
+
+	display: inline-block;
+}
+.app-permission-box {
+	float: right; 
+	position: relative;
+
+	height: 50px;
+
+	display: inline-block;
 }

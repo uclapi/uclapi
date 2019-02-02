@@ -6,10 +6,10 @@ import FlatButton from 'material-ui/FlatButton';
 
 class LogInLayout extends React.Component {
   render () {
-    return <div className="loginlayout">
+    return <div className="log-in-layout">
         <div className="container">
           <h1>Sign in to manage app settings</h1>
-          <a href={this.props.url}
+          <a href={this.props.url}>
             <RaisedButton label="Log in" primary={true} />
           </a>
         </div>

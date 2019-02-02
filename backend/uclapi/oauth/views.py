@@ -640,7 +640,8 @@ def appsettings(request):
 
     meta = {
         "status" : "ONLINE",
-        "fullname": user.full_name
+        "fullname": user.full_name,
+        "department": user.department
     }
 
     initial_data = json.dumps(meta, cls=DjangoJSONEncoder)
