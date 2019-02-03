@@ -156,11 +156,10 @@ def get_started(request):
         request.session["user_id"]
     except KeyError:
         logged_in = False
+
     articles = get_articles()
-
-
-
     token = get_temp_token()
+
     return render(request, 'getStarted.html', {
         'initial_data': {
             'temp_token': token,

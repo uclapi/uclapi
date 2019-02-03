@@ -47,7 +47,7 @@ class MediumArticleScraperTestCase(TestCase):
             pipe.delete(redis_key_url)
             pipe.delete(redis_key_title)
         pipe.execute()
-        self.assertEqual(articles,medium_article_iterator)
+        self.assertEqual(articles, medium_article_iterator)
 
 
 class DashboardTestCase(TestCase):
