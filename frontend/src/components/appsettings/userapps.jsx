@@ -17,17 +17,20 @@ class UserApps extends React.Component {
           </div>
         </div>
 
-        {this.props.apps.map((app, i) => {
-          app.scopes[1]['enabled']=="true" || app.scopes[2]['enabled']=="true" ? (
-            <AuthAppRow app_name={app.name}
-              app_created={app.created}
-              app_is_auth="true" />
-          ) : (
-            <AuthAppRow app_name={app.name}
-              app_created={app.created}
-              app_is_auth="false" />
-          )
-        })}
+        <div className="settings-title"><h2>Permissions</h2></div>
+        <div className="card-settings">
+          {this.props.apps.map((app, i) => {
+            app.scopes[1]['enabled']=="true" || app.scopes[2]['enabled']=="true" ? (
+              <AuthAppRow app_name={app.name}
+                app_created={app.created}
+                app_is_auth="true" />
+            ) : (
+              <AuthAppRow app_name={app.name}
+                app_created={app.created}
+                app_is_auth="false" />
+            )
+          })}
+        </div>
       </div>
     </div>;
   }
