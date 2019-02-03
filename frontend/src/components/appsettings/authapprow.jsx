@@ -12,16 +12,26 @@ class AuthAppRow extends React.Component {
             </div>
 
             <div className="app-permission-box">
-              <Switch checked={this.props.app_is_auth} />
+              <Switch checked={this.props.app_is_auth} 
+                      onChange={this.handleChange})/>
             </div>
           </div>;
+  }
+
+  handleChange (event, checked) {
+    if(checked) {
+      
+    } else {
+      
+    }
   }
 }
 
 AuthAppRow.propTypes = {
   app_name: PropTypes.string,
   app_created: PropTypes.string,
-  app_is_auth: PropTypes.bool
+  app_is_auth: PropTypes.bool,
+  app_scope_id: PropTypes.string
 };
 
 export default AuthAppRow;

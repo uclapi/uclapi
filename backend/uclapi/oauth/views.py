@@ -652,22 +652,10 @@ def appsettings(request):
     for app in user_apps:
         meta["apps"].append({
             "name": app.name,
-            "id": app.id,
-            "token": app.api_token,
+            "scope_id": app.scope.scope_number,
             "created": app.created,
-            "updated": app.last_updated,
             "oauth": {
-                "client_id": app.client_id,
-                "client_secret": app.client_secret,
-                "callback_url": app.callback_url,
                 "scopes": s.scope_dict_all(app.scope.scope_number)
-            },
-            "webhook": {
-                "verification_secret": app.webhook.verification_secret,
-                "url": app.webhook.url,
-                "siteid": app.webhook.siteid,
-                "roomid": app.webhook.roomid,
-                "contact": app.webhook.contact
             }
         })
 
