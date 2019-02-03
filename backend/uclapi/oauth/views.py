@@ -644,7 +644,7 @@ def appsettings(request):
         "status" : "ONLINE",
         "fullname": user.full_name,
         "department": user.department,
-        "scopes": s.get_all_scopes()
+        "scopes": s.get_scope_map()
     }
 
     initial_data = json.dumps(meta, cls=DjangoJSONEncoder)

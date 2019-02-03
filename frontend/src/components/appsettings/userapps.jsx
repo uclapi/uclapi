@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Switch from 'material-ui/core/Switch';
+import Switch from '@material-ui/core/Switch';
 
 class UserApps extends React.Component {
   render () {
@@ -10,8 +10,10 @@ class UserApps extends React.Component {
 
         <div className="settings-title"><h2>Account</h2></div>
         <div className="card-settings">
-          <h3>{this.props.fullname}</h3>
-          <h3>{this.props.department}</h3>
+          <div className="profile-card">
+            <h3>{this.props.fullname}</h3>
+            <h3>{this.props.department}</h3>
+          </div>
         </div>
 
         <div className="settings-title"><h2>Permissions</h2></div>
