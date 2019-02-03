@@ -19,28 +19,15 @@ class UserApps extends React.Component {
 
         {this.props.apps.map((app, i) => {
           app.scopes[1]['enabled']=="true" || app.scopes[2]['enabled']=="true" ? (
-            return <AuthAppRow app_name={app.name}
+            <AuthAppRow app_name={app.name}
               app_created={app.created}
-              app_is_auth="true"
+              app_is_auth="true" />
           ) : (
-            return <AuthAppRow app_name={app.name}
+            <AuthAppRow app_name={app.name}
               app_created={app.created}
-              app_is_auth="false"
+              app_is_auth="false" />
           )
         })}
-
-        <div className="settings-title"><h2>Permissions</h2></div>
-        <div className="card-settings">
-          <div className="auth-app">
-            <div className="app-information">
-              <h3> Social App </h3>
-              <h3> Harry Liversedge </h3>
-            </div>
-            <div className="app-permission-box">
-              <Switch />
-            </div>
-          </div>
-        </div>
       </div>
     </div>;
   }
