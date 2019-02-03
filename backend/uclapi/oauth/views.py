@@ -637,6 +637,7 @@ def appsettings(request):
         })
 
     user = User.objects.get(id=user_id)
+    user_apps = App.objects.filter(user=user, deleted=False)
 
     s = Scopes()
 
@@ -644,8 +645,32 @@ def appsettings(request):
         "status" : "ONLINE",
         "fullname": user.full_name,
         "department": user.department,
-        "scopes": s.get_scope_map()
+        "scopes": s.get_scope_map(),
+        "apps": []
     }
+
+    for app in user_apps:
+        meta["apps"].append({
+            "name": app.name,
+            "id": app.id,
+            "token": app.api_token,
+            "created": app.created,
+            "updated": app.last_updated,
+            "oauth": {
+                "client_id": app.client_id,
+                "client_secret": app.client_secret,
+                "callback_url": app.callback_url,
+                "scopes": s.scope_dict_all(app.scope.scope_number)
+            },
+            "webhook": {
+                "verification_secret": app.webhook.verification_secret,
+                "url": app.webhook.url,
+                "siteid": app.webhook.siteid,
+                "roomid": app.webhook.roomid,
+                "contact": app.webhook.contact
+            }
+        })
+
 
     initial_data = json.dumps(meta, cls=DjangoJSONEncoder)
     return render(request, 'appsettings.html', {

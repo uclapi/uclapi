@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import AuthAppRow from './appsettings/authapprow.jsx';
 
 import Switch from '@material-ui/core/Switch';
 
@@ -15,6 +16,18 @@ class UserApps extends React.Component {
             <h3>{this.props.department}</h3>
           </div>
         </div>
+
+        {this.props.apps.map((app, i) => {
+          app.scopes[1]['enabled']=="true" || app.scopes[2]['enabled']=="true" ? (
+            return <AuthAppRow app_name={app.name}
+              app_created={app.created}
+              app_is_auth="true"
+          ) : (
+            return <AuthAppRow app_name={app.name}
+              app_created={app.created}
+              app_is_auth="false"
+          )
+        })}
 
         <div className="settings-title"><h2>Permissions</h2></div>
         <div className="card-settings">
@@ -35,7 +48,8 @@ class UserApps extends React.Component {
 
 UserApps.propTypes = {
   fullname: PropTypes.string,
-  department: PropTypes.string
+  department: PropTypes.string,
+  apps: PropTypes.array
 };
 
 export default UserApps;
