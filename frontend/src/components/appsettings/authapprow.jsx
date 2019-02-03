@@ -18,7 +18,7 @@ class AuthAppRow extends React.Component {
   }
 }
 
-UserApps.propTypes = {
+AuthAppRow.propTypes = {
   app_name: PropTypes.string,
   app_created: PropTypes.string,
   app_is_auth: PropTypes.bool

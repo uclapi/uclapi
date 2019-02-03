@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import AuthAppRow from './authapprow.jsx';
 
-import Switch from '@material-ui/core/Switch';
-
 class UserApps extends React.Component {
   render () {
     return <div className="settings-holder">
