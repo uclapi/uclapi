@@ -653,6 +653,7 @@ def appsettings(request):
         meta["apps"].append({
             "name": app.name,
             "scope_id": app.scope.scope_number,
+            "id": app.id,
             "created": app.created,
             "oauth": {
                 "scopes": s.scope_dict_all(app.scope.scope_number)

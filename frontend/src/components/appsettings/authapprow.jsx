@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Switch from '@material-ui/core/Switch';
+import Button from '@material-ui/core/Button';
 
 class AuthAppRow extends React.Component {
   render () {
@@ -12,19 +12,19 @@ class AuthAppRow extends React.Component {
             </div>
 
             <div className="app-permission-box">
-              <Switch checked={this.props.app_is_auth} 
-                      onChange={this.handleChange})/>
+              <Button disabled={!this.props.app_is_auth} 
+                      text="Revoke Permissions"
+                      onClick={this.handleChange} />
             </div>
           </div>;
   }
 
   handleChange (event, checked) {
-      /* this.setState((state) => {
-        let appIndex = this.getAppIndex(appId);
-        if(appIndex !== undefined){
-          return update(state, {apps: {$splice: [[appIndex, 1]]}});
+      this.setState((state) => {
+        if(this.props.app_id !== undefined){
+          //return update(state, {apps: {$splice: [[this.props.app_id, 1]]}});
         }
-      }); */
+      });
   }
 
 }
@@ -33,7 +33,8 @@ AuthAppRow.propTypes = {
   app_name: PropTypes.string,
   app_created: PropTypes.string,
   app_is_auth: PropTypes.bool,
-  app_scope_id: PropTypes.string
+  app_scope_id: PropTypes.string,
+  app_id: PropTypes.string
 };
 
 export default AuthAppRow;
