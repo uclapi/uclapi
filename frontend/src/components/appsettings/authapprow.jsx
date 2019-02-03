@@ -19,12 +19,14 @@ class AuthAppRow extends React.Component {
   }
 
   handleChange (event, checked) {
-    if(checked) {
-      
-    } else {
-      
-    }
+      /* this.setState((state) => {
+        let appIndex = this.getAppIndex(appId);
+        if(appIndex !== undefined){
+          return update(state, {apps: {$splice: [[appIndex, 1]]}});
+        }
+      }); */
   }
+
 }
 
 AuthAppRow.propTypes = {
