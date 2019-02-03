@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AuthAppRow from './appsettings/authapprow.jsx';
+import AuthAppRow from './authapprow.jsx';
 
 import Switch from '@material-ui/core/Switch';
 
