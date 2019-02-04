@@ -628,11 +628,6 @@ def my_apps(request):
 
         return redirect(url)
 
-    meta = {
-        "status" : "OFFLINE",
-        "url" : url
-    }
-
     user = User.objects.get(id=user_id)
 
     tokens = OAuthToken.objects.filter(user=user)
@@ -659,7 +654,7 @@ def my_apps(request):
         "status" : "ONLINE",
         "full_name": user.full_name,
         "department": user.department,
-        "scopes": s.get_scope_map(),
+        "scopes": scopes.get_scope_map(),
         "apps": authorised_apps
     }
 
