@@ -3,7 +3,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-	url(r'appsettings/$', views.appsettings),
+	url(r'myapps/$', views.my_apps),
     url(r'authorise/$', views.authorise),
     url(r'shibcallback', views.shibcallback),
     url(r'token$', views.token),
@@ -13,5 +13,5 @@ urlpatterns = [
     url(r'user/deny$', views.userdeny),
     url(r'user/data$', views.userdata),
     url(r'user/studentnumber$', views.get_student_number),
-    url(r'user/login.callback$', views.shibboleth_callback)
+    url(r'myapps/shibcallback$', views.myapps_shibboleth_callback)
 ]

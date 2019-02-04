@@ -560,7 +560,7 @@ def get_student_number(request, *args, **kwargs):
     )
 
 @csrf_exempt
-def shibboleth_callback(request):
+def myapps_shibboleth_callback(request):
     # should auth user login or signup
     # then redirect to dashboard homepage
     eppn = request.META['HTTP_EPPN']
@@ -610,11 +610,11 @@ def shibboleth_callback(request):
             "name": display_name
         })
 
-    return redirect(appsettings)
+    return redirect("/oauth/myapps")
 
 
 @ensure_csrf_cookie
-def appsettings(request):
+def my_apps(request):
     # Check whether the user is logged in
     try:
         user_id = request.session["user_id"]
@@ -622,46 +622,48 @@ def appsettings(request):
         # Build Shibboleth callback URL
         url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
         param = (request.build_absolute_uri(request.path) +
-                 "user/login.callback")
+                 "user/myapps/shibcallback")
         param = quote(param)
         url = url + param
 
-        meta = {
-            "status" : "OFFLINE",
-            "url" : url
-        }
-
-        initial_data = json.dumps(meta, cls=DjangoJSONEncoder)
-        return render(request, 'appsettings.html', {
-            'initial_data': initial_data
-        })
-
-    user = User.objects.get(id=user_id)
-    user_apps = App.objects.filter(user=user, deleted=False)
-
-    s = Scopes()
+        return redirect(url)
 
     meta = {
-        "status" : "ONLINE",
-        "fullname": user.full_name,
-        "department": user.department,
-        "scopes": s.get_scope_map(),
-        "apps": []
+        "status" : "OFFLINE",
+        "url" : url
     }
 
-    for app in user_apps:
-        meta["apps"].append({
-            "name": app.name,
-            "scope_id": app.scope.scope_number,
-            "id": app.id,
-            "created": app.created,
-            "oauth": {
-                "scopes": s.scope_dict_all(app.scope.scope_number)
+    user = User.objects.get(id=user_id)
+
+    tokens = OAuthToken.objects.filter(user=user)
+
+    authorised_apps = []
+    scopes = Scopes()
+
+    for token in tokens:
+        authorised_apps.append({
+            "id": token.id,
+            "active": token.active,
+            "app": {
+                "id": token.app.id,
+                "creator": {
+                    "name": token.app.user.full_name,
+                    "email": token.app.user.email
+                },
+                "name": token.app.name,
+                "scopes": scopes.scope_dict_all(token.scope.scope_number)
             }
         })
 
+    initial_data_dict = {
+        "status" : "ONLINE",
+        "full_name": user.full_name,
+        "department": user.department,
+        "scopes": s.get_scope_map(),
+        "apps": authorised_apps
+    }
 
-    initial_data = json.dumps(meta, cls=DjangoJSONEncoder)
+    initial_data = json.dumps(initial_data_dict, cls=DjangoJSONEncoder)
     return render(request, 'appsettings.html', {
         'initial_data': initial_data
     })
