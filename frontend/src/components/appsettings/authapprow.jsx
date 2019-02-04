@@ -13,7 +13,9 @@ class AuthAppRow extends React.Component {
 
             <div className="app-permission-box">
               <Button disabled={!this.props.app_is_auth} 
-                      text="Revoke Permissions"
+                      classes={{
+                        text: "Revoke Permissions"
+                      }}
                       onClick={this.handleChange} />
             </div>
           </div>;
