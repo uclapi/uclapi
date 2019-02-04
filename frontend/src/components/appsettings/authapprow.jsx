@@ -4,6 +4,14 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 
 class AuthAppRow extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      apps: props.apps,
+      showCreate: false
+    };
+  }
+
   render () {
     return <div className="auth-app">
             <div className="app-information">
@@ -24,7 +32,7 @@ class AuthAppRow extends React.Component {
   handleChange (event, checked) {
       this.setState((state) => {
         if(this.props.app_id !== undefined){
-          //return update(state, {apps: {$splice: [[this.props.app_id, 1]]}});
+          return update(state, {apps: {$splice: [[this.props.app_id, 1]]}});
         }
       });
   }
