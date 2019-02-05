@@ -194,7 +194,7 @@ def _serialize_rooms(room_set):
             "capacity": room.capacity,
             "classification": room.classification,
             "classification_name": classification_name,
-            #"automated": room.automated,
+            # "automated": room.automated,
             "location": {
                 "address": [
                     site.address1,
