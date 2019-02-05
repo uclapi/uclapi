@@ -39,7 +39,7 @@ _rooms_cache = {}
 _site_coord_cache = {}
 _room_coord_cache = {}
 _instance_cache = {}
-_lectureres_cache = {}
+_lecturers_cache = {}
 _department_name_cache = {}
 
 
@@ -114,8 +114,8 @@ def _get_full_department_name(department_code):
 
 def _get_lecturer_details(lecturer_upi):
     """Returns a lecturer's name and email address from their UPI"""
-    if lecturer_upi in _lectureres_cache:
-        return _lectureres_cache[lecturer_upi]
+    if lecturer_upi in _lecturers_cache:
+        return _lecturers_cache[lecturer_upi]
     lecturers = get_cache("lecturer")
     details = {
         "name": "Unknown",
@@ -134,7 +134,7 @@ def _get_lecturer_details(lecturer_upi):
     if lecturer.owner:
         details["department_id"] = lecturer.owner
         details["department_name"] = _get_full_department_name(lecturer.owner)
-    _lectureres_cache[lecturer_upi] = details
+    _lecturers_cache[lecturer_upi] = details
     return details
 
 
