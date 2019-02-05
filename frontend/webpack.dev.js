@@ -49,6 +49,7 @@ module.exports = {
     dashboard: entryPointsPathPrefix + '/dashboard.jsx',
     marketplace: entryPointsPathPrefix + '/marketplace.jsx',
     authorise: entryPointsPathPrefix + '/authorise.jsx',
+    vendors: ['react'],
   },
   output: {
     path: path.resolve(__dirname, '../backend/uclapi/static/'),
