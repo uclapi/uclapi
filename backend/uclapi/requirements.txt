@@ -6,7 +6,7 @@ celery==4.2.1
 certifi==2018.11.29
 chardet==3.0.4
 ciso8601==2.1.1
-cx-Oracle==7.0.0
+cx-Oracle==7.1.0
 decorator==4.3.2
 deepdiff==3.3.0
 Django==1.11.18
