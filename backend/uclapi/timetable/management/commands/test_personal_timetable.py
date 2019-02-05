@@ -1,5 +1,7 @@
-from django.core.management.base import BaseCommand
 import time
+
+from django.core.management.base import BaseCommand
+
 from timetable.app_helpers import get_student_timetable
 
 
