@@ -9,7 +9,8 @@ from .helpers import (PrettyJsonResponse, _create_page_token,
                       _return_json_bookings, _serialize_equipment,
                       _serialize_rooms, _filter_for_free_rooms, _round_date)
 from .models import BookingA, BookingB, Equipment, Lock, Room
-
+from timetable.models import RoomsA,RoomsB
+from timetable.models import Lock as Lock_Timetable
 from common.decorators import uclapi_protected_endpoint
 
 
@@ -34,9 +35,11 @@ def get_rooms(request, *args, **kwargs):
     # - Filtered by this academic year only
     # - Anything centrally bookable
     # - All ICH rooms (Site IDs 238 and 240)
-    all_rooms = Room.objects.using("roombookings").filter(
+    lock = Lock_Timetable.objects.all()[0]
+    curr = RoomsA if lock.a else RoomsB
+    all_rooms = curr.objects.filter(
         Q(setid=settings.ROOMBOOKINGS_SETID),
-        Q(bookabletype='CB') | Q(siteid="238") | Q(siteid="240")
+        Q(type='CB') | Q(siteid="238") | Q(siteid="240")
     )
 
     # no filters provided, return all rooms serialised

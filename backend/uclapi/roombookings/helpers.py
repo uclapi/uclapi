@@ -178,26 +178,26 @@ def _serialize_rooms(room_set):
         # Maps room classification to a textual version
         # e.g. LT => Lecture Theatre
         classification_name = ROOM_TYPE_MAP.get(
-            room.roomclass,
+            room.classification,
             "Unknown Room Type"
         )
         room_to_add = {
-            "roomname": room.roomname,
+            "roomname": room.name,
             "roomid": room.roomid,
             "siteid": room.siteid,
-            "sitename": room.sitename,
+            #"sitename": room.sitename,
             "capacity": room.capacity,
-            "classification": room.roomclass,
-            "classification_name": classification_name,
-            "automated": room.automated,
-            "location": {
-                "address": [
-                    room.address1,
-                    room.address2,
-                    room.address3,
-                    room.address4
-                ]
-            }
+            "classification": room.classification,
+            "classification_name": classification_name
+            #"automated": room.automated,
+            #"location": {
+                #"address": [
+                #    room.address1,
+                #    room.address2,
+                #    room.address3,
+                #    room.address4
+                #]
+            #}
         }
 
         try:
