@@ -185,19 +185,19 @@ def _serialize_rooms(room_set):
             "roomname": room.name,
             "roomid": room.roomid,
             "siteid": room.siteid,
-            #"sitename": room.sitename,
+            # "sitename": room.sitename,
             "capacity": room.capacity,
             "classification": room.classification,
             "classification_name": classification_name
-            #"automated": room.automated,
-            #"location": {
-                #"address": [
-                #    room.address1,
-                #    room.address2,
-                #    room.address3,
-                #    room.address4
-                #]
-            #}
+            # "automated": room.automated,
+            # "location": {
+            #    "address": [
+            #        room.address1,
+            #        room.address2,
+            #        room.address3,
+            #        room.address4
+            #    ]
+            # }
         }
 
         try:
