@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+import json
 
 from timetable.app_helpers import get_student_timetable
 
@@ -10,4 +11,4 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         upi = input("Please enter the student UPI: ")
         tt = get_student_timetable(upi)
-        print(tt)
+        print(json.dumps(tt))
