@@ -562,7 +562,7 @@ def get_student_number(request, *args, **kwargs):
 @csrf_exempt
 def myapps_shibboleth_callback(request):
     # should auth user login or signup
-    # then redirect to dashboard homepage
+    # then redirect to my apps homepage
     eppn = request.META['HTTP_EPPN']
     groups = request.META['HTTP_UCLINTRANETGROUPS']
     cn = request.META['HTTP_CN']
@@ -622,7 +622,7 @@ def my_apps(request):
         # Build Shibboleth callback URL
         url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
         param = (request.build_absolute_uri(request.path) +
-                 "user/myapps/shibcallback")
+                 "shibcallback")
         param = quote(param)
         url = url + param
 
