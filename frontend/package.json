@@ -20,7 +20,7 @@
   },
   "homepage": "https://uclapi.com",
   "dependencies": {
-    "ajv": "^6.7.0",
+    "ajv": "^6.8.1",
     "aphrodite": "^2.2.3",
     "glamor": "^2.20.40",
     "immutability-helper": "^3.0.0",
@@ -57,7 +57,7 @@
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "vinyl-transform": "^1.0.0",
-    "webpack": "^4.29.0",
+    "webpack": "^4.29.1",
     "webpack-bundle-tracker": "^0.4.2-beta",
     "webpack-cli": "^3.2.1"
   },
