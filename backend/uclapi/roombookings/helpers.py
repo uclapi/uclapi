@@ -15,6 +15,8 @@ import ciso8601
 from common.helpers import PrettyJsonResponse
 from .models import BookingA, BookingB, Location, Lock, SiteLocation
 from .api_helpers import generate_token
+from timetable.models import SitesA,SitesB
+from timetable.models import Lock as timetableLock
 
 from uclapi.settings import REDIS_UCLAPI_HOST
 
@@ -181,23 +183,26 @@ def _serialize_rooms(room_set):
             room.classification,
             "Unknown Room Type"
         )
+        lock = timetableLock.objects.all()[0]
+        curr = SitesA if lock.a else SitesB
+        site = curr.objects.get(siteid=room.siteid)
         room_to_add = {
             "roomname": room.name,
             "roomid": room.roomid,
             "siteid": room.siteid,
-            #"sitename": room.sitename,
+            "sitename": site.sitename,
             "capacity": room.capacity,
             "classification": room.classification,
-            "classification_name": classification_name
+            "classification_name": classification_name,
             #"automated": room.automated,
-            #"location": {
-                #"address": [
-                #    room.address1,
-                #    room.address2,
-                #    room.address3,
-                #    room.address4
-                #]
-            #}
+            "location": {
+                "address": [
+                    site.address1,
+                    site.address2,
+                    site.address3,
+                    site.address4
+                ]
+            }
         }
 
         try:
