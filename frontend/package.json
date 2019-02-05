@@ -57,7 +57,7 @@
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "vinyl-transform": "^1.0.0",
-    "webpack": "^4.29.0",
+    "webpack": "^4.29.1",
     "webpack-bundle-tracker": "^0.4.2-beta",
     "webpack-cli": "^3.2.1"
   },
