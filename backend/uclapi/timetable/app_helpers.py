@@ -199,7 +199,7 @@ def _get_timetable_events(full_modules, stumodules):
         for event in events_data:
             if event.slotid not in event_bookings_list:
                 event_bookings_list[event.slotid] =  \
-                bookings.objects.filter(slotid=event.slotid)
+                    bookings.objects.filter(slotid=event.slotid)
             event_bookings = event_bookings_list[event.slotid]
             # .exists() instead of len so we don't evaluate all of the filter
             if not event_bookings.exists():
