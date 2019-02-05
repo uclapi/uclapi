@@ -171,12 +171,12 @@ def _get_timetable_events(full_modules, stumodules):
     modules_chosen = {}
     for module in full_modules:
         key = str(module.moduleid)+" "+str(module.instid)
-        lab_key = str(module.moduleid)+" "+str(module.instid)+""+str(module.modgrpcode)
+        lab_key = key+str(module.modgrpcode)
         if key in modules_chosen:
             del modules_chosen[key]
         modules_chosen[lab_key] = module
 
-    for _,module in modules_chosen.items():
+    for _, module in modules_chosen.items():
         if stumodules:
             # Get events for the lab group assigned
             # Also include general lecture events (via the or operator)
@@ -196,14 +196,12 @@ def _get_timetable_events(full_modules, stumodules):
             )
             module_data = module
         instance_data = _get_instance_details(module.instid)
-        #event_slotid_list = [event.slotid for event in events_data]
-        #event_bookings_list = bookings.objects.filter(slotid__in=event_slotid_list)
-        count = 0
         for event in events_data:
             if event.slotid not in event_bookings_list:
-                event_bookings_list[event.slotid] = bookings.objects.filter(slotid=event.slotid)
+                event_bookings_list[event.slotid] =  \
+                bookings.objects.filter(slotid=event.slotid)
             event_bookings = event_bookings_list[event.slotid]
-            #.exists() instead of len so we don't evaluate all of the filter
+            # .exists() instead of len so we don't evaluate all of the filter
             if not event_bookings.exists():
                 # We have to trust the data in the event because
                 # no rooms are booked for some weird reason.
@@ -313,7 +311,6 @@ def _get_timetable_events(full_modules, stumodules):
                     if date_str not in full_timetable:
                         full_timetable[date_str] = []
                     full_timetable[date_str].append(event_data)
-            count += 1
     return full_timetable
 
 
@@ -389,7 +386,7 @@ def _get_location_coordinates(siteid, roomid):
             siteid=siteid,
             roomid=roomid
         )
-        _room_coord_cache[roomid] = (location.lat,location.lng)
+        _room_coord_cache[roomid] = (location.lat, location.lng)
         return location.lat, location.lng
     except Location.DoesNotExist:
         pass
@@ -401,7 +398,7 @@ def _get_location_coordinates(siteid, roomid):
         location = SiteLocation.objects.get(
             siteid=siteid
         )
-        _site_coord_cache[siteid] = (location.lat,location.lng)
+        _site_coord_cache[siteid] = (location.lat, location.lng)
         return location.lat, location.lng
     except SiteLocation.DoesNotExist:
         pass
