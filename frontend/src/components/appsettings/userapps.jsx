@@ -1,4 +1,4 @@
-import React from 'react';
+cimport React from 'react';
 import PropTypes from 'prop-types';
 import AuthAppRow from './authapprow.jsx';
 
@@ -10,14 +10,14 @@ class UserApps extends React.Component {
         <div className="settings-title"><h2>Account</h2></div>
         <div className="card-settings">
           <div className="profile-card">
-            <h3>{this.props.fullname}</h3>
+            <h3>{this.props.full_name}</h3>
             <h3>{this.props.department}</h3>
           </div>
         </div>
 
         <div className="settings-title"><h2>Permissions</h2></div>
         <div className="card-settings">
-          {this.props.apps.map((app, i) => {
+          {this.props.authorised_apps.map((app, i) => {
               return <AuthAppRow app_name={app.name}
                 app_created={app.created}
                 app_is_auth={app.oauth.scopes[0].enabled=="true" || app.oauth.scopes[1].enabled=="true"}
@@ -32,9 +32,9 @@ class UserApps extends React.Component {
 }
 
 UserApps.propTypes = {
-  fullname: PropTypes.string,
+  full_name: PropTypes.string,
   department: PropTypes.string,
-  apps: PropTypes.array
+  authorised_apps: PropTypes.array
 };
 
 export default UserApps;
