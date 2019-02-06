@@ -48,7 +48,7 @@ class AppSettings extends React.Component {
     } else {
       return <MuiThemeProvider muiTheme={muiTheme}>
         <Hub> 
-          <UserApps full_name={this.state.data.full_name} department={this.state.data.department} authorised_apps={this.state.data.apps} />  
+          <UserApps fullname={this.state.data.fullname} department={this.state.data.department} authorised_apps={this.state.data.apps} />  
         </Hub>
       </MuiThemeProvider>;
     }

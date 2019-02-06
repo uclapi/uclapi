@@ -652,7 +652,7 @@ def my_apps(request):
 
     initial_data_dict = {
         "status" : "ONLINE",
-        "full_name": user.full_name,
+        "fullname": user.full_name,
         "department": user.department,
         "scopes": scopes.get_scope_map(),
         "apps": authorised_apps

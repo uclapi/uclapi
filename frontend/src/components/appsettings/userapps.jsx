@@ -10,7 +10,7 @@ class UserApps extends React.Component {
         <div className="settings-title"><h2>Account</h2></div>
         <div className="card-settings">
           <div className="profile-card">
-            <h3>{this.props.full_name}</h3>
+            <h3>{this.props.fullname}</h3>
             <h3>{this.props.department}</h3>
           </div>
         </div>
@@ -32,7 +32,7 @@ class UserApps extends React.Component {
 }
 
 UserApps.propTypes = {
-  full_name: PropTypes.string,
+  fullname: PropTypes.string,
   department: PropTypes.string,
   authorised_apps: PropTypes.array
 };
