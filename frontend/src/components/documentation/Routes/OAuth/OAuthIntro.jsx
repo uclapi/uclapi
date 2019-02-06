@@ -54,6 +54,7 @@ export default class OAuthIntro extends React.Component {
 
           <p>If the application is denied, the callback URL receives <code>result</code> and <code>state</code>, and no private data will be provided to the application.</p>
           <p>1. To receive the OAuth user token (for performing actions on user’s behalf), we require <code>code</code> (from 3.), <code>client_id</code>, and <code>client_secret</code>. These should then be sent to <code>https://uclapi.com/oauth/token</code>, which will return a response containing <code>state</code>, <code>ok</code>, <code>client_id</code>, <code>token</code> (OAuth user token), and <code>scope</code> (scopes the app can access on the user’s behalf).</p>
+          <p><b>Note:</b> OAuth tokens and general API tokes are different. Whilst general API tokens can be used for all non-personal, generic data (such as room bookings), OAuth tokens must be used with an app's `client_secret` in order to retrieve personal data for a user. To make things easier, you can use personal OAuth tokens in place of general tokens once a user has logged into your app to retrieve generic data too.</p>
         </Topic>
       )
     }
