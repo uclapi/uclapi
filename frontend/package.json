@@ -20,12 +20,8 @@
   },
   "homepage": "https://uclapi.com",
   "dependencies": {
-<<<<<<< HEAD
     "@material-ui/core": "^3.9.1",
-    "ajv": "^6.7.0",
-=======
     "ajv": "^6.8.1",
->>>>>>> 9574e1e65bf13a536506a2dce9fc7aed0001ad8e
     "aphrodite": "^2.2.3",
     "glamor": "^2.20.40",
     "immutability-helper": "^3.0.0",
