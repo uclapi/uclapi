@@ -24,8 +24,8 @@ def get_rooms(request, *args, **kwargs):
 
     request_params['roomid'] = request.GET.get('roomid')
     request_params['siteid'] = request.GET.get('siteid')
-    request_params['roomname__contains'] = request.GET.get('roomname')
-    request_params['sitename__contains'] = request.GET.get('sitename')
+    request_params['roomname__icontains'] = request.GET.get('roomname')
+    request_params['sitename__icontains'] = request.GET.get('sitename')
     request_params['category'] = request.GET.get('category')
     request_params['roomclass'] = request.GET.get('classification')
     request_params['capacity__gte'] = request.GET.get('capacity')
