@@ -22,7 +22,7 @@ from dashboard.models import (
     User
 )
 
-from dashboard.app_helpers import get_temp_token
+from dashboard.app_helpers import get_temp_token,generate_temp_api_token
 
 from oauth.models import OAuthToken, OAuthScope
 from oauth.scoping import Scopes
@@ -35,7 +35,7 @@ from uclapi.settings import REDIS_UCLAPI_HOST
 import datetime
 import json
 import redis
-
+import time
 
 class SecondsUntilMidnightTestCase(SimpleTestCase):
     def test_seconds_until_midnight(self):
@@ -229,6 +229,29 @@ class TempTokenCheckerTest(TestCase):
         self.assertEqual(
             data['error'],
             "Temporary token can only return one booking."
+        )
+
+    def test_expired_token_provided(self):
+        r = redis.Redis(host=REDIS_UCLAPI_HOST)
+
+        expired_token = generate_temp_api_token()
+        # We initialise a new temporary token and set it to 1
+        # as it is generated at its first usage.
+        r.set(expired_token, 1, px=1)
+        time.sleep(0.001)
+        result = _check_temp_token_issues(
+            expired_token,
+            False,
+            "/roombookings/bookings",
+            None
+        )
+        self.assertTrue(isinstance(result, JsonResponse))
+        data = json.loads(result.content.decode())
+        self.assertEqual(result.status_code, 400)
+        self.assertFalse(data['ok'])
+        self.assertEqual(
+            data['error'],
+            "Temporary token is either invalid or expired."
         )
 
     def test_all_passes(self):
