@@ -261,7 +261,7 @@ Running the API locally requires two shells open: one for Fake Shibboleth and on
 ### Start Dependencies
 1. Ensure Postgres is running
 2. Start Redis: `sudo service redis-server start`
-3. Ensure the front end is build ``` cd uclapi/frontend && npm run build ```
+3. Ensure the front end is built ``` cd uclapi/frontend && npm run build ```
 
 ### Starting Fake Shibboleth (Shell 1)
 ```
