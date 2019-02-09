@@ -10,7 +10,7 @@ Create a ridiculously simple, documentation first, and comprehensive API around 
 Find out more at our [website](https://uclapi.com)
 
 ### Interested in helping build it?
-Read on more to find out how to setup and build the API. From here you can start writing your own changes and submitting them, read our [Contribution Guide](CONTRIBUTING.md) to learn more about how you can contribute.
+Read on more to find out how to setup and build the API. From here you can start writing your own changes and submitting them. See our [Contribution Guide](CONTRIBUTING.md) to learn more about how you can contribute.
 
 ## Setting Up and Building
 This will walk you through setting yourself up a local development environment. This is different to if you want to deploy this into production, but luckily we have an internal set of installation scripts for this. Therefore, this guide will not walk you through, for example, getting Gunicorn or Nginx running. This is for simply getting an environment up that can be used to develop the API. Testing with Nginx and Gunicorn is done in staging prior to a production deployment.
@@ -128,7 +128,7 @@ git clone https://github.com/uclapi/fakeshibboleth
 
 ### Quick Note on using virtual environments
 
-Virtual environments allow us to easily switch between python versions and the pip packages we have installed. They are entered with the following commands:
+Virtual environments allow us to easily switch between Python versions and the pip packages we have installed. They are entered with the following commands:
 
 ```
 Linux: . venv/bin/activate 
@@ -141,7 +141,7 @@ You can tell you're in one by the first letters of a terminal/cmd prompt. The li
 (venv)Your-Computer:your_project UserName$ 
 ```
 
-Once inside anything we run runs with this environments version of python. This must be done whenever using our project and so before running *manage.py* or other python files remember to be in the virtual environment.
+Once inside anything we run runs with this environment's version of python and the version's of any packages installed within it. This must be done whenever using our project and so before running *manage.py* or other python files remember to be in the virtual environment.
 
 Finally to exit this you simply type
 
@@ -188,7 +188,7 @@ Setting this up will vary based on your operating system. It is perfectly possib
 
 #### Create the required tables
 
-Now we have PostgreSQL installed we can create some empty tables so we can complete the migrations later. There are two required, uclapi_default, and uclapi_gencache if you are using the environment variables below. These can be created by accessing the postgreSQL command prompt with the command ```psql``` and then running ```create database uclapi_default;``` and then ```create database uclapi_gencache;``` 
+Now we have PostgreSQL installed we can create some empty databases so we can complete the migrations later. There are two required, uclapi_default, and uclapi_gencache if you are using the environment variables below. These can be created by accessing the postgreSQL command prompt with the command ```psql``` and then running ```create database uclapi_default;``` and then ```create database uclapi_gencache;``` 
 
 ### Configure the environment variables in .env
 Firstly, `cp uclapi/backend/uclapi/.env.example uclapi/backend/uclapi/.env`.
