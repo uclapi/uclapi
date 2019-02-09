@@ -284,3 +284,25 @@ If those commands work you should be able to navigate to `http://localhost:8000/
 We're an amazing project, so obviously we have tests :sparkles:  
 Make sure you have the requirements installed in your virtual environment (and you have activated it) , `cd` into `backend/uclapi` and then run :  
 `python manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner' --settings=uclapi.settings_mocked`
+
+## Our Custom Django Management Commands
+Whats that?! You want even more info? This section details any custom management commands we have created for django. You can view the full list of commands including the standard ones by running the command ```python manage.py --help``` and get more information on specific commands by running ```python manage.py command --help```. The most useful commands for development are listed below in addition to this however.
+
+### Triggering Webhooks Manually
+To trigger webhooks and test them you can run the command ```python manage.py trigger_webhooks``` with the optional flag of ```--debug``` to print details of each response. **Note: this will require having data in the room_booking database. You will also want to have done this atleast twice or else you will send hundreds of thousands of bookings to the endpoint**
+
+### Testing the Timetable System
+To test the timetables system you can run ```python manage.py test_personal_timetable```. This will query you for a ucl userid and then print out their timetable data in json format. **This will require you having populated both caches**
+
+### Updating The Frontend
+To update the blogs displayed on frontpage you can run the command ```python manage.py update_medium```. This will retrieve a number of articles from our blog and insert them into the front-end. The amount retrieved is set in settings.py with the varibale `MEDIUM_ARTICLE_QUANTITY` **Note: the front end does not require rebuilding after this**
+
+### Database Updating Commands
+These were covered above but for completeness you have at your disposal these commands to switch the lock of the database and then update them.
+```
+python manage.py create_lock
+python manage.py update_gencache
+python manage.py create_timetable_lock
+python manage.py update_timetable_gencache
+```
+**Note: As said previosuly these require valid credentials and for you to be on the UCL network to use**
