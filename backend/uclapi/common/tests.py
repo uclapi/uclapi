@@ -19,7 +19,6 @@ from .helpers import (
 
 from dashboard.models import (
     App,
-    TemporaryToken,
     User
 )
 
@@ -230,25 +229,6 @@ class TempTokenCheckerTest(TestCase):
         self.assertEqual(
             data['error'],
             "Temporary token can only return one booking."
-        )
-
-    def test_expired_token_provided(self):
-        expired_token = TemporaryToken.objects.create(
-            created=datetime.datetime(2010, 1, 1, 1, 0)
-        )
-        result = _check_temp_token_issues(
-            expired_token.api_token,
-            False,
-            "/roombookings/bookings",
-            None
-        )
-        self.assertTrue(isinstance(result, JsonResponse))
-        data = json.loads(result.content.decode())
-        self.assertEqual(result.status_code, 400)
-        self.assertFalse(data['ok'])
-        self.assertEqual(
-            data['error'],
-            "Temporary token is either invalid or expired."
         )
 
     def test_all_passes(self):
