@@ -27,7 +27,7 @@ In case you suspect you find a vulnerability in the API, please refrain from cre
 ### Pull requests (PRs) and their role in submitting enhancements
 * **Open a new branch** to work on your feature/bug-fix.
 * **Commit your changes** to this new branch.
-* **Fast forward your branch** when its ready to merge to make sure its up to date with the master branch.
+* **Fast forward your branch** when it's ready to merge to make sure its up to date with the master branch.
 * **Open your PR.**
 * **Fill in [the required PR template](.uclapi/PULL_REQUEST_TEMPLATE.md).**
 * **Do not include issue numbers in the PR title**, instead refrence them at the bottom of the description saying "Closes #xx".
@@ -47,4 +47,4 @@ We use [Hound CI](https://houndci.com) to automatically check PR's for style-gui
 * Try to limit the commit message to 50 characters or less. You can always use multiple lines.
 
 ## Closing remarks
-This document was inspired by the [CONTRIBUTING.md in atom/atom](https://github.com/atom/atom/blob/master/CONTRIBUTING.md) repository.
+This document was inspired by [Atom's contribution guide](https://github.com/atom/atom/blob/master/CONTRIBUTING.md).
