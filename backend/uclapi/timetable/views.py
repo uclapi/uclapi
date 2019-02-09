@@ -11,6 +11,7 @@ from .app_helpers import (
     get_departmental_modules,
     get_departments,
     get_student_timetable,
+    get_course_modules
 )
 
 from common.decorators import uclapi_protected_endpoint
@@ -113,7 +114,7 @@ def get_department_courses_endpoint(request, *args, **kwargs):
         return response
 
     courses = {"ok": True, "courses": []}
-    for course in Course.objects.filter(owner=department_id, setid=_SETID):
+    for course in Course.objects.filter(owner=department_id, setid=_SETID, linkcode="YY"):
         courses["courses"].append({
             "course_name": course.name,
             "course_id": course.courseid,
@@ -143,6 +144,32 @@ def get_department_modules_endpoint(request, *args, **kwargs):
     modules = {
         "ok": True,
         "modules": get_departmental_modules(department_id)
+    }
+
+    return JsonResponse(modules, custom_header_data=kwargs)
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(
+    last_modified_redis_key='timetable_gencache'
+)
+def get_course_modules_endpoint(request, *args, **kwargs):
+    """
+    Returns all modules taught on a particular course.
+    """
+    try:
+        course_id = request.GET["course"]
+    except KeyError:
+        response = JsonResponse({
+            "ok": False,
+            "error": "Supply a Course ID using the department courses parameter."
+        }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
+
+    modules = {
+        "ok": True,
+        "modules": get_course_modules(course_id)
     }
 
     return JsonResponse(modules, custom_header_data=kwargs)
