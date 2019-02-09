@@ -526,14 +526,15 @@ def get_course_modules(course_id):
     dept_modules = {}
 
     modules = get_cache("crsavailmodules")
-    for module in modules.objects.filter(courseid=course_id, setid=_SETID):
+    for compulsory in modules.objects.filter(courseid=course_id, setid=_SETID).only('moduleid'):
+        module = get_cache("module").objects.filter(moduleid=compulsory.moduleid)[:1]
+        module = module[0]
         instance_data = _get_instance_details(module.instid)
-        extra_data = get_cache("module").objects.filter(moduleid=module.moduleid)[:1]
 
         if module.moduleid not in dept_modules:
             dept_modules[module.moduleid] = {
                 "module_id": module.moduleid,
-                "name": extra_data[0].name,
+                "name": module.name,
                 "instances": []
             }
 
@@ -542,19 +543,20 @@ def get_course_modules(course_id):
                 module.moduleid,
                 instance_data['instance_code']
             ),
-            "class_size": extra_data[0].csize,
+            "class_size": module.csize,
             ** instance_data
         })
 
     modules = get_cache("crscompmodules")
-    for module in modules.objects.filter(courseid=course_id, setid=_SETID):
+    for available in modules.objects.filter(courseid=course_id, setid=_SETID).only('moduleid'):
+        module = get_cache("module").objects.filter(moduleid=available.moduleid)[:1]
+        module = module[0]
         instance_data = _get_instance_details(module.instid)
-        extra_data = get_cache("module").objects.filter(moduleid=module.moduleid)[:1]
 
         if module.moduleid not in dept_modules:
             dept_modules[module.moduleid] = {
                 "module_id": module.moduleid,
-                "name": extra_data[0].name,
+                "name": module.name,
                 "instances": []
             }
 
@@ -563,7 +565,7 @@ def get_course_modules(course_id):
                 module.moduleid,
                 instance_data['instance_code']
             ),
-            "class_size": extra_data[0].csize,
+            "class_size": module.csize,
             ** instance_data
         })
 
