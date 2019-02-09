@@ -1,16 +1,37 @@
+require('dotenv')
+  .config({
+    path: '../backend/uclapi/.env'
+  });
+
 const webpack = require('webpack');
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const BundleTracker = require('webpack-bundle-tracker');
 
 const os = require('os');
 
 var entryPointsPathPrefix = './src/pages';
 
+const publicPath = process.env.AWS_S3_STATICS === 'True'
+  ? `https://${process.env.AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${process.env.AWS_S3_BUCKET_PATH}`
+  : '/static/';
+
 module.exports = {
+  mode: 'production',
   optimization: {
-    minimizer: []  // This list is built below as per platform requirements
+    minimizer: [],  // This list is built below as per platform requirements
+    splitChunks: {
+      name: false,
+      cacheGroups: {
+        vendors: {
+          chunks: 'all',
+          name: 'vendors',
+          test: /[\\/]node_modules[\\/]/,
+        },
+      },
+    },
   },
   plugins: [
     new UglifyJsPlugin({
@@ -18,7 +39,15 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
      'process.env.NODE_ENV': JSON.stringify('production')
-    })
+    }),
+    new MiniCssExtractPlugin({
+      filename: "[name]-[contenthash].css",
+      chunkFilename: "[id]-[contenthash].css"
+    }),
+    new BundleTracker({
+      filename: '../backend/uclapi/static/webpack-stats.json'
+    }),
+    new webpack.HashedModuleIdsPlugin()
   ],
   module: {
     rules: [
@@ -32,27 +61,30 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          { loader: "style-loader" },
+          MiniCssExtractPlugin.loader,
           { loader: "css-loader" },
           { loader: "sass-loader" }
         ]
       },
       {
         test: /\.(jpg|png|svg)$/,
-        loader: 'url-loader'
+        loader: 'file-loader'
       },
     ]
   },
   entry: {
-    './../backend/uclapi/dashboard/static/js/getStarted': entryPointsPathPrefix + '/getStarted.jsx',
-    './../backend/uclapi/dashboard/static/js/documentation': entryPointsPathPrefix + '/documentation.jsx',
-    './../backend/uclapi/dashboard/static/js/dashboard': entryPointsPathPrefix + '/dashboard.jsx',
-    './../backend/uclapi/marketplace/static/js/marketplace': entryPointsPathPrefix + '/marketplace.jsx',
-    './../backend/uclapi/oauth/static/js/authorise': entryPointsPathPrefix + '/authorise.jsx',
+    getStarted: entryPointsPathPrefix + '/getStarted.jsx',
+    documentation: entryPointsPathPrefix + '/documentation.jsx',
+    dashboard: entryPointsPathPrefix + '/dashboard.jsx',
+    marketplace: entryPointsPathPrefix + '/marketplace.jsx',
+    authorise: entryPointsPathPrefix + '/authorise.jsx',
+    appSettings: entryPointsPathPrefix + '/appsettings.jsx',
+    vendors: ['react'],
   },
   output: {
-    path: path.resolve(__dirname),
-    filename: '[name].js'
+    path: path.resolve(__dirname, '../backend/uclapi/static/'),
+    publicPath,
+    filename: '[name]-[contenthash].js'
   }
 };
 

@@ -3,10 +3,12 @@ from unittest.mock import patch
 
 from django.test import RequestFactory, TestCase
 from rest_framework.test import APIRequestFactory
+from django.conf import settings
+import redis
 
 from .app_helpers import is_url_safe, generate_api_token, \
     generate_app_client_id, generate_app_client_secret, \
-    generate_app_id
+    generate_app_id, get_articles
 from .middleware.fake_shibboleth_middleware import FakeShibbolethMiddleWare
 from .models import App, User
 from .webhook_views import (
@@ -16,6 +18,36 @@ from dashboard.api_applications import (
     create_app, delete_app, regenerate_app_token, rename_app, set_callback_url,
     update_scopes, get_user_by_id
 )
+
+
+class MediumArticleScraperTestCase(TestCase):
+    def test_articles_retrieved(self):
+        medium_article_iterator = [
+            {'title': 'a', 'url': 'b'},
+            {'title': 'c', 'url': 'd'},
+            {'title': 'e', 'url': 'f'}
+        ]
+        self._redis = redis.Redis(
+            host=settings.REDIS_UCLAPI_HOST,
+            charset="utf-8",
+            decode_responses=True
+        )
+        pipe = self._redis.pipeline()
+        for i in range(0, len(medium_article_iterator)):
+            article = medium_article_iterator[i]
+            redis_key_url = "Blog:item:{}:url".format(i)
+            redis_key_title = "Blog:item:{}:title".format(i)
+            pipe.set(redis_key_url, article['url'])
+            pipe.set(redis_key_title, article['title'])
+        pipe.execute()
+        articles = get_articles()
+        for i in range(0, len(medium_article_iterator)):
+            redis_key_url = "Blog:item:{}:url".format(i)
+            redis_key_title = "Blog:item:{}:title".format(i)
+            pipe.delete(redis_key_url)
+            pipe.delete(redis_key_title)
+        pipe.execute()
+        self.assertEqual(articles, medium_article_iterator)
 
 
 class DashboardTestCase(TestCase):
