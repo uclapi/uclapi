@@ -20,7 +20,10 @@ from .models import (DeptsA, DeptsB, LecturerA, LecturerB, Lock, ModuleA,
                      StudentsB, StumodulesA, StumodulesB,  TimetableA,
                      TimetableB, WeekmapnumericA, WeekmapnumericB,
                      WeekstructureA, WeekstructureB,
-                     CminstancesA, CminstancesB)
+                     CminstancesA, CminstancesB,
+                     CourseA, CourseB,
+                     CrscompmodulesA, CrscompmodulesB,
+                     CrsavailmodulesA, CrsavailmodulesB)
 from .tasks import cache_student_timetable
 
 _SETID = settings.ROOMBOOKINGS_SETID
@@ -57,6 +60,9 @@ def get_cache(model_name):
         "departments": [DeptsA, DeptsB],
         "stumodules": [StumodulesA, StumodulesB],
         "cminstances": [CminstancesA, CminstancesB],
+        "course": [CourseA, CourseB],
+        "crsavailmodules": [CrsavailmodulesA, CrsavailmodulesB],
+        "crscompmodules": [CrscompmodulesA, CrscompmodulesB]
     }
     roombookings_models = {
         "booking": [BookingA, BookingB]
@@ -515,6 +521,53 @@ def get_departmental_modules(department_id):
 
     return dept_modules
 
+
+def get_course_modules(course_id):
+    dept_modules = {}
+
+    modules = get_cache("crsavailmodules")
+    for module in modules.objects.filter(courseid=course_id, setid=_SETID):
+        instance_data = _get_instance_details(module.instid)
+        extra_data = get_cache("module").objects.filter(moduleid=module.moduleid)[:1]
+
+        if module.moduleid not in dept_modules:
+            dept_modules[module.moduleid] = {
+                "module_id": module.moduleid,
+                "name": extra_data[0].name,
+                "instances": []
+            }
+
+        dept_modules[module.moduleid]['instances'].append({
+            "full_module_id": "{}-{}".format(
+                module.moduleid,
+                instance_data['instance_code']
+            ),
+            "class_size": extra_data[0].csize,
+            ** instance_data
+        })
+
+    modules = get_cache("crscompmodules")
+    for module in modules.objects.filter(courseid=course_id, setid=_SETID):
+        instance_data = _get_instance_details(module.instid)
+        extra_data = get_cache("module").objects.filter(moduleid=module.moduleid)[:1]
+
+        if module.moduleid not in dept_modules:
+            dept_modules[module.moduleid] = {
+                "module_id": module.moduleid,
+                "name": extra_data[0].name,
+                "instances": []
+            }
+
+        dept_modules[module.moduleid]['instances'].append({
+            "full_module_id": "{}-{}".format(
+                module.moduleid,
+                instance_data['instance_code']
+            ),
+            "class_size": extra_data[0].csize,
+            ** instance_data
+        })
+
+    return dept_modules
 
 def get_departments():
     depts = get_cache("departments")
