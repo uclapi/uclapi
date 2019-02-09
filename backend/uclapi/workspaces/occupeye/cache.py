@@ -253,12 +253,13 @@ class OccupeyeCache():
                 # This is a rare case, so just set it to False.
                 # Easier than expecting our clients to deal with null
                 occupied_state = False
-            pipeline.hmset(sensor_status_key, {
+            sensor_status = {
                 "occupied": str(occupied_state),
-                "hardware_id": sensor_data["HardwareID"],
-                "last_trigger_type": sensor_data["LastTriggerType"],
-                "last_trigger_timestamp": sensor_data["LastTriggerTime"]
-            })
+                "hardware_id": str(sensor_data["HardwareID"]),
+                "last_trigger_type": str(sensor_data["LastTriggerType"]),
+                "last_trigger_timestamp": str(sensor_data["LastTriggerTime"])
+            }
+            pipeline.hmset(sensor_status_key, sensor_status)
 
         pipeline.execute()
 
