@@ -9,8 +9,7 @@ from .helpers import (PrettyJsonResponse, _create_page_token,
                       _return_json_bookings, _serialize_equipment,
                       _serialize_rooms, _filter_for_free_rooms, _round_date)
 from .models import BookingA, BookingB, Equipment, Lock, Room
-from timetable.models import RoomsA, RoomsB
-from timetable.models import Lock as Lock_Timetable
+
 from common.decorators import uclapi_protected_endpoint
 
 
@@ -24,8 +23,8 @@ def get_rooms(request, *args, **kwargs):
 
     request_params['roomid'] = request.GET.get('roomid')
     request_params['siteid'] = request.GET.get('siteid')
-    request_params['roomname__contains'] = request.GET.get('roomname')
-    request_params['sitename__contains'] = request.GET.get('sitename')
+    request_params['roomname__icontains'] = request.GET.get('roomname')
+    request_params['sitename__icontains'] = request.GET.get('sitename')
     request_params['category'] = request.GET.get('category')
     request_params['roomclass'] = request.GET.get('classification')
     request_params['capacity__gte'] = request.GET.get('capacity')
@@ -35,11 +34,9 @@ def get_rooms(request, *args, **kwargs):
     # - Filtered by this academic year only
     # - Anything centrally bookable
     # - All ICH rooms (Site IDs 238 and 240)
-    lock = Lock_Timetable.objects.all()[0]
-    curr = RoomsA if lock.a else RoomsB
-    all_rooms = curr.objects.filter(
+    all_rooms = Room.objects.using("roombookings").filter(
         Q(setid=settings.ROOMBOOKINGS_SETID),
-        Q(type='CB') | Q(siteid="238") | Q(siteid="240")
+        Q(bookabletype='CB') | Q(siteid="238") | Q(siteid="240")
     )
 
     # no filters provided, return all rooms serialised
