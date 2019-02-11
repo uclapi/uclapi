@@ -169,7 +169,7 @@ def get_course_modules_endpoint(request, *args, **kwargs):
 
     modules = {
         "ok": True,
-        "modules": get_course_modules(course_id)
+        "modules": get_course_modules(course_id, request.query_params)
     }
 
     return JsonResponse(modules, custom_header_data=kwargs)
