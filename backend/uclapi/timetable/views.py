@@ -167,6 +167,33 @@ def get_course_modules_endpoint(request, *args, **kwargs):
         response.status_code = 400
         return response
 
+    bool_params = [
+        'term_1', 'term_2', 'term_3', 'term_4',
+        'summer', 'summer_school', 'summer_school_1', 
+        'summer_school_2', 'lsr', 'year_long', 'is_undergraduate'
+    ] 
+    valid_bools = ['1','0','true','false']
+    for param in bool_params:
+        if request.query_params.get(param):
+            if request.query_params.get(param) not in valid_bools:
+                response = JsonResponse({
+                    "ok": False,
+                    "error": "The parameter '{}' must be given as a valid."
+                             "boolean value (1,0,true,false)".format(param)
+                }, custom_header_data=kwargs)
+                response.status_code = 400
+                return response
+    if request.query_params.get('fheq_level'):
+        try:
+            int(request.query_params.get('fheq_level'))
+        except ValueError:
+            response = JsonResponse({
+                "ok": False,
+                "error": "Please supply the parameter 'fheq_level' as a valid integer."
+            }, custom_header_data=kwargs)
+            response.status_code = 400
+            return response
+
     modules = {
         "ok": True,
         "modules": get_course_modules(course_id, request.query_params)
