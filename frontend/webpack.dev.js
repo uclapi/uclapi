@@ -49,6 +49,7 @@ module.exports = {
     dashboard: entryPointsPathPrefix + '/dashboard.jsx',
     marketplace: entryPointsPathPrefix + '/marketplace.jsx',
     authorise: entryPointsPathPrefix + '/authorise.jsx',
+    appSettings: entryPointsPathPrefix + '/appsettings.jsx',
     vendors: ['react'],
   },
   output: {
