@@ -162,37 +162,37 @@ def _get_instance_details(instid):
 def _is_instance_in_criteria(instance, criteria):
     """Given (validated) criteria, determines if an instance meets it"""
     if criteria.get('term_1'):
-        if str2bool(criteria.get('term_1')) and not instance['periods']['teaching_periods']['term_1']:
+        if str2bool(criteria.get('term_1')) != instance['periods']['teaching_periods']['term_1']:
             return False
     if criteria.get('term_2'):
-        if str2bool(criteria.get('term_2')) and not instance['periods']['teaching_periods']['term_2']:
+        if str2bool(criteria.get('term_2')) != instance['periods']['teaching_periods']['term_2']:
             return False
     if criteria.get('term_3'):
-        if str2bool(criteria.get('term_3')) and not instance['periods']['teaching_periods']['term_3']:
+        if str2bool(criteria.get('term_3')) != instance['periods']['teaching_periods']['term_3']:
             return False
     if criteria.get('term_4'):
-        if str2bool(criteria.get('term_4')) and not instance['periods']['teaching_periods']['term_4']:
+        if str2bool(criteria.get('term_4')) != instance['periods']['teaching_periods']['term_4']:
             return False
     if criteria.get('summer'):
-        if str2bool(criteria.get('summer')) and not instance['periods']['teaching_periods']['summer']:
+        if str2bool(criteria.get('summer')) != instance['periods']['teaching_periods']['summer']:
             return False
     if criteria.get('summer_school'):
-        if str2bool(criteria.get('is_summer_school')) and not instance['periods']['summer_school']['is_summer_school']:
+        if str2bool(criteria.get('is_summer_school')) != instance['periods']['summer_school']['is_summer_school']:
             return False
     if criteria.get('summer_school_1'):
-        if str2bool(criteria.get('summer_school_1')) and not instance['periods']['summer_school']['summer_school_1']:
+        if str2bool(criteria.get('summer_school_1')) != instance['periods']['summer_school']['summer_school_1']:
             return False
     if criteria.get('summer_school_2'):
-        if str2bool(criteria.get('summer_school_2')) and not instance['periods']['summer_school']['summer_school_2']:
+        if str2bool(criteria.get('summer_school_2')) != instance['periods']['summer_school']['summer_school_2']:
             return False
     if criteria.get('lsr'):
-        if str2bool(criteria.get('lsr')) and not instance['periods']['lsr']:
+        if str2bool(criteria.get('lsr')) != instance['periods']['lsr']:
             return False
     if criteria.get('year_long'):
-        if str2bool(criteria.get('year_long')) and not instance['periods']['year_long']:
+        if str2bool(criteria.get('year_long')) != instance['periods']['year_long']:
             return False
     if criteria.get('is_undergraduate'):
-        if str2bool(criteria.get('is_undergraduate')) and not instance['delivery']['is_undergraduate']:
+        if str2bool(criteria.get('is_undergraduate')) != instance['delivery']['is_undergraduate']:
             return False
     if criteria.get('fheq_level'):
         if not criteria.get('fheq_level') == str(instance['delivery']['fheq_level']):
@@ -589,7 +589,7 @@ def get_course_modules(course_id, query_params):
 
     modules = get_cache("crscompmodules")
     for compulsory in modules.objects.filter(courseid=course_id, setid=_SETID).only('moduleid'):
-        for module in get_cache("module").objects.filter(moduleid=available.moduleid, setid=_SETID):
+        for module in get_cache("module").objects.filter(moduleid=compulsory.moduleid, setid=_SETID):
             instance_data = _get_instance_details(module.instid)
             if not _is_instance_in_criteria(instance_data, query_params):
                 continue
