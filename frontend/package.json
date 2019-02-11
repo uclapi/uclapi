@@ -21,7 +21,7 @@
   "homepage": "https://uclapi.com",
   "dependencies": {
     "@material-ui/core": "^3.9.1",
-    "ajv": "^6.8.1",
+    "ajv": "^6.9.1",
     "aphrodite": "^2.2.3",
     "glamor": "^2.20.40",
     "immutability-helper": "^3.0.0",
