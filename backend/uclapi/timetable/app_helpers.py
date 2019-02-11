@@ -14,6 +14,8 @@ from roombookings.models import (
     SiteLocation
 )
 
+from workspaces.occupeye.utils import str2bool
+
 from .amp import ModuleInstance
 from .models import (DeptsA, DeptsB, LecturerA, LecturerB, Lock, ModuleA,
                      ModuleB, RoomsA, RoomsB, SitesA, SitesB, StudentsA,
@@ -143,7 +145,6 @@ def _get_lecturer_details(lecturer_upi):
     _lecturers_cache[lecturer_upi] = details
     return details
 
-
 def _get_instance_details(instid):
     if instid in _instance_cache:
         return _instance_cache[instid]
@@ -158,6 +159,45 @@ def _get_instance_details(instid):
     _instance_cache[instid] = data
     return data
 
+def _is_instance_in_criteria(instance, criteria):
+    """Given (validated) criteria, determines if an instance meets it"""
+    if criteria.get('term_1'):
+        if str2bool(criteria.get('term_1')) and not instance['periods']['teaching_periods']['term_1']:
+            return False
+    if criteria.get('term_2'):
+        if str2bool(criteria.get('term_2')) and not instance['periods']['teaching_periods']['term_2']:
+            return False
+    if criteria.get('term_3'):
+        if str2bool(criteria.get('term_3')) and not instance['periods']['teaching_periods']['term_3']:
+            return False
+    if criteria.get('term_4'):
+        if str2bool(criteria.get('term_4')) and not instance['periods']['teaching_periods']['term_4']:
+            return False
+    if criteria.get('summer'):
+        if str2bool(criteria.get('summer')) and not instance['periods']['teaching_periods']['summer']:
+            return False
+    if criteria.get('summer_school'):
+        if str2bool(criteria.get('is_summer_school')) and not instance['periods']['summer_school']['is_summer_school']:
+            return False
+    if criteria.get('summer_school_1'):
+        if str2bool(criteria.get('summer_school_1')) and not instance['periods']['summer_school']['summer_school_1']:
+            return False
+    if criteria.get('summer_school_2'):
+        if str2bool(criteria.get('summer_school_2')) and not instance['periods']['summer_school']['summer_school_2']:
+            return False
+    if criteria.get('lsr'):
+        if str2bool(criteria.get('lsr')) and not instance['periods']['lsr']:
+            return False
+    if criteria.get('year_long'):
+        if str2bool(criteria.get('year_long')) and not instance['periods']['year_long']:
+            return False
+    if criteria.get('is_undergraduate'):
+        if str2bool(criteria.get('is_undergraduate')) and not instance['delivery']['is_undergraduate']:
+            return False
+    if criteria.get('fheq_level'):
+        if not criteria.get('fheq_level') == str(instance['delivery']['fheq_level']):
+            return False
+    return True
 
 def _get_timetable_events(full_modules, stumodules):
     """
@@ -522,52 +562,54 @@ def get_departmental_modules(department_id):
     return dept_modules
 
 
-def get_course_modules(course_id):
+def get_course_modules(course_id, query_params):
     dept_modules = {}
 
     modules = get_cache("crsavailmodules")
-    for compulsory in modules.objects.filter(courseid=course_id, setid=_SETID).only('moduleid'):
-        module = get_cache("module").objects.filter(moduleid=compulsory.moduleid)[:1]
-        module = module[0]
-        instance_data = _get_instance_details(module.instid)
+    for available in modules.objects.filter(courseid=course_id, setid=_SETID).only('moduleid'):
+        for module in get_cache("module").objects.filter(moduleid=available.moduleid, setid=_SETID):
+            instance_data = _get_instance_details(module.instid)
+            if not _is_instance_in_criteria(instance_data, query_params):
+                continue
 
-        if module.moduleid not in dept_modules:
-            dept_modules[module.moduleid] = {
-                "module_id": module.moduleid,
-                "name": module.name,
-                "instances": []
-            }
+            if module.moduleid not in dept_modules:
+                dept_modules[module.moduleid] = {
+                    "module_id": module.moduleid,
+                    "name": module.name,
+                    "instances": []
+                }
 
-        dept_modules[module.moduleid]['instances'].append({
-            "full_module_id": "{}-{}".format(
-                module.moduleid,
-                instance_data['instance_code']
-            ),
-            "class_size": module.csize,
-            ** instance_data
-        })
+            dept_modules[module.moduleid]['instances'].append({
+                "full_module_id": "{}-{}".format(
+                    module.moduleid,
+                    instance_data['instance_code']
+                ),
+                "class_size": module.csize,
+                ** instance_data
+            })
 
     modules = get_cache("crscompmodules")
-    for available in modules.objects.filter(courseid=course_id, setid=_SETID).only('moduleid'):
-        module = get_cache("module").objects.filter(moduleid=available.moduleid)[:1]
-        module = module[0]
-        instance_data = _get_instance_details(module.instid)
+    for compulsory in modules.objects.filter(courseid=course_id, setid=_SETID).only('moduleid'):
+        for module in get_cache("module").objects.filter(moduleid=available.moduleid, setid=_SETID):
+            instance_data = _get_instance_details(module.instid)
+            if not _is_instance_in_criteria(instance_data, query_params):
+                continue
 
-        if module.moduleid not in dept_modules:
-            dept_modules[module.moduleid] = {
-                "module_id": module.moduleid,
-                "name": module.name,
-                "instances": []
-            }
+            if module.moduleid not in dept_modules:
+                dept_modules[module.moduleid] = {
+                    "module_id": module.moduleid,
+                    "name": module.name,
+                    "instances": []
+                }
 
-        dept_modules[module.moduleid]['instances'].append({
-            "full_module_id": "{}-{}".format(
-                module.moduleid,
-                instance_data['instance_code']
-            ),
-            "class_size": module.csize,
-            ** instance_data
-        })
+            dept_modules[module.moduleid]['instances'].append({
+                "full_module_id": "{}-{}".format(
+                    module.moduleid,
+                    instance_data['instance_code']
+                ),
+                "class_size": module.csize,
+                ** instance_data
+            })
 
     return dept_modules
 
