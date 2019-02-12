@@ -11,7 +11,8 @@ from .app_helpers import (
     get_departmental_modules,
     get_departments,
     get_student_timetable,
-    get_course_modules
+    get_course_modules,
+    validate_amp_query_params
 )
 
 from common.decorators import uclapi_protected_endpoint
@@ -166,33 +167,14 @@ def get_course_modules_endpoint(request, *args, **kwargs):
         }, custom_header_data=kwargs)
         response.status_code = 400
         return response
-
-    bool_params = [
-        'term_1', 'term_2', 'term_3', 'term_1_next_year',
-        'summer', 'summer_school', 'summer_school_1', 
-        'summer_school_2', 'lsr', 'year_long', 'is_undergraduate'
-    ] 
-    valid_bools = ['1','0','true','false']
-    for param in bool_params:
-        if request.query_params.get(param):
-            if request.query_params.get(param) not in valid_bools:
-                response = JsonResponse({
-                    "ok": False,
-                    "error": "The parameter '{}' must be given as a valid."
-                             "boolean value (1,0,true,false)".format(param)
-                }, custom_header_data=kwargs)
-                response.status_code = 400
-                return response
-    if request.query_params.get('fheq_level'):
-        try:
-            int(request.query_params.get('fheq_level'))
-        except ValueError:
-            response = JsonResponse({
-                "ok": False,
-                "error": "Please supply the parameter 'fheq_level' as a valid integer."
-            }, custom_header_data=kwargs)
-            response.status_code = 400
-            return response
+    if not validate_amp_query_params(request.query_params):
+        response = JsonResponse({
+            "ok": False,
+            "error": "Please make sure that all query parameters are of the "
+                     "correct type as specified in the documentation"
+        }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
 
     modules = {
         "ok": True,
