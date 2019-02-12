@@ -30,11 +30,11 @@ services:
       - "6379"
   uclapi:
     build:
-      context: ./docker
-      dockerfile: uclapi-dev.Dockerfile
+      context: .
+      dockerfile: docker/uclapi-dev.Dockerfile
     volumes:
       - type: bind
-        source: ${PWD}
+        source: .
         target: /web/uclapi
         read_only: true
     ports:
@@ -44,7 +44,7 @@ services:
       - gencache
       - redis
     env_file:
-      - ./docker/.env
+      - ./backend/uclapi/.env
     environment:
       - SECRET_KEY=iRlsWf2BF2nnNy1zIsZcun6fZX5GGpk0
       - SHIBBOLETH_ROOT=http://localhost:8001/auto
@@ -70,8 +70,8 @@ services:
 
   fakeshibboleth:
     build:
-      context: ./docker
-      dockerfile: fakeshibboleth.Dockerfile
+      context: .
+      dockerfile: docker/fakeshibboleth.Dockerfile
       args:
         AUTO_EPPN: develop@ucl.ac.uk
         AUTO_UCLINTRANETGROUPS: ucl-all;ucl-ug;schsci-all
@@ -88,8 +88,8 @@ services:
       - "8001:8001"
   oauth-test:
     build:
-      context: ./docker
-      dockerfile: oauth-test.Dockerfile
+      context: .
+      dockerfile: docker/oauth-test.Dockerfile
     ports:
       - "8002:8002"
 

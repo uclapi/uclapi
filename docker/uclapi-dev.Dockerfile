@@ -76,7 +76,7 @@ RUN wget -O instantclient.zip ${ORACLE_INSTANTCLIENT_BASIC_URL} && \
     echo "${ORACLE_HOME}" > /etc/ld.so.conf.d/oracle.conf && \
     ldconfig
 
-COPY requirements.txt requirements.txt
+COPY backend/uclapi/requirements.txt requirements.txt
 
 RUN pip install --no-cache-dir -r requirements.txt
 
