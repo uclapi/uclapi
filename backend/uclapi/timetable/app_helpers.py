@@ -170,8 +170,8 @@ def _is_instance_in_criteria(instance, criteria):
     if criteria.get('term_3'):
         if str2bool(criteria.get('term_3')) != instance['periods']['teaching_periods']['term_3']:
             return False
-    if criteria.get('term_4'):
-        if str2bool(criteria.get('term_4')) != instance['periods']['teaching_periods']['term_4']:
+    if criteria.get('term_1_next_year'):
+        if str2bool(criteria.get('term_1_next_year')) != instance['periods']['teaching_periods']['term_1_next_year']:
             return False
     if criteria.get('summer'):
         if str2bool(criteria.get('summer')) != instance['periods']['teaching_periods']['summer']:
@@ -180,10 +180,10 @@ def _is_instance_in_criteria(instance, criteria):
         if str2bool(criteria.get('is_summer_school')) != instance['periods']['summer_school']['is_summer_school']:
             return False
     if criteria.get('summer_school_1'):
-        if str2bool(criteria.get('summer_school_1')) != instance['periods']['summer_school']['summer_school_1']:
+        if str2bool(criteria.get('summer_school_1')) != instance['periods']['summer_school']['sessions']['session_1']:
             return False
     if criteria.get('summer_school_2'):
-        if str2bool(criteria.get('summer_school_2')) != instance['periods']['summer_school']['summer_school_2']:
+        if str2bool(criteria.get('summer_school_2')) != instance['periods']['summer_school']['sessions']['session_2']:
             return False
     if criteria.get('lsr'):
         if str2bool(criteria.get('lsr')) != instance['periods']['lsr']:
