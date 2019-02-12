@@ -77,8 +77,8 @@ services:
         AUTO_UCLINTRANETGROUPS: ucl-all;ucl-ug;schsci-all
         AUTO_CN: develop
         AUTO_DEPARTMENT: Dept of API Development
-        AUTO_GIVENNAME: UCL API Developer
-        AUTO_DISPLAYNAME: UCL API
+        AUTO_GIVENNAME: UCL API
+        AUTO_DISPLAYNAME: UCL API Developer
         AUTO_EMPLOYEEID: uclapi1
         AUTO_AFFILIATION: member@ucl.ac.uk;student@ucl.ac.uk
         AUTO_MAIL: ucl.api.developer@ucl.ac.uk
@@ -90,6 +90,9 @@ services:
     build:
       context: .
       dockerfile: docker/oauth-test.Dockerfile
+      args:
+        UCLAPI_CLIENT_ID: '1105308584328350.9460393713696551'
+        UCLAPI_CLIENT_SECRET: 251e9f9553bb3b86829c18bf795844d977dedf569b24a70e4d4e753958fcc2f3
     ports:
       - "8002:8002"
 

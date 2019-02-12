@@ -86,11 +86,7 @@ CMD echo "Migrating Main DB"; \
     python3 /web/uclapi/backend/uclapi/manage.py migrate; \
     echo "Migrating Gencache DB"; \
     python3 /web/uclapi/backend/uclapi/manage.py migrate --database gencache; \
-    echo "Updating Medium Article Cache"; \
-    python3 /web/uclapi/backend/uclapi/manage.py update_medium; \
-    echo "Creating Main Lock"; \
-    python3 /web/uclapi/backend/uclapi/manage.py create_lock; \
-    echo "Creating Timetable Lock"; \
-    python3 /web/uclapi/backend/uclapi/manage.py create_timetable_lock; \
+    echo "Running Development Environment Setup"; \
+    python3 /web/uclapi/backend/uclapi/manage.py dev_environment_setup; \
     echo "Starting Django on Port 8000"; \
     python3 /web/uclapi/backend/uclapi/manage.py runserver 0.0.0.0:8000
