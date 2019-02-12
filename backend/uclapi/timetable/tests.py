@@ -1,10 +1,6 @@
 from django.http import QueryDict
-from django.test import SimpleTestCase, tag
-from rest_framework.test import APIRequestFactory, APITestCase
+from django.test import SimpleTestCase
 
-from dashboard.models import App, User
-
-from .views import get_course_modules_endpoint
 from .app_helpers import validate_amp_query_params
 
 from .amp import (
@@ -857,19 +853,8 @@ class AmpCodeParsing(SimpleTestCase):
             # We should not get an error for any of these codes
             ModuleInstance(code)
 
-@tag('integration')
-class AmpQueryParams(APITestCase):
+class AmpQueryParams(SimpleTestCase):
     """Tests for instance (AMP) query parameters"""
-
-    # def setUp(self):
-    #     self.factory = APIRequestFactory()
-    #     user = User.objects.create(
-    #         email="test@ucl.ac.uk",
-    #         cn="test",
-    #         given_name="Test Test"
-    #     )
-    #     app = App.objects.create(user=user, name="An App")
-    #     self.api_token = app.api_token
 
     def test_amp_params_are_correctly_validated(self):
         amp_params = [
