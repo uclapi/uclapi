@@ -3,6 +3,7 @@ from django.conf import settings
 from rest_framework.decorators import api_view
 
 from common.helpers import PrettyJsonResponse as JsonResponse
+from workspaces.occupeye.utils import str2bool
 
 from .models import Course
 
@@ -167,14 +168,28 @@ def get_course_modules_endpoint(request, *args, **kwargs):
         }, custom_header_data=kwargs)
         response.status_code = 400
         return response
+
     if not validate_amp_query_params(request.query_params):
         response = JsonResponse({
             "ok": False,
             "error": "Please make sure that all query parameters are of the "
-                     "correct type as specified in the documentation"
+                     "correct type as specified in the documentation."
         }, custom_header_data=kwargs)
         response.status_code = 400
         return response
+
+    if (request.query_params.get('only_available') and 
+        request.query_params.get('only_compulsory')):
+        if (str2bool(request.query_params.get('only_available')) and
+            str2bool(request.query_params.get('only_compulsory'))):
+            response = JsonResponse({
+                "ok": False,
+                "error": "Logically, we cannot supply modules that are only "
+                         "available and also only compulsory."
+            }, custom_header_data=kwargs)
+            response.status_code = 400
+            return response
+            
 
     modules = {
         "ok": True,
