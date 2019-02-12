@@ -33,6 +33,46 @@ h3 {
   font-weight: 400;
 }
 
+.FAQ {
+  padding: 50px 0 50px 0;
+
+  h1 {
+    text-align: center;
+    padding-bottom: 60px;
+    text-decoration: underline;
+  }
+  h2, h3 {
+    text-align: left;
+    margin: unset;
+  }
+  h2 {
+    padding-bottom: 10px;
+    text-decoration: underline;
+  }
+  h3 {
+    padding-bottom: 30px;
+  }
+
+  h3 a {
+    color: $highlight-color;
+    text-decoration: none;
+  }
+  .container > a {
+    text-decoration: none;
+    display: block;
+    font-weight: lighter;
+    margin-top: 0px;
+    margin-bottom: 60px;
+    color: white;
+    font-size: 36px;
+    margin: 40px auto;
+  }
+  a:hover {
+    color: $highlight-color;
+    text-decoration: underline;
+  }
+}
+
 .intro {
   padding-top: 200px;
   padding-bottom: 200px;
