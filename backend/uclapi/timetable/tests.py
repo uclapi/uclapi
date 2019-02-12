@@ -882,15 +882,15 @@ class AmpQueryParams(APITestCase):
         for valid_bool in valid_bools:
             for amp_param in amp_params: 
                 query_params = QueryDict('{}={}'.format(amp_param, valid_bool))
-                self.assertEqual(validate_amp_query_params(query_params), True)
+                self.assertTrue(validate_amp_query_params(query_params))
 
         for invalid_bool in invalid_bools:
             for amp_param in amp_params: 
                 query_params = QueryDict('{}={}'.format(amp_param, invalid_bool))
-                self.assertEqual(validate_amp_query_params(query_params), False)
+                self.assertFalse(validate_amp_query_params(query_params))
 
         query_params = QueryDict('fheq_level=4')
-        self.assertEqual(validate_amp_query_params(query_params), True)
+        self.assertTrue(validate_amp_query_params(query_params))
 
         query_params = QueryDict('fheq_level=s')
-        self.assertEqual(validate_amp_query_params(query_params), False)
+        self.assertFalse(validate_amp_query_params(query_params))
