@@ -1,9 +1,11 @@
+from django.http import QueryDict
 from django.test import SimpleTestCase, tag
 from rest_framework.test import APIRequestFactory, APITestCase
 
 from dashboard.models import App, User
 
 from .views import get_course_modules_endpoint
+from .app_helpers import validate_amp_query_params
 
 from .amp import (
     InvalidAMPCodeException,
@@ -859,32 +861,17 @@ class AmpCodeParsing(SimpleTestCase):
 class AmpQueryParams(APITestCase):
     """Tests for instance (AMP) query parameters"""
 
-    def setUp(self):
-        self.factory = APIRequestFactory()
-        user = User.objects.create(
-            email="test@ucl.ac.uk",
-            cn="test",
-            given_name="Test Test"
-        )
-        app = App.objects.create(user=user, name="An App")
-        self.api_token = app.api_token
+    # def setUp(self):
+    #     self.factory = APIRequestFactory()
+    #     user = User.objects.create(
+    #         email="test@ucl.ac.uk",
+    #         cn="test",
+    #         given_name="Test Test"
+    #     )
+    #     app = App.objects.create(user=user, name="An App")
+    #     self.api_token = app.api_token
 
-    def test_fheq_level_can_only_be_int(self):
-        params = {
-            'token': self.api_token,
-            'course': 'UMNCOMSMAT05',
-            'fheq_level': '4'
-        }
-        request = self.factory.get('/timetable/data/course/modules', params)
-        response = get_course_modules_endpoint(request)
-        self.assertEqual(response.status_code, 200)
-
-        params['fheq_level'] = 's'
-        request = self.factory.get('/timetable/data/course/modules', params)
-        response = get_course_modules_endpoint(request)
-        self.assertEqual(response.status_code, 400)
-
-    def test_bool_params_are_validated_in_view(self):
+    def test_amp_params_are_correctly_validated(self):
         amp_params = [
             'term_1', 'term_2', 'term_3', 'term_1_next_year',
             'summer', 'summer_school', 'summer_school_1', 
@@ -892,21 +879,18 @@ class AmpQueryParams(APITestCase):
         ]
         valid_bools = ['0', '1', 'true', 'false']
         invalid_bools = ['maybe']
-        params = {
-            'token': self.api_token,
-            'course': 'UMNCOMSMAT05',
-        }
         for valid_bool in valid_bools:
             for amp_param in amp_params: 
-                params[amp_param] = valid_bool
-                request = self.factory.get('/timetable/data/course/modules', params)
-                response = get_course_modules_endpoint(request)
-                self.assertEqual(response.status_code, 200)
+                query_params = QueryDict('{}={}'.format(amp_param, valid_bool))
+                self.assertEqual(validate_amp_query_params(query_params), True)
 
         for invalid_bool in invalid_bools:
             for amp_param in amp_params: 
-                params[amp_param] = invalid_bool
-                request = self.factory.get('/timetable/data/course/modules', params)
-                response = get_course_modules_endpoint(request)
-                self.assertEqual(response.status_code, 400)
-                del params[amp_param]
+                query_params = QueryDict('{}={}'.format(amp_param, invalid_bool))
+                self.assertEqual(validate_amp_query_params(query_params), False)
+
+        query_params = QueryDict('fheq_level=4')
+        self.assertEqual(validate_amp_query_params(query_params), True)
+
+        query_params = QueryDict('fheq_level=s')
+        self.assertEqual(validate_amp_query_params(query_params), False)
