@@ -24,10 +24,13 @@ services:
         source: uclapi-gencache
         target: /var/lib/postgresql/data
   redis: 
-    image: redis:latest
+    image: redis:alpine
     restart: always
-    ports: 
-      - "6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - type: volume
+        source: uclapi-redis
+        target: /data
   uclapi:
     build:
       context: .
@@ -99,3 +102,4 @@ services:
 volumes:
   uclapi-db:
   uclapi-gencache:
+  uclapi-redis:
