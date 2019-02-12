@@ -168,7 +168,7 @@ def get_course_modules_endpoint(request, *args, **kwargs):
         return response
 
     bool_params = [
-        'term_1', 'term_2', 'term_3', 'term_4',
+        'term_1', 'term_2', 'term_3', 'term_1_next_year',
         'summer', 'summer_school', 'summer_school_1', 
         'summer_school_2', 'lsr', 'year_long', 'is_undergraduate'
     ] 
