@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM python:3.6-alpine
 
 #################################
 ######## Main Parameters ########
@@ -32,39 +32,16 @@ ENV AUTO_UNSCOPED_AFFILIATION ${AUTO_UNSCOPED_AFFILIATION}
 ########### Let's go! ###########
 #################################
 
-RUN apt-get update && \
-    apt-get install -y python3 \
-                       python3-wheel \
-                       python3-setuptools \
-                       libaio1 \
-                       wget \
-                       git \
-                       libpython3-dev \
-                       build-essential \
-                       libpcre3 \
-                       libpcre3-dev \
-                       sed \
-                       locales \
-                       liblz4-1 && \
-    apt-get clean
-
-# Fix up the language / encoding environment variables to stop Pip complaining later
-RUN locale-gen en_GB.UTF-8
-ENV LANG en_GB.UTF-8
-ENV LANGUAGE en_GB:en
-ENV LC_ALL en_GB.UTF-8
-
-# Install the latest version of Pip from the repo
-# Using ADD means that when the installation script changes remotely the container will
-# rebuild from this stage. Otherwise, it should progress.
-ADD https://bootstrap.pypa.io/get-pip.py get-pip.py
-RUN python3 get-pip.py
+RUN apk update && \
+    apk upgrade && \
+    apk add git
 
 # Invalidate the build cache using the GitHub API if there has been a new commit.
 # Courtesy of https://stackoverflow.com/a/39278224
 ADD https://api.github.com/repos/uclapi/fakeshibboleth/git/refs/heads/master version.json
 
-RUN mkdir /web && git clone https://github.com/uclapi/fakeshibboleth /web/fakeshibboleth
+RUN mkdir /web && \
+    git clone https://github.com/uclapi/fakeshibboleth /web/fakeshibboleth
 
 RUN pip install --no-cache-dir -r /web/fakeshibboleth/requirements.txt
 
