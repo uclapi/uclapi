@@ -199,6 +199,33 @@ def _is_instance_in_criteria(instance, criteria):
             return False
     return True
 
+def validate_amp_query_params(query_params):
+    """
+    Validates that query params concerning AMP are of the valid type
+
+    :param query_params: parameters given by the user to the endpoint
+    :type query_params: django.http.QueryDict
+
+    :returns: True if query parameters are of valid form, False otherwise
+    :rtype: bool
+    """
+    bool_params = [
+        'term_1', 'term_2', 'term_3', 'term_1_next_year',
+        'summer', 'summer_school', 'summer_school_1', 
+        'summer_school_2', 'lsr', 'year_long', 'is_undergraduate'
+    ] 
+    valid_bools = ['1','0','true','false']
+    for param in bool_params:
+        if query_params.get(param):
+            if query_params.get(param) not in valid_bools:
+                return False
+    if query_params.get('fheq_level'):
+        try:
+            int(query_params.get('fheq_level'))
+        except ValueError:
+            return False
+    return True
+
 def _get_timetable_events(full_modules, stumodules):
     """
     Gets a dictionary of timetabled events.
