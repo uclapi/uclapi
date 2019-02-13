@@ -11,13 +11,23 @@ export default class FAQ extends React.Component {
           <h1>FAQ</h1>
 
           <QandA 
+          question={"Do I need to be from UCL to develop?"}
+          answer={["Currently to develop applications you must be affiliated with UCL as authentication is done via UCL login. Without an appropriate login you will be unable to develop applications using UCL API."]}
+          id={"answer_6"} />
+
+          <QandA 
+          question={"Do I need to use a particlar language?"}
+          answer={["UCL API is a RESTful API meaning that you are not restricted to using any specific language.  Our ", <a href='/docs'>documentation</a>, " currently includes instructions on how to get up and running with Javascript, Python and Shell. However there is no restraints on the language you could use."]}
+          id={"answer_7"} />
+
+          <QandA 
           question={"What is UCL API?"}
-          answer={["UCL API is a platform for interacting with various data usually hidden away by UCL systems.  The aim is to enable skilled developers to develop tools for other UCL students to enrich theirlives at UCL."]}
+          answer={["UCL API is a platform for interacting with data usually hidden away by UCL systems.  The aim is to enable skilled developers to develop tools for other UCL students to enrich their lives at UCL."]}
           id={"answer_1"} />
 
           <QandA 
           question={"Who is running this?"}
-          answer={["UCL API is a student-built platform. This means all of the features open to you as developers havebeen developed by students as well!"]}
+          answer={["UCL API is a student-built platform. This means all of the features open to you as developers have been developed by students as well!"]}
           id={"answer_2"} />
 
           <QandA 
@@ -32,18 +42,8 @@ export default class FAQ extends React.Component {
 
           <QandA 
           question={"What have other people built?"}
-          answer={["Other people have developed applications such as Room Buddy for UCL which helps students to find the closest free room in UCL for studying. A full list of all of the applications created can be found on the ", <a href='/marketplace'>marketplace.</a>]}
+          answer={["Applications such as Room Buddy for UCL which helps students to find the closest free room in UCL for studying. A full list of all of the applications created can be found on the ", <a href='/marketplace'>marketplace.</a>]}
           id={"answer_5"} />
-
-          <QandA 
-          question={"Do I need to be from UCL to develop?"}
-          answer={["Currently to develop applications you must be affiliated with UCL as the authentication is done via UCL login. Without an appropriate login you will be unable to develop applications using UCL API."]}
-          id={"answer_6"} />
-
-          <QandA 
-          question={"Do I need to use a particlar language?"}
-          answer={["UCL API is a RESTful API meaning that you are not restricted to using any specific language.  Our ", <a href='/docs'>documentation</a>, " currently includes instructions on how to get up and running with Javascript, Python and Shell. However there is no restraints on the language you could use."]}
-          id={"answer_7"} />
 
           <QandA 
           question={"How can I get in touch?"}
