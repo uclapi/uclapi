@@ -1,4 +1,6 @@
+from distutils.util import strtobool
 from django.conf import settings
+
 
 from rest_framework.decorators import api_view
 
@@ -110,7 +112,7 @@ def get_department_courses_endpoint(request, *args, **kwargs):
     except KeyError:
         response = JsonResponse({
             "ok": False,
-            "error": "Supply a Department ID using the department parameter."
+            "error": "No department ID provided."
         }, custom_header_data=kwargs)
         response.status_code = 400
         return response
@@ -164,7 +166,7 @@ def get_course_modules_endpoint(request, *args, **kwargs):
     except KeyError:
         response = JsonResponse({
             "ok": False,
-            "error": "Supply a Course ID using the department courses parameter."
+            "error": "No course ID provided."
         }, custom_header_data=kwargs)
         response.status_code = 400
         return response
@@ -172,20 +174,41 @@ def get_course_modules_endpoint(request, *args, **kwargs):
     if not validate_amp_query_params(request.query_params):
         response = JsonResponse({
             "ok": False,
-            "error": "Please make sure that all query parameters are of the "
-                     "correct type as specified in the documentation."
+            "error": "Given parameter is not of corrrect type"
         }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
-    if (request.query_params.get('only_available') and 
-        request.query_params.get('only_compulsory')):
-        if (str2bool(request.query_params.get('only_available')) and
-            str2bool(request.query_params.get('only_compulsory'))):
+    
+    if request.query_params.get('only_compulsory'):
+        try:
+            strtobool(request.query_params.get('only_compulsory'))
+        except ValueError:
             response = JsonResponse({
                 "ok": False,
-                "error": "Logically, we cannot supply modules that are only "
-                         "available and also only compulsory."
+                "error": "Given parameter is not of correct type"
+            }, custom_header_data=kwargs)
+            response.status_code = 400
+            return response
+
+    if request.query_params.get('only_available'):
+        try:
+            strtobool(request.query_params.get('only_available'))
+        except ValueError:
+            response = JsonResponse({
+                "ok": False,
+                "error": "Given parameter is not of correct type"
+            }, custom_header_data=kwargs)
+            response.status_code = 400
+            return response
+
+    if (request.query_params.get('only_available') and 
+        request.query_params.get('only_compulsory')):
+        if (strtobool(request.query_params.get('only_available')) and
+            strtobool(request.query_params.get('only_compulsory'))):
+            response = JsonResponse({
+                "ok": False,
+                "error": "only_available and only_compulsory cannot both be true"
             }, custom_header_data=kwargs)
             response.status_code = 400
             return response
