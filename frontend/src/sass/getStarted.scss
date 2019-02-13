@@ -42,7 +42,7 @@ h3 {
     text-decoration: underline;
   }
   h2, h3 {
-    text-align: left;
+    text-align: center;
     margin: unset;
   }
   h2 {
@@ -50,9 +50,9 @@ h3 {
     text-decoration: underline;
     cursor: pointer;
     margin: auto;
-    text-align: center;
   }
   h3 {
+    margin: auto;
     padding-bottom: 30px;
   }
 
