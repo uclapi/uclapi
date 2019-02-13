@@ -1,5 +1,4 @@
 import React from 'react';
-
 import QandA from './QandA.jsx';
 
 export default class FAQ extends React.Component {

@@ -36,6 +36,16 @@ h3 {
 .FAQ {
   padding: 50px 0 50px 0;
 
+  .answer {
+    transition: height 0.5s;
+    overflow: hidden;
+  }
+  .extended-answer {
+    height: 100px;
+  }
+  .collapsed-answer {
+    height: 0;
+  }
   h1 {
     text-align: center;
     padding-bottom: 30px;

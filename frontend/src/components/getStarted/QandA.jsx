@@ -11,10 +11,10 @@ export default class QandA extends React.Component {
     }
 
     slideBox() {
-    	return <div className="answer" key={this.props.id}><h3>{this.props.answer}</h3></div>;
+    	return <div className="answer extended-answer" key={this.props.id}><h3>{this.props.answer}</h3></div>;
     }
     noBox() {
-    	return <div className="answer" key={this.props.id}></div>;
+    	return <div className="answer collapsed-answer" key={this.props.id}><h3>{this.props.answer}</h3></div>;
     }
 
     render() {
