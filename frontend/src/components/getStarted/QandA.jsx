@@ -1,35 +1,14 @@
 import React from 'react';
+import Collapse, { Panel } from 'rc-collapse';
 
 export default class QandA extends React.Component {
-	constructor(props) {
-	    super(props);
-
-	    this.state = { isHidden: true };
-	    this.showhide = this.showhide.bind(this);
-	    this.slideBox = this.slideBox.bind(this);
-	    this.noBox = this.noBox.bind(this);
-    }
-
-    slideBox() {
-    	return <div className="answer extended-answer" key={this.props.id}><h3>{this.props.answer}</h3></div>;
-    }
-    noBox() {
-    	return <div className="answer collapsed-answer" key={this.props.id}><h3>{this.props.answer}</h3></div>;
-    }
-
     render() {
-    	let answer = this.state.isHidden ? this.noBox() : this.slideBox();
     	return (
-    		<div className="question-and-answer">
-	    	    <div className="question" onClick={this.showhide}><h2>{this.props.question}</h2></div>
-                {answer}
-	        </div>
+		<Collapse>
+    	  <Panel header={this.props.question} showArrow>
+    	    <p>{this.props.answer}</p>
+    	  </Panel>
+	  	</Collapse>
     	);
 	}
-
-    showhide() {
-		this.setState({
-		    isHidden: !this.state.isHidden
-		});
-    }
 }
