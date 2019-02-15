@@ -22,7 +22,7 @@ from dashboard.models import (
     User
 )
 
-from dashboard.app_helpers import get_temp_token,generate_temp_api_token
+from dashboard.app_helpers import get_temp_token, generate_temp_api_token
 
 from oauth.models import OAuthToken, OAuthScope
 from oauth.scoping import Scopes
