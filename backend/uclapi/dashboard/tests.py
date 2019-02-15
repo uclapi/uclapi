@@ -579,7 +579,7 @@ class ApiApplicationsTestCase(TestCase):
             cn="test",
             given_name="Test Test"
         )
-        allowed_urls = ['/api/rename/','/api/delete/','/api/regen/']
+        allowed_urls = ['/api/rename/', '/api/delete/', '/api/regen/']
         for url in self.functions:
             if url in allowed_urls:
                 no_app_post_request(self, url, self.functions[url][0], user_)
