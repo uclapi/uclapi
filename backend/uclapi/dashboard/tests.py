@@ -580,7 +580,7 @@ class ApiApplicationsTestCase(TestCase):
             given_name="Test Test"
         )
         for url in self.functions:
-            if url == '/api/rename/' or url == '/api/delete/':
+            if url == '/api/rename/' or url == '/api/delete/' or url == '/api/regen/':
                 no_app_post_request(self, url, self.functions[url][0], user_)
 
     # Start of create_app section
