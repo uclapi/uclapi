@@ -4,9 +4,10 @@ from random import SystemRandom
 from common.helpers import generate_api_token
 from uclapi.settings import (
     MEDIUM_ARTICLE_QUANTITY,
-    REDIS_UCLAPI_HOST
+    REDIS_UCLAPI_HOST,
+    DEBUG
 )
-
+from django.core.management import call_command
 import os
 import redis
 import textwrap
@@ -15,6 +16,11 @@ import validators
 
 def get_articles():
     r = redis.Redis(host=REDIS_UCLAPI_HOST)
+    if not r.exists("Blog:item:1:url"):
+        if DEBUG:
+            call_command('update_medium')
+        else:
+            return []
     pipe = r.pipeline()
     articles = []
     for i in range(0, MEDIUM_ARTICLE_QUANTITY):
