@@ -238,7 +238,7 @@ class TempTokenCheckerTest(TestCase):
         # We initialise a new temporary token and set it to 1
         # as it is generated at its first usage.
         r.set(expired_token, 1, px=1)
-        time.sleep(0.001)
+        time.sleep(0.002)
         result = _check_temp_token_issues(
             expired_token,
             False,
