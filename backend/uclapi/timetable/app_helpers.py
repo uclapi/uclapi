@@ -36,7 +36,10 @@ _session_type_map = {
 }
 
 _rooms_cache = {}
-
+_site_coord_cache = {}
+_room_coord_cache = {}
+_instance_cache = {}
+_lecturers_cache = {}
 _department_name_cache = {}
 
 
@@ -111,6 +114,8 @@ def _get_full_department_name(department_code):
 
 def _get_lecturer_details(lecturer_upi):
     """Returns a lecturer's name and email address from their UPI"""
+    if lecturer_upi in _lecturers_cache:
+        return _lecturers_cache[lecturer_upi]
     lecturers = get_cache("lecturer")
     details = {
         "name": "Unknown",
@@ -129,19 +134,23 @@ def _get_lecturer_details(lecturer_upi):
     if lecturer.owner:
         details["department_id"] = lecturer.owner
         details["department_name"] = _get_full_department_name(lecturer.owner)
-
+    _lecturers_cache[lecturer_upi] = details
     return details
 
 
 def _get_instance_details(instid):
+    if instid in _instance_cache:
+        return _instance_cache[instid]
     cminstances = get_cache("cminstances")
     instance_data = cminstances.objects.get(instid=instid)
     instance = ModuleInstance(instance_data.instcode)
-    return {
+    data = {
         "delivery": instance.delivery.get_delivery(),
         "periods": instance.periods.get_periods(),
         "instance_code": instance_data.instcode
     }
+    _instance_cache[instid] = data
+    return data
 
 
 def _get_timetable_events(full_modules, stumodules):
@@ -157,9 +166,17 @@ def _get_timetable_events(full_modules, stumodules):
     modules = get_cache("module")
 
     bookings = get_cache("booking")
-
+    event_bookings_list = {}
     full_timetable = {}
+    modules_chosen = {}
     for module in full_modules:
+        key = str(module.moduleid)+" "+str(module.instid)
+        lab_key = key+str(module.modgrpcode)
+        if key in modules_chosen:
+            del modules_chosen[key]
+        modules_chosen[lab_key] = module
+
+    for _, module in modules_chosen.items():
         if stumodules:
             # Get events for the lab group assigned
             # Also include general lecture events (via the or operator)
@@ -180,8 +197,12 @@ def _get_timetable_events(full_modules, stumodules):
             module_data = module
         instance_data = _get_instance_details(module.instid)
         for event in events_data:
-            event_bookings = bookings.objects.filter(slotid=event.slotid)
-            if len(event_bookings) == 0:
+            if event.slotid not in event_bookings_list:
+                event_bookings_list[event.slotid] =  \
+                    bookings.objects.filter(slotid=event.slotid)
+            event_bookings = event_bookings_list[event.slotid]
+            # .exists() instead of len so we don't evaluate all of the filter
+            if not event_bookings.exists():
                 # We have to trust the data in the event because
                 # no rooms are booked for some weird reason.
                 for date in _get_real_dates(event):
@@ -263,7 +284,8 @@ def _get_timetable_events(full_modules, stumodules):
                         "session_type_str": _get_session_type_str(
                             event.moduletype
                         ),
-                        "contact": booking.condisplayname
+                        "contact": booking.condisplayname,
+                        "instance": instance_data
                     }
 
                     # If this is student module data, add in the group code
@@ -359,19 +381,25 @@ def _get_session_type_str(session_type):
 def _get_location_coordinates(siteid, roomid):
     # First try and get the specific room's location
     try:
+        if roomid in _room_coord_cache:
+            return _room_coord_cache[roomid]
         location = Location.objects.get(
             siteid=siteid,
             roomid=roomid
         )
+        _room_coord_cache[roomid] = (location.lat, location.lng)
         return location.lat, location.lng
     except Location.DoesNotExist:
         pass
 
     # Now try and get the building's location
     try:
+        if siteid in _site_coord_cache:
+            return _site_coord_cache[siteid]
         location = SiteLocation.objects.get(
             siteid=siteid
         )
+        _site_coord_cache[siteid] = (location.lat, location.lng)
         return location.lat, location.lng
     except SiteLocation.DoesNotExist:
         pass
