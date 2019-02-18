@@ -867,12 +867,14 @@ class AmpQueryParams(SimpleTestCase):
         invalid_bools = ['maybe']
         for valid_bool in valid_bools:
             for amp_param in amp_params:
-                query_params = QueryDict('{}={}'.format(amp_param, valid_bool))
+                query_params = QueryDict('{}={}'.format(amp_param,
+                                                        valid_bool))
                 self.assertTrue(validate_amp_query_params(query_params))
 
         for invalid_bool in invalid_bools:
             for amp_param in amp_params:
-                query_params = QueryDict('{}={}'.format(amp_param, invalid_bool))
+                query_params = QueryDict('{}={}'.format(amp_param, 
+                                                        invalid_bool))
                 self.assertFalse(validate_amp_query_params(query_params))
 
         query_params = QueryDict('fheq_level=4')

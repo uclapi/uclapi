@@ -117,7 +117,9 @@ def get_department_courses_endpoint(request, *args, **kwargs):
         return response
 
     courses = {"ok": True, "courses": []}
-    for course in Course.objects.filter(owner=department_id, setid=_SETID, linkcode="YY"):
+    for course in Course.objects.filter(owner=department_id,
+                                        setid=_SETID,
+                                        linkcode="YY"):
         courses["courses"].append({
             "course_name": course.name,
             "course_id": course.courseid,
@@ -206,11 +208,11 @@ def get_course_modules_endpoint(request, *args, **kwargs):
                 strtobool(request.query_params.get('only_compulsory'))):
             response = JsonResponse({
                 "ok": False,
-                "error": "only_available and only_compulsory cannot both be true"
+                "error": "only_available and only_compulsory"
+                         " cannot both be true"
             }, custom_header_data=kwargs)
             response.status_code = 400
             return response
-
 
     modules = {
         "ok": True,
