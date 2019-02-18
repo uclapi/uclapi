@@ -709,3 +709,34 @@ class ApiApplicationsTestCase(TestCase):
             content["message"],
             "App sucessfully deleted."
         )
+
+    def test_regen_token_success(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/regen/',
+            {
+                "app_id": app_.id
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = regenerate_app_token(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            content["message"],
+            "App token sucessfully regenerated."
+        )
+        self.assertEqual(
+            content["app"]["id"],
+            app_.id
+        )
+        self.assertTrue(
+            content["app"]["token"] != app_.api_token
+        )
