@@ -5,7 +5,6 @@ from django.conf import settings
 from rest_framework.decorators import api_view
 
 from common.helpers import PrettyJsonResponse as JsonResponse
-from workspaces.occupeye.utils import str2bool
 
 from .models import Course
 
@@ -179,7 +178,6 @@ def get_course_modules_endpoint(request, *args, **kwargs):
         response.status_code = 400
         return response
 
-    
     if request.query_params.get('only_compulsory'):
         try:
             strtobool(request.query_params.get('only_compulsory'))
@@ -202,17 +200,17 @@ def get_course_modules_endpoint(request, *args, **kwargs):
             response.status_code = 400
             return response
 
-    if (request.query_params.get('only_available') and 
-        request.query_params.get('only_compulsory')):
+    if (request.query_params.get('only_available') and
+            request.query_params.get('only_compulsory')):
         if (strtobool(request.query_params.get('only_available')) and
-            strtobool(request.query_params.get('only_compulsory'))):
+                strtobool(request.query_params.get('only_compulsory'))):
             response = JsonResponse({
                 "ok": False,
                 "error": "only_available and only_compulsory cannot both be true"
             }, custom_header_data=kwargs)
             response.status_code = 400
             return response
-            
+
 
     modules = {
         "ok": True,
