@@ -198,6 +198,7 @@ def _is_instance_in_criteria(instance, criteria):
             return False
     return True
 
+
 def validate_amp_query_params(query_params):
     """
     Validates that query params concerning AMP are of the valid type
@@ -210,10 +211,10 @@ def validate_amp_query_params(query_params):
     """
     bool_params = [
         'term_1', 'term_2', 'term_3', 'term_1_next_year',
-        'summer', 'summer_school', 'summer_school_1', 
+        'summer', 'summer_school', 'summer_school_1',
         'summer_school_2', 'lsr', 'year_long', 'is_undergraduate'
-    ] 
-    valid_bools = ['1','0','true','false']
+    ]
+
     for param in bool_params:
         if query_params.get(param):
             try:
@@ -641,12 +642,12 @@ def _get_available_course_modules(dept_modules, course_id, query_params):
 
 def get_course_modules(course_id, query_params):
     dept_modules = {}
-    if not query_params.get('only_available') == None:
+    if not query_params.get('only_available') is None:
         if strtobool(query_params.get('only_available')):
             _get_available_course_modules(dept_modules, course_id, query_params)
             return dept_modules
 
-    if not query_params.get('only_compulsory') == None:
+    if not query_params.get('only_compulsory') is None:
         if strtobool(query_params.get('only_compulsory')):
             _get_compulsory_course_modules(dept_modules, course_id, query_params)
             return dept_modules
