@@ -158,43 +158,56 @@ def _get_instance_details(instid):
     _instance_cache[instid] = data
     return data
 
+
 def _is_instance_in_criteria(instance, criteria):
     """Given (validated) criteria, determines if an instance meets it"""
     if criteria.get('term_1'):
-        if strtobool(criteria.get('term_1')) != instance['periods']['teaching_periods']['term_1']:
+        if (strtobool(criteria.get('term_1'))
+            != instance['periods']['teaching_periods']['term_1']):
             return False
     if criteria.get('term_2'):
-        if strtobool(criteria.get('term_2')) != instance['periods']['teaching_periods']['term_2']:
+        if (strtobool(criteria.get('term_2'))
+            != instance['periods']['teaching_periods']['term_2']):
             return False
     if criteria.get('term_3'):
-        if strtobool(criteria.get('term_3')) != instance['periods']['teaching_periods']['term_3']:
+        if (strtobool(criteria.get('term_3'))
+            != instance['periods']['teaching_periods']['term_3']):
             return False
     if criteria.get('term_1_next_year'):
-        if strtobool(criteria.get('term_1_next_year')) != instance['periods']['teaching_periods']['term_1_next_year']:
+        if (strtobool(criteria.get('term_1_next_year'))
+            != instance['periods']['teaching_periods']['term_1_next_year']):
             return False
     if criteria.get('summer'):
-        if strtobool(criteria.get('summer')) != instance['periods']['teaching_periods']['summer']:
+        if (strtobool(criteria.get('summer'))
+            != instance['periods']['teaching_periods']['summer']):
             return False
     if criteria.get('summer_school'):
-        if strtobool(criteria.get('is_summer_school')) != instance['periods']['summer_school']['is_summer_school']:
+        if (strtobool(criteria.get('is_summer_school'))
+            != instance['periods']['summer_school']['is_summer_school']):
             return False
     if criteria.get('summer_school_1'):
-        if strtobool(criteria.get('summer_school_1')) != instance['periods']['summer_school']['sessions']['session_1']:
+        if (strtobool(criteria.get('summer_school_1'))
+            != instance['periods']['summer_school']['sessions']['session_1']):
             return False
     if criteria.get('summer_school_2'):
-        if strtobool(criteria.get('summer_school_2')) != instance['periods']['summer_school']['sessions']['session_2']:
+        if (strtobool(criteria.get('summer_school_2'))
+            != instance['periods']['summer_school']['sessions']['session_2']):
             return False
     if criteria.get('lsr'):
-        if strtobool(criteria.get('lsr')) != instance['periods']['lsr']:
+        if (strtobool(criteria.get('lsr'))
+            != instance['periods']['lsr']):
             return False
     if criteria.get('year_long'):
-        if strtobool(criteria.get('year_long')) != instance['periods']['year_long']:
+        if (strtobool(criteria.get('year_long'))
+            != instance['periods']['year_long']):
             return False
     if criteria.get('is_undergraduate'):
-        if strtobool(criteria.get('is_undergraduate')) != instance['delivery']['is_undergraduate']:
+        if (strtobool(criteria.get('is_undergraduate'))
+            != instance['delivery']['is_undergraduate']):
             return False
     if criteria.get('fheq_level'):
-        if not criteria.get('fheq_level') == str(instance['delivery']['fheq_level']):
+        if (not criteria.get('fheq_level') 
+            == str(instance['delivery']['fheq_level'])):
             return False
     return True
 
@@ -227,6 +240,7 @@ def validate_amp_query_params(query_params):
         except ValueError:
             return False
     return True
+
 
 def _get_timetable_events(full_modules, stumodules):
     """
@@ -593,8 +607,12 @@ def get_departmental_modules(department_id):
 
 def _get_compulsory_course_modules(dept_modules, course_id, query_params):
     modules = get_cache("crscompmodules")
-    for compulsory in modules.objects.filter(courseid=course_id, setid=_SETID).only('moduleid'):
-        for module in get_cache("module").objects.filter(moduleid=compulsory.moduleid, setid=_SETID):
+    for compulsory in modules.objects \
+                             .filter(courseid=course_id, setid=_SETID) \
+                             .only('moduleid'):
+        for module in get_cache("module").objects \
+                                         .filter(moduleid=compulsory.moduleid,
+                                                 setid=_SETID):
             instance_data = _get_instance_details(module.instid)
             if not _is_instance_in_criteria(instance_data, query_params):
                 continue
@@ -618,8 +636,14 @@ def _get_compulsory_course_modules(dept_modules, course_id, query_params):
 
 def _get_available_course_modules(dept_modules, course_id, query_params):
         modules = get_cache("crsavailmodules")
-        for available in modules.objects.filter(courseid=course_id, setid=_SETID).only('moduleid'):
-            for module in get_cache("module").objects.filter(moduleid=available.moduleid, setid=_SETID):
+        for available in modules.objects \
+                                .filter(courseid=course_id, setid=_SETID) \
+                                .only('moduleid'):
+            for module in get_cache("module").objects \
+                                             .filter(
+                                                 moduleid=available.moduleid,
+                                                 setid=_SETID
+                                             ):
                 instance_data = _get_instance_details(module.instid)
                 if not _is_instance_in_criteria(instance_data, query_params):
                     continue
@@ -645,12 +669,16 @@ def get_course_modules(course_id, query_params):
     dept_modules = {}
     if not query_params.get('only_available') is None:
         if strtobool(query_params.get('only_available')):
-            _get_available_course_modules(dept_modules, course_id, query_params)
+            _get_available_course_modules(dept_modules,
+                                          course_id,
+                                          query_params)
             return dept_modules
 
     if not query_params.get('only_compulsory') is None:
         if strtobool(query_params.get('only_compulsory')):
-            _get_compulsory_course_modules(dept_modules, course_id, query_params)
+            _get_compulsory_course_modules(dept_modules,
+                                           course_id,
+                                           query_params)
             return dept_modules
 
     _get_available_course_modules(dept_modules, course_id, query_params)
