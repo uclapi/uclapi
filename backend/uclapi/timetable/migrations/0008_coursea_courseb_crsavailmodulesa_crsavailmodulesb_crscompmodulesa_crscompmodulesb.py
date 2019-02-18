@@ -8,7 +8,8 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('timetable', '0007_cminstances_cminstancesa_cminstancesb_stumodulesa_stumodulesb'),
+        ('timetable',
+         '0007_cminstances_cminstancesa_cminstancesb_stumodulesa_stumodulesb'),
     ]
 
     operations = [
