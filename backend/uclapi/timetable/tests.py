@@ -853,24 +853,25 @@ class AmpCodeParsing(SimpleTestCase):
             # We should not get an error for any of these codes
             ModuleInstance(code)
 
+
 class AmpQueryParams(SimpleTestCase):
     """Tests for instance (AMP) query parameters"""
 
     def test_amp_params_are_correctly_validated(self):
         amp_params = [
             'term_1', 'term_2', 'term_3', 'term_1_next_year',
-            'summer', 'summer_school', 'summer_school_1', 
+            'summer', 'summer_school', 'summer_school_1',
             'summer_school_2', 'lsr', 'year_long', 'is_undergraduate'
         ]
         valid_bools = ['0', '1', 'true', 'false']
         invalid_bools = ['maybe']
         for valid_bool in valid_bools:
-            for amp_param in amp_params: 
+            for amp_param in amp_params:
                 query_params = QueryDict('{}={}'.format(amp_param, valid_bool))
                 self.assertTrue(validate_amp_query_params(query_params))
 
         for invalid_bool in invalid_bools:
-            for amp_param in amp_params: 
+            for amp_param in amp_params:
                 query_params = QueryDict('{}={}'.format(amp_param, invalid_bool))
                 self.assertFalse(validate_amp_query_params(query_params))
 
