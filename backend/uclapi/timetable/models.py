@@ -1269,7 +1269,7 @@ class Course(models.Model):
 
 
 class CourseA(models.Model):
-    id = models.AutoField(primary_key = True)
+    id = models.AutoField(primary_key=True)
     setid = models.TextField(max_length=10)
     courseid = models.TextField(max_length=12)
     name = models.TextField(max_length=80)
@@ -1294,7 +1294,7 @@ class CourseA(models.Model):
 
 
 class CourseB(models.Model):
-    id = models.AutoField(primary_key = True)
+    id = models.AutoField(primary_key=True)
     setid = models.TextField(max_length=10)
     courseid = models.TextField(max_length=12)
     name = models.TextField(max_length=80)
