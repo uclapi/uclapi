@@ -873,7 +873,7 @@ class AmpQueryParams(SimpleTestCase):
 
         for invalid_bool in invalid_bools:
             for amp_param in amp_params:
-                query_params = QueryDict('{}={}'.format(amp_param, 
+                query_params = QueryDict('{}={}'.format(amp_param,
                                                         invalid_bool))
                 self.assertFalse(validate_amp_query_params(query_params))
 

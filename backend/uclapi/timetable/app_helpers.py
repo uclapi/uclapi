@@ -144,6 +144,7 @@ def _get_lecturer_details(lecturer_upi):
     _lecturers_cache[lecturer_upi] = details
     return details
 
+
 def _get_instance_details(instid):
     if instid in _instance_cache:
         return _instance_cache[instid]
@@ -162,52 +163,52 @@ def _get_instance_details(instid):
 def _is_instance_in_criteria(instance, criteria):
     """Given (validated) criteria, determines if an instance meets it"""
     if criteria.get('term_1'):
-        if (strtobool(criteria.get('term_1'))
-            != instance['periods']['teaching_periods']['term_1']):
+        if (strtobool(criteria.get('term_1')) !=
+            instance['periods']['teaching_periods']['term_1']):
             return False
     if criteria.get('term_2'):
-        if (strtobool(criteria.get('term_2'))
-            != instance['periods']['teaching_periods']['term_2']):
+        if (strtobool(criteria.get('term_2')) !=
+            instance['periods']['teaching_periods']['term_2']):
             return False
     if criteria.get('term_3'):
-        if (strtobool(criteria.get('term_3'))
-            != instance['periods']['teaching_periods']['term_3']):
+        if (strtobool(criteria.get('term_3')) !=
+            instance['periods']['teaching_periods']['term_3']):
             return False
     if criteria.get('term_1_next_year'):
-        if (strtobool(criteria.get('term_1_next_year'))
-            != instance['periods']['teaching_periods']['term_1_next_year']):
+        if (strtobool(criteria.get('term_1_next_year')) !=
+            instance['periods']['teaching_periods']['term_1_next_year']):
             return False
     if criteria.get('summer'):
-        if (strtobool(criteria.get('summer'))
-            != instance['periods']['teaching_periods']['summer']):
+        if (strtobool(criteria.get('summer')) !=
+            instance['periods']['teaching_periods']['summer']):
             return False
     if criteria.get('summer_school'):
-        if (strtobool(criteria.get('is_summer_school'))
-            != instance['periods']['summer_school']['is_summer_school']):
+        if (strtobool(criteria.get('is_summer_school')) !=
+            instance['periods']['summer_school']['is_summer_school']):
             return False
     if criteria.get('summer_school_1'):
-        if (strtobool(criteria.get('summer_school_1'))
-            != instance['periods']['summer_school']['sessions']['session_1']):
+        if (strtobool(criteria.get('summer_school_1')) !=
+            instance['periods']['summer_school']['sessions']['session_1']):
             return False
     if criteria.get('summer_school_2'):
-        if (strtobool(criteria.get('summer_school_2'))
-            != instance['periods']['summer_school']['sessions']['session_2']):
+        if (strtobool(criteria.get('summer_school_2')) !=
+            instance['periods']['summer_school']['sessions']['session_2']):
             return False
     if criteria.get('lsr'):
-        if (strtobool(criteria.get('lsr'))
-            != instance['periods']['lsr']):
+        if (strtobool(criteria.get('lsr')) !=
+            instance['periods']['lsr']):
             return False
     if criteria.get('year_long'):
-        if (strtobool(criteria.get('year_long'))
-            != instance['periods']['year_long']):
+        if (strtobool(criteria.get('year_long')) !=
+            instance['periods']['year_long']):
             return False
     if criteria.get('is_undergraduate'):
-        if (strtobool(criteria.get('is_undergraduate'))
-            != instance['delivery']['is_undergraduate']):
+        if (strtobool(criteria.get('is_undergraduate')) !=
+            instance['delivery']['is_undergraduate']):
             return False
     if criteria.get('fheq_level'):
-        if (not criteria.get('fheq_level') 
-            == str(instance['delivery']['fheq_level'])):
+        if (not criteria.get('fheq_level') ==
+            str(instance['delivery']['fheq_level'])):
             return False
     return True
 
