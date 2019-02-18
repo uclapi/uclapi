@@ -234,7 +234,7 @@ def set_callback_url(request):
 
     try:
         user_id = request.session["user_id"]
-    except (KeyError,AttributeError) :
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
             "message": "User ID not set in session. Please log in again."
