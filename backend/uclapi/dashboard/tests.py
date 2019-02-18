@@ -740,3 +740,30 @@ class ApiApplicationsTestCase(TestCase):
         self.assertTrue(
             content["app"]["token"] != app_.api_token
         )
+
+    def test_change_callback_url_success(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/setcallbackurl/',
+            {
+                "app_id": app_.id,
+                "callback_url": "https://testcall.com"
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = set_callback_url(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            content["message"],
+            "Callback URL successfully changed."
+        )
+        app_ = App.objects.filter(id=app_.id, user=user_.id)[0]
+        self.assertTrue(app_.callback_url == "https://testcall.com")
