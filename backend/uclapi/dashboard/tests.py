@@ -921,7 +921,7 @@ class ApiApplicationsTestCase(TestCase):
             '/api/updatescopes/',
             {
                 "app_id": app_.id,
-                "scopes":5
+                "scopes": 5
             }
         )
         request.session = {'user_id': user_.id}
