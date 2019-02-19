@@ -175,7 +175,7 @@ class DashboardAppHelpersTestCase(TestCase):
         client_secret = generate_app_client_secret()
         self.assertEqual(len(client_secret), 64)
 
-    def generate_app_id(self):
+    def test_generate_app_id(self):
         app_id = generate_app_id()
         self.assertEqual(app_id[0], 'A')
         self.assertEqual(len(app_id), 11)
