@@ -996,7 +996,7 @@ class ApiApplicationsTestCase(TestCase):
             }
         )
         request.session = {'user_id': user_.id}
-        self.assertEqual(app_.scope.scope_number,0)
+        self.assertEqual(app_.scope.scope_number, 0)
         response = update_scopes(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 200)
@@ -1005,4 +1005,4 @@ class ApiApplicationsTestCase(TestCase):
             "Scope successfully changed."
         )
         app_ = App.objects.filter(id=app_.id, user=user_.id)[0]
-        self.assertEqual(app_.scope.scope_number,2)
+        self.assertEqual(app_.scope.scope_number, 2)
