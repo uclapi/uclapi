@@ -992,7 +992,8 @@ class ApiApplicationsTestCase(TestCase):
             '/api/updatescopes/',
             {
                 "app_id": app_.id,
-                "scopes": '[{"checked":true, "name":"timetable"}]'
+                "scopes": '[{"checked":true, "name":"timetable"}, \
+                           {"checked":false, "name":"student_number"}]'
             }
         )
         request.session = {'user_id': user_.id}
