@@ -377,5 +377,5 @@ def update_scopes(request):
 
         return PrettyJsonResponse({
             "success": True,
-            "message": "Scope successfully changed",
+            "message": "Scope successfully changed.",
         })

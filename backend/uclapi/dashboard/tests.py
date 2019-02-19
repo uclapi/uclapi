@@ -980,3 +980,29 @@ class ApiApplicationsTestCase(TestCase):
             content["message"],
             "App does not exist."
         )
+
+    def test_change_scopes_success(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+        request = self.factory.post(
+            '/api/updatescopes/',
+            {
+                "app_id": app_.id,
+                "scopes": '[{"checked":true, "name":"timetable"}]'
+            }
+        )
+        request.session = {'user_id': user_.id}
+        self.assertEqual(app_.scope.scope_number,0)
+        response = update_scopes(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            content["message"],
+            "Scope successfully changed."
+        )
+        app_ = App.objects.filter(id=app_.id, user=user_.id)[0]
+        self.assertEqual(app_.scope.scope_number,2)
