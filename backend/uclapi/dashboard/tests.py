@@ -860,3 +860,123 @@ class ApiApplicationsTestCase(TestCase):
         )
         app_ = App.objects.filter(id=app_.id, user=user_.id)[0]
         self.assertTrue(app_.callback_url == "https://testcall.com")
+
+    def test_change_scopes_not_in_session(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/updatescopes/',
+            {
+                "app_id": app_.id,
+            }
+        )
+        response = update_scopes(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "User ID not set in session. Please log in again."
+        )
+
+    def test_change_scopes_no_scope_data(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/updatescopes/',
+            {
+                "app_id": app_.id,
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = update_scopes(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "No scopes data attached."
+        )
+
+    def test_change_scopes_non_iterable_scope_data(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/updatescopes/',
+            {
+                "app_id": app_.id,
+                "scopes":5
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = update_scopes(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "Invalid scope data that could not be iterated."
+        )
+
+    def test_change_scopes_non_parsable_scope_data(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/updatescopes/',
+            {
+                "app_id": app_.id,
+                "scopes": "{}{}"
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = update_scopes(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "Invalid scope data that could not be parsed."
+        )
+
+    def test_change_scopes_app_does_not_exist(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        request = self.factory.post(
+            '/api/updatescopes/',
+            {
+                "app_id": 100000000000001,
+                "scopes": "{}"
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = update_scopes(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "App does not exist."
+        )

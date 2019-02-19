@@ -25,7 +25,7 @@ def create_app(request):
     try:
         name = request.POST["name"]
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have name or user."
@@ -81,7 +81,7 @@ def rename_app(request):
         app_id = request.POST["app_id"]
         new_name = request.POST["new_name"]
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have app_id/new_name"
@@ -129,7 +129,7 @@ def regenerate_app_token(request):
     try:
         app_id = request.POST["app_id"]
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have an app_id."
@@ -180,7 +180,7 @@ def delete_app(request):
     try:
         app_id = request.POST["app_id"]
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have an app_id."
@@ -309,7 +309,7 @@ def update_scopes(request):
 
     try:
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
             "message": "User ID not set in session. Please log in again."
@@ -361,7 +361,7 @@ def update_scopes(request):
             app.scope.scope_number = current
             app.scope.save()
             app.save()
-        except (KeyError, ValueError):
+        except (KeyError, ValueError, TypeError):
             response = PrettyJsonResponse({
                 "success": False,
                 "message": "Invalid scope data that could not be iterated."
