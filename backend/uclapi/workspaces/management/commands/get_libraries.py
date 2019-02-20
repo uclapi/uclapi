@@ -1,4 +1,3 @@
-import re
 import redis
 import requests
 
@@ -51,13 +50,49 @@ class Command(BaseCommand):
             return 1
 
     def get_library_hours(self, term_number):
-        pass
+        url = 'https://www.ucl.ac.uk/library/opening-hours/term-{}'.format(
+            term_number
+        )
+
+        r = requests.get(url)
+        library_accordion = '<data>' + r.text.split(
+            '<dl class="accordion">'
+        )[1].split('</dl>')[0] + '</data>'
+
+        # print(library_accordion)
+        parser = etree.XMLParser(target=etree.TreeBuilder())
+        root = etree.XML(library_accordion, parser)
+        # print(etree.tostring(root, pretty_print=True))
+
+        library_names = []
+
+        libraries = root.iterfind('./dt/a')
+        for library in libraries:
+            library_names.append(library.text)
+
+        library_data = {}
+        counter = 0
+
+        descriptions = root.iterfind('./dd')
+        for description in descriptions:
+            this_library = { "hours": [] }
+            hours = description.iterfind('./div/ul[@class="disc"]/li')
+            for hour in hours:
+                this_library["hours"].append(hour.text)
+
+            library_data[library_names[counter]] = this_library
+            counter += 1
+
+        return library_data
 
     def handle(self, *args, **options):
+        self._redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST)
+
         current_term = self.get_current_term()
         print("Currently using {}, we are in Term {}".format(
             settings.ROOMBOOKINGS_SETID,
             current_term
         ))
 
-        library_hours = self.get_library_hours(current_term)
+        library_data = self.get_library_hours(current_term)
+        print(library_data)
