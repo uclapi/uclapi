@@ -2,7 +2,24 @@ CREATE OR REPLACE FUNCTION get_student_timetable_a(
     TEXT, -- UPI
     TEXT  -- Set ID
 )
-RETURNS SETOF RECORD -- TEXT --SETOF RECORD
+-- RETURNS SETOF RECORD -- TEXT --SETOF RECORD
+RETURNS TABLE (
+    weekday BIGINT,
+    starttime TEXT,
+    duration BIGINT,
+    finishtime TEXT,
+    moduleid TEXT,
+    modgrpcode TEXT,
+    instcode TEXT,
+    weekid BIGINT,
+    lecturerid TEXT,
+    deptid TEXT,
+    siteid TEXT,
+    roomid TEXT,
+    weeknumber BIGINT,
+    weekstartdate DATE,
+    actualdate DATE
+)
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -23,7 +40,7 @@ BEGIN
     DROP TABLE IF EXISTS tt_tmp_hasgroupnum;
     DROP TABLE IF EXISTS tt_tmp_taking;
     DROP TABLE IF EXISTS tt_tmp_events_slot_id;
-    DROP TABLE IF EXISTS tt_tmp_cmis_events;
+    DROP TABLE IF EXISTS tt_tmp_timetable_events;
 
 -- Get basic information about the student
     SELECT  s.studentid,
@@ -219,6 +236,9 @@ BEGIN
                         AND tt.modgrpcode IS NULL
                     )
                 )
+                AND st.instid = tt.instid
+                -- THIS IS A HACK TO FIX THE DUPLICATION BUG
+                -- TODO: Remove this when stuclasses is available
             )
         LEFT OUTER JOIN timetable_cminstancesa ci
             ON tt.instid = ci.instid
@@ -230,26 +250,64 @@ BEGIN
 -- Get all the CMIS events associated with the slots occupied by
 -- the modules the student is taking
 
-    CREATE TEMP TABLE tt_tmp_cmis_events
+--     CREATE TEMP TABLE tt_tmp_cmis_events
+--     AS
+--     SELECT * FROM tt_tmp_events_slot_id -- TODO: figure out how this relates to cmis_g_tt_stu_events
+--     WHERE (
+--             (weekday is not null)
+--         AND (weekday > 0)
+--         AND (starttime is not null)
+--         AND (duration is not null)
+--     )
+--     ORDER BY weekday,
+--              starttime,
+--              weekmap DESC,
+--              moduleid,
+--              modgrpcode,
+--              duration,
+--              slotid,
+--              compos_crit;
+
+    CREATE TEMP TABLE tt_tmp_timetable_events
     AS
-    SELECT * FROM tt_tmp_events_slot_id -- TODO: figure out how this relates to cmis_g_tt_stu_events
+    SELECT tt.weekday as weekday,
+           tt.starttime as starttime,
+           tt.duration as duration,
+           tt.finishtime as finishtime,
+           tes.moduleid as moduleid,
+           tes.modgrpcode as modgrpcode,
+           tes.instcode as instcode,
+           tt.weekid as weekid,
+           tt.lecturerid as lecturerid,
+           tt.deptid as deptid,
+           tt.siteid as siteid,
+           tt.roomid as roomid,
+           twn.weeknumber as weeknumber,
+           tws.startdate as weekstartdate,
+           tws.startdate + CAST(tt.weekday as INTEGER) - 1 as actualdate
+    FROM timetable_timetablea tt
+    INNER JOIN tt_tmp_events_slot_id tes
+        ON tt.slotid = tes.slotid
+    INNER JOIN timetable_weekmapnumerica twn
+        ON tt.weekid = twn.weekid
+    INNER JOIN timetable_weekstructurea tws
+        ON twn.weeknumber = tws.weeknumber
     WHERE (
-            (weekday is not null)
-        AND (weekday > 0)
-        AND (starttime is not null)
-        AND (duration is not null)
+            (tt.weekday IS NOT NULL)
+        AND (tt.weekday > 0)
+        AND (tt.starttime IS NOT NULL)
+        AND (tt.duration IS NOT NULL)
     )
-    ORDER BY weekday,
-             starttime,
-             weekmap DESC,
-             moduleid,
-             modgrpcode,
-             duration,
-             slotid,
-             compos_crit;
+    ORDER BY tt.weekday,
+             tt.starttime,
+             tes.moduleid,
+             tes.modgrpcode,
+             tt.duration,
+             tes.slotid
+    ;
 
 -- Return the timetable we just built back to the calling application
-    RETURN QUERY SELECT * FROM tt_tmp_cmis_events;
+    RETURN QUERY SELECT * FROM tt_tmp_timetable_events;
 
 END
 $$;
