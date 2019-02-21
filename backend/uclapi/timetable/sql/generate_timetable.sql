@@ -18,7 +18,8 @@ RETURNS TABLE (
     roomid TEXT,
     weeknumber BIGINT,
     weekstartdate DATE,
-    actualdate DATE
+    actualdate DATE,
+    slotid BIGINT
 )
 LANGUAGE plpgsql
 AS $$
@@ -284,7 +285,8 @@ BEGIN
            tt.roomid as roomid,
            twn.weeknumber as weeknumber,
            tws.startdate as weekstartdate,
-           tws.startdate + CAST(tt.weekday as INTEGER) - 1 as actualdate
+           tws.startdate + CAST(tt.weekday as INTEGER) - 1 as actualdate,
+           tes.slotid as slotid
     FROM timetable_timetablea tt
     INNER JOIN tt_tmp_events_slot_id tes
         ON tt.slotid = tes.slotid
