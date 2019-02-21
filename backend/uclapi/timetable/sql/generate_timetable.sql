@@ -304,22 +304,25 @@ BEGIN
     INNER JOIN roombookings_bookinga rb
         ON tt.slotid = rb.slotid
        AND tt.setid  = rb.setid
+    LEFT OUTER JOIN timetable_cminstancesa ci
+        ON tt.instid = ci.instid
+       AND tt.setid  = ci.setid 
     WHERE (
             (tt.weekday IS NOT NULL)
         AND (tt.weekday > 0)
         AND (tt.starttime IS NOT NULL)
         AND (tt.duration IS NOT NULL)
+        AND (tt.instid = ci.instid)
+        AND (ci.instid :: TEXT = tes.instid :: TEXT)
     )
-    ORDER BY tt.weekday,
-             tt.starttime,
-             tes.moduleid,
-             tes.modgrpcode,
-             tt.duration,
-             tes.slotid
+    ORDER BY weeknumber,
+             startdatetime,
+             moduleid,
+             title
     ;
 
 -- Return the timetable we just built back to the calling application
-    RETURN QUERY SELECT * FROM tt_tmp_timetable_events;
+    RETURN QUERY SELECT DISTINCT * FROM tt_tmp_timetable_events;
 
 END
 $$;
