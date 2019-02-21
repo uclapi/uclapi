@@ -1203,6 +1203,57 @@ class Course(models.Model):
         _DATABASE = 'roombookings'
 
 
+
+class CourseA(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.TextField(max_length=10)
+    courseid = models.TextField(max_length=12)
+    name = models.TextField(max_length=80)
+    category = models.TextField(max_length=10)
+    type = models.TextField(max_length=10)
+    linkcode = models.TextField(max_length=20)
+    owner = models.TextField(max_length=10)
+    numyears = models.IntegerField()
+    crsweight = models.FloatField(null=True, blank=True)
+    minmodules = models.IntegerField(null=True, blank=True)
+    maxmodules = models.IntegerField(null=True, blank=True)
+    numplaces = models.IntegerField(null=True, blank=True)
+    mintotal = models.IntegerField(null=True, blank=True)
+    maxtotal = models.IntegerField(null=True, blank=True)
+    firstyear = models.IntegerField(null=True, blank=True)
+    oldcourseid = models.TextField(max_length=12, null=True, blank=True)
+    isactive = models.CharField(max_length=1, null=True, blank=True)
+    lecturerid = models.TextField(max_length=10, null=True, blank=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class CourseB(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.TextField(max_length=10)
+    courseid = models.TextField(max_length=12)
+    name = models.TextField(max_length=80)
+    category = models.TextField(max_length=10)
+    type = models.TextField(max_length=10)
+    linkcode = models.TextField(max_length=20)
+    owner = models.TextField(max_length=10)
+    numyears = models.IntegerField()
+    crsweight = models.FloatField(null=True, blank=True)
+    minmodules = models.IntegerField(null=True, blank=True)
+    maxmodules = models.IntegerField(null=True, blank=True)
+    numplaces = models.IntegerField(null=True, blank=True)
+    mintotal = models.IntegerField(null=True, blank=True)
+    maxtotal = models.IntegerField(null=True, blank=True)
+    firstyear = models.IntegerField(null=True, blank=True)
+    oldcourseid = models.TextField(max_length=12, null=True, blank=True)
+    isactive = models.CharField(max_length=1, null=True, blank=True)
+    lecturerid = models.TextField(max_length=10, null=True, blank=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
 class Cminstances(models.Model):
     setid = models.TextField(max_length=10)
     instid = models.BigIntegerField(primary_key=True)
@@ -1244,6 +1295,76 @@ class CminstancesB(models.Model):
     instrank = models.BigIntegerField(null=True, blank=True)
     inststart = models.DateField(null=True, blank=True)
     instfinish = models.DateField(null=True, blank=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class Modulegroups(models.Model):
+    setid = models.TextField(max_length=10, primary_key=True)
+    moduleid = models.TextField(max_length=12, primary_key=True)
+    owner = models.TextField(max_length=10)
+    grpcode = models.TextField(max_length=10, primary_key=True)
+    name = models.TextField(max_length=30, null=True, blank=True)
+    csize = models.IntegerField(null=True, blank=True)
+    minsize = models.IntegerField(null=True, blank=True)
+    maxsize = models.IntegerField(null=True, blank=True)
+    prefmaxsize = models.IntegerField(null=True, blank=True)
+    linkcode = models.TextField(max_length=20, null=True, blank=True)
+    estsize = models.IntegerField(null=True, blank=True)
+    thiskey = models.IntegerField(null=True, blank=True)
+    parentkey = models.IntegerField(null=True, blank=True)
+    groupnum = models.IntegerField(null=True, blank=True)
+    mequivid = models.IntegerField(null=True, blank=True)
+    instid = models.IntegerField(null=True, blank=True)
+
+    class Meta:
+        managed = False
+        db_table = '"CMIS_OWNER"."MODULEGROUPS"'
+        _DATABASE = 'roombookings'
+
+
+class ModulegroupsA(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.TextField(max_length=10)
+    moduleid = models.TextField(max_length=12)
+    owner = models.TextField(max_length=10)
+    grpcode = models.TextField(max_length=10)
+    name = models.TextField(max_length=30, null=True, blank=True)
+    csize = models.IntegerField(null=True, blank=True)
+    minsize = models.IntegerField(null=True, blank=True)
+    maxsize = models.IntegerField(null=True, blank=True)
+    prefmaxsize = models.IntegerField(null=True, blank=True)
+    linkcode = models.TextField(max_length=20, null=True, blank=True)
+    estsize = models.IntegerField(null=True, blank=True)
+    thiskey = models.IntegerField(null=True, blank=True)
+    parentkey = models.IntegerField(null=True, blank=True)
+    groupnum = models.IntegerField(null=True, blank=True)
+    mequivid = models.IntegerField(null=True, blank=True)
+    instid = models.IntegerField()
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class ModulegroupsB(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.TextField(max_length=10)
+    moduleid = models.TextField(max_length=12)
+    owner = models.TextField(max_length=10)
+    grpcode = models.TextField(max_length=10)
+    name = models.TextField(max_length=30, null=True, blank=True)
+    csize = models.IntegerField(null=True, blank=True)
+    minsize = models.IntegerField(null=True, blank=True)
+    maxsize = models.IntegerField(null=True, blank=True)
+    prefmaxsize = models.IntegerField(null=True, blank=True)
+    linkcode = models.TextField(max_length=20, null=True, blank=True)
+    estsize = models.IntegerField(null=True, blank=True)
+    thiskey = models.IntegerField(null=True, blank=True)
+    parentkey = models.IntegerField(null=True, blank=True)
+    groupnum = models.IntegerField(null=True, blank=True)
+    mequivid = models.IntegerField(null=True, blank=True)
+    instid = models.IntegerField()
 
     class Meta:
         _DATABASE = 'gencache'
