@@ -45,6 +45,15 @@ class ModelRouter(object):
                obj2._state.db in self.managed_db_list
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
+        # Special rule for stored functions in the Timetable app
+        if (
+            app_label == "timetable" and
+            model_name == None and
+            "type" in hints and
+            hints["type"] == "raw_sql"
+        ):
+            return db == "gencache"
+
         if db == "default":
             return model_name not in self.gencache_model_names
 
