@@ -38,27 +38,11 @@ let response = `{
     "token": "uclapi-user-abc-def-ghi-jkl",
 }
 `
-let example = `{
-    "department": "Dept of Department",
-    "email": "xxxxxxx@ucl.ac.uk",
-    "ok": true,
-    "full_name": "Full Name",
-    "cn": "xxxxxxx",
-    "given_name": "Full",
-    "upi": "fname12",
-    "scope_number": 0,
-    "is_student": true
-}
-`
+
 let responseCodeExample = {
   python: response,
   javascript: response,
   shell: response
-}
-let exampleCodeExample = {
-  python: example,
-  javascript: example,
-  shell: example
 }
 
 
