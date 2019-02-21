@@ -4,10 +4,6 @@ CREATE OR REPLACE FUNCTION get_student_timetable_a(
 )
 -- RETURNS SETOF RECORD -- TEXT --SETOF RECORD
 RETURNS TABLE (
-    weekday BIGINT,
-    starttime TEXT,
-    duration BIGINT,
-    finishtime TEXT,
     moduleid TEXT,
     modgrpcode TEXT,
     instcode TEXT,
@@ -16,10 +12,19 @@ RETURNS TABLE (
     deptid TEXT,
     siteid TEXT,
     roomid TEXT,
-    weeknumber BIGINT,
-    weekstartdate DATE,
-    actualdate DATE,
-    slotid BIGINT
+    slotid BIGINT,
+    sitename VARCHAR,
+    roomname VARCHAR,
+    bookabletype VARCHAR,
+    starttime VARCHAR,
+    finishtime VARCHAR,
+    duration BIGINT,
+    startdatetime TIMESTAMPTZ,
+    finishdatetime TIMESTAMPTZ,
+    weeknumber DOUBLE PRECISION,
+    condisplayname VARCHAR,
+    title VARCHAR,
+    descrip VARCHAR
 )
 LANGUAGE plpgsql
 AS $$
@@ -271,11 +276,7 @@ BEGIN
 
     CREATE TEMP TABLE tt_tmp_timetable_events
     AS
-    SELECT tt.weekday as weekday,
-           tt.starttime as starttime,
-           tt.duration as duration,
-           tt.finishtime as finishtime,
-           tes.moduleid as moduleid,
+    SELECT tes.moduleid as moduleid,
            tes.modgrpcode as modgrpcode,
            tes.instcode as instcode,
            tt.weekid as weekid,
@@ -283,17 +284,26 @@ BEGIN
            tt.deptid as deptid,
            tt.siteid as siteid,
            tt.roomid as roomid,
-           twn.weeknumber as weeknumber,
-           tws.startdate as weekstartdate,
-           tws.startdate + CAST(tt.weekday as INTEGER) - 1 as actualdate,
-           tes.slotid as slotid
+           tes.slotid as slotid,
+           rb.sitename as sitename,
+           rb.roomname as roomname,
+           rb.bookabletype as bookabletype,
+           rb.starttime as starttime,
+           rb.finishtime as finishtime,
+           tt.duration as duration,
+           rb.startdatetime as startdatetime,
+           rb.finishdatetime as finishdatetime,
+           rb.weeknumber as weeknumber,
+           rb.condisplayname as condisplayname,
+           rb.title as title,
+           rb.descrip as descrip
     FROM timetable_timetablea tt
     INNER JOIN tt_tmp_events_slot_id tes
         ON tt.slotid = tes.slotid
-    INNER JOIN timetable_weekmapnumerica twn
-        ON tt.weekid = twn.weekid
-    INNER JOIN timetable_weekstructurea tws
-        ON twn.weeknumber = tws.weeknumber
+       AND tt.slotid = tes.slotid
+    INNER JOIN roombookings_bookinga rb
+        ON tt.slotid = rb.slotid
+       AND tt.setid  = rb.setid
     WHERE (
             (tt.weekday IS NOT NULL)
         AND (tt.weekday > 0)
