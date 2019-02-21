@@ -15,8 +15,6 @@ import ciso8601
 from common.helpers import PrettyJsonResponse
 from .models import BookingA, BookingB, Location, Lock, SiteLocation
 from .api_helpers import generate_token
-from timetable.models import SitesA, SitesB
-from timetable.models import Lock as timetableLock
 
 from uclapi.settings import REDIS_UCLAPI_HOST
 
@@ -180,27 +178,24 @@ def _serialize_rooms(room_set):
         # Maps room classification to a textual version
         # e.g. LT => Lecture Theatre
         classification_name = ROOM_TYPE_MAP.get(
-            room.classification,
+            room.roomclass,
             "Unknown Room Type"
         )
-        lock = timetableLock.objects.all()[0]
-        curr = SitesA if lock.a else SitesB
-        site = curr.objects.get(siteid=room.siteid)
         room_to_add = {
-            "roomname": room.name,
+            "roomname": room.roomname,
             "roomid": room.roomid,
             "siteid": room.siteid,
-            "sitename": site.sitename,
+            "sitename": room.sitename,
             "capacity": room.capacity,
-            "classification": room.classification,
+            "classification": room.roomclass,
             "classification_name": classification_name,
-            # "automated": room.automated,
+            "automated": room.automated,
             "location": {
                 "address": [
-                    site.address1,
-                    site.address2,
-                    site.address3,
-                    site.address4
+                    room.address1,
+                    room.address2,
+                    room.address3,
+                    room.address4
                 ]
             }
         }

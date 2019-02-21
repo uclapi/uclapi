@@ -8,7 +8,7 @@ from django.conf import settings
 from django.db import connections
 from datetime import datetime
 import cx_Oracle
-from roombookings.models import BookingA, BookingB, Lock
+from roombookings.models import BookingA, BookingB, Lock, RoomA, RoomB
 from django.core.management import call_command
 
 
@@ -57,10 +57,6 @@ class Command(BaseCommand):
             "TRUNCATE TABLE {} RESTART IDENTITY;".format(
                     "roombookings_" + current_bucket.__name__.lower()))
 
-        self.stdout.write(
-            "Dumping all the data from Oracle into a new list..."
-        )
-
         batch_size = 5000
         running_total = 0
 
@@ -104,6 +100,74 @@ class Command(BaseCommand):
             data_objects.clear()
 
             gc.collect()
+        self.stdout.write("Inserted {} records.".format(running_total))
+        self.stdout.write("Bookings cached, moving onto Rooms")
+        select_query = (
+            'SELECT * FROM "CMIS_UCLAPI_V_ROOMS"'
+            ' WHERE (setid = \'{}\')'.format(settings.ROOMBOOKINGS_SETID)
+        )
+
+        cur.execute(select_query)
+
+        self.stdout.write("Selecting a clone table...")
+        lock = Lock.objects.all()[0]
+        current_bucket = RoomA if lock.bookingA else RoomB
+
+        self.stdout.write("Flushing the clone table...")
+        # flush the table
+        cursor = connections['gencache'].cursor()
+        cursor.execute(
+            "TRUNCATE TABLE {} RESTART IDENTITY;".format(
+                    "roombookings_" + current_bucket.__name__.lower()))
+
+        self.stdout.write(
+            "Dumping all the data from Oracle into a new list..."
+        )
+
+        batch_size = 5000
+        running_total = 0
+
+        while True:
+            data_objects = []
+            for row in cur.fetchmany(numRows=batch_size):
+                data_objects.append(current_bucket(
+                    setid=row[0],
+                    siteid=row[1],
+                    sitename=row[2],
+                    address1=row[3],
+                    address2=row[4],
+                    address3=row[5],
+                    address4=row[6],
+                    roomid=row[7],
+                    roomname=row[8],
+                    roomdeptid=row[9],
+                    bookabletype=row[10],
+                    roomclass=row[11],
+                    zone=row[12],
+                    webview=row[13],
+                    automated=row[14],
+                    capacity=row[15],
+                    category=row[16]
+                ))
+
+            data_objects_size = len(data_objects)
+
+            # If there's no more data, quit
+            if data_objects_size == 0:
+                break
+
+            self.stdout.write("Inserting records {} => {}".format(
+                running_total + 1,
+                running_total + data_objects_size)
+            )
+            current_bucket.objects.using("gencache").bulk_create(
+                data_objects
+            )
+            running_total += data_objects_size
+            data_objects.clear()
+
+            gc.collect()
+
 
         self.stdout.write("Inserted {} records.".format(running_total))
 
