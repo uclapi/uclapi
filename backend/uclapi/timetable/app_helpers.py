@@ -284,7 +284,8 @@ def _get_timetable_events(full_modules, stumodules):
                         "session_type_str": _get_session_type_str(
                             event.moduletype
                         ),
-                        "contact": booking.condisplayname
+                        "contact": booking.condisplayname,
+                        "instance": instance_data
                     }
 
                     # If this is student module data, add in the group code
