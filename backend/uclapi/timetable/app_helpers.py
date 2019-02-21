@@ -11,12 +11,14 @@ from roombookings.models import (
     BookingA,
     BookingB,
     Location,
-    SiteLocation
+    SiteLocation,
+    RoomA,
+    RoomB
 )
 
 from .amp import ModuleInstance
 from .models import (DeptsA, DeptsB, LecturerA, LecturerB, Lock, ModuleA,
-                     ModuleB, RoomsA, RoomsB, SitesA, SitesB, StudentsA,
+                     ModuleB, SitesA, SitesB, StudentsA,
                      StudentsB, StumodulesA, StumodulesB,  TimetableA,
                      TimetableB, WeekmapnumericA, WeekmapnumericB,
                      WeekstructureA, WeekstructureB,
@@ -52,7 +54,7 @@ def get_cache(model_name):
         "weekmapnumeric": [WeekmapnumericA, WeekmapnumericB],
         "weekstructure": [WeekstructureA, WeekstructureB],
         "lecturer": [LecturerA, LecturerB],
-        "rooms": [RoomsA, RoomsB],
+        "rooms": [RoomA, RoomB],
         "sites": [SitesA, SitesB],
         "departments": [DeptsA, DeptsB],
         "stumodules": [StumodulesA, StumodulesB],
@@ -425,9 +427,9 @@ def _get_location_details(siteid, roomid):
             return {}
         lat, lng = _get_location_coordinates(siteid, roomid)
         _rooms_cache[cache_id] = {
-            "name": room.name,
+            "name": room.roomname,
             "capacity": room.capacity,
-            "type": room.type,
+            "type": room.bookabletype,
             "address": [
                 site.address1,
                 site.address2,

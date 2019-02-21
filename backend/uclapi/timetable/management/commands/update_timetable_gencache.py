@@ -9,7 +9,6 @@ from timetable.models import \
     Weekstructure, WeekstructureA, WeekstructureB, \
     Weekmapnumeric, WeekmapnumericA, WeekmapnumericB, \
     Lecturer, LecturerA, LecturerB, \
-    Rooms, RoomsA, RoomsB, \
     Sites, SitesA, SitesB, \
     Module, ModuleA, ModuleB, \
     Weekmapstring, WeekmapstringA, WeekmapstringB, \
@@ -33,7 +32,6 @@ class Command(BaseCommand):
             (Weekmapnumeric, WeekmapnumericA, WeekmapnumericB, True),
             (Weekmapstring, WeekmapstringA, WeekmapstringB, True),
             (Lecturer, LecturerA, LecturerB, True),
-            (Rooms, RoomsA, RoomsB, True),
             (Sites, SitesA, SitesB, True),
             (Students, StudentsA, StudentsB, True),
             (Depts, DeptsA, DeptsB, False),
