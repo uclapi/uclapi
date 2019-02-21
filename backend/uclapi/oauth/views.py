@@ -461,6 +461,7 @@ def token(request):
         "state": state,
         "client_id": app.client_id,
         "token": token.token,
+        "access_token": token.token,
         "scope": json.dumps(s.scope_dict(token.scope.scope_number))
     }
 

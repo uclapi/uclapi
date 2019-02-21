@@ -175,7 +175,7 @@ class DashboardAppHelpersTestCase(TestCase):
         client_secret = generate_app_client_secret()
         self.assertEqual(len(client_secret), 64)
 
-    def generate_app_id(self):
+    def test_generate_app_id(self):
         app_id = generate_app_id()
         self.assertEqual(app_id[0], 'A')
         self.assertEqual(len(app_id), 11)
@@ -496,7 +496,7 @@ def post_request_only(self, url, view):
     )
 
 
-def empty_get_request_only(self, url, view, error):
+def empty_post_request_only(self, url, view, error):
     request = self.factory.post(
         url,
         {
@@ -509,6 +509,25 @@ def empty_get_request_only(self, url, view, error):
     self.assertEqual(
         content["message"],
         error
+    )
+
+
+def no_app_post_request(self, url, view, user_):
+
+    request = self.factory.post(
+        url,
+        {
+            "new_name": "test_app",
+            "app_id": 1
+        }
+    )
+    request.session = {'user_id': user_.id}
+    response = view(request)
+    content = json.loads(response.content.decode())
+    self.assertEqual(response.status_code, 400)
+    self.assertEqual(
+        content["message"],
+        "App does not exist."
     )
 
 
@@ -547,12 +566,23 @@ class ApiApplicationsTestCase(TestCase):
 
     def test_missing_parameters(self):
         for url in self.functions:
-            empty_get_request_only(
+            empty_post_request_only(
                 self,
                 url,
                 self.functions[url][0],
                 self.errors[self.functions[url][1]]
             )
+
+    def test_app_does_not_exist(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        allowed_urls = ['/api/rename/', '/api/delete/', '/api/regen/']
+        for url in self.functions:
+            if url in allowed_urls:
+                no_app_post_request(self, url, self.functions[url][0], user_)
 
     # Start of create_app section
 
@@ -606,3 +636,374 @@ class ApiApplicationsTestCase(TestCase):
             content["message"],
             "App does not exist."
         )
+
+    def test_rename_success_app(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/rename/',
+            {
+                "new_name": "test_app",
+                "app_id": app_.id
+            }
+        )
+        request.session = {'user_id': user_.id}
+        self.assertTrue(len(App.objects.filter(
+            name="test_app",
+            user=user_,
+            deleted=False)) == 0)
+        self.assertTrue(len(App.objects.filter(
+            name="An App",
+            user=user_,
+            deleted=False)) != 0)
+        response = rename_app(request)
+        self.assertTrue(len(App.objects.filter(
+            name="test_app",
+            user=user_,
+            deleted=False)) != 0)
+        self.assertTrue(len(App.objects.filter(
+            name="An App",
+            user=user_,
+            deleted=False)) == 0)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            content["message"],
+            "App sucessfully renamed."
+        )
+
+    def test_delete_app_success(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/delete/',
+            {
+                "app_id": app_.id
+            }
+        )
+        request.session = {'user_id': user_.id}
+        self.assertTrue(len(App.objects.filter(
+            name="An App",
+            user=user_,
+            deleted=False)) != 0)
+        response = delete_app(request)
+        self.assertTrue(len(App.objects.filter(
+            name="An App",
+            user=user_,
+            deleted=False)) == 0)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            content["message"],
+            "App sucessfully deleted."
+        )
+
+    def test_regen_token_success(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/regen/',
+            {
+                "app_id": app_.id
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = regenerate_app_token(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            content["message"],
+            "App token sucessfully regenerated."
+        )
+        self.assertEqual(
+            content["app"]["id"],
+            app_.id
+        )
+        self.assertTrue(
+            content["app"]["token"] != app_.api_token
+        )
+
+    def test_change_callback_not_in_session(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/setcallbackurl/',
+            {
+                "app_id": app_.id,
+            }
+        )
+        response = set_callback_url(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "User ID not set in session. Please log in again."
+        )
+
+    def test_change_callback_no_url_provided(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/setcallbackurl/',
+            {
+                "app_id": app_.id,
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = set_callback_url(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "Request does not have a Callback URL."
+        )
+
+    def test_change_callback_app_does_not_exist(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        request = self.factory.post(
+            '/api/setcallbackurl/',
+            {
+                "app_id": 100000000000001,
+                "callback_url": "https://testcall.com"
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = set_callback_url(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "App does not exist."
+        )
+
+    def test_change_callback_url_not_valid(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+        request = self.factory.post(
+            '/api/setcallbackurl/',
+            {
+                "app_id": app_.id,
+                "callback_url": "NotReallyAURL"
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = set_callback_url(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "The requested callback URL is not valid."
+        )
+
+    def test_change_callback_url_success(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/setcallbackurl/',
+            {
+                "app_id": app_.id,
+                "callback_url": "https://testcall.com"
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = set_callback_url(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            content["message"],
+            "Callback URL successfully changed."
+        )
+        app_ = App.objects.filter(id=app_.id, user=user_.id)[0]
+        self.assertTrue(app_.callback_url == "https://testcall.com")
+
+    def test_change_scopes_not_in_session(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/updatescopes/',
+            {
+                "app_id": app_.id,
+            }
+        )
+        response = update_scopes(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "User ID not set in session. Please log in again."
+        )
+
+    def test_change_scopes_no_scope_data(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/updatescopes/',
+            {
+                "app_id": app_.id,
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = update_scopes(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "No scopes data attached."
+        )
+
+    def test_change_scopes_non_iterable_scope_data(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/updatescopes/',
+            {
+                "app_id": app_.id,
+                "scopes": 5
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = update_scopes(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "Invalid scope data that could not be iterated."
+        )
+
+    def test_change_scopes_non_parsable_scope_data(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        request = self.factory.post(
+            '/api/updatescopes/',
+            {
+                "app_id": app_.id,
+                "scopes": "{}{}"
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = update_scopes(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "Invalid scope data that could not be parsed."
+        )
+
+    def test_change_scopes_app_does_not_exist(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        request = self.factory.post(
+            '/api/updatescopes/',
+            {
+                "app_id": 100000000000001,
+                "scopes": "{}"
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = update_scopes(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "App does not exist."
+        )
+
+    def test_change_scopes_success(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+        request = self.factory.post(
+            '/api/updatescopes/',
+            {
+                "app_id": app_.id,
+                "scopes": '[{"checked":true, "name":"timetable"}, \
+                           {"checked":false, "name":"student_number"}]'
+            }
+        )
+        request.session = {'user_id': user_.id}
+        self.assertEqual(app_.scope.scope_number, 0)
+        response = update_scopes(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            content["message"],
+            "Scope successfully changed."
+        )
+        app_ = App.objects.filter(id=app_.id, user=user_.id)[0]
+        self.assertEqual(app_.scope.scope_number, 2)
