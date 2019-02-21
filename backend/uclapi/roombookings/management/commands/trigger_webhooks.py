@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
-from roombookings.models import Lock, BookingA, BookingB
+from roombookings.models import BookingA, BookingB
+from timetable.models import Lock
 from roombookings.helpers import _serialize_bookings
 from dashboard.models import Webhook, WebhookTriggerHistory
 from datetime import datetime

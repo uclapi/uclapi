@@ -8,7 +8,8 @@ from .helpers import (PrettyJsonResponse, _create_page_token,
                       _get_paginated_bookings, _parse_datetime,
                       _return_json_bookings, _serialize_equipment,
                       _serialize_rooms, _filter_for_free_rooms, _round_date)
-from .models import BookingA, BookingB, Equipment, Lock, RoomA, RoomB
+from .models import BookingA, BookingB, Equipment, RoomA, RoomB
+from timetable.models import Lock
 from common.decorators import uclapi_protected_endpoint
 
 

@@ -4,6 +4,9 @@ from django.db import connections
 from datetime import datetime
 import redis
 from common.helpers import LOCAL_TIMEZONE
+from roombookings.models import \
+    Room, RoomA, RoomB, \
+    Booking, BookingA, BookingB
 from timetable.models import \
     Timetable, TimetableA, TimetableB, \
     Weekstructure, WeekstructureA, WeekstructureB, \
@@ -24,19 +27,21 @@ class Command(BaseCommand):
     help = 'Clones timetable related dbs to speed up queries'
 
     def handle(self, *args, **options):
-        # Table format: (OracleTable, BucketA, BucketB, HasSetID)
+        # Table format: (OracleTable, BucketA, BucketB, HasSetID, isBookingsGenCache)
         tables = [
-            (Module, ModuleA, ModuleB, True),
-            (Timetable, TimetableA, TimetableB, True),
-            (Weekstructure, WeekstructureA, WeekstructureB, True),
-            (Weekmapnumeric, WeekmapnumericA, WeekmapnumericB, True),
-            (Weekmapstring, WeekmapstringA, WeekmapstringB, True),
-            (Lecturer, LecturerA, LecturerB, True),
-            (Sites, SitesA, SitesB, True),
-            (Students, StudentsA, StudentsB, True),
-            (Depts, DeptsA, DeptsB, False),
-            (Cminstances, CminstancesA, CminstancesB, True),
-            (Stumodules, StumodulesA, StumodulesB, True),
+            (Module, ModuleA, ModuleB, True, False),
+            (Timetable, TimetableA, TimetableB, True, False),
+            (Weekstructure, WeekstructureA, WeekstructureB, True, False),
+            (Weekmapnumeric, WeekmapnumericA, WeekmapnumericB, True, False),
+            (Weekmapstring, WeekmapstringA, WeekmapstringB, True, False),
+            (Lecturer, LecturerA, LecturerB, True, False),
+            (Sites, SitesA, SitesB, True, False),
+            (Students, StudentsA, StudentsB, True, False),
+            (Depts, DeptsA, DeptsB, False, False),
+            (Cminstances, CminstancesA, CminstancesB, True, False),
+            (Stumodules, StumodulesA, StumodulesB, True, False),
+            (Room, RoomA, RoomB, True, True),
+            (Booking, BookingA, BookingB, True, True)
         ]
 
         lock = Lock.objects.all()[0]
@@ -65,8 +70,12 @@ class Command(BaseCommand):
                 ))
 
             cursor = connections['gencache'].cursor()
+            table_prefix = "timetable_"
+            if table_data[4]:
+                table_prefix = "roombookings_"
             cursor.execute(
-                "TRUNCATE TABLE timetable_{} RESTART IDENTITY;".format(
+                "TRUNCATE TABLE {}{} RESTART IDENTITY;".format(
+                        table_prefix,
                         table_data[destination_table_index].__name__.lower()
                 )
             )
@@ -91,3 +100,11 @@ class Command(BaseCommand):
             timespec='seconds'
         )
         self._redis.set(last_modified_key, current_timestamp)
+        last_modified_key = "http:headers:Last-Modified:gencache"
+
+        current_timestamp = datetime.now(LOCAL_TIMEZONE).isoformat(
+            timespec='seconds'
+        )
+        self._redis.set(last_modified_key, current_timestamp)
+
+        call_command('trigger_webhooks')L

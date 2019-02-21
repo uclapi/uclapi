@@ -146,14 +146,6 @@ class RoomB(models.Model):
         _DATABASE = 'gencache'
 
 
-class Lock(models.Model):
-    bookingA = models.BooleanField()
-    bookingB = models.BooleanField()
-
-    class Meta:
-        _DATABASE = 'default'
-
-
 class Equipment(models.Model):
     setid = models.CharField(max_length=40, blank=True, null=True)
     roomid = models.CharField(max_length=40, primary_key=True)

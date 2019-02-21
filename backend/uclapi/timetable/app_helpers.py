@@ -7,7 +7,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
 from roombookings.models import (
-    Lock as RBLock,
     BookingA,
     BookingB,
     Location,
@@ -70,7 +69,7 @@ def get_cache(model_name):
         else:
             model = timetable_models[model_name][1]
     elif model_name in roombookings_models:
-        roombooking_lock = RBLock.objects.all()[0]
+        roombooking_lock = Lock.objects.all()[0]
         if roombooking_lock.bookingA:
             model = roombookings_models[model_name][0]
         else:

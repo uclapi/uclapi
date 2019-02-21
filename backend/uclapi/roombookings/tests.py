@@ -25,7 +25,8 @@ from .helpers import (
     TOKEN_EXPIRY_TIME
 )
 
-from .models import Lock, Room
+from .models import Room
+from timetable.models import Lock
 
 from .views import get_bookings
 
@@ -159,7 +160,7 @@ class ManagementCommandsTestCase(TestCase):
         self.assertGreaterEqual(L, 0)
         self.assertLessEqual(L, 1)
 
-        call_command('create_lock')
+        call_command('create_timetable_lock')
 
         self.assertEqual(
             len(Lock.objects.all()),
