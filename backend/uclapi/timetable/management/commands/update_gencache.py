@@ -24,7 +24,7 @@ from timetable.models import \
 
 class Command(BaseCommand):
 
-    help = 'Clones timetable related dbs to speed up queries'
+    help = 'Clones timetable and booking related dbs to speed up queries'
 
     def handle(self, *args, **options):
         # Table format: (OracleTable, BucketA, BucketB, HasSetID, isBookingsGenCache)
@@ -94,12 +94,6 @@ class Command(BaseCommand):
             decode_responses=True
         )
         print("Setting Last-Modified key")
-        last_modified_key = "http:headers:Last-Modified:timetable_gencache"
-
-        current_timestamp = datetime.now(LOCAL_TIMEZONE).isoformat(
-            timespec='seconds'
-        )
-        self._redis.set(last_modified_key, current_timestamp)
         last_modified_key = "http:headers:Last-Modified:gencache"
 
         current_timestamp = datetime.now(LOCAL_TIMEZONE).isoformat(
