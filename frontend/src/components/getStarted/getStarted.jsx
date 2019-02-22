@@ -7,6 +7,7 @@ import Demo from './Demo.jsx';
 import Marketplace from './Marketplace.jsx';
 import Blog from './Blog.jsx';
 import FAQ from './FAQ.jsx';
+import GitHub from './GitHub.jsx';
 
 
 export default class GetStartedComponent extends React.Component {
@@ -21,6 +22,7 @@ export default class GetStartedComponent extends React.Component {
           <Blog />
           <Marketplace />
           <FAQ />
+          <GitHub />
         </div>
       )
     }
