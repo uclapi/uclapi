@@ -6,33 +6,41 @@ CREATE OR REPLACE FUNCTION get_student_timetable(
 )
 -- RETURNS SETOF RECORD -- TEXT --SETOF RECORD
 RETURNS TABLE (
-    startdatetime       TIMESTAMPTZ,
-    finishdatetime      TIMESTAMPTZ,
-    duration            BIGINT,
-    slotid              BIGINT,
-    weekid              BIGINT,
-    weeknumber          DOUBLE PRECISION,
-    moduleid            TEXT,
-    modulename          TEXT,
-    deptid              TEXT,
-    deptname            TEXT,
-    lecturerid          TEXT,
-    lecturername        TEXT,
-    lecturerdeptid      TEXT,
-    lecturerdeptname    TEXT,
-    title               VARCHAR,
-    sessiontypeid       TEXT,
-    condisplayname      VARCHAR,
-    modgrpcode          TEXT,
-    instcode            TEXT,
-    siteid              TEXT,
-    roomid              TEXT,
-    sitename            VARCHAR,
-    roomname            VARCHAR,
-    bookabletype        VARCHAR,
-    starttime           VARCHAR,
-    finishtime          VARCHAR,
-    descrip             VARCHAR
+    startdatetime       TIMESTAMPTZ,            -- 01
+    finishdatetime      TIMESTAMPTZ,            -- 02
+    duration            BIGINT,                 -- 03
+    slotid              BIGINT,                 -- 04
+    weekid              BIGINT,                 -- 05
+    weeknumber          DOUBLE PRECISION,       -- 06
+    moduleid            TEXT,                   -- 07
+    modulename          TEXT,                   -- 08
+    deptid              TEXT,                   -- 09
+    deptname            TEXT,                   -- 10
+    lecturerid          TEXT,                   -- 11
+    lecturername        TEXT,                   -- 12
+    lecturerdeptid      TEXT,                   -- 13
+    lecturerdeptname    TEXT,                   -- 14
+    lecturereppn        TEXT,                   -- 15
+    title               VARCHAR,                -- 16
+    sessiontypeid       TEXT,                   -- 17
+    condisplayname      TEXT,                   -- 18
+    modgrpcode          TEXT,                   -- 19
+    instcode            TEXT,                   -- 20
+    siteid              TEXT,                   -- 21
+    roomid              TEXT,                   -- 22
+    sitename            TEXT,                   -- 23
+    roomname            TEXT,                   -- 24
+    roomcapacity        BIGINT,                 -- 25
+    roomtype            TEXT,                   -- 26
+    roomclassification  TEXT,                   -- 27
+    siteaddr1           TEXT,                   -- 28
+    siteaddr2           TEXT,                   -- 29
+    siteaddr3           TEXT,                   -- 30
+    siteaddr4           TEXT,                   -- 31
+    bookabletype        TEXT,                   -- 32
+    starttime           VARCHAR,                -- 33
+    finishtime          VARCHAR,                -- 34
+    descrip             VARCHAR                 -- 35
 )
 LANGUAGE plpgsql
 AS $$
@@ -46,6 +54,8 @@ DECLARE
     bt_tt_lecturer      TEXT;
     bt_tt_module        TEXT;
     bt_tt_modulegroups  TEXT;
+    bt_tt_rooms         TEXT;
+    bt_tt_sites         TEXT;
     bt_tt_stuclasses    TEXT;
     bt_tt_students      TEXT;
     bt_tt_stumodules    TEXT;
@@ -81,6 +91,8 @@ BEGIN
     bt_tt_lecturer      := 'timetable_lecturer'     || tt_bucket;
     bt_tt_module        := 'timetable_module'       || tt_bucket;
     bt_tt_modulegroups  := 'timetable_modulegroups' || tt_bucket;
+    bt_tt_rooms         := 'timetable_rooms'        || tt_bucket;
+    bt_tt_sites         := 'timetable_sites'        || tt_bucket;
     bt_tt_stuclasses    := 'timetable_stuclasses'   || tt_bucket;
     bt_tt_students      := 'timetable_students'     || tt_bucket;
     bt_tt_stumodules    := 'timetable_stumodules'   || tt_bucket;
@@ -255,18 +267,22 @@ BEGIN
         unfitted,        -- N             | st.unfitted
         compos_crit,     -- NO_MOD        | MOD
         instid,          -- ci.instid     | ci.instid
-        instcode         -- ci.instcode   | ci.instcode
+        instcode,        -- ci.instcode   | ci.instcode
+        siteid,          -- tt.siteid     | tt.siteid
+        roomid           -- tt.roomid     | tt.roomid
     )
     AS
-        SELECT tt.slotid :: BIGINT,
-               NULL :: TEXT,
-               NULL :: TEXT,
-               tt.setid :: TEXT,
-               NULL :: TEXT,
-               ''N'' :: TEXT,
-               ''NO_MOD'' :: TEXT,
-               ci.instid :: TEXT,
-               ci.instcode :: TEXT
+        SELECT tt.slotid   :: BIGINT,
+               NULL        :: TEXT,
+               NULL        :: TEXT,
+               tt.setid    :: TEXT,
+               NULL        :: TEXT,
+               ''N''       :: TEXT,
+               ''NO_MOD''  :: TEXT,
+               ci.instid   :: TEXT,
+               ci.instcode :: TEXT,
+               tt.siteid   :: TEXT,
+               tt.roomid   :: TEXT
         FROM ' || bt_tt_timetable || ' tt
         LEFT OUTER JOIN ' || bt_tt_cminstances || ' ci
              ON tt.instid = ci.instid
@@ -310,15 +326,17 @@ BEGIN
                 )
             )
     UNION
-        SELECT tt.slotid :: BIGINT,
-               tt.moduleid :: TEXT,
-               tt.modgrpcode :: TEXT, 
-               tt.setid :: TEXT,
-               st.stumodselstatus :: TEXT,
-               st.unfitted :: TEXT,
-               ''MOD'' :: TEXT,
-               ci.instid :: TEXT,
-               ci.instcode :: TEXT
+        SELECT tt.slotid            :: BIGINT,
+               tt.moduleid          :: TEXT,
+               tt.modgrpcode        :: TEXT, 
+               tt.setid             :: TEXT,
+               st.stumodselstatus   :: TEXT,
+               st.unfitted          :: TEXT,
+               ''MOD''              :: TEXT,
+               ci.instid            :: TEXT,
+               ci.instcode          :: TEXT,
+               tt.siteid            :: TEXT,
+               tt.roomid            :: TEXT
         FROM ' || bt_tt_timetable  || ' tt
         JOIN tt_tmp_taking st
             ON (
@@ -363,16 +381,25 @@ BEGIN
                FROM ' || bt_tt_depts || '
                WHERE deptid = lecturer.owner
            )                    as lecturerdeptname,
+           lecturer.linkcode    as lecturereppn,
            rb.title             as title, 
            tt.moduletype        as sessiontypeid,
-           rb.condisplayname    as condisplayname,
+    --     rb.condisplayname    as condisplayname,
+           string_agg(DISTINCT rb.condisplayname, '' / '') as condisplayname,
            tes.modgrpcode       as modgrpcode,
            tes.instcode         as instcode,
            tt.siteid            as siteid,
            tt.roomid            as roomid,
-           rb.sitename          as sitename,
-           rb.roomname          as roomname,
-           rb.bookabletype      as bookabletype,
+           sites.sitename       as sitename,
+           rooms.name           as roomname,
+           rooms.capacity       as roomcapacity,
+           rooms.type           as roomtype,
+           rooms.classification as roomclassification,
+           sites.address1       as siteaddr1,
+           sites.address2       as siteaddr2,
+           sites.address3       as siteaddr3,
+           sites.address4       as siteaddr4,
+           rooms.type           as bookabletype,
            rb.starttime         as starttime,
            rb.finishtime        as finishtime,
            rb.descrip           as descrip
@@ -381,20 +408,27 @@ BEGIN
     INNER JOIN tt_tmp_events_slot_id tes
         ON tt.slotid = tes.slotid
        AND tt.slotid = tes.slotid
-    INNER JOIN ' || bt_rb_booking || ' rb
+    LEFT OUTER JOIN ' || bt_rb_booking || ' rb
         ON tt.slotid = rb.slotid
        AND tt.setid  = rb.setid
     LEFT OUTER JOIN ' || bt_tt_cminstances || ' ci
         ON tt.instid = ci.instid
        AND tt.setid  = ci.setid 
-    INNER JOIN ' || bt_tt_module || ' m
+    LEFT JOIN ' || bt_tt_module || ' m
         ON m.moduleid = tes.moduleid
        AND m.setid    = tes.setid
-    INNER JOIN ' || bt_tt_depts || ' depts
+    LEFT OUTER JOIN ' || bt_tt_depts || ' depts
         ON depts.deptid = tt.deptid
-    INNER JOIN ' || bt_tt_lecturer || ' lecturer
+    LEFT OUTER JOIN ' || bt_tt_lecturer || ' lecturer
         ON lecturer.lecturerid = tt.lecturerid
        AND lecturer.setid      = tes.setid
+    LEFT OUTER JOIN ' || bt_tt_sites || ' sites
+        ON sites.siteid = tt.siteid
+       AND sites.setid  = tes.setid
+    LEFT OUTER JOIN ' || bt_tt_rooms || ' rooms
+        ON rooms.roomid = tt.roomid
+       AND rooms.siteid = tt.siteid
+       AND rooms.setid  = tes.setid
     WHERE (
             (tt.weekday IS NOT NULL)
         AND (tt.weekday > 0)
@@ -403,14 +437,60 @@ BEGIN
         AND (tt.instid = ci.instid)
         AND (ci.instid :: TEXT = tes.instid :: TEXT)
     )
-    ORDER BY weeknumber,
-             startdatetime,
+    GROUP BY rb.startdatetime,
+             rb.finishdatetime,
+             tt.duration,
+             tes.slotid,
+             tt.weekid,
+             rb.weeknumber,
+             tes.moduleid,
+             m.name,
+             tt.deptid,
+             depts.name,
+             tt.lecturerid,
+             lecturer.name,
+             lecturer.owner,
+             lecturerdeptname,
+             lecturer.linkcode,
+             rb.title, 
+             tt.moduletype,
+             tes.modgrpcode,
+             tes.instcode,
+             tt.siteid,
+             tt.roomid,
+             sites.sitename,
+             rooms.name,
+             rooms.capacity,
+             rooms.type,
+             rooms.classification,
+             sites.address1,
+             sites.address2,
+             sites.address3,
+             sites.address4,
+             rooms.type,
+             rb.starttime,
+             rb.finishtime,
+             rb.descrip
+    ORDER BY startdatetime,
              moduleid,
-             title
+             title,
+             sitename,
+             roomname
     ';
 
 -- Return the timetable we just built back to the calling application
-    RETURN QUERY SELECT DISTINCT * FROM tt_tmp_timetable_events;
+    RETURN QUERY SELECT
+    DISTINCT ON
+    (
+        startdatetime,
+        finishdatetime,
+        slotid,
+        weeknumber,
+        moduleid,
+        modgrpcode
+    ) *
+    FROM tt_tmp_timetable_events te
+    WHERE te.startdatetime IS NOT NULL;
 
 END
 $$;

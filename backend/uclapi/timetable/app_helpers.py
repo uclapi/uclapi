@@ -21,23 +21,18 @@ from .models import (DeptsA, DeptsB, LecturerA, LecturerB, Lock, ModuleA,
                      TimetableB, WeekmapnumericA, WeekmapnumericB,
                      WeekstructureA, WeekstructureB,
                      CminstancesA, CminstancesB)
+from .personal_timetable import get_personal_timetable
 from .tasks import cache_student_timetable
+from .utils import (
+    get_location_coordinates,
+    SESSION_TYPE_MAP
+)
 
 _SETID = settings.ROOMBOOKINGS_SETID
 
 _week_map = {}
 _week_num_date_map = {}
-
-_session_type_map = {
-    "EX": "Examination",
-    "L": "Lecture",
-    "P": "Practical",
-    "PBL": "Problem Based Learning",
-}
-
 _rooms_cache = {}
-_site_coord_cache = {}
-_room_coord_cache = {}
 _instance_cache = {}
 _lecturers_cache = {}
 _department_name_cache = {}
@@ -372,40 +367,10 @@ def _get_real_dates(slot):
 
 
 def _get_session_type_str(session_type):
-    if session_type in _session_type_map:
-        return _session_type_map[session_type]
+    if session_type in SESSION_TYPE_MAP:
+        return SESSION_TYPE_MAP[session_type]
     else:
         return "Unknown"
-
-
-def _get_location_coordinates(siteid, roomid):
-    # First try and get the specific room's location
-    try:
-        if roomid in _room_coord_cache:
-            return _room_coord_cache[roomid]
-        location = Location.objects.get(
-            siteid=siteid,
-            roomid=roomid
-        )
-        _room_coord_cache[roomid] = (location.lat, location.lng)
-        return location.lat, location.lng
-    except Location.DoesNotExist:
-        pass
-
-    # Now try and get the building's location
-    try:
-        if siteid in _site_coord_cache:
-            return _site_coord_cache[siteid]
-        location = SiteLocation.objects.get(
-            siteid=siteid
-        )
-        _site_coord_cache[siteid] = (location.lat, location.lng)
-        return location.lat, location.lng
-    except SiteLocation.DoesNotExist:
-        pass
-
-    # Now just bail
-    return None, None
 
 
 def _get_location_details(siteid, roomid):
@@ -423,7 +388,7 @@ def _get_location_details(siteid, roomid):
             site = sites.objects.filter(siteid=siteid)[0]
         except IndexError:
             return {}
-        lat, lng = _get_location_coordinates(siteid, roomid)
+        lat, lng = get_location_coordinates(siteid, roomid)
         _rooms_cache[cache_id] = {
             "name": room.name,
             "capacity": room.capacity,
@@ -455,9 +420,8 @@ def get_student_timetable(upi, date_filter=None):
         data = r.get(timetable_key)
         student_events = json.loads(data)
     else:
-        student = get_student_by_upi(upi)
-        student_modules = _get_student_modules(student)
-        student_events = _get_timetable_events(student_modules, True)
+        student_events = get_personal_timetable(upi)
+        print(student_events)
         # Celery task to cache for the next request
         cache_student_timetable.delay(upi, student_events)
 
