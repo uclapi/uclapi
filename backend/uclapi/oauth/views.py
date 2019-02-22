@@ -663,3 +663,14 @@ def my_apps(request):
     return render(request, 'appsettings.html', {
         'initial_data': initial_data
     })
+
+
+def de_authorise_app(request):
+    client_id = get_var(request, "client_id")
+    app = App.objects.get(client_id=client_id)
+    user = User.objects.get(email=eppn)
+
+    token = OAuthToken.objects.get(app=app, user=user)
+    #
+    # del token
+    # token.active = False

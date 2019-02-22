@@ -14,7 +14,7 @@ from dashboard.models import App, User
 from .app_helpers import generate_random_verification_code
 from .models import OAuthScope, OAuthToken
 from .scoping import Scopes
-from .views import authorise, shibcallback
+from .views import authorise, shibcallback, de_authorise_app
 
 
 @uclapi_protected_endpoint(personal_data=True, required_scopes=["timetable"])
@@ -478,3 +478,35 @@ class AppHelpersTestCase(TestCase):
         code = generate_random_verification_code()
         self.assertEqual(code[:6], "verify")
         self.assertEqual(len(code), 86)
+
+
+class DeleteAToken(TestCase):
+    def setUp(self):
+        mock_status_code = unittest.mock.Mock()
+        mock_status_code.status_code = 200
+
+        self.factory = APIRequestFactory()
+    def test_de_authorise_app(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+        oauth_scope = OAuthScope.objects.create(
+            scope_number=2
+        )
+        oauth_token = OAuthToken.objects.create(
+            app=app_,
+            user=user_,
+            scope=oauth_scope
+        )
+        request = self.factory.get(
+            '/oauth/testcase',
+            {
+                'client_secret': app_.client_secret,
+                'token': oauth_token.token
+            }
+        )
+        de = de_authorise_app(request)
+        print(oauth_token.token)
