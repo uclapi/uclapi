@@ -28,6 +28,8 @@ class ModelRouter(object):
             "weekstructureb",
             "studentsa",
             "studentsb",
+            "stuclassesa",
+            "stuclassesb",
             "stumodulesa",
             "stumodulesb",
             "deptsa",

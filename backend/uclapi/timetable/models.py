@@ -1370,6 +1370,52 @@ class ModulegroupsB(models.Model):
         _DATABASE = 'gencache'
 
 
+class Stuclasses(models.Model):
+    setid = models.TextField(max_length=10)
+    studentid = models.TextField(primary_key=True, max_length=12)
+    courseid = models.TextField(max_length=12)
+    classgroupid = models.TextField(max_length=10)
+    clsgrpcode = models.TextField(max_length=10)
+    courseyear = models.BigIntegerField(null=True, blank=True)
+    fixingrp = models.CharField(max_length=1, null=True, blank=True)
+    inactive = models.CharField(max_length=1, null=True, blank=True)
+
+    class Meta:
+        managed = False
+        db_table = '"CMIS_OWNER"."STUCLASSES"'
+        _DATABASE = 'roombookings'
+
+
+class StuclassesA(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.TextField(max_length=10)
+    studentid = models.TextField(max_length=12)
+    courseid = models.TextField(max_length=12)
+    classgroupid = models.TextField(max_length=10)
+    clsgrpcode = models.TextField(max_length=10)
+    courseyear = models.BigIntegerField(null=True, blank=True)
+    fixingrp = models.CharField(max_length=1, null=True, blank=True)
+    inactive = models.CharField(max_length=1, null=True, blank=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class StuclassesB(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.TextField(max_length=10)
+    studentid = models.TextField(max_length=12)
+    courseid = models.TextField(max_length=12)
+    classgroupid = models.TextField(max_length=10)
+    clsgrpcode = models.TextField(max_length=10)
+    courseyear = models.BigIntegerField(null=True, blank=True)
+    fixingrp = models.CharField(max_length=1, null=True, blank=True)
+    inactive = models.CharField(max_length=1, null=True, blank=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
 class Lock(models.Model):
     a = models.BooleanField()
     b = models.BooleanField()
