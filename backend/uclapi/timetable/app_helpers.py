@@ -160,58 +160,45 @@ def _get_instance_details(instid):
     return data
 
 
-def _is_instance_in_criteria(instance, criteria):
+def _is_instance_in_criteria(instance, query_params):
     """Given (validated) criteria, determines if an instance meets it"""
-    if criteria.get('term_1'):
-        if (strtobool(criteria.get('term_1')) !=
-                instance['periods']['teaching_periods']['term_1']):
-            return False
-    if criteria.get('term_2'):
-        if (strtobool(criteria.get('term_2')) !=
-                instance['periods']['teaching_periods']['term_2']):
-            return False
-    if criteria.get('term_3'):
-        if (strtobool(criteria.get('term_3')) !=
-                instance['periods']['teaching_periods']['term_3']):
-            return False
-    if criteria.get('term_1_next_year'):
-        if (strtobool(criteria.get('term_1_next_year')) !=
-                instance['periods']['teaching_periods']['term_1_next_year']):
-            return False
-    if criteria.get('summer'):
-        if (strtobool(criteria.get('summer')) !=
-                instance['periods']['teaching_periods']['summer']):
-            return False
-    if criteria.get('summer_school'):
-        if (strtobool(criteria.get('is_summer_school')) !=
-                instance['periods']['summer_school']['is_summer_school']):
-            return False
-    if criteria.get('summer_school_1'):
-        if (strtobool(criteria.get('summer_school_1')) !=
-                instance['periods']['summer_school']['sessions']['session_1']):
-            return False
-    if criteria.get('summer_school_2'):
-        if (strtobool(criteria.get('summer_school_2')) !=
-                instance['periods']['summer_school']['sessions']['session_2']):
-            return False
-    if criteria.get('lsr'):
-        if (strtobool(criteria.get('lsr')) !=
-                instance['periods']['lsr']):
-            return False
-    if criteria.get('year_long'):
-        if (strtobool(criteria.get('year_long')) !=
-                instance['periods']['year_long']):
-            return False
-    if criteria.get('is_undergraduate'):
-        if (strtobool(criteria.get('is_undergraduate')) !=
-                instance['delivery']['is_undergraduate']):
-            return False
-    if criteria.get('fheq_level'):
-        if (not criteria.get('fheq_level') ==
-                str(instance['delivery']['fheq_level'])):
-            return False
+    criteria_list = [
+        'term_1',
+        'term_2',
+        'term_3',
+        'term_1_next_year',
+        'summer',
+        'is_summer_school',
+        'session_1',
+        'session_2',
+        'lsr',
+        'year_long',
+        'is_undergraduate',
+        'fheq_level'
+    ]
+    comparator = {}
+    for i in range(len(criteria_list)):
+        if query_params.get(criteria_list[i]):
+            if i < 5:
+                comparator = instance['periods']['teaching_periods']
+            elif i < 6:
+                comparator = instance['periods']['summer_school']
+            elif i < 8:
+                comparator = instance['periods']['summer_school']['sessions']
+            elif i < 10:
+                comparator = instance['periods']
+            elif i < 11:
+                comparator = instance['delivery']
+            else:
+                comparator = instance['delivery']
+                if (comparator[criteria_list[i]] != 
+                        int(query_params.get(criteria_list[i]))):
+                    return False
+                continue
+            if (comparator[criteria_list[i]] != 
+                    strtobool(query_params.get(criteria_list[i]))):
+                return False
     return True
-
 
 def validate_amp_query_params(query_params):
     """
@@ -225,8 +212,8 @@ def validate_amp_query_params(query_params):
     """
     bool_params = [
         'term_1', 'term_2', 'term_3', 'term_1_next_year',
-        'summer', 'summer_school', 'summer_school_1',
-        'summer_school_2', 'lsr', 'year_long', 'is_undergraduate'
+        'summer', 'is_summer_school', 'session_1',
+        'session_2', 'lsr', 'year_long', 'is_undergraduate'
     ]
 
     for param in bool_params:
