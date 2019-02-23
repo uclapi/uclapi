@@ -101,4 +101,4 @@ class Command(BaseCommand):
         )
         self._redis.set(last_modified_key, current_timestamp)
 
-        call_command('trigger_webhooks')L
+        call_command('trigger_webhooks')
