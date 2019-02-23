@@ -22,7 +22,7 @@
   "dependencies": {
     "@material-ui/core": "^3.9.2",
     "ajv": "^6.9.1",
-    "aphrodite": "^2.3.1",
+    "aphrodite": "^2.2.3",
     "glamor": "^2.20.40",
     "immutability-helper": "^3.0.0",
     "js-cookie": "^2.2.0",
@@ -37,7 +37,7 @@
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.3.3",
+    "@babel/core": "^7.2.2",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-react": "^7.0.0",
@@ -58,7 +58,7 @@
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "vinyl-transform": "^1.0.0",
-    "webpack": "^4.29.5",
+    "webpack": "^4.29.4",
     "webpack-bundle-tracker": "^0.4.2-beta",
     "webpack-cli": "^3.2.3"
   },

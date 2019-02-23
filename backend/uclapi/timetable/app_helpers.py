@@ -160,7 +160,7 @@ def _get_instance_details(instid):
     return data
 
 
-def _is_instance_in_criteria(instance, query_params):
+def _is_instance_in_criteria(instance, criteria):
     """Given (validated) criteria, determines if an instance meets it"""
     criteria_list = [
         'term_1',
@@ -198,7 +198,7 @@ def _is_instance_in_criteria(instance, query_params):
             if (comparator[criteria_list[i]] !=
                     strtobool(query_params.get(criteria_list[i]))):
                 return False
-    return True
+
 
 def validate_amp_query_params(query_params):
     """
@@ -212,8 +212,8 @@ def validate_amp_query_params(query_params):
     """
     bool_params = [
         'term_1', 'term_2', 'term_3', 'term_1_next_year',
-        'summer', 'is_summer_school', 'session_1',
-        'session_2', 'lsr', 'year_long', 'is_undergraduate'
+        'summer', 'summer_school', 'summer_school_1',
+        'summer_school_2', 'lsr', 'year_long', 'is_undergraduate'
     ]
 
     for param in bool_params:

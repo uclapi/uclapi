@@ -170,17 +170,17 @@ export default class GetDataCoursesModules extends React.Component {
                 example="true"
                 description="Boolean designating if you would like module instances where the module is timetabled during the Late Summer Resit period. This is used internally by Examinations to timetable Late Summer Assessments (LSAs)." />
             <Cell
-                name="is_summer_school"
+                name="summer_school"
                 requirement="optional"
                 example="false"
                 description="Boolean designating if you would like module instances where the course is taught as part of the UCL Summer School (true) or standard academic teaching (false)." />
             <Cell
-                name="session_1"
+                name="summer_school_1"
                 requirement="optional"
                 example="true"
                 description="Boolean designating if you would like module instances where the module is taught in the first summer school session of this academic year's summer." />
             <Cell
-                name="session_2"
+                name="summer_school_2"
                 requirement="optional"
                 example="false"
                 description="Boolean designating if you would like module instances where the module is taught in the second summer school session of this academic year's summer." />

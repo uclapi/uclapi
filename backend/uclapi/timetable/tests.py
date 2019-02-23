@@ -1,5 +1,7 @@
 from django.http import QueryDict
-from django.test import SimpleTestCase, TestCase
+from django.test import SimpleTestCase
+
+from .app_helpers import validate_amp_query_params
 
 from .app_helpers import (
     validate_amp_query_params,
@@ -856,14 +858,14 @@ class AmpCodeParsing(SimpleTestCase):
             ModuleInstance(code)
 
 
-class AmpQueryParams(TestCase):
+class AmpQueryParams(SimpleTestCase):
     """Tests for instance (AMP) query parameters"""
 
     def test_amp_params_are_correctly_validated(self):
         amp_params = [
             'term_1', 'term_2', 'term_3', 'term_1_next_year',
-            'summer', 'is_summer_school', 'session_1',
-            'session_2', 'lsr', 'year_long', 'is_undergraduate'
+            'summer', 'summer_school', 'summer_school_1',
+            'summer_school_2', 'lsr', 'year_long', 'is_undergraduate'
         ]
         valid_bools = ['0', '1', 'true', 'false']
         invalid_bools = ['maybe']
