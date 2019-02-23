@@ -21,13 +21,15 @@ from timetable.models import \
     Stumodules, StumodulesA, StumodulesB, \
     Lock
 
+from django.core.management import call_command
 
 class Command(BaseCommand):
 
     help = 'Clones timetable and booking related dbs to speed up queries'
 
     def handle(self, *args, **options):
-        # Table format: (OracleTable, BucketA, BucketB, HasSetID, isBookingsGenCache)
+        # Table format:
+        # (OracleTable, BucketA, BucketB, HasSetID, isBookingsGenCache)
         tables = [
             (Module, ModuleA, ModuleB, True, False),
             (Timetable, TimetableA, TimetableB, True, False),
