@@ -6,7 +6,6 @@ from .app_helpers import (
     _get_instance_details,
     _is_instance_in_criteria
 )
-
 from .amp import (
     InvalidAMPCodeException,
     ModuleInstance,
