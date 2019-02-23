@@ -16,5 +16,5 @@ class Command(BaseCommand):
             self.stdout.write("Lock already exists")
         else:
             Lock_to_keep = Lock.objects.all()[0]
-            Notification.objects.exclude(pk__in=list(Lock_to_keep)).delete()
+            Lock.objects.exclude(pk__in=list(Lock_to_keep)).delete()
             self.stdout.write("Deleted all but first lock")
