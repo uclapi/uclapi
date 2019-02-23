@@ -160,7 +160,7 @@ class ManagementCommandsTestCase(TestCase):
         self.assertGreaterEqual(L, 0)
         self.assertLessEqual(L, 1)
 
-        call_command('create_timetable_lock')
+        call_command('create_lock')
 
         self.assertEqual(
             len(Lock.objects.all()),
@@ -227,13 +227,13 @@ class DoesTokenExistTestCase(TestCase):
 
     fake_locks = MockSet(
         MockModel(
-            bookingA=True,
-            bookingB=False
+            a=True,
+            b=False
         )
     )
 
     lock_objects = unittest.mock.patch(
-        'roombookings.models.Lock.objects',
+        'timetable.models.Lock.objects',
         fake_locks
     )
 

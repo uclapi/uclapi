@@ -70,7 +70,7 @@ def get_cache(model_name):
             model = timetable_models[model_name][1]
     elif model_name in roombookings_models:
         roombooking_lock = Lock.objects.all()[0]
-        if roombooking_lock.bookingA:
+        if roombooking_lock.a:
             model = roombookings_models[model_name][0]
         else:
             model = roombookings_models[model_name][1]

@@ -28,7 +28,7 @@ class Command(BaseCommand):
         # currently locked table is the old one, more recent one is not locked
         lock = Lock.objects.all()[0]  # there is only ever one lock
 
-        if lock.bookingA:
+        if lock.a:
             old_booking_table = BookingA
             new_booking_table = BookingB
         else:

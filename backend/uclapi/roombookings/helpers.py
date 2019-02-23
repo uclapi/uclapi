@@ -90,7 +90,7 @@ def _get_paginated_bookings(page_token):
 def _paginated_result(query, page_number, pagination):
     try:
         lock = Lock.objects.all()[0]
-        curr = BookingA if not lock.bookingA else BookingB
+        curr = BookingA if not lock.a else BookingB
         all_bookings = curr.objects.filter(**query).order_by('startdatetime')
     except FieldError:
         return {

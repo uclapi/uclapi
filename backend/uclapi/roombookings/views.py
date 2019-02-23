@@ -35,7 +35,7 @@ def get_rooms(request, *args, **kwargs):
     # - Anything centrally bookable
     # - All ICH rooms (Site IDs 238 and 240)
     lock = Lock.objects.all()[0]
-    curr = RoomA if not lock.bookingA else RoomB
+    curr = RoomA if not lock.a else RoomB
 
     all_rooms = curr.objects.filter(
         Q(setid=settings.ROOMBOOKINGS_SETID),
@@ -133,7 +133,7 @@ def get_bookings(request, *args, **kwargs):
     bookings = _get_paginated_bookings(page_token)
 
     lock = Lock.objects.all()[0]
-    curr = BookingA if not lock.bookingA else BookingB
+    curr = BookingA if not lock.a else BookingB
 
     bookings["count"] = curr.objects.filter(**request_params).count()
 
