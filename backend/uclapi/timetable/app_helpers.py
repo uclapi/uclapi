@@ -160,7 +160,7 @@ def _get_instance_details(instid):
     return data
 
 
-def _is_instance_in_criteria(instance, criteria):
+def _is_instance_in_criteria(instance, query_params):
     """Given (validated) criteria, determines if an instance meets it"""
     criteria_list = [
         'term_1',
@@ -198,6 +198,7 @@ def _is_instance_in_criteria(instance, criteria):
             if (comparator[criteria_list[i]] !=
                     strtobool(query_params.get(criteria_list[i]))):
                 return False
+    return True
 
 
 def validate_amp_query_params(query_params):
