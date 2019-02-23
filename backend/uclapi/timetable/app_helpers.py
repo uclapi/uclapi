@@ -161,7 +161,17 @@ def _get_instance_details(instid):
 
 
 def _is_instance_in_criteria(instance, query_params):
-    """Given (validated) criteria, determines if an instance meets it"""
+    """
+    Given (validated) criteria, determines if an instance meets it
+
+    :param instance: instance details
+    :type instance: dict
+    :param query_params: parameters given by the user to the endpoint
+    :type query_params: django.http.QueryDict
+
+    :returns: True if instance is in criteria (query_params)
+    :rtype: bool
+    """
     criteria_list = [
         'term_1',
         'term_2',
@@ -595,6 +605,18 @@ def get_departmental_modules(department_id):
 
 
 def _get_compulsory_course_modules(dept_modules, course_id, query_params):
+    """
+    Gets all compulsory modules on a given course,
+    filtering by instance criteria.
+
+    :param dept_modules: dictionary of department modules
+    :type dept_modules: dict
+    :param course_id: course id
+    :type course_id: str
+    :param query_params: dictionary of validated query parameters
+    :type query_params: django.http.QueryDict
+
+    """
     modules = get_cache("crscompmodules")
     for compulsory in modules.objects \
                              .filter(courseid=course_id, setid=_SETID) \
@@ -624,6 +646,19 @@ def _get_compulsory_course_modules(dept_modules, course_id, query_params):
 
 
 def _get_available_course_modules(dept_modules, course_id, query_params):
+    """
+    Gets all available modules on a given course,
+    filtering by instance criteria.
+
+    :param dept_modules: dictionary of department modules
+    :type dept_modules: dict
+    :param course_id: course id
+    :type course_id: str
+    :param query_params: dictionary of validated criteria
+    :type query_params: django.http.QueryDict
+
+    """
+    modules = get_cache("crscompmodules")
         modules = get_cache("crsavailmodules")
         for available in modules.objects \
                                 .filter(courseid=course_id, setid=_SETID) \
@@ -655,6 +690,18 @@ def _get_available_course_modules(dept_modules, course_id, query_params):
 
 
 def get_course_modules(course_id, query_params):
+    """
+    Gets all modules on a given course, filtering by instance criteria.
+
+    :param course_id: course id
+    :type course_id: str
+    :param query_params: dictionary of validated criteria
+    :type query_params: django.http.QueryDict
+
+    :returns: course modules, filtered by instance criteria
+    :rtype: dict
+
+    """
     dept_modules = {}
     if not query_params.get('only_available') is None:
         if strtobool(query_params.get('only_available')):
