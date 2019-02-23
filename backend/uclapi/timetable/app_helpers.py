@@ -191,11 +191,11 @@ def _is_instance_in_criteria(instance, query_params):
                 comparator = instance['delivery']
             else:
                 comparator = instance['delivery']
-                if (comparator[criteria_list[i]] != 
+                if (comparator[criteria_list[i]] !=
                         int(query_params.get(criteria_list[i]))):
                     return False
                 continue
-            if (comparator[criteria_list[i]] != 
+            if (comparator[criteria_list[i]] !=
                     strtobool(query_params.get(criteria_list[i]))):
                 return False
     return True

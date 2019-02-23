@@ -3,7 +3,6 @@ from django.test import SimpleTestCase, TestCase
 
 from .app_helpers import (
     validate_amp_query_params,
-    _get_instance_details,
     _is_instance_in_criteria
 )
 from .amp import (
@@ -885,7 +884,6 @@ class AmpQueryParams(TestCase):
 
         query_params = QueryDict('fheq_level=s')
         self.assertFalse(validate_amp_query_params(query_params))
-    
 
     def test_instance_in_amp_params(self):
         criteria = QueryDict(mutable=True)
@@ -911,8 +909,8 @@ class AmpQueryParams(TestCase):
                 False, True, False, True
             ]
         ]
-        expected_fheq_level = [6,8]
-        for x in range (len(amp_codes)):
+        expected_fheq_level = [6, 8]
+        for x in range(len(amp_codes)):
             expected_bool = expected_bools[x]
             instance_obj = ModuleInstance(amp_codes[x])
             instance_dict = {
@@ -922,7 +920,7 @@ class AmpQueryParams(TestCase):
             }
             for i in range(num_params-1):
                 criteria[amp_params[i]] = 'true'
-                self.assertEqual(_is_instance_in_criteria(instance_dict, 
+                self.assertEqual(_is_instance_in_criteria(instance_dict,
                                                           criteria),
                                  expected_bool[i])
                 criteria[amp_params[i]] = 'false'
@@ -931,10 +929,10 @@ class AmpQueryParams(TestCase):
                                     expected_bool[i])
                 criteria.pop(amp_params[i])
             criteria['fheq_level'] = '0' + str(expected_fheq_level[x])
-            self.assertEqual(_is_instance_in_criteria(instance_dict, 
-                                                    criteria),
-                                expected_bool[num_params-1])
+            self.assertEqual(_is_instance_in_criteria(instance_dict,
+                                                      criteria),
+                             expected_bool[num_params-1])
             criteria['fheq_level'] = '0' + str(expected_fheq_level[x] + 2)
-            self.assertNotEqual(_is_instance_in_criteria(instance_dict, 
-                                                        criteria),
+            self.assertNotEqual(_is_instance_in_criteria(instance_dict,
+                                                         criteria),
                                 expected_bool[num_params-1])
