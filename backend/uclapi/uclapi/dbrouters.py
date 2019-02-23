@@ -4,6 +4,8 @@ class ModelRouter(object):
         self.gencache_model_names = [
             "bookinga",
             "bookingb",
+            "rooma",
+            "roomb",
             "cminstancesa",
             "cminstancesb",
             "coursea",

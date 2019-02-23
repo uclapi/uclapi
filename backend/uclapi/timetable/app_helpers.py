@@ -7,16 +7,17 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
 from roombookings.models import (
-    Lock as RBLock,
     BookingA,
     BookingB,
     Location,
-    SiteLocation
+    SiteLocation,
+    RoomA,
+    RoomB
 )
 
 from .amp import ModuleInstance
 from .models import (DeptsA, DeptsB, LecturerA, LecturerB, Lock, ModuleA,
-                     ModuleB, RoomsA, RoomsB, SitesA, SitesB, StudentsA,
+                     ModuleB, SitesA, SitesB, StudentsA,
                      StudentsB, StumodulesA, StumodulesB,  TimetableA,
                      TimetableB, WeekmapnumericA, WeekmapnumericB,
                      WeekstructureA, WeekstructureB,
@@ -47,7 +48,7 @@ def get_cache(model_name):
         "weekmapnumeric": [WeekmapnumericA, WeekmapnumericB],
         "weekstructure": [WeekstructureA, WeekstructureB],
         "lecturer": [LecturerA, LecturerB],
-        "rooms": [RoomsA, RoomsB],
+        "rooms": [RoomA, RoomB],
         "sites": [SitesA, SitesB],
         "departments": [DeptsA, DeptsB],
         "stumodules": [StumodulesA, StumodulesB],
@@ -63,8 +64,8 @@ def get_cache(model_name):
         else:
             model = timetable_models[model_name][1]
     elif model_name in roombookings_models:
-        roombooking_lock = RBLock.objects.all()[0]
-        if roombooking_lock.bookingA:
+        roombooking_lock = Lock.objects.all()[0]
+        if roombooking_lock.a:
             model = roombookings_models[model_name][0]
         else:
             model = roombookings_models[model_name][1]
@@ -390,9 +391,9 @@ def _get_location_details(siteid, roomid):
             return {}
         lat, lng = get_location_coordinates(siteid, roomid)
         _rooms_cache[cache_id] = {
-            "name": room.name,
+            "name": room.roomname,
             "capacity": room.capacity,
-            "type": room.type,
+            "type": room.bookabletype,
             "address": [
                 site.address1,
                 site.address2,
