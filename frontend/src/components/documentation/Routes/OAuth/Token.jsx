@@ -94,7 +94,7 @@ export default class Token extends React.Component {
             <p>Please note, access to any of this data needs to be approved by the user first.
             </p>
 
-            <p>To use this type of token for your app, you need to send a request to "Authorise" endpoint at: <code>https://uclapi.com/oauth/authorise</code> which can be done directly or by including a “Sign in With UCL Button” in your app, such as the one provided below, which links users to the authorisation endpoint with your app’s Client ID (accessible via the dashboard) and a random state number included in the GET parameters.
+            <p>To use this type of token for your app, you need to send a request to the "Authorise" endpoint at: <code>https://uclapi.com/oauth/authorise</code> which can be done directly or by including a “Sign in With UCL Button” in your app, such as the one provided below, which links users to the authorisation endpoint with your app’s Client ID (accessible via the dashboard) and a random state number included in the GET parameters.
             </p>
             <p>
             The users then sign in with their UCL credentials and, if they authorise your app to use their personal data, a token will be generated which your app can use to get user’s personal data in JSON format from the oauth/user/data.
