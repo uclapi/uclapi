@@ -56,7 +56,7 @@ def get_rooms(request, *args, **kwargs):
     return PrettyJsonResponse({
         "ok": True,
         "rooms": _serialize_rooms(filtered_rooms)
-}, custom_header_data=kwargs)
+        }, custom_header_data=kwargs)
 
 
 @api_view(['GET'])

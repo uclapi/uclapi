@@ -101,6 +101,7 @@ class Room(models.Model):
         db_table = 'CMIS_UCLAPI_V_ROOMS'
         _DATABASE = 'roombookings'
 
+
 class RoomA(models.Model):
     setid = models.CharField(max_length=40, blank=True, null=True)
     siteid = models.CharField(max_length=40, blank=True, null=True)
@@ -122,6 +123,7 @@ class RoomA(models.Model):
 
     class Meta:
         _DATABASE = 'gencache'
+
 
 class RoomB(models.Model):
     setid = models.CharField(max_length=40, blank=True, null=True)
