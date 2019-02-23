@@ -1,7 +1,11 @@
 from django.http import QueryDict
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, TestCase
 
-from .app_helpers import validate_amp_query_params
+from .app_helpers import (
+    validate_amp_query_params,
+    _get_instance_details,
+    _is_instance_in_criteria
+)
 
 from .amp import (
     InvalidAMPCodeException,
@@ -854,14 +858,14 @@ class AmpCodeParsing(SimpleTestCase):
             ModuleInstance(code)
 
 
-class AmpQueryParams(SimpleTestCase):
+class AmpQueryParams(TestCase):
     """Tests for instance (AMP) query parameters"""
 
     def test_amp_params_are_correctly_validated(self):
         amp_params = [
             'term_1', 'term_2', 'term_3', 'term_1_next_year',
-            'summer', 'summer_school', 'summer_school_1',
-            'summer_school_2', 'lsr', 'year_long', 'is_undergraduate'
+            'summer', 'is_summer_school', 'session_1',
+            'session_2', 'lsr', 'year_long', 'is_undergraduate'
         ]
         valid_bools = ['0', '1', 'true', 'false']
         invalid_bools = ['maybe']
@@ -882,3 +886,56 @@ class AmpQueryParams(SimpleTestCase):
 
         query_params = QueryDict('fheq_level=s')
         self.assertFalse(validate_amp_query_params(query_params))
+    
+
+    def test_instance_in_amp_params(self):
+        criteria = QueryDict(mutable=True)
+        amp_params = [
+            'term_1', 'term_2', 'term_3', 'term_1_next_year',
+            'summer', 'is_summer_school', 'session_1', 'session_2',
+            'lsr', 'year_long', 'is_undergraduate', 'fheq_level'
+        ]
+        num_params = len(amp_params)
+        amp_codes = [
+            'A6U-T1',
+            'B8P-YEAR'
+        ]
+        expected_bools = [
+            [
+                True, False, False, False,
+                False, False, False, False,
+                False, False, True, True
+            ],
+            [
+                True, True, True, False,
+                False, False, False, False,
+                False, True, False, True
+            ]
+        ]
+        expected_fheq_level = [6,8]
+        for x in range (len(amp_codes)):
+            expected_bool = expected_bools[x]
+            instance_obj = ModuleInstance(amp_codes[x])
+            instance_dict = {
+                "delivery": instance_obj.delivery.get_delivery(),
+                "periods": instance_obj.periods.get_periods(),
+                "instance_code": amp_codes[x]
+            }
+            for i in range(num_params-1):
+                criteria[amp_params[i]] = 'true'
+                self.assertEqual(_is_instance_in_criteria(instance_dict, 
+                                                          criteria),
+                                 expected_bool[i])
+                criteria[amp_params[i]] = 'false'
+                self.assertNotEqual(_is_instance_in_criteria(instance_dict,
+                                                             criteria),
+                                    expected_bool[i])
+                criteria.pop(amp_params[i])
+            criteria['fheq_level'] = '0' + str(expected_fheq_level[x])
+            self.assertEqual(_is_instance_in_criteria(instance_dict, 
+                                                    criteria),
+                                expected_bool[num_params-1])
+            criteria['fheq_level'] = '0' + str(expected_fheq_level[x] + 2)
+            self.assertNotEqual(_is_instance_in_criteria(instance_dict, 
+                                                        criteria),
+                                expected_bool[num_params-1])
