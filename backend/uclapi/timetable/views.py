@@ -1,4 +1,6 @@
+from distutils.util import strtobool
 from django.conf import settings
+
 
 from rest_framework.decorators import api_view
 
@@ -11,6 +13,8 @@ from .app_helpers import (
     get_departmental_modules,
     get_departments,
     get_student_timetable,
+    get_course_modules,
+    validate_amp_query_params
 )
 
 from common.decorators import uclapi_protected_endpoint
@@ -107,13 +111,15 @@ def get_department_courses_endpoint(request, *args, **kwargs):
     except KeyError:
         response = JsonResponse({
             "ok": False,
-            "error": "Supply a Department ID using the department parameter."
+            "error": "No department ID provided."
         }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
     courses = {"ok": True, "courses": []}
-    for course in Course.objects.filter(owner=department_id, setid=_SETID):
+    for course in Course.objects.filter(owner=department_id,
+                                        setid=_SETID,
+                                        linkcode="YY"):
         courses["courses"].append({
             "course_name": course.name,
             "course_id": course.courseid,
@@ -143,6 +149,74 @@ def get_department_modules_endpoint(request, *args, **kwargs):
     modules = {
         "ok": True,
         "modules": get_departmental_modules(department_id)
+    }
+
+    return JsonResponse(modules, custom_header_data=kwargs)
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(
+    last_modified_redis_key='timetable_gencache'
+)
+def get_course_modules_endpoint(request, *args, **kwargs):
+    """
+    Returns all modules taught on a particular course.
+    """
+    try:
+        course_id = request.GET["course"]
+    except KeyError:
+        response = JsonResponse({
+            "ok": False,
+            "error": "No course ID provided."
+        }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
+
+    if not validate_amp_query_params(request.query_params):
+        response = JsonResponse({
+            "ok": False,
+            "error": "Given parameter is not of corrrect type"
+        }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
+
+    if request.query_params.get('only_compulsory'):
+        try:
+            strtobool(request.query_params.get('only_compulsory'))
+        except ValueError:
+            response = JsonResponse({
+                "ok": False,
+                "error": "Given parameter is not of correct type"
+            }, custom_header_data=kwargs)
+            response.status_code = 400
+            return response
+
+    if request.query_params.get('only_available'):
+        try:
+            strtobool(request.query_params.get('only_available'))
+        except ValueError:
+            response = JsonResponse({
+                "ok": False,
+                "error": "Given parameter is not of correct type"
+            }, custom_header_data=kwargs)
+            response.status_code = 400
+            return response
+
+    if (request.query_params.get('only_available') and
+            request.query_params.get('only_compulsory')):
+        if (strtobool(request.query_params.get('only_available')) and
+                strtobool(request.query_params.get('only_compulsory'))):
+            response = JsonResponse({
+                "ok": False,
+                "error": "only_available and only_compulsory"
+                         " cannot both be true"
+            }, custom_header_data=kwargs)
+            response.status_code = 400
+            return response
+
+    modules = {
+        "ok": True,
+        "modules": get_course_modules(course_id, request.query_params)
     }
 
     return JsonResponse(modules, custom_header_data=kwargs)
