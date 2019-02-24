@@ -862,8 +862,8 @@ class AmpQueryParams(SimpleTestCase):
     def test_amp_params_are_correctly_validated(self):
         amp_params = [
             'term_1', 'term_2', 'term_3', 'term_1_next_year',
-            'summer', 'summer_school', 'summer_school_1',
-            'summer_school_2', 'lsr', 'year_long', 'is_undergraduate'
+            'summer', 'is_summer_school', 'session_1',
+            'session_2', 'lsr', 'year_long', 'is_undergraduate'
         ]
         valid_bools = ['0', '1', 'true', 'false']
         invalid_bools = ['maybe']
