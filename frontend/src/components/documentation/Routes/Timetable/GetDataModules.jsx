@@ -113,7 +113,7 @@ export default class GetDataModules extends React.Component {
           <Topic
             activeLanguage={this.props.activeLanguage}
             codeExamples={codeExamples}>
-            <h1 id="timetable/data/modules">Get List of Department Modules</h1>
+            <h1 id="timetable/data/modules">Get List of Modules</h1>
             <p>
               Endpoint: <code>https://uclapi.com/timetable/data/modules</code>
             </p>

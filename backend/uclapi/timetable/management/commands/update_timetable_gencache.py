@@ -17,9 +17,6 @@ from timetable.models import \
     Depts, DeptsA, DeptsB, \
     Cminstances, CminstancesA, CminstancesB, \
     Stumodules, StumodulesA, StumodulesB, \
-    Course, CourseA, CourseB, \
-    Crsavailmodules, CrsavailmodulesA, CrsavailmodulesB, \
-    Crscompmodules, CrscompmodulesA, CrscompmodulesB, \
     Lock
 
 
@@ -42,9 +39,6 @@ class Command(BaseCommand):
             (Depts, DeptsA, DeptsB, False),
             (Cminstances, CminstancesA, CminstancesB, True),
             (Stumodules, StumodulesA, StumodulesB, True),
-            (Course, CourseA, CourseB, True),
-            (Crsavailmodules, CrsavailmodulesA, CrsavailmodulesB, True),
-            (Crscompmodules, CrscompmodulesA, CrscompmodulesB, True),
         ]
 
         lock = Lock.objects.all()[0]

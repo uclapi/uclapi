@@ -27,13 +27,7 @@ class ModelRouter(object):
             "stumodulesa",
             "stumodulesb",
             "deptsa",
-            "deptsb",
-            "coursea",
-            "courseb",
-            "crsavailmodulesa",
-            "crsavailmodulesb",
-            "crscompmodulesa",
-            "crscompmodulesb"
+            "deptsb"
         ]
 
     def db_for_read(self, model, **hints):

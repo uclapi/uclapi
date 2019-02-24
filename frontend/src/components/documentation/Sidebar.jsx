@@ -158,17 +158,9 @@ export default class Sidebar extends React.Component {
                 href="#timetable/data/departments"
               />,
               <ListItem
-                primaryText="Get List of Department Modules"
+                primaryText="Get Department Modules"
                 href="#timetable/data/modules"
               />,
-              <ListItem
-                primaryText="Get List of Department Courses"
-                href="#timetable/data/courses"
-              />,
-              <ListItem
-                primaryText="Get List of Course Modules"
-                href="#timetable/data/courses/modules"
-              />
             ]}
           />
 
