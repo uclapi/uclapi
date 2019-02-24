@@ -2,9 +2,8 @@ from django.db import connections
 from django.conf import settings
 from psycopg2.extras import RealDictCursor
 
-from roombookings.models import Lock as RbLock
 from timetable.amp import ModuleInstance
-from timetable.models import Lock as TtLock
+from timetable.models import Lock
 
 from .utils import (
     get_location_coordinates,
@@ -24,14 +23,15 @@ def get_personal_timetable_rows(upi):
 
     raw_connection = wrapped_connection.connection
 
+    bucket = 'a' if Lock.objects.all()[0].a else 'b'
+
     with raw_connection.cursor(cursor_factory=RealDictCursor) as cursor:
         cursor.callproc(
             'get_student_timetable',
             [
                 upi,
                 set_id,
-                'a' if RbLock.objects.all()[0].bookingA else 'b',
-                'a' if TtLock.objects.all()[0].a else 'b'
+                bucket
             ]
         )
         rows = cursor.fetchall()

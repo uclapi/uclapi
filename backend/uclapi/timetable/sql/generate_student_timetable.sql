@@ -1,8 +1,7 @@
 CREATE OR REPLACE FUNCTION get_student_timetable(
     upi         TEXT, -- UPI
     set_id      TEXT, -- Set ID
-    rb_bucket   TEXT, -- Roombookings Bucket
-    tt_bucket   TEXT  -- Timetable bucket
+    bucket      TEXT  -- Cache bucket (a or b)
 )
 -- RETURNS SETOF RECORD -- TEXT --SETOF RECORD
 RETURNS TABLE (
@@ -54,7 +53,7 @@ DECLARE
     bt_tt_lecturer      TEXT;
     bt_tt_module        TEXT;
     bt_tt_modulegroups  TEXT;
-    bt_tt_rooms         TEXT;
+    bt_rb_room         TEXT;
     bt_tt_sites         TEXT;
     bt_tt_stuclasses    TEXT;
     bt_tt_students      TEXT;
@@ -72,10 +71,8 @@ BEGIN
 -- qtype2 (UPI Field) is stored all caps in the database
     upi := UPPER(upi);
 
--- We process bucket names in lower case so that we can concatenate them
--- on to the ends of table names.
-    rb_bucket := LOWER(rb_bucket);
-    tt_bucket := LOWER(tt_bucket);
+-- Check the bucket ID in lower case
+    bucket := LOWER(bucket)
 
 -- Generate Table Names
 
@@ -83,20 +80,20 @@ BEGIN
     -- can make this function any more generalised.
     -- It will work without matching buckets, however.
 
-    bt_rb_booking       := 'roombookings_booking'   || rb_bucket;
+    bt_rb_booking       := 'roombookings_booking'   || bucket;
+    bt_rb_room          := 'roombookings_room'      || bucket;
 
-    bt_tt_cminstances   := 'timetable_cminstances'  || tt_bucket;
-    bt_tt_course        := 'timetable_course'       || tt_bucket;
-    bt_tt_depts         := 'timetable_depts'        || tt_bucket;
-    bt_tt_lecturer      := 'timetable_lecturer'     || tt_bucket;
-    bt_tt_module        := 'timetable_module'       || tt_bucket;
-    bt_tt_modulegroups  := 'timetable_modulegroups' || tt_bucket;
-    bt_tt_rooms         := 'timetable_rooms'        || tt_bucket;
-    bt_tt_sites         := 'timetable_sites'        || tt_bucket;
-    bt_tt_stuclasses    := 'timetable_stuclasses'   || tt_bucket;
-    bt_tt_students      := 'timetable_students'     || tt_bucket;
-    bt_tt_stumodules    := 'timetable_stumodules'   || tt_bucket;
-    bt_tt_timetable     := 'timetable_timetable'    || tt_bucket;
+    bt_tt_cminstances   := 'timetable_cminstances'  || bucket;
+    bt_tt_course        := 'timetable_course'       || bucket;
+    bt_tt_depts         := 'timetable_depts'        || bucket;
+    bt_tt_lecturer      := 'timetable_lecturer'     || bucket;
+    bt_tt_module        := 'timetable_module'       || bucket;
+    bt_tt_modulegroups  := 'timetable_modulegroups' || bucket;
+    bt_tt_sites         := 'timetable_sites'        || bucket;
+    bt_tt_stuclasses    := 'timetable_stuclasses'   || bucket;
+    bt_tt_students      := 'timetable_students'     || bucket;
+    bt_tt_stumodules    := 'timetable_stumodules'   || bucket;
+    bt_tt_timetable     := 'timetable_timetable'    || bucket;
 
 -- Drop any stale temporary tables that already exist
     DROP TABLE IF EXISTS tt_tmp_hasgroupnum;
@@ -425,7 +422,7 @@ BEGIN
     LEFT OUTER JOIN ' || bt_tt_sites || ' sites
         ON sites.siteid = tt.siteid
        AND sites.setid  = tes.setid
-    LEFT OUTER JOIN ' || bt_tt_rooms || ' rooms
+    LEFT OUTER JOIN ' || bt_rb_room || ' rooms
         ON rooms.roomid = tt.roomid
        AND rooms.siteid = tt.siteid
        AND rooms.setid  = tes.setid
