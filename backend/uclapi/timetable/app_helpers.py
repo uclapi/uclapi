@@ -659,34 +659,34 @@ def _get_available_course_modules(dept_modules, course_id, query_params):
 
     """
     modules = get_cache("crscompmodules")
-        modules = get_cache("crsavailmodules")
-        for available in modules.objects \
-                                .filter(courseid=course_id, setid=_SETID) \
-                                .only('moduleid'):
-            for module in get_cache("module").objects \
-                                             .filter(
-                                                 moduleid=available.moduleid,
-                                                 setid=_SETID
-                                             ):
-                instance_data = _get_instance_details(module.instid)
-                if not _is_instance_in_criteria(instance_data, query_params):
-                    continue
+    modules = get_cache("crsavailmodules")
+    for available in modules.objects \
+                            .filter(courseid=course_id, setid=_SETID) \
+                            .only('moduleid'):
+        for module in get_cache("module").objects \
+                                            .filter(
+                                                moduleid=available.moduleid,
+                                                setid=_SETID
+                                            ):
+            instance_data = _get_instance_details(module.instid)
+            if not _is_instance_in_criteria(instance_data, query_params):
+                continue
 
-                if module.moduleid not in dept_modules:
-                    dept_modules[module.moduleid] = {
-                        "module_id": module.moduleid,
-                        "name": module.name,
-                        "instances": []
-                    }
+            if module.moduleid not in dept_modules:
+                dept_modules[module.moduleid] = {
+                    "module_id": module.moduleid,
+                    "name": module.name,
+                    "instances": []
+                }
 
-                dept_modules[module.moduleid]['instances'].append({
-                    "full_module_id": "{}-{}".format(
-                        module.moduleid,
-                        instance_data['instance_code']
-                    ),
-                    "class_size": module.csize,
-                    ** instance_data
-                })
+            dept_modules[module.moduleid]['instances'].append({
+                "full_module_id": "{}-{}".format(
+                    module.moduleid,
+                    instance_data['instance_code']
+                ),
+                "class_size": module.csize,
+                ** instance_data
+            })
 
 
 def get_course_modules(course_id, query_params):
