@@ -1,8 +1,6 @@
 from django.http import QueryDict
 from django.test import SimpleTestCase
 
-from .app_helpers import validate_amp_query_params
-
 from .app_helpers import (
     validate_amp_query_params,
     _is_instance_in_criteria
