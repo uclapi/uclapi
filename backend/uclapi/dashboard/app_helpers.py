@@ -72,6 +72,7 @@ def generate_app_client_secret():
     client_secret = hexlify(os.urandom(32)).decode()
     return client_secret
 
+
 # Returns 0 if url is safe/valid
 # Returns 1 if url doesn't start with https://
 # Returns 2 if url is not valid format
