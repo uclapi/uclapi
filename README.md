@@ -247,6 +247,7 @@ pushd uclapi/backend/uclapi
 ./manage.py update_gencache
 ./manage.py create_timetable_lock
 ./manage.py update_timetable_gencache
+./manage.py feed_occupeye_cache
 deactivate
 popd
 ```
@@ -298,11 +299,13 @@ To test the timetables system you can run ```python manage.py test_personal_time
 To update the blogs displayed on frontpage you can run the command ```python manage.py update_medium```. This will retrieve a number of articles from our blog and insert them into the front-end. The amount retrieved is set in settings.py with the varibale `MEDIUM_ARTICLE_QUANTITY` **Note: the front end does not require rebuilding after this**
 
 ### Database Updating Commands
-These were covered above but for completeness you have at your disposal these commands to switch the lock of the database and then update them.
+These were covered above but for completeness you have at your disposal these commands to switch the lock of the database and then update them. The mini occupeye cache only caches a small subset of data while the full one caches everything. In prod the mini is run every 2 mins while the full one is run every day at 2 AM.
 ```
 python manage.py create_lock
 python manage.py update_gencache
 python manage.py create_timetable_lock
 python manage.py update_timetable_gencache
+python manage.py feed_occupeye_cache
+python manage.py feed_occupeye_cache_mini
 ```
 **Note: As said previously these require valid credentials and for you to be on the UCL network to use**
