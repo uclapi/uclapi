@@ -254,7 +254,8 @@ def set_callback_url(request):
     url_not_safe_saved = is_url_not_safe(new_callback_url)
     if url_not_safe_saved:
         if url_not_safe_saved == 1:
-            message = "The requested callback URL does not start with 'https://'."
+            message = "The requested callback URL does not \
+                       start with 'https://'."
         elif url_not_safe_saved == 2:
             message = "The requested callback URL is not valid."
         elif url_not_safe_saved == 3:
