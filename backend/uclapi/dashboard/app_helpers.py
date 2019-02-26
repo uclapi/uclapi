@@ -72,24 +72,30 @@ def generate_app_client_secret():
     client_secret = hexlify(os.urandom(32)).decode()
     return client_secret
 
-
-def is_url_safe(url):
+# Returns 0 if url is safe/valid
+# Returns 1 if url doesn't start with https://
+# Returns 2 if url is not valid format
+# Returns 3 if url is in our blacklist
+# Returns 4 if url is not public
+def is_url_not_safe(url):
     if not url.startswith("https://"):
-        return False
+        return 1
 
     if not validators.url(url, public=True):
-        return False
+        if validators.url(url, public=False):
+            return 4
+        return 2
 
     whitelist_urls = os.environ["WHITELISTED_CALLBACK_URLS"].split(';')
     if url in whitelist_urls:
-        return True
+        return 0
 
     forbidden_urls = os.environ["FORBIDDEN_CALLBACK_URLS"].split(';')
     for furl in forbidden_urls:
         if furl in url:
-            return False
+            return 3
 
-    return True
+    return 0
 
 
 def generate_secret():

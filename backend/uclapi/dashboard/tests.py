@@ -6,7 +6,7 @@ from rest_framework.test import APIRequestFactory
 from django.conf import settings
 import redis
 
-from .app_helpers import is_url_safe, generate_api_token, \
+from .app_helpers import is_url_not_safe, generate_api_token, \
     generate_app_client_id, generate_app_client_secret, \
     generate_app_id, get_articles
 from .middleware.fake_shibboleth_middleware import FakeShibbolethMiddleWare
@@ -102,13 +102,13 @@ class DashboardTestCase(TestCase):
         self.assertContains(res, "Test testington")
 
     def test_unsafe_urls(self):
-        assert not is_url_safe("ftp://test.com")
-        assert not is_url_safe("https://uclapi.com/callback")
-        assert not is_url_safe("ssh://uclapi.com/callback")
+        assert is_url_not_safe("ftp://test.com")
+        assert is_url_not_safe("https://uclapi.com/callback")
+        assert is_url_not_safe("ssh://uclapi.com/callback")
 
     def test_safe_url(self):
-        assert is_url_safe("https://mytestapp.com/callback")
-        assert is_url_safe("https://uclapiexample.com/callback")
+        assert not is_url_not_safe("https://mytestapp.com/callback")
+        assert not is_url_not_safe("https://uclapiexample.com/callback")
 
 
 class FakeShibbolethMiddleWareTestCase(TestCase):
@@ -183,38 +183,38 @@ class DashboardAppHelpersTestCase(TestCase):
 
 class URLSafetyTestCase(TestCase):
     def test_is_url_safe_full_success(self):
-        self.assertTrue(
-            is_url_safe("https://example.com")
+        self.assertFalse(
+            is_url_not_safe("https://example.com")
         )
 
     def test_is_url_safe_https_failure(self):
-        self.assertFalse(
-            is_url_safe("http://example.com")
+        self.assertTrue(
+            is_url_not_safe("http://example.com")
         )
 
     def test_is_url_safe_validators_failure(self):
-        self.assertFalse(
-            is_url_safe("https://asdasd.asd.asd.asd.1234")
+        self.assertTrue(
+            is_url_not_safe("https://asdasd.asd.asd.asd.1234")
         )
 
     def test_is_url_safe_validators_failure_private(self):
-        self.assertFalse(
-            is_url_safe("https://127.0.0.1")
+        self.assertTrue(
+            is_url_not_safe("https://127.0.0.1")
         )
 
     def test_is_url_safe_validators_failure_private2(self):
-        self.assertFalse(
-            is_url_safe("https://10.0.0.1")
+        self.assertTrue(
+            is_url_not_safe("https://10.0.0.1")
         )
 
     def test_is_url_safe_forbidden(self):
-        self.assertFalse(
-            is_url_safe("https://uclapi.com/test/test")
+        self.assertTrue(
+            is_url_not_safe("https://uclapi.com/test/test")
         )
 
     def test_is_url_safe_forbidden2(self):
-        self.assertFalse(
-            is_url_safe("https://staging.ninja/test/test")
+        self.assertTrue(
+            is_url_not_safe("https://staging.ninja/test/test")
         )
     # Testcase for whitelisted URL needed
 
@@ -311,7 +311,7 @@ class WebHookRequestViewTests(TestCase):
         )
 
     @patch("dashboard.webhook_views.verify_ownership", lambda *args: False)
-    @patch("dashboard.webhook_views.is_url_safe", lambda *args: True)
+    @patch("dashboard.webhook_views.is_url_not_safe", lambda *args: False)
     def test_edit_webhook_POST_ownership_verification_fail(
         self
     ):
@@ -338,7 +338,7 @@ class WebHookRequestViewTests(TestCase):
         )
 
     @patch("dashboard.webhook_views.verify_ownership", lambda *args: True)
-    @patch("dashboard.webhook_views.is_url_safe", lambda *args: True)
+    @patch("dashboard.webhook_views.is_url_not_safe", lambda *args: False)
     @patch("keen.add_event", lambda *args: None)
     def test_edit_webhook_POST_user_owns_app_changing_url_verification_ok(
         self
@@ -831,7 +831,7 @@ class ApiApplicationsTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             content["message"],
-            "The requested callback URL is not valid."
+            "The requested callback URL does not start with 'https://'."
         )
 
     def test_change_callback_url_success(self):
