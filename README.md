@@ -299,7 +299,7 @@ To test the timetables system you can run ```python manage.py test_personal_time
 To update the blogs displayed on frontpage you can run the command ```python manage.py update_medium```. This will retrieve a number of articles from our blog and insert them into the front-end. The amount retrieved is set in settings.py with the varibale `MEDIUM_ARTICLE_QUANTITY` **Note: the front end does not require rebuilding after this**
 
 ### Database Updating Commands
-These were covered above but for completeness you have at your disposal these commands to switch the lock of the database and then update them. The mini occupeye cache only caches a small subset of data while the full one caches everything. In prod the mini is run every 2 mins while the full one is run every day at 2 AM.
+These were covered above but for completeness you have at your disposal the following commands to set up a database lock and then update the cached data from Oracle. We also provide two caching commands for the OccupEye study space sensor data. The mini OccupEye cache only caches a small subset of data (e.g. current sensor states) while the standard cache command caches everything. In prod the mini cache operation is run every 2 mins (and takes approx. 15-20s) while the full one is run every day at 2 AM (and takes approx. 2-3 minutes).
 ```
 python manage.py create_lock
 python manage.py update_gencache
