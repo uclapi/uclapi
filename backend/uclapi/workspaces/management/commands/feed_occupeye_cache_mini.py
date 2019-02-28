@@ -5,7 +5,7 @@ from workspaces.occupeye.cache import OccupeyeCache
 
 class Command(BaseCommand):
     help = (
-        'Caches current OccupEye data into redis'
+        'Caches current OccupEye sensor statuses into Redis'
     )
 
     def handle(self, *args, **options):
