@@ -202,6 +202,27 @@ class Command(BaseCommand):
     help = 'Clones timetable and booking related databases from Oracle into PostgreSQL'
 
     def handle(self, *args, **options):
+        # We first check if we are already caching so that we don't
+        # tread over ourselves by trying to cache twice at once
+        print("Connecting to Redis")
+        self._redis = redis.Redis(
+            host=settings.REDIS_UCLAPI_HOST,
+            charset="utf-8",
+            decode_responses=True
+        )
+
+        cache_running_key = "cron:gencache:in_progress"
+        running = self._redis.get(cache_running_key)
+        if running:
+            print("## A gencache update job is still in progress ##")
+            return
+
+        # There is no other job running so we can cache now
+        # We set the TTL to 2700 seconds = 45 minutes, the maximum time
+        # that the cache operation could ever take before we consider it
+        # to have died or failed.
+        self._redis.set(cache_running_key, "True", ex=2700)
+
         lock = Lock.objects.all()[0]
         destination_table_index = 2 if lock.a else 1
 
@@ -217,12 +238,6 @@ class Command(BaseCommand):
         lock.a, lock.b = not lock.a, not lock.b
         lock.save()
 
-        print("Connecting to Redis")
-        self._redis = redis.Redis(
-            host=settings.REDIS_UCLAPI_HOST,
-            charset="utf-8",
-            decode_responses=True
-        )
         print("Setting Last-Modified key")
         last_modified_key = "http:headers:Last-Modified:gencache"
 
@@ -230,5 +245,9 @@ class Command(BaseCommand):
             timespec='seconds'
         )
         self._redis.set(last_modified_key, current_timestamp)
+
+        # Cache has been run now, so we can delete the key to allow it
+        # to be run again in the future.
+        self._redis.delete(cache_running_key)
 
         call_command('trigger_webhooks')

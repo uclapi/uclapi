@@ -75,24 +75,6 @@ def get_cache(model_name):
     return model
 
 
-def get_student_by_upi(upi):
-    """Returns a StudentA or StudentB object by UPI"""
-    students = get_cache("students")
-    # Assume the current Set ID due to caching
-    upi_upper = upi.upper()
-    student = students.objects.filter(
-        qtype2=upi_upper
-    )[0]
-    return student
-
-
-def _get_student_modules(student):
-    """Returns all Stumodules object by for a given student"""
-    stumodules = get_cache("stumodules")
-    student_modules = stumodules.objects.filter(studentid=student.studentid)
-    return student_modules
-
-
 def _get_full_department_name(department_code):
     """Converts a department code, such as COMPS_ENG, into a full name
     such as Computer Science"""
@@ -149,11 +131,9 @@ def _get_instance_details(instid):
     return data
 
 
-def _get_timetable_events(full_modules, stumodules):
+def _get_timetable_events(full_modules):
     """
-    Gets a dictionary of timetabled events.
-    If stumodules=True then assume full_modules = [Stumodules]
-    If stumodules=False then assume full_modules [ModuleA] or [ModuleB]
+    Gets a dictionary of timetabled events for a list of Module objects
     """
     if not _week_map:
         _map_weeks()
@@ -166,31 +146,17 @@ def _get_timetable_events(full_modules, stumodules):
     full_timetable = {}
     modules_chosen = {}
     for module in full_modules:
-        key = str(module.moduleid)+" "+str(module.instid)
-        lab_key = key+str(module.modgrpcode)
+        key = str(module.moduleid) + " " + str(module.instid)
+        lab_key = key + str(module.modgrpcode)
         if key in modules_chosen:
             del modules_chosen[key]
         modules_chosen[lab_key] = module
 
     for _, module in modules_chosen.items():
-        if stumodules:
-            # Get events for the lab group assigned
-            # Also include general lecture events (via the or operator)
-            events_data = timetable.objects.filter(
-                Q(modgrpcode=module.modgrpcode) | Q(modgrpcode='') | Q(modgrpcode=None),  # noqa
-                moduleid=module.moduleid,
-                instid=module.instid
-            )
-            module_data = modules.objects.get(
-                moduleid=module.moduleid,
-                instid=module.instid
-            )
-        else:
-            events_data = timetable.objects.filter(
-                moduleid=module.moduleid,
-                instid=module.instid
-            )
-            module_data = module
+        events_data = timetable.objects.filter(
+            moduleid=module.moduleid,
+            instid=module.instid
+        )
         instance_data = _get_instance_details(module.instid)
         for event in events_data:
             if event.slotid not in event_bookings_list:
@@ -207,18 +173,18 @@ def _get_timetable_events(full_modules, stumodules):
                         "end_time": event.finishtime,
                         "duration": event.duration,
                         "module": {
-                            "module_id": module_data.moduleid,
+                            "module_id": module.moduleid,
                             "department_id": event.owner,
                             "department_name": _get_full_department_name(
                                 event.owner
                             ),
-                            "name": module_data.name
+                            "name": module.name
                         },
                         "location": _get_location_details(
                             event.siteid,
                             event.roomid
                         ),
-                        "session_title": module_data.name,
+                        "session_title": module.name,
                         "session_type": event.moduletype,
                         "session_type_str": _get_session_type_str(
                             event.moduletype
@@ -226,16 +192,6 @@ def _get_timetable_events(full_modules, stumodules):
                         "contact": "Unknown",
                         "instance": instance_data
                     }
-
-                    # If this is student module data, add in the group code
-                    # because we have that field in Stumodules
-                    if stumodules:
-                        event_data["session_group"] = event.modgrpcode
-                        if event.modgrpcode != '':
-                            event_data["session_title"] = "{} ({})".format(
-                                module_data.name,
-                                event.modgrpcode
-                            )
 
                     # Check if the module timetable event's Lecturer ID
                     # exists. If not, we use the Lecturer ID associated
@@ -250,13 +206,12 @@ def _get_timetable_events(full_modules, stumodules):
                             _get_lecturer_details(event.lecturerid)
                     else:
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(module_data.lecturerid)
+                            _get_lecturer_details(module.lecturerid)
 
                     date_str = date.strftime("%Y-%m-%d")
                     if date_str not in full_timetable:
                         full_timetable[date_str] = []
                     full_timetable[date_str].append(event_data)
-
             else:
                 for booking in event_bookings:
                     event_data = {
@@ -264,12 +219,12 @@ def _get_timetable_events(full_modules, stumodules):
                         "end_time": booking.finishtime,
                         "duration": event.duration,
                         "module": {
-                            "module_id": module_data.moduleid,
+                            "module_id": module.moduleid,
                             "department_id": event.owner,
                             "department_name": _get_full_department_name(
                                 event.owner
                             ),
-                            "name": module_data.name
+                            "name": module.name
                         },
                         "location": _get_location_details(
                             booking.siteid,
@@ -284,11 +239,6 @@ def _get_timetable_events(full_modules, stumodules):
                         "instance": instance_data
                     }
 
-                    # If this is student module data, add in the group code
-                    # because we have that field in Stumodules
-                    if stumodules:
-                        event_data["session_group"] = module.modgrpcode
-
                     # Check if the module timetable event's Lecturer ID
                     # exists. If not, we use the Lecturer ID associated
                     # with the module as a whole. It's an ugly hack, but
@@ -302,7 +252,7 @@ def _get_timetable_events(full_modules, stumodules):
                             _get_lecturer_details(event.lecturerid)
                     else:
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(module_data.lecturerid)
+                            _get_lecturer_details(module.lecturerid)
 
                     date_str = booking.startdatetime.strftime("%Y-%m-%d")
                     if date_str not in full_timetable:
@@ -422,7 +372,6 @@ def get_student_timetable(upi, date_filter=None):
         student_events = json.loads(data)
     else:
         student_events = get_personal_timetable(upi)
-        print(student_events)
         # Celery task to cache for the next request
         cache_student_timetable.delay(upi, student_events)
 
