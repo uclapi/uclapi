@@ -27,11 +27,10 @@ def get_personal_timetable_rows(upi):
 
     with raw_connection.cursor(cursor_factory=RealDictCursor) as cursor:
         cursor.callproc(
-            'get_student_timetable',
+            'get_student_timetable_' + bucket,
             [
                 upi,
-                set_id,
-                bucket
+                set_id
             ]
         )
         rows = cursor.fetchall()

@@ -5,30 +5,43 @@ from __future__ import unicode_literals
 import os
 
 from django.db import migrations
-
+from jinjasql import JinjaSql
 
 class Migration(migrations.Migration):
-
-    path_to_sql = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
-        'sql',
-        'generate_student_timetable.sql'
-    )
-
-    with open(path_to_sql, 'r') as sql_file:
-        sql_script = sql_file.read()
 
     dependencies = [
         ('timetable', '0010_auto_20190220_1835'),
     ]
 
+    path_to_sql = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+        'sql',
+        'generate_student_timetable_template.sql'
+    )
+
+    with open(path_to_sql, 'r') as sql_file:
+        template = sql_file.read()
+
+    j = JinjaSql()
+
+    query_a, _ = j.prepare_query(template, { "bucket_id": "a" })
+    query_b, _ = j.prepare_query(template, { "bucket_id": "b" })
+
     operations = [
         migrations.RunSQL(
-            'DROP FUNCTION IF EXISTS get_student_timetable(TEXT, TEXT, TEXT, TEXT);',
+            'DROP FUNCTION IF EXISTS get_student_timetable_a(TEXT, TEXT, TEXT, TEXT);',
             hints={"type": "raw_sql"}
         ),
         migrations.RunSQL(
-            sql_script,
+            'DROP FUNCTION IF EXISTS get_student_timetable_b(TEXT, TEXT, TEXT, TEXT);',
             hints={"type": "raw_sql"}
-        )
+        ),
+        migrations.RunSQL(
+            query_a,
+            hints={"type": "raw_sql"}
+        ),
+        migrations.RunSQL(
+            query_b,
+            hints={"type": "raw_sql"}
+        ),
     ]
