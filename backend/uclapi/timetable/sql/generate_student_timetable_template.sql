@@ -340,7 +340,7 @@ LEFT OUTER JOIN timetable_lecturer{{ bucket_id | sqlsafe }} lecturer
 LEFT OUTER JOIN timetable_sites{{ bucket_id | sqlsafe }} sites
     ON sites.siteid = tt.siteid
     AND sites.setid  = tes.setid
-LEFT OUTER JOIN timetable_rooms{{ bucket_id | sqlsafe }} rooms
+LEFT OUTER JOIN roombookings_room{{ bucket_id | sqlsafe }} rooms
     ON rooms.roomid = tt.roomid
     AND rooms.siteid = tt.siteid
     AND rooms.setid  = tes.setid
