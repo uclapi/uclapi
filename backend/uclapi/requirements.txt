@@ -1,5 +1,4 @@
 amqp==2.4.1
-billiard==3.6.0.0
 boto3==1.9.101
 botocore==1.12.101
 celery==4.2.1
@@ -24,7 +23,6 @@ greenlet==0.4.15
 gunicorn==19.9.0
 hiredis==1.0.0
 idna==2.8
-Jinja2==2.1.0
 jinjasql==0.1.7
 jmespath==0.9.3
 jsonpickle==1.1

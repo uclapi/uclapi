@@ -120,7 +120,7 @@ DATABASES = {
         'USER': os.environ.get("DB_UCLAPI_USERNAME"),
         'PASSWORD': os.environ.get("DB_UCLAPI_PASSWORD"),
         'HOST': os.environ.get("DB_UCLAPI_HOST"),
-        'PORT': os.environ.get("DB_UCLAPI_PORT")
+        'PORT': os.environ.get("DB_UCLAPI_PORT"),
     },
     'roombookings': {
         'ENGINE': 'django.db.backends.oracle',
@@ -128,7 +128,8 @@ DATABASES = {
         'USER': os.environ.get("DB_ROOMS_USERNAME"),
         'PASSWORD': os.environ.get("DB_ROOMS_PASSWORD"),
         'HOST': '',
-        'PORT': ''
+        'PORT': '',
+        'OPTIONS': {'threaded': True}
     },
     'gencache': {
         'ENGINE': 'django_postgrespool2',
@@ -136,7 +137,7 @@ DATABASES = {
         'USER': os.environ.get("DB_CACHE_USERNAME"),
         'PASSWORD': os.environ.get("DB_CACHE_PASSWORD"),
         'HOST': os.environ.get("DB_CACHE_HOST"),
-        'PORT': os.environ.get("DB_CACHE_PORT")
+        'PORT': os.environ.get("DB_CACHE_PORT"),
     }
 }
 

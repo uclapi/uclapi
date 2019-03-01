@@ -4,7 +4,7 @@ import sys
 
 import django
 import redis
-
+import time
 from datetime import datetime
 from multiprocessing import Pool, Process
 
@@ -58,8 +58,8 @@ from timetable.models import \
     )
     """
 tables = [
-    (Booking, BookingA, BookingB, True, True, True),
     (Cminstances, CminstancesA, CminstancesB, True, False, False),
+    (Booking, BookingA, BookingB, True, True, True),
     (Course, CourseA, CourseB, True, False, False),
     (Depts, DeptsA, DeptsB, False, False, False),
     (Lecturer, LecturerA, LecturerB, True, False, True),
@@ -96,25 +96,28 @@ tables = [
 # More efficient QuerySet iterator that won't kill our RAM usage
 # https://stackoverflow.com/a/5188179
 class FriendlyQuerySetIterator(object):
-    def __init__(self, queryset, object_limit, progress_offset=0):
+    def __init__(self, queryset, object_limit, table_name, progress_offset=0):
         self._queryset = queryset
         self._generator = self._setup()
         self.object_limit = object_limit
+        self.progress_offset = progress_offset
+        self.table_name = table_name
 
     def _setup(self):
         record_count = self._queryset.count()
-        progress_title = "Chunk caching [{} records]".format(
-            record_count
+        progress_title = "Chunk caching [{} records] from {}".format(
+            record_count,
+            self.table_name
         )
         prog = tqdm(
             desc=progress_title,
-            position=progress_offset + 1,
-            total=100
+            position=self.progress_offset + 1,
+            total=record_count
         )
         prog.update(0)
         for i in range(0, record_count, self.object_limit):
             # update_progress(progress_title, i / record_count)
-            prog.update(i / record_count * 100)
+
             gc.collect()
             # By making a copy of of the queryset and using that to actually access
             # the objects we ensure that there are only object_limit objects in
@@ -122,10 +125,15 @@ class FriendlyQuerySetIterator(object):
             sub_queryset = copy.deepcopy(self._queryset)[i:i + self.object_limit]
             for obj in sub_queryset.iterator():
                 yield obj
+                prog.update(1)
+            #if(record_count-i > self.object_limit):
+            #    prog.update(self.object_limit)
+            #else:
+            #    prog.update(record_count-i)
 
         # When complete
         # update_progress(progress_title, 1)
-        prog.update(100)
+        prog.close()
 
     def __iter__(self):
         return self
@@ -138,7 +146,7 @@ def cache_table_process(index, destination_table_index):
      # Number of objects to load into RAM at once from Oracle when chunking.
     load_batch_size = 20000
     # Maxmimum number of objects to insert into PostgreSQL at once.
-    insert_batch_size = 40000
+    insert_batch_size = 20000
 
     table_data = tables[index]
     # Only pulls in objects which apply to this year's Set ID
@@ -168,7 +176,7 @@ def cache_table_process(index, destination_table_index):
     # Decide whether to use a chunked query or not
     if table_data[5]:
         new_objs = []
-        for obj in FriendlyQuerySetIterator(objs, load_batch_size, index):
+        for obj in FriendlyQuerySetIterator(objs, load_batch_size, table_data[0].__name__, index):
             new_objs.append(table_data[destination_table_index](
                 **dict(
                     map(lambda k: (k, getattr(obj, k)),
@@ -195,7 +203,7 @@ def cache_table_process(index, destination_table_index):
         prog = tqdm(
             desc=ram_load_header,
             position=index + 1,
-            total=100
+            total=item_count
         )
         # update_progress(ram_load_header, 0)
         prog.update(0)
@@ -205,11 +213,12 @@ def cache_table_process(index, destination_table_index):
                     map(lambda k: (k, getattr(obj, k)),
                         map(lambda l: l.name, obj._meta.get_fields())))
             ))
-            if len(new_objs) % load_batch_size == 0:
-                prog.update(len(new_objs) / item_count * 100)
+            prog.update(1)
+            #if len(new_objs) % load_batch_size == 0:
+                #prog.update(load_batch_size)
                 # update_progress(ram_load_header, len(new_objs) / item_count)
         # update_progress(ram_load_header, 1)
-        prog.update(100)
+        prog.close()
         # print("Now batch inserting into PostgreSQL (this may take some time)...")
         table_data[destination_table_index].objects.using(
             'gencache'
@@ -220,6 +229,7 @@ class Command(BaseCommand):
     help = 'Clones timetable and booking related databases from Oracle into PostgreSQL'
 
     def handle(self, *args, **options):
+        start_time = time.time()
         # We first check if we are already caching so that we don't
         # tread over ourselves by trying to cache twice at once
         print("Connecting to Redis")
@@ -254,7 +264,12 @@ class Command(BaseCommand):
 
             pool.close()
             pool.join()
-
+        for i in tables:
+            print()
+        print()
+        elapsed_time = time.time() - start_time
+        #print(elapsed_time)
+        #pause_me = input()
         # for i in range(0, len(tables)):
         #     p = Process(
         #         target=cache_table_process,
