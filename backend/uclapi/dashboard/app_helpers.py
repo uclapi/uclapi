@@ -13,6 +13,10 @@ import redis
 import textwrap
 import validators
 
+NOT_HTTPS = 1
+NOT_VALID = 2
+URL_BLACKLISTED = 3
+NOT_PUBLIC = 4
 
 def get_articles():
     r = redis.Redis(host=REDIS_UCLAPI_HOST)
@@ -72,20 +76,14 @@ def generate_app_client_secret():
     client_secret = hexlify(os.urandom(32)).decode()
     return client_secret
 
-
-# Returns 0 if url is safe/valid
-# Returns 1 if url doesn't start with https://
-# Returns 2 if url is not valid format
-# Returns 3 if url is in our blacklist
-# Returns 4 if url is not public
-def is_url_not_safe(url):
+def is_url_unsafe(url):
     if not url.startswith("https://"):
-        return 1
+        return NOT_HTTPS
 
     if not validators.url(url, public=True):
         if validators.url(url, public=False):
-            return 4
-        return 2
+            return NOT_PUBLIC
+        return NOT_VALID
 
     whitelist_urls = os.environ["WHITELISTED_CALLBACK_URLS"].split(';')
     if url in whitelist_urls:
@@ -94,7 +92,7 @@ def is_url_not_safe(url):
     forbidden_urls = os.environ["FORBIDDEN_CALLBACK_URLS"].split(';')
     for furl in forbidden_urls:
         if furl in url:
-            return 3
+            return URL_BLACKLISTED
 
     return 0
 

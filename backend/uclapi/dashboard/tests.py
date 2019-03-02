@@ -6,7 +6,7 @@ from rest_framework.test import APIRequestFactory
 from django.conf import settings
 import redis
 
-from .app_helpers import is_url_not_safe, generate_api_token, \
+from .app_helpers import is_url_unsafe, generate_api_token, \
     generate_app_client_id, generate_app_client_secret, \
     generate_app_id, get_articles
 from .middleware.fake_shibboleth_middleware import FakeShibbolethMiddleWare
@@ -102,13 +102,13 @@ class DashboardTestCase(TestCase):
         self.assertContains(res, "Test testington")
 
     def test_unsafe_urls(self):
-        assert is_url_not_safe("ftp://test.com")
-        assert is_url_not_safe("https://uclapi.com/callback")
-        assert is_url_not_safe("ssh://uclapi.com/callback")
+        assert is_url_unsafe("ftp://test.com")
+        assert is_url_unsafe("https://uclapi.com/callback")
+        assert is_url_unsafe("ssh://uclapi.com/callback")
 
     def test_safe_url(self):
-        assert not is_url_not_safe("https://mytestapp.com/callback")
-        assert not is_url_not_safe("https://uclapiexample.com/callback")
+        assert not is_url_unsafe("https://mytestapp.com/callback")
+        assert not is_url_unsafe("https://uclapiexample.com/callback")
 
 
 class FakeShibbolethMiddleWareTestCase(TestCase):
@@ -184,37 +184,37 @@ class DashboardAppHelpersTestCase(TestCase):
 class URLSafetyTestCase(TestCase):
     def test_is_url_safe_full_success(self):
         self.assertFalse(
-            is_url_not_safe("https://example.com")
+            is_url_unsafe("https://example.com")
         )
 
     def test_is_url_safe_https_failure(self):
         self.assertTrue(
-            is_url_not_safe("http://example.com")
+            is_url_unsafe("http://example.com")
         )
 
     def test_is_url_safe_validators_failure(self):
         self.assertTrue(
-            is_url_not_safe("https://asdasd.asd.asd.asd.1234")
+            is_url_unsafe("https://asdasd.asd.asd.asd.1234")
         )
 
     def test_is_url_safe_validators_failure_private(self):
         self.assertTrue(
-            is_url_not_safe("https://127.0.0.1")
+            is_url_unsafe("https://127.0.0.1")
         )
 
     def test_is_url_safe_validators_failure_private2(self):
         self.assertTrue(
-            is_url_not_safe("https://10.0.0.1")
+            is_url_unsafe("https://10.0.0.1")
         )
 
     def test_is_url_safe_forbidden(self):
         self.assertTrue(
-            is_url_not_safe("https://uclapi.com/test/test")
+            is_url_unsafe("https://uclapi.com/test/test")
         )
 
     def test_is_url_safe_forbidden2(self):
         self.assertTrue(
-            is_url_not_safe("https://staging.ninja/test/test")
+            is_url_unsafe("https://staging.ninja/test/test")
         )
     # Testcase for whitelisted URL needed
 
@@ -311,7 +311,7 @@ class WebHookRequestViewTests(TestCase):
         )
 
     @patch("dashboard.webhook_views.verify_ownership", lambda *args: False)
-    @patch("dashboard.webhook_views.is_url_not_safe", lambda *args: False)
+    @patch("dashboard.webhook_views.is_url_unsafe", lambda *args: False)
     def test_edit_webhook_POST_ownership_verification_fail(
         self
     ):
@@ -338,7 +338,7 @@ class WebHookRequestViewTests(TestCase):
         )
 
     @patch("dashboard.webhook_views.verify_ownership", lambda *args: True)
-    @patch("dashboard.webhook_views.is_url_not_safe", lambda *args: False)
+    @patch("dashboard.webhook_views.is_url_unsafe", lambda *args: False)
     @patch("keen.add_event", lambda *args: None)
     def test_edit_webhook_POST_user_owns_app_changing_url_verification_ok(
         self
