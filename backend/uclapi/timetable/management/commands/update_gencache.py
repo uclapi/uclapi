@@ -160,7 +160,7 @@ def cache_table_process(index, destination_table_index):
             setid=settings.ROOMBOOKINGS_SETID
         )
     else:
-        objs = table_data[0].objects.iterator()
+        objs = table_data[0].objects.all()
 
     # print("Inserting contents of {} into {}...".format(
     #     table_data[0].__name__,
