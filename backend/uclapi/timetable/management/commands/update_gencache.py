@@ -4,7 +4,9 @@ import sys
 
 import django
 import redis
+
 import time
+
 from datetime import datetime
 from multiprocessing import Pool, Process
 
@@ -95,6 +97,8 @@ tables = [
 
 # More efficient QuerySet iterator that won't kill our RAM usage
 # https://stackoverflow.com/a/5188179
+
+
 class FriendlyQuerySetIterator(object):
     def __init__(self, queryset, object_limit, table_name, progress_offset=0):
         self._queryset = queryset
@@ -115,17 +119,18 @@ class FriendlyQuerySetIterator(object):
             total=record_count
         )
         prog.update(0)
-        for i in range(0, record_count, self.object_limit):
+        #for i in range(0, record_count, self.object_limit):
             # update_progress(progress_title, i / record_count)
 
-            gc.collect()
+        gc.collect()
             # By making a copy of of the queryset and using that to actually access
             # the objects we ensure that there are only object_limit objects in
             # memory at any given time
-            sub_queryset = copy.deepcopy(self._queryset)[i:i + self.object_limit]
-            for obj in sub_queryset.iterator():
-                yield obj
-                prog.update(1)
+            #sub_queryset = copy.deepcopy(self._queryset)[i:i + self.object_limit]
+        for obj in self._queryset.iterator():
+            #for obj in sub_queryset.iterator():
+            yield obj
+            prog.update(1)
             #if(record_count-i > self.object_limit):
             #    prog.update(self.object_limit)
             #else:
@@ -146,7 +151,7 @@ def cache_table_process(index, destination_table_index):
      # Number of objects to load into RAM at once from Oracle when chunking.
     load_batch_size = 20000
     # Maxmimum number of objects to insert into PostgreSQL at once.
-    insert_batch_size = 20000
+    insert_batch_size = 40000
 
     table_data = tables[index]
     # Only pulls in objects which apply to this year's Set ID
@@ -155,7 +160,7 @@ def cache_table_process(index, destination_table_index):
             setid=settings.ROOMBOOKINGS_SETID
         )
     else:
-        objs = table_data[0].objects.all()
+        objs = table_data[0].objects.iterator()
 
     # print("Inserting contents of {} into {}...".format(
     #     table_data[0].__name__,
@@ -172,7 +177,6 @@ def cache_table_process(index, destination_table_index):
                 table_data[destination_table_index].__name__.lower()
         )
     )
-
     # Decide whether to use a chunked query or not
     if table_data[5]:
         new_objs = []
@@ -187,6 +191,7 @@ def cache_table_process(index, destination_table_index):
                     'gencache'
                 ).bulk_create(new_objs, batch_size=insert_batch_size)
                 new_objs.clear()
+                gc.collect()
 
         # Insert any items left over
         table_data[destination_table_index].objects.using(
@@ -223,6 +228,8 @@ def cache_table_process(index, destination_table_index):
         table_data[destination_table_index].objects.using(
             'gencache'
         ).bulk_create(new_objs, batch_size=insert_batch_size)
+        new_objs.clear()
+        gc.collect()
 
 
 class Command(BaseCommand):
