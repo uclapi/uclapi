@@ -60,8 +60,8 @@ from timetable.models import \
     )
     """
 tables = [
-    (Cminstances, CminstancesA, CminstancesB, True, False, False),
     (Booking, BookingA, BookingB, True, True, True),
+    (Cminstances, CminstancesA, CminstancesB, True, False, False),
     (Course, CourseA, CourseB, True, False, False),
     (Depts, DeptsA, DeptsB, False, False, False),
     (Lecturer, LecturerA, LecturerB, True, False, True),
@@ -69,7 +69,7 @@ tables = [
     (Room, RoomA, RoomB, True, True, False),
     (Sites, SitesA, SitesB, True, False, False),
     (Stuclasses, StuclassesA, StuclassesB, True, False, False),
-    (Stumodules, StumodulesA, StumodulesB, True, False, False),
+    (Stumodules, StumodulesA, StumodulesB, True, False, True),
     (Students, StudentsA, StudentsB, True, False, True),
     (Timetable, TimetableA, TimetableB, True, False, True),
     (Modulegroups, ModulegroupsA, ModulegroupsB, True, False, True),
@@ -149,43 +149,138 @@ class FriendlyQuerySetIterator(object):
 
 def cache_table_process(index, destination_table_index):
      # Number of objects to load into RAM at once from Oracle when chunking.
-    load_batch_size = 20000
+    load_batch_size = 10000
     # Maxmimum number of objects to insert into PostgreSQL at once.
-    insert_batch_size = 40000
+    insert_batch_size = 5000
 
     table_data = tables[index]
-    # Only pulls in objects which apply to this year's Set ID
-    if table_data[3]:
-        objs = table_data[0].objects.filter(
-            setid=settings.ROOMBOOKINGS_SETID
+
+    # Delete existing cached data
+    gencache_cursor = connections['gencache'].cursor()
+    table_prefix = "roombookings_" if table_data[4] else "timetable_"
+    gencache_cursor.execute(
+        "TRUNCATE TABLE {}{} RESTART IDENTITY;".format(
+                table_prefix,
+                table_data[destination_table_index].__name__.lower()
         )
-    else:
-        objs = table_data[0].objects.all()
+    )
+
+    # if table_data[3]:
+    #     objs = table_data[0].objects.filter(
+    #         setid=settings.ROOMBOOKINGS_SETID
+    #     )
+    # else:
+    #     objs = table_data[0].objects.all()
+
+    # Only pulls in objects which apply to this year's Set ID
+    
 
     # print("Inserting contents of {} into {}...".format(
     #     table_data[0].__name__,
     #     table_data[destination_table_index].__name__
     # ))
 
-    cursor = connections['gencache'].cursor()
-
-    table_prefix = "roombookings_" if table_data[4] else "timetable_"
-
-    cursor.execute(
-        "TRUNCATE TABLE {}{} RESTART IDENTITY;".format(
-                table_prefix,
-                table_data[destination_table_index].__name__.lower()
-        )
-    )
+    
     # Decide whether to use a chunked query or not
     if table_data[5]:
+        oracle_cursor = connections['roombookings'].cursor()
+        if table_data[3]:
+            query = "SELECT COUNT(SETID) FROM {} WHERE SETID = '{}'".format(
+                table_data[0]._meta.db_table,
+                settings.ROOMBOOKINGS_SETID
+            )
+        else:
+            query = "SELECT COUNT(*) FROM {}".format(
+                table_data[0]._meta.db_table
+            )
+        oracle_cursor.execute(query)
+        count_data = oracle_cursor.fetchone()
+        total_records = count_data[0]
+
+        if table_data[3]:
+            query = "SELECT * FROM {} WHERE SETID = '{}'".format(
+                table_data[0]._meta.db_table,
+                settings.ROOMBOOKINGS_SETID
+            )
+        else:
+            query = "SELECT * FROM {}".format(
+                table_data[0]._meta.db_table
+            )
+
+        oracle_cursor.arraysize = load_batch_size
+
+        oracle_cursor.execute(query)
+
+        # def make_dict_factory(cursor):
+        #     column_names = [d[0] for d in cursor.description]
+        #     def create_row(*args):
+        #         return dict(zip(column_names, args))
+        #     return create_row
+        # oracle_cursor.rowfactory = make_dict_factory(oracle_cursor)
+
+        # names = [c[0] for c in oracle_cursor.description]
+        # import collections
+        # oracle_cursor.rowfactory = collections.namedtuple(
+        #     table_data[0]._meta.db_table,
+        #     names
+        # )
+        def columns(cursor):
+            return {cd[0] : i for i, cd in enumerate(cursor.description)}
+        cols = columns(oracle_cursor)
+
+        # print(cols)
+
+        progress_title = "Chunk caching from {} [{} records]".format(
+            table_data[0].__name__,
+            total_records
+        )
+        prog = tqdm(
+            desc=progress_title,
+            position=index + 1,
+            total=total_records
+        )
+        prog.update(0)
+
         new_objs = []
-        for obj in FriendlyQuerySetIterator(objs, load_batch_size, table_data[0].__name__, index):
-            new_objs.append(table_data[destination_table_index](
-                **dict(
-                    map(lambda k: (k, getattr(obj, k)),
-                        map(lambda l: l.name, obj._meta.get_fields())))
-            ))
+        # for obj in FriendlyQuerySetIterator(objs, load_batch_size, table_data[0].__name__, index):
+        for obj in oracle_cursor.fetchall():
+            # new_objs.append(table_data[destination_table_index](
+            #     **dict(
+            #         map(lambda k: (k, getattr(obj, k)),
+            #             map(lambda l: l.name, obj._meta.get_fields())))
+            # ))
+            # print(obj)
+            # print(**dict(obj))
+            # new_objs.append(table_data[destination_table_index])(**dict(obj))
+            new_obj = {}
+            for k, v in cols.items():
+                if obj[v]:
+                    val = obj[v]
+                else:
+                    if isinstance(obj[v], str):
+                        val = ''
+                    elif isinstance(obj[v], int):
+                        val = 0
+                    else:
+                        val = None
+                new_obj[k.lower()] = val
+            # new_obj = {
+            #     k.lower(): obj[v] if obj[v] else '' for k, v in cols.items()
+            # }
+            new_objs.append(table_data[destination_table_index](**new_obj))
+            # for col in cols:
+            #     new_obj[col]
+            # new_objs.append(table_data[destination_table_index] (
+            #     **dict(
+            #         map(lambda k: (k, ))
+            #     )
+            # ))
+            # new_objs.append(table_data[destination_table_index](
+            #     **dict(
+            #         map(lambda k: (k, obj[cols[k]]), cols)
+            #     )
+            # ))
+            prog.update(1)
             if len(new_objs) >= load_batch_size:
                 table_data[destination_table_index].objects.using(
                     'gencache'
@@ -198,6 +293,13 @@ def cache_table_process(index, destination_table_index):
             'gencache'
         ).bulk_create(new_objs, batch_size=insert_batch_size)
     else:
+        if table_data[3]:
+            objs = table_data[0].objects.filter(
+                setid=settings.ROOMBOOKINGS_SETID
+            )
+        else:
+            objs = table_data[0].objects.all()
+
         new_objs = []
         item_count = objs.count()
         ram_load_header = "Loading {} into RAM [{} records]".format(
