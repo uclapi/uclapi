@@ -76,6 +76,7 @@ def generate_app_client_secret():
     client_secret = hexlify(os.urandom(32)).decode()
     return client_secret
 
+
 def is_url_unsafe(url):
     if not url.startswith("https://"):
         return NOT_HTTPS
