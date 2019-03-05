@@ -17,6 +17,7 @@ from django.core.management.base import BaseCommand
 from django.core.paginator import Paginator
 from django.db import connections
 from tqdm import tqdm
+from django import db
 
 
 # Nasty hack to ensure we can initialise models in worker processes
@@ -173,14 +174,14 @@ def cache_table_process(index, destination_table_index):
     #     objs = table_data[0].objects.all()
 
     # Only pulls in objects which apply to this year's Set ID
-    
+
 
     # print("Inserting contents of {} into {}...".format(
     #     table_data[0].__name__,
     #     table_data[destination_table_index].__name__
     # ))
 
-    
+
     # Decide whether to use a chunked query or not
     if table_data[5]:
         oracle_cursor = connections['roombookings'].cursor()
@@ -227,6 +228,7 @@ def cache_table_process(index, destination_table_index):
         def columns(cursor):
             return {cd[0] : i for i, cd in enumerate(cursor.description)}
         cols = columns(oracle_cursor)
+        # oracle_cursor.close()
 
         # print(cols)
 
@@ -243,55 +245,42 @@ def cache_table_process(index, destination_table_index):
 
         new_objs = []
         # for obj in FriendlyQuerySetIterator(objs, load_batch_size, table_data[0].__name__, index):
-        for obj in oracle_cursor.fetchall():
-            # new_objs.append(table_data[destination_table_index](
-            #     **dict(
-            #         map(lambda k: (k, getattr(obj, k)),
-            #             map(lambda l: l.name, obj._meta.get_fields())))
-            # ))
-            # print(obj)
-            # print(**dict(obj))
-            # new_objs.append(table_data[destination_table_index])(**dict(obj))
-            new_obj = {}
-            for k, v in cols.items():
-                if obj[v]:
-                    val = obj[v]
-                else:
-                    if isinstance(obj[v], str):
-                        val = ''
-                    elif isinstance(obj[v], int):
-                        val = 0
+        objs = oracle_cursor.fetchmany(load_batch_size)
+        while objs:
+            for obj in objs:
+
+                new_obj = {}
+                for k, v in cols.items():
+                    if obj[v]:
+                        val = obj[v]
                     else:
-                        val = None
-                new_obj[k.lower()] = val
-            # new_obj = {
-            #     k.lower(): obj[v] if obj[v] else '' for k, v in cols.items()
-            # }
-            new_objs.append(table_data[destination_table_index](**new_obj))
-            # for col in cols:
-            #     new_obj[col]
-            # new_objs.append(table_data[destination_table_index] (
-            #     **dict(
-            #         map(lambda k: (k, ))
-            #     )
-            # ))
-            # new_objs.append(table_data[destination_table_index](
-            #     **dict(
-            #         map(lambda k: (k, obj[cols[k]]), cols)
-            #     )
-            # ))
-            prog.update(1)
-            if len(new_objs) >= load_batch_size:
-                table_data[destination_table_index].objects.using(
-                    'gencache'
-                ).bulk_create(new_objs, batch_size=insert_batch_size)
-                new_objs.clear()
-                gc.collect()
+                        if isinstance(obj[v], str):
+                            val = ''
+                        elif isinstance(obj[v], int):
+                            val = 0
+                        else:
+                            val = None
+                    new_obj[k.lower()] = val
+                # new_obj = {
+                #     k.lower(): obj[v] if obj[v] else '' for k, v in cols.items()
+                # }
+                new_objs.append(table_data[destination_table_index](**new_obj))
+
+                prog.update(1)
+                if len(new_objs) >= load_batch_size:
+                    table_data[destination_table_index].objects.using(
+                        'gencache'
+                    ).bulk_create(new_objs, batch_size=insert_batch_size)
+                    new_objs.clear()
+                    gc.collect()
+            objs = oracle_cursor.fetchmany(load_batch_size)
 
         # Insert any items left over
         table_data[destination_table_index].objects.using(
             'gencache'
         ).bulk_create(new_objs, batch_size=insert_batch_size)
+        del new_objs
+        oracle_cursor.close()
     else:
         if table_data[3]:
             objs = table_data[0].objects.filter(
@@ -331,7 +320,10 @@ def cache_table_process(index, destination_table_index):
             'gencache'
         ).bulk_create(new_objs, batch_size=insert_batch_size)
         new_objs.clear()
-        gc.collect()
+        del new_objs
+        del objs
+    gc.collect()
+    db.reset_queries()
 
 
 class Command(BaseCommand):
@@ -377,7 +369,7 @@ class Command(BaseCommand):
             print()
         print()
         elapsed_time = time.time() - start_time
-        #print(elapsed_time)
+        print(elapsed_time)
         #pause_me = input()
         # for i in range(0, len(tables)):
         #     p = Process(
