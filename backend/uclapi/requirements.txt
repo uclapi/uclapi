@@ -1,4 +1,4 @@
-amqp==2.4.1
+amqp==2.4.2
 boto3==1.9.108
 botocore==1.12.108
 celery==4.2.1
