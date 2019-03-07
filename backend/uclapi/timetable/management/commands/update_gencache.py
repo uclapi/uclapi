@@ -1,6 +1,4 @@
-import copy
 import gc
-import sys
 
 import django
 import redis
@@ -8,13 +6,12 @@ import redis
 import time
 
 from datetime import datetime
-from multiprocessing import Pool, Process
+from multiprocessing import Pool
 
 from django.apps import apps
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
-from django.core.paginator import Paginator
 from django.db import connections
 from tqdm import tqdm
 from django import db
@@ -80,78 +77,12 @@ tables = [
 ]
 
 
-# # Another Stack Exchange solution!
-# # https://blender.stackexchange.com/a/30739
-# def update_progress(job_title, progress, offset=True):
-#     length = 30
-#     block = int(round(length * progress))
-#     msg = "\r{0}: [{1}] {2}%".format(
-#         job_title,
-#         "#"*block + "-"*(length - block),
-#         round(progress * 100, 2)
-#     )
-#     if progress >= 1:
-#         msg += " DONE\r\n"
-#     sys.stdout.write(msg)
-#     sys.stdout.flush()
-
-
-# More efficient QuerySet iterator that won't kill our RAM usage
-# https://stackoverflow.com/a/5188179
-
-
-class FriendlyQuerySetIterator(object):
-    def __init__(self, queryset, object_limit, table_name, progress_offset=0):
-        self._queryset = queryset
-        self._generator = self._setup()
-        self.object_limit = object_limit
-        self.progress_offset = progress_offset
-        self.table_name = table_name
-
-    def _setup(self):
-        record_count = self._queryset.count()
-        progress_title = "Chunk caching [{} records] from {}".format(
-            record_count,
-            self.table_name
-        )
-        prog = tqdm(
-            desc=progress_title,
-            position=self.progress_offset + 1,
-            total=record_count
-        )
-        prog.update(0)
-        #for i in range(0, record_count, self.object_limit):
-            # update_progress(progress_title, i / record_count)
-
-        gc.collect()
-            # By making a copy of of the queryset and using that to actually access
-            # the objects we ensure that there are only object_limit objects in
-            # memory at any given time
-            #sub_queryset = copy.deepcopy(self._queryset)[i:i + self.object_limit]
-        for obj in self._queryset.iterator():
-            #for obj in sub_queryset.iterator():
-            yield obj
-            prog.update(1)
-            #if(record_count-i > self.object_limit):
-            #    prog.update(self.object_limit)
-            #else:
-            #    prog.update(record_count-i)
-
-        # When complete
-        # update_progress(progress_title, 1)
-        prog.close()
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        return self._generator.__next__()
-
-
-def cache_table_process(index, destination_table_index):
-     # Number of objects to load into RAM at once from Oracle when chunking.
+def cache_table_process(index, destination_table_index, options):
+    # Number of objects to load into RAM at once from Oracle
+    # when chunking.
     load_batch_size = 10000
-    # Maxmimum number of objects to insert into PostgreSQL at once.
+    # Maxmimum number of objects to insert into PostgreSQL
+    # at once.
     insert_batch_size = 5000
 
     table_data = tables[index]
@@ -166,22 +97,6 @@ def cache_table_process(index, destination_table_index):
         )
     )
 
-    # if table_data[3]:
-    #     objs = table_data[0].objects.filter(
-    #         setid=settings.ROOMBOOKINGS_SETID
-    #     )
-    # else:
-    #     objs = table_data[0].objects.all()
-
-    # Only pulls in objects which apply to this year's Set ID
-
-
-    # print("Inserting contents of {} into {}...".format(
-    #     table_data[0].__name__,
-    #     table_data[destination_table_index].__name__
-    # ))
-
-
     # Decide whether to use a chunked query or not
     if table_data[5]:
         oracle_cursor = connections['roombookings'].cursor()
@@ -194,6 +109,7 @@ def cache_table_process(index, destination_table_index):
             query = "SELECT COUNT(*) FROM {}".format(
                 table_data[0]._meta.db_table
             )
+
         oracle_cursor.execute(query)
         count_data = oracle_cursor.fetchone()
         total_records = count_data[0]
@@ -212,43 +128,31 @@ def cache_table_process(index, destination_table_index):
 
         oracle_cursor.execute(query)
 
-        # def make_dict_factory(cursor):
-        #     column_names = [d[0] for d in cursor.description]
-        #     def create_row(*args):
-        #         return dict(zip(column_names, args))
-        #     return create_row
-        # oracle_cursor.rowfactory = make_dict_factory(oracle_cursor)
-
-        # names = [c[0] for c in oracle_cursor.description]
-        # import collections
-        # oracle_cursor.rowfactory = collections.namedtuple(
-        #     table_data[0]._meta.db_table,
-        #     names
-        # )
         def columns(cursor):
-            return {cd[0] : i for i, cd in enumerate(cursor.description)}
+            return {cd[0]: i for i, cd in enumerate(cursor.description)}
         cols = columns(oracle_cursor)
-        # oracle_cursor.close()
 
-        # print(cols)
-
-        progress_title = "Chunk caching from {} [{} records]".format(
-            table_data[0].__name__,
-            total_records
-        )
-        prog = tqdm(
-            desc=progress_title,
-            position=index + 1,
-            total=total_records
-        )
-        prog.update(0)
+        if options['unattended']:
+            print("[Start] Chunk caching from {} [{} records]".format(
+                table_data[0].__name__,
+                total_records
+            ))
+        else:
+            progress_title = "Chunk caching from {} [{} records]".format(
+                table_data[0].__name__,
+                total_records
+            )
+            prog = tqdm(
+                desc=progress_title,
+                position=index + 1,
+                total=total_records
+            )
+            prog.update(0)
 
         new_objs = []
-        # for obj in FriendlyQuerySetIterator(objs, load_batch_size, table_data[0].__name__, index):
         objs = oracle_cursor.fetchmany(load_batch_size)
         while objs:
             for obj in objs:
-
                 new_obj = {}
                 for k, v in cols.items():
                     if obj[v]:
@@ -261,18 +165,19 @@ def cache_table_process(index, destination_table_index):
                         else:
                             val = None
                     new_obj[k.lower()] = val
-                # new_obj = {
-                #     k.lower(): obj[v] if obj[v] else '' for k, v in cols.items()
-                # }
+
                 new_objs.append(table_data[destination_table_index](**new_obj))
 
-                prog.update(1)
+                if not options['unattended']:
+                    prog.update(1)
+
                 if len(new_objs) >= load_batch_size:
                     table_data[destination_table_index].objects.using(
                         'gencache'
                     ).bulk_create(new_objs, batch_size=insert_batch_size)
                     new_objs.clear()
                     gc.collect()
+
             objs = oracle_cursor.fetchmany(load_batch_size)
 
         # Insert any items left over
@@ -281,6 +186,11 @@ def cache_table_process(index, destination_table_index):
         ).bulk_create(new_objs, batch_size=insert_batch_size)
         del new_objs
         oracle_cursor.close()
+        if options['unattended']:
+            print("[Done!] Chunk caching from {} [{} records]".format(
+                table_data[0].__name__,
+                total_records
+            ))
     else:
         if table_data[3]:
             objs = table_data[0].objects.filter(
@@ -291,43 +201,75 @@ def cache_table_process(index, destination_table_index):
 
         new_objs = []
         item_count = objs.count()
-        ram_load_header = "Loading {} into RAM [{} records]".format(
-            table_data[0].__name__,
-            item_count
-        )
+        if options['unattended']:
+            print("[Start] Loading {} into RAM [{} records]".format(
+                table_data[0].__name__,
+                total_records
+            ))
+        else:
+            ram_load_header = "Loading {} into RAM [{} records]".format(
+                table_data[0].__name__,
+                item_count
+            )
 
-        prog = tqdm(
-            desc=ram_load_header,
-            position=index + 1,
-            total=item_count
-        )
-        # update_progress(ram_load_header, 0)
-        prog.update(0)
+            prog = tqdm(
+                desc=ram_load_header,
+                position=index + 1,
+                total=item_count
+            )
+            prog.update(0)
+
         for obj in objs:
             new_objs.append(table_data[destination_table_index](
                 **dict(
                     map(lambda k: (k, getattr(obj, k)),
                         map(lambda l: l.name, obj._meta.get_fields())))
             ))
-            prog.update(1)
-            #if len(new_objs) % load_batch_size == 0:
-                #prog.update(load_batch_size)
-                # update_progress(ram_load_header, len(new_objs) / item_count)
-        # update_progress(ram_load_header, 1)
-        prog.close()
-        # print("Now batch inserting into PostgreSQL (this may take some time)...")
+            if not options['unattended']:
+                prog.update(1)
+
+        if not options['unattended']:
+            prog.close()
+
         table_data[destination_table_index].objects.using(
             'gencache'
         ).bulk_create(new_objs, batch_size=insert_batch_size)
         new_objs.clear()
         del new_objs
         del objs
+
+        if options['unattended']:
+            print("[Done!] Loading {} into RAM [{} records]".format(
+                table_data[0].__name__,
+                total_records
+            ))
+
     gc.collect()
     db.reset_queries()
 
 
 class Command(BaseCommand):
-    help = 'Clones timetable and booking related databases from Oracle into PostgreSQL'
+    help = 'Clones databases from Oracle into PostgreSQL'
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--unattended',
+            action='store_true',
+            dest='unattended',
+            default=False,
+            help='Run in unattended mode designed to be piped into a log file'
+        )
+
+        parser.add_argument(
+            '--skip-run-check',
+            action='store_true',
+            dest='skip_run_check',
+            default=False,
+            help=(
+                'The gencache task will run even if there is still a job '
+                'in progress according to Redis'
+            )
+        )
 
     def handle(self, *args, **options):
         start_time = time.time()
@@ -344,7 +286,10 @@ class Command(BaseCommand):
         running = self._redis.get(cache_running_key)
         if running:
             print("## A gencache update job is still in progress ##")
-            # return
+            # Only quit if we haven't specified that we want to override
+            # this check
+            if not options['skip_run_check']:
+                return
 
         # There is no other job running so we can cache now
         # We set the TTL to 2700 seconds = 45 minutes, the maximum time
@@ -359,7 +304,7 @@ class Command(BaseCommand):
             # Build up a list of argument tuples for the child process calls
             pool_args = []
             for i in range(0, len(tables)):
-                pool_args.append((i, destination_table_index))
+                pool_args.append((i, destination_table_index, options))
 
             pool.starmap(cache_table_process, pool_args)
 
@@ -367,17 +312,15 @@ class Command(BaseCommand):
             pool.join()
         for i in tables:
             print()
+
         print()
         elapsed_time = time.time() - start_time
-        print(elapsed_time)
-        #pause_me = input()
-        # for i in range(0, len(tables)):
-        #     p = Process(
-        #         target=cache_table_process,
-        #         args=(i, destination_table_index,)
-        #     )
-        #     p.start()
-        #     p.join()
+        print(
+            "Caching process completed in {}m {%.3g}s".format(
+                elapsed_time // 60,
+                elapsed_time % 60
+            )
+        )
 
         print("Inverting lock")
         lock.a, lock.b = not lock.a, not lock.b
