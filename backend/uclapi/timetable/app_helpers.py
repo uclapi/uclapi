@@ -4,13 +4,10 @@ import json
 import redis
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
 
 from roombookings.models import (
     BookingA,
     BookingB,
-    Location,
-    SiteLocation,
     RoomA,
     RoomB
 )
@@ -139,7 +136,6 @@ def _get_timetable_events(full_modules):
         _map_weeks()
 
     timetable = get_cache("timetable")
-    modules = get_cache("module")
 
     bookings = get_cache("booking")
     event_bookings_list = {}

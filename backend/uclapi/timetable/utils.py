@@ -11,6 +11,7 @@ SESSION_TYPE_MAP = {
 _site_coord_cache = {}
 _room_coord_cache = {}
 
+
 def get_location_coordinates(siteid, roomid):
     # First try and get the specific room's location
     try:

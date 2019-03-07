@@ -51,6 +51,9 @@ def get_personal_timetable(upi):
             lecturer_email = "{}@ucl.ac.uk".format(
                 row['lecturereppn']
             )
+        session_type_str = SESSION_TYPE_MAP[row['sessiontypeid']] \
+            if row['sessiontypeid'] in SESSION_TYPE_MAP else "Unknown"
+
         booking_data = {
             "start_time": row['starttime'],
             "end_time": row['finishtime'],
@@ -85,7 +88,7 @@ def get_personal_timetable(upi):
             },
             "session_title": row['title'],
             "session_type": row['sessiontypeid'],
-            "session_type_str": SESSION_TYPE_MAP[row['sessiontypeid']] if row['sessiontypeid'] in SESSION_TYPE_MAP else "Unknown",
+            "session_type_str": session_type_str,
             "contact": row['condisplayname'],
             "instance": {
                 "delivery": instance.delivery.get_delivery(),
