@@ -24,16 +24,16 @@ class Migration(migrations.Migration):
 
     j = JinjaSql()
 
-    query_a, _ = j.prepare_query(template, { "bucket_id": "a" })
-    query_b, _ = j.prepare_query(template, { "bucket_id": "b" })
+    query_a, _ = j.prepare_query(template, {"bucket_id": "a"})
+    query_b, _ = j.prepare_query(template, {"bucket_id": "b"})
 
     operations = [
         migrations.RunSQL(
-            'DROP FUNCTION IF EXISTS get_student_timetable_a(TEXT, TEXT, TEXT, TEXT);',
+            'DROP FUNCTION IF EXISTS get_student_timetable_a(TEXT, TEXT, TEXT, TEXT);',  # noqa
             hints={"type": "raw_sql"}
         ),
         migrations.RunSQL(
-            'DROP FUNCTION IF EXISTS get_student_timetable_b(TEXT, TEXT, TEXT, TEXT);',
+            'DROP FUNCTION IF EXISTS get_student_timetable_b(TEXT, TEXT, TEXT, TEXT);',  # noqa
             hints={"type": "raw_sql"}
         ),
         migrations.RunSQL(
