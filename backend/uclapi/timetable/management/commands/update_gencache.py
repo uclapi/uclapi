@@ -316,9 +316,9 @@ class Command(BaseCommand):
         print()
         elapsed_time = time.time() - start_time
         print(
-            "Caching process completed in {}m {:.1f}s".format(
-                elapsed_time // 60,
-                elapsed_time % 60
+            "Caching process completed in {}m {}s".format(
+                int(elapsed_time // 60),
+                int(elapsed_time % 60)
             )
         )
 
