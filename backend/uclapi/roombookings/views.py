@@ -225,6 +225,7 @@ def get_free_rooms(request, *args, **kwargs):
     # - Filtered by this academic year only
     # - Anything centrally bookable
     # - All ICH rooms (Site IDs 238 and 240)
+    lock = Lock.objects.all()[0]
     curr = RoomA if not lock.a else RoomB
     all_rooms = curr.objects.filter(
         Q(bookabletype='CB') | Q(siteid='238') | Q(siteid='240')
