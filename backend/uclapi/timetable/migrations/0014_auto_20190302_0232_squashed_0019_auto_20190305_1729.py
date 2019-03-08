@@ -7,8 +7,6 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    replaces = [('timetable', '0014_auto_20190302_0232'), ('timetable', '0015_auto_20190305_0158'), ('timetable', '0016_auto_20190305_0221'), ('timetable', '0017_auto_20190305_0233'), ('timetable', '0018_auto_20190305_0249'), ('timetable', '0019_auto_20190305_1729')]
-
     dependencies = [
         ('timetable', '0013_merge_20190223_2339'),
     ]
