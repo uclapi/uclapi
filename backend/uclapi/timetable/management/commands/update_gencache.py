@@ -204,7 +204,7 @@ def cache_table_process(index, destination_table_index, options):
         if options['unattended']:
             print("[Start] Loading {} into RAM [{} records]".format(
                 table_data[0].__name__,
-                total_records
+                item_count
             ))
         else:
             ram_load_header = "Loading {} into RAM [{} records]".format(
@@ -241,7 +241,7 @@ def cache_table_process(index, destination_table_index, options):
         if options['unattended']:
             print("[Done!] Loading {} into RAM [{} records]".format(
                 table_data[0].__name__,
-                total_records
+                item_count
             ))
 
     gc.collect()
