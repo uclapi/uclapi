@@ -143,7 +143,10 @@ def _get_timetable_events(full_modules):
     modules_chosen = {}
     for module in full_modules:
         key = str(module.moduleid) + " " + str(module.instid)
-        lab_key = key + str(module.modgrpcode)
+        try:
+            lab_key = key + str(module.modgrpcode)
+        except AttributeError:
+            lab_key = key
         if key in modules_chosen:
             del modules_chosen[key]
         modules_chosen[lab_key] = module
