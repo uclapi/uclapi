@@ -221,12 +221,13 @@ def get_free_rooms(request, *args, **kwargs):
     # All bookings in the given time period
     bookings = _get_paginated_bookings(page_token)["bookings"]
 
+    lock = Lock.objects.all()[0]
+    curr = RoomA if not lock.a else RoomB
+
     # Get available rooms:
     # - Filtered by this academic year only
     # - Anything centrally bookable
     # - All ICH rooms (Site IDs 238 and 240)
-    lock = Lock.objects.all()[0]
-    curr = RoomA if not lock.a else RoomB
     all_rooms = curr.objects.filter(
         Q(bookabletype='CB') | Q(siteid='238') | Q(siteid='240')
     )
