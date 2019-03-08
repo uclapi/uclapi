@@ -700,9 +700,9 @@ class Timetable(models.Model):
     setid = models.TextField(max_length=10)
     periodid = models.BigIntegerField(null=True, blank=True)
     weekday = models.BigIntegerField(null=True, blank=True)
-    starttime = models.TextField(max_length=5,null=True)
+    starttime = models.TextField(max_length=5, null=True)
     duration = models.BigIntegerField(null=True, blank=True)
-    finishtime = models.TextField(max_length=5,null=True)
+    finishtime = models.TextField(max_length=5, null=True)
     weekid = models.BigIntegerField(null=True, blank=True)
     classgroupid = models.TextField(max_length=10, null=True)
     courseid = models.TextField(max_length=12, null=True)
@@ -802,7 +802,7 @@ class TimetableA(models.Model):
     weekday = models.BigIntegerField(null=True, blank=True)
     starttime = models.TextField(max_length=5, null=True)
     duration = models.BigIntegerField(null=True, blank=True)
-    finishtime = models.TextField(max_length=5,null=True)
+    finishtime = models.TextField(max_length=5, null=True)
     weekid = models.BigIntegerField(null=True, blank=True)
     classgroupid = models.TextField(max_length=10, null=True)
     courseid = models.TextField(max_length=12, null=True)
@@ -848,7 +848,8 @@ class TimetableA(models.Model):
     maxrooms = models.BigIntegerField(null=True, blank=True)
     datechanged = models.TextField(max_length=12, null=True)
     sizeused = models.BigIntegerField(null=True, blank=True)
-    uniquefield = models.TextField(max_length=10, null=True)  # unique null=True??????
+    # uniquefield has null values in, so we have to account for this
+    uniquefield = models.TextField(max_length=10, null=True)
     equipid = models.TextField(max_length=10, null=True)
     ecode = models.TextField(max_length=20, null=True)
     einstalled = models.TextField(max_length=12, null=True)
@@ -900,7 +901,7 @@ class TimetableB(models.Model):
     weekday = models.BigIntegerField(null=True, blank=True)
     starttime = models.TextField(max_length=5, null=True)
     duration = models.BigIntegerField(null=True, blank=True)
-    finishtime = models.TextField(max_length=5,null=True)
+    finishtime = models.TextField(max_length=5, null=True)
     weekid = models.BigIntegerField(null=True, blank=True)
     classgroupid = models.TextField(max_length=10, null=True)
     courseid = models.TextField(max_length=12, null=True)
@@ -946,7 +947,8 @@ class TimetableB(models.Model):
     maxrooms = models.BigIntegerField(null=True, blank=True)
     datechanged = models.TextField(max_length=12, null=True)
     sizeused = models.BigIntegerField(null=True, blank=True)
-    uniquefield = models.TextField(max_length=10, null=True)  # unique null=True??????
+    # uniquefield has null values in, so we have to account for this
+    uniquefield = models.TextField(max_length=10, null=True)
     equipid = models.TextField(max_length=10, null=True)
     ecode = models.TextField(max_length=20, null=True)
     einstalled = models.TextField(max_length=12, null=True)
@@ -1125,7 +1127,6 @@ class Course(models.Model):
         managed = False
         db_table = '"CMIS_OWNER"."COURSE"'
         _DATABASE = 'roombookings'
-
 
 
 class CourseA(models.Model):
