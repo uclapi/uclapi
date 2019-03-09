@@ -265,7 +265,7 @@ def set_callback_url(request):
             message = "The requested callback URL is not publicly available."
         response = PrettyJsonResponse({
             "success": False,
-            "message": (message)
+            "message": message
         })
         response.status_code = 400
         return response
