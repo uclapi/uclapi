@@ -4,7 +4,8 @@ from dashboard.tasks import keen_add_event_task as keen_add_event
 from oauth.scoping import Scopes
 from common.helpers import PrettyJsonResponse
 
-from .app_helpers import is_url_safe
+from .app_helpers import (is_url_unsafe, NOT_HTTPS,
+                          NOT_VALID, URL_BLACKLISTED, NOT_PUBLIC)
 from .models import App, User
 
 
@@ -251,12 +252,20 @@ def set_callback_url(request):
         })
         response.status_code = 400
         return response
-
-    if not is_url_safe(new_callback_url):
+    url_not_safe_saved = is_url_unsafe(new_callback_url)
+    if url_not_safe_saved:
+        if url_not_safe_saved == NOT_HTTPS:
+            message = "The requested callback URL does not "\
+                      "start with 'https://'."
+        elif url_not_safe_saved == NOT_VALID:
+            message = "The requested callback URL is not valid."
+        elif url_not_safe_saved == URL_BLACKLISTED:
+            message = "The requested callback URL is forbidden."
+        elif url_not_safe_saved == NOT_PUBLIC:
+            message = "The requested callback URL is not publicly available."
         response = PrettyJsonResponse({
             "success": False,
-            "message": ("The requested callback URL"
-                        " is not valid.")
+            "message": message
         })
         response.status_code = 400
         return response
