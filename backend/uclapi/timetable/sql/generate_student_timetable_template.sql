@@ -34,10 +34,9 @@ RETURNS TABLE (
     siteaddr2           TEXT,                   -- 29
     siteaddr3           TEXT,                   -- 30
     siteaddr4           TEXT,                   -- 31
-    bookabletype        TEXT,                   -- 32
-    starttime           VARCHAR,                -- 33
-    finishtime          VARCHAR,                -- 34
-    descrip             VARCHAR                 -- 35
+    starttime           VARCHAR,                -- 32
+    finishtime          VARCHAR,                -- 33
+    descrip             VARCHAR                 -- 34
 )
 LANGUAGE plpgsql
 AS $$
@@ -306,15 +305,14 @@ SELECT rb.startdatetime     as startdatetime,
        tt.siteid            as siteid,
        tt.roomid            as roomid,
        sites.sitename       as sitename,
-       rooms.name           as roomname,
+       rooms.roomname       as roomname,
        rooms.capacity       as roomcapacity,
-       rooms.type           as roomtype,
-       rooms.classification as roomclassification,
+       rooms.roomtype       as roomtype,
+       rooms.roomclass      as roomclassification,
        sites.address1       as siteaddr1,
        sites.address2       as siteaddr2,
        sites.address3       as siteaddr3,
        sites.address4       as siteaddr4,
-       rooms.type           as bookabletype,
        rb.starttime         as starttime,
        rb.finishtime        as finishtime,
        rb.descrip           as descrip
