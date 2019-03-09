@@ -29,11 +29,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunSQL(
-            'DROP FUNCTION IF EXISTS get_student_timetable_a(TEXT, TEXT, TEXT, TEXT);',  # noqa
+            'DROP FUNCTION IF EXISTS get_student_timetable_a(TEXT, TEXT);',
             hints={"type": "raw_sql"}
         ),
         migrations.RunSQL(
-            'DROP FUNCTION IF EXISTS get_student_timetable_b(TEXT, TEXT, TEXT, TEXT);',  # noqa
+            'DROP FUNCTION IF EXISTS get_student_timetable_b(TEXT, TEXT);',
             hints={"type": "raw_sql"}
         ),
         migrations.RunSQL(

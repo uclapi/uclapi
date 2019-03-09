@@ -382,7 +382,7 @@ def _get_timetable_events_module_list(module_list):
         except (ObjectDoesNotExist, ValueError):
             return False
 
-    return _get_timetable_events(full_modules, False)
+    return _get_timetable_events(full_modules)
 
 
 def _map_weeks():
