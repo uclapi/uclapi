@@ -125,13 +125,13 @@ SELECT smUnion.moduleid,
         smUnion.instcode
 FROM (
     SELECT sm.setid,
-            sm.studentid,
-            sm.moduleid,
-            mg.grpcode,
-            mg.groupnum,
-            'Y' as unfitted,
-            ci.instid,
-            ci.instcode
+           sm.studentid,
+           sm.moduleid,
+           mg.grpcode,
+           mg.groupnum,
+           'Y' as unfitted,
+           ci.instid,
+           ci.instcode
     FROM timetable_stumodules{{ bucket_id | sqlsafe }} sm
     JOIN timetable_modulegroups{{ bucket_id | sqlsafe }} mg
         ON sm.moduleid = mg.moduleid
@@ -279,45 +279,45 @@ UNION
 CREATE TEMP TABLE tt_tmp_timetable_events
 AS
 SELECT rb.startdatetime     as startdatetime,
-        rb.finishdatetime    as finishdatetime,
-        tt.duration          as duration,
-        tes.slotid           as slotid,
-        tt.weekid            as weekid,
-        rb.weeknumber        as weeknumber,
-        tes.moduleid         as moduleid,
-        m.name               as modulename,
-        tt.deptid            as deptid,
-        depts.name           as deptname,
-        tt.lecturerid        as lecturerid,
-        lecturer.name        as lecturername,
-        lecturer.owner       as lecturerdeptid,
-        (
-            SELECT name
-            FROM timetable_depts{{ bucket_id | sqlsafe }} de
-            WHERE de.deptid = lecturer.owner
-        )                    as lecturerdeptname,
-        lecturer.linkcode    as lecturereppn,
-        rb.title             as title, 
-        tt.moduletype        as sessiontypeid,
+       rb.finishdatetime    as finishdatetime,
+       tt.duration          as duration,
+       tes.slotid           as slotid,
+       tt.weekid            as weekid,
+       rb.weeknumber        as weeknumber,
+       tes.moduleid         as moduleid,
+       m.name               as modulename,
+       tt.deptid            as deptid,
+       depts.name           as deptname,
+       tt.lecturerid        as lecturerid,
+       lecturer.name        as lecturername,
+       lecturer.owner       as lecturerdeptid,
+       (
+           SELECT name
+           FROM timetable_depts{{ bucket_id | sqlsafe }} de
+           WHERE de.deptid = lecturer.owner
+       )                    as lecturerdeptname,
+       lecturer.linkcode    as lecturereppn,
+       rb.title             as title, 
+       tt.moduletype        as sessiontypeid,
 --     rb.condisplayname    as condisplayname,
-        string_agg(DISTINCT rb.condisplayname, ' / ') as condisplayname,
-        tes.modgrpcode       as modgrpcode,
-        tes.instcode         as instcode,
-        tt.siteid            as siteid,
-        tt.roomid            as roomid,
-        sites.sitename       as sitename,
-        rooms.name           as roomname,
-        rooms.capacity       as roomcapacity,
-        rooms.type           as roomtype,
-        rooms.classification as roomclassification,
-        sites.address1       as siteaddr1,
-        sites.address2       as siteaddr2,
-        sites.address3       as siteaddr3,
-        sites.address4       as siteaddr4,
-        rooms.type           as bookabletype,
-        rb.starttime         as starttime,
-        rb.finishtime        as finishtime,
-        rb.descrip           as descrip
+       string_agg(DISTINCT rb.condisplayname, ' / ') as condisplayname,
+       tes.modgrpcode       as modgrpcode,
+       tes.instcode         as instcode,
+       tt.siteid            as siteid,
+       tt.roomid            as roomid,
+       sites.sitename       as sitename,
+       rooms.name           as roomname,
+       rooms.capacity       as roomcapacity,
+       rooms.type           as roomtype,
+       rooms.classification as roomclassification,
+       sites.address1       as siteaddr1,
+       sites.address2       as siteaddr2,
+       sites.address3       as siteaddr3,
+       sites.address4       as siteaddr4,
+       rooms.type           as bookabletype,
+       rb.starttime         as starttime,
+       rb.finishtime        as finishtime,
+       rb.descrip           as descrip
 
 FROM timetable_timetable{{ bucket_id | sqlsafe }} tt
 INNER JOIN tt_tmp_events_slot_id tes
