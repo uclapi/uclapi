@@ -67,9 +67,9 @@ export default class StudentNumber extends React.Component {
                 example="uclapi-user-abd-def-ghi-jkl"
                 description="OAuth user token." />
               <Cell
-                name="client_id"
+                name="client_secret"
                 requirement="required"
-                example="123.456"
+                example="secret"
                 description="Client ID of the authenticating app." />
             </Table>
           </Topic>
