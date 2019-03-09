@@ -196,7 +196,7 @@ class OccupeyeCache():
             self._const.SURVEY_SENSORS_LIST_KEY
         ).format(survey_id)
         self.delete_sensors(
-            pipeline, 
+            pipeline,
             survey_id,
             survey_sensors_list_key,
             all_sensors_data
