@@ -636,7 +636,7 @@ class CrscompmodulesA(models.Model):
     moduleid = models.TextField(max_length=12)
     instid = models.BigIntegerField(null=True, blank=True)
     semid = models.BigIntegerField(null=True, blank=True)
-    unitvalue = models.TextField(max_length=19)
+    unitvalue = models.TextField(max_length=19, null=True, blank=True)
     crsver = models.BigIntegerField(null=True, blank=True)
 
     class Meta:
@@ -652,7 +652,7 @@ class CrscompmodulesB(models.Model):
     moduleid = models.TextField(max_length=12)
     instid = models.BigIntegerField(null=True, blank=True)
     semid = models.BigIntegerField(null=True, blank=True)
-    unitvalue = models.TextField(max_length=19)
+    unitvalue = models.TextField(max_length=19, null=True, blank=True)
     crsver = models.BigIntegerField(null=True, blank=True)
 
     class Meta:
@@ -735,7 +735,7 @@ class CrsavailmodulesA(models.Model):
     moduleid = models.TextField(max_length=12)
     instid = models.BigIntegerField(null=True, blank=True)
     semid = models.BigIntegerField(null=True, blank=True)
-    unitvalue = models.TextField(max_length=19)
+    unitvalue = models.TextField(max_length=19, null=True, blank=True)
     crsver = models.BigIntegerField(null=True, blank=True)
 
     class Meta:
@@ -752,7 +752,7 @@ class CrsavailmodulesB(models.Model):
     moduleid = models.TextField(max_length=12)
     instid = models.BigIntegerField(null=True, blank=True)
     semid = models.BigIntegerField(null=True, blank=True)
-    unitvalue = models.TextField(max_length=19)
+    unitvalue = models.TextField(max_length=19, null=True, blank=True)
     crsver = models.BigIntegerField(null=True, blank=True)
 
     class Meta:
