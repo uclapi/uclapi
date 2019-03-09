@@ -18,7 +18,7 @@ from .models import (
     CminstancesA, CminstancesB,
     CourseA, CourseB,
     CrscompmodulesA, CrscompmodulesB,
-    CrsavailmodulesA, CrsavailmodulesB
+    CrsavailmodulesA, CrsavailmodulesB,
     DeptsA, DeptsB,
     LecturerA, LecturerB,
     Lock,

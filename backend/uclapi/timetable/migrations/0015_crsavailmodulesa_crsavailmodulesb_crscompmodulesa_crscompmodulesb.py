@@ -9,58 +9,10 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('timetable',
-         '0007_cminstances_cminstancesa_cminstancesb_stumodulesa_stumodulesb'),
+         '0014_auto_20190302_0232_squashed_0019_auto_20190305_1729'),
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='CourseA',
-            fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('setid', models.TextField(max_length=10)),
-                ('courseid', models.TextField(max_length=12)),
-                ('name', models.TextField(max_length=80)),
-                ('category', models.TextField(max_length=10)),
-                ('type', models.TextField(max_length=10)),
-                ('linkcode', models.TextField(max_length=20)),
-                ('owner', models.TextField(max_length=10)),
-                ('numyears', models.BigIntegerField(blank=True, null=True)),
-                ('crsweight', models.FloatField(null=True)),
-                ('minmodules', models.BigIntegerField(blank=True, null=True)),
-                ('maxmodules', models.BigIntegerField(blank=True, null=True)),
-                ('numplaces', models.BigIntegerField(blank=True, null=True)),
-                ('mintotal', models.BigIntegerField(blank=True, null=True)),
-                ('maxtotal', models.BigIntegerField(blank=True, null=True)),
-                ('firstyear', models.BigIntegerField(blank=True, null=True)),
-                ('oldcourseid', models.TextField(max_length=12)),
-                ('isactive', models.CharField(max_length=1)),
-                ('lecturerid', models.TextField(max_length=10)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='CourseB',
-            fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('setid', models.TextField(max_length=10)),
-                ('courseid', models.TextField(max_length=12)),
-                ('name', models.TextField(max_length=80)),
-                ('category', models.TextField(max_length=10)),
-                ('type', models.TextField(max_length=10)),
-                ('linkcode', models.TextField(max_length=20)),
-                ('owner', models.TextField(max_length=10)),
-                ('numyears', models.BigIntegerField(blank=True, null=True)),
-                ('crsweight', models.FloatField(null=True)),
-                ('minmodules', models.BigIntegerField(blank=True, null=True)),
-                ('maxmodules', models.BigIntegerField(blank=True, null=True)),
-                ('numplaces', models.BigIntegerField(blank=True, null=True)),
-                ('mintotal', models.BigIntegerField(blank=True, null=True)),
-                ('maxtotal', models.BigIntegerField(blank=True, null=True)),
-                ('firstyear', models.BigIntegerField(blank=True, null=True)),
-                ('oldcourseid', models.TextField(max_length=12)),
-                ('isactive', models.CharField(max_length=1)),
-                ('lecturerid', models.TextField(max_length=10)),
-            ],
-        ),
         migrations.CreateModel(
             name='CrsavailmodulesA',
             fields=[
