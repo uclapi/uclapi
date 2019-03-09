@@ -58,10 +58,12 @@ class OccupeyeCache():
         )
         pipeline = self._redis.pipeline()
 
-        self.delete_maps(pipeline, 
-                         survey_id, 
-                         survey_maps_list_key, 
-                         survey_maps_data)
+        self.delete_maps(
+            pipeline,
+            survey_id,
+            survey_maps_list_key,
+            survey_maps_data
+        )
 
         for survey_map in survey_maps_data:
             survey_map_id = self._const.SURVEY_MAP_DATA_KEY.format(
@@ -193,7 +195,12 @@ class OccupeyeCache():
         survey_sensors_list_key = (
             self._const.SURVEY_SENSORS_LIST_KEY
         ).format(survey_id)
-        self.delete_sensors(pipeline, survey_id, survey_sensors_list_key, all_sensors_data)
+        self.delete_sensors(
+            pipeline, 
+            survey_id,
+            survey_sensors_list_key,
+            all_sensors_data
+        )
 
         for sensor_data in all_sensors_data:
             hardware_id = sensor_data["HardwareID"]
@@ -668,10 +675,15 @@ class OccupeyeCache():
             )
             self.delete_maps(pipeline, survey_id, survey_maps_list_key, [])
 
-            survey_sensors_list_key = self._const.SURVEY_SENSORS_LIST_KEY.format(
-                survey_id
+            survey_sensors_list_key = (
+                self._const.SURVEY_SENSORS_LIST_KEY.format(survey_id)
             )
-            self.delete_sensors(pipeline, survey_id, survey_sensors_list_key, [])
+            self.delete_sensors(
+                pipeline,
+                survey_id,
+                survey_sensors_list_key,
+                []
+            )
 
     def delete_sensors(
         self, pipeline, survey_id,
@@ -686,14 +698,18 @@ class OccupeyeCache():
         api_survey_sensors_id_set = set(
             [survey_sensor["HardwareID"] for survey_sensor in all_sensors_data]
         )
-        sensors_to_delete = redis_survey_sensors_set - api_survey_sensors_id_set
+        sensors_to_delete = (
+            redis_survey_sensors_set - api_survey_sensors_id_set
+        )
         pipeline.delete(survey_sensors_list_key)
         for sensor_id in sensors_to_delete:
             pipeline.delete(
                 self._const.SURVEY_SENSOR_DATA_KEY.format(survey_id, sensor_id)
             )
             pipeline.delete(
-                self._const.SURVEY_SENSOR_STATUS_KEY.format(survey_id, sensor_id)
+                self._const.SURVEY_SENSOR_STATUS_KEY.format(
+                    survey_id, sensor_id
+                )
             )
 
     def delete_image(self, pipeline, image_id):
