@@ -79,7 +79,6 @@ $break-small: 780px;
 
   > .rc-collapse-item {
     border-top: 1px solid $grey;
-    padding: 20px;
 
     > .rc-collapse-header {
       color: $dark-grey;
@@ -87,6 +86,8 @@ $break-small: 780px;
       height: 38px;
       line-height: 38px;
       text-indent: 16px;
+      outline: 0;
+      padding: 10px 0 10px 0;
 
       .arrow {
         border-bottom: 3px solid transparent;
@@ -129,11 +130,11 @@ $break-small: 780px;
 
 
 .rc-collapse-content {
-  background-color: $white;
-  color: $dark-grey;
-  overflow: hidden;
-  padding: 0 16px;
-  font-size: 20px;
+    border-top: solid 1px #CCC;
+    color: #666;
+    font-size: 20px;
+    overflow: hidden;
+    padding: 0 16px;
 
   > .rc-collapse-content-box {
     margin-bottom: 16px;
