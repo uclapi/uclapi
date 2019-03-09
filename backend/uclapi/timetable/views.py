@@ -22,7 +22,7 @@ _SETID = settings.ROOMBOOKINGS_SETID
 @uclapi_protected_endpoint(
     personal_data=True,
     required_scopes=['timetable'],
-    last_modified_redis_key='timetable_gencache'
+    last_modified_redis_key='gencache'
 )
 def get_personal_timetable_endpoint(request, *args, **kwargs):
     token = kwargs['token']
@@ -42,7 +42,7 @@ def get_personal_timetable_endpoint(request, *args, **kwargs):
 
 @api_view(["GET"])
 @uclapi_protected_endpoint(
-    last_modified_redis_key='timetable_gencache'
+    last_modified_redis_key='gencache'
 )
 def get_modules_timetable_endpoint(request, *args, **kwargs):
     module_ids = request.GET.get("modules")
@@ -81,7 +81,7 @@ def get_modules_timetable_endpoint(request, *args, **kwargs):
 
 @api_view(["GET"])
 @uclapi_protected_endpoint(
-    last_modified_redis_key='timetable_gencache'
+    last_modified_redis_key='gencache'
 )
 def get_departments_endpoint(request, *args, **kwargs):
     """
@@ -96,7 +96,7 @@ def get_departments_endpoint(request, *args, **kwargs):
 
 @api_view(["GET"])
 @uclapi_protected_endpoint(
-    last_modified_redis_key='timetable_gencache'
+    last_modified_redis_key='gencache'
 )
 def get_department_courses_endpoint(request, *args, **kwargs):
     """
@@ -124,7 +124,7 @@ def get_department_courses_endpoint(request, *args, **kwargs):
 
 @api_view(["GET"])
 @uclapi_protected_endpoint(
-    last_modified_redis_key='timetable_gencache'
+    last_modified_redis_key='gencache'
 )
 def get_department_modules_endpoint(request, *args, **kwargs):
     """

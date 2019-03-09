@@ -25,7 +25,8 @@ from .helpers import (
     TOKEN_EXPIRY_TIME
 )
 
-from .models import Lock, Room
+from .models import Room
+from timetable.models import Lock
 
 from .views import get_bookings
 
@@ -226,13 +227,13 @@ class DoesTokenExistTestCase(TestCase):
 
     fake_locks = MockSet(
         MockModel(
-            bookingA=True,
-            bookingB=False
+            a=True,
+            b=False
         )
     )
 
     lock_objects = unittest.mock.patch(
-        'roombookings.models.Lock.objects',
+        'timetable.models.Lock.objects',
         fake_locks
     )
 
