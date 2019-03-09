@@ -29,7 +29,7 @@ RETURNS TABLE (
     roomname            VARCHAR,                -- 24
     roomcapacity        NUMERIC,                -- 25
     roomtype            VARCHAR,                -- 26
-    roomclassification  VARCHAR                 -- 27
+    roomclassification  VARCHAR,                -- 27
     siteaddr1           TEXT,                   -- 28
     siteaddr2           TEXT,                   -- 29
     siteaddr3           TEXT,                   -- 30
