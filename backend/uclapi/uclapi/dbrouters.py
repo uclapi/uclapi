@@ -10,6 +10,10 @@ class ModelRouter(object):
             "cminstancesb",
             "coursea",
             "courseb",
+            "crsavailmodulesa",
+            "crsavailmodulesb",
+            "crscompmodulesa",
+            "crscompmodulesb",
             "lecturera",
             "lecturerb",
             "modulea",
@@ -35,7 +39,13 @@ class ModelRouter(object):
             "stumodulesa",
             "stumodulesb",
             "deptsa",
-            "deptsb"
+            "deptsb",
+            "coursea",
+            "courseb",
+            "crsavailmodulesa",
+            "crsavailmodulesb",
+            "crscompmodulesa",
+            "crscompmodulesb"
         ]
 
     def db_for_read(self, model, **hints):

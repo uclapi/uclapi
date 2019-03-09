@@ -627,6 +627,38 @@ class Crscompmodules(models.Model):
         _DATABASE = 'roombookings'
 
 
+class CrscompmodulesA(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.TextField(max_length=10)
+    courseid = models.TextField(max_length=12)
+    crsyear = models.BigIntegerField(null=True, blank=True)
+    deptid = models.TextField(max_length=10)
+    moduleid = models.TextField(max_length=12)
+    instid = models.BigIntegerField(null=True, blank=True)
+    semid = models.BigIntegerField(null=True, blank=True)
+    unitvalue = models.TextField(max_length=19)
+    crsver = models.BigIntegerField(null=True, blank=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class CrscompmodulesB(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.TextField(max_length=10)
+    courseid = models.TextField(max_length=12)
+    crsyear = models.BigIntegerField(null=True, blank=True)
+    deptid = models.TextField(max_length=10)
+    moduleid = models.TextField(max_length=12)
+    instid = models.BigIntegerField(null=True, blank=True)
+    semid = models.BigIntegerField(null=True, blank=True)
+    unitvalue = models.TextField(max_length=19)
+    crsver = models.BigIntegerField(null=True, blank=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
 class Classifications(models.Model):
     setid = models.TextField(max_length=10)
     classid = models.TextField(max_length=10)
@@ -692,6 +724,39 @@ class Crsavailmodules(models.Model):
         db_table = '"CMIS_OWNER"."CRSAVAILMODULES"'
         _DATABASE = 'roombookings'
 
+
+class CrsavailmodulesA(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.TextField(max_length=10)
+    courseid = models.TextField(max_length=12)
+    crsyear = models.BigIntegerField(null=True, blank=True)
+    groupnum = models.BigIntegerField(null=True, blank=True)
+    deptid = models.TextField(max_length=10)
+    moduleid = models.TextField(max_length=12)
+    instid = models.BigIntegerField(null=True, blank=True)
+    semid = models.BigIntegerField(null=True, blank=True)
+    unitvalue = models.TextField(max_length=19)
+    crsver = models.BigIntegerField(null=True, blank=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class CrsavailmodulesB(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.TextField(max_length=10)
+    courseid = models.TextField(max_length=12)
+    crsyear = models.BigIntegerField(null=True, blank=True)
+    groupnum = models.BigIntegerField(null=True, blank=True)
+    deptid = models.TextField(max_length=10)
+    moduleid = models.TextField(max_length=12)
+    instid = models.BigIntegerField(null=True, blank=True)
+    semid = models.BigIntegerField(null=True, blank=True)
+    unitvalue = models.TextField(max_length=19)
+    crsver = models.BigIntegerField(null=True, blank=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
 
 class Timetable(models.Model):
     slotid = models.BigIntegerField(primary_key=True)
