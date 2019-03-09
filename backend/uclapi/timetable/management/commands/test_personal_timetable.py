@@ -3,7 +3,7 @@ import time
 from django.core.management.base import BaseCommand
 import json
 
-from timetable.app_helpers import get_student_timetable
+from timetable.personal_timetable import get_personal_timetable
 
 
 class Command(BaseCommand):
@@ -13,7 +13,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         upi = input("Please enter the student UPI: ")
         start_time = time.time()
-        tt = get_student_timetable(upi)
+        tt = get_personal_timetable(upi)
         elapsed_time = time.time() - start_time
         print(elapsed_time)
         print(json.dumps(tt))

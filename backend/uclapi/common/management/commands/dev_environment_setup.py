@@ -3,7 +3,6 @@ from django.core.management import call_command
 from django.conf import settings
 
 from dashboard.models import App, User
-from roombookings.models import Lock as RoombookingsLock
 from timetable.models import Lock as TimetableLock
 
 
@@ -51,10 +50,6 @@ class Command(BaseCommand):
                 app.name
             )
         )
-
-        print("Configuring Locks...")
-        if len(RoombookingsLock.objects.all()) == 0:
-            call_command("create_lock")
 
         if len(TimetableLock.objects.all()) == 0:
             call_command("create_timetable_lock")

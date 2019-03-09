@@ -15,9 +15,11 @@ from django.views.decorators.csrf import (
 
 from dashboard.models import App, User
 from dashboard.tasks import keen_add_event_task as keen_add_event
-from timetable.app_helpers import get_student_by_upi
 
-from .app_helpers import generate_random_verification_code
+from .app_helpers import (
+    generate_random_verification_code,
+    get_student_by_upi
+)
 from .models import OAuthToken
 from .scoping import Scopes
 

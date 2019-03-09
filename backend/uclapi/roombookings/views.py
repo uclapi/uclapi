@@ -8,14 +8,14 @@ from .helpers import (PrettyJsonResponse, _create_page_token,
                       _get_paginated_bookings, _parse_datetime,
                       _return_json_bookings, _serialize_equipment,
                       _serialize_rooms, _filter_for_free_rooms, _round_date)
-from .models import BookingA, BookingB, Equipment, Lock, Room
-
+from .models import BookingA, BookingB, Equipment, RoomA, RoomB
+from timetable.models import Lock
 from common.decorators import uclapi_protected_endpoint
 
 
 @api_view(['GET'])
 @uclapi_protected_endpoint(
-    last_modified_redis_key=None  # Served from Oracle directly
+    last_modified_redis_key="gencache"  # Served from our cached Oracle view
 )
 def get_rooms(request, *args, **kwargs):
     # add them to iterables so can be filtered without if-else
@@ -34,26 +34,25 @@ def get_rooms(request, *args, **kwargs):
     # - Filtered by this academic year only
     # - Anything centrally bookable
     # - All ICH rooms (Site IDs 238 and 240)
-    all_rooms = Room.objects.using("roombookings").filter(
-        Q(setid=settings.ROOMBOOKINGS_SETID),
-        Q(bookabletype='CB') | Q(siteid="238") | Q(siteid="240")
+    lock = Lock.objects.all()[0]
+    curr = RoomA if not lock.a else RoomB
+
+    # No filters provided, return all rooms serialised
+    if reduce(lambda x, y: x or y, request_params.values()):
+        request_params = dict((k, v) for k, v in request_params.items() if v)
+    else:
+        request_params = {}
+
+    filtered_rooms = curr.objects.filter(
+        Q(bookabletype='CB') | Q(siteid='238') | Q(siteid='240'),
+        **request_params
     )
 
-    # no filters provided, return all rooms serialised
-    if not reduce(lambda x, y: x or y, request_params.values()):
-        return PrettyJsonResponse({
+    return PrettyJsonResponse(
+        {
             "ok": True,
-            "rooms": _serialize_rooms(all_rooms)
+            "rooms": _serialize_rooms(filtered_rooms)
         }, custom_header_data=kwargs)
-
-    request_params = dict((k, v) for k, v in request_params.items() if v)
-
-    filtered_rooms = all_rooms.filter(**request_params)
-
-    return PrettyJsonResponse({
-        "ok": True,
-        "rooms": _serialize_rooms(filtered_rooms)
-    }, custom_header_data=kwargs)
 
 
 @api_view(['GET'])
@@ -130,9 +129,12 @@ def get_bookings(request, *args, **kwargs):
     bookings = _get_paginated_bookings(page_token)
 
     lock = Lock.objects.all()[0]
-    curr = BookingA if not lock.bookingA else BookingB
+    curr = BookingA if not lock.a else BookingB
 
-    bookings["count"] = curr.objects.filter(**request_params).count()
+    bookings["count"] = curr.objects.filter(
+        Q(bookabletype='CB') | Q(siteid='238') | Q(siteid='240'),
+        **request_params
+    ).count()
 
     return _return_json_bookings(bookings, custom_header_data=kwargs)
 
@@ -219,13 +221,15 @@ def get_free_rooms(request, *args, **kwargs):
     # All bookings in the given time period
     bookings = _get_paginated_bookings(page_token)["bookings"]
 
+    lock = Lock.objects.all()[0]
+    curr = RoomA if not lock.a else RoomB
+
     # Get available rooms:
     # - Filtered by this academic year only
     # - Anything centrally bookable
     # - All ICH rooms (Site IDs 238 and 240)
-    all_rooms = Room.objects.using("roombookings").filter(
-        Q(setid=settings.ROOMBOOKINGS_SETID),
-        Q(bookabletype='CB') | Q(siteid="238") | Q(siteid="240")
+    all_rooms = curr.objects.filter(
+        Q(bookabletype='CB') | Q(siteid='238') | Q(siteid='240')
     )
     all_rooms = _serialize_rooms(all_rooms)
 

@@ -4,40 +4,33 @@ import json
 import redis
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
 
 from roombookings.models import (
-    Lock as RBLock,
     BookingA,
     BookingB,
-    Location,
-    SiteLocation
+    RoomA,
+    RoomB
 )
 
 from .amp import ModuleInstance
 from .models import (DeptsA, DeptsB, LecturerA, LecturerB, Lock, ModuleA,
-                     ModuleB, RoomsA, RoomsB, SitesA, SitesB, StudentsA,
+                     ModuleB, SitesA, SitesB, StudentsA,
                      StudentsB, StumodulesA, StumodulesB,  TimetableA,
                      TimetableB, WeekmapnumericA, WeekmapnumericB,
                      WeekstructureA, WeekstructureB,
                      CminstancesA, CminstancesB)
+from .personal_timetable import get_personal_timetable
 from .tasks import cache_student_timetable
+from .utils import (
+    get_location_coordinates,
+    SESSION_TYPE_MAP
+)
 
 _SETID = settings.ROOMBOOKINGS_SETID
 
 _week_map = {}
 _week_num_date_map = {}
-
-_session_type_map = {
-    "EX": "Examination",
-    "L": "Lecture",
-    "P": "Practical",
-    "PBL": "Problem Based Learning",
-}
-
 _rooms_cache = {}
-_site_coord_cache = {}
-_room_coord_cache = {}
 _instance_cache = {}
 _lecturers_cache = {}
 _department_name_cache = {}
@@ -52,7 +45,7 @@ def get_cache(model_name):
         "weekmapnumeric": [WeekmapnumericA, WeekmapnumericB],
         "weekstructure": [WeekstructureA, WeekstructureB],
         "lecturer": [LecturerA, LecturerB],
-        "rooms": [RoomsA, RoomsB],
+        "rooms": [RoomA, RoomB],
         "sites": [SitesA, SitesB],
         "departments": [DeptsA, DeptsB],
         "stumodules": [StumodulesA, StumodulesB],
@@ -68,8 +61,8 @@ def get_cache(model_name):
         else:
             model = timetable_models[model_name][1]
     elif model_name in roombookings_models:
-        roombooking_lock = RBLock.objects.all()[0]
-        if roombooking_lock.bookingA:
+        roombooking_lock = Lock.objects.all()[0]
+        if roombooking_lock.a:
             model = roombookings_models[model_name][0]
         else:
             model = roombookings_models[model_name][1]
@@ -77,24 +70,6 @@ def get_cache(model_name):
         raise Exception("Unknown model requested from cache")
 
     return model
-
-
-def get_student_by_upi(upi):
-    """Returns a StudentA or StudentB object by UPI"""
-    students = get_cache("students")
-    # Assume the current Set ID due to caching
-    upi_upper = upi.upper()
-    student = students.objects.filter(
-        qtype2=upi_upper
-    )[0]
-    return student
-
-
-def _get_student_modules(student):
-    """Returns all Stumodules object by for a given student"""
-    stumodules = get_cache("stumodules")
-    student_modules = stumodules.objects.filter(studentid=student.studentid)
-    return student_modules
 
 
 def _get_full_department_name(department_code):
@@ -153,26 +128,23 @@ def _get_instance_details(instid):
     return data
 
 
-def _get_timetable_events(full_modules, stumodules):
+def _get_timetable_events(full_modules):
     """
-    Gets a dictionary of timetabled events.
-    If stumodules=True then assume full_modules = [Stumodules]
-    If stumodules=False then assume full_modules [ModuleA] or [ModuleB]
+    Gets a dictionary of timetabled events for a list of Module objects
     """
     if not _week_map:
         _map_weeks()
 
     timetable = get_cache("timetable")
-    modules = get_cache("module")
 
     bookings = get_cache("booking")
     event_bookings_list = {}
     full_timetable = {}
     modules_chosen = {}
     for module in full_modules:
-        key = str(module.moduleid)+" "+str(module.instid)
+        key = str(module.moduleid) + " " + str(module.instid)
         try:
-            lab_key = key+str(module.modgrpcode)
+            lab_key = key + str(module.modgrpcode)
         except AttributeError:
             lab_key = key
         if key in modules_chosen:
@@ -180,24 +152,10 @@ def _get_timetable_events(full_modules, stumodules):
         modules_chosen[lab_key] = module
 
     for _, module in modules_chosen.items():
-        if stumodules:
-            # Get events for the lab group assigned
-            # Also include general lecture events (via the or operator)
-            events_data = timetable.objects.filter(
-                Q(modgrpcode=module.modgrpcode) | Q(modgrpcode='') | Q(modgrpcode=None),  # noqa
-                moduleid=module.moduleid,
-                instid=module.instid
-            )
-            module_data = modules.objects.get(
-                moduleid=module.moduleid,
-                instid=module.instid
-            )
-        else:
-            events_data = timetable.objects.filter(
-                moduleid=module.moduleid,
-                instid=module.instid
-            )
-            module_data = module
+        events_data = timetable.objects.filter(
+            moduleid=module.moduleid,
+            instid=module.instid
+        )
         instance_data = _get_instance_details(module.instid)
         for event in events_data:
             if event.slotid not in event_bookings_list:
@@ -214,18 +172,18 @@ def _get_timetable_events(full_modules, stumodules):
                         "end_time": event.finishtime,
                         "duration": event.duration,
                         "module": {
-                            "module_id": module_data.moduleid,
+                            "module_id": module.moduleid,
                             "department_id": event.owner,
                             "department_name": _get_full_department_name(
                                 event.owner
                             ),
-                            "name": module_data.name
+                            "name": module.name
                         },
                         "location": _get_location_details(
                             event.siteid,
                             event.roomid
                         ),
-                        "session_title": module_data.name,
+                        "session_title": module.name,
                         "session_type": event.moduletype,
                         "session_type_str": _get_session_type_str(
                             event.moduletype
@@ -233,16 +191,6 @@ def _get_timetable_events(full_modules, stumodules):
                         "contact": "Unknown",
                         "instance": instance_data
                     }
-
-                    # If this is student module data, add in the group code
-                    # because we have that field in Stumodules
-                    if stumodules:
-                        event_data["session_group"] = event.modgrpcode
-                        if event.modgrpcode != '':
-                            event_data["session_title"] = "{} ({})".format(
-                                module_data.name,
-                                event.modgrpcode
-                            )
 
                     # Check if the module timetable event's Lecturer ID
                     # exists. If not, we use the Lecturer ID associated
@@ -257,13 +205,12 @@ def _get_timetable_events(full_modules, stumodules):
                             _get_lecturer_details(event.lecturerid)
                     else:
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(module_data.lecturerid)
+                            _get_lecturer_details(module.lecturerid)
 
                     date_str = date.strftime("%Y-%m-%d")
                     if date_str not in full_timetable:
                         full_timetable[date_str] = []
                     full_timetable[date_str].append(event_data)
-
             else:
                 for booking in event_bookings:
                     event_data = {
@@ -271,12 +218,12 @@ def _get_timetable_events(full_modules, stumodules):
                         "end_time": booking.finishtime,
                         "duration": event.duration,
                         "module": {
-                            "module_id": module_data.moduleid,
+                            "module_id": module.moduleid,
                             "department_id": event.owner,
                             "department_name": _get_full_department_name(
                                 event.owner
                             ),
-                            "name": module_data.name
+                            "name": module.name
                         },
                         "location": _get_location_details(
                             booking.siteid,
@@ -291,11 +238,6 @@ def _get_timetable_events(full_modules, stumodules):
                         "instance": instance_data
                     }
 
-                    # If this is student module data, add in the group code
-                    # because we have that field in Stumodules
-                    if stumodules:
-                        event_data["session_group"] = module.modgrpcode
-
                     # Check if the module timetable event's Lecturer ID
                     # exists. If not, we use the Lecturer ID associated
                     # with the module as a whole. It's an ugly hack, but
@@ -309,7 +251,7 @@ def _get_timetable_events(full_modules, stumodules):
                             _get_lecturer_details(event.lecturerid)
                     else:
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(module_data.lecturerid)
+                            _get_lecturer_details(module.lecturerid)
 
                     date_str = booking.startdatetime.strftime("%Y-%m-%d")
                     if date_str not in full_timetable:
@@ -347,7 +289,7 @@ def _get_timetable_events_module_list(module_list):
         except (ObjectDoesNotExist, ValueError):
             return False
 
-    return _get_timetable_events(full_modules, False)
+    return _get_timetable_events(full_modules)
 
 
 def _map_weeks():
@@ -375,40 +317,10 @@ def _get_real_dates(slot):
 
 
 def _get_session_type_str(session_type):
-    if session_type in _session_type_map:
-        return _session_type_map[session_type]
+    if session_type in SESSION_TYPE_MAP:
+        return SESSION_TYPE_MAP[session_type]
     else:
         return "Unknown"
-
-
-def _get_location_coordinates(siteid, roomid):
-    # First try and get the specific room's location
-    try:
-        if roomid in _room_coord_cache:
-            return _room_coord_cache[roomid]
-        location = Location.objects.get(
-            siteid=siteid,
-            roomid=roomid
-        )
-        _room_coord_cache[roomid] = (location.lat, location.lng)
-        return location.lat, location.lng
-    except Location.DoesNotExist:
-        pass
-
-    # Now try and get the building's location
-    try:
-        if siteid in _site_coord_cache:
-            return _site_coord_cache[siteid]
-        location = SiteLocation.objects.get(
-            siteid=siteid
-        )
-        _site_coord_cache[siteid] = (location.lat, location.lng)
-        return location.lat, location.lng
-    except SiteLocation.DoesNotExist:
-        pass
-
-    # Now just bail
-    return None, None
 
 
 def _get_location_details(siteid, roomid):
@@ -426,11 +338,11 @@ def _get_location_details(siteid, roomid):
             site = sites.objects.filter(siteid=siteid)[0]
         except IndexError:
             return {}
-        lat, lng = _get_location_coordinates(siteid, roomid)
+        lat, lng = get_location_coordinates(siteid, roomid)
         _rooms_cache[cache_id] = {
-            "name": room.name,
+            "name": room.roomname,
             "capacity": room.capacity,
-            "type": room.type,
+            "type": room.bookabletype,
             "address": [
                 site.address1,
                 site.address2,
@@ -458,9 +370,7 @@ def get_student_timetable(upi, date_filter=None):
         data = r.get(timetable_key)
         student_events = json.loads(data)
     else:
-        student = get_student_by_upi(upi)
-        student_modules = _get_student_modules(student)
-        student_events = _get_timetable_events(student_modules, True)
+        student_events = get_personal_timetable(upi)
         # Celery task to cache for the next request
         cache_student_timetable.delay(upi, student_events)
 
