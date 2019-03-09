@@ -27,7 +27,7 @@ RETURNS TABLE (
     roomid              TEXT,                   -- 22
     sitename            TEXT,                   -- 23
     roomname            VARCHAR,                -- 24
-    roomcapacity        NUMERIC,                -- 25
+    roomcapacity        DOUBLE PRECISION,       -- 25
     roomtype            VARCHAR,                -- 26
     roomclassification  VARCHAR,                -- 27
     siteaddr1           TEXT,                   -- 28
