@@ -472,8 +472,7 @@ def token(request):
 
 @uclapi_protected_endpoint(
     personal_data=True,
-    last_modified_redis_key="timetable_gencache"
-)
+    last_modified_redis_key="timetable_gencache")
 def userdata(request, *args, **kwargs):
     token = kwargs['token']
     print("Checking student status")
@@ -514,8 +513,7 @@ def scope_map(request):
 
 @uclapi_protected_endpoint(
     personal_data=True,
-    last_modified_redis_key=None
-)
+    last_modified_redis_key=None)
 def token_test(request, *args, **kwargs):
     s = Scopes()
 
@@ -536,8 +534,7 @@ def token_test(request, *args, **kwargs):
 @uclapi_protected_endpoint(
     personal_data=True,
     required_scopes=['student_number'],
-    last_modified_redis_key="timetable_gencache"
-)
+    last_modified_redis_key="timetable_gencache")
 def get_student_number(request, *args, **kwargs):
     token = kwargs['token']
 
@@ -665,3 +662,31 @@ def my_apps(request):
     return render(request, 'appsettings.html', {
         'initial_data': initial_data
     })
+
+@ensure_csrf_cookie
+def de_authorise_app(request):
+    #Which user is requesting to de authorise an app.
+    user = User.objects.get(id=request.session["user_id"])
+    #to be used to find the app user wants to de authorise
+    client_id = request.GET.get("client_id", None)
+
+    try:
+        # We only allow the process to happen if the app exists and has not
+        # been flagged as deleted
+        app = App.objects.filter(client_id=client_id, deleted=False)[0]
+    except IndexError:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": "App does not exist for client id"
+        })
+        response.status_code = 400
+        return response
+
+    token = OAuthToken.objects.get(app=app, user=user)
+    token.delete()
+    response = PrettyJsonResponse({
+        "ok": True,
+        "message": "App successfully de-authorised"
+    })
+    response.status_code = 200
+    return response
