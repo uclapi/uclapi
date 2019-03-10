@@ -20,8 +20,7 @@ class UserApps extends React.Component {
           {this.props.authorised_apps.map((app, i) => {
               return <AuthAppRow app_name={app.name}
                 app_created={app.created}
-                app_is_auth={app.oauth.scopes[0].enabled=="true" || app.oauth.scopes[1].enabled=="true"}
-                app_scope_id={app.scope_id} 
+                app_is_auth={app.active}
                 app_id={app.id}
               />;
           })}

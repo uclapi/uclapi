@@ -7,9 +7,10 @@ class AuthAppRow extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      apps: props.apps,
+      app: props.app,
       showCreate: false
     };
+    this.handleChange = this.handleChange.bind(this);
   }
 
   render () {
@@ -30,11 +31,11 @@ class AuthAppRow extends React.Component {
   }
 
   handleChange (event, checked) {
-      this.setState((state) => {
+      /*this.setState((state) => {
         if(this.props.app_id !== undefined){
           return update(state, {apps: {$splice: [[this.props.app_id, 1]]}});
         }
-      });
+      });*/
   }
 
 }
@@ -43,7 +44,6 @@ AuthAppRow.propTypes = {
   app_name: PropTypes.string,
   app_created: PropTypes.string,
   app_is_auth: PropTypes.bool,
-  app_scope_id: PropTypes.string,
   app_id: PropTypes.string
 };
 
