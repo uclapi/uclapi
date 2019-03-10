@@ -21,7 +21,7 @@ class AuthAppRow extends React.Component {
             </div>
 
             <div className="app-permission-box">
-              <Button disabled={this.props.app_is_auth} 
+              <Button disabled={!this.props.app_is_auth} 
                       size="medium" color="primary"
                       onClick={this.handleChange}>
                 Revoke permissions
@@ -31,11 +31,7 @@ class AuthAppRow extends React.Component {
   }
 
   handleChange (event, checked) {
-      /*this.setState((state) => {
-        if(this.props.app_id !== undefined){
-          return update(state, {apps: {$splice: [[this.props.app_id, 1]]}});
-        }
-      });*/
+      // Call function in back end to delete scope
   }
 
 }
