@@ -486,27 +486,34 @@ class DeleteAToken(TestCase):
         mock_status_code.status_code = 200
 
         self.factory = APIRequestFactory()
+
     def test_de_authorise_app(self):
         user_ = User.objects.create(
             email="test@ucl.ac.uk",
             cn="test",
-            given_name="Test Test"
-        )
+            given_name="Test Test")
         app_ = App.objects.create(user=user_, name="An App")
+
         oauth_scope = OAuthScope.objects.create(
-            scope_number=2
-        )
+            scope_number=2)
         oauth_token = OAuthToken.objects.create(
             app=app_,
             user=user_,
-            scope=oauth_scope
-        )
+            scope=oauth_scope)
+
+        token_id = oauth_token.token
+
         request = self.factory.get(
             '/oauth/testcase',
             {
                 'client_secret': app_.client_secret,
                 'token': oauth_token.token
-            }
-        )
+            })
+
+        print("\nToken: " + oauth_token.token)
+
         de = de_authorise_app(request)
-        print(oauth_token.token)
+
+        oauth_token = OAuthToken.objects.get(token=token_id)
+
+        print(de)
