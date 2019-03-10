@@ -661,31 +661,11 @@ def my_apps(request):
         'initial_data': initial_data
     })
 
-
+@ensure_csrf_cookie
 def de_authorise_app(request):
 
-    try:
-        data = json.loads(raw_data_str)
-    except:
-        response = PrettyJsonResponse({
-            "ok": False,
-            "error": ("The JSON data was not in the expected format."
-                      " Please contact support.")
-        })
-        response.status_code = 430
-        return response
-    try:
-        users = User.objects.filter(employee_id=data["user_upi"])
-        user = users[0]
-    except (User.DoesNotExist, KeyError):
-        response = PrettyJsonResponse({
-            "ok": False,
-            "error":
-                "User does not exist. This should never occur. "
-                "Please contact support."
-        })
-        response.status_code = 420
-        return response
+    user = User.objects.get(id=request.session["user_id"])
+    client_id = request.GET.get("client_id", None)
 
     try:
         # We only allow the process to happen if the app exists and has not
@@ -696,11 +676,17 @@ def de_authorise_app(request):
             "ok": False,
             "error": "App does not exist for client id"
         })
-        response.status_code = 400
+        response.status_code = 408
         return response
 
-    r = redis.Redis(host=REDIS_UCLAPI_HOST)
+
+    # r = redis.Redis(host=REDIS_UCLAPI_HOST)
     token = OAuthToken.objects.get(app=app, user=user)
     token.delete()
-    token.save()
-    r.clear()
+
+    response = PrettyJsonResponse({
+        "ok": True,
+        "message": "App successfully de-authorised"
+    })
+    response.status_code = 200
+    return response

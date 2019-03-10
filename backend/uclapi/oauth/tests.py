@@ -5,6 +5,7 @@ import os
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 from django.core import signing
+from django.core.exceptions import ObjectDoesNotExist
 
 from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse
@@ -507,13 +508,18 @@ class DeleteAToken(TestCase):
             '/oauth/testcase',
             {
                 'client_secret': app_.client_secret,
-                'token': oauth_token.token
+                'token': oauth_token.token,
+                'client_id': app_.client_id
             })
+        request.session = {'user_id': user_.id}
+        # print("\nToken: " + oauth_token.token)
 
-        print("\nToken: " + oauth_token.token)
+        de_authorise_app(request)
 
-        de = de_authorise_app(request)
+        # oauth_token = OAuthToken.objects.get(token=token_id
+        with self.assertRaises(ObjectDoesNotExist):
+            print("\nhjhj")
 
-        oauth_token = OAuthToken.objects.get(token=token_id)
 
-        print(de)
+        #
+        # print(oauth_token.token)
