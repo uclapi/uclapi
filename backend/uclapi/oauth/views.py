@@ -643,6 +643,7 @@ def my_apps(request):
                     "name": token.app.user.full_name,
                     "email": token.app.user.email
                 },
+                "client_id": token.app.client_id,
                 "name": token.app.name,
                 "scopes": scopes.scope_dict_all(token.scope.scope_number)
             }
@@ -651,6 +652,7 @@ def my_apps(request):
     initial_data_dict = {
         "status" : "ONLINE",
         "fullname": user.full_name,
+        "user_id": user.id,
         "department": user.department,
         "scopes": scopes.get_scope_map(),
         "apps": authorised_apps
