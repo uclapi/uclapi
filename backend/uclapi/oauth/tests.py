@@ -512,8 +512,7 @@ class DeleteAToken(TestCase):
                 'client_id': app_.client_id
             })
         request.session = {'user_id': user_.id}
-
-
+        
         token_id = oauth_token.token
 
         de_authorise_app(request)
