@@ -153,6 +153,18 @@ def _get_instance_details(instid):
     return data
 
 
+def _get_chosen_modules(full_modules):
+    modules_chosen = {}
+    for module in full_modules:
+        key = str(module.moduleid) + " " + str(module.instid)
+        lab_key = key + str(module.modgrpcode)
+        if key in modules_chosen:
+            del modules_chosen[key]
+        modules_chosen[lab_key] = module
+
+    return modules_chosen
+
+
 def _get_timetable_events(full_modules, stumodules):
     """
     Gets a dictionary of timetabled events.
@@ -168,19 +180,14 @@ def _get_timetable_events(full_modules, stumodules):
     bookings = get_cache("booking")
     event_bookings_list = {}
     full_timetable = {}
-    modules_chosen = {}
-    for module in full_modules:
-        key = str(module.moduleid)+" "+str(module.instid)
-        lab_key = key+str(module.modgrpcode)
-        if key in modules_chosen:
-            del modules_chosen[key]
-        modules_chosen[lab_key] = module
 
+    modules_chosen = _get_chosen_modules(full_modules)
+    
     for _, module in modules_chosen.items():
         if stumodules:
             # Get events for the lab group assigned
             # Also include general lecture events (via the or operator)
-            events_data = timetable.objects.filter(
+            timetable_entries = timetable.objects.filter(
                 Q(modgrpcode=module.modgrpcode) | Q(modgrpcode='') | Q(modgrpcode=None),  # noqa
                 moduleid=module.moduleid,
                 instid=module.instid
@@ -190,88 +197,47 @@ def _get_timetable_events(full_modules, stumodules):
                 instid=module.instid
             )
         else:
-            events_data = timetable.objects.filter(
+            timetable_entries = timetable.objects.filter(
                 moduleid=module.moduleid,
                 instid=module.instid
             )
             module_data = module
+
         instance_data = _get_instance_details(module.instid)
-        for event in events_data:
-            if event.slotid not in event_bookings_list:
-                event_bookings_list[event.slotid] =  \
-                    bookings.objects.filter(slotid=event.slotid)
-            event_bookings = event_bookings_list[event.slotid]
-            # .exists() instead of len so we don't evaluate all of the filter
-            if not event_bookings.exists():
-                # We have to trust the data in the event because
-                # no rooms are booked for some weird reason.
-                for date in _get_real_dates(event):
-                    event_data = {
-                        "start_time": event.starttime,
-                        "end_time": event.finishtime,
-                        "duration": event.duration,
-                        "module": {
-                            "module_id": module_data.moduleid,
-                            "department_id": event.owner,
-                            "department_name": _get_full_department_name(
-                                event.owner
-                            ),
-                            "name": module_data.name
-                        },
-                        "location": _get_location_details(
-                            event.siteid,
-                            event.roomid
-                        ),
-                        "session_title": module_data.name,
-                        "session_type": event.moduletype,
-                        "session_type_str": _get_session_type_str(
-                            event.moduletype
-                        ),
-                        "contact": "Unknown",
-                        "instance": instance_data
-                    }
 
-                    # If this is student module data, add in the group code
-                    # because we have that field in Stumodules
-                    if stumodules:
-                        event_data["session_group"] = event.modgrpcode
-                        if event.modgrpcode != '':
-                            event_data["session_title"] = "{} ({})".format(
-                                module_data.name,
-                                event.modgrpcode
-                            )
+        print("Module: {}, Instance: {}".format(
+            module.moduleid,
+            instance_data['instance_code']
+        ))
 
-                    # Check if the module timetable event's Lecturer ID
-                    # exists. If not, we use the Lecturer ID associated
-                    # with the module as a whole. It's an ugly hack, but
-                    # it works around not all timetabled lectures having
-                    # the Lecturer ID field filled as they should.
-                    # We assume therefore that if the lecturer isn't
-                    # specified then the class is to be led by the
-                    # module's owner.
-                    if event.lecturerid.strip():
-                        event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(event.lecturerid)
-                    else:
-                        event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(module_data.lecturerid)
+        timetable_slots_list = {}
 
-                    date_str = date.strftime("%Y-%m-%d")
-                    if date_str not in full_timetable:
-                        full_timetable[date_str] = []
-                    full_timetable[date_str].append(event_data)
+        for entry in timetable_entries:
+            if entry.slotid not in timetable_slots_list:
+                timetable_slots_list[entry.slotid] =  \
+                    bookings.objects.filter(slotid=entry.slotid)
+            event_bookings = timetable_slots_list[entry.slotid]
 
-            else:
-                for booking in event_bookings:
+        print("Bookings for Module {}: {}".format(module.moduleid, str(event_bookings)))
+
+        for entry in timetable_entries:
+            if entry.slotid in timetable_slots_list and timetable_slots_list[entry.slotid]:
+                print("NUMBER OF BOOKINGS FOR MODULE {}, SLOT {} : {} ".format(
+                    module.moduleid,
+                    entry.slotid,
+                    str(len(timetable_slots_list[entry.slotid])))
+                )
+                print(str(timetable_slots_list[entry.slotid]))
+                for booking in timetable_slots_list[entry.slotid]:
                     event_data = {
                         "start_time": booking.starttime,
                         "end_time": booking.finishtime,
-                        "duration": event.duration,
+                        "duration": entry.duration,
                         "module": {
                             "module_id": module_data.moduleid,
-                            "department_id": event.owner,
+                            "department_id": entry.owner,
                             "department_name": _get_full_department_name(
-                                event.owner
+                                entry.owner
                             ),
                             "name": module_data.name
                         },
@@ -280,11 +246,12 @@ def _get_timetable_events(full_modules, stumodules):
                             booking.roomid
                         ),
                         "session_title": booking.title,
-                        "session_type": event.moduletype,
+                        "session_type": entry.moduletype,
                         "session_type_str": _get_session_type_str(
-                            event.moduletype
+                            entry.moduletype
                         ),
-                        "contact": booking.condisplayname
+                        "contact": booking.condisplayname,
+                        "instance": instance_data
                     }
 
                     # If this is student module data, add in the group code
@@ -300,9 +267,9 @@ def _get_timetable_events(full_modules, stumodules):
                     # We assume therefore that if the lecturer isn't
                     # specified then the class is to be led by the
                     # module's owner.
-                    if event.lecturerid.strip():
+                    if entry.lecturerid.strip():
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(event.lecturerid)
+                            _get_lecturer_details(entry.lecturerid)
                     else:
                         event_data["module"]["lecturer"] = \
                             _get_lecturer_details(module_data.lecturerid)
@@ -311,6 +278,70 @@ def _get_timetable_events(full_modules, stumodules):
                     if date_str not in full_timetable:
                         full_timetable[date_str] = []
                     full_timetable[date_str].append(event_data)
+                    # print("Appending1: " + str(date_str) + " - " + str(event_data))
+                    if date_str == "2019-02-21":
+                        # print("Appending1: " + str(date_str) + " - " + str(event_data))
+                        print(["{}: {}".format(f.name, getattr(booking, f.name)) for f in bookings._meta.get_fields()])
+            else:
+                # We have to trust the data in the events because
+                # no rooms are booked for some weird reason.
+                for date in _get_real_dates(entry):
+                    event_data = {
+                        "start_time": entry.starttime,
+                        "end_time": entry.finishtime,
+                        "duration": entry.duration,
+                        "module": {
+                            "module_id": module_data.moduleid,
+                            "department_id": entry.owner,
+                            "department_name": _get_full_department_name(
+                                entry.owner
+                            ),
+                            "name": module_data.name
+                        },
+                        "location": _get_location_details(
+                            entry.siteid,
+                            entry.roomid
+                        ),
+                        "session_title": module_data.name,
+                        "session_type": entry.moduletype,
+                        "session_type_str": _get_session_type_str(
+                            entry.moduletype
+                        ),
+                        "contact": "Unknown",
+                        "instance": instance_data
+                    }
+
+                    # If this is student module data, add in the group code
+                    # because we have that field in Stumodules
+                    if stumodules:
+                        event_data["session_group"] = entry.modgrpcode
+                        if entry.modgrpcode != '':
+                            event_data["session_title"] = "{} ({})".format(
+                                module_data.name,
+                                entry.modgrpcode
+                            )
+
+                    # Check if the module timetable event's Lecturer ID
+                    # exists. If not, we use the Lecturer ID associated
+                    # with the module as a whole. It's an ugly hack, but
+                    # it works around not all timetabled lectures having
+                    # the Lecturer ID field filled as they should.
+                    # We assume therefore that if the lecturer isn't
+                    # specified then the class is to be led by the
+                    # module's owner.
+                    if entry.lecturerid.strip():
+                        event_data["module"]["lecturer"] = \
+                            _get_lecturer_details(entry.lecturerid)
+                    else:
+                        event_data["module"]["lecturer"] = \
+                            _get_lecturer_details(module_data.lecturerid)
+
+                    date_str = date.strftime("%Y-%m-%d")
+                    if date_str not in full_timetable:
+                        full_timetable[date_str] = []
+                    full_timetable[date_str].append(event_data)
+                    # print("Appending2: " + str(date_str) + " - " + str(event_data))
+
     return full_timetable
 
 
