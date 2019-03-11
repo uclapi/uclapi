@@ -637,6 +637,7 @@ def my_apps(request):
     scopes = Scopes()
 
     for token in tokens:
+        print(token)
         authorised_apps.append({
             "id": token.id,
             "active": token.active,
@@ -654,6 +655,7 @@ def my_apps(request):
     initial_data_dict = {
         "status" : "ONLINE",
         "fullname": user.full_name,
+        "user_id": user.id,
         "department": user.department,
         "scopes": scopes.get_scope_map(),
         "apps": authorised_apps
