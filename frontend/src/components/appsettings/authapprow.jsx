@@ -12,6 +12,7 @@ class AuthAppRow extends React.Component {
       isVisible: true
     };
     this.handleChange = this.handleChange.bind(this);
+    this.deauthoriseApp = this.deauthoriseApp.bind(this);
   }
 
   render () {
@@ -36,6 +37,13 @@ class AuthAppRow extends React.Component {
   }
 
   handleChange (event, checked) {
+      // Add toast to confirm deauthorisation
+      if(confirm('Are you sure you want to deauthorise this app?')){
+        this.deauthoriseApp();
+      }
+  }
+
+  deauthoriseApp() {
       // Call function in back end to delete scope
       axios.get('/oauth/deauthorise', {
         params: {
@@ -62,8 +70,7 @@ AuthAppRow.propTypes = {
   app_name: PropTypes.string,
   app_created: PropTypes.string,
   app_is_auth: PropTypes.bool,
-  app_id: PropTypes.string,
-  key: PropTypes.string
+  app_id: PropTypes.string
 };
 
 export default AuthAppRow;
