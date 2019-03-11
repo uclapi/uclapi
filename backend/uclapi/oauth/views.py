@@ -636,7 +636,6 @@ def my_apps(request):
     scopes = Scopes()
 
     for token in tokens:
-        print(token)
         authorised_apps.append({
             "id": token.id,
             "active": token.active,
@@ -646,6 +645,7 @@ def my_apps(request):
                     "name": token.app.user.full_name,
                     "email": token.app.user.email
                 },
+                "client_id": token.app.client_id,
                 "name": token.app.name,
                 "scopes": scopes.scope_dict_all(token.scope.scope_number)
             }
