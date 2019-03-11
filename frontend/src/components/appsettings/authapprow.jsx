@@ -9,12 +9,15 @@ class AuthAppRow extends React.Component {
     super(props);
     this.state = {
       app: props.app,
-      showCreate: false
+      isVisible: true
     };
     this.handleChange = this.handleChange.bind(this);
   }
 
   render () {
+    this.button_text = "Revoke Permissions"
+    if(!this.state.isVisible) {this.button_text="App Disabled"}
+
     return <div className="auth-app">
             <div className="app-information">
               <h3>{this.props.app_name}</h3>
@@ -22,10 +25,11 @@ class AuthAppRow extends React.Component {
             </div>
 
             <div className="app-permission-box">
-              <Button disabled={!this.props.app_is_auth} 
-                      size="medium" color="primary"
+              <Button disabled={!this.state.isVisible}
+                      size="medium" 
+                      color="primary"
                       onClick={this.handleChange}>
-                Revoke permissions
+                {this.button_text}
               </Button>
             </div>
           </div>;
@@ -42,6 +46,10 @@ class AuthAppRow extends React.Component {
           // Log success in console
           console.log("Successfully de-authorised app: ")
           console.log(response)
+
+          this.setState({
+            isVisible: false,
+          })
       }).catch(error => {
           // Handle error
           console.log(error);
