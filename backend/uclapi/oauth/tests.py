@@ -518,4 +518,4 @@ class DeleteAToken(TestCase):
         de_authorise_app(request)
 
         with self.assertRaises(OAuthToken.DoesNotExist):
-            oauth_token = OAuthToken.objects.get(token = token_id)
+            oauth_token = OAuthToken.objects.get(token=token_id)
