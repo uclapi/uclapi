@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 import Button from '@material-ui/core/Button';
 
@@ -32,6 +33,19 @@ class AuthAppRow extends React.Component {
 
   handleChange (event, checked) {
       // Call function in back end to delete scope
+      axios.get('/oauth/deauthorise', {
+        params: {
+          client_id: this.props.app_client_id
+        },
+        xsrfHeaderName: "X-CSRFToken",
+      }).then(response => {
+          // Log success in console
+          console.log("Successfully de-authorised app: ")
+          console.log(response)
+      }).catch(error => {
+          // Handle error
+          console.log(error);
+      })
   }
 
 }
@@ -40,7 +54,8 @@ AuthAppRow.propTypes = {
   app_name: PropTypes.string,
   app_created: PropTypes.string,
   app_is_auth: PropTypes.bool,
-  app_id: PropTypes.string
+  app_id: PropTypes.string,
+  key: PropTypes.string
 };
 
 export default AuthAppRow;

@@ -22,6 +22,8 @@ class UserApps extends React.Component {
                 app_created={app.app.creator.name}
                 app_is_auth={app.active}
                 app_id={app.app.id}
+                app_client_id={app.app.client_id}
+                key={i}
               />;
           })}
         </div>
