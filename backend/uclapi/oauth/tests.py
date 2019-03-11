@@ -5,6 +5,7 @@ import os
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 from django.core import signing
+from django.core.exceptions import ObjectDoesNotExist
 
 from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse
@@ -511,6 +512,7 @@ class DeleteAToken(TestCase):
                 'client_id': app_.client_id
             })
         request.session = {'user_id': user_.id}
+
 
         token_id = oauth_token.token
 

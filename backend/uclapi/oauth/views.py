@@ -470,8 +470,7 @@ def token(request):
 
 @uclapi_protected_endpoint(
     personal_data=True,
-    last_modified_redis_key="timetable_gencache"
-)
+    last_modified_redis_key="timetable_gencache")
 def userdata(request, *args, **kwargs):
     token = kwargs['token']
     print("Checking student status")
@@ -512,8 +511,7 @@ def scope_map(request):
 
 @uclapi_protected_endpoint(
     personal_data=True,
-    last_modified_redis_key=None
-)
+    last_modified_redis_key=None)
 def token_test(request, *args, **kwargs):
     s = Scopes()
 
@@ -534,8 +532,7 @@ def token_test(request, *args, **kwargs):
 @uclapi_protected_endpoint(
     personal_data=True,
     required_scopes=['student_number'],
-    last_modified_redis_key="timetable_gencache"
-)
+    last_modified_redis_key="timetable_gencache")
 def get_student_number(request, *args, **kwargs):
     token = kwargs['token']
 
