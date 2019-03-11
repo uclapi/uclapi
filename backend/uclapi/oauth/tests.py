@@ -519,36 +519,3 @@ class DeleteAToken(TestCase):
 
         with self.assertRaises(OAuthToken.DoesNotExist):
             oauth_token = OAuthToken.objects.get(token = token_id)
-
-
-    # def test_list_of_authorised_apps(self):
-    #     user_ = User.objects.create(
-    #         email="test@ucl.ac.uk",
-    #         cn="test",
-    #         given_name="Test Test")
-    #
-    #     oauth_scope = OAuthScope.objects.create(
-    #         scope_number=2)
-    #
-    #     app_1 = App.objects.create(user=user_, name="App1")
-    #     oauth_token_1 = OAuthToken.objects.create(
-    #         app=app_1,
-    #         user=user_,
-    #         scope=oauth_scope)
-    #
-    #     app_2 = App.objects.create(user=user_, name="App2")
-    #     oauth_token_2 = OAuthToken.objects.create(
-    #         app=app_2,
-    #         user=user_,
-    #         scope=oauth_scope)
-    #     request = self.factory.get(
-    #         '/oauth/testcase',
-    #         {
-    #             'client_secret': app_1.client_secret,
-    #             'token': oauth_token_1.token,
-    #             'client_id': app_1.client_id
-    #         })
-    #     request.session = {'user_id': user_.id}
-    #
-    #
-    #     de_authorise_app(request)
