@@ -5,6 +5,7 @@ import os
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 from django.core import signing
+from django.core.exceptions import ObjectDoesNotExist
 
 from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse
@@ -14,7 +15,7 @@ from dashboard.models import App, User
 from .app_helpers import generate_random_verification_code
 from .models import OAuthScope, OAuthToken
 from .scoping import Scopes
-from .views import authorise, shibcallback
+from .views import authorise, shibcallback, de_authorise_app
 
 
 @uclapi_protected_endpoint(personal_data=True, required_scopes=["timetable"])
@@ -478,3 +479,77 @@ class AppHelpersTestCase(TestCase):
         code = generate_random_verification_code()
         self.assertEqual(code[:6], "verify")
         self.assertEqual(len(code), 86)
+
+
+class DeleteAToken(TestCase):
+    def setUp(self):
+        mock_status_code = unittest.mock.Mock()
+        mock_status_code.status_code = 200
+
+        self.factory = APIRequestFactory()
+
+    def test_de_authorise_app(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test")
+        app_ = App.objects.create(user=user_, name="An App")
+
+        oauth_scope = OAuthScope.objects.create(
+            scope_number=2)
+        oauth_token = OAuthToken.objects.create(
+            app=app_,
+            user=user_,
+            scope=oauth_scope)
+
+        token_id = oauth_token.token
+
+        request = self.factory.get(
+            '/oauth/testcase',
+            {
+                'client_secret': app_.client_secret,
+                'token': oauth_token.token,
+                'client_id': app_.client_id
+            })
+        request.session = {'user_id': user_.id}
+
+
+        token_id = oauth_token.token
+
+        de_authorise_app(request)
+
+        with self.assertRaises(OAuthToken.DoesNotExist):
+            oauth_token = OAuthToken.objects.get(token = token_id)
+
+
+    # def test_list_of_authorised_apps(self):
+    #     user_ = User.objects.create(
+    #         email="test@ucl.ac.uk",
+    #         cn="test",
+    #         given_name="Test Test")
+    #
+    #     oauth_scope = OAuthScope.objects.create(
+    #         scope_number=2)
+    #
+    #     app_1 = App.objects.create(user=user_, name="App1")
+    #     oauth_token_1 = OAuthToken.objects.create(
+    #         app=app_1,
+    #         user=user_,
+    #         scope=oauth_scope)
+    #
+    #     app_2 = App.objects.create(user=user_, name="App2")
+    #     oauth_token_2 = OAuthToken.objects.create(
+    #         app=app_2,
+    #         user=user_,
+    #         scope=oauth_scope)
+    #     request = self.factory.get(
+    #         '/oauth/testcase',
+    #         {
+    #             'client_secret': app_1.client_secret,
+    #             'token': oauth_token_1.token,
+    #             'client_id': app_1.client_id
+    #         })
+    #     request.session = {'user_id': user_.id}
+    #
+    #
+    #     de_authorise_app(request)
