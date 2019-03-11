@@ -663,3 +663,31 @@ def my_apps(request):
     return render(request, 'appsettings.html', {
         'initial_data': initial_data
     })
+
+@ensure_csrf_cookie
+def de_authorise_app(request):
+    #Which user is requesting to de authorise an app.
+    user = User.objects.get(id=request.session["user_id"])
+    #to be used to find the app user wants to de authorise
+    client_id = request.GET.get("client_id", None)
+
+    try:
+        # We only allow the process to happen if the app exists and has not
+        # been flagged as deleted
+        app = App.objects.filter(client_id=client_id, deleted=False)[0]
+    except IndexError:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": "App does not exist for client id"
+        })
+        response.status_code = 400
+        return response
+
+    token = OAuthToken.objects.get(app=app, user=user)
+    token.delete()
+    response = PrettyJsonResponse({
+        "ok": True,
+        "message": "App successfully de-authorised"
+    })
+    response.status_code = 200
+    return response
