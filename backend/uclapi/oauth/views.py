@@ -667,9 +667,9 @@ def my_apps(request):
 
 @ensure_csrf_cookie
 def de_authorise_app(request):
-    #Which user is requesting to de authorise an app.
+    # Which user is requesting to de authorise an app.
     user = User.objects.get(id=request.session["user_id"])
-    #to be used to find the app user wants to de authorise
+    # to be used to find the app user wants to de authorise
     client_id = request.GET.get("client_id", None)
 
     try:
