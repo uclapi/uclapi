@@ -665,6 +665,7 @@ def my_apps(request):
         'initial_data': initial_data
     })
 
+
 @ensure_csrf_cookie
 def de_authorise_app(request):
     # Which user is requesting to de authorise an app.
