@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 import Button from '@material-ui/core/Button';
 
@@ -7,12 +8,17 @@ class AuthAppRow extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      apps: props.apps,
-      showCreate: false
+      app: props.app,
+      isVisible: true
     };
+    this.handleChange = this.handleChange.bind(this);
+    this.deauthoriseApp = this.deauthoriseApp.bind(this);
   }
 
   render () {
+    this.button_text = "Revoke Permissions"
+    if(!this.state.isVisible) {this.button_text="App Disabled"}
+
     return <div className="auth-app">
             <div className="app-information">
               <h3>{this.props.app_name}</h3>
@@ -20,21 +26,42 @@ class AuthAppRow extends React.Component {
             </div>
 
             <div className="app-permission-box">
-              <Button disabled={this.props.app_is_auth} 
-                      size="medium" color="primary"
+              <Button disabled={!this.state.isVisible}
+                      size="medium" 
+                      color="primary"
                       onClick={this.handleChange}>
-                Revoke permissions
+                {this.button_text}
               </Button>
             </div>
           </div>;
   }
 
   handleChange (event, checked) {
-      this.setState((state) => {
-        if(this.props.app_id !== undefined){
-          return update(state, {apps: {$splice: [[this.props.app_id, 1]]}});
-        }
-      });
+      // Add toast to confirm deauthorisation
+      if(confirm('Are you sure you want to deauthorise this app?')){
+        this.deauthoriseApp();
+      }
+  }
+
+  deauthoriseApp() {
+      // Call function in back end to delete scope
+      axios.get('/oauth/deauthorise', {
+        params: {
+          client_id: this.props.app_client_id
+        },
+        xsrfHeaderName: "X-CSRFToken",
+      }).then(response => {
+          // Log success in console
+          console.log("Successfully de-authorised app: ")
+          console.log(response)
+
+          this.setState({
+            isVisible: false,
+          })
+      }).catch(error => {
+          // Handle error
+          console.log(error);
+      })
   }
 
 }
@@ -43,7 +70,6 @@ AuthAppRow.propTypes = {
   app_name: PropTypes.string,
   app_created: PropTypes.string,
   app_is_auth: PropTypes.bool,
-  app_scope_id: PropTypes.string,
   app_id: PropTypes.string
 };
 
