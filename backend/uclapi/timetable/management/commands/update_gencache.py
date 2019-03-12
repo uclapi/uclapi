@@ -346,8 +346,10 @@ class Command(BaseCommand):
         url = "https://cachet.apps.uclapi.com/api/v1/components/2"
         cachet_token = settings.CACHET_KEY
         cachet_format = "application/x-www-form-urlencoded"
-        payload_headers = {"X-Cachet-Token":cachet_token, "Content-Type": cachet_format}
-        requests.request("PUT",url,data={"status":1},headers=payload_headers)
+        payload_headers = {"X-Cachet-Token": cachet_token,
+                           "Content-Type": cachet_format}
+        payload = {"status": 1}
+        requests.request("PUT", url, data=payload, headers=payload_headers)
         print("Cachet updated")
 
         call_command('trigger_webhooks')
