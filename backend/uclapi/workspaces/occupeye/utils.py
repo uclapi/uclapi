@@ -31,7 +31,12 @@ def authenticated_request(url, bearer):
 def survey_ids_to_surveys(surveys_data, survey_ids):
         if survey_ids:
             try:
-                survey_ids_list = [int(x) for x in survey_ids.split(',')]
+                # If we cast to a set then a list we remove duplicates
+                # This avoids the user specifying a filter with a bad
+                # ID and a duplicate good one, which would cause issues.
+                survey_ids_list = list(
+                    set([int(x) for x in survey_ids.split(',')])
+                )
             except ValueError:
                 raise BadOccupEyeRequest
         else:

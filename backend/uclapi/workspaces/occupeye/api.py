@@ -31,7 +31,7 @@ class OccupEyeApi():
         )
         self._const = OccupEyeConstants()
 
-    def get_surveys(self):
+    def get_surveys(self, survey_filter):
         """
         Serialises all surveys and maps to a dictionary
         object that can be returned to the user. If the
@@ -54,8 +54,17 @@ class OccupEyeApi():
                 "name": survey_data["name"],
                 "active": str2bool(survey_data["active"]),
                 "start_time": survey_data["start_time"],
-                "end_time": survey_data["end_time"]
+                "end_time": survey_data["end_time"],
+                "staff_survey": str2bool(survey_data["staff_survey"])
             }
+            # If we want to filter out staff surveys and this is a staff
+            # one then we skip over it.
+            if (
+                survey_filter == "student" and survey["staff_survey"] or \
+                survey_filter == "staff" and not survey["staff_survey"]
+            ):
+                continue
+
             survey_maps_list_key = self._const.SURVEY_MAPS_LIST_KEY.format(
                 survey_id
             )
@@ -310,11 +319,11 @@ class OccupEyeApi():
             survey_data["maps"].append(map_data)
         shared_dict[survey_id] = survey_data
 
-    def get_survey_sensors_summary(self, survey_ids):
+    def get_survey_sensors_summary(self, survey_ids, survey_filter):
         """
         Gets a summary of every survey, map and the sensor counts within them.
         """
-        surveys_data = self.get_surveys()
+        surveys_data = self.get_surveys(survey_filter)
         filtered_surveys = survey_ids_to_surveys(
             surveys_data,
             survey_ids
@@ -323,10 +332,29 @@ class OccupEyeApi():
         # Check whether every survey was requested
         if len(filtered_surveys) == len(surveys_data):
             # Since the list is de-duplicated and clean, we can return
-            # data for all surveys straight from the cache
-            data = json.loads(
-                self._redis.get(self._const.SUMMARY_CACHE_ALL_SURVEYS)
-            )
+            # data for all surveys straight from the cache if the list
+            # of Survey IDs is the same length as the total surveys
+            # available.
+            if survey_filter == "all":
+                data = json.loads(
+                    self._redis.get(
+                        self._const.SUMMARY_CACHE_ALL_SURVEYS
+                    )
+                )
+            elif survey_filter == "student":
+                data = json.loads(
+                    self._redis.get(
+                        self._const.SUMMARY_CACHE_ALL_STUDENT_SURVEYS
+                    )
+                )
+            elif survey_filter == "staff":
+                data = json.loads(
+                    self._redis.get(
+                        self._const.SUMMARY_CACHE_ALL_STAFF_SURVEYS
+                    )
+                )
+            else:
+                raise BadOccupEyeRequest
             return data
 
         # If we got here, the user specified one or more survey_ids.
@@ -345,8 +373,13 @@ class OccupEyeApi():
 
         return summary_list
 
-    def get_historical_time_usage_data(self, survey_ids, day_count):
-        surveys_data = self.get_surveys()
+    def get_historical_time_usage_data(
+        self,
+        survey_ids,
+        day_count,
+        survey_filter
+    ):
+        surveys_data = self.get_surveys(survey_filter)
 
         filtered_surveys = survey_ids_to_surveys(
             surveys_data,
