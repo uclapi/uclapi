@@ -1,4 +1,5 @@
 import gc
+import os
 
 import django
 import redis
@@ -16,6 +17,7 @@ from django.db import connections
 from tqdm import tqdm
 from django import db
 
+import requests
 
 # Nasty hack to ensure we can initialise models in worker processes
 # Courtesy of: https://stackoverflow.com/a/39996838
@@ -341,5 +343,12 @@ class Command(BaseCommand):
         # Cache has been run now, so we can delete the key to allow it
         # to be run again in the future.
         self._redis.delete(cache_running_key)
+
+        url = "https://cachet.apps.uclapi.com/api/v1/components/2"
+        cachet_token = os.environ.get("CACHET_TOKEN")
+        cachet_format = "application/x-www-form-urlencoded"
+        payload_headers = {"X-Cachet-Token":cachet_token, "Content-Type": cachet_format}
+        requests.request("PUT",url,data={"status":1},headers=payload_headers)
+        print("Cachet updated")
 
         call_command('trigger_webhooks')
