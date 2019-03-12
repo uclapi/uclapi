@@ -492,18 +492,18 @@ class DeleteAToken(TestCase):
         user_ = User.objects.create(
             email="test@ucl.ac.uk",
             cn="test",
-            given_name="Test Test")
+            given_name="Test Test"
+            )
         app_ = App.objects.create(user=user_, name="An App")
-
         oauth_scope = OAuthScope.objects.create(
-            scope_number=2)
+            scope_number=2
+            )
         oauth_token = OAuthToken.objects.create(
             app=app_,
             user=user_,
-            scope=oauth_scope)
-
+            scope=oauth_scope
+            )
         token_id = oauth_token.token
-
         request = self.factory.get(
             '/oauth/testcase',
             {
@@ -514,8 +514,6 @@ class DeleteAToken(TestCase):
         request.session = {'user_id': user_.id}
 
         token_id = oauth_token.token
-
         de_authorise_app(request)
-
         with self.assertRaises(OAuthToken.DoesNotExist):
             oauth_token = OAuthToken.objects.get(token=token_id)
