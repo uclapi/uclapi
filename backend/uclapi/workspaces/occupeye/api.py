@@ -60,7 +60,7 @@ class OccupEyeApi():
             # If we want to filter out staff surveys and this is a staff
             # one then we skip over it.
             if (
-                survey_filter == "student" and survey["staff_survey"] or \
+                survey_filter == "student" and survey["staff_survey"] or
                 survey_filter == "staff" and not survey["staff_survey"]
             ):
                 continue

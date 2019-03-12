@@ -115,8 +115,9 @@ class OccupeyeCache():
             # We check if the Survey's ID is in our list of staff survey
             # constants. If so, we mark it as such so we can filter them
             # out for students by default.
-            staff_survey = str(int(survey["SurveyID"]) in \
-                            self._const.STAFF_SURVEY_IDS)
+            staff_survey = str(
+                int(survey["SurveyID"]) in self._const.STAFF_SURVEY_IDS
+            )
 
             pipeline.hmset(
                 survey_key,
