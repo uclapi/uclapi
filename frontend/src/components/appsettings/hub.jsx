@@ -5,7 +5,7 @@ import NavbarConsistent from './navbarconsistent.jsx';
 class Hub extends React.Component {
   render () {
     return <div className="hub">
-      <NavbarConsistent />
+      <NavbarConsistent isScroll={false} />
       {this.props.children}
     </div>;
   }
