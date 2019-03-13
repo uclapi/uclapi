@@ -5,7 +5,7 @@ import posed from 'react-pose';
 const Bounce = posed.div({
   up: { marginTop: "-3px" },
   down: { marginTop: "3px" }
-})
+});
 
 class Link extends React.Component {
 	constructor(props) {
