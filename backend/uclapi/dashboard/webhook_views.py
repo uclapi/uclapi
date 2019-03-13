@@ -2,7 +2,7 @@ from common.helpers import PrettyJsonResponse
 from .models import App, User
 from dashboard.tasks import keen_add_event_task as keen_add_event
 import requests
-from .app_helpers import generate_secret, is_url_safe
+from .app_helpers import generate_secret, is_url_unsafe
 
 
 def user_owns_app(user_id, app_id):
@@ -84,7 +84,7 @@ def edit_webhook(request):
     webhook = app.webhook
 
     if url != webhook.url:
-        if not is_url_safe(url):
+        if is_url_unsafe(url):
             response = PrettyJsonResponse({
                 "ok": False,
                 "message": (
