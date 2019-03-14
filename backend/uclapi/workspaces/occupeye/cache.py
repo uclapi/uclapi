@@ -2,6 +2,7 @@ import json
 
 from base64 import b64encode
 from datetime import datetime, timedelta
+from distutils.util import strtobool
 
 import redis
 import requests
@@ -16,8 +17,7 @@ from .exceptions import OccupEyeOtherSensorState
 from .token import get_bearer_token
 from .utils import (
     authenticated_request,
-    is_sensor_occupied,
-    str2bool
+    is_sensor_occupied
 )
 
 
@@ -244,7 +244,7 @@ class OccupeyeCache():
                 "room_id": sensor_data["RoomID"],
                 "room_name": str(sensor_data["RoomName"]),
                 "share_id": str(sensor_data["ShareID"]),
-                "floor": str(str2bool(sensor_data["Floor"])),
+                "floor": str(sensor_data["Floor"]),
                 "room_type": str(sensor_data["RoomType"]),
                 "building_name": str(sensor_data["Building"]),
                 "room_description": str(sensor_data["RoomDescription"])
@@ -449,7 +449,9 @@ class OccupeyeCache():
                 "id": int(survey_id),
                 "name": survey_redis_data["name"],
                 "maps": [],
-                "staff_survey": str2bool(survey_redis_data["staff_survey"]),
+                "staff_survey": strtobool(
+                    str(survey_redis_data["staff_survey"])
+                ),
                 "sensors_absent": 0,
                 "sensors_occupied": 0,
                 "sensors_other": 0
@@ -548,7 +550,6 @@ class OccupeyeCache():
             self._const.SUMMARY_CACHE_ALL_STUDENT_SURVEYS,
             json.dumps([s for s in surveys if not s['staff_survey']])
         )
-
 
     def feed_cache(self, full):
         """

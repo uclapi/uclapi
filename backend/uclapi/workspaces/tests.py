@@ -1,5 +1,7 @@
 import os
+
 from binascii import hexlify
+from distutils.util import strtobool
 
 import redis
 
@@ -12,7 +14,6 @@ from .occupeye.token import (
     get_bearer_token,
     token_valid
 )
-from .occupeye.utils import str2bool
 
 
 class OccupEyeApiTestCase(TestCase):
@@ -135,7 +136,7 @@ class OccupEyeApiTestCase(TestCase):
             "12:00"
         )
         self.assertTrue(
-            str2bool(surveys[0]["staff_survey"])
+            strtobool(str(surveys[0]["staff_survey"]))
         )
 
         self.assertEqual(
@@ -156,25 +157,5 @@ class OccupEyeApiTestCase(TestCase):
             "17:00"
         )
         self.assertFalse(
-            str2bool(surveys[1]["staff_survey"])
+            strtobool(str(surveys[1]["staff_survey"]))
         )
-
-    def test_str2bool(self):
-        # return str(v).lower() in ("yes", "true", "t", "1")
-        self.assertTrue(str2bool("Yes"))
-        self.assertTrue(str2bool("YES"))
-        self.assertTrue(str2bool("yes"))
-        self.assertTrue(str2bool("True"))
-        self.assertTrue(str2bool("TRUE"))
-        self.assertTrue(str2bool("true"))
-        self.assertTrue(str2bool("T"))
-        self.assertTrue(str2bool("t"))
-        self.assertTrue(str2bool("1"))
-
-        self.assertFalse(str2bool("no"))
-        self.assertFalse(str2bool("No"))
-        self.assertFalse(str2bool("NO"))
-        self.assertFalse(str2bool("n"))
-        self.assertFalse(str2bool("False"))
-        self.assertFalse(str2bool("FALSE"))
-        self.assertFalse(str2bool("0"))

@@ -1,6 +1,7 @@
 import json
 
 from collections import OrderedDict
+from distutils.util import strtobool
 
 import redis
 
@@ -10,7 +11,6 @@ from .constants import OccupEyeConstants
 from .exceptions import BadOccupEyeRequest, OccupEyeOtherSensorState
 from .utils import (
     is_sensor_occupied,
-    str2bool,
     survey_ids_to_surveys
 )
 
@@ -52,10 +52,10 @@ class OccupEyeApi():
             survey = {
                 "id": int(survey_data["id"]),
                 "name": survey_data["name"],
-                "active": str2bool(survey_data["active"]),
+                "active": strtobool(survey_data["active"]),
                 "start_time": survey_data["start_time"],
                 "end_time": survey_data["end_time"],
-                "staff_survey": str2bool(survey_data["staff_survey"])
+                "staff_survey": strtobool(survey_data["staff_survey"])
             }
             # If we want to filter out staff surveys and this is a staff
             # one then we skip over it.
