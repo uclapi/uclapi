@@ -108,7 +108,7 @@ def throttle_api_call(token, token_type):
     if count_data is None:
         # Conditional fixes bug where a call is made exactly at midnight.
         # Redis cannot have key with TTL of 0
-        r.set(cache_key, 1, secs if secs != 0 else 1)
+        r.set(cache_key, 1, secs if secs > 0 else 86400)
         return (False, limit, limit - 1, secs)
     else:
         count = int(count_data)
