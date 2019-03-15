@@ -19,9 +19,9 @@ print(r.json())`,
   shell: `curl -G https://uclapi.com/workspaces/images/map/live \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d survey_id=22 \
--d map_id=3`,
+-d map_id=84`,
 
-  javascript: `fetch("https://uclapi.com/workspaces/images/map/live?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=22&map_id=3",
+  javascript: `fetch("https://uclapi.com/workspaces/images/map/live?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=22&map_id=84",
 {
     method: "GET",
 })
@@ -89,7 +89,7 @@ export default class WorkspacesGetLiveImage extends React.Component {
                         <Cell
                             name="map_id"
                             requirement="required"
-                            example="3"
+                            example="84"
                             description="The ID of the library's survey which contains the map you want to obtain." />
                         <Cell
                             name="image_scale"
