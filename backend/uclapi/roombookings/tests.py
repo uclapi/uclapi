@@ -442,3 +442,27 @@ class CreateRedisPageTokenTest(TestCase):
             query_decoded["test"],
             "test_data"
         )
+
+class GetBookingEndpointTest(TestCase):
+
+    def setUp(self):
+        self.factory = APIRequestFactory()
+
+        # Standard Token data
+        self.user_ = User.objects.create(cn="test", employee_id=7357)
+        self.app = App.objects.create(user=self.user_, name="An App")
+        def test_get_booking_default():
+            request = self.factory.get(
+                'roombookings/bookings',
+                {'token': self.app.api_token}
+            )
+            response = get_bookings(request)
+            self.assertEqual(response.status_code, 200)
+
+        def test_get_booking_invalid_results_per_page():
+            request = self.factory.get(
+                'roombookings/bookings',
+                {'token': self.app.api_token, 'results_per_page': 'ten'}
+            )
+            response = get_bookings(request)
+            self.assertEqual(response.status_code, 400)
