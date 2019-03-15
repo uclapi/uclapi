@@ -33,10 +33,12 @@ def get_rooms(request, *args, **kwargs):
         if request_params['capacity__gte']:
             float(request_params['capacity__gte'])
     except ValueError:
-        return PrettyJsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": "capacity should be a float"
         }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
 
     # Get available rooms:
     # - Filtered by this academic year only
