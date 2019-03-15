@@ -192,6 +192,9 @@ coordinates contains a lat and lng key with the latitude and longitude of the ro
               <Cell
                 name="Token does not exist"
                 description="Gets returned when you supply an invalid token." />
+              <Cell
+                name="capacity should be a float"
+                description="capacity should always be a float." />
               </Table>
           </Topic>
         </div>
