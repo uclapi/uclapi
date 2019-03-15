@@ -100,8 +100,6 @@ class NavbarConsistent extends React.Component {
 	}
 
 	render () {
-		console.log(this.state.isMenuHidden);
-
 		return <div className="navbar-extras">
 				<Toast className="navbarconsistent centered" pose={this.state.isVisible ? 'shown' : 'hidden'}>
 				  <a href={"/"}>
