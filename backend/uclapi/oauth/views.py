@@ -1,5 +1,6 @@
 import json
 import os
+import urllib.parse
 
 import redis
 from django.core import signing
@@ -624,8 +625,10 @@ def my_apps(request):
     except KeyError:
         # Build Shibboleth callback URL
         url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
-        param = (request.build_absolute_uri(request.path) +
-                 "shibcallback")
+        param = urllib.parse.urljoin(
+            request.build_absolute_uri(request.path),
+            "/shibcallback"
+        )
         param = quote(param)
         url = url + param
 
