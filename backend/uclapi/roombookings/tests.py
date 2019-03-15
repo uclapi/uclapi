@@ -28,7 +28,7 @@ from .helpers import (
 from .models import Room
 from timetable.models import Lock
 
-from .views import get_bookings
+from .views import get_bookings, get_rooms
 
 from uclapi.settings import REDIS_UCLAPI_HOST
 
@@ -442,3 +442,28 @@ class CreateRedisPageTokenTest(TestCase):
             query_decoded["test"],
             "test_data"
         )
+
+class GetRoomsEndpointTest(TestCase):
+
+    def setUp(self):
+        self.factory = APIRequestFactory()
+
+        # Standard Token data
+        self.user_ = User.objects.create(cn="test", employee_id=7357)
+        self.app = App.objects.create(user=self.user_, name="An App")
+
+    def test_get_rooms_default(self):
+        request = self.factory.get(
+            '/roombookings/rooms',
+            {'token': self.app.api_token}
+        )
+        response = get_rooms(request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_rooms_with_invalid_capacity(self):
+        request = self.factory.get(
+            '/roombookings/rooms',
+            {'token': self.app.api_token, 'capacity': '5-'}
+        )
+        response = get_rooms(request)
+        self.assertEqual(response.status_code, 400)
