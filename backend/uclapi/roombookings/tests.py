@@ -443,6 +443,7 @@ class CreateRedisPageTokenTest(TestCase):
             "test_data"
         )
 
+
 class GetBookingEndpointTest(TestCase):
 
     def setUp(self):
