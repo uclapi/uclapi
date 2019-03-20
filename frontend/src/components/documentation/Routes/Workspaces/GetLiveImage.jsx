@@ -38,10 +38,10 @@ let response = `
     <g transform="scale(0.02, 0.02)">
         <image width="28329.0" height="29882.0" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA7QAAA..."/>
         <g>
-            <g transform=""translate(13223.0,27477.0)">
+            <g id="603001" transform="translate(13223.0,27477.0)">
                 <circle r="128" fill="#FFC90E"/>
             </g>
-            <g transform="translate(13223.0,26708.0)">
+            <g id="603002" transform="translate(13223.0,26708.0)">
                 <circle r="128" fill="#FFC90E"/>
             </g>
             ...
@@ -119,7 +119,7 @@ export default class WorkspacesGetLiveImage extends React.Component {
                     codeExamples={responseCodeExample}>
                     <h2>Response</h2>
                     <p>
-                        The response will be XML SVG data that contains a base64-encoded PNG map (the same data that is returned by `/workspaces/images/map`) and vector circles designating which seats are free and occupied. An example of this returned data is on the right.
+                        The response will be XML SVG data that contains a base64-encoded PNG map (the same data that is returned by `/workspaces/images/map`) and vector circles designating which seats are free and occupied. Each &lt;g&gt; SVG element contains an ID that corresponds to the sensor ID, where additional information about the sensor can be retrieved via `/workspaces/sensors`. An example of this returned data is on the right.
                     </p>
                 </Topic>
             </div>
