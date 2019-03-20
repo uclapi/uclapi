@@ -2,6 +2,7 @@ import json
 
 from base64 import b64encode
 from datetime import datetime, timedelta
+from distutils.util import strtobool
 
 import redis
 import requests
@@ -16,8 +17,7 @@ from .exceptions import OccupEyeOtherSensorState
 from .token import get_bearer_token
 from .utils import (
     authenticated_request,
-    is_sensor_occupied,
-    str2bool
+    is_sensor_occupied
 )
 
 
@@ -98,10 +98,27 @@ class OccupeyeCache():
         )
         self.delete_surveys(pipeline, surveys_data)
         for survey in surveys_data:
+            # Check whether the survey has been discontinued. If so, we skip
+            # over it and refuse to cache it as it is now irrelevant.
+            if "EndDate" in survey:
+                end_date = datetime.strptime(
+                    survey["EndDate"],
+                    "%Y-%m-%d"
+                ).date()
+                if datetime.now().date() > end_date:
+                    continue
+
             survey_id = survey["SurveyID"]
             survey_key = self._const.SURVEY_DATA_KEY.format(
                 str(survey_id)
             )
+            # We check if the Survey's ID is in our list of staff survey
+            # constants. If so, we mark it as such so we can filter them
+            # out for students by default.
+            staff_survey = str(
+                int(survey["SurveyID"]) in self._const.STAFF_SURVEY_IDS
+            )
+
             pipeline.hmset(
                 survey_key,
                 {
@@ -109,7 +126,8 @@ class OccupeyeCache():
                     "active": str(survey["Active"]),
                     "name": survey["Name"],
                     "start_time": survey["StartTime"],
-                    "end_time": survey["EndTime"]
+                    "end_time": survey["EndTime"],
+                    "staff_survey": staff_survey
                 }
             )
             pipeline.lpush(
@@ -226,7 +244,7 @@ class OccupeyeCache():
                 "room_id": sensor_data["RoomID"],
                 "room_name": str(sensor_data["RoomName"]),
                 "share_id": str(sensor_data["ShareID"]),
-                "floor": str(str2bool(sensor_data["Floor"])),
+                "floor": str(sensor_data["Floor"]),
                 "room_type": str(sensor_data["RoomType"]),
                 "building_name": str(sensor_data["Building"]),
                 "room_description": str(sensor_data["RoomDescription"])
@@ -431,6 +449,9 @@ class OccupeyeCache():
                 "id": int(survey_id),
                 "name": survey_redis_data["name"],
                 "maps": [],
+                "staff_survey": strtobool(
+                    str(survey_redis_data["staff_survey"])
+                ),
                 "sensors_absent": 0,
                 "sensors_occupied": 0,
                 "sensors_other": 0
@@ -520,6 +541,14 @@ class OccupeyeCache():
         self._redis.set(
             self._const.SUMMARY_CACHE_ALL_SURVEYS,
             json.dumps(surveys)
+        )
+        self._redis.set(
+            self._const.SUMMARY_CACHE_ALL_STAFF_SURVEYS,
+            json.dumps([s for s in surveys if s['staff_survey']])
+        )
+        self._redis.set(
+            self._const.SUMMARY_CACHE_ALL_STUDENT_SURVEYS,
+            json.dumps([s for s in surveys if not s['staff_survey']])
         )
 
     def feed_cache(self, full):
