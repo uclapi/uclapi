@@ -307,7 +307,7 @@ def _get_timetable_events(full_modules):
                     else:
                         # This will give us 'Unknown' in all fields
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(None)
+                            _lecturers_cache[None]
 
                     date_str = date.strftime("%Y-%m-%d")
                     if date_str not in full_timetable:
@@ -355,7 +355,7 @@ def _get_timetable_events(full_modules):
                     else:
                         # This will give us 'Unknown' in all fields
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(None)
+                            _lecturers_cache[None]
 
 
                     date_str = booking.startdatetime.strftime("%Y-%m-%d")
