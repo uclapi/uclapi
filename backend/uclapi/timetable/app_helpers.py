@@ -42,8 +42,14 @@ _week_map = {}
 _week_num_date_map = {}
 _rooms_cache = {}
 _instance_cache = {}
-_lecturers_cache = {}
 _department_name_cache = {}
+_lecturers_cache = {}
+_lecturers_cache[None] = {
+    "name": "Unknown",
+    "email": "Unknown",
+    "department_id": "Unknown",
+    "department_name": "Unknown"
+}
 
 
 def get_cache(model_name):
@@ -113,6 +119,7 @@ def _get_lecturer_details(lecturer_upi):
     try:
         lecturer = lecturers.objects.get(lecturerid=lecturer_upi)
     except ObjectDoesNotExist:
+        _lecturers_cache[lecturer_upi] = details
         return details
 
     details["name"] = lecturer.name
