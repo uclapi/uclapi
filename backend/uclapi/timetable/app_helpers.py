@@ -287,18 +287,20 @@ def _get_timetable_events(full_modules):
 
                     # Check if the module timetable event's Lecturer ID
                     # exists. If not, we use the Lecturer ID associated
-                    # with the module as a whole. It's an ugly hack, but
+                    # with the module as a whole. If neither exist then 
+                    # we say that we don't know. It's an ugly hack, but
                     # it works around not all timetabled lectures having
                     # the Lecturer ID field filled as they should.
-                    # We assume therefore that if the lecturer isn't
-                    # specified then the class is to be led by the
-                    # module's owner.
-                    if event.lecturerid.strip():
+                    if event.lecturerid:
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(event.lecturerid)
+                            _get_lecturer_details(event.lecturerid.strip())
+                    elif module.lecturerid:
+                        event_data["module"]["lecturer"] = \
+                            _get_lecturer_details(module.lecturerid.strip())
                     else:
+                        # This will give us 'Unknown' in all fields
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(module.lecturerid)
+                            _get_lecturer_details(None)
 
                     date_str = date.strftime("%Y-%m-%d")
                     if date_str not in full_timetable:
@@ -333,18 +335,21 @@ def _get_timetable_events(full_modules):
 
                     # Check if the module timetable event's Lecturer ID
                     # exists. If not, we use the Lecturer ID associated
-                    # with the module as a whole. It's an ugly hack, but
+                    # with the module as a whole. If neither exist then 
+                    # we say that we don't know. It's an ugly hack, but
                     # it works around not all timetabled lectures having
                     # the Lecturer ID field filled as they should.
-                    # We assume therefore that if the lecturer isn't
-                    # specified then the class is to be led by the
-                    # module's owner.
-                    if event.lecturerid.strip():
+                    if event.lecturerid:
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(event.lecturerid)
+                            _get_lecturer_details(event.lecturerid.strip())
+                    elif module.lecturerid:
+                        event_data["module"]["lecturer"] = \
+                            _get_lecturer_details(module.lecturerid.strip())
                     else:
+                        # This will give us 'Unknown' in all fields
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(module.lecturerid)
+                            _get_lecturer_details(None)
+
 
                     date_str = booking.startdatetime.strftime("%Y-%m-%d")
                     if date_str not in full_timetable:
