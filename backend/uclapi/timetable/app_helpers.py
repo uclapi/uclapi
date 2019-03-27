@@ -123,7 +123,8 @@ def _get_lecturer_details(lecturer_upi):
         return details
 
     details["name"] = lecturer.name
-    details["email"] = lecturer.linkcode + "@ucl.ac.uk"
+    if lecturer.linkcode:
+        details["email"] = lecturer.linkcode + "@ucl.ac.uk"
 
     if lecturer.owner:
         details["department_id"] = lecturer.owner
