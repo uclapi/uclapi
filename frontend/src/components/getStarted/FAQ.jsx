@@ -26,7 +26,7 @@ class FAQ extends React.Component {
 
           <QandA 
           question={"Who is running this?"}
-          answer={["UCL API is a student-built platform. This means all of the features open to you as developers have been developed by students as well!"]}
+          answer={["UCL API is a student-built platform, backed and supported by UCL's Information Services Division (ISD). This means that all of the features in UCL API have been both developed by students and aimed at students such as yourself, so jump right in!"]}
           id={"4"} />
 
           <QandA 
