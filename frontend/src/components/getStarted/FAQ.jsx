@@ -31,7 +31,7 @@ class FAQ extends React.Component {
 
           <QandA
           question={"How do I get involved?"}
-          answer={["UCL API is available as a public repository on ", <a href="https://github.com/uclapi/uclapi">GitHub</a>, " for anybody to clone and inspect. Find an issue? Feel free to open an ", <a href="https://github.com/uclapi/uclapi/issues">Issue</a>, " or even a ", <a href="https://github.com/uclapi/uclapi/pulls>Pull Request</a>", " with a proposed fix! We also have annual hiring windows to recruit more students as others graduate, so keep an eye on our social media accounts."]}
+          answer={["UCL API is available as a public repository on ", <a href="https://github.com/uclapi/uclapi">GitHub</a>, " for anybody to clone and inspect. Find an issue? Feel free to open an ", <a href="https://github.com/uclapi/uclapi/issues">Issue</a>, " or even a ", <a href="https://github.com/uclapi/uclapi/pulls">Pull Request</a>", " with a proposed fix! We also have annual hiring windows to recruit more students as others graduate, so keep an eye on our social media accounts."]}
           id={"5"} />
 
           <QandA
