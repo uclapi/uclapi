@@ -16,7 +16,7 @@ class FAQ extends React.Component {
 
           <QandA 
           question={"Do I need to use a particlar language?"}
-          answer={["UCL API is a RESTful API meaning that you are not restricted to using any specific language.  Our ", <a href='/docs'>documentation</a>, " currently includes instructions on how to get up and running with Javascript, Python and Shell. However there is no restraints on the language you could use."]}
+          answer={["UCL API is a RESTful API meaning that you are not restricted to using any specific language. Our ", <a href='/docs'>documentation</a>, " currently includes instructions on how to get up and running with Javascript, Python and the Unix shell using cURL. However, you may use any other programming language so long as it can make web requests."]}
           id={"2"} />
 
           <QandA 
