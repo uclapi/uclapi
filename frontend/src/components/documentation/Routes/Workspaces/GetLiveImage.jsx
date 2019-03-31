@@ -9,8 +9,8 @@ let codeExamples = {
 
 params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
-  "survey_id": "22",
-  "map_id": "84"
+  "survey_id": "38",
+  "map_id": "105"
 }
 
 r = requests.get("https://uclapi.com/workspaces/images/map/live", params=params)
@@ -18,10 +18,10 @@ print(r.json())`,
 
   shell: `curl -G https://uclapi.com/workspaces/images/map/live \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
--d survey_id=22 \
--d map_id=84`,
+-d survey_id=38 \
+-d map_id=105`,
 
-  javascript: `fetch("https://uclapi.com/workspaces/images/map/live?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=22&map_id=84",
+  javascript: `fetch("https://uclapi.com/workspaces/images/map/live?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=38&map_id=105",
 {
     method: "GET",
 })
@@ -84,12 +84,12 @@ export default class WorkspacesGetLiveImage extends React.Component {
                         <Cell
                             name="survey_id"
                             requirement="required"
-                            example="22"
+                            example="38"
                             description="The ID of the library's survey which contains the map you want to obtain." />
                         <Cell
                             name="map_id"
                             requirement="required"
-                            example="84"
+                            example="105"
                             description="The ID of the library's survey which contains the map you want to obtain." />
                         <Cell
                             name="image_scale"
