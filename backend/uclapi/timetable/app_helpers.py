@@ -42,8 +42,14 @@ _week_map = {}
 _week_num_date_map = {}
 _rooms_cache = {}
 _instance_cache = {}
-_lecturers_cache = {}
 _department_name_cache = {}
+_lecturers_cache = {}
+_lecturers_cache[None] = {
+    "name": "Unknown",
+    "email": "Unknown",
+    "department_id": "Unknown",
+    "department_name": "Unknown"
+}
 
 
 def get_cache(model_name):
@@ -113,10 +119,12 @@ def _get_lecturer_details(lecturer_upi):
     try:
         lecturer = lecturers.objects.get(lecturerid=lecturer_upi)
     except ObjectDoesNotExist:
+        _lecturers_cache[lecturer_upi] = details
         return details
 
     details["name"] = lecturer.name
-    details["email"] = lecturer.linkcode + "@ucl.ac.uk"
+    if lecturer.linkcode:
+        details["email"] = lecturer.linkcode + "@ucl.ac.uk"
 
     if lecturer.owner:
         details["department_id"] = lecturer.owner
@@ -287,18 +295,20 @@ def _get_timetable_events(full_modules):
 
                     # Check if the module timetable event's Lecturer ID
                     # exists. If not, we use the Lecturer ID associated
-                    # with the module as a whole. It's an ugly hack, but
+                    # with the module as a whole. If neither exist then
+                    # we say that we don't know. It's an ugly hack, but
                     # it works around not all timetabled lectures having
                     # the Lecturer ID field filled as they should.
-                    # We assume therefore that if the lecturer isn't
-                    # specified then the class is to be led by the
-                    # module's owner.
-                    if event.lecturerid.strip():
+                    if event.lecturerid:
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(event.lecturerid)
+                            _get_lecturer_details(event.lecturerid.strip())
+                    elif module.lecturerid:
+                        event_data["module"]["lecturer"] = \
+                            _get_lecturer_details(module.lecturerid.strip())
                     else:
+                        # This will give us 'Unknown' in all fields
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(module.lecturerid)
+                            _lecturers_cache[None]
 
                     date_str = date.strftime("%Y-%m-%d")
                     if date_str not in full_timetable:
@@ -333,18 +343,21 @@ def _get_timetable_events(full_modules):
 
                     # Check if the module timetable event's Lecturer ID
                     # exists. If not, we use the Lecturer ID associated
-                    # with the module as a whole. It's an ugly hack, but
+                    # with the module as a whole. If neither exist then
+                    # we say that we don't know. It's an ugly hack, but
                     # it works around not all timetabled lectures having
                     # the Lecturer ID field filled as they should.
-                    # We assume therefore that if the lecturer isn't
-                    # specified then the class is to be led by the
-                    # module's owner.
-                    if event.lecturerid.strip():
+                    if event.lecturerid:
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(event.lecturerid)
+                            _get_lecturer_details(event.lecturerid.strip())
+                    elif module.lecturerid:
+                        event_data["module"]["lecturer"] = \
+                            _get_lecturer_details(module.lecturerid.strip())
                     else:
+                        # This will give us 'Unknown' in all fields
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(module.lecturerid)
+                            _lecturers_cache[None]
+
 
                     date_str = booking.startdatetime.strftime("%Y-%m-%d")
                     if date_str not in full_timetable:

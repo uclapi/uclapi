@@ -85,10 +85,12 @@ def get_bookings(request, *args, **kwargs):
         results_per_page = int(results_per_page)
         results_per_page = results_per_page if results_per_page > 0 else 1000
     except ValueError:
-        return PrettyJsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": "results_per_page should be an integer"
         }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
 
     results_per_page = results_per_page if results_per_page < 1000 else 1000
 
