@@ -266,6 +266,8 @@ class OccupeyeCache():
             ),
             self.bearer_token
         )
+        if not isinstance(all_sensors_data, dict):
+            return
         pipeline = self._redis.pipeline()
         for sensor_data in all_sensors_data:
             hardware_id = sensor_data["HardwareID"]
@@ -636,7 +638,7 @@ class OccupeyeCache():
             self._redis.llen(survey_maps_list_key)
         ))
         api_survey_maps_id_set = set(
-            [survey_map["MapID"] for survey_map in survey_maps_data]
+            [str(survey_map["MapID"]) for survey_map in survey_maps_data]
         )
         maps_to_delete = redis_survey_maps_set - api_survey_maps_id_set
 
@@ -688,9 +690,21 @@ class OccupeyeCache():
             self._redis.llen(self._const.SURVEYS_LIST_KEY)
         ))
         api_survey_id_set = set(
-            [survey["SurveyID"] for survey in surveys_data]
+            [str(survey["SurveyID"]) for survey in surveys_data]
         )
         surveys_to_delete = redis_survey_set - api_survey_id_set
+
+        for survey in surveys_data:
+            # Check whether the survey has been discontinued.
+            # If so, we refuse to cache it as it is now irrelevant.
+            if "EndDate" in survey:
+                end_date = datetime.strptime(
+                    survey["EndDate"],
+                    "%Y-%m-%d"
+                ).date()
+                if datetime.now().date() > end_date:
+                    surveys_to_delete.add(str(survey["SurveyID"]))
+
         pipeline.delete(self._const.SURVEYS_LIST_KEY)
         for survey_id in surveys_to_delete:
             pipeline.delete(self._const.SURVEY_DATA_KEY.format(survey_id))
@@ -725,7 +739,7 @@ class OccupeyeCache():
             self._redis.llen(survey_sensors_list_key)
         ))
         api_survey_sensors_id_set = set(
-            [survey_sensor["HardwareID"] for survey_sensor in all_sensors_data]
+            [str(survey_sensor["HardwareID"]) for survey_sensor in all_sensors_data]
         )
         sensors_to_delete = (
             redis_survey_sensors_set - api_survey_sensors_id_set

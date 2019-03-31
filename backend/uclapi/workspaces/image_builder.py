@@ -12,6 +12,7 @@ class ImageBuilder():
     """
     Builds an SVG image with live sensor statuses/
     """
+
     def __init__(self, survey_id, map_id):
         # Confirm integers
         if not survey_id.isdigit():
@@ -41,7 +42,7 @@ class ImageBuilder():
         self.set_image_scale()
         self.set_circle_radius()
 
-    def set_colours(self, absent="#ABE00C", occupied="#FFC90E"):
+    def set_colours(self, absent="#016810", occupied="#B60202"):
         self._absent_colour = absent
         self._occupied_colour = occupied
 
