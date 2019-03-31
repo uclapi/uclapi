@@ -41,7 +41,7 @@ class FAQ extends React.Component {
 
           <QandA 
           question={"What have other people built?"}
-          answer={["Applications such as Room Buddy for UCL which helps students to find the closest free room in UCL for studying. A full list of all of the applications created can be found on the ", <a href='/marketplace'>marketplace.</a>]}
+          answer={["From small Computer Science projects, to running lecture theatre central heating systems right up to UCL Assistant, UCL API is being used across UCL for many projects public and private. A full list of all (known!) applications available to the UCL community can be found at the ", <a href="/marketplace">Marketplace.</a>]}
           id={"7"} />
 
           <QandA 
