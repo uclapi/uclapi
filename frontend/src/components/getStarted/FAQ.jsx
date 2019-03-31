@@ -48,6 +48,11 @@ class FAQ extends React.Component {
           question={"How can I get in touch?"}
           answer={["If you have any other quieries get in touch with us on ", <a href="https://www.facebook.com/uclapi/">Facebook</a>, " or ", <a href="https://twitter.com/uclapi">Twitter</a>, ".  We also respond to emails to ", <a href="mailto:isd.apiteam@ucl.ac.uk">isd.apiteam@ucl.ac.uk</a>, "."]}
           id={"8"} />
+          
+          <QandA
+          question={"Who owns the Intellectual Property (IP) of what I build?"}
+          answer={["You do! We have no claim on your IP. However, we would ask that, if possible, you place somewhere in any apps you write with UCL API a mention that the data came from us; this it helps to raise awareness of this service for any student developers who might make use of your app. This is not strictly enforced though, as it may not be possible to include this attribution in an unintrusive manner (e.g. in a Slack bot). If you have any questions please feel free to reach out! We are very flexible on this as we want you to focus on creating great apps that will improve the lives of students at UCL."]}
+          id={"9"} />
         </div>
       </div>
     )
