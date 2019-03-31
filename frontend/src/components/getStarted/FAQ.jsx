@@ -46,7 +46,7 @@ class FAQ extends React.Component {
 
           <QandA 
           question={"How can I get in touch?"}
-          answer={["If you have any other quieries get in touch with us on ", <a href='https://www.facebook.com/uclapi/'>facebook</a>, " or ", <a href='https://twitter.com/uclapi'>twitter</a>, ".  We also respond to emails to isd.apiteam@ucl.ac.uk ."]}
+          answer={["If you have any other quieries get in touch with us on ", <a href="https://www.facebook.com/uclapi/">Facebook</a>, " or ", <a href="https://twitter.com/uclapi">Twitter</a>, ".  We also respond to emails to ", <a href="mailto:isd.apiteam@ucl.ac.uk">isd.apiteam@ucl.ac.uk</a>, "."]}
           id={"8"} />
         </div>
       </div>
