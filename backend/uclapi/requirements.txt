@@ -7,7 +7,7 @@ chardet==3.0.4
 ciso8601==2.1.1
 cx-Oracle==7.1.2
 decorator==4.4.0
-deepdiff==3.3.0
+deepdiff==4.0.2
 Django==1.11.20
 django-cors-headers==2.5.2
 django-dotenv==1.4.2
@@ -27,7 +27,7 @@ jinjasql==0.1.7
 jmespath==0.9.4
 jsonpickle==1.1
 keen==0.5.1
-kombu==4.4.0
+kombu==4.3.0
 lxml==4.3.3
 Markupsafe==1.1.1
 mock==2.0.0
@@ -38,7 +38,7 @@ psycopg2-binary==2.7.7
 python-dateutil==2.8.0
 pytz==2018.9
 raven==6.10.0
-redis==3.2.1
+redis==2.10.6
 requests==2.21.0
 requests-file==1.4.3
 requests-futures==0.9.9
