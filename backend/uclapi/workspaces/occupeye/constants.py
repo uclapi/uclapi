@@ -82,5 +82,5 @@ class OccupEyeConstants():
     VALID_HISTORICAL_DATA_DAYS = [1, 7, 30]
 
     # Set a filter for surveys designed for staff only
-    STAFF_SURVEY_IDS = [49, 59]
+    STAFF_SURVEY_IDS = [59]
     VALID_SURVEY_FILTERS = ["all", "staff", "student"]
