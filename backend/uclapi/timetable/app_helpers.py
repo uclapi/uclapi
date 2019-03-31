@@ -1,5 +1,6 @@
 import datetime
 import json
+from distutils.util import strtobool
 
 import redis
 from django.conf import settings
@@ -13,12 +14,21 @@ from roombookings.models import (
 )
 
 from .amp import ModuleInstance
-from .models import (DeptsA, DeptsB, LecturerA, LecturerB, Lock, ModuleA,
-                     ModuleB, SitesA, SitesB, StudentsA,
-                     StudentsB, StumodulesA, StumodulesB,  TimetableA,
-                     TimetableB, WeekmapnumericA, WeekmapnumericB,
-                     WeekstructureA, WeekstructureB,
-                     CminstancesA, CminstancesB)
+from .models import (
+    CminstancesA, CminstancesB,
+    CourseA, CourseB,
+    CrscompmodulesA, CrscompmodulesB,
+    CrsavailmodulesA, CrsavailmodulesB,
+    DeptsA, DeptsB,
+    LecturerA, LecturerB,
+    Lock,
+    ModuleA, ModuleB,
+    SitesA, SitesB,
+    StudentsA, StudentsB,
+    TimetableA, TimetableB,
+    WeekmapnumericA, WeekmapnumericB,
+    WeekstructureA, WeekstructureB
+)
 from .personal_timetable import get_personal_timetable
 from .tasks import cache_student_timetable
 from .utils import (
@@ -32,8 +42,14 @@ _week_map = {}
 _week_num_date_map = {}
 _rooms_cache = {}
 _instance_cache = {}
-_lecturers_cache = {}
 _department_name_cache = {}
+_lecturers_cache = {}
+_lecturers_cache[None] = {
+    "name": "Unknown",
+    "email": "Unknown",
+    "department_id": "Unknown",
+    "department_name": "Unknown"
+}
 
 
 def get_cache(model_name):
@@ -48,8 +64,10 @@ def get_cache(model_name):
         "rooms": [RoomA, RoomB],
         "sites": [SitesA, SitesB],
         "departments": [DeptsA, DeptsB],
-        "stumodules": [StumodulesA, StumodulesB],
         "cminstances": [CminstancesA, CminstancesB],
+        "course": [CourseA, CourseB],
+        "crsavailmodules": [CrsavailmodulesA, CrsavailmodulesB],
+        "crscompmodules": [CrscompmodulesA, CrscompmodulesB]
     }
     roombookings_models = {
         "booking": [BookingA, BookingB]
@@ -101,10 +119,12 @@ def _get_lecturer_details(lecturer_upi):
     try:
         lecturer = lecturers.objects.get(lecturerid=lecturer_upi)
     except ObjectDoesNotExist:
+        _lecturers_cache[lecturer_upi] = details
         return details
 
     details["name"] = lecturer.name
-    details["email"] = lecturer.linkcode + "@ucl.ac.uk"
+    if lecturer.linkcode:
+        details["email"] = lecturer.linkcode + "@ucl.ac.uk"
 
     if lecturer.owner:
         details["department_id"] = lecturer.owner
@@ -126,6 +146,87 @@ def _get_instance_details(instid):
     }
     _instance_cache[instid] = data
     return data
+
+
+def _is_instance_in_criteria(instance, query_params):
+    """
+    Given (validated) criteria, determines if an instance meets it
+
+    :param instance: instance details
+    :type instance: dict
+    :param query_params: parameters given by the user to the endpoint
+    :type query_params: django.http.QueryDict
+
+    :returns: True if instance is in criteria (query_params)
+    :rtype: bool
+    """
+    criteria_list = [
+        'term_1',
+        'term_2',
+        'term_3',
+        'term_1_next_year',
+        'summer',
+        'is_summer_school',
+        'session_1',
+        'session_2',
+        'lsr',
+        'year_long',
+        'is_undergraduate',
+        'fheq_level'
+    ]
+    comparator = {}
+    for i in range(len(criteria_list)):
+        if query_params.get(criteria_list[i]):
+            if i < 5:
+                comparator = instance['periods']['teaching_periods']
+            elif i < 6:
+                comparator = instance['periods']['summer_school']
+            elif i < 8:
+                comparator = instance['periods']['summer_school']['sessions']
+            elif i < 10:
+                comparator = instance['periods']
+            elif i < 11:
+                comparator = instance['delivery']
+            else:
+                comparator = instance['delivery']
+                if (comparator[criteria_list[i]] !=
+                        int(query_params.get(criteria_list[i]))):
+                    return False
+                continue
+            if (comparator[criteria_list[i]] !=
+                    strtobool(query_params.get(criteria_list[i]))):
+                return False
+    return True
+
+
+def validate_amp_query_params(query_params):
+    """
+    Validates that query params concerning AMP are of the valid type
+
+    :param query_params: parameters given by the user to the endpoint
+    :type query_params: django.http.QueryDict
+
+    :returns: True if query parameters are of valid form, False otherwise
+    :rtype: bool
+    """
+    bool_params = [
+        'term_1', 'term_2', 'term_3', 'term_1_next_year',
+        'summer', 'is_summer_school', 'session_1',
+        'session_2', 'lsr', 'year_long', 'is_undergraduate'
+    ]
+
+    for param in bool_params:
+        if query_params.get(param):
+            try:
+                strtobool(query_params.get(param))
+            except ValueError:
+                return False
+    if query_params.get('fheq_level'):
+        try:
+            int(query_params.get('fheq_level'))
+        except ValueError:
+            return False
+    return True
 
 
 def _get_timetable_events(full_modules):
@@ -194,18 +295,20 @@ def _get_timetable_events(full_modules):
 
                     # Check if the module timetable event's Lecturer ID
                     # exists. If not, we use the Lecturer ID associated
-                    # with the module as a whole. It's an ugly hack, but
+                    # with the module as a whole. If neither exist then
+                    # we say that we don't know. It's an ugly hack, but
                     # it works around not all timetabled lectures having
                     # the Lecturer ID field filled as they should.
-                    # We assume therefore that if the lecturer isn't
-                    # specified then the class is to be led by the
-                    # module's owner.
-                    if event.lecturerid.strip():
+                    if event.lecturerid:
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(event.lecturerid)
+                            _get_lecturer_details(event.lecturerid.strip())
+                    elif module.lecturerid:
+                        event_data["module"]["lecturer"] = \
+                            _get_lecturer_details(module.lecturerid.strip())
                     else:
+                        # This will give us 'Unknown' in all fields
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(module.lecturerid)
+                            _lecturers_cache[None]
 
                     date_str = date.strftime("%Y-%m-%d")
                     if date_str not in full_timetable:
@@ -240,18 +343,21 @@ def _get_timetable_events(full_modules):
 
                     # Check if the module timetable event's Lecturer ID
                     # exists. If not, we use the Lecturer ID associated
-                    # with the module as a whole. It's an ugly hack, but
+                    # with the module as a whole. If neither exist then
+                    # we say that we don't know. It's an ugly hack, but
                     # it works around not all timetabled lectures having
                     # the Lecturer ID field filled as they should.
-                    # We assume therefore that if the lecturer isn't
-                    # specified then the class is to be led by the
-                    # module's owner.
-                    if event.lecturerid.strip():
+                    if event.lecturerid:
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(event.lecturerid)
+                            _get_lecturer_details(event.lecturerid.strip())
+                    elif module.lecturerid:
+                        event_data["module"]["lecturer"] = \
+                            _get_lecturer_details(module.lecturerid.strip())
                     else:
+                        # This will give us 'Unknown' in all fields
                         event_data["module"]["lecturer"] = \
-                            _get_lecturer_details(module.lecturerid)
+                            _lecturers_cache[None]
+
 
                     date_str = booking.startdatetime.strftime("%Y-%m-%d")
                     if date_str not in full_timetable:
@@ -289,7 +395,7 @@ def _get_timetable_events_module_list(module_list):
         except (ObjectDoesNotExist, ValueError):
             return False
 
-    return _get_timetable_events(full_modules, False)
+    return _get_timetable_events(full_modules)
 
 
 def _map_weeks():
@@ -426,6 +532,124 @@ def get_departmental_modules(department_id):
             ** instance_data
         })
 
+    return dept_modules
+
+
+def _get_compulsory_course_modules(dept_modules, course_id, query_params):
+    """
+    Gets all compulsory modules on a given course,
+    filtering by instance criteria.
+
+    :param dept_modules: dictionary of department modules
+    :type dept_modules: dict
+    :param course_id: course id
+    :type course_id: str
+    :param query_params: dictionary of validated query parameters
+    :type query_params: django.http.QueryDict
+
+    """
+    modules = get_cache("crscompmodules")
+    for compulsory in modules.objects \
+                             .filter(courseid=course_id, setid=_SETID) \
+                             .only('moduleid'):
+        for module in get_cache("module").objects \
+                                         .filter(moduleid=compulsory.moduleid,
+                                                 setid=_SETID):
+            instance_data = _get_instance_details(module.instid)
+            if not _is_instance_in_criteria(instance_data, query_params):
+                continue
+
+            if module.moduleid not in dept_modules:
+                dept_modules[module.moduleid] = {
+                    "module_id": module.moduleid,
+                    "name": module.name,
+                    "instances": []
+                }
+
+            dept_modules[module.moduleid]['instances'].append({
+                "full_module_id": "{}-{}".format(
+                    module.moduleid,
+                    instance_data['instance_code']
+                ),
+                "class_size": module.csize,
+                ** instance_data
+            })
+
+
+def _get_available_course_modules(dept_modules, course_id, query_params):
+    """
+    Gets all available modules on a given course,
+    filtering by instance criteria.
+
+    :param dept_modules: dictionary of department modules
+    :type dept_modules: dict
+    :param course_id: course id
+    :type course_id: str
+    :param query_params: dictionary of validated criteria
+    :type query_params: django.http.QueryDict
+
+    """
+    modules = get_cache("crscompmodules")
+    modules = get_cache("crsavailmodules")
+    for available in modules.objects \
+                            .filter(courseid=course_id, setid=_SETID) \
+                            .only('moduleid'):
+        for module in get_cache("module").objects \
+                                            .filter(
+                                                moduleid=available.moduleid,
+                                                setid=_SETID
+                                            ):
+            instance_data = _get_instance_details(module.instid)
+            if not _is_instance_in_criteria(instance_data, query_params):
+                continue
+
+            if module.moduleid not in dept_modules:
+                dept_modules[module.moduleid] = {
+                    "module_id": module.moduleid,
+                    "name": module.name,
+                    "instances": []
+                }
+
+            dept_modules[module.moduleid]['instances'].append({
+                "full_module_id": "{}-{}".format(
+                    module.moduleid,
+                    instance_data['instance_code']
+                ),
+                "class_size": module.csize,
+                ** instance_data
+            })
+
+
+def get_course_modules(course_id, query_params):
+    """
+    Gets all modules on a given course, filtering by instance criteria.
+
+    :param course_id: course id
+    :type course_id: str
+    :param query_params: dictionary of validated criteria
+    :type query_params: django.http.QueryDict
+
+    :returns: course modules, filtered by instance criteria
+    :rtype: dict
+
+    """
+    dept_modules = {}
+    if not query_params.get('only_available') is None:
+        if strtobool(query_params.get('only_available')):
+            _get_available_course_modules(dept_modules,
+                                          course_id,
+                                          query_params)
+            return dept_modules
+
+    if not query_params.get('only_compulsory') is None:
+        if strtobool(query_params.get('only_compulsory')):
+            _get_compulsory_course_modules(dept_modules,
+                                           course_id,
+                                           query_params)
+            return dept_modules
+
+    _get_available_course_modules(dept_modules, course_id, query_params)
+    _get_compulsory_course_modules(dept_modules, course_id, query_params)
     return dept_modules
 
 

@@ -28,6 +28,8 @@ from roombookings.models import \
     Booking, BookingA, BookingB
 from timetable.models import \
     Cminstances, CminstancesA, CminstancesB, \
+    Crsavailmodules, CrsavailmodulesA, CrsavailmodulesB, \
+    Crscompmodules, CrscompmodulesA, CrscompmodulesB, \
     Course, CourseA, CourseB, \
     Depts, DeptsA, DeptsB, \
     Lecturer, LecturerA, LecturerB, \
@@ -61,6 +63,8 @@ tables = [
     (Booking, BookingA, BookingB, True, True, True),
     (Cminstances, CminstancesA, CminstancesB, True, False, False),
     (Course, CourseA, CourseB, True, False, False),
+    (Crsavailmodules, CrsavailmodulesA, CrsavailmodulesB, True, False, True),
+    (Crscompmodules, CrscompmodulesA, CrscompmodulesB, True, False, True),
     (Depts, DeptsA, DeptsB, False, False, False),
     (Lecturer, LecturerA, LecturerB, True, False, True),
     (Module, ModuleA, ModuleB, True, False, False),

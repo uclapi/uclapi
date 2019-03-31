@@ -106,6 +106,7 @@ class ImageBuilder():
 
         for sensor_id, sensor_data in the_map["sensors"].items():
             node = etree.SubElement(bubble_overlay, "g")
+            node.attrib["id"] = sensor_id
             node.attrib["transform"] = "translate({},{})".format(
                 sensor_data["x_pos"],
                 sensor_data["y_pos"]

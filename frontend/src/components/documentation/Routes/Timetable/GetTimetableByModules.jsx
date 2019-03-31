@@ -135,11 +135,6 @@ export default class GetEquiment extends React.Component {
                 example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
                 description="Authentication token." />
               <Cell
-                name="client_secret"
-                requirement="required"
-                example="mysecret"
-                description="Client secret of the authenticating app." />
-              <Cell
                 name="modules"
                 requirement="required"
                 example="COMP0030,COMP0133-A7U-T1"

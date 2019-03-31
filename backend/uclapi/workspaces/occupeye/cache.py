@@ -2,6 +2,7 @@ import json
 
 from base64 import b64encode
 from datetime import datetime, timedelta
+from distutils.util import strtobool
 
 import redis
 import requests
@@ -16,8 +17,7 @@ from .exceptions import OccupEyeOtherSensorState
 from .token import get_bearer_token
 from .utils import (
     authenticated_request,
-    is_sensor_occupied,
-    str2bool
+    is_sensor_occupied
 )
 
 
@@ -52,13 +52,19 @@ class OccupeyeCache():
         survey_maps_list_key = (
             self._const.SURVEY_MAPS_LIST_KEY
         ).format(survey_id)
-        pipeline = self._redis.pipeline()
         survey_maps_data = authenticated_request(
             self._const.URL_MAPS_BY_SURVEY.format(survey_id),
             self.bearer_token
         )
+        pipeline = self._redis.pipeline()
 
-        pipeline.delete(survey_maps_list_key)
+        self.delete_maps(
+            pipeline,
+            survey_id,
+            survey_maps_list_key,
+            survey_maps_data
+        )
+
         for survey_map in survey_maps_data:
             survey_map_id = self._const.SURVEY_MAP_DATA_KEY.format(
                 survey_id,
@@ -76,6 +82,7 @@ class OccupeyeCache():
                 survey_maps_list_key,
                 survey_map["MapID"]
             )
+
         pipeline.execute()
 
     def cache_survey_data(self):
@@ -85,17 +92,33 @@ class OccupeyeCache():
         helper function above to tie all maps to surveys.
         """
         pipeline = self._redis.pipeline()
-        pipeline.delete(self._const.SURVEYS_LIST_KEY)
         surveys_data = authenticated_request(
             self._const.URL_SURVEYS,
             self.bearer_token
         )
-
+        self.delete_surveys(pipeline, surveys_data)
         for survey in surveys_data:
+            # Check whether the survey has been discontinued. If so, we skip
+            # over it and refuse to cache it as it is now irrelevant.
+            if "EndDate" in survey:
+                end_date = datetime.strptime(
+                    survey["EndDate"],
+                    "%Y-%m-%d"
+                ).date()
+                if datetime.now().date() > end_date:
+                    continue
+
             survey_id = survey["SurveyID"]
             survey_key = self._const.SURVEY_DATA_KEY.format(
                 str(survey_id)
             )
+            # We check if the Survey's ID is in our list of staff survey
+            # constants. If so, we mark it as such so we can filter them
+            # out for students by default.
+            staff_survey = str(
+                int(survey["SurveyID"]) in self._const.STAFF_SURVEY_IDS
+            )
+
             pipeline.hmset(
                 survey_key,
                 {
@@ -103,7 +126,8 @@ class OccupeyeCache():
                     "active": str(survey["Active"]),
                     "name": survey["Name"],
                     "start_time": survey["StartTime"],
-                    "end_time": survey["EndTime"]
+                    "end_time": survey["EndTime"],
+                    "staff_survey": staff_survey
                 }
             )
             pipeline.lpush(
@@ -189,8 +213,13 @@ class OccupeyeCache():
         survey_sensors_list_key = (
             self._const.SURVEY_SENSORS_LIST_KEY
         ).format(survey_id)
+        self.delete_sensors(
+            pipeline,
+            survey_id,
+            survey_sensors_list_key,
+            all_sensors_data
+        )
 
-        pipeline.delete(survey_sensors_list_key)
         for sensor_data in all_sensors_data:
             hardware_id = sensor_data["HardwareID"]
             sensor_data_key = (
@@ -215,7 +244,7 @@ class OccupeyeCache():
                 "room_id": sensor_data["RoomID"],
                 "room_name": str(sensor_data["RoomName"]),
                 "share_id": str(sensor_data["ShareID"]),
-                "floor": str(str2bool(sensor_data["Floor"])),
+                "floor": str(sensor_data["Floor"]),
                 "room_type": str(sensor_data["RoomType"]),
                 "building_name": str(sensor_data["Building"]),
                 "room_description": str(sensor_data["RoomDescription"])
@@ -237,6 +266,8 @@ class OccupeyeCache():
             ),
             self.bearer_token
         )
+        if not isinstance(all_sensors_data, dict):
+            return
         pipeline = self._redis.pipeline()
         for sensor_data in all_sensors_data:
             hardware_id = sensor_data["HardwareID"]
@@ -420,6 +451,9 @@ class OccupeyeCache():
                 "id": int(survey_id),
                 "name": survey_redis_data["name"],
                 "maps": [],
+                "staff_survey": strtobool(
+                    str(survey_redis_data["staff_survey"])
+                ),
                 "sensors_absent": 0,
                 "sensors_occupied": 0,
                 "sensors_other": 0
@@ -510,6 +544,14 @@ class OccupeyeCache():
             self._const.SUMMARY_CACHE_ALL_SURVEYS,
             json.dumps(surveys)
         )
+        self._redis.set(
+            self._const.SUMMARY_CACHE_ALL_STAFF_SURVEYS,
+            json.dumps([s for s in surveys if s['staff_survey']])
+        )
+        self._redis.set(
+            self._const.SUMMARY_CACHE_ALL_STUDENT_SURVEYS,
+            json.dumps([s for s in surveys if not s['staff_survey']])
+        )
 
     def feed_cache(self, full):
         """
@@ -584,3 +626,136 @@ class OccupeyeCache():
         self._redis.set(last_modified_key, current_timestamp)
 
         print("[+] Done")
+
+    def delete_maps(
+        self, pipeline, survey_id,
+        survey_maps_list_key, survey_maps_data
+    ):
+        """Delete maps that no longer exist in a survey"""
+        redis_survey_maps_set = set(self._redis.lrange(
+            survey_maps_list_key,
+            0,
+            self._redis.llen(survey_maps_list_key)
+        ))
+        api_survey_maps_id_set = set(
+            [str(survey_map["MapID"]) for survey_map in survey_maps_data]
+        )
+        maps_to_delete = redis_survey_maps_set - api_survey_maps_id_set
+
+        pipeline.delete(survey_maps_list_key)
+        for map_id in maps_to_delete:
+            pipeline.delete(
+                self._const.SURVEY_MAP_DATA_KEY.format(survey_id, map_id)
+            )
+            pipeline.delete(
+                self._const.SURVEY_MAP_VMAX_X_KEY.format(survey_id, map_id)
+            )
+            pipeline.delete(
+                self._const.SURVEY_MAP_VMAX_Y_KEY.format(survey_id, map_id)
+            )
+            pipeline.delete(
+                self._const.SURVEY_MAP_VIEWBOX_KEY.format(survey_id, map_id)
+            )
+            survey_maps_sensors_key = (
+                self._const.SURVEY_MAP_SENSORS_LIST_KEY.format(
+                    survey_id,
+                    map_id
+                )
+            )
+            survey_maps_sensors_list = self._redis.lrange(
+                survey_maps_sensors_key,
+                0,
+                self._redis.llen(survey_maps_sensors_key)
+            )
+            for sensor_id in survey_maps_sensors_list:
+                pipeline.delete(
+                    self._const.SURVEY_MAP_SENSOR_PROPERTIES_KEY.format(
+                        survey_id,
+                        map_id,
+                        sensor_id
+                    )
+                )
+            image_id = self._redis.hgetall(
+                self._const.SURVEY_MAP_DATA_KEY.format(survey_id, map_id)
+            )['image_id']
+            self.delete_image(pipeline, image_id)
+
+            pipeline.delete(survey_maps_sensors_key)
+
+    def delete_surveys(self, pipeline, surveys_data):
+        """Delete surveys that no longer exist"""
+        redis_survey_set = set(self._redis.lrange(
+            self._const.SURVEYS_LIST_KEY,
+            0,
+            self._redis.llen(self._const.SURVEYS_LIST_KEY)
+        ))
+        api_survey_id_set = set(
+            [str(survey["SurveyID"]) for survey in surveys_data]
+        )
+        surveys_to_delete = redis_survey_set - api_survey_id_set
+
+        for survey in surveys_data:
+            # Check whether the survey has been discontinued.
+            # If so, we refuse to cache it as it is now irrelevant.
+            if "EndDate" in survey:
+                end_date = datetime.strptime(
+                    survey["EndDate"],
+                    "%Y-%m-%d"
+                ).date()
+                if datetime.now().date() > end_date:
+                    surveys_to_delete.add(str(survey["SurveyID"]))
+
+        pipeline.delete(self._const.SURVEYS_LIST_KEY)
+        for survey_id in surveys_to_delete:
+            pipeline.delete(self._const.SURVEY_DATA_KEY.format(survey_id))
+            pipeline.delete(self._const.SUMMARY_CACHE_SURVEY.format(survey_id))
+            pipeline.delete(
+                self._const.SURVEY_MAX_TIMESTAMP_KEY.format(survey_id)
+            )
+
+            survey_maps_list_key = self._const.SURVEY_MAPS_LIST_KEY.format(
+                survey_id
+            )
+            self.delete_maps(pipeline, survey_id, survey_maps_list_key, [])
+
+            survey_sensors_list_key = (
+                self._const.SURVEY_SENSORS_LIST_KEY.format(survey_id)
+            )
+            self.delete_sensors(
+                pipeline,
+                survey_id,
+                survey_sensors_list_key,
+                []
+            )
+
+    def delete_sensors(
+        self, pipeline, survey_id,
+        survey_sensors_list_key, all_sensors_data
+    ):
+        """Delete sensors that no longer exist in a survey"""
+        redis_survey_sensors_set = set(self._redis.lrange(
+            survey_sensors_list_key,
+            0,
+            self._redis.llen(survey_sensors_list_key)
+        ))
+        api_survey_sensors_id_set = set(
+            [str(survey_sensor["HardwareID"]) for survey_sensor in all_sensors_data]
+        )
+        sensors_to_delete = (
+            redis_survey_sensors_set - api_survey_sensors_id_set
+        )
+        pipeline.delete(survey_sensors_list_key)
+        for sensor_id in sensors_to_delete:
+            pipeline.delete(
+                self._const.SURVEY_SENSOR_DATA_KEY.format(survey_id, sensor_id)
+            )
+            pipeline.delete(
+                self._const.SURVEY_SENSOR_STATUS_KEY.format(
+                    survey_id, sensor_id
+                )
+            )
+
+    def delete_image(self, pipeline, image_id):
+        "Deletes images that no longer are used by the API"""
+        pipeline.delete(self._const.IMAGE_BASE64_KEY.format(image_id))
+        pipeline.delete(self._const.IMAGE_CONTENT_TYPE_KEY.format(image_id))
