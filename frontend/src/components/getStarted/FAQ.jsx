@@ -36,7 +36,7 @@ class FAQ extends React.Component {
 
           <QandA 
           question={"Does this cost anything?"}
-          answer={["UCL API is and will always be a completely free platform as the purpose is to enable innovation to better the student experience. This cannot be done without amazing developers using the API and so we will never make this monetized."]}
+          answer={["UCL API is and will always be a completely free as the platform's purpose is to enable innovation to better the student experience. This cannot be done without amazing developers such as yourself using the API."]}
           id={"6"} />
 
           <QandA 
