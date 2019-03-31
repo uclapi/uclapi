@@ -30,7 +30,7 @@ class FAQ extends React.Component {
           id={"4"} />
 
           <QandA 
-          question={"How do i get involved?"}
+          question={"How do I get involved?"}
           answer={["UCL API is available as a public repository on github for anybody to clone and then make a pull request from. It can be found ", <a href='https://github.com/uclapi/uclapi'>here</a>, "."]}
           id={"5"} />
 
