@@ -242,7 +242,7 @@ def _get_timetable_events(full_modules):
     distinct_fields = (
         'setid', 'siteid', 'roomid', 'sitename', 'roomname', 'bookabletype',
         'slotid', 'bookingid', 'starttime', 'finishtime', 'startdatetime',
-        'finishdatetime', 'weeknumber', 'condisplayname', 'phone', 'descrip'
+        'finishdatetime', 'weeknumber', 'condisplayname', 'phone', 'descrip',
     )
     event_bookings_list = {}
     full_timetable = {}
@@ -269,7 +269,6 @@ def _get_timetable_events(full_modules):
                         bookings.objects \
                                 .filter(
                                     slotid=event.slotid,
-                                    title=module.name
                                 ).distinct(*distinct_fields)
             event_bookings = event_bookings_list[event.slotid]
             # .exists() instead of len so we don't evaluate all of the filter
