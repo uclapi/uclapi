@@ -20,7 +20,7 @@
   },
   "homepage": "https://uclapi.com",
   "dependencies": {
-    "@material-ui/core": "^3.9.1",
+    "@material-ui/core": "^3.9.3",
     "ajv": "^6.10.0",
     "aphrodite": "^2.3.1",
     "glamor": "^2.20.40",
@@ -33,13 +33,13 @@
     "react-dom": "^16.8.4",
     "react": "^16.8.4",
     "react-router-dom": "^4.3.1",
-    "react-syntax-highlighter": "^10.2.0",
+    "react-syntax-highlighter": "^10.2.1",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "@babel/preset-env": "^7.4.1",
+    "@babel/preset-env": "^7.4.2",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.5",
     "babelify": "^10.0.0",
