@@ -38,11 +38,11 @@ let response = `
     <g transform="scale(0.02, 0.02)">
         <image width="28329.0" height="29882.0" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA7QAAA..."/>
         <g>
-            <g id="603001" transform="translate(13223.0,27477.0)">
-                <circle r="128" fill="#FFC90E"/>
+            <g transform="translate(13223.0,27477.0)">
+                <circle r="128" fill="#B60202"/>
             </g>
-            <g id="603002" transform="translate(13223.0,26708.0)">
-                <circle r="128" fill="#FFC90E"/>
+            <g transform="translate(13223.0,26708.0)">
+                <circle r="128" fill="#B60202"/>
             </g>
             ...
         </g>
@@ -104,13 +104,13 @@ export default class WorkspacesGetLiveImage extends React.Component {
                         <Cell
                             name="absent_colour"
                             requirement="optional"
-                            example="#ABE00C"
-                            description="The colour of the circle designating a free seat. This must be provided as a hex colour code, including the preceeding # symbol. The default is #ABE00C." />
+                            example="#016810"
+                            description="The colour of the circle designating a free seat. This must be provided as a hex colour code, including the preceeding # symbol. The default is #016810." />
                         <Cell
                             name="occupied_colour"
                             requirement="optional"
-                            example="#FFC90E"
-                            description="The colour of the circle designating a taken, or occupied, seat. This must be provided as a hex colour code, including the preceeding # symbol. The default is #FFC90E." />
+                            example="#B60202"
+                            description="The colour of the circle designating a taken, or occupied, seat. This must be provided as a hex colour code, including the preceeding # symbol. The default is #B60202." />
                     </Table>
                 </Topic>
 
