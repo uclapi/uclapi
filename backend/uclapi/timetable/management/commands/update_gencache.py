@@ -342,14 +342,15 @@ class Command(BaseCommand):
         # Cache has been run now, so we can delete the key to allow it
         # to be run again in the future.
         self._redis.delete(cache_running_key)
-
-        url = "https://cachet.apps.uclapi.com/api/v1/components/2"
-        cachet_token = settings.CACHET_KEY
-        cachet_format = "application/x-www-form-urlencoded"
-        payload_headers = {"X-Cachet-Token": cachet_token,
-                           "Content-Type": cachet_format}
-        payload = {"status": 1}
-        requests.request("PUT", url, data=payload, headers=payload_headers)
-        print("Cachet updated")
+        if not settings.DEBUG:
+            url = settings.CACHET_URL
+            url = url+"components/2"
+            cachet_token = settings.CACHET_TOKEN
+            cachet_format = "application/x-www-form-urlencoded"
+            payload_headers = {"X-Cachet-Token": cachet_token,
+                               "Content-Type": cachet_format}
+            payload = {"status": 1}
+            requests.put(url, data=payload, headers=payload_headers)
+            print("Cachet updated")
 
         call_command('trigger_webhooks')
