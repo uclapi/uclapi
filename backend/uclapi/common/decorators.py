@@ -48,6 +48,7 @@ def how_many_seconds_until_midnight():
 
 
 def log_api_call(request, token, token_type):
+    """This functions handles logging of api calls using keen events."""
     service = request.path.split("/")[1]
     method = request.path.split("/")[2]
 
