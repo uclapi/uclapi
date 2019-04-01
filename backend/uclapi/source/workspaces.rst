@@ -7,10 +7,18 @@ Contents
 .. toctree::
    workspaces
 
-Caching Class
--------------------------
+image_builder.py
+--------------------
 
-This shoud be our caching class
+.. automodule:: workspaces.image_builder
+   :members:
+   :undoc-members:
+   :private-members:
 
-.. autoclass:: workspaces.occupeye.cache.OccupeyeCache
-    :members:
+views.py
+--------------------
+
+.. automodule:: workspaces.views
+   :members:
+   :undoc-members:
+   :private-members:
