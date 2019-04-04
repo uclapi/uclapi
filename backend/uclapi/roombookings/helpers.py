@@ -90,7 +90,7 @@ def _get_paginated_bookings(page_token):
 def _paginated_result(query, page_number, pagination):
     try:
         lock = Lock.objects.all()[0]
-        curr = BookingA if not lock.a else BookingB
+        curr = BookingA if lock.a else BookingB
         all_bookings = curr.objects.filter(
             Q(bookabletype='CB') | Q(siteid='238') | Q(siteid='240'),
             **query
