@@ -39,11 +39,13 @@ class Command(BaseCommand):
 
         old_bookings = _serialize_bookings(
             old_booking_table.objects.filter(
+                Q(bookabletype='CB') | Q(siteid='238') | Q(siteid='240'),
                 startdatetime__gt=now
             )
         )
         new_bookings = _serialize_bookings(
             new_booking_table.objects.filter(
+                Q(bookabletype='CB') | Q(siteid='238') | Q(siteid='240'),
                 startdatetime__gt=now
             )
         )
