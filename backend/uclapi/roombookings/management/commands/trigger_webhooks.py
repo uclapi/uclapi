@@ -25,10 +25,10 @@ class Command(BaseCommand):
         self.stdout.write("Triggering webhooks")
         session = FuturesSession()
 
-        # currently locked table is the old one, more recent one is not locked
+        # currently not locked table is the old one, more recent one is locked
         lock = Lock.objects.all()[0]  # there is only ever one lock
 
-        if lock.a:
+        if not lock.a:
             old_booking_table = BookingA
             new_booking_table = BookingB
         else:
