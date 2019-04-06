@@ -203,7 +203,7 @@ def delete_app(request):
         app = apps[0]
         app.deleted = True
         webhook = app.webhook
-        webhook.url = ""
+        webhook.url = None
         webhook.siteid = ""
         webhook.roomid = ""
         webhook.contact = ""
