@@ -137,7 +137,7 @@ def get_survey_sensors(request, *args, **kwargs):
     response = JsonResponse({
         "ok": True,
         **data
-    })
+    }, custom_header_data=kwargs)
     return response
 
 
