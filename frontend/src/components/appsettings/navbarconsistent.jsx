@@ -33,7 +33,7 @@ let links = [
 		src: "dashboard", 
 	},
 ]
-const maxScreen = 700;
+const maxScreen = 770;
 
 
 class NavbarConsistent extends React.Component {

@@ -57,24 +57,24 @@ $navbarHeight: 60px;
   }
 }
 .bounce-image {
-  padding-right: 25px;
-  float: left;
-  width: 16px;
-  height: 16px;
-  transition-property: margin-top;
-  transition-timing-function: linear;
-  transition-duration: 0.2s;
-  padding-left: 25px;
+    float: left;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    transition-property: margin-top;
+    transition-timing-function: linear;
+    transition-duration: 0.2s;
 }
 .link-to-page { 
     display: inline-block;
     float: right;
     height: 16px;
-    margin-top: 20px;
+    margin: 20px 25px 0 25px;
 
     img {
       width: 16px;
       height: 16px;
+      margin: 0;
     }
 }
 .link-to-page h1 {
@@ -88,6 +88,7 @@ $navbarHeight: 60px;
     font-weight: normal;
 }
 .link-to-page a {
+    display: inline-block;
     float: left;
     text-decoration: none;
     color: #FFFFFF;
