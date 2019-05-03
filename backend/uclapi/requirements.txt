@@ -1,5 +1,5 @@
 amqp==2.4.2
-boto3==1.9.133
+boto3==1.9.141
 botocore==1.12.133
 celery==4.3.0
 certifi==2019.3.9
