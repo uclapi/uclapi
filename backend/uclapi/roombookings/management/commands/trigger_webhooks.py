@@ -7,6 +7,7 @@ from datetime import datetime
 from deepdiff import DeepDiff
 from django.utils import timezone
 from requests_futures.sessions import FuturesSession
+from django.db.models import Q
 
 
 class Command(BaseCommand):
