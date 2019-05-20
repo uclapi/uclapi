@@ -53,7 +53,7 @@ class Command(BaseCommand):
 
         ddiff = DeepDiff(old_bookings, new_bookings, ignore_order=True)
 
-        webhooks = Webhook.objects.all()
+        webhooks = Webhook.objects.filter(app__deleted=False)
         #  assumption: list of webhooks will be longer than ddiff
 
         num_bookings_added = 0

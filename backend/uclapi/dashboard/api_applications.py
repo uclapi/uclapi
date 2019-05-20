@@ -202,6 +202,13 @@ def delete_app(request):
     else:
         app = apps[0]
         app.deleted = True
+        webhook = app.webhook
+        webhook.url = ""
+        webhook.siteid = ""
+        webhook.roomid = ""
+        webhook.contact = ""
+        webhook.enabled = False
+        webhook.save()
         app.save()
 
         keen_add_event.delay("App deleted", {
