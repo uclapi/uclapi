@@ -25,10 +25,10 @@ class Command(BaseCommand):
         self.stdout.write("Triggering webhooks")
         session = FuturesSession()
 
-        # currently locked table is the old one, more recent one is not locked
+        # currently not locked table is the old one, more recent one is locked
         lock = Lock.objects.all()[0]  # there is only ever one lock
 
-        if lock.a:
+        if not lock.a:
             old_booking_table = BookingA
             new_booking_table = BookingB
         else:
@@ -50,7 +50,7 @@ class Command(BaseCommand):
 
         ddiff = DeepDiff(old_bookings, new_bookings, ignore_order=True)
 
-        webhooks = Webhook.objects.all()
+        webhooks = Webhook.objects.filter(app__deleted=False)
         #  assumption: list of webhooks will be longer than ddiff
 
         num_bookings_added = 0
