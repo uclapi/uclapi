@@ -23,7 +23,8 @@ def get_location_coordinates(siteid, roomid):
 
     :raise Location.DoesNotExist: If the site can not be found
 
-    :returns: latitude and longitude, or None,None in failure to raise exception
+    :returns: latitude and longitude, or None,None in failure to
+              raise exception
     :rtype: tuple (string,string)
     """
     # First try and get the specific room's location
