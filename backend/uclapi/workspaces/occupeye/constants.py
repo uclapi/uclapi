@@ -88,8 +88,10 @@ class OccupEyeConstants():
     # address mapping
 
     SURVEY_LOCATIONS = {
-        "UCL Torrington 1-19 113": {"lat": "51.521886", "long": "-0.134415",
-         "address": ["1-19 Torrington Pl", "Fitzrovia", "London", "WC1E 7HB"]},
+        "UCL Torrington 1-19 113": {
+         "lat": "51.521886", "long": "-0.134415",
+         "address": ["1-19 Torrington Pl", "Fitzrovia", "London", "WC1E 7HB"]
+        },
         "UCL Student Centre": {"lat": "51.524916", "long": "-0.132371",
          "address": ["27-28 Gordon Square", "Bloomsbury", "London", "WC1H 0AH"]},
         "UCL SSEES Library": {"lat": "51.525342", "long": "-0.131602",
