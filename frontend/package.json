@@ -33,7 +33,7 @@
     "react-dom": "^16.8.6",
     "react": "^16.8.6",
     "react-router-dom": "^5.0.0",
-    "react-syntax-highlighter": "^10.2.1",
+    "react-syntax-highlighter": "^10.3.0",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
