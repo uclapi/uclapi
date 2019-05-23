@@ -222,11 +222,21 @@ class OccupEyeConstants():
         },
         "UCL Archaeology 501": {
          "lat": "51.524908", "long": "-0.131575",
-         "address": ["31-34 Gordon Square", "Kings Cross", "London", "WC1H 0PY"]
+         "address": [
+            "31-34 Gordon Square",
+            "Kings Cross",
+            "London",
+            "WC1H 0PY"
+         ]
         },
         "UCL Archaeology 117": {
          "lat": "51.524908", "long": "-0.131575",
-         "address": ["31-34 Gordon Square", "Kings Cross", "London", "WC1H 0PY"]
+         "address": [
+            "31-34 Gordon Square",
+            "Kings Cross",
+            "London",
+            "WC1H 0PY"
+         ]
         },
         "UCL Anatomy Hub ": {
          "lat": "51.523625", "long": "-0.133624",
