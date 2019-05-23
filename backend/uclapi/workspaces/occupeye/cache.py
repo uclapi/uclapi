@@ -127,7 +127,13 @@ class OccupeyeCache():
                     "name": survey["Name"],
                     "start_time": survey["StartTime"],
                     "end_time": survey["EndTime"],
-                    "staff_survey": staff_survey
+                    "staff_survey": staff_survey,
+                    "lat": self._const.SURVEY_LOCATIONS[survey["Name"]]["lat"],
+                    "long": self._const.SURVEY_LOCATIONS[survey["Name"]]["long"],
+                    "address1": self._const.SURVEY_LOCATIONS[survey["Name"]]["address"][0],
+                    "address2": self._const.SURVEY_LOCATIONS[survey["Name"]]["address"][1],
+                    "address3": self._const.SURVEY_LOCATIONS[survey["Name"]]["address"][2],
+                    "address4": self._const.SURVEY_LOCATIONS[survey["Name"]]["address"][3]
                 }
             )
             pipeline.lpush(
