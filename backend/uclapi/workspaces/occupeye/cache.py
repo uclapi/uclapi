@@ -118,7 +118,7 @@ class OccupeyeCache():
             staff_survey = str(
                 int(survey["SurveyID"]) in self._const.STAFF_SURVEY_IDS
             )
-
+            location_data = self._const.SURVEY_LOCATIONS[survey["Name"]]
             pipeline.hmset(
                 survey_key,
                 {
@@ -128,12 +128,12 @@ class OccupeyeCache():
                     "start_time": survey["StartTime"],
                     "end_time": survey["EndTime"],
                     "staff_survey": staff_survey,
-                    "lat": self._const.SURVEY_LOCATIONS[survey["Name"]]["lat"],
-                    "long": self._const.SURVEY_LOCATIONS[survey["Name"]]["long"],
-                    "address1": self._const.SURVEY_LOCATIONS[survey["Name"]]["address"][0],
-                    "address2": self._const.SURVEY_LOCATIONS[survey["Name"]]["address"][1],
-                    "address3": self._const.SURVEY_LOCATIONS[survey["Name"]]["address"][2],
-                    "address4": self._const.SURVEY_LOCATIONS[survey["Name"]]["address"][3]
+                    "lat": location_data["lat"],
+                    "long": location_data["long"],
+                    "address1": location_data["address"][0],
+                    "address2": location_data["address"][1],
+                    "address3": location_data["address"][2],
+                    "address4": location_data["address"][3]
                 }
             )
             pipeline.lpush(
