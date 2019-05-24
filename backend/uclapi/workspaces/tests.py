@@ -91,7 +91,13 @@ class OccupEyeApiTestCase(TestCase):
                 "name": "test survey 1",
                 "start_time": "10:00",
                 "end_time": "12:00",
-                "staff_survey": str(True)
+                "staff_survey": str(True),
+                "lat": "3.14159",
+                "long": "-0.500100",
+                "address1": "some building",
+                "address2": "some street",
+                "address3": "some city",
+                "address4": "postcode please"
             }
         )
         pipeline.hmset(
@@ -102,7 +108,13 @@ class OccupEyeApiTestCase(TestCase):
                 "name": "test survey 2",
                 "start_time": "09:00",
                 "end_time": "17:00",
-                "staff_survey": str(False)
+                "staff_survey": str(False),
+                "lat": "2.14159",
+                "long": "-1.500100",
+                "address1": "some building2",
+                "address2": "some street2",
+                "address3": "some city2",
+                "address4": "postcode please2"
             }
         )
         pipeline.expire("occupeye:surveys", 20)
