@@ -29,28 +29,41 @@ let response = `{
     "ok": true,
     "surveys": [
         {
-            "active": true,
+            "id": 46,
+            "name": "UCL Institute of Education Library",
+            "active": 1,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "staff_survey": 0,
+            "location": {
+                "coordinates": {
+                    "lat": "51.522897",
+                    "lng": "-0.127864"
+                },
+                "address": [
+                    "Newsam Library and Archives",
+                    "20 Bedford Way",
+                    "London",
+                    "WC1H  0AL"
+                ]
+            },
             "maps": [
                 {
-                    "image_id": 79,
-                    "name": "Level 3",
-                    "id": 73
-                },
-                {
-                    "image_id": 80,
+                    "id": 114,
                     "name": "Level 4",
-                    "id": 74
+                    "image_id": 123
                 },
                 {
-                    "image_id": 81,
+                    "id": 115,
+                    "name": "Level 3",
+                    "image_id": 126
+                },
+                {
+                    "id": 116,
                     "name": "Level 5",
-                    "id": 75
+                    "image_id": 127
                 }
-            ],
-            "end_time": "17:00",
-            "start_time": "09:00",
-            "name": "UCL Institute of Education Library",
-            "id": 46
+            ]
         },
         ...
     ]
@@ -101,6 +114,16 @@ export default class WorkspacesGetSurveys extends React.Component {
                     <Table
                         name="Response">
                         <Cell
+                            name="id"
+                            extra="integer"
+                            example="46"
+                            description="The library survey's ID. This is used later to identify individual libraries." />
+                        <Cell
+                            name="name"
+                            extra="string"
+                            example="UCL Institute of Education Library"
+                            description="The human-readable name of the library." />
+                        <Cell
                             name="active"
                             extra="boolean"
                             example="true"
@@ -121,15 +144,35 @@ export default class WorkspacesGetSurveys extends React.Component {
                             example="false"
                             description="Whether the survey represents a staff workspace (`true`) or a student work or study space (`false`). This is useful in apps where you set the `survey_filter` parameter to `all` and wish to do filtering of student and staff workspaces in your app or API as opposed to leaving the filtering to UCL API. By default, as `survey_filter` is set to `student` unless you specify otherwise, all workspaces will have this parameter set to `false`." />
                         <Cell
-                            name="name"
-                            extra="string"
-                            example="UCL Institute of Education Library"
-                            description="The human-readable name of the library." />
+                            name="location"
+                            extra="dictionary"
+                            example='{"coordinates": {"lat": "51.522897","lng": "-0.127864"},"address": ["Newsam Library and Archives","20 Bedford Way","London","WC1H  0AL"]'
+                            description="Dictionary of survey location information including co-ordinates and the address." />
                         <Cell
-                            name="id"
-                            extra="integer"
-                            example="46"
-                            description="The library survey's ID. This is used later to identify individual libraries." />
+                            name='location["coordinates"]'
+                            extra="dictionary"
+                            example='{"lat": "51.522897","lng": "-0.127864"}'
+                            description="Dictionary containing a latitude and longitude." />
+                        <Cell
+                            name='location["coordinates"]["lat"]'
+                            extra="string"
+                            example='"51.522897"'
+                            description="Latitude of the survey location." />
+                        <Cell
+                            name='location["coordinates"]["lng"]'
+                            extra="string"
+                            example='"-0.127864"'
+                            description="Longitude of the survey location." />
+                        <Cell
+                            name='location["address"]'
+                            extra="list"
+                            example='["Newsam Library and Archives","20 Bedford Way","London","WC1H  0AL"]'
+                            description="List containing address lines for the survey location." />
+                        <Cell
+                            name='location[address][n]'
+                            extra="string"
+                            example='"20 Bedford Way"'
+                            description="One line of an address for a survey location." />
                         <Cell
                             name="maps"
                             extra="list"
