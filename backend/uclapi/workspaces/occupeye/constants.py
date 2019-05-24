@@ -118,8 +118,8 @@ class OccupEyeConstants():
         "UCL SENIT Suite": {
          "lat": "51.524280", "long": "-0.133026",
          "address": [
-            "Senit Suite",
-            "Kings Cross",
+            "Wilkins Building",
+            "Gower St",
             "London",
             "WC1E 6BT"
          ]
@@ -136,10 +136,10 @@ class OccupEyeConstants():
         "UCL Science Library": {
          "lat": "51.523556", "long": "-0.132588",
          "address": [
-            "Malet Pl",
-            "Bloomsbury",
+            "DMS Watson Building",
+            "Malet Place",
             "London",
-            "WC1E"
+            "WC1E 6BT"
          ]
         },
         "UCL School of Pharmacy Library": {
@@ -154,8 +154,8 @@ class OccupEyeConstants():
         "UCL Main Library": {
          "lat": "51.524748", "long": "-0.133535",
          "address": [
+            "Wilkins Building",
             "Gower St",
-            "Bloomsbury",
             "London",
             "WC1E 6BT"
          ]
@@ -190,28 +190,28 @@ class OccupEyeConstants():
         "UCL Institute of Education Library": {
          "lat": "51.522897", "long": "-0.127864",
          "address": [
-            "Newsam Library and Archives",
             "20 Bedford Way",
             "London",
-            "WC1H  0AL"
+            "WC1H  0AL",
+            ""
          ]
         },
         "UCL Institute of Archaeology Library": {
          "lat": "51.524906", "long": "-0.131578",
          "address": [
-            "5th Floor",
-            "Institute of Archaeology",
             "31-34 Gordon Square",
-            "WC1H 0PY"
+            "WC1H 0PY",
+            "",
+            ""
          ]
         },
         "UCL Great Ormond Street Institute of Child Health Library": {
          "lat": "51.5232287", "long": "-0.1200982",
          "address": [
-            "UCL Great Ormond Street Institue of Child Health",
             "30 Guilford Street",
             "London",
-            "WC1N 1EH"
+            "WC1N 1EH",
+            ""
          ]
         },
         "UCL Eastman Dental Library": {
@@ -235,7 +235,7 @@ class OccupEyeConstants():
         "UCL Cruciform Hub": {
          "lat": "51.524054", "long": "-0.135032",
          "address": [
-            "Gower St",
+            "Cruciform Building, Gower St",
             "Fitzrovia",
             "London",
             "WC1E 6BT"
@@ -253,7 +253,7 @@ class OccupEyeConstants():
         "UCL chadwick B04": {
          "lat": "51.524233", "long": "-0.134336",
          "address": [
-            "Gower St",
+            "Chadwick building, Gower St",
             "Bloomsbury",
             "London",
             "WC1E 6DE"
@@ -262,7 +262,7 @@ class OccupEyeConstants():
         "UCL Chadwick 223": {
          "lat": "51.524233", "long": "-0.134336",
          "address": [
-            "Gower St",
+            "Chadwick building, Gower St",
             "Bloomsbury",
             "London",
             "WC1E 6DE"
@@ -316,7 +316,7 @@ class OccupEyeConstants():
         "UCL Anatomy Hub ": {
          "lat": "51.523625", "long": "-0.133624",
          "address": [
-            "University College London",
+            "Anatomy Building",
             "Gower St",
             "London",
             "WC1E 6XA"
@@ -325,8 +325,8 @@ class OccupEyeConstants():
         "UCL 23 Gordon Square  history cluster": {
          "lat": "51.524497", "long": "-0.132115",
          "address": [
-            "23 GORDON SQUARE",
-            "LONDON",
+            "23 Gordon Square",
+            "London",
             "WC1H 0AG",
             ""
          ]
@@ -334,10 +334,10 @@ class OccupEyeConstants():
         "The Joint Library of Ophthalmology": {
          "lat": "51.527235", "long": "-0.091205",
          "address": [
-            "UCL Institute of Ophthalmology",
             "11-43 Bath Street",
             "London",
-            "EC1V 9EL"
+            "EC1V 9EL",
+            ""
          ]
         },
         "Royal Free Hospital Medical Library": {
@@ -352,25 +352,25 @@ class OccupEyeConstants():
         "Graduate Hub - RP Dev Testing": {
          "lat": "51.524143", "long": "-0.133525",
          "address": [
+            "South Wing, Gower St"
             "Kings Cross",
             "London",
             "WC1E 6DE",
-            ""
          ]
         },
         "Graduate Hub": {
          "lat": "51.524143", "long": "-0.133525",
          "address": [
+            "South Wing, Gower St"
             "Kings Cross",
             "London",
             "WC1E 6DE",
-            ""
          ]
         },
         "Foster Court": {
          "lat": "51.523555", "long": "-0.132497",
          "address": [
-            "Gower St",
+            "Foster Court, Gower St",
             "Bloomsbury",
             "London",
             "WC1E 6BT"
