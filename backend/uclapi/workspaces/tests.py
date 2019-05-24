@@ -129,6 +129,10 @@ class OccupEyeApiTestCase(TestCase):
             len(surveys),
             2
         )
+        self.assertEqual(
+            len(surveys[0]),
+            8
+        )
 
         self.assertEqual(
             surveys[0]["id"],
@@ -150,6 +154,30 @@ class OccupEyeApiTestCase(TestCase):
         self.assertTrue(
             strtobool(str(surveys[0]["staff_survey"]))
         )
+        self.assertEqual(
+            surveys[0]["location"]["coordinates"]["lat"],
+            "3.14159"
+        )
+        self.assertEqual(
+            surveys[0]["location"]["coordinates"]["lng"],
+            "-0.500100"
+        )
+        self.assertEqual(
+            surveys[0]["location"]["address"][0],
+            "some building"
+        )
+        self.assertEqual(
+            surveys[0]["location"]["address"][1],
+            "some street"
+        )
+        self.assertEqual(
+            surveys[0]["location"]["address"][2],
+            "some city"
+        )
+        self.assertEqual(
+            surveys[0]["location"]["address"][3],
+            "postcode please"
+        )
 
         self.assertEqual(
             surveys[1]["id"],
@@ -170,4 +198,28 @@ class OccupEyeApiTestCase(TestCase):
         )
         self.assertFalse(
             strtobool(str(surveys[1]["staff_survey"]))
+        )
+        self.assertEqual(
+            surveys[1]["location"]["coordinates"]["lat"],
+            "2.14159"
+        )
+        self.assertEqual(
+            surveys[1]["location"]["coordinates"]["lng"],
+            "-1.500100"
+        )
+        self.assertEqual(
+            surveys[1]["location"]["address"][0],
+            "some building2"
+        )
+        self.assertEqual(
+            surveys[1]["location"]["address"][1],
+            "some street2"
+        )
+        self.assertEqual(
+            surveys[1]["location"]["address"][2],
+            "some city2"
+        )
+        self.assertEqual(
+            surveys[1]["location"]["address"][3],
+            "postcode please2"
         )
