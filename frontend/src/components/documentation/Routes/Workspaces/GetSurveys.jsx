@@ -145,26 +145,26 @@ export default class WorkspacesGetSurveys extends React.Component {
                             description="Whether the survey represents a staff workspace (`true`) or a student work or study space (`false`). This is useful in apps where you set the `survey_filter` parameter to `all` and wish to do filtering of student and staff workspaces in your app or API as opposed to leaving the filtering to UCL API. By default, as `survey_filter` is set to `student` unless you specify otherwise, all workspaces will have this parameter set to `false`." />
                         <Cell
                             name="location"
-                            extra="dictionary"
+                            extra="object"
                             example='{"coordinates": {"lat": "51.522897","lng": "-0.127864"},"address": ["Newsam Library and Archives","20 Bedford Way","London","WC1H  0AL"]'
-                            description="Dictionary of survey location information including co-ordinates and the address." />
+                            description="Object containing survey location information including co-ordinates and the address." />
                         <Cell
-                            name='location["coordinates"]'
-                            extra="dictionary"
+                            name='location[coordinates]'
+                            extra="object"
                             example='{"lat": "51.522897","lng": "-0.127864"}'
-                            description="Dictionary containing a latitude and longitude." />
+                            description="Object containing a latitude and longitude." />
                         <Cell
-                            name='location["coordinates"]["lat"]'
+                            name='location[coordinates][lat]'
                             extra="string"
                             example='"51.522897"'
                             description="Latitude of the survey location." />
                         <Cell
-                            name='location["coordinates"]["lng"]'
+                            name='location[coordinates][lng]'
                             extra="string"
                             example='"-0.127864"'
                             description="Longitude of the survey location." />
                         <Cell
-                            name='location["address"]'
+                            name='location[address]'
                             extra="list"
                             example='["Newsam Library and Archives","20 Bedford Way","London","WC1H  0AL"]'
                             description="List containing address lines for the survey location." />
