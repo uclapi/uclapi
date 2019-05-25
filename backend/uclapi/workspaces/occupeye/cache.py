@@ -266,7 +266,12 @@ class OccupeyeCache():
             ),
             self.bearer_token
         )
-        if not isinstance(all_sensors_data, dict):
+        if not isinstance(all_sensors_data, list):
+            print(
+                "[-] Survey {} has bad sensor data, ignoring...".format(
+                    survey_id
+                )
+            )
             return
         pipeline = self._redis.pipeline()
         for sensor_data in all_sensors_data:
@@ -739,7 +744,7 @@ class OccupeyeCache():
             self._redis.llen(survey_sensors_list_key)
         ))
         api_survey_sensors_id_set = set(
-            [str(survey_sensor["HardwareID"]) for survey_sensor in all_sensors_data]
+            [str(survey_sensor["HardwareID"]) for survey_sensor in all_sensors_data]  # noqa
         )
         sensors_to_delete = (
             redis_survey_sensors_set - api_survey_sensors_id_set
