@@ -352,7 +352,7 @@ class OccupEyeConstants():
         "Graduate Hub - RP Dev Testing": {
          "lat": "51.524143", "long": "-0.133525",
          "address": [
-            "South Wing, Gower St"
+            "South Wing, Gower St",
             "Kings Cross",
             "London",
             "WC1E 6DE",
@@ -361,7 +361,7 @@ class OccupEyeConstants():
         "Graduate Hub": {
          "lat": "51.524143", "long": "-0.133525",
          "address": [
-            "South Wing, Gower St"
+            "South Wing, Gower St",
             "Kings Cross",
             "London",
             "WC1E 6DE",
