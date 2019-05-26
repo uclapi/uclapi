@@ -121,7 +121,9 @@ class OccupeyeCache():
             if survey["Name"] in self._const.SURVEY_LOCATIONS:
                 location_data = self._const.SURVEY_LOCATIONS[survey["Name"]]
             else:
-                location_data = {"lat": "", "long": "", "address": ["", "", "", ""]}
+                location_data = {
+                 "lat": "", "long": "", "address": ["", "", "", ""]
+                }
             print(survey["Name"])
             pipeline.hmset(
                 survey_key,
