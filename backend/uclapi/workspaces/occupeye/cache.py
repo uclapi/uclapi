@@ -124,7 +124,6 @@ class OccupeyeCache():
                 location_data = {
                  "lat": "", "long": "", "address": ["", "", "", ""]
                 }
-            print(survey["Name"])
             pipeline.hmset(
                 survey_key,
                 {
