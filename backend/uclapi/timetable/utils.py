@@ -19,7 +19,7 @@ def get_location_coordinates(siteid, roomid):
     :param siteid:
     :type siteid: str
     :param roomid:
-    :type roomid: string
+    :type roomid: str
 
     :raise Location.DoesNotExist: If the site can not be found
 
