@@ -131,14 +131,14 @@ git clone https://github.com/uclapi/fakeshibboleth
 Virtual environments allow us to easily switch between Python versions and the pip packages we have installed. They are entered with the following commands:
 
 ```
-Linux: . venv/bin/activate 
+Linux: . venv/bin/activate
 Windows: \venv\Scripts\activate
 ```
 
 You can tell you're in one by the first letters of a terminal/cmd prompt. The line should start with the name of your virtual environment for example:
 
 ```
-(venv)Your-Computer:your_project UserName$ 
+(venv)Your-Computer:your_project UserName$
 ```
 
 Once activated anything we execute will run with this environment's version of python and the versions of any packages installed within it. This must be done whenever using our project and so before running *manage.py* or other python files remember to activate the virtual environment.
@@ -188,7 +188,7 @@ Setting this up will vary based on your operating system. It is perfectly possib
 
 #### Create the required tables
 
-Now we have PostgreSQL installed we can create some empty databases so we can complete the migrations later. There are two required, uclapi_default, and uclapi_gencache if you are using the environment variables below. These can be created by accessing the postgreSQL command prompt with the command ```psql``` and then running ```create database uclapi_default;``` and then ```create database uclapi_gencache;``` 
+Now we have PostgreSQL installed we can create some empty databases so we can complete the migrations later. There are two required, uclapi_default, and uclapi_gencache if you are using the environment variables below. These can be created by accessing the postgreSQL command prompt with the command ```psql``` and then running ```create database uclapi_default;``` and then ```create database uclapi_gencache;```
 
 ### Configure the environment variables in .env
 Firstly, `cp uclapi/backend/uclapi/.env.example uclapi/backend/uclapi/.env`.
@@ -309,3 +309,10 @@ python manage.py feed_occupeye_cache
 python manage.py feed_occupeye_cache_mini
 ```
 **Note: As said previously these require valid credentials and for you to be on the UCL network to use**
+
+## Documentation
+As well as the user-facing documentation we also now ship our own internal Documentation
+which aims to help developers contribute to our code. To make it simply run ```make html```
+while in the backend directory. You can then navigate to the build directory and open up
+index.html in your favourite browser to view the documentation. It can also be built in pdf, latex
+and a few other formats.
