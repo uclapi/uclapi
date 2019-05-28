@@ -25,7 +25,7 @@ def get_location_coordinates(siteid, roomid):
 
     :returns: latitude and longitude, or None,None in failure to
               raise exception
-    :rtype: tuple (string,string)
+    :rtype: tuple (str,str)
     """
     # First try and get the specific room's location
     try:
