@@ -16,7 +16,7 @@ django-storages==1.7.1
 djangorestframework==3.9.4
 django-postgrespool2==0.2.0
 docutils==0.14
-eventlet==0.24.1
+eventlet==0.25.0
 gevent==1.4.0
 freezegun==0.3.11
 greenlet==0.4.15
