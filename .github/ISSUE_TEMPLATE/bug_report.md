@@ -13,7 +13,7 @@ A clear and concise description of what the bug is.
 **To Reproduce**
 Steps to reproduce the behavior:
 1. request endpoint with these parameters
-2. note empty field etc...
+2. Notice a field is null but shouldn't be or un-expected error message etc...
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
