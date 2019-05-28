@@ -17,7 +17,7 @@ def get_location_coordinates(siteid, roomid):
     Given a site and room, returns the co-ordinates of this location.
 
     :param siteid:
-    :type siteid: string
+    :type siteid: str
     :param roomid:
     :type roomid: string
 
