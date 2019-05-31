@@ -31,7 +31,7 @@ export default class PersonCard extends React.Component {
             onMouseOver={this.onMouseOver}
             onMouseOut={this.onMouseOut}
             style={{
-              "borderRadius": "10px"
+              "borderRadius": "1px"
             }}>
             <img src={this.props.image} />
             <h1>{this.props.name}</h1>

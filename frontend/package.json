@@ -30,11 +30,12 @@
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
     "rc-collapse": "^1.11.3",
-    "react-dom": "^16.8.6",
     "react": "^16.8.6",
-    "react-transition-group": "^4.0.1",
+    "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0",
     "react-syntax-highlighter": "^10.3.0",
+    "react-transition-group": "^4.0.1",
+    "react-waypoint": "^9.0.2",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {

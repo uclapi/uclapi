@@ -3,9 +3,17 @@ import React from 'react';
 
 export default class Intro extends React.Component {
 
+  constructor(props) {
+    super(props);
+  }
+
   render() {
+    var divStyle = {
+      height: this.props.h,
+    };
+
     return (
-      <div className="wilContainer">
+      <div className="wilContainer" style={divStyle}>
         <div className="container">
           <div className="row">
             <div className="col">
