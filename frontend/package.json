@@ -32,7 +32,7 @@
     "rc-collapse": "^1.11.3",
     "react-dom": "^16.8.6",
     "react": "^16.8.6",
-    "react-transition-group": "^4.0.1",
+    "react-transition-group": "^4.1.0",
     "react-router-dom": "^5.0.0",
     "react-syntax-highlighter": "^10.3.0",
     "whatwg-fetch": "^3.0.0"
