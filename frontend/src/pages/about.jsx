@@ -1,20 +1,26 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 import Navbar from '../components/about/Navbar.jsx';
 import Wil from '../components/about/Wil.jsx';
 import PersonContainer from '../components/about/PersonContainer.jsx';
-
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
  export default class AboutComponent extends React.Component {
 
    render () {
     return (
-      <div>
+      <MuiThemeProvider>
         <Navbar />
         <Wil />
         <PersonContainer />
-      </div>
+      </MuiThemeProvider>
     )
   }
 
  }
+
+ReactDOM.render(
+  <AboutComponent />,
+  document.querySelector('.app')
+);

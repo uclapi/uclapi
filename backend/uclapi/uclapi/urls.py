@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from dashboard.views import documentation, get_started
+from dashboard.views import documentation, get_started, about
 from marketplace.views import marketplace
 
 urlpatterns = [
