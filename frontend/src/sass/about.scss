@@ -68,6 +68,10 @@ a {
   color: #FFFFFF;
   text-align: right;
 
+  box-shadow: 1px -12px 12px -2px rgba(0,0,0,0.31) inset;
+  -webkit-box-shadow: 1px -12px 12px -2px rgba(0,0,0,0.31) inset;
+  -moz-box-shadow: 1px -12px 12px -2px rgba(0,0,0,0.31) inset;
+
   h1 {
     margin-top: 40px;
     font-weight: bold;
