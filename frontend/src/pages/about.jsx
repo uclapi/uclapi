@@ -24,7 +24,7 @@ import './../sass/hub.scss';
    }
 
    handleScroll() {
-    var pos = 500 - (window.scrollY - 60);
+    var pos = 500 - (window.scrollY);
 
     if(pos>240 && pos<480) {
       this.setState({

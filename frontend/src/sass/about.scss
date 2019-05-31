@@ -42,7 +42,7 @@ a {
     margin-top: 20px;
   }
 
-  h2, h3 {
+  h2, h3, p {
     font-weight: normal;
     font-size: 11px;
   }
@@ -59,12 +59,13 @@ a {
 }
 
 .wilContainer {
-  background: linear-gradient(rgba(67, 67, 67, 0.3), rgba(67, 67, 67, 0.3)), url("./../images/wil_bg.jpg");
+  background: linear-gradient(rgba(67, 67, 67, 0.3), rgba(67, 67, 67, 0.3)), url("./../images/about_back.jpg");
+  background-position-y: -200px;
   margin: 0px;
   padding-top: 40px;
   background-size: cover;
   height: 500px;
-  color: #313537;
+  color: #FFFFFF;
   text-align: right;
 
   h1 {
