@@ -29,5 +29,6 @@ urlpatterns = [
     url(r'^search/', include('search.urls')),
     url(r'^resources/', include('resources.urls')),
     url(r'^workspaces/', include('workspaces.urls')),
+    url(r'^about/', about),
     url(r'^$', get_started),
 ]

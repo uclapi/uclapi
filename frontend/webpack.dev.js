@@ -44,6 +44,7 @@ module.exports = {
     ]
   },
   entry: {
+    about: entryPointsPathPrefix + '/about.jsx',
     getStarted: entryPointsPathPrefix + '/getStarted.jsx',
     documentation: entryPointsPathPrefix + '/documentation.jsx',
     dashboard: entryPointsPathPrefix + '/dashboard.jsx',

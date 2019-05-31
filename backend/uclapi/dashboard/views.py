@@ -72,6 +72,10 @@ def shibboleth_callback(request):
 
 
 @ensure_csrf_cookie
+def about(request):
+    return render(request, 'about.html')
+
+@ensure_csrf_cookie
 def dashboard(request):
     try:
         user_id = request.session["user_id"]
