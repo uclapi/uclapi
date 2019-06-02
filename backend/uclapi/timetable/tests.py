@@ -1,7 +1,7 @@
 from django.http import QueryDict
 from django.test import SimpleTestCase
 
-from django.test import RequestFactory, TestCase
+from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 import json
 from .app_helpers import (
@@ -23,6 +23,7 @@ from .views import (
 )
 from dashboard.models import App, User
 
+
 class ViewTesting(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
@@ -30,7 +31,7 @@ class ViewTesting(TestCase):
         self.app = App.objects.create(user=self.user_, name="An App")
 
     def test_module_timetable_no_id(self):
-        request = self.factory.get('/a/random/path', {'token': self.app.api_token})
+        request = self.factory.get('/', {'token': self.app.api_token})
         response = get_modules_timetable_endpoint(request)
 
         content = json.loads(response.content.decode())
@@ -963,9 +964,12 @@ class AmpQueryParams(SimpleTestCase):
                                                          criteria),
                                 expected_bool[num_params-1])
 
+
 class Helper_functions(SimpleTestCase):
 
     def test_session_type_to_string(self):
         session_list = SESSION_TYPE_MAP
         for session in session_list:
-            self.assertEqual(_get_session_type_str(session),session_list[session])
+            self.assertEqual(
+                _get_session_type_str(session), session_list[session]
+            )
