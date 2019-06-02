@@ -41,6 +41,14 @@ Build for production:
 $ npm run production
 ```
 
+## Webpack analysis
+
+Generate and view stats.json:
+``` Bash
+$ npm run profile
+$ npx webpack-bundle-analyzer stats.json
+```
+
 ## View
 To see the dashboard you must start the django server and fake shibboleth app (see backend readme) then navigate to [localhost:8000/dashboard](localhost:8000/dashboard). The static files are served up by the Django server.
 
