@@ -44,7 +44,7 @@ class ViewTesting(TestCase):
     def test_module_timetable_invalid_modules(self):
         params = {
             'token': self.app.api_token,
-            'modules': ' '
+            'modules': ''
         }
         request = self.factory.get(
                     '/timetable/bymodule', params
