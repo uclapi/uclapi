@@ -19,7 +19,7 @@ from .amp import (
 )
 
 from .views import (
-    get_modules_timetable_endpoint
+    get_modules_timetable_endpoint,
 )
 from dashboard.models import App, User
 
@@ -40,6 +40,21 @@ class ViewTesting(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertFalse(content["ok"])
         self.assertEqual(content["error"], "No module IDs provided.")
+
+    def test_module_timetable_invalid_modules(self):
+        params = {
+            'token': self.app.api_token,
+            'modules': ' '
+        }
+        request = self.factory.get(
+                    '/timetable/bymodule', params
+                  )
+        response = get_modules_timetable_endpoint(request)
+
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["ok"])
+        self.assertEqual(content["error"], "One or more invalid Module IDs supplied.")
 
 class AmpCodeParsing(SimpleTestCase):
     def test_real_code_regular_1(self):
