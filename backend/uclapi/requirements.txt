@@ -18,7 +18,7 @@ django-postgrespool2==0.2.0
 docutils==0.14
 eventlet==0.25.0
 gevent==1.4.0
-freezegun==0.3.11
+freezegun==0.3.12
 greenlet==0.4.15
 gunicorn==19.9.0
 hiredis==1.0.0
@@ -27,13 +27,13 @@ jinjasql==0.1.7
 jmespath==0.9.4
 jsonpickle==1.2
 keen==0.5.1
-kombu==4.5.0
+kombu==4.6.0
 lxml==4.3.3
 Markupsafe==1.1.1
 mock==3.0.5
 model-mommy==1.6.0
-pbr==5.2.0
-pycryptodome==3.8.1
+pbr==5.2.1
+pycryptodome==3.8.2
 psycopg2-binary==2.8.2
 python-dateutil==2.8.0
 pytz==2019.1
