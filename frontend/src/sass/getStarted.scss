@@ -152,12 +152,14 @@ $break-small: 780px;
 }
 
 .intro {
-  padding-top: 200px;
-  padding-bottom: 200px;
   background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("./../images/logoCover2.png");
   background-size: cover;
   background-position: 50%;
   text-align: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   a {
     margin-right: 20px;
