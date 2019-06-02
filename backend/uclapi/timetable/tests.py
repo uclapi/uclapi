@@ -1,6 +1,9 @@
 from django.http import QueryDict
 from django.test import SimpleTestCase
 
+from django.test import RequestFactory, TestCase
+from rest_framework.test import APIRequestFactory
+import json
 from .app_helpers import (
     validate_amp_query_params,
     _is_instance_in_criteria,
@@ -15,6 +18,25 @@ from .amp import (
     STUDENT_TYPES
 )
 
+from .views import (
+    get_modules_timetable_endpoint
+)
+from dashboard.models import App, User
+
+class ViewTesting(TestCase):
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.user_ = User.objects.create(cn="test", employee_id=7357)
+        self.app = App.objects.create(user=self.user_, name="An App")
+
+    def test_module_timetable_no_id(self):
+        request = self.factory.get('/a/random/path', {'token': self.app.api_token})
+        response = get_modules_timetable_endpoint(request)
+
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(content["ok"])
+        self.assertEqual(content["error"], "No module IDs provided.")
 
 class AmpCodeParsing(SimpleTestCase):
     def test_real_code_regular_1(self):
