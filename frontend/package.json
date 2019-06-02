@@ -5,7 +5,6 @@
   "scripts": {
     "start": "NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors",
     "build": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors",
-    "production": "NODE_ENV=production webpack --config webpack.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "profile": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors --profile --json > stats.json"
   },
@@ -32,7 +31,7 @@
     "rc-collapse": "^1.11.3",
     "react-dom": "^16.8.6",
     "react": "^16.8.6",
-    "react-transition-group": "^4.0.1",
+    "react-transition-group": "^4.1.0",
     "react-router-dom": "^5.0.0",
     "react-syntax-highlighter": "^10.3.0",
     "whatwg-fetch": "^3.0.0"
