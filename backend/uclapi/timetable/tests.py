@@ -3,8 +3,12 @@ from django.test import SimpleTestCase
 
 from .app_helpers import (
     validate_amp_query_params,
-    _is_instance_in_criteria
+    _is_instance_in_criteria,
+    _get_session_type_str
 )
+
+from .utils import SESSION_TYPE_MAP
+
 from .amp import (
     InvalidAMPCodeException,
     ModuleInstance,
@@ -936,3 +940,10 @@ class AmpQueryParams(SimpleTestCase):
             self.assertNotEqual(_is_instance_in_criteria(instance_dict,
                                                          criteria),
                                 expected_bool[num_params-1])
+
+class Helper_functions(SimpleTestCase):
+
+    def test_session_type_to_string(self):
+        session_list = SESSION_TYPE_MAP
+        for session in session_list:
+            self.assertEqual(_get_session_type_str(session),session_list[session])
