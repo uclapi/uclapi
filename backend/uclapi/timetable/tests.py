@@ -31,7 +31,9 @@ class ViewTesting(TestCase):
         self.app = App.objects.create(user=self.user_, name="An App")
 
     def test_module_timetable_no_id(self):
-        request = self.factory.get('/timetable/bymodule', {'token': self.app.api_token})
+        request = self.factory.get(
+                    '/timetable/bymodule', {'token': self.app.api_token}
+                  )
         response = get_modules_timetable_endpoint(request)
 
         content = json.loads(response.content.decode())
