@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 class RelativeDate extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     /*
@@ -13,7 +13,7 @@ class RelativeDate extends React.Component {
       This may make 'a few seconds ago' somewhat redundant, but it's
       worth it.
     */
-    moment.fn.fromNowOrNow = function(a) {
+    moment.fn.fromNowOrNow = function (a) {
       if (Math.abs(moment().diff(this)) < 5000) {
         return 'just now';
       }
@@ -21,8 +21,8 @@ class RelativeDate extends React.Component {
     };
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <div title={moment.utc(this.props.date).local().format('dddd, Do MMMM YYYY, h:mm:ss a')}>
         {this.props.label} {moment.utc(this.props.date).local().fromNowOrNow()}
       </div>
