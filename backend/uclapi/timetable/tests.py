@@ -54,7 +54,10 @@ class ViewTesting(TestCase):
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
         self.assertFalse(content["ok"])
-        self.assertEqual(content["error"], "One or more invalid Module IDs supplied.")
+        self.assertEqual(
+            content["error"],
+            "One or more invalid Module IDs supplied."
+        )
 
 class AmpCodeParsing(SimpleTestCase):
     def test_real_code_regular_1(self):
