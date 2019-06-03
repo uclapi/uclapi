@@ -73,7 +73,7 @@ def shibboleth_callback(request):
 
 @ensure_csrf_cookie
 def about(request):
-    return render(request, 'about.html', { 'initial_data': {} })
+    return render(request, 'about.html', {'initial_data': {}})
 
 @ensure_csrf_cookie
 def dashboard(request):
