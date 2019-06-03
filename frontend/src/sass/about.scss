@@ -82,6 +82,7 @@ a {
   height: 500px;
   color: #FFFFFF;
   text-align: right;
+  overflow: hidden;
 
   h1 {
     margin-top: 40px;
@@ -94,6 +95,8 @@ a {
 
   .container {
     width: 95%;
+
+    padding-left: 2.5%; padding-right: 2.5%;
   }
 }
 
@@ -116,5 +119,20 @@ a {
   .active span {
     font-weight: bold !important;
     text-decoration: underline;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .personCard {
+    margin-right: 0;
+  }
+  .container {
+    text-align: center;
+  }
+}
+
+@media only screen and (max-width: 1100px) {
+  .wilContainer {
+    background-position-y: 0;
   }
 }

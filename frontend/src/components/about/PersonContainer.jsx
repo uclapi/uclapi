@@ -69,7 +69,7 @@ let team_19 = [
       "startYear": "2019",
       "endYear": "Present",
       "title": "Commander General",
-      "email": "zach@ucl.ac.uk",
+      "email": "zak.morgan.17@ucl.ac.uk",
       "github": "https://github.com/zipy124",
       "image": zak
     },
@@ -78,7 +78,7 @@ let team_19 = [
       "startYear": "2019",
       "endYear": "Present",
       "title": "Russian Hacker",
-      "email": "faiz@ucl.ac.uk",
+      "email": "alexander.saoutkin.17@ucl.ac.uk",
       "github": "https://github.com/FeverFew",
       "image": alex
     },
@@ -87,7 +87,7 @@ let team_19 = [
       "startYear": "2019",
       "endYear": "present",
       "title": "Senior React Developer",
-      "email": "ani@ucl.ac.uk",
+      "email": "huey.lee.18@ucl.ac.uk",
       "github": "https://github.com/hueyy",
       "image": huey
     },
@@ -96,7 +96,7 @@ let team_19 = [
       "startYear": "2016",
       "endYear": "2018",
       "title": "People Stuff",
-      "email": "jaro@ucl.ac.uk",
+      "email": "kimia.pirouzkia.17@ucl.ac.uk",
       "github": "https://github.com/kimia84",
       "image": kimia
     },
@@ -105,7 +105,7 @@ let team_19 = [
       "startYear": "2019",
       "endYear": "2017",
       "title": "Medic",
-      "email": "henry@ucl.ac.uk",
+      "email": "anush.shashidhara.15@ucl.ac.uk",
       "github": "https://github.com/anushhks",
       "image": anush
     },
@@ -114,7 +114,7 @@ let team_19 = [
       "startYear": "2019",
       "endYear": "2017",
       "title": "Part Timer",
-      "email": "harry.liversedge18@ucl.ac.uk",
+      "email": "harry.liversedge.17@ucl.ac.uk",
       "github": "https://github.com/TuxedoFish",
       "image": harry
     }
