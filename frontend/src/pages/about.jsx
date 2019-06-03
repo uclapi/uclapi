@@ -5,6 +5,7 @@ import NavbarConsistent from '../components/appsettings/navbarconsistent.jsx';
 import Wil from '../components/about/Wil.jsx';
 import PersonContainer from '../components/about/PersonContainer.jsx';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import TransparentWindow from '../components/about/TransparentWindow.jsx';
 
 import { Waypoint } from 'react-waypoint';
 
@@ -57,7 +58,9 @@ import './../sass/hub.scss';
       <MuiThemeProvider>
         <NavbarConsistent />
         <Wil h={h}/>
-        <PersonContainer />
+        <PersonContainer index={0} />
+        <TransparentWindow />
+        <PersonContainer index={1} />
       </MuiThemeProvider>
     )
   }

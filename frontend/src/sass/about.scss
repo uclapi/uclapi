@@ -7,6 +7,11 @@ body {
   background: #f4f4f4;
   color: #ffffff;
   background-size: cover;
+}
+
+.app {
+  background-image: url("./../images/logoCover2.png");
+  background-size: cover;
   background-position: 50%;
   background-attachment: fixed;
 }
@@ -25,6 +30,16 @@ body {
   flex-wrap: wrap;
   padding: 20px;
   justify-content: center;
+}
+
+.lineContainer {
+  width: 100%;
+  height: auto;
+  background-color: #f4f4f4;
+
+  box-shadow: 1px -1px 36px -2px rgba(0,0,0,0.72);
+  -webkit-box-shadow: 1px -1px 36px -2px rgba(0,0,0,0.72);
+  -moz-box-shadow: 1px -1px 36px -2px rgba(0,0,0,0.72);
 }
 
 a {
@@ -68,10 +83,6 @@ a {
   color: #FFFFFF;
   text-align: right;
 
-  box-shadow: 1px -12px 12px -2px rgba(0,0,0,0.31) inset;
-  -webkit-box-shadow: 1px -12px 12px -2px rgba(0,0,0,0.31) inset;
-  -moz-box-shadow: 1px -12px 12px -2px rgba(0,0,0,0.31) inset;
-
   h1 {
     margin-top: 40px;
     font-weight: bold;
@@ -84,6 +95,12 @@ a {
   .container {
     width: 95%;
   }
+}
+
+.window {
+  background-color: #FFFFFF00;
+  width: 100%;
+  height: 500px;
 }
 
 .navbar {
