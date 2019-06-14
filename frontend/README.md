@@ -43,10 +43,11 @@ $ npm run production
 
 ## Webpack analysis
 
+Running `npm run profile` will generate a `stats.json` file which can be analysed with [webpack-bundle-analyzer](https://github.com/webpack-contrib/webpack-bundle-analyzer) to identify areas for possible optimisation
+
 Generate and view stats.json:
 ``` Bash
 $ npm run profile
-$ npx webpack-bundle-analyzer stats.json
 ```
 
 ## View
@@ -55,8 +56,7 @@ To see the dashboard you must start the django server and fake shibboleth app (s
 ## Things to note
 
 ## Webpack
-Running `npm-start` will start webpack in auto-rebuild mode where it will watch for changes and rebuild if necessary.
-Running `npm run profile` will generate a `stats.json` file which can be analysed with something like [webpack-bundle-analyzer](https://github.com/webpack-contrib/webpack-bundle-analyzer) to identify areas for possible optimisation
+Running `npm start` will start webpack in auto-rebuild mode where it will watch for changes and rebuild if necessary.
 
 ### Django templates
 Because we are serving the django templates there are certain things you need to consider. To pass data from django into the react app we serialise
