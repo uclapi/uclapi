@@ -56,7 +56,7 @@ class ViewTesting(TestCase):
         self.assertFalse(content["ok"])
         self.assertEqual(
             content["error"],
-            "One or more invalid Module IDs supplied."
+            "No module IDs provided."
         )
 
 class AmpCodeParsing(SimpleTestCase):
