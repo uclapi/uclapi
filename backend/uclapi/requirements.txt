@@ -27,7 +27,7 @@ jinjasql==0.1.7
 jmespath==0.9.4
 jsonpickle==1.2
 keen==0.5.1
-kombu==4.6.0
+kombu==4.6.1
 lxml==4.3.4
 Markupsafe==1.1.1
 mock==3.0.5
