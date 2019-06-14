@@ -48,6 +48,7 @@ def how_many_seconds_until_midnight():
 
 
 def log_api_call(request, token, token_type):
+    """This functions handles logging of api calls using keen events."""
     service = request.path.split("/")[1]
     method = request.path.split("/")[2]
 
@@ -106,7 +107,9 @@ def throttle_api_call(token, token_type):
 
     secs = how_many_seconds_until_midnight()
     if count_data is None:
-        r.set(cache_key, 1, secs)
+        # Conditional fixes bug where a call is made exactly at midnight.
+        # Redis cannot have key with TTL of 0
+        r.set(cache_key, 1, secs if secs > 0 else 86400)
         return (False, limit, limit - 1, secs)
     else:
         count = int(count_data)

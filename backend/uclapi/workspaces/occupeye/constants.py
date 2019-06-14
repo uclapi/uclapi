@@ -40,6 +40,8 @@ class OccupEyeConstants():
 
     SUMMARY_CACHE_SURVEY = "occupeye:summaries:{}"
     SUMMARY_CACHE_ALL_SURVEYS = "occupeye:summaries:all"
+    SUMMARY_CACHE_ALL_STUDENT_SURVEYS = "occupeye:summaries:all:student"
+    SUMMARY_CACHE_ALL_STAFF_SURVEYS = "occupeye:summaries:all:staff"
 
     IMAGE_BASE64_KEY = "occupeye:image:{}:base64"
     IMAGE_CONTENT_TYPE_KEY = "occupeye:image:{}:content_type"
@@ -78,3 +80,7 @@ class OccupEyeConstants():
 
     # Valid historical time periods
     VALID_HISTORICAL_DATA_DAYS = [1, 7, 30]
+
+    # Set a filter for surveys designed for staff only
+    STAFF_SURVEY_IDS = [59]
+    VALID_SURVEY_FILTERS = ["all", "staff", "student"]

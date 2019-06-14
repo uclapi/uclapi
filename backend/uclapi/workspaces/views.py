@@ -22,9 +22,23 @@ from .image_builder import ImageBuilder
 )
 def get_surveys(request, *args, **kwargs):
     api = OccupEyeApi()
+    consts = OccupEyeConstants()
+
+    survey_filter = request.GET.get("survey_filter", "student")
+    if survey_filter not in consts.VALID_SURVEY_FILTERS:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "The survey filter you provided is invalid. "
+                "Valid survey filters are: "
+            ) + str(consts.VALID_SURVEY_FILTERS)
+        }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
+
     response_data = {
         "ok": True,
-        "surveys": api.get_surveys()
+        "surveys": api.get_surveys(survey_filter)
     }
     return JsonResponse(
         response_data,
@@ -109,18 +123,9 @@ def get_survey_sensors(request, *args, **kwargs):
         response.status_code = 400
         return response
 
-    # # Check if state data should be returned
-    # try:
-    #     return_states = request.GET["return_states"].lower() == "true"
-    # except KeyError:
-    #     return_states = False
-
     api = OccupEyeApi()
     try:
-        data = api.get_survey_sensors(
-            survey_id
-            # return_states=return_states
-        )
+        data = api.get_survey_sensors(survey_id)
     except BadOccupEyeRequest:
         response = JsonResponse({
             "ok": False,
@@ -132,7 +137,7 @@ def get_survey_sensors(request, *args, **kwargs):
     response = JsonResponse({
         "ok": True,
         **data
-    })
+    }, custom_header_data=kwargs)
     return response
 
 
@@ -182,9 +187,23 @@ def get_survey_max_timestamp(request, *args, **kwargs):
 )
 def get_survey_sensors_summary(request, *args, **kwargs):
     survey_ids = request.GET.get("survey_ids", None)
+
+    survey_filter = request.GET.get("survey_filter", "student")
+    consts = OccupEyeConstants()
+    if survey_filter not in consts.VALID_SURVEY_FILTERS:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "The survey filter you provided is invalid. "
+                "Valid survey filters are: "
+            ) + str(consts.VALID_SURVEY_FILTERS)
+        }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
+
     api = OccupEyeApi()
     try:
-        data = api.get_survey_sensors_summary(survey_ids)
+        data = api.get_survey_sensors_summary(survey_ids, survey_filter)
     except BadOccupEyeRequest:
         response = JsonResponse({
             "ok": False,
@@ -211,7 +230,20 @@ def get_survey_sensors_summary(request, *args, **kwargs):
 def get_historical_time_data(request, *args, **kwargs):
     api = OccupEyeApi()
     consts = OccupEyeConstants()
+
     survey_ids = request.GET.get("survey_ids", None)
+    survey_filter = request.GET.get("survey_filter", "student")
+    if survey_filter not in consts.VALID_SURVEY_FILTERS:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "The survey filter you provided is invalid. "
+                "Valid survey filters are: "
+            ) + str(consts.VALID_SURVEY_FILTERS)
+        }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
+
     try:
         day_count = request.GET["days"]
     except KeyError:
@@ -250,7 +282,11 @@ def get_historical_time_data(request, *args, **kwargs):
         return response
 
     try:
-        data = api.get_historical_time_usage_data(survey_ids, day_count)
+        data = api.get_historical_time_usage_data(
+            survey_ids,
+            day_count,
+            survey_filter
+        )
     except BadOccupEyeRequest:
         response = JsonResponse({
             "ok": False,
