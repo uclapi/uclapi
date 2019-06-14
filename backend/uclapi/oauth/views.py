@@ -509,16 +509,16 @@ def userdata(request, *args, **kwargs):
 
     user_data = {
         "ok": True,
-        "full_name": token.user.full_name,
-        "email": token.user.email,
-        "given_name": token.user.given_name,
         "cn": token.user.cn,
         "department": token.user.department,
+        "email": token.user.email,
+        "full_name": token.user.full_name,
+        "given_name": token.user.given_name,
         "upi": token.user.employee_id,
         "scope_number": token.scope.scope_number,
-        "is_student": is_student
+        "is_student": is_student,
+        "ucl_groups": token.user.raw_intranet_groups.split(';')
     }
-    print("Is student: " + str(is_student))
 
     return PrettyJsonResponse(
         user_data,
