@@ -8,20 +8,20 @@ import Link from './link.jsx';
 import menu from '../../images/menu.svg';
 
 const Toast = posed.div({
-		hidden: {top: '-60px'},
-		shown: {top: 0}
+	hidden: { top: '-60px' },
+	shown: { top: 0 }
 });
 const SlideDown = posed.div({
-		shown: {height: '105px', paddingBottom: '25px'},
-		hidden: {height: 0, paddingBottom: 0},
+	shown: { height: '105px', paddingBottom: '25px' },
+	hidden: { height: 0, paddingBottom: 0 },
 });
 
 let links = [
-	{
-		name: "settings",
-		link: "/oauth/myapps",
-		src: "settings", 
-	},
+	// {
+	// 	name: "settings",
+	// 	link: "/oauth/myapps",
+	// 	src: "settings", 
+	// },
 	{
 		name: "documentation",
 		link: "/docs",
@@ -30,7 +30,7 @@ let links = [
 	{
 		name: "dashboard",
 		link: "/dashboard",
-		src: "dashboard", 
+		src: "dashboard",
 	},
 ]
 const maxScreen = 770;
@@ -58,7 +58,7 @@ class NavbarConsistent extends React.Component {
 		});
 	}
 	updateDimensions() {
-		if(window.innerWidth<maxScreen) {
+		if (window.innerWidth < maxScreen) {
 			this.setState({
 				isSmall: true,
 				isMenuHidden: true,
@@ -69,24 +69,24 @@ class NavbarConsistent extends React.Component {
 				isMenuHidden: true,
 			})
 		}
-    }
-    componentWillMount() {
-        this.updateDimensions();
-        this.setState({
+	}
+	componentWillMount() {
+		this.updateDimensions();
+		this.setState({
 			isMenuHidden: true,
 		});
-    }
+	}
 	componentDidMount() {
-		if(this.props.isScroll) { window.addEventListener('scroll', this.updateNavBar); }
-        window.addEventListener("resize", this.updateDimensions);
+		if (this.props.isScroll) { window.addEventListener('scroll', this.updateNavBar); }
+		window.addEventListener("resize", this.updateDimensions);
 	}
 	componentWillUnmount() {
-		if(this.props.isScroll) { window.removeEventListener('scroll', this.updateNavBar); }
+		if (this.props.isScroll) { window.removeEventListener('scroll', this.updateNavBar); }
 	}
 	updateNavBar() {
 		let scrollTop = window.scrollY;
 
-		if(scrollTop <= this.navbarHeight && this.state.isVisible) {
+		if (scrollTop <= this.navbarHeight && this.state.isVisible) {
 			this.setState({
 				isVisible: false,
 				isMenuHidden: true,
@@ -99,28 +99,28 @@ class NavbarConsistent extends React.Component {
 		}
 	}
 
-	render () {
+	render() {
 		return <div className="navbar-extras">
-				<Toast className="navbarconsistent centered" pose={this.state.isVisible ? 'shown' : 'hidden'}>
-				  <a href={"/"}>
-				  	<img src={logo}/>
-				  </a>
-				  <div className="logoTextWhite"><div>UCL API</div></div>
+			<Toast className="navbarconsistent centered" pose={this.state.isVisible ? 'shown' : 'hidden'}>
+				<a href={"/"}>
+					<img src={logo} />
+				</a>
+				<div className="logoTextWhite"><div>UCL API</div></div>
 
-				  <div className="link-titles">
-					  {!this.state.isSmall ? (
-					  	links.map((s, key) => <Link key={key} name={s.name} src={s.src} link={s.link} />)
-				  	  ) : (
-				  	  	<div className="menu-icon"><img src={menu} onClick={this.toggleMenu} /></div> 
-				  	  )}
-				  </div>
-				</Toast>
-				{this.state.isSmall ? (
-					  <SlideDown className="link-titles-menu" pose={this.state.isMenuHidden ? 'hidden' : 'shown'}>
-					  	  {links.map((s, key) => <Link key={key} name={s.name} src={s.src} link={s.link} />)}
-					  </SlideDown>
-				) : null }
-			</div>
+				<div className="link-titles">
+					{!this.state.isSmall ? (
+						links.map((s, key) => <Link key={key} name={s.name} src={s.src} link={s.link} />)
+					) : (
+							<div className="menu-icon"><img src={menu} onClick={this.toggleMenu} /></div>
+						)}
+				</div>
+			</Toast>
+			{this.state.isSmall ? (
+				<SlideDown className="link-titles-menu" pose={this.state.isMenuHidden ? 'hidden' : 'shown'}>
+					{links.map((s, key) => <Link key={key} name={s.name} src={s.src} link={s.link} />)}
+				</SlideDown>
+			) : null}
+		</div>
 	}
 }
 
