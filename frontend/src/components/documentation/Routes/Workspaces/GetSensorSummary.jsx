@@ -15,8 +15,8 @@ params = {
 r = requests.get("https://uclapi.com/workspaces/sensors/summary", params=params)
 print(r.json())`,
 
-  shell: `curl -X GET https://uclapi.com/workspaces/sensors/summary \
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \
+  shell: `curl -G https://uclapi.com/workspaces/sensors/summary \\
+-d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d survey_ids=46,45`,
 
   javascript: `fetch("https://uclapi.com/workspaces/sensors/summary?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_ids=46,45",
@@ -133,6 +133,11 @@ export default class WorkspacesGetSensorsSummary extends React.Component {
                             requirement="optional"
                             example="46,45"
                             description="A comma delimited list of Survey IDs. If this parameter is not supplied, summary data for every survey is returned." />
+                        <Cell
+                            name="survey_filter"
+                            requirement="optional"
+                            example="student"
+                            description="Filter the surveys based on who they are designed for. Valid values of this parameter are `all` (no filtering), `student` (return only student surveys; this is the default) and `staff` (return only surveys representing work areas for UCL staff only). It is recommended that the default (student) is used in apps aimed at students, unless a specific reason to include a staff workspace is required." />
                     </Table>
                 </Topic>
 
@@ -174,7 +179,7 @@ export default class WorkspacesGetSensorsSummary extends React.Component {
                                 ]
                             `}
                             description="A list of survey objects, each of which contains a list of maps with associated sensor counts, as well as library sensor totals." />
-                        
+
                         <Cell
                             name="surveys[n][name]"
                             extra="string"

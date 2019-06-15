@@ -10,19 +10,17 @@ let codeExamples = {
 
 params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
-  "client_secret": "secret"
-  "modules": "COMP3095,COMP3001"
+  "modules": "COMP0030,COMP0133-A7U-T1"
 }
 
 r = requests.get("https://uclapi.com/timetable/bymodule", params=params)
 print(r.json())`,
 
-  shell: `curl -X GET https://uclapi.com/timetable/bymodule \
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \
--d client_secret=secret \
--d modules=COMP3095,COMP3001`,
+  shell: `curl -G https://uclapi.com/timetable/bymodule \\
+-d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
+-d modules=COMP0030,COMP0133-A7U-T1`,
 
-  javascript: `fetch("https://uclapi.com/timetable/bymodule?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&client_secret=secret&modules=COMP3095,COMP3001",
+  javascript: `fetch("https://uclapi.com/timetable/bymodule?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&modules=COMP0030,COMP0133-A7U-T1",
 {
     method: "GET",
 })
@@ -37,34 +35,71 @@ print(r.json())`,
 
 let response = `{
     "timetable": {
-        "2017-11-23": [
-            {
-                "location": {
-                    "address": [
-                        "Torrington Place",
-                        "London",
-                        "WC1E 7JE"
-                    ],
-                    "sitename": "Roberts Building",
-                    "capacity": 91,
-                    "name": "Roberts Building 508",
-                    "type": "CB"
+      "2018-10-02": [
+        {
+            "start_time": "10:00",
+            "end_time": "11:00",
+            "duration": 60,
+            "module": {
+                "module_id": "COMP0030",
+                "department_id": "COMPS_ENG",
+                "department_name": "Computer Science",
+                "name": "Research Methods",
+                "lecturer": {
+                    "name": "HUNTER, Anthony (Prof)",
+                    "email": "ucachun@ucl.ac.uk",
+                    "department_id": "COMPS_ENG",
+                    "department_name": "Computer Science"
+                }
+            },
+            "location": {
+                "name": "Roberts Building 421",
+                "capacity": 94,
+                "type": "CB",
+                "address": [
+                    "Torrington Place",
+                    "London",
+                    "WC1E 7JE",
+                    ""
+                ],
+                "site_name": "Roberts Building",
+                "coordinates": {
+                    "lat": null,
+                    "lng": null
+                }
+            },
+            "session_title": "Research Methods",
+            "session_type": "L",
+            "session_type_str": "Lecture",
+            "contact": "Unknown",
+            "instance": {
+                "delivery": {
+                    "fheq_level": 6,
+                    "is_undergraduate": true
                 },
-                "module": {
-                    "lecturer": {
-                        "email": "ucachun@ucl.ac.uk",
-                        "name": "HUNTER, Anthony (Prof)"
+                "periods": {
+                    "teaching_periods": {
+                        "term_1": true,
+                        "term_2": false,
+                        "term_3": false,
+                        "term_1_next_year": false,
+                        "summer": false
                     },
-                    "module_code": "COMP3093",
-                    "course_owner": "COMPS_ENG",
-                    "name": "Research Methods",
-                    "module_id": "COMP3095"
+                    "year_long": false,
+                    "lsr": false,
+                    "summer_school": {
+                        "is_summer_school": false,
+                        "sessions": {
+                            "session_1": false,
+                            "session_2": false
+                        }
+                    }
                 },
-                "end_time": "18:30:00",
-                "start_time": "17:30:00",
-                "duration": 60
+                "instance_code": "A6U-T1"
             }
-        ],
+        }
+      ],
+      ...
     },
     "ok": true
 }`
@@ -100,15 +135,10 @@ export default class GetEquiment extends React.Component {
                 example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
                 description="Authentication token." />
               <Cell
-                name="client_secret"
-                requirement="required"
-                example="mysecret"
-                description="Client secret of the authenticating app." />
-              <Cell
                 name="modules"
                 requirement="required"
-                example="COMP3095,COMP3001"
-                description="A comma-separated list of the module codes you want the timetable of." />
+                example="COMP0030,COMP0133-A7U-T1"
+                description="A comma-separated list of the module codes you want the timetable of. You can supply either standard module codes (e.g. COMP0133), or full codes including the instance of the module (COMP0133-A7U-T1). Note that if you do not supply an instance, every single timetable entry will be returned including duplicates for the same module taught as multiple instances. It is recommended that a full module code including instance be supplied." />
             </Table>
           </Topic>
 
@@ -219,6 +249,91 @@ export default class GetEquiment extends React.Component {
                 extra="string"
                 example="Prof Robin Hirsch"
                 description="The name associated with the individual room booking. This is the most likely candidate for the person taking the session or lecture. This name is also the most human-readable. Apps should display this value as the lecturer for any given booking, and only use the lecturer information given in the module{lecturer{}} dictionary to reference the course lead or owner." />
+              <Cell
+                name="instance"
+                extra="dictionary"
+                example={`"instance": "delivery": {...}, "periods": {...}, "instance_code": "A6U-T1"`}
+                description="The Academic Model Project (AMP) instance data for the module. This contains information on when the module is taught and in which way." />
+              <Cell
+                name="instance[delivery]"
+                extra="dictionary"
+                example={`"fheq_level": 6, "is_undergraduate": true`}
+                description="The level the course is taught at, and whether it is an undergraduate (true) or postgraduate (false) course." />
+              <Cell
+                name="instance[delivery][fheq_level]"
+                extra="integer"
+                example="6"
+                description="The level that the course is taught at. Level 4 => first year, Level 5 => second year, Level 6 => third year, Level 7 => fourth year or postgraduate" />
+              <Cell
+                name="instance[delivery][is_undergraduate]"
+                extra="boolean"
+                example="true"
+                description="Whether the course instance is for undergraduate (true) students or postgraduate (false) students." />
+              <Cell
+                name="instance[periods]"
+                extra="dictionary"
+                example={`"teaching_periods": { ... }, "year_long": false, "lsr": false, "summer_school": { ... }`}
+                description="When this course instance is taught." />
+              <Cell
+                name="instance[periods][teaching_periods]"
+                extra="dictionary"
+                example={`"term_1": true, "term_2": false, "term_3": false, "term_1_next_year": false, "summer": false`}
+                description="Which teaching periods this course instance is taught during." />
+              <Cell
+                name="instance[periods][teaching_periods][term_1]"
+                extra="boolean"
+                example="true"
+                description="Whether the course is taught during Term 1." />
+              <Cell
+                name="instance[periods][teaching_periods][term_2]"
+                extra="boolean"
+                example="false"
+                description="Whether the course is taught during Term 2." />
+              <Cell
+                name="instance[periods][teaching_periods][term_3]"
+                extra="boolean"
+                example="false"
+                description="Whether the course is taught during Term 3." />
+              <Cell
+                name="instance[periods][teaching_periods][term_1_next_year]"
+                extra="boolean"
+                example="false"
+                description="Whether the course is taught during Term 1 of the following academic year. This is used by admissions to calculate the end dates for non-standard programmes, and therefore is rare." />
+              <Cell
+                name="instance[periods][teaching_periods][summer]"
+                extra="boolean"
+                example="false"
+                description="Whether the course timetabled during the summer holidays. This can happen in some Postgraduate and Medicine teaching arrangements, but is rare. Note that this is NOT the same as the UCL Summer School." />
+              <Cell
+                name="instance[periods][year_long]"
+                extra="boolean"
+                example="false"
+                description="Whether the course is timetabled to last for an entire academic year." />
+              <Cell
+                name="instance[periods][lsr]"
+                extra="boolean"
+                example="false"
+                description="Whether the module is timetabled during the Late Summer Resit period. This is used internally by Examinations to timetable Late Summer Assessments (LSAs)." />
+              <Cell
+                name="instance[periods][summer_school]"
+                extra="dictionary"
+                example={`"is_summer_school": false, "sessions": { ... }`}
+                description="Information on whether the course is taught by the UCL Summer School programme and, if so, when." />
+              <Cell
+                name="instance[periods][summer_school][is_summer_school]"
+                extra="boolean"
+                example="false"
+                description="Whether the module is taught as part of the UCL Summer School (true) or standard academic teaching (false)." />
+              <Cell
+                name="instance[periods][summer_school][sessions][session_1]"
+                extra="boolean"
+                example="false"
+                description="Whether the module is taught in the first summer school session of this academic year's summer. This will be false for all standard academic modules." />
+              <Cell
+                name="instance[periods][summer_school][sessions][session_2]"
+                extra="boolean"
+                example="false"
+                description="Whether the module is taught in the second summer school session of this academic year's summer. This will be false for all standard academic modules." />
             </Table>
           </Topic>
 

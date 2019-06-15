@@ -92,17 +92,17 @@ export default class Navbar extends React.Component {
       rightButtons = (
         <div>
           <IconButton>
-            <ActionMenu style={styles.iconButton} onTouchTap={this.handleToggle}/>
+            <ActionMenu style={styles.iconButton} onClick={this.handleToggle}/>
           </IconButton>
           <Drawer open={this.state.open} openSecondary={true} docked={false}>
             <a href={"/"}>
-              <MenuItem onTouchTap={this.handleToggle}>Home</MenuItem>
+              <MenuItem onClick={this.handleToggle}>Home</MenuItem>
             </a>
             <a href={"/docs/"}>
-              <MenuItem onTouchTap={this.handleToggle}>Documentation</MenuItem>
+              <MenuItem onClick={this.handleToggle}>Documentation</MenuItem>
             </a>
             <a href={"/dashboard/"}>
-              <MenuItem onTouchTap={this.handleToggle}>Login</MenuItem>
+              <MenuItem onClick={this.handleToggle}>Login</MenuItem>
             </a>
           </Drawer>
         </div>
@@ -112,17 +112,17 @@ export default class Navbar extends React.Component {
         rightButtons = (
           <div>
             <IconButton>
-              <ActionMenu style={styles.iconButton} onTouchTap={this.handleToggle}/>
+              <ActionMenu style={styles.iconButton} onClick={this.handleToggle}/>
             </IconButton>
             <Drawer open={this.state.open} openSecondary={true} docked={false}>
               <a href={"/"}>
-                <MenuItem onTouchTap={this.handleToggle}>Home</MenuItem>
+                <MenuItem onClick={this.handleToggle}>Home</MenuItem>
               </a>
               <a href={"/docs/"}>
-                <MenuItem onTouchTap={this.handleToggle}>Documentation</MenuItem>
+                <MenuItem onClick={this.handleToggle}>Documentation</MenuItem>
               </a>
               <a href={"/dashboard/"}>
-                <MenuItem onTouchTap={this.handleToggle}>Dashboard</MenuItem>
+                <MenuItem onClick={this.handleToggle}>Dashboard</MenuItem>
               </a>
             </Drawer>
           </div>

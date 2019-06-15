@@ -1,12 +1,21 @@
+from distutils.util import strtobool
 from django.conf import settings
+
 
 from rest_framework.decorators import api_view
 
 from common.helpers import PrettyJsonResponse as JsonResponse
 
-from .models import Lock, Course, Depts, ModuleA, ModuleB
+from .models import Course
 
-from .app_helpers import get_student_timetable, get_custom_timetable
+from .app_helpers import (
+    get_custom_timetable,
+    get_departmental_modules,
+    get_departments,
+    get_student_timetable,
+    get_course_modules,
+    validate_amp_query_params
+)
 
 from common.decorators import uclapi_protected_endpoint
 
@@ -14,8 +23,15 @@ _SETID = settings.ROOMBOOKINGS_SETID
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=True, required_scopes=['timetable'])
-def get_personal_timetable(request, *args, **kwargs):
+@uclapi_protected_endpoint(
+    personal_data=True,
+    required_scopes=['timetable'],
+    last_modified_redis_key='gencache'
+)
+def get_personal_timetable_endpoint(request, *args, **kwargs):
+    """
+    Returns a personal timetable of a user. Requires OAuth permissions.
+    """
     token = kwargs['token']
     user = token.user
     try:
@@ -28,18 +44,23 @@ def get_personal_timetable(request, *args, **kwargs):
         "ok": True,
         "timetable": timetable
     }
-    return JsonResponse(response, rate_limiting_data=kwargs)
+    return JsonResponse(response, custom_header_data=kwargs)
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint()
-def get_modules_timetable(request, *args, **kwargs):
+@uclapi_protected_endpoint(
+    last_modified_redis_key='gencache'
+)
+def get_modules_timetable_endpoint(request, *args, **kwargs):
+    """
+    Returns a timetabe for a module or set of modules.
+    """
     module_ids = request.GET.get("modules")
     if module_ids is None:
         return JsonResponse({
             "ok": False,
             "error": "No module IDs provided."
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
 
     try:
         modules = module_ids.split(',')
@@ -47,48 +68,47 @@ def get_modules_timetable(request, *args, **kwargs):
         return JsonResponse({
             "ok": False,
             "error": "Invalid module IDs provided."
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
 
-    try:
-        date_filter = request.GET["date_filter"]
-        custom_timetable = get_custom_timetable(modules, date_filter)
-    except KeyError:
-        custom_timetable = get_custom_timetable(modules)
+    date_filter = request.GET.get("date_filter")
+    custom_timetable = get_custom_timetable(modules, date_filter)
 
     if custom_timetable:
         response_json = {
             "ok": True,
             "timetable": custom_timetable
         }
-        return JsonResponse(response_json, rate_limiting_data=kwargs)
+        return JsonResponse(response_json, custom_header_data=kwargs)
     else:
         response_json = {
             "ok": False,
             "error": "One or more invalid Module IDs supplied."
         }
-        response = JsonResponse(response_json, rate_limiting_data=kwargs)
+        response = JsonResponse(response_json, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint()
-def get_departments(request, *args, **kwargs):
+@uclapi_protected_endpoint(
+    last_modified_redis_key='gencache'
+)
+def get_departments_endpoint(request, *args, **kwargs):
     """
     Returns all departments at UCL
     """
-    depts = {"ok": True, "departments": []}
-    for dept in Depts.objects.all():
-        depts["departments"].append({
-            "department_id": dept.deptid,
-            "name": dept.name
-        })
-    return JsonResponse(depts, rate_limiting_data=kwargs)
+    departments = {
+        "ok": True,
+        "departments": get_departments()
+    }
+    return JsonResponse(departments, custom_header_data=kwargs)
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint()
-def get_department_courses(request, *args, **kwargs):
+@uclapi_protected_endpoint(
+    last_modified_redis_key='gencache'
+)
+def get_department_courses_endpoint(request, *args, **kwargs):
     """
     Returns all the courses in UCL with relevant ID
     """
@@ -97,24 +117,28 @@ def get_department_courses(request, *args, **kwargs):
     except KeyError:
         response = JsonResponse({
             "ok": False,
-            "error": "Supply a Department ID using the department parameter."
-        }, rate_limiting_data=kwargs)
+            "error": "No department ID provided."
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
     courses = {"ok": True, "courses": []}
-    for course in Course.objects.filter(owner=department_id, setid=_SETID):
+    for course in Course.objects.filter(owner=department_id,
+                                        setid=_SETID,
+                                        linkcode="YY"):
         courses["courses"].append({
             "course_name": course.name,
             "course_id": course.courseid,
             "years": course.numyears
         })
-    return JsonResponse(courses, rate_limiting_data=kwargs)
+    return JsonResponse(courses, custom_header_data=kwargs)
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint()
-def get_department_modules(request, *args, **kwargs):
+@uclapi_protected_endpoint(
+    last_modified_redis_key='gencache'
+)
+def get_department_modules_endpoint(request, *args, **kwargs):
     """
     Returns all modules taught by a particular department.
     """
@@ -124,19 +148,81 @@ def get_department_modules(request, *args, **kwargs):
         response = JsonResponse({
             "ok": False,
             "error": "Supply a Department ID using the department parameter."
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
-    modules = {"ok": True, "modules": []}
-    lock = Lock.objects.all()[0]
-    m = ModuleA if lock.a else ModuleB
-    for module in m.objects.filter(owner=department_id, setid=_SETID):
-        modules["modules"].append({
-            "module_id": module.moduleid,
-            "name": module.name,
-            "module_code": module.linkcode,
-            "class_size": module.csize
-        })
+    modules = {
+        "ok": True,
+        "modules": get_departmental_modules(department_id)
+    }
 
-    return JsonResponse(modules, rate_limiting_data=kwargs)
+    return JsonResponse(modules, custom_header_data=kwargs)
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(
+    last_modified_redis_key='timetable_gencache'
+)
+def get_course_modules_endpoint(request, *args, **kwargs):
+    """
+    Returns all modules taught on a particular course.
+    """
+    try:
+        course_id = request.GET["course"]
+    except KeyError:
+        response = JsonResponse({
+            "ok": False,
+            "error": "No course ID provided."
+        }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
+
+    if not validate_amp_query_params(request.query_params):
+        response = JsonResponse({
+            "ok": False,
+            "error": "Given parameter is not of corrrect type"
+        }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
+
+    if request.query_params.get('only_compulsory'):
+        try:
+            strtobool(request.query_params.get('only_compulsory'))
+        except ValueError:
+            response = JsonResponse({
+                "ok": False,
+                "error": "Given parameter is not of correct type"
+            }, custom_header_data=kwargs)
+            response.status_code = 400
+            return response
+
+    if request.query_params.get('only_available'):
+        try:
+            strtobool(request.query_params.get('only_available'))
+        except ValueError:
+            response = JsonResponse({
+                "ok": False,
+                "error": "Given parameter is not of correct type"
+            }, custom_header_data=kwargs)
+            response.status_code = 400
+            return response
+
+    if (request.query_params.get('only_available') and
+            request.query_params.get('only_compulsory')):
+        if (strtobool(request.query_params.get('only_available')) and
+                strtobool(request.query_params.get('only_compulsory'))):
+            response = JsonResponse({
+                "ok": False,
+                "error": "only_available and only_compulsory"
+                         " cannot both be true"
+            }, custom_header_data=kwargs)
+            response.status_code = 400
+            return response
+
+    modules = {
+        "ok": True,
+        "modules": get_course_modules(course_id, request.query_params)
+    }
+
+    return JsonResponse(modules, custom_header_data=kwargs)

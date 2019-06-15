@@ -8,13 +8,20 @@ import requests
 
 
 @api_view(['GET'])
-@uclapi_protected_endpoint()
+@uclapi_protected_endpoint(
+    last_modified_redis_key=None  # Served directly from the backend Search API
+)
 def people(request, *args, **kwargs):
+    """
+    Backend for the /search endpoint. Provided a query will search for people
+    in the UCL database with an attribute such as name or e-mail that matches
+    the search parameter.
+    """
     if "query" not in request.GET:
         response = JsonResponse({
             "ok": False,
             "error": "No query provided."
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -46,4 +53,4 @@ def people(request, *args, **kwargs):
     return JsonResponse({
         "ok": True,
         "people": people
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)

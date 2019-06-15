@@ -4,7 +4,6 @@ import celery
 import os
 import raven
 
-from django.conf import settings
 from raven.contrib.celery import register_signal as raven_register_signal, \
     register_logger_signal as raven_register_logger_signal
 
@@ -26,23 +25,6 @@ class Celery(celery.Celery):
 app = Celery('uclapi')
 
 app.config_from_object('django.conf.settings', namespace='CELERY')
-
-
-from opbeat.contrib.django.models import \
-    register_handlers as opbeat_register_handlers, \
-    logger as opbeat_logger  # noqa: E402#
-
-from opbeat.contrib.celery import \
-    register_signal as opbeat_register_signal  # noqa: E402
-
-
-try:
-    opbeat_register_signal(app)
-except Exception as e:
-    opbeat_logger.exception('Failed installing celery hook: %s' % e)
-
-if 'opbeat.contrib.django' in settings.INSTALLED_APPS:
-    opbeat_register_handlers()
 
 app.autodiscover_tasks()
 

@@ -22,8 +22,13 @@ import SearchVersionHeader from './Routes/Search/VersionHeader.jsx';
 import GetPeople from './Routes/Search/GetPeople.jsx';
 
 import TimetableVersionHeader from './Routes/Timetable/VersionHeader.jsx';
+import GetDataDepartments from './Routes/Timetable/GetDataDepartments.jsx';
+import GetDataModules from './Routes/Timetable/GetDataModules.jsx';
 import GetPersonalTimetable from './Routes/Timetable/GetPersonalTimetable.jsx';
 import GetTimetableByModules from './Routes/Timetable/GetTimetableByModules.jsx';
+import GetDataCourses from './Routes/Timetable/GetDataCourses.jsx';
+import GetDataCoursesModules from './Routes/Timetable/GetDataCoursesModules.jsx';
+
 
 import ResourcesVersionHeader from './Routes/Resources/VersionHeader.jsx';
 import DesktopAvailability from './Routes/Resources/DesktopAvailability.jsx';
@@ -75,6 +80,10 @@ export default class DocumentationComponent extends React.Component {
             <TimetableVersionHeader />
             <GetPersonalTimetable />
             <GetTimetableByModules />
+            <GetDataDepartments />
+            <GetDataModules />
+            <GetDataCourses />
+            <GetDataCoursesModules />
 
             <SectionHeader link="resources" title="Resources" />
             <ResourcesVersionHeader />

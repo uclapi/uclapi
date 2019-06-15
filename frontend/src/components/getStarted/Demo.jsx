@@ -2,7 +2,7 @@ import React from 'react';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import AutoComplete from 'material-ui/AutoComplete';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import {androidstudio} from 'react-syntax-highlighter/styles/hljs';
+import {androidstudio} from 'react-syntax-highlighter/dist/styles/hljs';
 import RaisedButton from 'material-ui/RaisedButton';
 import 'whatwg-fetch';
 
@@ -403,10 +403,10 @@ print(r.json())`
         "code": `const token = "${window.initialData.temp_token}";
 
 fetch(
-  "https://uclapi.com/roombookings/bookings?token=",
-  token,
-  "&results_per_page=1", ${this.state.roomNameMap.javascript}
-  "&date=" + ${now.toISOString().substring(0, 10).replace(/-/g, "")}
+  "https://uclapi.com/roombookings/bookings?token="
+  + token
+  + "&results_per_page=1" ${this.state.roomNameMap.javascript}
+  + "&date=" + "${now.toISOString().substring(0, 10).replace(/-/g, "")}"
 ).then((response) => {
   return response.json()
 })
@@ -426,7 +426,7 @@ fetch(
   getSchedule(roomName) {
     this.state.roomNameMap = {
       'python': `\n  "roomname": "${roomName}",`,
-      'javascript': `\n  "&roomname=${roomName}",`,
+      'javascript': `\n  + "&roomname=${roomName}"`,
       'bash': `\\ \n-d roomname='${roomName}'`
     }
 

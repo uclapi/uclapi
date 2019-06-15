@@ -14,7 +14,7 @@ params = {
 r = requests.get("https://uclapi.com/resources/desktops", params=params)
 print(r.json())`,
 
-  shell: `curl https://uclapi.com/resources/desktops \
+  shell: `curl -G https://uclapi.com/resources/desktops \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb
 `,
 
@@ -102,7 +102,7 @@ export default class GetEquiment extends React.Component {
                 name="free_seats"
                 extra="int"
                 example="24"
-                description="Number of free seats in the room." />  
+                description="Number of free seats in the room." />
               <Cell
                 name="latitude"
                 extra="string"
@@ -117,22 +117,22 @@ export default class GetEquiment extends React.Component {
                 name="postcode"
                 extra="string"
                 example="WC1E 6BT"
-                description="Postcode of the location of the room" /> 
+                description="Postcode of the location of the room" />
               <Cell
                 name="address"
                 extra="string"
                 example="Malet Place, Gower Street."
-                description="Address of the room." /> 
+                description="Address of the room." />
               <Cell
                 name="roomname"
                 extra="string"
                 example="Ground-Ground floor - Public."
-                description="Name of the room." /> 
+                description="Name of the room." />
               <Cell
                 name="building_name"
                 extra="string"
                 example="DMS Watson Science Library."
-                description="Name of the building." /> 
+                description="Name of the building." />
               <Cell
                 name="room_status"
                 extra="string"

@@ -12,7 +12,7 @@ from django.conf import settings
 def cache_student_timetable(upi, timetable_data):
     timetable_key = "timetable:personal:{}".format(upi)
 
-    r = redis.StrictRedis(
+    r = redis.Redis(
         host=settings.REDIS_UCLAPI_HOST,
         charset="utf-8",
         decode_responses=True

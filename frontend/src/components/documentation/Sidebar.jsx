@@ -67,6 +67,7 @@ export default class Sidebar extends React.Component {
               <ListItem primaryText="Welcome" href="#welcome" />,
               <ListItem primaryText="Get Your API Key" href="#get-api-key" />,
               <ListItem primaryText="API Rate Limits" href="#api-rate-limits" />,
+              <ListItem primaryText="API Data Freshness" href="#api-expiry-times" />,
               <ListItem primaryText="Version Information" href="#version-information" />,
             ]}
           />
@@ -152,6 +153,22 @@ export default class Sidebar extends React.Component {
                 primaryText="Get Timetable By Modules"
                 href="#timetable/bymodule"
               />,
+              <ListItem
+                primaryText="Get List of Departments"
+                href="#timetable/data/departments"
+              />,
+              <ListItem
+                primaryText="Get List of Department Modules"
+                href="#timetable/data/modules"
+              />,
+              <ListItem
+                primaryText="Get List of Department Courses"
+                href="#timetable/data/courses"
+              />,
+              <ListItem
+                primaryText="Get List of Course Modules"
+                href="#timetable/data/courses/modules"
+              />
             ]}
           />
 

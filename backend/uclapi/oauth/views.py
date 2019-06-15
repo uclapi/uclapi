@@ -15,9 +15,11 @@ from django.views.decorators.csrf import (
 
 from dashboard.models import App, User
 from dashboard.tasks import keen_add_event_task as keen_add_event
-from timetable.app_helpers import get_student_by_upi
 
-from .app_helpers import generate_random_verification_code
+from .app_helpers import (
+    generate_random_verification_code,
+    get_student_by_upi
+)
 from .models import OAuthToken
 from .scoping import Scopes
 
@@ -50,10 +52,17 @@ def authorise(request):
         response.status_code = 400
         return response
 
-    if app.callback_url is None:
+    if app.callback_url is None or app.callback_url.strip() == "":
         response = PrettyJsonResponse({
             "ok": False,
-            "error": "No callback URL set for this app."
+            "error": (
+                        "This app does not have a callback URL set. "
+                        "If you are the developer of this app, "
+                        "please ensure you have set a valid callback "
+                        "URL for your application in the Dashboard. "
+                        "If you are a user, please contact the app's "
+                        "developer to rectify this."
+                      )
         })
         response.status_code = 400
         return response
@@ -94,17 +103,21 @@ def shibcallback(request):
     try:
         # Expire our signed tokens after five minutes for added security
         appdata = signer.unsign(appdata_signed, max_age=300)
-    except signing.BadSignature:
-        response = PrettyJsonResponse({
-            "ok": False,
-            "error": "Bad signature. Please try login again."
-        })
-        response.status_code = 400
-        return response
     except signing.SignatureExpired:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": "Signature has expired. Please try login again."
+            "error": ("Login data has expired. Please attempt to log in "
+                      "again. If the issues persist please contact the "
+                      "UCL API Team to rectify this.")
+        })
+        response.status_code = 400
+        return response
+    except signing.BadSignature:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": ("Bad signature. Please attempt to log in again. "
+                      "If the issues persist please contact the UCL API "
+                      "Team to rectify this.")
         })
         response.status_code = 400
         return response
@@ -298,7 +311,7 @@ def userallow(request):
 
     code = generate_random_verification_code()
 
-    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
 
     verification_data = {
         "client_id": app.client_id,
@@ -339,7 +352,7 @@ def token(request):
         response.status_code = 400
         return response
 
-    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
     try:
         data_json = r.get(code).decode('ascii')
 
@@ -450,13 +463,17 @@ def token(request):
         "state": state,
         "client_id": app.client_id,
         "token": token.token,
+        "access_token": token.token,
         "scope": json.dumps(s.scope_dict(token.scope.scope_number))
     }
 
     return PrettyJsonResponse(oauth_data)
 
 
-@uclapi_protected_endpoint(personal_data=True)
+@uclapi_protected_endpoint(
+    personal_data=True,
+    last_modified_redis_key="timetable_gencache"
+)
 def userdata(request, *args, **kwargs):
     token = kwargs['token']
     print("Checking student status")
@@ -483,7 +500,7 @@ def userdata(request, *args, **kwargs):
 
     return PrettyJsonResponse(
         user_data,
-        rate_limiting_data=kwargs
+        custom_header_data=kwargs
     )
 
 
@@ -495,7 +512,10 @@ def scope_map(request):
     return PrettyJsonResponse(scope_map)
 
 
-@uclapi_protected_endpoint(personal_data=True)
+@uclapi_protected_endpoint(
+    personal_data=True,
+    last_modified_redis_key=None
+)
 def token_test(request, *args, **kwargs):
     s = Scopes()
 
@@ -510,12 +530,13 @@ def token_test(request, *args, **kwargs):
             pretty_print=False
         ),
         "scope_number": token.scope.scope_number
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)
 
 
 @uclapi_protected_endpoint(
     personal_data=True,
-    required_scopes=['student_number']
+    required_scopes=['student_number'],
+    last_modified_redis_key="timetable_gencache"
 )
 def get_student_number(request, *args, **kwargs):
     token = kwargs['token']
@@ -528,7 +549,7 @@ def get_student_number(request, *args, **kwargs):
         response = PrettyJsonResponse({
             "ok": False,
             "error": "User is not a student."
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -538,5 +559,109 @@ def get_student_number(request, *args, **kwargs):
     }
     return PrettyJsonResponse(
         data,
-        rate_limiting_data=kwargs
+        custom_header_data=kwargs
     )
+
+@csrf_exempt
+def myapps_shibboleth_callback(request):
+    # should auth user login or signup
+    # then redirect to my apps homepage
+    eppn = request.META['HTTP_EPPN']
+    groups = request.META['HTTP_UCLINTRANETGROUPS']
+    cn = request.META['HTTP_CN']
+    department = request.META['HTTP_DEPARTMENT']
+    given_name = request.META['HTTP_GIVENNAME']
+    display_name = request.META['HTTP_DISPLAYNAME']
+    employee_id = request.META['HTTP_EMPLOYEEID']
+
+    try:
+        user = User.objects.get(email=eppn)
+    except ObjectDoesNotExist:
+        # create a new user
+        new_user = User(
+            email=eppn,
+            full_name=display_name,
+            given_name=given_name,
+            department=department,
+            cn=cn,
+            raw_intranet_groups=groups,
+            employee_id=employee_id
+        )
+
+        new_user.save()
+        add_user_to_mailing_list_task.delay(new_user.email, new_user.full_name)
+
+        request.session["user_id"] = new_user.id
+        keen_add_event.delay("signup", {
+            "id": new_user.id,
+            "email": eppn,
+            "name": display_name
+        })
+    else:
+        # user exists already, update values
+        request.session["user_id"] = user.id
+        user.full_name = display_name
+        user.given_name = given_name
+        user.department = department
+        user.raw_intranet_groups = groups
+        user.employee_id = employee_id
+        user.save()
+
+        keen_add_event.delay("User data updated", {
+            "id": user.id,
+            "email": eppn,
+            "name": display_name
+        })
+
+    return redirect("/oauth/myapps")
+
+
+@ensure_csrf_cookie
+def my_apps(request):
+    # Check whether the user is logged in
+    try:
+        user_id = request.session["user_id"]
+    except KeyError:
+        # Build Shibboleth callback URL
+        url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
+        param = (request.build_absolute_uri(request.path) +
+                 "shibcallback")
+        param = quote(param)
+        url = url + param
+
+        return redirect(url)
+
+    user = User.objects.get(id=user_id)
+
+    tokens = OAuthToken.objects.filter(user=user)
+
+    authorised_apps = []
+    scopes = Scopes()
+
+    for token in tokens:
+        authorised_apps.append({
+            "id": token.id,
+            "active": token.active,
+            "app": {
+                "id": token.app.id,
+                "creator": {
+                    "name": token.app.user.full_name,
+                    "email": token.app.user.email
+                },
+                "name": token.app.name,
+                "scopes": scopes.scope_dict_all(token.scope.scope_number)
+            }
+        })
+
+    initial_data_dict = {
+        "status" : "ONLINE",
+        "fullname": user.full_name,
+        "department": user.department,
+        "scopes": scopes.get_scope_map(),
+        "apps": authorised_apps
+    }
+
+    initial_data = json.dumps(initial_data_dict, cls=DjangoJSONEncoder)
+    return render(request, 'appsettings.html', {
+        'initial_data': initial_data
+    })

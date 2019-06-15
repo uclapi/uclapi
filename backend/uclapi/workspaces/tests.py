@@ -1,5 +1,7 @@
 import os
+
 from binascii import hexlify
+from distutils.util import strtobool
 
 import redis
 
@@ -16,7 +18,7 @@ from .occupeye.token import (
 
 class OccupEyeApiTestCase(TestCase):
     def setUp(self):
-        self.r = redis.StrictRedis(
+        self.r = redis.Redis(
             host=settings.REDIS_UCLAPI_HOST,
             charset="utf-8",
             decode_responses=True
@@ -85,20 +87,22 @@ class OccupEyeApiTestCase(TestCase):
             "occupeye:surveys:9991",
             {
                 "id": 9991,
-                "active": True,
+                "active": str(True),
                 "name": "test survey 1",
                 "start_time": "10:00",
-                "end_time": "12:00"
+                "end_time": "12:00",
+                "staff_survey": str(True)
             }
         )
         pipeline.hmset(
             "occupeye:surveys:9992",
             {
                 "id": 9992,
-                "active": False,
+                "active": str(False),
                 "name": "test survey 2",
                 "start_time": "09:00",
-                "end_time": "17:00"
+                "end_time": "17:00",
+                "staff_survey": str(False)
             }
         )
         pipeline.expire("occupeye:surveys", 20)
@@ -106,7 +110,7 @@ class OccupEyeApiTestCase(TestCase):
         pipeline.expire("occupeye:surveys:9992", 20)
         pipeline.execute()
 
-        surveys = self.api.get_surveys()
+        surveys = self.api.get_surveys("all")
         # When the data comes from the actual API it is backwards
         surveys.reverse()
         self.assertEqual(
@@ -131,6 +135,9 @@ class OccupEyeApiTestCase(TestCase):
             surveys[0]["end_time"],
             "12:00"
         )
+        self.assertTrue(
+            strtobool(str(surveys[0]["staff_survey"]))
+        )
 
         self.assertEqual(
             surveys[1]["id"],
@@ -148,4 +155,7 @@ class OccupEyeApiTestCase(TestCase):
         self.assertEqual(
             surveys[1]["end_time"],
             "17:00"
+        )
+        self.assertFalse(
+            strtobool(str(surveys[1]["staff_survey"]))
         )

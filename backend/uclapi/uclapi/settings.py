@@ -66,14 +66,13 @@ INSTALLED_APPS = [
     'oauth',
     'timetable',
     'common',
-    'opbeat.contrib.django',
     'raven.contrib.django.raven_compat',
     'corsheaders',
-    'workspaces'
+    'workspaces',
+    'webpack_loader'
 ]
 
 MIDDLEWARE = [
-    'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -116,12 +115,12 @@ WSGI_APPLICATION = 'uclapi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django_postgrespool2',
         'NAME': os.environ.get("DB_UCLAPI_NAME"),
         'USER': os.environ.get("DB_UCLAPI_USERNAME"),
         'PASSWORD': os.environ.get("DB_UCLAPI_PASSWORD"),
         'HOST': os.environ.get("DB_UCLAPI_HOST"),
-        'PORT': os.environ.get("DB_UCLAPI_PORT")
+        'PORT': os.environ.get("DB_UCLAPI_PORT"),
     },
     'roombookings': {
         'ENGINE': 'django.db.backends.oracle',
@@ -129,26 +128,29 @@ DATABASES = {
         'USER': os.environ.get("DB_ROOMS_USERNAME"),
         'PASSWORD': os.environ.get("DB_ROOMS_PASSWORD"),
         'HOST': '',
-        'PORT': ''
+        'PORT': '',
+        'OPTIONS': {'threaded': True}
     },
     'gencache': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django_postgrespool2',
         'NAME': os.environ.get("DB_CACHE_NAME"),
         'USER': os.environ.get("DB_CACHE_USERNAME"),
         'PASSWORD': os.environ.get("DB_CACHE_PASSWORD"),
         'HOST': os.environ.get("DB_CACHE_HOST"),
-        'PORT': os.environ.get("DB_CACHE_PORT")
+        'PORT': os.environ.get("DB_CACHE_PORT"),
     }
 }
 
-DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
+# Max connections is pool_size + max_overflow
+# Will idle at pool_size connections, overflow are for spikes in traffic
 
-# analytics
-OPBEAT = {
-    'ORGANIZATION_ID': os.environ.get("OPBEAT_ORG_ID"),
-    'APP_ID': os.environ.get("OPBEAT_APP_ID"),
-    'SECRET_TOKEN': os.environ.get("OPBEAT_SECRET_TOKEN")
+DATABASE_POOL_ARGS = {
+    'max_overflow': 15,
+    'pool_size': 5,
+    'recycle': 300
 }
+
+DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
 
 RAVEN_CONFIG = {
     'dsn': os.environ.get("SENTRY_DSN"),
@@ -187,16 +189,6 @@ USE_L10N = True
 
 USE_TZ = False
 
-# set it to True when developing using webpack-serve
-# so that static files are fetched from http://localhost:8080/
-WEBPACK_SERVE = True
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.10/howto/static-files/
-
-STATIC_URL = 'http://localhost:8080/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
 # Cross Origin settings
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/roombookings/.*$'
@@ -217,8 +209,16 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
+ROOMBOOKINGS_SETID = 'LIVE-18-19'
 
-ROOMBOOKINGS_SETID = 'LIVE-17-18'
+# This dictates how many Medium articles we scrape
+MEDIUM_ARTICLE_QUANTITY = 3
+
+# We need to specify a tuple of STATICFILES_DIRS instead of a
+# STATIC_ROOT so that collectstatic picks up the WebPack bundles
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 # S3 file storage settings
 # There are three scenarios to consider:
@@ -255,6 +255,13 @@ if strtobool(os.environ.get("AWS_S3_STATICS", "False")):
         AWS_STORAGE_BUCKET_NAME
     )
 
+    # We set the default ACL data on all stacks we upload to public-read
+    # so that the files are world readable.
+    # This is required for the statics to be served up directly.
+    # Often this is a security risk, but in this case it's
+    # actually required to serve the website.
+    AWS_DEFAULT_ACL = "public-read"
+
     # If credentials are enabled, collectstatic can do uploads
     if strtobool(os.environ["AWS_S3_STATICS_CREDENTIALS_ENABLED"]):
         AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
@@ -265,3 +272,43 @@ if strtobool(os.environ.get("AWS_S3_STATICS", "False")):
         AWS_S3_ENCRYPTION = False
     else:
         AWS_QUERYSTRING_AUTH = False
+
+    # Since we are hosting on AWS, we should set the Static URL to it
+    STATIC_URL = "{}/{}".format(
+        AWS_S3_CUSTOM_DOMAIN,
+        AWS_LOCATION
+    )
+    # Set up the WebPack loader for remote loading
+    WEBPACK_LOADER = {
+        'DEFAULT': {
+            'CACHE': not DEBUG,
+            'BUNDLE_DIR_NAME': './',  # must end with slash
+            'STATS_URL': "https://{}webpack-stats.json".format(
+                STATIC_URL
+            ),
+            'POLL_INTERVAL': 0.1,
+            'TIMEOUT': None,
+            'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
+        }
+    }
+else:
+    # https://docs.djangoproject.com/en/1.10/howto/static-files/
+    # The default Static URL is /static/ which is fine for when statics
+    # have been built and placed into their respective folders.
+    STATIC_URL = os.environ.get("STATIC_URL", '/static/')
+
+    # Set up the WebPack loader for local loading
+    WEBPACK_LOADER = {
+        'DEFAULT': {
+            'CACHE': not DEBUG,
+            'BUNDLE_DIR_NAME': './',  # must end with slash
+            'STATS_FILE': os.path.join(
+                BASE_DIR,
+                'static',
+                'webpack-stats.json'
+            ),
+            'POLL_INTERVAL': 0.1,
+            'TIMEOUT': None,
+            'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
+        }
+    }

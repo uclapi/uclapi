@@ -4,7 +4,8 @@ from dashboard.tasks import keen_add_event_task as keen_add_event
 from oauth.scoping import Scopes
 from common.helpers import PrettyJsonResponse
 
-from .app_helpers import is_url_safe
+from .app_helpers import (is_url_unsafe, NOT_HTTPS,
+                          NOT_VALID, URL_BLACKLISTED, NOT_PUBLIC)
 from .models import App, User
 
 
@@ -25,7 +26,7 @@ def create_app(request):
     try:
         name = request.POST["name"]
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have name or user."
@@ -81,7 +82,7 @@ def rename_app(request):
         app_id = request.POST["app_id"]
         new_name = request.POST["new_name"]
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have app_id/new_name"
@@ -129,10 +130,10 @@ def regenerate_app_token(request):
     try:
         app_id = request.POST["app_id"]
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
-            "message": "Request does not have app_id."
+            "message": "Request does not have an app_id."
         })
         response.status_code = 400
         return response
@@ -180,10 +181,10 @@ def delete_app(request):
     try:
         app_id = request.POST["app_id"]
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
-            "message": "Request does not have app_id."
+            "message": "Request does not have an app_id."
         })
         response.status_code = 400
         return response
@@ -201,6 +202,13 @@ def delete_app(request):
     else:
         app = apps[0]
         app.deleted = True
+        webhook = app.webhook
+        webhook.url = ""
+        webhook.siteid = ""
+        webhook.roomid = ""
+        webhook.contact = ""
+        webhook.enabled = False
+        webhook.save()
         app.save()
 
         keen_add_event.delay("App deleted", {
@@ -234,7 +242,7 @@ def set_callback_url(request):
 
     try:
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
             "message": "User ID not set in session. Please log in again."
@@ -251,12 +259,20 @@ def set_callback_url(request):
         })
         response.status_code = 400
         return response
-
-    if not is_url_safe(new_callback_url):
+    url_not_safe_saved = is_url_unsafe(new_callback_url)
+    if url_not_safe_saved:
+        if url_not_safe_saved == NOT_HTTPS:
+            message = "The requested callback URL does not "\
+                      "start with 'https://'."
+        elif url_not_safe_saved == NOT_VALID:
+            message = "The requested callback URL is not valid."
+        elif url_not_safe_saved == URL_BLACKLISTED:
+            message = "The requested callback URL is forbidden."
+        elif url_not_safe_saved == NOT_PUBLIC:
+            message = "The requested callback URL is not publicly available."
         response = PrettyJsonResponse({
             "success": False,
-            "message": ("The requested callback URL"
-                        " is not valid.")
+            "message": message
         })
         response.status_code = 400
         return response
@@ -309,7 +325,7 @@ def update_scopes(request):
 
     try:
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
             "message": "User ID not set in session. Please log in again."
@@ -361,7 +377,7 @@ def update_scopes(request):
             app.scope.scope_number = current
             app.scope.save()
             app.save()
-        except (KeyError, ValueError):
+        except (KeyError, ValueError, TypeError):
             response = PrettyJsonResponse({
                 "success": False,
                 "message": "Invalid scope data that could not be iterated."
@@ -377,5 +393,5 @@ def update_scopes(request):
 
         return PrettyJsonResponse({
             "success": True,
-            "message": "Scope successfully changed",
+            "message": "Scope successfully changed.",
         })

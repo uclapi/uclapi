@@ -16,9 +16,9 @@ params = {
 r = requests.get("https://uclapi.com/workspaces/sensors/averages/time", params=params)
 print(r.json())`,
 
-  shell: `curl -X GET https://uclapi.com/workspaces/sensors/averages/time \
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \
--d days=30,
+  shell: `curl -G https://uclapi.com/workspaces/sensors/averages/time \\
+-d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
+-d days=30 \
 -d survey_ids=46,45`,
 
   javascript: `fetch("https://uclapi.com/workspaces/sensors/averages/time?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&days=40&survey_ids=46,45",
@@ -133,6 +133,11 @@ export default class WorkspacesGetSensorHistoricalTimeData extends React.Compone
                             requirement="optional"
                             example="46,45"
                             description="A comma delimited list of Survey IDs. If this parameter is not supplied, historical data for every survey is returned." />
+                        <Cell
+                            name="survey_filter"
+                            requirement="optional"
+                            example="student"
+                            description="Filter the surveys based on who they are designed for. Valid values of this parameter are `all` (no filtering), `student` (return only student surveys; this is the default) and `staff` (return only surveys representing work areas for UCL staff only). It is recommended that the default (student) is used in apps aimed at students, unless a specific reason to include a staff workspace is required." />
                     </Table>
                 </Topic>
 
@@ -145,6 +150,9 @@ export default class WorkspacesGetSensorHistoricalTimeData extends React.Compone
                     </p>
                     <p>
                         Please note that the counts below may not perfectly add up. This is because we perform an integer division calculation to get an average based on multiple days' worth of data, so you may encounter off-by-one errors if you check that `sensors_absent` + `sensors_occupied` == `sensors_total`. Please do not be alarmed by this! However, if you do get large, unexplained differences do let us know so that we can look into it.
+                    </p>
+                    <p>
+                        Please note further that there are some rare situations where the data source we use may have historical data missing. Sitautions that can cause this include new libraries being added which do not yet have historical data available, and situations where data has not properly been saved by our data provider. In cases like this, our response to your app will include an empty `averages` object with no times within it. Your code should account for this possibility by checking whether each time period is actually present. If time periods are missing your application should alert the user to data being missing and fail gracefully.
                     </p>
 
                     <Table
@@ -169,7 +177,7 @@ export default class WorkspacesGetSensorHistoricalTimeData extends React.Compone
                                 ]
                             `}
                             description="A list of survey objects, each of which contains metadata and average occupancy data for that library." />
-                        
+
                         <Cell
                             name="surveys[n][name]"
                             extra="string"
@@ -198,7 +206,7 @@ export default class WorkspacesGetSensorHistoricalTimeData extends React.Compone
                                     ...
                                 }
                             `}
-                            description="An object which contains every ten minute time period in a day. The first time period is 00:00:00, and the last one is 23:50:00. Each time period specifies a total number of sensors, a number of absent sensors (e.g. unoccupied seats) and occupied sensors representing seats that are in use." />
+                            description="An object which contains every ten minute time period in a day. The first time period is 00:00:00, and the last one is 23:50:00. Each time period specifies a total number of sensors, a number of absent sensors (e.g. unoccupied seats) and occupied sensors representing seats that are in use. This object can sometimes be empty if the requested data is not available for some reason. Whilst this is rare, your app should be prepared for this and therefore be able to inform the user that the data they requested is unavailable at this time." />
                         <Cell
                             name="surveys[n][averages][t][sensors_absent]"
                             extra="integer"

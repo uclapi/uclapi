@@ -16,21 +16,41 @@ from .image_builder import ImageBuilder
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False)
+@uclapi_protected_endpoint(
+    personal_data=False,
+    last_modified_redis_key='Workspaces'
+)
 def get_surveys(request, *args, **kwargs):
     api = OccupEyeApi()
+    consts = OccupEyeConstants()
+
+    survey_filter = request.GET.get("survey_filter", "student")
+    if survey_filter not in consts.VALID_SURVEY_FILTERS:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "The survey filter you provided is invalid. "
+                "Valid survey filters are: "
+            ) + str(consts.VALID_SURVEY_FILTERS)
+        }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
+
     response_data = {
         "ok": True,
-        "surveys": api.get_surveys()
+        "surveys": api.get_surveys(survey_filter)
     }
     return JsonResponse(
         response_data,
-        rate_limiting_data=kwargs
+        custom_header_data=kwargs
     )
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False)
+@uclapi_protected_endpoint(
+    personal_data=False,
+    last_modified_redis_key='Workspaces'
+)
 def get_map_image(request, *args, **kwargs):
     try:
         image_id = request.GET['image_id']
@@ -38,7 +58,7 @@ def get_map_image(request, *args, **kwargs):
         response = JsonResponse({
             "ok": False,
             "error": "No Image ID provided."
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -56,7 +76,7 @@ def get_map_image(request, *args, **kwargs):
                 "The image with the ID you requested "
                 "does not exist."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -65,7 +85,7 @@ def get_map_image(request, *args, **kwargs):
     if image_format == "raw":
         return HttpResponse(
             content=b64decode(image_b64),
-            rate_limiting_data=kwargs,
+            custom_header_data=kwargs,
             content_type=content_type
         )
     elif image_format == "base64":
@@ -73,7 +93,7 @@ def get_map_image(request, *args, **kwargs):
             "ok": True,
             "content_type": content_type,
             "data": image_b64
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         return response
     else:
         response = JsonResponse({
@@ -82,13 +102,16 @@ def get_map_image(request, *args, **kwargs):
                 "You specified a response format that "
                 "was not either raw or base64."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False)
+@uclapi_protected_endpoint(
+    personal_data=False,
+    last_modified_redis_key='Workspaces'
+)
 def get_survey_sensors(request, *args, **kwargs):
     try:
         survey_id = request.GET["survey_id"]
@@ -100,18 +123,9 @@ def get_survey_sensors(request, *args, **kwargs):
         response.status_code = 400
         return response
 
-    # # Check if state data should be returned
-    # try:
-    #     return_states = request.GET["return_states"].lower() == "true"
-    # except KeyError:
-    #     return_states = False
-
     api = OccupEyeApi()
     try:
-        data = api.get_survey_sensors(
-            survey_id
-            # return_states=return_states
-        )
+        data = api.get_survey_sensors(survey_id)
     except BadOccupEyeRequest:
         response = JsonResponse({
             "ok": False,
@@ -123,12 +137,15 @@ def get_survey_sensors(request, *args, **kwargs):
     response = JsonResponse({
         "ok": True,
         **data
-    })
+    }, custom_header_data=kwargs)
     return response
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False)
+@uclapi_protected_endpoint(
+    personal_data=False,
+    last_modified_redis_key='Workspaces'
+)
 def get_survey_max_timestamp(request, *args, **kwargs):
     try:
         survey_id = request.GET["survey_id"]
@@ -158,42 +175,75 @@ def get_survey_max_timestamp(request, *args, **kwargs):
         "ok": True,
         "survey_id": survey_id_int,
         "last_updated": max_timestamp
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)
 
     return response
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False)
+@uclapi_protected_endpoint(
+    personal_data=False,
+    last_modified_redis_key='Workspaces'
+)
 def get_survey_sensors_summary(request, *args, **kwargs):
     survey_ids = request.GET.get("survey_ids", None)
+
+    survey_filter = request.GET.get("survey_filter", "student")
+    consts = OccupEyeConstants()
+    if survey_filter not in consts.VALID_SURVEY_FILTERS:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "The survey filter you provided is invalid. "
+                "Valid survey filters are: "
+            ) + str(consts.VALID_SURVEY_FILTERS)
+        }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
+
     api = OccupEyeApi()
     try:
-        data = api.get_survey_sensors_summary(survey_ids)
+        data = api.get_survey_sensors_summary(survey_ids, survey_filter)
     except BadOccupEyeRequest:
         response = JsonResponse({
             "ok": False,
             "error": (
                 "One or more of the survey_ids you requested is not valid."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
     response = JsonResponse({
         "ok": True,
         "surveys": data
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)
 
     return response
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False)
+@uclapi_protected_endpoint(
+    personal_data=False,
+    last_modified_redis_key='Workspaces'
+)
 def get_historical_time_data(request, *args, **kwargs):
     api = OccupEyeApi()
     consts = OccupEyeConstants()
+
     survey_ids = request.GET.get("survey_ids", None)
+    survey_filter = request.GET.get("survey_filter", "student")
+    if survey_filter not in consts.VALID_SURVEY_FILTERS:
+        response = JsonResponse({
+            "ok": False,
+            "error": (
+                "The survey filter you provided is invalid. "
+                "Valid survey filters are: "
+            ) + str(consts.VALID_SURVEY_FILTERS)
+        }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
+
     try:
         day_count = request.GET["days"]
     except KeyError:
@@ -203,7 +253,7 @@ def get_historical_time_data(request, *args, **kwargs):
                 "You did not specify how many days of historical data "
                 "should be returned. Valid options are: "
             ) + str(consts.VALID_HISTORICAL_DATA_DAYS)
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -214,7 +264,7 @@ def get_historical_time_data(request, *args, **kwargs):
                 "You did not specify an integer number of days of "
                 "historical days. Valid options are: "
             ) + str(consts.VALID_HISTORICAL_DATA_DAYS)
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -227,32 +277,39 @@ def get_historical_time_data(request, *args, **kwargs):
                 "You did not specify a valid number of days of "
                 "historical days. Valid options are: "
             ) + str(consts.VALID_HISTORICAL_DATA_DAYS)
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
     try:
-        data = api.get_historical_time_usage_data(survey_ids, day_count)
+        data = api.get_historical_time_usage_data(
+            survey_ids,
+            day_count,
+            survey_filter
+        )
     except BadOccupEyeRequest:
         response = JsonResponse({
             "ok": False,
             "error": (
                 "One or more of the survey_ids you requested is not valid."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
     response = JsonResponse({
         "ok": True,
         "surveys": data
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)
 
     return response
 
 
 @api_view(['GET'])
-@uclapi_protected_endpoint(personal_data=False)
+@uclapi_protected_endpoint(
+    personal_data=False,
+    last_modified_redis_key='Workspaces'
+)
 def get_live_map(request, *args, **kwargs):
     try:
         survey_id = request.GET["survey_id"]
@@ -264,7 +321,7 @@ def get_live_map(request, *args, **kwargs):
                 "You must provide a Survey ID and a Map ID "
                 "to get a live sensor status image."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -303,7 +360,7 @@ def get_live_map(request, *args, **kwargs):
                 "the format of HTML hex colours. Colours must "
                 "either be in the format #ABC or #ABCDEF."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -317,7 +374,7 @@ def get_live_map(request, *args, **kwargs):
                 "must be a floating point number, such as 1 "
                 "or 0.02."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -331,7 +388,7 @@ def get_live_map(request, *args, **kwargs):
                 "It must be a floating point number, such as 128 or "
                 "100.5."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -344,7 +401,7 @@ def get_live_map(request, *args, **kwargs):
                 "Either the IDs you sent were not "
                 "integers, or they do not exist."
             )
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -363,7 +420,7 @@ def get_live_map(request, *args, **kwargs):
     response = HttpResponse(
         map_svg,
         content_type="image/svg+xml",
-        rate_limiting_data=kwargs
+        custom_header_data=kwargs
     )
     response["Content-Length"] = len(map_svg)
 

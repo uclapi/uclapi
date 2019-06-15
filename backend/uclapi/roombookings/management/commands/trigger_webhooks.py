@@ -1,24 +1,35 @@
 from django.core.management.base import BaseCommand
-from roombookings.models import Lock, BookingA, BookingB
+from roombookings.models import BookingA, BookingB
+from timetable.models import Lock
 from roombookings.helpers import _serialize_bookings
 from dashboard.models import Webhook, WebhookTriggerHistory
 from datetime import datetime
 from deepdiff import DeepDiff
-import grequests
 from django.utils import timezone
+from requests_futures.sessions import FuturesSession
+from django.db.models import Q
 
 
 class Command(BaseCommand):
 
     help = 'Diff roombooking result sets and notify relevant webhooks'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--debug',
+            action='store_true',
+            dest='debug',
+            help='Print webhook responses',
+        )
+
     def handle(self, *args, **options):
         self.stdout.write("Triggering webhooks")
+        session = FuturesSession()
 
-        # currently locked table is the old one, more recent one is not locked
+        # currently not locked table is the old one, more recent one is locked
         lock = Lock.objects.all()[0]  # there is only ever one lock
 
-        if lock.bookingA:
+        if not lock.a:
             old_booking_table = BookingA
             new_booking_table = BookingB
         else:
@@ -29,18 +40,20 @@ class Command(BaseCommand):
 
         old_bookings = _serialize_bookings(
             old_booking_table.objects.filter(
+                Q(bookabletype='CB') | Q(siteid='238') | Q(siteid='240'),
                 startdatetime__gt=now
             )
         )
         new_bookings = _serialize_bookings(
             new_booking_table.objects.filter(
+                Q(bookabletype='CB') | Q(siteid='238') | Q(siteid='240'),
                 startdatetime__gt=now
             )
         )
 
         ddiff = DeepDiff(old_bookings, new_bookings, ignore_order=True)
 
-        webhooks = Webhook.objects.all()
+        webhooks = Webhook.objects.filter(app__deleted=False)
         #  assumption: list of webhooks will be longer than ddiff
 
         num_bookings_added = 0
@@ -121,10 +134,11 @@ class Command(BaseCommand):
 
             webhooks_to_enact[idx]["payload"] = payload
 
-            if payload["content"] != {}:
+            if payload["content"] != {} and webhook["url"] != "":
                 unsent_requests.append(
-                    grequests.post(
-                        webhook["url"], json=payload, headers={
+                    session.post(
+                        webhook["url"], json=payload,
+                        headers={
                             "User-Agent": "uclapi-bot/1"
                         }
                     )
@@ -132,7 +146,11 @@ class Command(BaseCommand):
         self.stdout.write(
             "Triggering {} webhooks.".format(len(unsent_requests))
         )
-        grequests.map(unsent_requests)
+        if("debug" in options):
+            for i in unsent_requests:
+                self.stdout.write(
+                    'response status {0}'.format(i.result().status_code)
+                )
 
         for webhook in webhooks_to_enact:
             if webhook["payload"]["content"] != {}:

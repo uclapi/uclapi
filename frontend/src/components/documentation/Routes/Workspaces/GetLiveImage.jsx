@@ -9,19 +9,19 @@ let codeExamples = {
 
 params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
-  "survey_id": "22",
-  "map_id": "3"
+  "survey_id": "38",
+  "map_id": "105"
 }
 
 r = requests.get("https://uclapi.com/workspaces/images/map/live", params=params)
 print(r.json())`,
 
-  shell: `curl -X GET https://uclapi.com/workspaces/images/map/live \
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \
--d survey_id=22
--d map_id=3`,
+  shell: `curl -G https://uclapi.com/workspaces/images/map/live \\
+-d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
+-d survey_id=38 \
+-d map_id=105`,
 
-  javascript: `fetch("https://uclapi.com/workspaces/images/map/live?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=22&map_id=3",
+  javascript: `fetch("https://uclapi.com/workspaces/images/map/live?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=38&map_id=105",
 {
     method: "GET",
 })
@@ -38,11 +38,11 @@ let response = `
     <g transform="scale(0.02, 0.02)">
         <image width="28329.0" height="29882.0" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA7QAAA..."/>
         <g>
-            <g transform=""translate(13223.0,27477.0)">
-                <circle r="128" fill="#FFC90E"/>
+            <g transform="translate(13223.0,27477.0)">
+                <circle r="128" fill="#B60202"/>
             </g>
             <g transform="translate(13223.0,26708.0)">
-                <circle r="128" fill="#FFC90E"/>
+                <circle r="128" fill="#B60202"/>
             </g>
             ...
         </g>
@@ -84,12 +84,12 @@ export default class WorkspacesGetLiveImage extends React.Component {
                         <Cell
                             name="survey_id"
                             requirement="required"
-                            example="22"
+                            example="38"
                             description="The ID of the library's survey which contains the map you want to obtain." />
                         <Cell
                             name="map_id"
                             requirement="required"
-                            example="3"
+                            example="105"
                             description="The ID of the library's survey which contains the map you want to obtain." />
                         <Cell
                             name="image_scale"
@@ -104,13 +104,13 @@ export default class WorkspacesGetLiveImage extends React.Component {
                         <Cell
                             name="absent_colour"
                             requirement="optional"
-                            example="#ABE00C"
-                            description="The colour of the circle designating a free seat. This must be provided as a hex colour code, including the preceeding # symbol. The default is #ABE00C." />
+                            example="#016810"
+                            description="The colour of the circle designating a free seat. This must be provided as a hex colour code, including the preceeding # symbol. The default is #016810." />
                         <Cell
                             name="occupied_colour"
                             requirement="optional"
-                            example="#FFC90E"
-                            description="The colour of the circle designating a taken, or occupied, seat. This must be provided as a hex colour code, including the preceeding # symbol. The default is #FFC90E." />                        
+                            example="#B60202"
+                            description="The colour of the circle designating a taken, or occupied, seat. This must be provided as a hex colour code, including the preceeding # symbol. The default is #B60202." />
                     </Table>
                 </Topic>
 
@@ -119,7 +119,7 @@ export default class WorkspacesGetLiveImage extends React.Component {
                     codeExamples={responseCodeExample}>
                     <h2>Response</h2>
                     <p>
-                        The response will be XML SVG data that contains a base64-encoded PNG map (the same data that is returned by `/workspaces/images/map`) and vector circles designating which seats are free and occupied. An example of this returned data is on the right.
+                        The response will be XML SVG data that contains a base64-encoded PNG map (the same data that is returned by `/workspaces/images/map`) and vector circles designating which seats are free and occupied. Each &lt;g&gt; SVG element contains an ID that corresponds to the sensor ID, where additional information about the sensor can be retrieved via `/workspaces/sensors`. An example of this returned data is on the right.
                     </p>
                 </Topic>
             </div>
