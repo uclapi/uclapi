@@ -2,7 +2,7 @@ amqp==2.5.0
 botocore==1.12.173
 boto3==1.9.168
 celery==4.3.0
-certifi==2019.3.9
+certifi==2019.6.16
 chardet==3.0.4
 ciso8601==2.1.1
 cx-Oracle==7.1.3
