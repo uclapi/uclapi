@@ -14,7 +14,7 @@ from dashboard.models import App, User
 from .app_helpers import generate_random_verification_code
 from .models import OAuthScope, OAuthToken
 from .scoping import Scopes
-from .views import authorise, shibcallback
+from .views import authorise, shibcallback, deauthorise_app
 
 
 @uclapi_protected_endpoint(personal_data=True, required_scopes=["timetable"])
@@ -478,3 +478,108 @@ class AppHelpersTestCase(TestCase):
         code = generate_random_verification_code()
         self.assertEqual(code[:6], "verify")
         self.assertEqual(len(code), 86)
+
+
+class DeleteAToken(TestCase):
+    def setUp(self):
+        mock_status_code = unittest.mock.Mock()
+        mock_status_code.status_code = 200
+
+        self.factory = APIRequestFactory()
+
+    def test_deauthorise_app(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+        oauth_scope = OAuthScope.objects.create(
+            scope_number=2
+        )
+        oauth_token = OAuthToken.objects.create(
+            app=app_,
+            user=user_,
+            scope=oauth_scope
+        )
+        token_id = oauth_token.token
+        request = self.factory.get(
+            '/oauth/testcase',
+            {
+                'client_secret': app_.client_secret,
+                'client_id': app_.client_id
+            }
+        )
+        request.session = {'user_id': user_.id}
+
+        token_id = oauth_token.token
+        deauthorise_app(request)
+        with self.assertRaises(OAuthToken.DoesNotExist):
+            oauth_token = OAuthToken.objects.get(token=token_id)
+
+    def test_deauthorise_user_does_not_exist(self):
+        request = self.factory.get(
+            '/oauth/testcase',
+            {
+                'client_secret': 'abcdefg',
+                'client_id': '1234.1234'
+            }
+        )
+        request.session = {'user_id': 999999999}
+        with self.assertRaises(User.DoesNotExist):
+            deauthorise_app(request)
+
+    def test_deauthorise_no_client_id(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        request = self.factory.get(
+            '/oauth/testcase',
+            {
+                'client_secret': 'abcdefg',
+                'token': 'uclapi-123456'
+            }
+        )
+        request.session = {'user_id': user_.id}
+
+        response = deauthorise_app(request)
+        self.assertEqual(response.status_code, 400)
+
+        content = json.loads(response.content.decode())
+        self.assertFalse(content["ok"])
+        self.assertEqual(
+            content["error"],
+            "A Client ID must be provided to deauthorise an app."
+        )
+
+    def test_deauthorise_no_token_for_app_and_user(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+        request = self.factory.get(
+            '/oauth/testcase',
+            {
+                'client_secret': app_.client_secret,
+                'client_id': app_.client_id
+            }
+        )
+
+        request.session = {'user_id': user_.id}
+
+        response = deauthorise_app(request)
+        self.assertEqual(response.status_code, 400)
+
+        content = json.loads(response.content.decode())
+        self.assertFalse(content["ok"])
+        self.assertEqual(
+            content["error"],
+            (
+                "The app with the Client ID provided does not have a "
+                "token for this user, so no action was taken."
+            )
+        )

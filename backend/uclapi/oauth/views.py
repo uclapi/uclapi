@@ -1,5 +1,6 @@
 import json
 import os
+import urllib.parse
 
 import redis
 from django.core import signing
@@ -624,8 +625,10 @@ def my_apps(request):
     except KeyError:
         # Build Shibboleth callback URL
         url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
-        param = (request.build_absolute_uri(request.path) +
-                 "shibcallback")
+        param = urllib.parse.urljoin(
+            request.build_absolute_uri(request.path),
+            "/shibcallback"
+        )
         param = quote(param)
         url = url + param
 
@@ -648,6 +651,7 @@ def my_apps(request):
                     "name": token.app.user.full_name,
                     "email": token.app.user.email
                 },
+                "client_id": token.app.client_id,
                 "name": token.app.name,
                 "scopes": scopes.scope_dict_all(token.scope.scope_number)
             }
@@ -656,6 +660,7 @@ def my_apps(request):
     initial_data_dict = {
         "status" : "ONLINE",
         "fullname": user.full_name,
+        "user_id": user.id,
         "department": user.department,
         "scopes": scopes.get_scope_map(),
         "apps": authorised_apps
@@ -665,3 +670,54 @@ def my_apps(request):
     return render(request, 'appsettings.html', {
         'initial_data': initial_data
     })
+
+
+@ensure_csrf_cookie
+def deauthorise_app(request):
+    # Find which user is requesting to deauthorise an app
+    user = User.objects.get(id=request.session["user_id"])
+
+    # Find the app that the user wants to deauthorise
+    client_id = request.GET.get("client_id", None)
+
+    if client_id is None:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": "A Client ID must be provided to deauthorise an app."
+        })
+        response.status_code = 400
+        return response
+
+    try:
+        # We only allow the process to happen if the app exists and has not
+        # been flagged as deleted
+        app = App.objects.filter(client_id=client_id, deleted=False)[0]
+    except IndexError:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": "App does not exist with the Client ID provided."
+        })
+        response.status_code = 400
+        return response
+
+    try:
+        token = OAuthToken.objects.get(app=app, user=user)
+    except OAuthToken.DoesNotExist:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": (
+                "The app with the Client ID provided does not have a "
+                "token for this user, so no action was taken."
+            )
+        })
+        response.status_code = 400
+        return response
+
+    token.delete()
+
+    response = PrettyJsonResponse({
+        "ok": True,
+        "message": "App successfully deauthorised."
+    })
+    response.status_code = 200
+    return response
