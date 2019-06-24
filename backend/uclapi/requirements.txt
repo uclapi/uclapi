@@ -1,6 +1,6 @@
 amqp==2.5.0
 boto3==1.9.173
-botocore==1.12.173
+botocore==1.12.174
 celery==4.3.0
 certifi==2019.6.16
 chardet==3.0.4
