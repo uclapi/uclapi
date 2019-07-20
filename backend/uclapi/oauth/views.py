@@ -1,10 +1,12 @@
 import json
 import os
+import urllib.parse
 
 import redis
 from django.core import signing
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.signing import TimestampSigner
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.http import quote
 from django.views.decorators.csrf import (
@@ -130,12 +132,33 @@ def shibcallback(request):
     app = App.objects.get(client_id=client_id)
 
     eppn = request.META['HTTP_EPPN']
-    groups = request.META['HTTP_UCLINTRANETGROUPS']
     cn = request.META['HTTP_CN']
     department = request.META['HTTP_DEPARTMENT']
     given_name = request.META['HTTP_GIVENNAME']
     display_name = request.META['HTTP_DISPLAYNAME']
     employee_id = request.META['HTTP_EMPLOYEEID']
+
+    # We check whether the user is a member of any UCL Intranet Groups.
+    # This is a quick litmus test to determine whether they should be able to
+    # use an OAuth application.
+    # We deny access to alumni, which does not have this Shibboleth attribute.
+    # Test accounts also do not have this attribute, but we can check the
+    # department attribute for the Shibtests department.
+    # This lets App Store reviewers log in to apps that use the UCL API.
+    if 'HTTP_UCLINTRANETGROUPS' in request.META:
+        groups = request.META['HTTP_UCLINTRANETGROUPS']
+    else:
+        if department == "Shibtests":
+            groups = "shibtests"
+        else:
+            response = HttpResponse(
+                (
+                    "Error 403 - denied. <br>"
+                    "Unfortunately, alumni are not permitted to use UCL Apps."
+                )
+            )
+            response.status_code = 403
+            return response
 
     # If a user has never used the API before then we need to sign them up
     try:
@@ -487,16 +510,16 @@ def userdata(request, *args, **kwargs):
 
     user_data = {
         "ok": True,
-        "full_name": token.user.full_name,
-        "email": token.user.email,
-        "given_name": token.user.given_name,
         "cn": token.user.cn,
         "department": token.user.department,
+        "email": token.user.email,
+        "full_name": token.user.full_name,
+        "given_name": token.user.given_name,
         "upi": token.user.employee_id,
         "scope_number": token.scope.scope_number,
-        "is_student": is_student
+        "is_student": is_student,
+        "ucl_groups": token.user.raw_intranet_groups.split(';')
     }
-    print("Is student: " + str(is_student))
 
     return PrettyJsonResponse(
         user_data,
@@ -562,6 +585,7 @@ def get_student_number(request, *args, **kwargs):
         custom_header_data=kwargs
     )
 
+
 @csrf_exempt
 def myapps_shibboleth_callback(request):
     # should auth user login or signup
@@ -576,7 +600,7 @@ def myapps_shibboleth_callback(request):
 
     try:
         user = User.objects.get(email=eppn)
-    except ObjectDoesNotExist:
+    except User.DoesNotExist:
         # create a new user
         new_user = User(
             email=eppn,
@@ -589,7 +613,6 @@ def myapps_shibboleth_callback(request):
         )
 
         new_user.save()
-        add_user_to_mailing_list_task.delay(new_user.email, new_user.full_name)
 
         request.session["user_id"] = new_user.id
         keen_add_event.delay("signup", {
@@ -624,8 +647,10 @@ def my_apps(request):
     except KeyError:
         # Build Shibboleth callback URL
         url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
-        param = (request.build_absolute_uri(request.path) +
-                 "shibcallback")
+        param = urllib.parse.urljoin(
+            request.build_absolute_uri(request.path),
+            "/shibcallback"
+        )
         param = quote(param)
         url = url + param
 
@@ -648,14 +673,16 @@ def my_apps(request):
                     "name": token.app.user.full_name,
                     "email": token.app.user.email
                 },
+                "client_id": token.app.client_id,
                 "name": token.app.name,
                 "scopes": scopes.scope_dict_all(token.scope.scope_number)
             }
         })
 
     initial_data_dict = {
-        "status" : "ONLINE",
+        "status": "ONLINE",
         "fullname": user.full_name,
+        "user_id": user.id,
         "department": user.department,
         "scopes": scopes.get_scope_map(),
         "apps": authorised_apps
@@ -665,3 +692,54 @@ def my_apps(request):
     return render(request, 'appsettings.html', {
         'initial_data': initial_data
     })
+
+
+@ensure_csrf_cookie
+def deauthorise_app(request):
+    # Find which user is requesting to deauthorise an app
+    user = User.objects.get(id=request.session["user_id"])
+
+    # Find the app that the user wants to deauthorise
+    client_id = request.GET.get("client_id", None)
+
+    if client_id is None:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": "A Client ID must be provided to deauthorise an app."
+        })
+        response.status_code = 400
+        return response
+
+    try:
+        # We only allow the process to happen if the app exists and has not
+        # been flagged as deleted
+        app = App.objects.filter(client_id=client_id, deleted=False)[0]
+    except IndexError:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": "App does not exist with the Client ID provided."
+        })
+        response.status_code = 400
+        return response
+
+    try:
+        token = OAuthToken.objects.get(app=app, user=user)
+    except OAuthToken.DoesNotExist:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": (
+                "The app with the Client ID provided does not have a "
+                "token for this user, so no action was taken."
+            )
+        })
+        response.status_code = 400
+        return response
+
+    token.delete()
+
+    response = PrettyJsonResponse({
+        "ok": True,
+        "message": "App successfully deauthorised."
+    })
+    response.status_code = 200
+    return response
