@@ -10,6 +10,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import GetStartedComponent from '../components/getStarted/getStarted.jsx';
 
 import './../sass/getStarted.scss';
+import './../sass/navbar.scss';
 
 const muiTheme = getMuiTheme({
   fontFamily: 'Roboto, sans-serif',
