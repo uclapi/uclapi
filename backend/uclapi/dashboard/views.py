@@ -4,6 +4,7 @@ from distutils.util import strtobool
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers.json import DjangoJSONEncoder
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.http import quote
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
@@ -19,6 +20,21 @@ from .tasks import add_user_to_mailing_list_task, \
 
 @csrf_exempt
 def shibboleth_callback(request):
+    # We first check whether the user is a member of any UCL Intranet Groups.
+    # This is a quick litmus test to determine whether they should have
+    # access to the dashboard.
+    # We deny access to test accounts and alumni, neither of which have
+    # this Shibboleth attribute.
+    if 'HTTP_UCLINTRANETGROUPS' not in request.META:
+        response = HttpResponse(
+            (
+                "Error 403 - denied. <br>"
+                "The API Dashboard is only assessible to active UCL users."
+            )
+        )
+        response.status_code = 403
+        return response
+
     # should auth user login or signup
     # then redirect to dashboard homepage
     eppn = request.META['HTTP_EPPN']
