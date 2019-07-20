@@ -723,7 +723,7 @@ def deauthorise_app(request):
         return response
 
     try:
-        token = OAuthin screen modeToken.objects.get(app=app, user=user)
+        token = OAuthToken.objects.get(app=app, user=user)
     except OAuthToken.DoesNotExist:
         response = PrettyJsonResponse({
             "ok": False,
