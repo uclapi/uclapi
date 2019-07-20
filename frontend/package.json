@@ -35,7 +35,7 @@
     "react-pose": "^4.0.8",
     "react-router-dom": "^5.0.1",
     "react-syntax-highlighter": "^11.0.2",
-    "react-transition-group": "^4.1.0",
+    "react-transition-group": "^4.2.1",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
