@@ -84,6 +84,11 @@ export default class WorkspacesGetSurveys extends React.Component {
                             requirement="required"
                             example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
                             description="Authentication token." />
+                        <Cell
+                            name="survey_filter"
+                            requirement="optional"
+                            example="student"
+                            description="Filter the surveys based on who they are designed for. Valid values of this parameter are `all` (no filtering), `student` (return only student surveys; this is the default) and `staff` (return only surveys representing work areas for UCL staff only). It is recommended that the default (student) is used in apps aimed at students, unless a specific reason to include a staff workspace is required." />
                     </Table>
                 </Topic>
                 <Topic
@@ -110,6 +115,11 @@ export default class WorkspacesGetSurveys extends React.Component {
                             extra="string"
                             example="17:00"
                             description="Standard UCL closing time supplied by the backend. This field should NOT be trusted as information on when a particular library closes. This is usually set to 17:00." />
+                        <Cell
+                            name="staff_survey"
+                            extra="boolean"
+                            example="false"
+                            description="Whether the survey represents a staff workspace (`true`) or a student work or study space (`false`). This is useful in apps where you set the `survey_filter` parameter to `all` and wish to do filtering of student and staff workspaces in your app or API as opposed to leaving the filtering to UCL API. By default, as `survey_filter` is set to `student` unless you specify otherwise, all workspaces will have this parameter set to `false`." />
                         <Cell
                             name="name"
                             extra="string"

@@ -7,7 +7,8 @@ import Demo from './Demo.jsx';
 import Marketplace from './Marketplace.jsx';
 import Blog from './Blog.jsx';
 import GitHub from './GitHub.jsx';
-import StagingBanner from './StagingBanner.jsx';
+import StagingBanner from './StagingBanner.jsx'
+import FAQ from './FAQ.jsx';
 import NavbarConsistent from '../appsettings/navbarconsistent.jsx';
 
 export default class GetStartedComponent extends React.Component {
@@ -26,9 +27,9 @@ export default class GetStartedComponent extends React.Component {
           <Demo />
           <Blog />
           <Marketplace />
+          <FAQ />
           <GitHub />
         </div>
       )
     }
-
 }

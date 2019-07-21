@@ -133,6 +133,11 @@ export default class WorkspacesGetSensorsSummary extends React.Component {
                             requirement="optional"
                             example="46,45"
                             description="A comma delimited list of Survey IDs. If this parameter is not supplied, summary data for every survey is returned." />
+                        <Cell
+                            name="survey_filter"
+                            requirement="optional"
+                            example="student"
+                            description="Filter the surveys based on who they are designed for. Valid values of this parameter are `all` (no filtering), `student` (return only student surveys; this is the default) and `staff` (return only surveys representing work areas for UCL staff only). It is recommended that the default (student) is used in apps aimed at students, unless a specific reason to include a staff workspace is required." />
                     </Table>
                 </Topic>
 
