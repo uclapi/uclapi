@@ -8,11 +8,11 @@ import Link from './link.jsx';
 import menu from '../../images/menu.svg';
 
 const Toast = posed.div({
-	hidden: { top: '-60px' },
+	hidden: { top: '-80px' },
 	shown: { top: 0 }
 });
 const SlideDown = posed.div({
-	shown: { height: '105px', paddingBottom: '25px' },
+	shown: { height: 'auto', paddingBottom: '25px' },
 	hidden: { height: 0, paddingBottom: 0 },
 });
 
@@ -23,12 +23,12 @@ let links = [
 	// 	src: "settings", 
 	// },
 	{
-		name: "documentation",
+		name: "Documentation",
 		link: "/docs",
 		src: "contract",
 	},
 	{
-		name: "dashboard",
+		name: "Dashboard",
 		link: "/dashboard",
 		src: "dashboard",
 	},

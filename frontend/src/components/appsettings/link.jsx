@@ -27,19 +27,10 @@ class Link extends React.Component {
         this.setState({
             hover: true,
         });
-
-        this.mInterval = window.setInterval(() => {
-        	if(this.state.hover) {
-        		this.bounce();
-        	} 
-        }, 400);
     }
     onMouseLeaveHandler() {
-		window.clearInterval(this.mInterval);
-
         this.setState({
             hover: false,
-            isUp: false,
         });
     }
     bounce() {
@@ -50,9 +41,6 @@ class Link extends React.Component {
 
 	render() {
 		return <div className="link-to-page" onMouseEnter={this.onMouseEnterHandler} onMouseLeave={this.onMouseLeaveHandler} >
-					<Bounce className="bounce-image" pose={this.state.isUp ? 'up' : 'down'}>
-						<img src={require('../../images/' + this.props.src + '.svg')} />
-					</Bounce>
 					<a href={this.props.link}>
 						<h1>{this.props.name}</h1>
 					</a>

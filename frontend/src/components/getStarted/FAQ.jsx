@@ -5,9 +5,9 @@ import QandA from './QandA.jsx';
 class FAQ extends React.Component {
   render() {
     return (
-      <div className="FAQ">
+      <div className="FAQ light">
         <div className="container">
-          <h1>FAQ</h1>
+          <h2>FAQ</h2>
           <QandA
             question={"What is UCL API?"}
             answer={["UCL API is a platform for interacting with data that is usually difficult to obtain or hidden in internal UCL systems. The aim is to enable student developers to develop tools for other UCL students to enrich their lives at UCL. Almost every API returns JSON which is simple to parse and interpret in most modern programming languages."]}

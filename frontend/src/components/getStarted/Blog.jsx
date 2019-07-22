@@ -12,13 +12,21 @@ export default class Blog extends React.Component {
 
   render() {
     return (
-      <div className="blog">
+      <div className="blog dark">
         <div className="container">
-          <h1>Check out our <a href="https://medium.com/ucl-api">blog</a> for tutorials.</h1>
+          <h2>Check out our <a href="https://medium.com/ucl-api">blog</a> for tutorials.</h2>
+          <br />
+          <br />
           {this.state.articles.map(item => (
-          <a href={item.url}>
-            {item.title}
-          </a>
+          <div className="blog-link-container">
+            <a href={item.url}>
+              {item.title}
+            </a>
+            <br />
+            <br />
+            <br />
+            <br />
+          </div>
           ))}
         </div>
       </div>

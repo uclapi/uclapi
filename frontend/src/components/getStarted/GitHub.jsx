@@ -5,7 +5,7 @@ export default class GitHub extends React.Component {
 
   render() {
     return (
-      <div className="github">
+      <div className="github dark">
         <div className="container">
           <h1>We're open source and proud!</h1>
           <h3>Check out our fleshy internals on GitHub!</h3>

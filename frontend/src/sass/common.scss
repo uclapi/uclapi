@@ -16,3 +16,63 @@ h1, h2, h3, h4, h5{
 body{
   background-color: rgba(234, 237, 241, 1);
 }
+
+.light {
+	color: #313537;
+    background: white;
+    flex: 2 200px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+    padding: 50px;
+
+    h2 {
+    	font-weight: lighter;
+    	font-size: 36px;
+        padding-top: 0;
+    }
+
+	a {
+	    color: black;
+        font-size: 36px;
+	}
+}
+
+.dark {
+	color: white;
+    background: #49b287;
+    flex: 2 200px;
+    padding-right: 15px;
+    padding-left: 60px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+    padding: 50px;
+
+    h2 {
+    	font-weight: lighter;
+    	font-size: 36px;
+        padding-top: 0;
+    }
+
+    a {
+        color: black;
+        font-size: 36px;
+        transition-duration: 500ms;
+        transition-property: color;
+    }
+
+    a:hover {
+        color: grey;
+    }
+}
+
+/*
+Tablets and Mobile
+*/
+@media only screen and (max-width: 540px) {
+    .dark a, 
+    .light a {
+        font-size: 25px;
+    }
+}

@@ -47,9 +47,9 @@ export default class APIs extends React.Component {
 
   render() {
     return (
-      <div className="apis">
+      <div className="apis dark">
         <div className="container">
-          <h1>Get Started using our APIs</h1>
+          <h2>Get Started using our APIs</h2>
           <div className="apiContainer">
             {apis.map((a, i) => <API
               key={i}

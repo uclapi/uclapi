@@ -83,7 +83,6 @@ $break-small: 780px;
     > .rc-collapse-header {
       color: $dark-grey;
       cursor: pointer;
-      height: 38px;
       line-height: 38px;
       text-indent: 16px;
       outline: 0;
@@ -166,17 +165,6 @@ $break-small: 780px;
   }
 }
 
-.goal {
-  // background: $accent-color;
-  padding-top: 100px;
-  padding-bottom: 100px;
-  text-align: center;
-
-  a {
-    color: white;
-  }
-}
-
 .stagingBanner {
   background: #ff0000;
   padding-top: 25px;
@@ -253,39 +241,9 @@ code {
   h1 a {
     color: $highlight-color;
   }
-
-  .container > a {
-    text-decoration: none;
-    display: block;
-    font-weight: lighter;
-    margin-top: 0px;
-    margin-bottom: 60px;
-    color: white;
-    font-size: 36px;
-    margin: 40px auto;
-  }
-
-  a:hover {
-    color: $highlight-color;
-    text-decoration: underline;
-  }
 }
 
 .apis {
-  padding-top: 60px;
-  padding-bottom: 40px;
-  background: $accent-color;
-  text-align: center;
-
-  h1 {
-    color: white;
-  }
-
-  p {
-    font-size: 18px;
-    color: $accent-color;
-  }
-
   .apiContainer {
     display: flex;
     flex-wrap: wrap;
@@ -293,15 +251,9 @@ code {
   }
 
   .api {
-    min-width: 400px;
+    min-width: 100%;
     margin: 10px;
     width: 30%;
-
-    a {
-      text-decoration: none;
-      display: block;
-      height: 100%;
-    }
 
     h1 {
       color: $primary-color;
@@ -313,4 +265,10 @@ code {
       padding: 20px;
     }
   }
+}
+
+.apiPaper a {
+  color: #49b287;
+  font-size: 15px;
+  text-decoration: none;
 }

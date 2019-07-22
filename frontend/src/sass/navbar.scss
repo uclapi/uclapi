@@ -1,6 +1,6 @@
 @import './helpers';
 
-$navbarHeight: 60px;
+$navbarHeight: 80px;
 
 .navbar-extras {
   .link-titles-menu {
@@ -9,7 +9,7 @@ $navbarHeight: 60px;
     overflow: hidden;
     width: 100%;
     background-color: #313537;
-    top: 60px;
+    top: 80px;
     transition-property: all;
     transition-timing-function: linear;
     transition-duration: 0.7s;
@@ -22,14 +22,10 @@ $navbarHeight: 60px;
 .navbarconsistent {
   z-index: 2;
   position: fixed;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+  background-color: #49b287;
   height: $navbarHeight;
   width: 100%;
   top: 0;
-
-  background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("./../images/logoCover2.png");
-  background-position: 50% 0%;
-  background-size: cover;
 
   display: flex;
   align-items: center;
@@ -37,8 +33,6 @@ $navbarHeight: 60px;
   transition-property: top;
   transition-duration: 0.2s;
   transition-timing-function: linear;
-
-  @include boxShadow(1);
 
   img {
     height: $navbarHeight - 15px;;
@@ -66,22 +60,24 @@ $navbarHeight: 60px;
     transition-duration: 0.2s;
 }
 .link-to-page { 
-    display: inline-block;
+    display: flex;
     float: right;
-    height: 16px;
-    margin: 20px 25px 0 25px;
-
-    img {
-      width: 16px;
-      height: 16px;
-      margin: 0;
-    }
+    height: 60px;
+    top: 10px;
+    margin: 5px 20px 5px 0;
+    line-height: 100%;
+    border: solid;
+    border-color: white;
+    border-width: 0 0 0 5px;
+    transition-duration: 200ms;
+    transition-property: border-width;
+    transition-timing-function: linear;
+    cursor: pointer;
+}
+.link-to-page:hover {
+    border-width: 0 0 0 10px;
 }
 .link-to-page h1 {
-    border: solid;
-    border-color: #FFF;
-    border-width: 0;
-    border-left-width: 1px;
     padding-left: 20px;
     margin: 0;
     font-size: 1em;
@@ -96,9 +92,12 @@ $navbarHeight: 60px;
     transition-duration: 0.2s;
     padding-left: 15px;
     transition-timing-function: linear;
+    height: 20px;
+    top: 25px;
+    position: relative;
 }
 .link-titles {
   right: 20px;
   position: absolute;
-  height: 60px;
+  height: 80px;
 }
