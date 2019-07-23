@@ -1,8 +1,10 @@
 import json
-import unittest.mock
 import os
+import random
+import string
+import unittest.mock
 
-from django.test import TestCase
+from django.test import Client, TestCase
 from rest_framework.test import APIRequestFactory
 from django.core import signing
 
@@ -355,6 +357,7 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
 class ViewsTestCase(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
+        self.client = Client()
 
     def test_no_parameters(self):
         request = self.factory.get(
@@ -471,6 +474,190 @@ class ViewsTestCase(TestCase):
              "If the issues persist please contact the UCL API "
              "Team to rectify this.")
         )
+
+    def test_valid_shibcallback_real_account(self):
+        dev_user_ = User.objects.create(
+            email="testdev@ucl.ac.uk",
+            cn="test",
+            given_name="Test Dev",
+            employee_id='testdev01'
+        )
+        app_ = App.objects.create(
+            user=dev_user_,
+            name="An App",
+            callback_url="www.somecallbackurl.com/callback"
+        )
+        test_user_ = User.objects.create(
+            email="testxxx@ucl.ac.uk",
+            cn="testxxx",
+            given_name="Test User",
+            employee_id='xxxtest01'
+        )
+
+        signer = signing.TimestampSigner()
+        # Generate a random state for testing
+        state = ''.join(
+            random.choices(string.ascii_letters + string.digits, k=32)
+        )
+        data = app_.client_id + state
+        signed_data = signer.sign(data)
+
+        response = self.client.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': signed_data
+            },
+            HTTP_EPPN='testxxx@ucl.ac.uk',
+            HTTP_CN='testxxx',
+            HTTP_DEPARTMENT='Dept of Tests',
+            HTTP_GIVENNAME='Test New Name',
+            HTTP_DISPLAYNAME='Test User',
+            HTTP_EMPLOYEEID='xxxtest01',
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.client.session['user_id'], test_user_.id)
+
+        initial_data = json.loads(response.context['initial_data'])
+        self.assertEqual(
+            initial_data['app_name'],
+            app_.name
+        )
+        self.assertEqual(
+            initial_data['client_id'],
+            app_.client_id
+        )
+        self.assertEqual(
+            initial_data['state'],
+            state
+        )
+        self.assertDictEqual(
+            initial_data['user'],
+            {
+                "full_name": "Test User",
+                "cn": "testxxx",
+                "email": "testxxx@ucl.ac.uk",
+                "department": "Dept of Tests",
+                "upi": "xxxtest01"
+            }
+        )
+
+        # Reload the test user from DB
+        test_user_ = User.objects.get(id=test_user_.id)
+
+        self.assertEqual(
+            test_user_.given_name,
+            "Test New Name"
+        )
+
+    def test_valid_shibcallback_test_account(self):
+        dev_user_ = User.objects.create(
+            email="testdev@ucl.ac.uk",
+            cn="test",
+            given_name="Test Dev",
+            employee_id='testdev01'
+        )
+        app_ = App.objects.create(
+            user=dev_user_,
+            name="An App",
+            callback_url="www.somecallbackurl.com/callback"
+        )
+        test_user_ = User.objects.create(
+            email="testxxx@ucl.ac.uk",
+            cn="testxxx",
+            given_name="Test User",
+            employee_id='xxxtest01'
+        )
+
+        signer = signing.TimestampSigner()
+        # Generate a random state for testing
+        state = ''.join(
+            random.choices(string.ascii_letters + string.digits, k=32)
+        )
+        data = app_.client_id + state
+        signed_data = signer.sign(data)
+
+        response = self.client.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': signed_data
+            },
+            HTTP_EPPN='testxxx@ucl.ac.uk',
+            HTTP_CN='testxxx',
+            HTTP_DEPARTMENT='Shibtests',
+            HTTP_GIVENNAME='Test',
+            HTTP_DISPLAYNAME='Test User',
+            HTTP_EMPLOYEEID='xxxtest01',
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.client.session['user_id'], test_user_.id)
+
+        initial_data = json.loads(response.context['initial_data'])
+        self.assertEqual(
+            initial_data['app_name'],
+            app_.name
+        )
+        self.assertEqual(
+            initial_data['client_id'],
+            app_.client_id
+        )
+        self.assertEqual(
+            initial_data['state'],
+            state
+        )
+        self.assertDictEqual(
+            initial_data['user'],
+            {
+                "full_name": "Test User",
+                "cn": "testxxx",
+                "email": "testxxx@ucl.ac.uk",
+                "department": "Shibtests",
+                "upi": "xxxtest01"
+            }
+        )
+
+        # Reload the test user from DB
+        test_user_ = User.objects.get(id=test_user_.id)
+
+        self.assertEqual(
+            test_user_.raw_intranet_groups,
+            "shibtests"
+        )
+
+    def test_invalid_or_alumni_account(self):
+        dev_user_ = User.objects.create(
+            email="testdev@ucl.ac.uk",
+            cn="test",
+            given_name="Test Dev",
+            employee_id='testdev01'
+        )
+        app_ = App.objects.create(
+            user=dev_user_,
+            name="An App",
+            callback_url="www.somecallbackurl.com/callback"
+        )
+
+        signer = signing.TimestampSigner()
+        # Generate a random state for testing
+        state = ''.join(
+            random.choices(string.ascii_letters + string.digits, k=32)
+        )
+        data = app_.client_id + state
+        signed_data = signer.sign(data)
+
+        response = self.client.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': signed_data
+            },
+            HTTP_EPPN='testxxx@ucl.ac.uk',
+            HTTP_CN='testxxx',
+            HTTP_DEPARTMENT='Dept of Alumni',
+            HTTP_GIVENNAME='Test',
+            HTTP_DISPLAYNAME='Test User',
+            HTTP_EMPLOYEEID='xxxtest01',
+        )
+        self.assertEqual(response.status_code, 403)
 
 
 class AppHelpersTestCase(TestCase):
