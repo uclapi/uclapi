@@ -649,7 +649,7 @@ def my_apps(request):
         url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
         param = urllib.parse.urljoin(
             request.build_absolute_uri(request.path),
-            "/shibcallback"
+            "/oauth/myapps/shibcallback"
         )
         param = quote(param)
         url = url + param
