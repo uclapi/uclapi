@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from dashboard.views import documentation, get_started
+from dashboard.views import documentation, home
 from marketplace.views import marketplace
 
 urlpatterns = [
@@ -29,5 +29,5 @@ urlpatterns = [
     url(r'^search/', include('search.urls')),
     url(r'^resources/', include('resources.urls')),
     url(r'^workspaces/', include('workspaces.urls')),
-    url(r'^$', get_started),
+    url(r'^$', home),
 ]

@@ -73,7 +73,7 @@ module.exports = {
     ]
   },
   entry: {
-    getStarted: entryPointsPathPrefix + '/getStarted.jsx',
+    HomePage: entryPointsPathPrefix + '/HomePage.jsx',
     documentation: entryPointsPathPrefix + '/documentation.jsx',
     dashboard: entryPointsPathPrefix + '/dashboard.jsx',
     marketplace: entryPointsPathPrefix + '/marketplace.jsx',
