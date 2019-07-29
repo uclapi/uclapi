@@ -15,7 +15,7 @@ class HomePage extends React.Component {
       <div className = "home-page">
         <SingleColumn
           height = "600px"
-          src = "splash_screen" 
+          src = "splash_screen.png"
           content = <CenterContent
                       isJustified={true}
                       content={<div className='landing-page-intro'>
@@ -33,14 +33,14 @@ class HomePage extends React.Component {
                       content={<div className='landing-page-goal'>
                                   <h1>Our Goal</h1>
                                   <h2>Create a ridiculously simple, documentation first, and comprehensive API around UCL
-                                  &quot;s digital services and establish an ecosystem of third party UCL apps and 
+                                  &apos;s digital services and establish an ecosystem of third party UCL apps and 
                                   services that use the API.</h2>
                                </div>}
                     />
         />
         <SingleColumn 
           isPadded={true}
-          color="maroon"
+          color="ucl-green"
           content = <CenterContent
                       isJustified={true}
                       content={<div className='landing-page-links'>
@@ -52,6 +52,7 @@ class HomePage extends React.Component {
           isPadded={true}
           color="dark-grey"
           content = <CenterContent
+                      isJustified={true}
                       content={<div className='landing-page-blog'>
                                   <h1>Check out our blog for tutorials.</h1>
                                   <h2>UCL API is a student-built platform for student 
@@ -60,8 +61,10 @@ class HomePage extends React.Component {
                     />
         />
         <SingleColumn
-          src="market"
+          color="ucl-green"
+          src="market.svg"
           height="600px"
+          img_size="auto 100%"
           content = <CenterContent
                       isJustified={true}
                       content={<div className='landing-page-marketplace'>
@@ -76,7 +79,7 @@ class HomePage extends React.Component {
           content = <CenterContent
                       isJustified={true}
                       content={<div className='landing-page-footer'>
-                                  <h1>We&quot;re open source and proud!</h1>
+                                  <h1>We&apos;re open source and proud!</h1>
                                   <h2>Check out our fleshy internals on GitHub!</h2>
                                </div>}
                     />

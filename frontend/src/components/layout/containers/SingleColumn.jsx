@@ -21,11 +21,14 @@ export default class SingleColumn extends React.Component {
     if(this.props.isPadded) { row_class_name += " vertical-padding"; }
     if(this.props.height) { row_style['height'] = this.props.height; }
     if(this.props.src) {
-      var img = require('../../../images/' + this.props.src + '.png');
+      var img = require('../../../images/' + this.props.src);
+      var img_size = "Cover";
+      if(this.props.img_size) { img_size = this.props.img_size; }
 
        row_style['backgroundImage'] = `url(${img})`; 
-       row_style['backgroundSize'] = "Cover";
+       row_style['backgroundSize'] = img_size;
        row_style['backgroundPosition'] = "50%";
+       row_style['backgroundRepeat'] = "no-repeat";
     }
 
     return (

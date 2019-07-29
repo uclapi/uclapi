@@ -6,7 +6,7 @@ export default class CenterContent extends React.Component {
     super(props);
 
     this.state = {
-      WIDTH_OF_CONTENT: "500px"
+      WIDTH_OF_CONTENT: "800px"
     }
   }
 
