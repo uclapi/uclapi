@@ -1,0 +1,32 @@
+/**
+	UCL API WEBSITE STYLES 
+	As of July 2019
+
+	Hopefully these stylings bring together
+	the amazing work of previous developers
+	and make it so that the horrendous task
+	of interacting with css is removed.
+
+	Table of contents:
+
+	- Alignments
+	- Containers
+
+**/
+
+/** Alignments **/
+
+.full-screen {
+	height: 100%;
+}
+
+.x-center {
+	position: relative;
+	margin: auto;
+}
+
+/** Containers **/
+
+.row {
+	width: 100%;
+}
