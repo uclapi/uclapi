@@ -1,0 +1,16 @@
+Getting UCLAPI up and running
+> cd /mnt/c
+> mkdir dev
+> cd dev
+> git clone https://github.com/uclapi/uclapi.git
+> cd frontend
+> npm run-script start
+( open new terminal )
+> cd docker
+> touch .env
+> vim .env
+( copy + paste .env from tutorial in + occupeye )
+> cd ../../
+> docker-compose up -d 
+> Docker Settings > Shared Drives > Enable C
+> Add script to ! FIND SCRIPT NAME !
