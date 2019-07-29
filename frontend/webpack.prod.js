@@ -49,6 +49,12 @@ module.exports = {
     }),
     new webpack.HashedModuleIdsPlugin()
   ],
+  resolve: {
+    alias: {
+      'Images': path.resolve(__dirname, './src/images'),
+      'Layout': path.resolve(__dirname, './src/components/layout'),
+    }
+  },
   module: {
     rules: [
       {

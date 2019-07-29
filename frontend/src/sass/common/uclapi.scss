@@ -9,10 +9,52 @@
 
 	Table of contents:
 
+	- Setup
+	- Color Scheme
+	- Text
 	- Alignments
 	- Containers
 
 **/
+
+/** Setup **/
+
+html, button, input, select, textarea {
+	font-family: 'Roboto', sans-serif;
+}
+
+html, body {
+  margin: 0;
+  background-color: white;
+}
+
+/** Color Scheme **/
+
+.dark-grey {
+	background-color: #313537;
+}
+
+.maroon {
+	background-color: #8d6e63;
+}
+
+/** Text **/
+
+h1, h2, h3, h4, h5{
+	font-family: 'Roboto', sans-serif;
+	color: white;
+}
+
+h1 {
+	font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    margin-top: 0;
+}
+
+.justified-text {
+  text-align: center;
+}
 
 /** Alignments **/
 
@@ -20,13 +62,24 @@
 	height: 100%;
 }
 
-.x-center {
+.center-x {
 	position: relative;
 	margin: auto;
+}
+
+.vertical-align-buddy {
+	width: 100%;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 /** Containers **/
 
 .row {
 	width: 100%;
+}
+
+.vertical-padding {
+	padding: 200px 0 200px 0;
 }

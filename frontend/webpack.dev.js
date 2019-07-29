@@ -43,6 +43,12 @@ module.exports = {
       },
     ]
   },
+  resolve: {
+    alias: {
+      'Images': path.resolve(__dirname, './src/images'),
+      'Layout': path.resolve(__dirname, './src/components/layout'),
+    }
+  },
   entry: {
     HomePage: entryPointsPathPrefix + '/HomePage.jsx',
     documentation: entryPointsPathPrefix + '/documentation.jsx',
