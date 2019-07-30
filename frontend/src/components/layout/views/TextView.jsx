@@ -11,9 +11,21 @@ export default class TextView extends React.Component {
     if(this.props.heading) { heading_size = this.props.heading; }
 
     const CustomTag = `h${heading_size}`;
+    var isLink = false;
+    if(this.props.link) {isLink = true;}
 
     return (
-      <CustomTag>{this.props.text}</CustomTag>
+      <CustomTag>
+        {isLink ? ( 
+          <a className="default-transition color-transition"href = {this.props.link}>
+            {this.props.text}
+          </a> 
+        ) : (
+          <div>
+            {this.props.text}
+          </div>
+        )}
+      </CustomTag>
     );
   }
 

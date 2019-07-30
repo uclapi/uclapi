@@ -44,6 +44,10 @@ html, body {
 	background-color: #8d6e63;
 }
 
+.warning-red {
+	background-color: red;
+}
+
 /** Text **/
 
 h1, h2, h3, h4, h5{
@@ -61,6 +65,9 @@ h1 {
 .justified-text {
   text-align: center;
 }
+
+a { color: white; text-decoration-color: white; }
+a:hover { color: #CCCCCC; }
 
 /** Alignments **/
 
@@ -115,3 +122,4 @@ h1 {
 	transition-timing-function: linear;
 }
 .background-color-transition { transition-property: background-color; }
+.color-transition { transition-property: color; }
