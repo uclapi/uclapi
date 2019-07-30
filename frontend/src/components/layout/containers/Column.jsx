@@ -18,8 +18,9 @@ export default class Column extends React.Component {
     if(this.props.isCenteredText) { content_class_name += " centered-text"; }
     if(this.props.isJustifiedText) { content_class_name += " justified-text"; }
 
-    content_style['width'] = this.state.UNSET_ERROR_WIDTH;
-    if(this.props.width) { content_style['width'] = this.props.width; }
+    content_style['width'] = "90%";
+    content_style['maxWidth'] = this.state.UNSET_ERROR_WIDTH;
+    if(this.props.width) { content_style['maxWidth'] = this.props.width; }
 
     return (
       <div className="vertical-align-buddy">

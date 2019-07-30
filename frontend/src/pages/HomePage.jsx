@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import './../sass/common/uclapi.scss';
 
 // Common Components
-import { RelativeLayout, Column, TextView } from 'Layout/Items.jsx';
+import { RelativeLayout, Column, TextView, ButtonView } from 'Layout/Items.jsx';
 
 class HomePage extends React.Component {
   render () {
@@ -17,6 +17,8 @@ class HomePage extends React.Component {
         <Column width="800px" isCentered={true} isJustifiedText={true}>
           <TextView text={"UCL API"} heading={1} />
           <TextView text={"UCL API is a student-built platform for student developers to improve the student experience of everyone at UCL."} heading={2} />
+          <ButtonView inline={true} text={"DASHBOARD"} link={"/dashboard"}/>
+          <ButtonView inline={true} text={"DOCS"} link={"/docs"} buttonType={"alternate"}/>
         </Column>
       </RelativeLayout>
 

@@ -14,6 +14,8 @@
 	- Text
 	- Alignments
 	- Containers
+	- Buttons
+	- Transitions
 
 **/
 
@@ -88,3 +90,28 @@ h1 {
 .vertical-padding {
 	padding: 200px 0 200px 0;
 }
+
+/** Buttons **/
+
+.uclapi-button {
+	padding: 10px 20px;
+	margin: 10px;
+	border-radius: 2px;
+	width: fit-content;
+	display: inline-block;
+	text-decoration: none;
+}
+
+.default-button { background-color: #313537; color: white; }
+.default-button:hover { background-color: #75797B;  }
+
+.alternate-button { background-color: #FFFFFF; color: black; }
+.alternate-button:hover { background-color: #CCCCCC;  }
+
+/** Transitions **/
+
+.default-transition {
+	transition-duration: 200ms;
+	transition-timing-function: linear;
+}
+.background-color-transition { transition-property: background-color; }
