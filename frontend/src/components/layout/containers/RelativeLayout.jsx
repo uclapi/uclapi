@@ -1,18 +1,12 @@
 import React from 'react';
 
-export default class SingleColumn extends React.Component {
+export default class RelativeLayout extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      STATIC_WIDTH: "66%"
-    };
   }
 
   render() {
-    var COLUMN_STYLE = { "width" : this.state.STATIC_WIDTH };
-
     var row_class_name = "row";
     var row_style = {};
 
@@ -33,9 +27,7 @@ export default class SingleColumn extends React.Component {
 
     return (
       <div className={ row_class_name } style={ row_style }>
-        <div className="1-column center-x full-screen" style={ COLUMN_STYLE }>
-          {this.props.content}
-        </div>
+          {this.props.children}
       </div>
     );
   }

@@ -1,16 +1,32 @@
-Getting UCLAPI up and running
-> cd /mnt/c
-> mkdir dev
-> cd dev
-> git clone https://github.com/uclapi/uclapi.git
-> cd frontend
-> npm run-script start
-( open new terminal )
-> cd docker
-> touch .env
-> vim .env
-( copy + paste .env from tutorial in + occupeye )
-> cd ../../
-> docker-compose up -d 
-> Docker Settings > Shared Drives > Enable C
-> Add script to ! FIND SCRIPT NAME !
+# Developing using docker
+
+## Installation of docker
+
+Make sure to have an installation of Windows 10 Education or use mac (Free licence through UCL) 
+
+Download docker for windows or docker for mac
+
+## Cloning the repository
+
+Install uclapi into a common source folder on your computer using:
+
+git clone https://github.com/uclapi/uclapi.git
+
+## Building the frontend
+
+cd frontend
+
+npm start
+
+## Running docker
+
+copy the .env.example into the root/uclapi folder and rename to .env
+
+navigate to docker settings > shared drives > enable c
+
+add the following script to ______ :
+
+
+Finally run the following command in a new terminal inside uclapi:
+
+docker-compose up -d

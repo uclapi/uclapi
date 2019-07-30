@@ -1,7 +1,9 @@
-import SingleColumn from './containers/SingleColumn.jsx';
-import CenterContent from './views/CenterContent.jsx';
+import RelativeLayout from './containers/RelativeLayout.jsx';
+import Column from './containers/Column.jsx';
+import TextView from './views/TextView.jsx';
 
 export {
-    SingleColumn,
-    CenterContent
+    RelativeLayout,
+    Column,
+    TextView
 }
