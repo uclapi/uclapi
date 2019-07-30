@@ -1,8 +1,5 @@
 import React from 'react';
 
-// Button is taken straight out of material-ui
-import RaisedButton from 'material-ui/RaisedButton';
-
 export default class ButtonView extends React.Component {
 
   constructor(props) {

@@ -21,12 +21,25 @@ export default class Column extends React.Component {
     content_style['width'] = "90%";
     content_style['maxWidth'] = this.state.UNSET_ERROR_WIDTH;
     if(this.props.width) { content_style['maxWidth'] = this.props.width; }
+    if(this.props.widthOverride) { content_style['width'] = this.props.widthOverride; }
+
+    var isVerticalAlign = this.props.isVerticalAlign || this.props.isRelativeVerticalAlign;
+    var vertical_align_style = [];
+    if(this.props.isRelativeVerticalAlign) { vertical_align_style['position'] = "relative"; }
 
     return (
-      <div className="vertical-align-buddy">
-        <div className={ content_class_name } style={ content_style }>
-          {this.props.children}
-        </div>
+      <div style={ { width: "100%" } } >
+        { isVerticalAlign ? (
+          <div className="vertical-align-buddy" style={vertical_align_style}>
+            <div className={ content_class_name } style={ content_style }>
+              {this.props.children}
+            </div>
+          </div>
+        ) : (
+          <div className={ content_class_name } style={ content_style }>
+            {this.props.children}
+          </div>
+        )}
       </div>
     )
   }

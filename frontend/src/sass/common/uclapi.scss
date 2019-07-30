@@ -16,6 +16,7 @@
 	- Containers
 	- Buttons
 	- Transitions
+	- Cards
 
 **/
 
@@ -36,8 +37,8 @@ html, body {
 	background-color: #313537;
 }
 
-.ucl-green {
-	background-color: #49b287;
+.ucl-orange {
+	background-color: #FC9685;
 }
 
 .maroon {
@@ -92,11 +93,12 @@ a:hover { color: #CCCCCC; }
 .row {
 	width: 100%;
     position: relative;
+	height: auto;
+	min-height: 100% !important;
 }
 
-.vertical-padding {
-	padding: 200px 0 200px 0;
-}
+.vertical-padding-top { padding-top: 50px; }
+.vertical-padding-bottom { padding-bottom: 50px; }
 
 /** Buttons **/
 
@@ -110,7 +112,7 @@ a:hover { color: #CCCCCC; }
 }
 
 .default-button { background-color: #313537; color: white; }
-.default-button:hover { background-color: #75797B;  }
+.default-button:hover, .uclapi-card:hover { background-color: #75797B;  }
 
 .alternate-button { background-color: #FFFFFF; color: black; }
 .alternate-button:hover { background-color: #CCCCCC;  }
@@ -123,3 +125,19 @@ a:hover { color: #CCCCCC; }
 }
 .background-color-transition { transition-property: background-color; }
 .color-transition { transition-property: color; }
+
+/** Cards **/
+
+.uclapi-card {
+	display: inline-flex;
+	background-color: #313537;
+	border-radius: 5px;
+	height: 200px;
+	padding: 10px;
+	margin: 10px;
+}
+
+.clickable {
+	text-decoration: none;
+	cursor: pointer;
+}
