@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import './../sass/common/uclapi.scss';
 
 // Common Components
-import { RelativeLayout, Column, TextView, ButtonView, CardView } from 'Layout/Items.jsx';
+import { RelativeLayout, Column, TextView, ButtonView, CardView, ImageView } from 'Layout/Items.jsx';
 
 let endpoints = [
   { name: "/oauth", description: "Let your users sign in with their UCL credentials", link: "/docs#oauth" },
@@ -28,7 +28,7 @@ class HomePage extends React.Component {
   }
 
   render () {
-    var isStaging = false;
+    var iconSize = "150px";
 
     return (
       <div className="landing-page-container">
@@ -42,7 +42,7 @@ class HomePage extends React.Component {
         </RelativeLayout>
       )}
 
-      <RelativeLayout height = "600px" src="splash_screen.png">         
+      <RelativeLayout height = "600px" src="home-page/splash_screen.png">         
         <Column style="9-10" isCentered={true} isVerticalAlign={true} isCenteredText={true}>
           <TextView text={"UCL API"} heading={1} align={"center"}/>
           <TextView text={"UCL API is a student-built platform for student developers to improve the student experience of everyone at UCL."} heading={2} align={"center"}/>
@@ -57,24 +57,27 @@ class HomePage extends React.Component {
         </Column>
       </RelativeLayout>
       <RelativeLayout isPaddedBottom = {true} color="dark-grey">         
-        <Column style="2-3" isCentered={true} >
-         <Column style="1-3"  isInline={true}>
+        <Column style="2-3" isCentered={true} isCenteredText={true}>
+         <Column style="1-3" isInline={true} minWidth={"280px"}>
           <TextView text={"Simple Interfaces"} heading={2} align={"center"}/>
           <TextView text={"The endpoints are streamlined to enable any developer to easily pick up and use the api. We hope that developers of all ability"
                          +" find our endpoints and website easy to navigate. We do not want to overcomplicate the process of developing"
                          +" awesome apps, we want to be the easiest part of your development process!"} align={"justify"} heading={5} />
+          <ImageView src={"home-page/heart.svg"} width={iconSize} height={iconSize} description={"an icon of a love heart"} isCentered={true} />
          </Column>
-         <Column style="1-3"  isInline={true}>
+         <Column style="1-3" isInline={true} minWidth={"280px"}>
           <TextView text={"Documentation first"} heading={2} align={"center"}/>
           <TextView text={"As developers we feel the pain of bad documentation: this is why we are driven by good documentation. We want you"
                          +" to spend less time worrying about how to use our api and more time thinking about how to revolutionise the student experience."
-                         +"With good documentation we allow you to focus on building helpful applications."} align={"justify"} heading={5} />
+                         +" With good documentation we allow you to focus on building helpful applications."} align={"justify"} heading={5} />
+          <ImageView src={"home-page/docs.svg"} width={iconSize} height={iconSize} description={"an icon of a clipboard"} isCentered={true} />
          </Column>
-         <Column style="1-3"  isInline={true}>
+         <Column style="1-3" isInline={true} minWidth={"280px"}>
           <TextView text={"Enable developers"} heading={2} align={"center"}/>
           <TextView text={"We want the api to be so comprehensive that any idea, no matter how big, can be created in order to improve students lives. We are always"
                          +" open to suggestions for new endpoints and functionality so we can enable a greater range of applications to be developed. We"
-                         +" cannot wait to see what you will develop!"} align={"justify"} heading={5} />
+                         +" cannot wait to see what you will develop!"} align={"justify"} heading={5}/>
+          <ImageView src={"home-page/heart.svg"} width={iconSize} height={iconSize} description={"an icon of a star"} isCentered={true} />
          </Column>
         </Column>
       </RelativeLayout>
@@ -109,11 +112,11 @@ class HomePage extends React.Component {
         </Column>
       </RelativeLayout>
 
-      <RelativeLayout src="market.svg" height="600px" img_size="auto 100%" color="ucl-orange">         
+      <RelativeLayout src="home-page/market.svg" height="600px" img_size="auto 100%" color="ucl-orange">         
         <Column style="9-10" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
           <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
           <TextView text={"Check out the UCL Marketplace to find apps built using UCL API"} heading={2} align={"center"}/>
-          <ButtonView inline={true} text={"UCL MARKETPLACE"} link={"/marketplace"} buttonType={"alternate"}/>
+          <ButtonView inline={true} text={"UCL MARKETPLACE"} link={"/marketplace"}/>
         </Column>
       </RelativeLayout>
 

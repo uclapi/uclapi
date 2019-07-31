@@ -6,11 +6,13 @@ import Column from './containers/Column.jsx';
 import TextView from './views/TextView.jsx';
 import ButtonView from './views/ButtonView.jsx';
 import CardView from './views/CardView.jsx';
+import ImageView from './views/ImageView.jsx';
 
 export {
     RelativeLayout,
     Column,
     TextView, 
     ButtonView, 
-    CardView
+    CardView,
+    ImageView
 }

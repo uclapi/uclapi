@@ -1,5 +1,15 @@
 import React from 'react';
 
+/**
+REQUIRED ATTRIBUTES:
+this.props.color OR this.props.src (remember to set a design for the layout)
+
+OPTIONAL ATTRIBUTES:
+this.props.fill (will make the layout fill an entire screen)
+this.props.isPadded (and variations affect the vertical padding of the layout)
+this.props.height (manually set the height over what the contents dictate)
+
+**/
 export default class RelativeLayout extends React.Component {
 
   constructor(props) {
