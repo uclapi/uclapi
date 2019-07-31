@@ -35,68 +35,93 @@ class HomePage extends React.Component {
 
       {this.state.host == "staging.ninja" && (
         <RelativeLayout isPadded = {true} color="warning-red">         
-          <Column width="800px" isCentered={true} isJustifiedText={true}>
-            <TextView text={"Warning! This is our bleeding-edge staging environment, and therefore performance, accuracy and reliability of the API cannot be guaranteed. For our stable, supported API please go to:"} heading={1} />
-            <TextView text={"uclapi.com"} heading = {2} link = {"https://uclapi.com"}/>
+          <Column style="9-10" isCentered={true} >
+            <TextView align={"center"} text={"Warning! This is our bleeding-edge staging environment, and therefore performance, accuracy and reliability of the API cannot be guaranteed. For our stable, supported API please go to:"} heading={1} />
+            <TextView align={"center"} text={"uclapi.com"} heading = {2} link = {"https://uclapi.com"}/>
           </Column>
         </RelativeLayout>
       )}
 
       <RelativeLayout height = "600px" src="splash_screen.png">         
-        <Column width="800px" isCentered={true} isJustifiedText={true} isVerticalAlign={true}>
-          <TextView text={"UCL API"} heading={1} />
-          <TextView text={"UCL API is a student-built platform for student developers to improve the student experience of everyone at UCL."} heading={2} />
+        <Column style="9-10" isCentered={true} isVerticalAlign={true} isCenteredText={true}>
+          <TextView text={"UCL API"} heading={1} align={"center"}/>
+          <TextView text={"UCL API is a student-built platform for student developers to improve the student experience of everyone at UCL."} heading={2} align={"center"}/>
           <ButtonView inline={true} text={"DASHBOARD"} link={"/dashboard"}/>
           <ButtonView inline={true} text={"DOCS"} link={"/docs"} buttonType={"alternate"}/>
         </Column>
       </RelativeLayout>
 
       <RelativeLayout isPadded = {true} color="dark-grey">         
-        <Column width="800px" isCentered={true} isJustifiedText={true}>
-          <TextView text={"Our Goal"} heading={1} />
-          <TextView text={"Create a ridiculously simple, documentation first, and comprehensive API around UCL's digital services and establish an ecosystem of third party UCL apps and services that use the API."} heading={3} />
-          <TextView text={"The UCL API Roadmap is public. Check it out and vote ✅"} heading = {3} link = {"https://trello.com/b/mimLkk3c/ucl-api-roadmap"}/>
+        <Column style="9-10" isCentered={true} >
+          <TextView text={"Our Goals"} heading={1} align={"center"}/>
+        </Column>
+      </RelativeLayout>
+      <RelativeLayout isPaddedBottom = {true} color="dark-grey">         
+        <Column style="2-3" isCentered={true} >
+         <Column style="1-3"  isInline={true}>
+          <TextView text={"Simple Interfaces"} heading={2} align={"center"}/>
+          <TextView text={"The endpoints are streamlined to enable any developer to easily pick up and use the api. We hope that developers of all ability"
+                         +" find our endpoints and website easy to navigate. We do not want to overcomplicate the process of developing"
+                         +" awesome apps, we want to be the easiest part of your development process!"} align={"justify"} heading={5} />
+         </Column>
+         <Column style="1-3"  isInline={true}>
+          <TextView text={"Documentation first"} heading={2} align={"center"}/>
+          <TextView text={"As developers we feel the pain of bad documentation: this is why we are driven by good documentation. We want you"
+                         +" to spend less time worrying about how to use our api and more time thinking about how to revolutionise the student experience."
+                         +"With good documentation we allow you to focus on building helpful applications."} align={"justify"} heading={5} />
+         </Column>
+         <Column style="1-3"  isInline={true}>
+          <TextView text={"Enable developers"} heading={2} align={"center"}/>
+          <TextView text={"We want the api to be so comprehensive that any idea, no matter how big, can be created in order to improve students lives. We are always"
+                         +" open to suggestions for new endpoints and functionality so we can enable a greater range of applications to be developed. We"
+                         +" cannot wait to see what you will develop!"} align={"justify"} heading={5} />
+         </Column>
+        </Column>
+      </RelativeLayout>
+      <RelativeLayout isPaddedBottom = {true} color="dark-grey">         
+        <Column style="9-10" isCentered={true} >
+          <TextView align={"center"} text={"The UCL API Roadmap is public. Check it out and vote ✅"} align={"center"} heading = {3} link = {"https://trello.com/b/mimLkk3c/ucl-api-roadmap"}/>
         </Column>
       </RelativeLayout>
 
       <RelativeLayout isPadded = {true} color="ucl-orange">         
-        <Column width="800px" isCentered={true} isJustifiedText={true}>
-          <TextView text={"Get Started using our APIs"} heading={1} />
+        <Column style="9-10" isCentered={true} >
+          <TextView text={"Get Started using our APIs"} heading={1} align={"center"}/>
         </Column>
       </RelativeLayout>
       <RelativeLayout isPaddedBottom = {true} color="ucl-orange">
-        <Column width="1300px" widthOverride="auto" isCentered={true} isJustifiedText={true}>
+        <Column style="1300px" widthOverride="auto" isCentered={true} isCenteredText={true}>
           {endpoints.map(x => (
-            <CardView isJustifiedText={true} width={"30%"} minWidth={"400px"} link={x.link}>
-              <Column width="90%" isCentered={true} isJustifiedText={true} isRelativeVerticalAlign={true}>
-                <TextView text={x.name} heading={1}/>
-                <TextView text={x.description} heading={3}/>
+            <CardView  width={"30%"} minWidth={"400px"} link={x.link}>
+              <Column style="9-10" isCentered={true}>
+                <TextView text={x.name} heading={1} align={"center"}/>
+                <TextView text={x.description} heading={3} align={"center"}/>
               </Column>
             </CardView> ) ) }
         </Column>
       </RelativeLayout>
 
       <RelativeLayout isPadded = {true} color="dark-grey">         
-        <Column width="800px" isCentered={true} isJustifiedText={true}>
-          <TextView text={"Check out our blog for tutorials"} heading={1} />
-          <TextView text={"UCL API is a student-built platform for student developers to improve the student experience of everyone at UCL."} heading={3} />
-          {this.state.articles.map(x => ( <TextView text={x.title} heading = {3} link = {x.url} /> ) ) }
+        <Column style="9-10" isCentered={true} >
+          <TextView text={"Check out our blog for tutorials"} heading={1} align={"center"}/>
+          <TextView text={"UCL API is a student-built platform for student developers to improve the student experience of everyone at UCL."} align={"center"} heading={3} />
+          {this.state.articles.map(x => ( <TextView text={x.title} align={"center"} heading = {3} link = {x.url} /> ) ) }
         </Column>
       </RelativeLayout>
 
       <RelativeLayout src="market.svg" height="600px" img_size="auto 100%" color="ucl-orange">         
-        <Column width="800px" isCentered={true} isJustifiedText={true} isVerticalAlign={true}>
-          <TextView text={"UCL Marketplace"} heading={1} />
-          <TextView text={"Check out the UCL Marketplace to find apps built using UCL API"} heading={2} />
+        <Column style="9-10" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
+          <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
+          <TextView text={"Check out the UCL Marketplace to find apps built using UCL API"} heading={2} align={"center"}/>
           <ButtonView inline={true} text={"UCL MARKETPLACE"} link={"/marketplace"} buttonType={"alternate"}/>
         </Column>
       </RelativeLayout>
 
       <RelativeLayout isPadded = {true} color="dark-grey">         
-        <Column width="800px" isCentered={true} isJustifiedText={true}>
-          <TextView text={"We're open source and proud!"} heading={1} />
-          <TextView text={"Check out our fleshy internals on Github!"} heading={3} />
-          <TextView text={"You know you want to!"} heading = {3} link = {"https://github.com/uclapi/uclapi"} />
+        <Column style="9-10" isCentered={true} >
+          <TextView text={"We're open source and proud!"} heading={1} align={"center"}/>
+          <TextView text={"Check out our fleshy internals on Github!"} heading={3} align={"center"}/>
+          <TextView text={"You know you want to!"} heading = {3} link = {"https://github.com/uclapi/uclapi"} align={"center"}/>
         </Column>
       </RelativeLayout>
 

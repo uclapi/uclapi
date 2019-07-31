@@ -1,5 +1,18 @@
 import React from 'react';
+/**
 
+REQUIRED ATTRIBUTES:
+this.props.style (1-3 => 1/3 width)
+
+OPTIONAL ATTRIBUTES:
+this.props.isCentered (centers the column within the parent)
+this.props.isCenteredText (centers any text within the column)
+this.props.isJustifiedText (justifies any text within the column)
+this.props.minWidth (Minimum width of the column)
+this.props.isVerticalAlign (Aligns the column vertically inside of a pre-set height layout)
+this.props.isInline (Are there multiple columns in a line on a row)
+
+**/
 export default class Column extends React.Component {
 
   constructor(props) {
@@ -8,40 +21,47 @@ export default class Column extends React.Component {
     this.state = {
       UNSET_ERROR_WIDTH: "0px"
     }
+
+    this.getWidth = this.getWidth.bind(this);
+  }
+
+  getWidth(style) {
+    var fraction = style.split("-")
+    var adaptation = 100;
+    if(this.props.isInline) { var adaptation = 100 - ( 4 * fraction[1] ); }
+    var percentage = fraction[0] / fraction[1] * adaptation;
+    return percentage + "%";
   }
 
   render() {
     var content_class_name = "content";
     var content_style = {};
 
+    content_style['width'] = this.getWidth(this.props.style);
+    if(this.props.minWidth) { content_style['minWidth'] = this.props.minWidth; }
+    if(this.props.isInline) { content_style['display'] = "inline-grid"; content_style['padding'] = "2%";}
+
     if(this.props.isCentered) {content_class_name += " center-x"; }
     if(this.props.isCenteredText) { content_class_name += " centered-text"; }
     if(this.props.isJustifiedText) { content_class_name += " justified-text"; }
 
-    content_style['width'] = "90%";
-    content_style['maxWidth'] = this.state.UNSET_ERROR_WIDTH;
-    if(this.props.width) { content_style['maxWidth'] = this.props.width; }
-    if(this.props.widthOverride) { content_style['width'] = this.props.widthOverride; }
+    var isVerticalAlign = this.props.isVerticalAlign;
 
-    var isVerticalAlign = this.props.isVerticalAlign || this.props.isRelativeVerticalAlign;
-    var vertical_align_style = [];
-    if(this.props.isRelativeVerticalAlign) { vertical_align_style['position'] = "relative"; }
-
-    return (
-      <div style={ { width: "100%" } } >
-        { isVerticalAlign ? (
-          <div className="vertical-align-buddy" style={vertical_align_style}>
-            <div className={ content_class_name } style={ content_style }>
-              {this.props.children}
-            </div>
-          </div>
-        ) : (
+    if(isVerticalAlign) {
+      return (
+        <div className="vertical-align-buddy">
           <div className={ content_class_name } style={ content_style }>
             {this.props.children}
           </div>
-        )}
-      </div>
-    )
+        </div>
+      );
+    } else {
+      return (
+          <div className={ content_class_name } style={ content_style }>
+              {this.props.children}
+          </div>
+      );
+    }
   }
 
 }

@@ -52,6 +52,7 @@ html, body {
 /** Text **/
 
 h1, h2, h3, h4, h5{
+	margin-top: 0;
 	font-family: 'Roboto', sans-serif;
 	color: white;
 }
@@ -64,11 +65,15 @@ h1 {
 }
 
 .justified-text {
-  text-align: center;
+  text-align: justify;
+}
+
+.centered-text {
+	text-align: center;
 }
 
 a { color: white; text-decoration-color: white; }
-a:hover { color: #CCCCCC; }
+a:hover { color: #BBBBBB; }
 
 /** Alignments **/
 
