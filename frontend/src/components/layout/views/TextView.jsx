@@ -23,17 +23,19 @@ export default class TextView extends React.Component {
 
     var CustomTag = `h${heading_size}`;
     if(this.props.align) {text_style['textAlign'] = this.props.align; }
+    if(this.props.color) {text_style['color'] = this.props.color; }
+    if(this.props.isInline) {text_style['display'] = "inline-block"; }
 
     var isLink = false;
     if(this.props.link) {isLink = true;}
 
     return (
-        <CustomTag>
+        <CustomTag style={text_style}>
           {isLink ? ( 
             <a className="default-transition color-transition" href = {this.props.link}>
               <div style={text_style}>
                 {this.props.text}
-            </div>
+              </div>
             </a> 
           ) : (
             <div style={text_style}>

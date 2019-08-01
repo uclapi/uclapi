@@ -35,11 +35,11 @@ export default class Column extends React.Component {
 
   render() {
     var content_class_name = "content";
-    var content_style = {};
+    var content_style = [];
 
     content_style['width'] = this.getWidth(this.props.style);
     if(this.props.minWidth) { content_style['minWidth'] = this.props.minWidth; }
-    if(this.props.isInline) { content_style['display'] = "inline-grid"; content_style['padding'] = "2%";}
+    if(this.props.isInline) { content_style['display'] = "inline-" + this.props.isInline; content_style['padding'] = "2%";}
 
     if(this.props.isCentered) {content_class_name += " center-x"; }
     if(this.props.isCenteredText) { content_class_name += " centered-text"; }
@@ -48,10 +48,15 @@ export default class Column extends React.Component {
     var isVerticalAlign = this.props.isVerticalAlign;
 
     if(isVerticalAlign) {
+      content_style['height'] = "100%";
+      content_style['width'] = this.getWidth(this.props.style);
+
       return (
-        <div className="vertical-align-buddy">
-          <div className={ content_class_name } style={ content_style }>
-            {this.props.children}
+        <div style={content_style}>
+          <div className="vertical-align-buddy">
+            <div className={ content_class_name }>
+              {this.props.children}
+            </div>
           </div>
         </div>
       );

@@ -87,7 +87,7 @@ a:hover { color: #BBBBBB; }
 }
 
 .vertical-align-buddy {
-	width: 100%;
+	width: inherit;
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
@@ -135,11 +135,18 @@ a:hover { color: #BBBBBB; }
 
 .uclapi-card {
 	display: inline-flex;
-	background-color: #313537;
 	border-radius: 5px;
 	height: 200px;
 	padding: 10px;
 	margin: 10px;
+}
+
+.uclapi-card-default {
+	background-color: #313537;
+}
+
+.uclapi-card-alternate {
+	background-color: #FFFFFF; 
 }
 
 .clickable {

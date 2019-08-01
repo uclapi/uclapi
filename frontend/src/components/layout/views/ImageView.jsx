@@ -26,11 +26,9 @@ export default class ImageView extends React.Component {
     if(this.props.isPaddedTop) { image_class_name += " vertical-padding-top"; }
     if(this.props.isPaddedBottom) { image_class_name += " vertical-padding-bottom"; }
 
-    var img = require('../../../images/' + this.props.src);
-
     return (
        <div className={image_class_name}>
-        <img src={img} alt={this.props.description} width={this.props.width} height={this.props.height}></img>
+        <img src={this.props.src} alt={this.props.description} width={this.props.width} height={this.props.height}></img>
        </div>
     );
   }

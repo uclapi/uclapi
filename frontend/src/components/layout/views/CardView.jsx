@@ -7,8 +7,11 @@ export default class CardView extends React.Component {
   }
 
   render() {
-    var card_class_name = "uclapi-card";
+    var card_class_name = "uclapi-card uclapi-card-";
     var card_style = {};
+
+    if(!this.props.cardType) {card_class_name+="default";}
+    if(this.props.cardType) {card_class_name+=this.props.cardType;}
 
     var isLink = false;
 
