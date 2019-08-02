@@ -49,6 +49,10 @@ html, body {
 	background-color: red;
 }
 
+.market-green {
+	background-color: #03B77B;
+}
+
 /** Text **/
 
 h1, h2, h3, h4, h5{
@@ -117,10 +121,10 @@ a:hover { color: #BBBBBB; }
 }
 
 .default-button { background-color: #313537; color: white; }
-.default-button:hover, .uclapi-card:hover { background-color: #75797B;  }
+.default-button:hover, .uclapi-card-clicked-default:hover { background-color: #75797B;  }
 
 .alternate-button { background-color: #FFFFFF; color: black; }
-.alternate-button:hover { background-color: #CCCCCC;  }
+.alternate-button:hover, .uclapi-card-clicked-alternate:hover { background-color: #CCCCCC;  }
 
 /** Transitions **/
 

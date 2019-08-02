@@ -49,12 +49,6 @@ module.exports = {
     }),
     new webpack.HashedModuleIdsPlugin()
   ],
-  resolve: {
-    alias: {
-      'Images': path.resolve(__dirname, './src/images'),
-      'Layout': path.resolve(__dirname, './src/components/layout'),
-    }
-  },
   module: {
     rules: [
       {
@@ -78,11 +72,18 @@ module.exports = {
       },
     ]
   },
+  resolve: {
+    alias: {
+      'Images': path.resolve(__dirname, './src/images'),
+      'Layout': path.resolve(__dirname, './src/components/layout'),
+      'Styles': path.resolve(__dirname, './src/components/sass'),
+    }
+  },
   entry: {
     HomePage: entryPointsPathPrefix + '/HomePage.jsx',
     documentation: entryPointsPathPrefix + '/documentation.jsx',
     dashboard: entryPointsPathPrefix + '/dashboard.jsx',
-    marketplace: entryPointsPathPrefix + '/marketplace.jsx',
+    Marketplace: entryPointsPathPrefix + '/Marketplace.jsx',
     authorise: entryPointsPathPrefix + '/authorise.jsx',
     appsettings: entryPointsPathPrefix + '/appsettings.jsx',
     vendors: ['react'],

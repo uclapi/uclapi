@@ -1,9 +1,9 @@
-// Standard React importss
+// Standard React imports
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 // Styles
-import './../sass/common/uclapi.scss';
+import 'Styles/common/uclapi.scss';
 
 // Images
 import heart from 'Images/home-page/heart.svg';
@@ -37,7 +37,7 @@ class HomePage extends React.Component {
   }
 
   render () {
-    var iconSize = "150px";
+    var iconsize = "150px";
 
     return (
       <div className="landing-page-container">
@@ -72,21 +72,21 @@ class HomePage extends React.Component {
           <TextView text={"The endpoints are streamlined to enable any developer to easily pick up and use the api. We hope that developers of all ability"
                          +" find our endpoints and website easy to navigate. We do not want to overcomplicate the process of developing"
                          +" awesome apps, we want to be the easiest part of your development process!"} align={"justify"} heading={5} />
-          <ImageView src={star} width={iconSize} height={iconSize} description={"an icon of a love heart"} isCentered={true} />
+          <ImageView src={star} width={iconsize} height={iconsize} description={"an icon of a love heart"} isCentered={true} />
          </Column>
          <Column style="1-3" isInline={"grid"} minWidth={"280px"}>
           <TextView text={"Documentation first"} heading={2} align={"center"}/>
           <TextView text={"As developers we feel the pain of bad documentation: this is why we are driven by good documentation. We want you"
                          +" to spend less time worrying about how to use our api and more time thinking about how to revolutionise the student experience."
                          +" With good documentation we allow you to focus on building helpful applications."} align={"justify"} heading={5} />
-          <ImageView src={docs} width={iconSize} height={iconSize} description={"an icon of a clipboard"} isCentered={true} />
+          <ImageView src={docs} width={iconsize} height={iconsize} description={"an icon of a clipboard"} isCentered={true} />
          </Column>
          <Column style="1-3" isInline={"grid"} minWidth={"280px"}>
           <TextView text={"Enable developers"} heading={2} align={"center"}/>
           <TextView text={"We want the api to be so comprehensive that any idea, no matter how big, can be created in order to improve students lives. We are always"
                          +" open to suggestions for new endpoints and functionality so we can enable a greater range of applications to be developed. We"
                          +" cannot wait to see what you will develop!"} align={"justify"} heading={5}/>
-          <ImageView src={heart} width={iconSize} height={iconSize} description={"an icon of a star"} isCentered={true} />
+          <ImageView src={heart} width={iconsize} height={iconsize} description={"an icon of a star"} isCentered={true} />
          </Column>
         </Column>
       </RelativeLayout>
@@ -117,7 +117,7 @@ class HomePage extends React.Component {
         <Column style="1-2" isCentered={true} isCenteredText={true}>
           <TextView text={"Check out our blog for tutorials"} heading={1} align={"center"}/>
           {this.state.articles.map(x => ( 
-            <CardView  width={"30%"} minWidth={"250px"} link={x.url} cardType={"alternate"}>
+            <CardView width={"30%"} minWidth={"250px"} link={x.url} cardType={"alternate"}>
               <Column style="9-10" isCentered={true}>
                 <TextView text={x.title} align={"center"} heading = {3} color={"black"}/>
               </Column>
@@ -126,7 +126,7 @@ class HomePage extends React.Component {
         </Column>
       </RelativeLayout>
 
-      <RelativeLayout src={market} height="600px" img_size="auto 100%" color="ucl-orange">         
+      <RelativeLayout src={market} height="600px" img_size="auto 60%" color="ucl-orange">         
         <Column style="1-1" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
           <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
           <TextView text={"Check out the UCL Marketplace to find apps built using UCL API"} heading={2} align={"center"}/>
@@ -138,13 +138,13 @@ class HomePage extends React.Component {
         <Column style="1-3" isCentered={true} isCenteredText={true}>
             <TextView text={"UCL API 2019"} heading={1} align={"center"}/>
 
-            <TextView text={"github "} heading={5} align={"center"} isInline={true}/>
+            <TextView text={"github "} heading={5} align={"center"} isInline={true} link={"https://github.com/uclapi/uclapi"}/>
+            <TextView text={`-`} heading={5} align={"center"} isInline={true} />
+            <TextView text={" twitter"} heading={5} align={"center"} isInline={true} link={"https://twitter.com/uclapi?lang=en"}/>
             <TextView text={`-`} heading={5} align={"center"} isInline={true}/>
-            <TextView text={" twitter"} heading={5} align={"center"} isInline={true}/>
-            <TextView text={`-`} heading={5} align={"center"} isInline={true}/>
-            <TextView text={" facebook"} heading={5} align={"center"} isInline={true}/>
+            <TextView text={" facebook"} heading={5} align={"center"} isInline={true} link={"https://www.facebook.com/uclapi/"}/>
 
-            <ImageView src={logo} width={iconSize} height={iconSize} description={"ucl api logo"} isCentered={true} />
+            <ImageView src={logo} width={iconsize} height={iconsize} description={"ucl api logo"} isCentered={true} />
         </Column>
       </RelativeLayout>
 
