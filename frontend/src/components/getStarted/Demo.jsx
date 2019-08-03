@@ -2,7 +2,7 @@ import React from 'react';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import AutoComplete from 'material-ui/AutoComplete';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import {androidstudio} from 'react-syntax-highlighter/dist/styles/hljs';
+import {androidstudio} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import RaisedButton from 'material-ui/RaisedButton';
 import 'whatwg-fetch';
 
