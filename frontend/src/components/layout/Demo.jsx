@@ -28,135 +28,86 @@ const muiTheme = getMuiTheme({
 
 // Required components
 import rooms from 'Layout/data/room_names.jsx';
-import {Column, Row, TextView} from 'Layout/Items.jsx';
+import {Column, Row, TextView, CodeView} from 'Layout/Items.jsx';
 
 export default class Demo extends React.Component {
 
   constructor(props) {
     super(props);
-    // let rootURL = 'http://localhost:8000';
-
-    // if (process.env.NODE_ENV === 'production') {
-    //   rootURL = 'https://uclapi.com';
-    // }
 
     let rootURL = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+    let now = new Date();
 
     this.state = {
-      schedule: "",
-      roomNameMap: {
-        'python': ``,
-        'javascript': ``,
-        'bash': ``
+      response: "",
+      params: {
+        "token": window.initialData.temp_token,
+        "date": now.toISOString().substring(0, 10).replace(/-/g, ""),
+        "results_per_page": "1"
       },
       rootURL: rootURL
     };
 
-    this.getLanguages = this.getLanguages.bind(this);
-    this.getSchedule = this.getSchedule.bind(this);
+    this.makeRequest = this.makeRequest.bind(this);
   }
 
-  getLanguages() {
+  makeRequest(roomName) {
     let now = new Date();
 
-    return [
-      {
-        "name": "python",
-        "code": `
-import requests
-
-params = {
-  "token": "${window.initialData.temp_token}",
-  "results_per_page": 1,
-  "date": ${now.toISOString().substring(0, 10).replace(/-/g, "")}, ${this.state.roomNameMap.python}
-}
-
-r = requests.get("https://uclapi.com/roombookings/bookings", params=params)
-print(r.json())`
-      }, 
-      {
-        "name": "javascript",
-        "code": `
-const token = "${window.initialData.temp_token}";
-
-fetch(
-  "https://uclapi.com/roombookings/bookings?token="
-  + token
-  + "&results_per_page=1" ${this.state.roomNameMap.javascript}
-  + "&date=" + "${now.toISOString().substring(0, 10).replace(/-/g, "")}"
-).then((response) => {
-  return response.json()
-})
-.then((json) => {
-  console.log(json);
-})`
-      }, 
-      {
-        "name": "bash",
-        "code": `
-curl https://uclapi.com/roombookings/bookings \\
-        -d token=${window.initialData.temp_token} \\
-        -d results_per_page=1 ${this.state.roomNameMap.bash} \\
-        -d date='${now.toISOString().substring(0, 10).replace(/-/g, "")}'`
+    this.setState = {
+      params: {
+        "token": window.initialData.temp_token,
+        "date": now.toISOString().substring(0, 10).replace(/-/g, ""),
+        "results_per_page": "1",
+        "roomName": roomName
       }
-    ]
-  }
-
-  getSchedule(roomName) {
-    this.state.roomNameMap = {
-      'python': `\n  "roomname": "${roomName}",`,
-      'javascript': `\n  + "&roomname=${roomName}"`,
-      'bash': `\\ \n-d roomname='${roomName}'`
     }
-
-    let now = new Date();
 
     // TODO:
     // Need to create development environment in package.json
-    let url = `${this.state.rootURL}/roombookings/bookings?token=` + window.initialData.temp_token + "&roomname=" + roomName + "&date=" + now.toISOString().substring(0, 10).replace(/-/g, "");
+    let url = `${this.state.rootURL}/roombookings/bookings?token=` + window.initialData.temp_token 
+      + "&roomname=" + roomName + "&date=" + now.toISOString().substring(0, 10).replace(/-/g, "");
 
     fetch(url).then(response => {
       return response.json();
     }).then((data) => {
       this.setState({
-        schedule: JSON.stringify(data, null, 4)
+        response: JSON.stringify(data, null, 4)
       });
-    })
+    });
   }
 
   render() {
-    let response = <div></div>;
-
-    if (this.state.schedule) {
-      response = <div>
-        <hr/>
-        <SyntaxHighlighter language={"javascript"} style={androidstudio}>
-          {this.state.schedule}
-        </SyntaxHighlighter>
-      </div>;
-    }
-
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <Row color={"ucl-orange"} height={"fit-content"} isPaddedBottom={true}>
           <Column style="2-3" isCentered={true} padding={"50px 0"}>
             <TextView text={"Try out the API"} heading={1} align={"center"} />
             <AutoComplete fullWidth={true} floatingLabelText="Room Name" filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true}
-             dataSource={rooms} onNewRequest={this.getSchedule}/>
+             dataSource={rooms} onNewRequest={this.makeRequest}/>
+          </Column>
+          
+          <Column style={"2-3"} isCentered={true}>
+            <TextView text={"The request being made:"} heading={3} align={"left"}/>
+          </Column>
+          <Column style={"2-3"} color={"code-grey"} isCentered={true}>
+            <CodeView url={`${this.state.rootURL}/roombookings/bookings`} params={this.state.params} type={"request"}/>
           </Column>
 
-          <Column style={"2-3"} color={"code-grey"} isCentered={true}>
-            <Tabs>
-              {this.getLanguages().map((language, index) => (
-                <Tab key={index} label={language.name}>
-                  <div>
-                    <SyntaxHighlighter language={language.name} style={androidstudio}>{language.code}</SyntaxHighlighter>
-                  </div>
-                </Tab>
-              ))}
-            </Tabs>
-            {response}
-          </Column>
+          {this.state.response ? (
+            <div className="demo-response">
+              <Column style={"2-3"} isCentered={true}>
+                <TextView text={"The response from the API:"} heading={3} align={"left"}/>
+              </Column>
+              <Column style={"2-3"} isCentered={true} color={code-grey}>
+                <CodeView response={this.state.response} type={"real-response"}/>
+              </Column>
+            </div>
+          ) : (
+            <Column style={"2-3"} isCentered={true} padding={"20px 0"}>
+              <TextView text={"select a room above to query for room bookings"} heading={5} align={"center"} fontStyle={"italic"}/>
+            </Column>
+          )}
         </Row>
       </MuiThemeProvider>
     )
