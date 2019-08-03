@@ -126,6 +126,9 @@ a:hover { color: #BBBBBB; }
 .alternate-button { background-color: #FFFFFF; color: black; }
 .alternate-button:hover, .uclapi-card-clicked-alternate:hover { background-color: #CCCCCC;  }
 
+.emphasis-button { background-color: #FC9685; color: black; }
+.emphasis-button:hover, .uclapi-card-clicked-emphasis:hover { background-color: #C95241;  }
+
 /** Transitions **/
 
 .default-transition {
@@ -151,6 +154,10 @@ a:hover { color: #BBBBBB; }
 
 .uclapi-card-alternate {
 	background-color: #FFFFFF; 
+}
+
+.uclapi-card-emphasis {
+	background-color: #FC9685; 
 }
 
 .clickable {

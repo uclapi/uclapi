@@ -19,7 +19,7 @@ import uclassistant_screenshot2 from 'Images/marketplace/uclassistant/screenshot
 import uclassistant_screenshot3 from 'Images/marketplace/uclassistant/screenshot_3.png';
 // Backgrounds
 import balloons from 'Images/home-page/balloons.jpg';
-import market from 'Images/marketplace/marketplace.png';
+import market from 'Images/marketplace/market.svg';
 import logo from 'Images/home-page/logo.svg';
 
 // Common Components
@@ -115,7 +115,7 @@ class Marketplace extends React.Component {
 
       return (
         <div className="marketplace-container">
-          <RelativeLayout src={market} height="600px" color="market-green" img_size="auto 60%">         
+          <RelativeLayout src={market} height="600px" color="ucl-orange" img_size="auto 60%">         
             <Column style="1-1" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
               <TextView text={"Apps to improve student life at UCL"} heading={2} align={"center"}/>
@@ -124,14 +124,16 @@ class Marketplace extends React.Component {
 
           <RelativeLayout isPadded={true} color="dark-grey">         
             <Column style="2-3" isCentered={true} isCenteredText={true}>
-               { this.state.featuredApps.map((app) => {
+               <TextView text={"Featured App"} heading={2} align={"left"} />
+               <TextView text={"Our favourite usage of the API"} heading={5} align={"left"} />
+               { this.state.featuredApps.map((app, i) => {
                   return (
-                    <CardView width={"100%"} minWidth={"250px"} isCenteredText={true} padding={"50px 0"} link={"/marketplace/" + app.id} margin={"0"} 
-                      cardType={"alternate"} padding={"50px 0"}>
+                    <CardView key={"featured-app-"+i} width={"100%"} minWidth={"250px"} isCenteredText={true} 
+                    padding={"50px 0"} link={"/marketplace/" + app.id} margin={"0"} cardType={"emphasis"} padding={"50px 0"}>
                       <Column style="1-2" isCentered={true}>
                         <ImageView src={app.logo} width={iconsize} height={iconsize} />
-                        <TextView text={app.name} heading={2} align={"center"} color={"black"}/>
-                        <TextView text={app.description} heading={5} align={"center"} color={"black"}/>
+                        <TextView text={app.name} heading={2} align={"center"} color={"white"}/>
+                        <TextView text={app.description} heading={5} align={"center"} color={"white"}/>
                       </Column>
                     </CardView>
                   );
@@ -140,9 +142,14 @@ class Marketplace extends React.Component {
           </RelativeLayout>
           <RelativeLayout isPaddedBottom={true} color="dark-grey">         
             <Column style="2-3" isCentered={true} isCenteredText={true}>
-               { this.state.appsToRender.map((app) => {
+               <TextView text={"All Apps"} heading={2} align={"left"} />
+               <TextView text={"Every app made using the API"} heading={5} align={"left"} />
+               { this.state.appsToRender.map((app, i) => {
+                  var margin = "0";
+                  if(i%2 == 0) {margin = "0 2% 0 0"}
+
                   return (
-                    <CardView width={"47%"} minWidth={"250px"} link={"/marketplace/" + app.id} cardType={"alternate"} padding={"50px 0"}>
+                    <CardView key={"all-apps-"+i} width={"49%"} minWidth={"250px"} link={"/marketplace/" + app.id} cardType={"alternate"} padding={"50px 0"} margin={margin}>
                       <Column style="9-10" isCentered={true}>
                         <ImageView src={app.logo} width={iconsize} height={iconsize} />
                         <TextView text={app.name} heading={2} align={"center"} color={"black"}/>
