@@ -62,39 +62,42 @@ export default class Demo extends React.Component {
     return [
       {
         "name": "python",
-        "code": `import requests
+        "code": `
+import requests
 
-                params = {
-                  "token": "${window.initialData.temp_token}",
-                  "results_per_page": 1,
-                  "date": ${now.toISOString().substring(0, 10).replace(/-/g, "")}, ${this.state.roomNameMap.python}
-                }
+params = {
+  "token": "${window.initialData.temp_token}",
+  "results_per_page": 1,
+  "date": ${now.toISOString().substring(0, 10).replace(/-/g, "")}, ${this.state.roomNameMap.python}
+}
 
-                r = requests.get("https://uclapi.com/roombookings/bookings", params=params)
-                print(r.json())`
+r = requests.get("https://uclapi.com/roombookings/bookings", params=params)
+print(r.json())`
       }, 
       {
         "name": "javascript",
-        "code": `const token = "${window.initialData.temp_token}";
+        "code": `
+const token = "${window.initialData.temp_token}";
 
-                fetch(
-                  "https://uclapi.com/roombookings/bookings?token="
-                  + token
-                  + "&results_per_page=1" ${this.state.roomNameMap.javascript}
-                  + "&date=" + "${now.toISOString().substring(0, 10).replace(/-/g, "")}"
-                ).then((response) => {
-                  return response.json()
-                })
-                .then((json) => {
-                  console.log(json);
-                })`
+fetch(
+  "https://uclapi.com/roombookings/bookings?token="
+  + token
+  + "&results_per_page=1" ${this.state.roomNameMap.javascript}
+  + "&date=" + "${now.toISOString().substring(0, 10).replace(/-/g, "")}"
+).then((response) => {
+  return response.json()
+})
+.then((json) => {
+  console.log(json);
+})`
       }, 
       {
         "name": "bash",
-        "code": `curl https://uclapi.com/roombookings/bookings \\
-                -d token=${window.initialData.temp_token} \\
-                -d results_per_page=1 ${this.state.roomNameMap.bash} \\
-                -d date='${now.toISOString().substring(0, 10).replace(/-/g, "")}'`
+        "code": `
+curl https://uclapi.com/roombookings/bookings \\
+        -d token=${window.initialData.temp_token} \\
+        -d results_per_page=1 ${this.state.roomNameMap.bash} \\
+        -d date='${now.toISOString().substring(0, 10).replace(/-/g, "")}'`
       }
     ]
   }
