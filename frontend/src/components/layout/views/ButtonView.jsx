@@ -13,7 +13,8 @@ export default class ButtonView extends React.Component {
     if(!this.props.buttonType) {button_class_name += " default-button";}
     else {button_class_name += " " + this.props.buttonType + "-button";}
     if(this.props.isCentered) {
-      button_style['margin'] = "auto";
+      button_style['marginRight'] = "auto";
+      button_style['marginLeft'] = "auto";
       button_style['display'] = "flex";
     }
 

@@ -27,7 +27,7 @@ import { RelativeLayout, Column, TextView, ButtonView, CardView, ImageView } fro
 
 // Application config
 let roombuddydescription = (
-  <div className="roombuddy-full-description" style={ { "padding" : "0 6%" } } >
+  <div className="roombuddy-full-description" style={ { "display": "inline-block", "padding": "0 6%" } } >
        <TextView heading={"3"} text={"Finding a place to get your work done can be hard. Every place you've thought of"
         + " is somehow already filled up: the libraries, the study pods, the benches outside the Print Room Café..."} />
        <TextView heading={"3"} text={"Room Buddy makes use of UCL API to find and direct you to open study spaces"
@@ -37,17 +37,17 @@ let roombuddydescription = (
         + " closest available space to your current location!"} />
        <TextView heading={"3"} text={"UCL Room Buddy was built with the UCL API, which gives student developers"
         + " programmatic access to UCL's data in order to improve the UCL experience for everyone."} />
-       <TextView heading={"3"} text={"Want to contribute to room buddy? Submit a pull request:"} isInline={true} />
-       <ButtonView buttonType={"alternate"} text={"visit github"} link={"https://github.com/uclapi/ucl-assistant-app"} />
+       <TextView heading={"3"} text={"Want to contribute to room buddy? Submit a pull request:"}/>
+       <ButtonView buttonType={"alternate"} text={"VISIT GITHUB"} isCentered={true} link={"https://github.com/uclapi/ucl-assistant-app"} />
        <TextView heading={"3"} text={"This app and its platform have been built by the UCL API Team, a group of students"
         + " working with UCL's Information Services Division (ISD) to provide students with a brand new ecosystem that allows"
-        + " anyone within the UCL Community to build apps with UCL data. Interested in building an app just like UCL Assistant"
+        + " anyone within the UCL Community to build apps with UCL data. Interested in building an app just like UCL Room Buddy"
         + " yourself? Head over to uclapi.com and log in with your UCL Account."}/>
   </div>
 );
 
 let uclassistantdescription = (
-  <div className="uclassistant-full-description" style={ { "padding" : "0 6%" } } >
+  <div className="uclassistant-full-description" style={ {"display": "inline-block", "padding" : "0 6%" } } >
        <TextView heading={"3"} text={"✨✨A brand new and beautiful app to manage your student life at UCL!✨✨"} />
        <TextView heading={"3"} text={"✅ View your personal timetable and get instant directions to your lectures."} />
        <TextView heading={"3"} text={"✅ Check the availability of all UCL libraries and study spaces, including in"
@@ -61,8 +61,8 @@ let uclassistantdescription = (
         + " currently in use, and then tap to navigate right there."}/>
        <TextView heading={"3"} text={"✅ Made with love 💖 by and for students"}/>
        <TextView heading={"3"} text={"✅ Fully open source. Got feedback, suggestions or even some new code to improve" 
-        + " the app? We welcome it:"} isInline={true}/>
-       <ButtonView buttonType={"alternate"} text={"visit github"} link={"https://github.com/uclapi/ucl-assistant-app"} />
+        + " the app? We welcome it:"}/>
+       <ButtonView buttonType={"alternate"} isCentered={true} text={"VISIT GITHUB"} link={"https://github.com/uclapi/ucl-assistant-app"} />
        <TextView heading={"3"} text={"This app and its platform have been built by the UCL API Team, a group of students"
         + " working with UCL's Information Services Division (ISD) to provide students with a brand new ecosystem that allows"
         + " anyone within the UCL Community to build apps with UCL data. Interested in building an app just like UCL Assistant"
@@ -73,55 +73,18 @@ let uclassistantdescription = (
 const allApps = {
   "uclroombuddy": {
     "name": "UCL Room Buddy", "id": "uclroombuddy", "category": "roombookings", "description": "Find the closest free room at UCL", "logo": roombuddylogo,
-    "detailedDescription": roombuddydescription,
-    "developerContact": "https://github.com/wilhelmklopp",
+    "detailedDescription": roombuddydescription, "developerContact": "https://github.com/wilhelmklopp",
     "androidLink": "https://play.google.com/store/apps/details?id=com.uclapi.uclroombuddy",
-    "screenshots": [
-      roombuddy_screenshot1,
-      roombuddy_screenshot2,
-      roombuddy_screenshot3
-    ]
+    "screenshots": [ roombuddy_screenshot1, roombuddy_screenshot2, roombuddy_screenshot3 ]
   },
   "uclassistant": {
     "name": "UCL Assistant", "id": "uclassistant", "category": "productivity", "description": "An app to manage your student life at UCL", "logo": uclassistantlogo,
-    "detailedDescription": uclassistantdescription,
-    "developerContact": "https://github.com/uclapi",
+    "detailedDescription": uclassistantdescription, "developerContact": "https://github.com/uclapi",
     "androidLink": "https://play.google.com/store/apps/details?id=com.uclapi.uclassistant&hl=en_GB",
-    "screenshots": [
-      uclassistant_screenshot1,
-      uclassistant_screenshot2,
-      uclassistant_screenshot3
+    "screenshots": [ uclassistant_screenshot1, uclassistant_screenshot2, uclassistant_screenshot3
     ]
   },
 }
-
-let categories = {
-  "roombookings": {
-    name: "Room Bookings",
-    description: "Apps to deal with rooms at UCL",
-    color: "#80D8FF",
-    apps: []
-  },
-  "productivity": {
-    name: "Productivity",
-    description: "Apps for productivity",
-    color: "#FF9800",
-    apps: []
-  },
-};
-
-let allAppsValues = Object.values(allApps);
-
-for (let i=0; i<allAppsValues.length; i++) {
-  if (categories[allAppsValues[i].category]) {
-    categories[allAppsValues[i].category].apps.push(allAppsValues[i])
-  }
-  else {
-    console.log(allApps[i].category, categories[allApps[i].category]);
-  }
-}
-
-categories = Object.values(categories);
 
 class Marketplace extends React.Component {
 
@@ -162,7 +125,7 @@ class Marketplace extends React.Component {
                <TextView text={"Our favourite usage of the API"} heading={5} align={"left"} />
                { this.state.featuredApps.map((app, i) => {
                   return (
-                    <CardView key={"featured-app-"+i} width={"100%"} minWidth={"250px"} isCenteredText={true} 
+                    <CardView key={"featured-app-"+i} width={"100%"} size={"small"} isCenteredText={true} 
                     padding={"50px 0"} link={"/marketplace/" + app.id} margin={"0"} cardType={"emphasis"} padding={"50px 0"}>
                       <Column style="1-2" isCentered={true}>
                         <ImageView src={app.logo} width={iconsize} height={iconsize} />
@@ -183,7 +146,7 @@ class Marketplace extends React.Component {
                   if(i%2 == 0) {margin = "0 2% 0 0"}
 
                   return (
-                    <CardView key={"all-apps-"+i} width={"49%"} minWidth={"250px"} link={"/marketplace/" + app.id} cardType={"alternate"} padding={"50px 0"} margin={margin}>
+                    <CardView key={"all-apps-"+i} width={"49%"} size={"small"} link={"/marketplace/" + app.id} cardType={"alternate"} padding={"50px 0"} margin={margin}>
                       <Column style="9-10" isCentered={true}>
                         <ImageView src={app.logo} width={iconsize} height={iconsize} />
                         <TextView text={app.name} heading={2} align={"center"} color={"black"}/>
@@ -196,7 +159,7 @@ class Marketplace extends React.Component {
           </RelativeLayout>
 
           <RelativeLayout isPadded = {true} src={balloons}>         
-            <Column style="1-3" isCentered={true} isCenteredText={true}>
+            <Column style="1-2" isCentered={true} isCenteredText={true}>
                 <TextView text={"UCL API"} heading={1} align={"center"}/>
 
                 <TextView text={"github "} heading={5} align={"center"} isInline={true} link={"https://github.com/uclapi/uclapi"}/>
@@ -256,7 +219,7 @@ class AppPage extends React.Component {
           <RelativeLayout isPaddedBottom={true} color="dark-grey">         
             <Column style="2-3" isCentered={true} isCenteredItems={true}>
               {this.state.app.screenshots.map((img, i) => ( 
-                <CardView width={"30%"} minWidth={screenshotwidth} cardType={"wrap-around"} height={screenshotheight}>
+                <CardView width={"30%"} minWidth={"small"} cardType={"wrap-around"} height={screenshotheight}>
                   <ImageView src={img} width={screenshotwidth} height={screenshotheight}
                     description={this.state.app.name + " screenshot number " + i} isCentered={true} />
                 </CardView>
@@ -271,7 +234,7 @@ class AppPage extends React.Component {
           </RelativeLayout>
 
           <RelativeLayout isPadded={true} src={balloons}>         
-            <Column style="1-3" isCentered={true} isCenteredText={true}>
+            <Column style="1-2" isCentered={true} isCenteredText={true}>
                 <TextView text={"UCL API"} heading={1} align={"center"}/>
 
                 <TextView text={"github "} heading={5} align={"center"} isInline={true} link={"https://github.com/uclapi/uclapi"}/>

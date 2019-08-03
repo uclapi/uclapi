@@ -25,6 +25,7 @@ export default class RelativeLayout extends React.Component {
     if(this.props.isPadded) { row_class_name += " vertical-padding-top vertical-padding-bottom"; }
     if(this.props.isPaddedTop) { row_class_name += " vertical-padding-top"; }
     if(this.props.isPaddedBottom) { row_class_name += " vertical-padding-bottom"; }
+    if(this.props.isScrollOverflow) { row_style['overflowX'] = "scroll"; }
     if(this.props.height) { row_style['height'] = this.props.height; }
     if(this.props.src) {
       var img_size = "Cover";

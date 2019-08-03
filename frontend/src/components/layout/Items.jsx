@@ -7,6 +7,8 @@ import TextView from './views/TextView.jsx';
 import ButtonView from './views/ButtonView.jsx';
 import CardView from './views/CardView.jsx';
 import ImageView from './views/ImageView.jsx';
+import CodeView from './views/CodeView.jsx';
+import Demo from './Demo.jsx';
 
 export {
     RelativeLayout,
@@ -14,5 +16,7 @@ export {
     TextView, 
     ButtonView, 
     CardView,
-    ImageView
+    ImageView, 
+    CodeView,
+    Demo
 }

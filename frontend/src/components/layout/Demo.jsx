@@ -6,6 +6,33 @@ import {androidstudio} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import RaisedButton from 'material-ui/RaisedButton';
 import 'whatwg-fetch';
 
+import {cyan500, cyan700,
+  pinkA200,
+  grey100, grey300, grey400, grey500,
+  white, darkBlack, fullBlack,
+} from 'material-ui/styles/colors';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+const muiTheme = getMuiTheme({
+  fontFamily: 'Roboto, sans-serif',
+  palette: {
+    primary1Color: "#434343",
+    primary2Color: "#434343",
+    primary3Color: grey400,
+    accent1Color: pinkA200,
+    accent2Color: grey100,
+    accent3Color: grey500,
+    textColor: darkBlack,
+    alternateTextColor: white,
+    canvasColor: white,
+    borderColor: grey300,
+    pickerHeaderColor: cyan500,
+    shadowColor: fullBlack,
+  },
+});
+
+import {Column, RelativeLayout, TextView} from 'Layout/Items.jsx';
 
 let rooms = [
   'Wilkins Building (Main Building) Portico',
@@ -458,28 +485,28 @@ fetch(
     }
 
     return (
-      <div className="demo">
+      <MuiThemeProvider muiTheme={muiTheme}>
+        <RelativeLayout color={"ucl-orange"} height={"fit-content"} isScrollOverflow={true}>
+          <Column style="1-2" isInline={"grid"} padding={"0 2%"}>
+            <TextView text={"Try out the Room Bookings API"} heading={2} />
+            <AutoComplete fullWidth={true} floatingLabelText="Room Name" filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} dataSource={rooms} onNewRequest={this.getSchedule}/>
+          </Column>
 
-        <div className="text">
-          <h2>Try out the Room Bookings API</h2>
-          <AutoComplete fullWidth={true} floatingLabelText="Room Name" filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} dataSource={rooms} onNewRequest={this.getSchedule}/>
-        </div>
+          <Column style="1-2" isInline={"grid"} padding={"0 2%"} color={"#282B2E"}>
+            <Tabs>
+              {this.getLanguages().map((language, index) => (
+                <Tab key={index} label={language.name}>
+                  <div>
+                    <SyntaxHighlighter language={language.name} style={androidstudio}>{language.code}</SyntaxHighlighter>
+                  </div>
+                </Tab>
+              ))}
+            </Tabs>
 
-        <div className="code">
-          <Tabs>
-            {this.getLanguages().map((language, index) => (
-              <Tab key={index} label={language.name}>
-                <div>
-                  <SyntaxHighlighter language={language.name} style={androidstudio}>{language.code}</SyntaxHighlighter>
-                </div>
-              </Tab>
-            ))}
-          </Tabs>
-
-          {response}
-        </div>
-
-      </div>
+            {response}
+          </Column>
+        </RelativeLayout>
+      </MuiThemeProvider>
     )
   }
 

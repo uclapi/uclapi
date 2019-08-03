@@ -11,12 +11,14 @@
 
 	- Setup
 	- Color Scheme
+	- Sizings
 	- Text
 	- Alignments
 	- Containers
 	- Buttons
 	- Transitions
 	- Cards
+	- Code Segments
 
 **/
 
@@ -51,6 +53,10 @@ html, body {
 
 .market-green {
 	background-color: #03B77B;
+}
+
+.code-grey {
+	background-color: #282B2E;
 }
 
 /** Text **/
@@ -101,6 +107,15 @@ a:hover { color: #BBBBBB; }
 	transform: translateY(-50%);
 }
 
+/** Sizing **/
+
+.small-size {
+	min-width: 280px
+}
+.medium-size {
+	min-width: 400px;
+}
+
 /** Containers **/
 
 .row {
@@ -149,7 +164,7 @@ a:hover { color: #BBBBBB; }
 	border-radius: 5px;
 	height: 200px;
 	padding: 10px;
-	margin: 10px;
+	margin: 20px;
 }
 
 .uclapi-card-default {
@@ -176,3 +191,13 @@ a:hover { color: #BBBBBB; }
 	text-decoration: none;
 	cursor: pointer;
 }
+
+/** Update cards and columns when the size approaches phone screen size **/
+@media only screen and (max-width: 540px) {
+	.mobile-friendly {
+		min-width: 90%;
+		padding: 0;
+	}
+}
+
+/** Code Segments **/

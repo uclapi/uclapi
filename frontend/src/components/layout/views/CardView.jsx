@@ -16,12 +16,13 @@ export default class CardView extends React.Component {
 
     var isLink = false;
 
+    if(this.props.isMobileFriendly) {card_class_name += " mobile-friendly"}
     if(this.props.link) { card_class_name += " default-transition background-color-transition clickable uclapi-card-clicked-"+cardType; isLink = true;}
     if(this.props.isJustifiedText) { card_class_name += " justified-text";}
+    if(this.props.size) { card_class_name += " " + this.props.size + "-size"; }
     if(this.props.padding) { card_style['padding'] = this.props.padding ;}
     if(this.props.padding) { card_style['margin'] = this.props.margin ;}
-
-    card_style['minWidth'] = this.props.minWidth;
+    
     card_style['width'] = this.props.width;
     card_style['height'] = this.props.height;
 

@@ -38,19 +38,22 @@ export default class Column extends React.Component {
     var content_style = [];
 
     content_style['width'] = this.getWidth(this.props.style);
-    if(this.props.minWidth) { content_style['minWidth'] = this.props.minWidth; }
     if(this.props.isInline) { 
       content_style['display'] = "inline-" + this.props.isInline; 
       content_style['padding'] = "2%"; 
     }
 
+    if(this.props.isMobileFriendly) {content_class_name += " mobile-friendly"}
     if(this.props.isCentered) {content_class_name += " center-x"; }
     if(this.props.isCenteredText) { content_class_name += " centered-text"; }
     if(this.props.isCenteredItems) {content_class_name += " center-items"; }
     if(this.props.isJustifiedText) { content_class_name += " justified-text"; }
+    if(this.props.size) { content_class_name += " " + this.props.size + "-size"; }
+
     if(this.props.padding) { content_style['padding'] = this.props.padding;}
     if(this.props.position) { content_style['position'] = this.props.position;}
     if(this.props.float) { content_style['float'] = this.props.float;}
+    if(this.props.color) { content_style['backgroundColor'] = this.props.color;}
 
     var isVerticalAlign = this.props.isVerticalAlign;
 
