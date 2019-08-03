@@ -49,11 +49,11 @@ export default class Column extends React.Component {
     if(this.props.isCenteredItems) {content_class_name += " center-items"; }
     if(this.props.isJustifiedText) { content_class_name += " justified-text"; }
     if(this.props.size) { content_class_name += " " + this.props.size + "-size"; }
+    if(this.props.color) { content_class_name +=  " " + this.props.color;}
 
     if(this.props.padding) { content_style['padding'] = this.props.padding;}
     if(this.props.position) { content_style['position'] = this.props.position;}
     if(this.props.float) { content_style['float'] = this.props.float;}
-    if(this.props.color) { content_style['backgroundColor'] = this.props.color;}
 
     var isVerticalAlign = this.props.isVerticalAlign;
 

@@ -23,7 +23,7 @@ import market from 'Images/marketplace/market.svg';
 import logo from 'Images/home-page/logo.svg';
 
 // Common Components
-import { RelativeLayout, Column, TextView, ButtonView, CardView, ImageView } from 'Layout/Items.jsx';
+import { Row, Column, TextView, ButtonView, CardView, ImageView } from 'Layout/Items.jsx';
 
 // Application config
 let roombuddydescription = (
@@ -112,14 +112,14 @@ class Marketplace extends React.Component {
 
       return (
         <div className="marketplace-container">
-          <RelativeLayout src={market} height="600px" color="ucl-orange" img_size="auto 60%">         
+          <Row src={market} height="600px" color="ucl-orange" img_size="auto 60%">         
             <Column style="1-1" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
               <TextView text={"Apps to improve student life at UCL"} heading={2} align={"center"}/>
             </Column>
-          </RelativeLayout>
+          </Row>
 
-          <RelativeLayout isPadded={true} color="dark-grey">         
+          <Row isPadded={true} color="dark-grey">         
             <Column style="2-3" isCentered={true} isCenteredText={true}>
                <TextView text={"Featured App"} heading={2} align={"left"} />
                <TextView text={"Our favourite usage of the API"} heading={5} align={"left"} />
@@ -136,8 +136,8 @@ class Marketplace extends React.Component {
                   );
                })}
             </Column>
-          </RelativeLayout>
-          <RelativeLayout isPaddedBottom={true} color="dark-grey">         
+          </Row>
+          <Row isPaddedBottom={true} color="dark-grey">         
             <Column style="2-3" isCentered={true} isCenteredText={true}>
                <TextView text={"All Apps"} heading={2} align={"left"} />
                <TextView text={"Every app made using the API"} heading={5} align={"left"} />
@@ -156,9 +156,9 @@ class Marketplace extends React.Component {
                   );
                })}
             </Column>
-          </RelativeLayout>
+          </Row>
 
-          <RelativeLayout isPadded = {true} src={balloons}>         
+          <Row isPadded = {true} src={balloons}>         
             <Column style="1-2" isCentered={true} isCenteredText={true}>
                 <TextView text={"UCL API"} heading={1} align={"center"}/>
 
@@ -170,7 +170,7 @@ class Marketplace extends React.Component {
 
                 <ImageView src={logo} width={logosize} height={logosize} description={"ucl api logo"} isCentered={true} />
             </Column>
-          </RelativeLayout>
+          </Row>
         </div>
       );
     }
@@ -196,14 +196,14 @@ class AppPage extends React.Component {
 
     return (
       <div className="marketplace-container">
-          <RelativeLayout src={market} height="600px" color="ucl-orange" img_size="auto 60%">         
+          <Row src={market} height="600px" color="ucl-orange" img_size="auto 60%">         
             <Column style="1-1" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
               <TextView text={"Apps to improve student life at UCL"} heading={2} align={"center"}/>
             </Column>
-          </RelativeLayout>
+          </Row>
 
-          <RelativeLayout isPadded={true} color="dark-grey" height={"100px"}>         
+          <Row isPadded={true} color="dark-grey" height={"100px"}>         
             <Column style="2-3" isCenteredText={true} isCentered={true}>
               <Column style="1-4" minWidth={iconsize} isInline={"grid"} isCenteredText={true}
                  padding={"2% 0"} position={"relative"} float={"left"}>
@@ -215,8 +215,8 @@ class AppPage extends React.Component {
                <TextView text={this.state.app.description} heading={5} align={"left"} />
               </Column>
             </Column>
-          </RelativeLayout>
-          <RelativeLayout isPaddedBottom={true} color="dark-grey">         
+          </Row>
+          <Row isPaddedBottom={true} color="dark-grey">         
             <Column style="2-3" isCentered={true} isCenteredItems={true}>
               {this.state.app.screenshots.map((img, i) => ( 
                 <CardView width={"30%"} minWidth={"small"} cardType={"wrap-around"} height={screenshotheight}>
@@ -225,15 +225,15 @@ class AppPage extends React.Component {
                 </CardView>
                 ) ) }
             </Column>
-          </RelativeLayout>
-          <RelativeLayout isPaddedBottom={true} color="dark-grey">         
+          </Row>
+          <Row isPaddedBottom={true} color="dark-grey">         
             <Column style="2-3" isCentered={true}>
               {this.state.app.detailedDescription}
               <ButtonView isCentered={true} buttonType={"alternate"} text={"DOWNLOAD LINK"} link={this.state.app.androidLink} />
             </Column>
-          </RelativeLayout>
+          </Row>
 
-          <RelativeLayout isPadded={true} src={balloons}>         
+          <Row isPadded={true} src={balloons}>         
             <Column style="1-2" isCentered={true} isCenteredText={true}>
                 <TextView text={"UCL API"} heading={1} align={"center"}/>
 
@@ -245,7 +245,7 @@ class AppPage extends React.Component {
 
                 <ImageView src={logo} width={logosize} height={logosize} description={"ucl api logo"} isCentered={true} />
             </Column>
-          </RelativeLayout>
+          </Row>
       </div>
     );
   }

@@ -1,5 +1,5 @@
 // Containers
-import RelativeLayout from './containers/RelativeLayout.jsx';
+import Row from './containers/Row.jsx';
 import Column from './containers/Column.jsx';
 
 // Views
@@ -11,7 +11,7 @@ import CodeView from './views/CodeView.jsx';
 import Demo from './Demo.jsx';
 
 export {
-    RelativeLayout,
+    Row,
     Column,
     TextView, 
     ButtonView, 

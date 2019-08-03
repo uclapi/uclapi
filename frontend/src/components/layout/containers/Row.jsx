@@ -10,7 +10,7 @@ this.props.isPadded (and variations affect the vertical padding of the layout)
 this.props.height (manually set the height over what the contents)
 
 **/
-export default class RelativeLayout extends React.Component {
+export default class Row extends React.Component {
 
   constructor(props) {
     super(props);
