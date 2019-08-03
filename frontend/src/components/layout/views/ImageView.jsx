@@ -20,6 +20,7 @@ export default class ImageView extends React.Component {
 
   render() {
     var image_class_name = "image-view"
+    var content_style = [];
 
     if(this.props.isCentered) { image_class_name += " center-x"; }
     if(this.props.isPadded) { image_class_name += " vertical-padding-top vertical-padding-bottom"; }
@@ -27,7 +28,7 @@ export default class ImageView extends React.Component {
     if(this.props.isPaddedBottom) { image_class_name += " vertical-padding-bottom"; }
 
     return (
-       <div className={image_class_name}>
+       <div className={image_class_name} style={content_style}>
         <img src={this.props.src} alt={this.props.description} width={this.props.width} height={this.props.height}></img>
        </div>
     );

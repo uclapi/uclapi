@@ -136,7 +136,7 @@ class HomePage extends React.Component {
 
       <RelativeLayout isPadded = {true} src={balloons}>         
         <Column style="1-3" isCentered={true} isCenteredText={true}>
-            <TextView text={"UCL API 2019"} heading={1} align={"center"}/>
+            <TextView text={"UCL API"} heading={1} align={"center"}/>
 
             <TextView text={"github "} heading={5} align={"center"} isInline={true} link={"https://github.com/uclapi/uclapi"}/>
             <TextView text={`-`} heading={5} align={"center"} isInline={true} />

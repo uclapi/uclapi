@@ -23,6 +23,7 @@ export default class CardView extends React.Component {
 
     card_style['minWidth'] = this.props.minWidth;
     card_style['width'] = this.props.width;
+    card_style['height'] = this.props.height;
 
     if(isLink) {
       return (
