@@ -81,7 +81,7 @@ export default class Demo extends React.Component {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <Row color={"ucl-orange"} height={"fit-content"} isPaddedBottom={true}>
-          <Column style="2-3" isCentered={true} padding={"50px 0"}>
+          <Column style="2-3" isCentered={true} padding={"0 0 50px 0"}>
             <TextView text={"Try out the API"} heading={1} align={"center"} />
             <AutoComplete fullWidth={true} floatingLabelText="Room Name" filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true}
              dataSource={rooms} onNewRequest={this.makeRequest}/>
@@ -104,7 +104,7 @@ export default class Demo extends React.Component {
               </Column>
             </div>
           ) : (
-            <Column style={"2-3"} isCentered={true} padding={"20px 0"}>
+            <Column style={"2-3"} isCentered={true} padding={"50px 0 0 0"}>
               <TextView text={"select a room above to query for room bookings"} heading={5} align={"center"} fontStyle={"italic"}/>
             </Column>
           )}
