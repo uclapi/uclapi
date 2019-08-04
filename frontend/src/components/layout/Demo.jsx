@@ -54,14 +54,14 @@ export default class Demo extends React.Component {
   makeRequest(roomName) {
     let now = new Date();
 
-    this.setState = {
+    this.setState({
       params: {
         "token": window.initialData.temp_token,
         "date": now.toISOString().substring(0, 10).replace(/-/g, ""),
         "results_per_page": "1",
         "roomName": roomName
       }
-    }
+    });
 
     // TODO:
     // Need to create development environment in package.json

@@ -81,8 +81,7 @@ const allApps = {
     "name": "UCL Assistant", "id": "uclassistant", "category": "productivity", "description": "An app to manage your student life at UCL", "logo": uclassistantlogo,
     "detailedDescription": uclassistantdescription, "developerContact": "https://github.com/uclapi",
     "androidLink": "https://play.google.com/store/apps/details?id=com.uclapi.uclassistant&hl=en_GB",
-    "screenshots": [ uclassistant_screenshot1, uclassistant_screenshot2, uclassistant_screenshot3
-    ]
+    "screenshots": [ uclassistant_screenshot1, uclassistant_screenshot2, uclassistant_screenshot3 ]
   },
 }
 
