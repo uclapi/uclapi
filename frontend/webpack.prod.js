@@ -81,7 +81,7 @@ module.exports = {
   },
   entry: {
     HomePage: entryPointsPathPrefix + '/HomePage.jsx',
-    documentation: entryPointsPathPrefix + '/documentation.jsx',
+    Documentation: entryPointsPathPrefix + '/Documentation.jsx',
     dashboard: entryPointsPathPrefix + '/dashboard.jsx',
     Marketplace: entryPointsPathPrefix + '/Marketplace.jsx',
     authorise: entryPointsPathPrefix + '/authorise.jsx',

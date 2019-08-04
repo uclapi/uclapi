@@ -4,34 +4,16 @@ import Topic from './../../Topic.jsx';
 import Table from './../../Table.jsx';
 import Cell from './../../Cell.jsx';
 
+// Code Generator 
+import * as RequestGenerator from 'Layout/Data/RequestGenerator.jsx';
 
-let codeExamples = {
-  python: `import requests
-
-params = {
+let params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
-  "roomid": "433"
+  "roomid": "433",
   "siteid": "086"
 }
 
-r = requests.get("https://uclapi.com/roombookings/equipment", params=params)
-print(r.json())`,
-
-  shell: `curl -G https://uclapi.com/roombookings/equipment \\
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
--d roomid=433 \
--d siteid=086`,
-
-  javascript: `fetch("https://uclapi.com/roombookings/equipment?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&roomid=433&siteid=086")
-.then((response) => {
-  return response.json()
-})
-.then((json) => {
-  console.log(json);
-})
-`
-}
-
+let codeExamples = RequestGenerator.getRequest("https://uclapi.com/roombookings/equipment", params);
 
 let response = `{
   "ok": true,

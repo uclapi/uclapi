@@ -4,31 +4,15 @@ import Topic from './../../Topic.jsx';
 import Table from './../../Table.jsx';
 import Cell from './../../Cell.jsx';
 
+// Code Generator 
+import * as RequestGenerator from 'Layout/Data/RequestGenerator.jsx';
 
-let codeExamples = {
-  python: `import requests
-
-params = {
+let params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
   "query": "Jane"
 }
-r = requests.get("https://uclapi.com/search/people", params=params)
-print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/search/people \\
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
--d query='Jane'`,
-
-  javascript: `fetch("https://uclapi.com/search/people?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&query=Jane")
-.then((response) => {
-  return response.json()
-})
-.then((json) => {
-  console.log(json);
-})
-`
-}
-
+let codeExamples = RequestGenerator.getRequest("https://uclapi.com/search/people", params);
 
 let response = `{
   "ok": true,
@@ -49,7 +33,6 @@ let responseCodeExample = {
   javascript: response,
   shell: response
 }
-
 
 export default class GetEquiment extends React.Component {
 

@@ -4,31 +4,15 @@ import Topic from './../../Topic.jsx';
 import Table from './../../Table.jsx';
 import Cell from './../../Cell.jsx';
 
+// Code Generator 
+import * as RequestGenerator from 'Layout/Data/RequestGenerator.jsx';
 
-let codeExamples = {
-  python: `import requests
-
-params = {
+let params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
   "contact": "Mark"
 }
-r = requests.get("https://uclapi.com/roombookings/bookings", params=params)
-print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/roombookings/bookings \\
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
--d contact=Mark`,
-
-  javascript: `fetch("https://uclapi.com/roombookings/bookings?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&contact=Mark")
-.then((response) => {
-  return response.json()
-})
-.then((json) => {
-  console.log(json);
-})
-`
-}
-
+let codeExamples = RequestGenerator.getRequest("https://uclapi.com/roombookings/bookings", params);
 
 let response = `{
    "ok": true,
@@ -58,7 +42,6 @@ let responseCodeExample = {
   javascript: response,
   shell: response
 }
-
 
 export default class GetBookings extends React.Component {
 

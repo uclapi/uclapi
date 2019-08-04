@@ -4,34 +4,15 @@ import Topic from './../../Topic.jsx';
 import Table from './../../Table.jsx';
 import Cell from './../../Cell.jsx';
 
+// Code Generator 
+import * as RequestGenerator from 'Layout/Data/RequestGenerator.jsx';
 
-let codeExamples = {
-  python: `import requests
-
-params = {
+let params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
   "modules": "COMP0030,COMP0133-A7U-T1"
 }
 
-r = requests.get("https://uclapi.com/timetable/bymodule", params=params)
-print(r.json())`,
-
-  shell: `curl -G https://uclapi.com/timetable/bymodule \\
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
--d modules=COMP0030,COMP0133-A7U-T1`,
-
-  javascript: `fetch("https://uclapi.com/timetable/bymodule?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&modules=COMP0030,COMP0133-A7U-T1",
-{
-    method: "GET",
-})
-.then((response) => {
-  return response.json()
-})
-.then((json) => {
-  console.log(json);
-})`
-}
-
+let codeExamples = RequestGenerator.getRequest("https://uclapi.com/timetable/bymodule", params);
 
 let response = `{
     "timetable": {

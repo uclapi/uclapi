@@ -3,7 +3,6 @@ import React from 'react';
 import Topic from './../../Topic.jsx';
 import signInButton from './../../../../images/signInWithUCLAPI.png';
 
-
 let codeExamples = {
   python: `<a href="https://uclapi.com/oauth/authorise?client_id=CLIENT_ID&state=STATE">
 <img src="https://s3.eu-west-2.amazonaws.com/uclapi-static/SignInWithUCLSmall.png">
@@ -17,7 +16,6 @@ let codeExamples = {
 <img src="https://s3.eu-west-2.amazonaws.com/uclapi-static/SignInWithUCLSmall.png">
 </a>`
 }
-
 
 export default class OAuthIntro extends React.Component {
 

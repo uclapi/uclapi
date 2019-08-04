@@ -9,7 +9,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import DocumentationComponent from '../components/documentation/Documentation.jsx';
 
-import './../sass/documentation.scss';
+import 'Styles/documentation.scss';
 
 const muiTheme = getMuiTheme({
   fontFamily: 'Roboto, sans-serif',

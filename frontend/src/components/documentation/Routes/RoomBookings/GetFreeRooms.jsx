@@ -4,31 +4,16 @@ import Topic from './../../Topic.jsx';
 import Table from './../../Table.jsx';
 import Cell from './../../Cell.jsx';
 
+// Code Generator 
+import * as RequestGenerator from 'Layout/Data/RequestGenerator.jsx';
 
-let codeExamples = {
-  python: `import requests
-
-params = {
+let params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
   "start_datetime": "2017-10-25T03:36:45+00:00",
   "end_datetime": "2017-10-25T23:36:45+00:00"
 }
-r = requests.get("https://uclapi.com/roombookings/freerooms", params=params)
-print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/roombookings/rooms \\
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
--d start_datetime=2017-10-25T03:36:45+00:00 \\
--d end_datetime=2017-10-25T23:36:45+00:00`,
-
-  javascript: `fetch("https://uclapi.com/roombookings/rooms?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&start_datetime=2017-10-25T03:36:45+00:00&end_datetime=2017-10-25T23:36:45+00:00")
-.then((response) => {
-  return response.json()
-})
-.then((json) => {
-  console.log(json);
-})`
-}
+let codeExamples = RequestGenerator.getRequest("https://uclapi.com/roombookings/freerooms", params);
 
 let response = `{
   "ok": true,

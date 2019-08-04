@@ -31,61 +31,16 @@ const muiTheme = getMuiTheme({
 // Common Components 
 import {Column, TextView} from 'Layout/Items.jsx'
 
+// Code Generator 
+import * as RequestGenerator from 'Layout/Data/RequestGenerator.jsx';
+
 export default class CodeView extends React.Component {
   constructor(props) {
     super(props);
 
-    this.getTextFromParameters = this.getTextFromParameters.bind(this);
-    this.getRequest = this.getRequest.bind(this);
     this.getResponse = this.getResponse.bind(this);
   }
 
-  getTextFromParameters() {
-    let now = new Date();
-    var params = this.props.params;
-
-    // Setup the python code segment
-    var python = `import requests\n`+`\n`+`params = {\n`;
-    for(var key in params) {
-      python += `\t "${key}": "${params[key]}",\n`;
-    }
-    python += `}\n` + `r = requests.get("${this.props.url}", params=params)\n` + `print(r.json())`;
-
-    // Setup the javascript code segment
-    var javascript = `fetch("${this.props.url}?`;
-    var isFirst=true;
-    for(var key in params) {
-      if(isFirst) {javascript += `${key}=${params[key]}`; isFirst=false;}
-      else {javascript += `&${key}=${params[key]}`;}
-    }
-    javascript += `")\n` + `.then((response) => {\n` + `\t return response.json() \n` + `})\n` + `.then((json) => {\n`;
-    javascript += `\t console.log(json);\n` + `})`;
-
-    // Setup the shell code segment
-    var shell = `curl -G $(this.props.url) \ \n`
-    for(var key in params) {
-      shell += `\t -d ${key}=${params[key]}\n`;
-    }
-
-    return this.getRequest(python, javascript, shell);
-  }
-
-  getRequest(python, javascript, shell) {
-    return [
-      {
-        "name" : "python",
-        "code" : python
-      },
-      {
-        "name" : "javascript",
-        "code" : javascript
-      },
-      {
-        "name" : "shell",
-        "code" : shell
-      },
-    ];
-  }
   getResponse(response) {
     return [
       {
@@ -97,7 +52,7 @@ export default class CodeView extends React.Component {
 
   render() {
     var languages = [];
-    if(this.props.type == "request") {languages = this.getTextFromParameters();}
+    if(this.props.type == "request") {languages = RequestGenerator.getRequest(this.props.url, this.props.params, true);}
     if(this.props.type == "real-response") {languages = this.getResponse(this.props.response);}
 
     return (
