@@ -316,3 +316,8 @@ which aims to help developers contribute to our code. To make it simply run ```m
 while in the backend directory. You can then navigate to the build directory and open up
 index.html in your favourite browser to view the documentation. It can also be built in pdf, latex
 and a few other formats.
+
+## Deployment
+To help deploy the application we have two scripts, one for staging and one for production. The requirments for this script are having a .env.prod and/or .env.staging depending on what you are deploying to. These should contain the required settings to point to the right /static/ folder locations. Once you have the .env files prepared simply run '''./deployment_production.sh''' or '''deployment_staging.sh'''. This will automaticaly update npm, build the static files and update them.
+
+After running the script you can then deploy the API either tradionally or using docker and it will pull down the updated static files.
