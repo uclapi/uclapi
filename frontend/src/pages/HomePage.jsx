@@ -187,6 +187,15 @@ class HomePage extends React.Component {
         </Column>
       </Row>
 
+      <Row isPadded={true} color="dark-grey">         
+        <Column style="2-3" isCentered={true} isCenteredText={true}>
+          <TextView text={"Frequently Asked Questions"} heading={1} align={"center"}/>
+          {FAQ.map(x => ( 
+            questionandanswer(x.question, x.answer)
+          ) ) }
+        </Column>
+      </Row>
+
       <Row isPadded = {true} src={balloons}>         
         <Column style="1-2" isCentered={true} isCenteredText={true}>
             <TextView text={"UCL API"} heading={1} align={"center"}/>
@@ -197,18 +206,18 @@ class HomePage extends React.Component {
             <TextView text={`-`} heading={5} align={"center"} isInline={true}/>
             <TextView text={" facebook"} heading={5} align={"center"} isInline={true} link={"https://www.facebook.com/uclapi/"}/>
 
-            <ImageView src={logo} width={iconsize} height={iconsize} description={"ucl api logo"} isCentered={true} />
+          <ImageView src={logo} width={iconsize} height={iconsize} description={"ucl api logo"} isCentered={true} />
+      </Column>
+    </Row>
+
+      <Row isPadded={true} color="dark-grey">         
+        <Column style="2-3" isCentered={true} isCenteredText={true}>
+          <TextView text={"Frequently Asked Questions"} heading={1} align={"center"}/>
+          {FAQ.map(x => ( 
+            questionandanswer(x.question, x.answer)
+          ) ) }
         </Column>
       </Row>
-
-        <Row isPadded={true} color="dark-grey">         
-          <Column style="2-3" isCentered={true} isCenteredText={true}>
-            <TextView text={"Frequently Asked Questions"} heading={1} align={"center"}/>
-            {FAQ.map(x => ( 
-              questionandanswer(x.question, x.answer)
-            ) ) }
-          </Column>
-        </Row>
 
       </React.Fragment>
     );
