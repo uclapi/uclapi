@@ -2,6 +2,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+// External dependencies
+import Collapse, { Panel } from 'rc-collapse';
+
 // Styles
 import 'Styles/common/uclapi.scss';
 
@@ -25,6 +28,53 @@ let endpoints = [
   { name: "/resources", description: "Find out how many UCL desktops are free", link: "/docs#resources"},
   { name: "/workspaces", description: "See how busy the libraries are right now", link: "/docs#workspaces"}
 ];
+
+let FAQ = [
+    {
+      'question': `What is UCL API?`,
+      'answer': `UCL API is a platform for interacting with data that is usually difficult to obtain or hidden in internal UCL systems. The aim is to enable student developers to develop tools for other UCL students to enrich their lives at UCL. Almost every API returns JSON which is simple to parse and interpret in most modern programming languages.`
+    },
+    {
+      'question': `Who is running this?`,
+      'answer': `UCL API is a student-built platform, backed and supported by UCL's ", <a href="https://www.ucl.ac.uk/isd/">Information Services Division (ISD)</a>, ". This means that all of the features in UCL API have been developed by students and are aimed at students such as yourself, so jump right in!`
+    },
+    {
+      'question': `Do I need to be from UCL to use the UCL API?`,
+      'answer': `You need to be affiliated with UCL because authentication (for both developers & end users) is done via the UCL login system.`
+    },
+    {
+      'question': `Do I need to write my apps in a particular programming language?`,
+      'answer': `UCL API is a RESTful API hence you can use any language you like. Our ", <a href='/docs'>docs</a>, " currently includes instructions on how to get up and running with Javascript, Python and the Unix shell using cURL. However, you may use any other programming language so long as it can make HTTP requests.`
+    },
+    {
+      'question': `How do I get involved?`,
+      'answer': `UCL API is open source. Our source code is available on ", <a href="https://github.com/uclapi/uclapi">a public Github repository on</a>, " for anybody to clone and inspect. Find an bug? Feel free to open an ", <a href="https://github.com/uclapi/uclapi/issues">Issue</a>, " or even a ", <a href="https://github.com/uclapi/uclapi/pulls">Pull Request</a>, " with a proposed fix! We also have annual hiring windows to recruit more students as others graduate, so keep an eye on our social media accounts.`
+    },
+    {
+      'question': `Does this cost anything?`,
+      'answer': `UCL API is and always will be completely free to use.`
+    },
+    {
+      'question': `What have other people built?`,
+      'answer': `From small Computer Science projects, to running lecture theatre central heating systems right up to UCL Assistant, UCL API is being used across UCL for many projects public and private. A full list of all (known!) applications available to the UCL community can be found at the <a href="/marketplace">Marketplace.</a>`
+    },
+    {
+      'question': `How can I get in touch?`,
+      'answer': `If you have any other queries get in touch with us on <a href="https://www.facebook.com/uclapi/">Facebook</a> or <a href="https://twitter.com/uclapi">Twitter</a>.  We also respond to emails to <a href="mailto:isd.apiteam@ucl.ac.uk">isd.apiteam@ucl.ac.uk</a>.`
+    },
+    {
+      'question': `Who owns the Intellectual Property (IP) of what I build?`,
+      'answer': `You do! We have no claim on your IP. However, we do request you include a shoutout somewhere. This helps raise awareness of UCL API and the vast amount of data available. It may not always be possible to include this attribution in an unintrusive manner (e.g. in a Slack bot), so we're flexible on this. The more people aware of UCL API and who use apps powered by UCL API, the better the platform will be. If you have any questions please feel free to reach out!`
+    },
+];
+
+const questionandanswer = (question, answer) => (
+    <Collapse>
+          <Panel header={question} showArrow>
+            <p>{answer}</p>
+          </Panel>
+    </Collapse>
+);
 
 class HomePage extends React.Component {
 
@@ -151,7 +201,16 @@ class HomePage extends React.Component {
         </Column>
       </Row>
 
-      </div>
+        <Row isPadded={true} color="dark-grey">         
+          <Column style="2-3" isCentered={true} isCenteredText={true}>
+            <TextView text={"Frequently Asked Questions"} heading={1} align={"center"}/>
+            {FAQ.map(x => ( 
+              questionandanswer(x.question, x.answer)
+            ) ) }
+          </Column>
+        </Row>
+
+      </React.Fragment>
     );
   }
 
