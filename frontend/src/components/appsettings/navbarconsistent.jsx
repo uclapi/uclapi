@@ -5,7 +5,7 @@ import posed from 'react-pose';
 // Components
 import Link from './link.jsx';
 // Images
-import menu from '../../images/menu.svg';
+import menu from '../../images/navbar/menu.svg';
 
 const Toast = posed.div({
 	hidden: { top: '-60px' },
@@ -31,6 +31,11 @@ let links = [
 		name: "dashboard",
 		link: "/dashboard",
 		src: "dashboard",
+	},
+	{
+		name: "marketplace",
+		link: "/marketplace",
+		src: "store",
 	},
 ]
 const maxScreen = 770;
