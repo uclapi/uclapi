@@ -155,7 +155,7 @@ def shibcallback(request):
     else:
         if department == "Shibtests":
             groups = "shibtests"
-        else if eppn == SHIB_TEST_USER:
+        elif eppn == SHIB_TEST_USER:
             groups = "shibtests"
         else:
             response = HttpResponse(
