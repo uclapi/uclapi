@@ -24,31 +24,31 @@ class MediumArticleScraperTestCase(TestCase):
     def test_articles_retrieved(self):
         medium_article_iterator = [
             {'title': 'a',
-            'url': 'b',
-            'tags': 'c',
-            'creator': 'd',
-            'published': 'e',
-            'updated': 'e',
-            'content': 'f',
-            'image_url': 'g',
+                'url': 'b',
+                'tags': 'c',
+                'creator': 'd',
+                'published': 'e',
+                'updated': 'e',
+                'content': 'f',
+                'image_url': 'g',
             },
             {'title': 'h',
-            'url': 'i',
-            'tags': 'j',
-            'creator': 'k',
-            'published': 'l',
-            'updated': 'm',
-            'content': 'n',
-            'image_url': 'o',
+                'url': 'i',
+                'tags': 'j',
+                'creator': 'k',
+                'published': 'l',
+                'updated': 'm',
+                'content': 'n',
+                'image_url': 'o',
             },
             {'title': 'p',
-            'url': 'q',
-            'tags': 'r',
-            'creator': 's',
-            'published': 't',
-            'updated': 'u',
-            'content': 'v',
-            'image_url': 'w',
+                'url': 'q',
+                'tags': 'r',
+                'creator': 's',
+                'published': 't',
+                'updated': 'u',
+                'content': 'v',
+                'image_url': 'w',
             },
         ]
         self._redis = redis.Redis(
@@ -74,7 +74,7 @@ class MediumArticleScraperTestCase(TestCase):
             pipe.set(redis_key_published, article['published'])
             pipe.set(redis_key_updated, article['updated'])
             pipe.set(redis_key_content, article['content'])
-            pipe.set(redis_key_image_url, article['link'])
+            pipe.set(redis_key_image_url, article['image_url'])
  
         pipe.execute()
 
