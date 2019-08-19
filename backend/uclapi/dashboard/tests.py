@@ -31,7 +31,7 @@ class MediumArticleScraperTestCase(TestCase):
                 'updated': 'e',
                 'content': 'f',
                 'image_url': 'g',
-            },
+             },
             {'title': 'h',
                 'url': 'i',
                 'tags': 'j',
@@ -40,7 +40,7 @@ class MediumArticleScraperTestCase(TestCase):
                 'updated': 'm',
                 'content': 'n',
                 'image_url': 'o',
-            },
+             },
             {'title': 'p',
                 'url': 'q',
                 'tags': 'r',
@@ -49,7 +49,7 @@ class MediumArticleScraperTestCase(TestCase):
                 'updated': 'u',
                 'content': 'v',
                 'image_url': 'w',
-            },
+             },
         ]
         self._redis = redis.Redis(
             host=settings.REDIS_UCLAPI_HOST,
