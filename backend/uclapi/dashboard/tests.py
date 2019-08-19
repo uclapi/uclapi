@@ -15,7 +15,7 @@ from .webhook_views import (
     edit_webhook, refresh_verification_secret, user_owns_app, verify_ownership
 )
 from dashboard.api_applications import (
-    create_app, de lete_app, regenerate_app_token, rename_app, set_callback_url,
+    create_app, delete_app, regenerate_app_token, rename_app, set_callback_url,
     update_scopes, get_user_by_id
 )
 
@@ -23,32 +23,32 @@ from dashboard.api_applications import (
 class MediumArticleScraperTestCase(TestCase):
     def test_articles_retrieved(self):
         medium_article_iterator = [
-            {   'title': 'a',
-                'url': 'b',
-                'tags': 'c',
-                'creator': 'd',
-                'published': 'e',
-                'updated': 'e',
-                'content': 'f',
-                'image_url': 'g',
+            {'title': 'a',
+            'url': 'b',
+            'tags': 'c',
+            'creator': 'd',
+            'published': 'e',
+            'updated': 'e',
+            'content': 'f',
+            'image_url': 'g',
             },
-            {   'title': 'h',
-                'url': 'i',
-                'tags': 'j',
-                'creator': 'k',
-                'published': 'l',
-                'updated': 'm',
-                'content': 'n',
-                'image_url': 'o',
+            {'title': 'h',
+            'url': 'i',
+            'tags': 'j',
+            'creator': 'k',
+            'published': 'l',
+            'updated': 'm',
+            'content': 'n',
+            'image_url': 'o',
             },
-            {   'title': 'p',
-                'url': 'q',
-                'tags': 'r',
-                'creator': 's',
-                'published': 't',
-                'updated': 'u',
-                'content': 'v',
-                'image_url': 'w',
+            {'title': 'p',
+            'url': 'q',
+            'tags': 'r',
+            'creator': 's',
+            'published': 't',
+            'updated': 'u',
+            'content': 'v',
+            'image_url': 'w',
             },
         ]
         self._redis = redis.Redis(
@@ -59,7 +59,6 @@ class MediumArticleScraperTestCase(TestCase):
         pipe = self._redis.pipeline()
         for i in range(0, len(medium_article_iterator)):
             article = medium_article_iterator[i]
-
             redis_key_title = "Blog:item:{}:title".format(i)
             redis_key_url = "Blog:item:{}:url".format(i)
             redis_key_tags = "Blog:item:{}:tags".format(i)
@@ -68,8 +67,6 @@ class MediumArticleScraperTestCase(TestCase):
             redis_key_updated = "Blog:item:{}:updated".format(i)
             redis_key_content = "Blog:item:{}:content".format(i)
             redis_key_image_url = "Blog:item:{}:image_url".format(i)
-
-
             pipe.set(redis_key_title, article['title'])
             pipe.set(redis_key_url, article['url'])
             pipe.set(redis_key_tags, article['tags'])
@@ -78,9 +75,9 @@ class MediumArticleScraperTestCase(TestCase):
             pipe.set(redis_key_updated, article['updated'])
             pipe.set(redis_key_content, article['content'])
             pipe.set(redis_key_image_url, article['link'])
-        
+ 
         pipe.execute()
-        
+
         articles = get_articles()
 
         for i in range(0, len(medium_article_iterator)):
@@ -92,7 +89,6 @@ class MediumArticleScraperTestCase(TestCase):
             redis_key_updated = "Blog:item:{}:updated".format(i)
             redis_key_content = "Blog:item:{}:content".format(i)
             redis_key_image_url = "Blog:item:{}:image_url".format(i)
-
             pipe.delete(redis_key_url)
             pipe.delete(redis_key_title)
             pipe.delete(redis_key_tags)
@@ -101,9 +97,8 @@ class MediumArticleScraperTestCase(TestCase):
             pipe.delete(redis_key_updated)
             pipe.delete(redis_key_content)
             pipe.delete(redis_key_image_url)
-
         pipe.execute()
-        
+
         self.assertEqual(articles, medium_article_iterator)
 
 
