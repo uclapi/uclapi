@@ -202,6 +202,11 @@ with open(fair_use_policy_path, 'r', encoding='utf-8') as fp:
 
 REDIS_UCLAPI_HOST = os.environ["REDIS_UCLAPI_HOST"]
 
+# Fill this in with the shibboleth test user. This is used to allow limited
+# access for iOS app store reviewers.
+# In development this can be set to any string
+SHIB_TEST_USER= os.environ["SHIB_TEST_USER"]
+
 # Celery Settings
 CELERY_BROKER_URL = 'redis://' + REDIS_UCLAPI_HOST
 CELERY_ACCEPT_CONTENT = ['json']
