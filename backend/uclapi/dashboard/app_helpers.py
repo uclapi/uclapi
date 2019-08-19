@@ -20,7 +20,7 @@ NOT_PUBLIC = 4
 
 def get_articles():
     r = redis.Redis(host=REDIS_UCLAPI_HOST)
-    if r.exists("Blog:item:1:updated"):
+    if not r.exists("Blog:item:1:updated"):
         if DEBUG:
             call_command('update_medium')
         else:
