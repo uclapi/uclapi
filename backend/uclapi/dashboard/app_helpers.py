@@ -47,19 +47,19 @@ def get_articles():
         pipe.get(redis_key_updated)
         pipe.get(redis_key_content)
         pipe.get(redis_key_image_url)
-    
+
     redis_response = pipe.execute()
     for i in range(0, MEDIUM_ARTICLE_QUANTITY):
-        start_index = i*8;
+        start_index = i*8
 
-        articles[i]['title'] = redis_response[start_index].decode("utf-8")
-        articles[i]['url'] = redis_response[start_index+1].decode("utf-8")
-        articles[i]['tags'] = redis_response[start_index+2].decode("utf-8")
-        articles[i]['creator'] = redis_response[start_index+3].decode("utf-8")
-        articles[i]['published'] = redis_response[start_index+4].decode("utf-8")
-        articles[i]['updated'] = redis_response[start_index+5].decode("utf-8")
-        articles[i]['content'] = redis_response[start_index+6].decode("utf-8")
-        articles[i]['image_url'] = redis_response[start_index+7].decode("utf-8")
+        articles[i]['title']=redis_response[start_index].decode("utf-8")
+        articles[i]['url']=redis_response[start_index+1].decode("utf-8")
+        articles[i]['tags']=redis_response[start_index+2].decode("utf-8")
+        articles[i]['creator']=redis_response[start_index+3].decode("utf-8")
+        articles[i]['published']=redis_response[start_index+4].decode("utf-8")
+        articles[i]['updated']=redis_response[start_index+5].decode("utf-8")
+        articles[i]['content']=redis_response[start_index+6].decode("utf-8")
+        articles[i]['image_url']=redis_response[start_index+7].decode("utf-8")
     return articles
 
 

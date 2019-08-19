@@ -35,7 +35,7 @@ class Command(BaseCommand):
 
             title = article[0].text
             url = article[1].text
-            short_link = article[2].text
+            # short_link = article[2].text
             tags = article[3].text
             index = 4
             while article[index].tag == "category":
