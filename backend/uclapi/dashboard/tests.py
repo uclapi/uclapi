@@ -75,11 +75,8 @@ class MediumArticleScraperTestCase(TestCase):
             pipe.set(redis_key_updated, article['updated'])
             pipe.set(redis_key_content, article['content'])
             pipe.set(redis_key_image_url, article['image_url'])
- 
         pipe.execute()
-
         articles = get_articles()
-
         for i in range(0, len(medium_article_iterator)):
             redis_key_title = "Blog:item:{}:title".format(i)
             redis_key_url = "Blog:item:{}:url".format(i)
@@ -98,7 +95,6 @@ class MediumArticleScraperTestCase(TestCase):
             pipe.delete(redis_key_content)
             pipe.delete(redis_key_image_url)
         pipe.execute()
-
         self.assertEqual(articles, medium_article_iterator)
 
 
