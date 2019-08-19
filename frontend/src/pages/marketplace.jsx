@@ -21,13 +21,14 @@ import uclassistant_screenshot3 from 'Images/marketplace/uclassistant/screenshot
 import balloons from 'Images/home-page/balloons.jpg';
 import market from 'Images/marketplace/market.svg';
 import logo from 'Images/home-page/logo.svg';
+import arrow from 'Images/marketplace/arrow-left.svg';
 
 // Common Components
 import { Row, Column, TextView, ButtonView, CardView, ImageView } from 'Layout/Items.jsx';
 
 // Application config
 let roombuddydescription = (
-  <div className="roombuddy-full-description" style={ { "display": "inline-block", "padding": "0 6%" } } >
+  <div className="roombuddy-full-description" style={ { "display": "inline-block"} } >
        <TextView heading={"3"} text={"Finding a place to get your work done can be hard. Every place you've thought of"
         + " is somehow already filled up: the libraries, the study pods, the benches outside the Print Room Café..."} />
        <TextView heading={"3"} text={"Room Buddy makes use of UCL API to find and direct you to open study spaces"
@@ -47,7 +48,7 @@ let roombuddydescription = (
 );
 
 let uclassistantdescription = (
-  <div className="uclassistant-full-description" style={ {"display": "inline-block", "padding" : "0 6%" } } >
+  <div className="uclassistant-full-description" style={ {"display": "inline-block" } } >
        <TextView heading={"3"} text={"✨✨A brand new and beautiful app to manage your student life at UCL!✨✨"} />
        <TextView heading={"3"} text={"✅ View your personal timetable and get instant directions to your lectures."} />
        <TextView heading={"3"} text={"✅ Check the availability of all UCL libraries and study spaces, including in"
@@ -125,7 +126,7 @@ class Marketplace extends React.Component {
                { this.state.featuredApps.map((app, i) => {
                   return (
                     <CardView key={"featured-app-"+i} width={"100%"} size={"small"} isCenteredText={true} 
-                    padding={"50px 0"} link={"/marketplace/" + app.id} margin={"0"} cardType={"emphasis"} padding={"50px 0"}>
+                    padding={"50px 0"} link={"/marketplace/" + app.id} margin={"0"} cardType={"emphasis"}>
                       <Column style="1-2" isCentered={true}>
                         <ImageView src={app.logo} width={iconsize} height={iconsize} />
                         <TextView text={app.name} heading={2} align={"center"} color={"white"}/>
@@ -145,7 +146,8 @@ class Marketplace extends React.Component {
                   if(i%2 == 0) {margin = "0 2% 0 0"}
 
                   return (
-                    <CardView key={"all-apps-"+i} width={"49%"} size={"small"} link={"/marketplace/" + app.id} cardType={"alternate"} padding={"50px 0"} margin={margin}>
+                    <CardView key={"all-apps-"+i} width={"49%"} size={"small"} link={"/marketplace/" + app.id} 
+                      cardType={"alternate"} padding={"50px 0"} margin={margin}>
                       <Column style="9-10" isCentered={true}>
                         <ImageView src={app.logo} width={iconsize} height={iconsize} />
                         <TextView text={app.name} heading={2} align={"center"} color={"black"}/>
@@ -202,11 +204,22 @@ class AppPage extends React.Component {
             </Column>
           </Row>
 
-          <Row isPadded={true} color="dark-grey" height={"100px"}>         
+          <Row isPaddedTop={true} color="dark-grey" height={"100px"}>         
             <Column style="2-3" isCenteredText={true} isCentered={true}>
-              <Column style="1-4" minWidth={iconsize} isInline={"grid"} isCenteredText={true}
+              <Column style="0" minWidth={iconsize} isInline={"grid"} isCenteredText={true}
                  padding={"2% 0"} position={"relative"} float={"left"}>
-                <ImageView src={this.state.app.logo} width={iconsize} height={iconsize} description={this.state.app.name + " logo"} isCentered={true} />
+                <ButtonView src={arrow} width={iconsize} height={iconsize} isCircular={true} isInline={"block"} 
+                  buttonType={"image"} text={"back-to-marketplace"} link={"/marketplace"} margin={"0"} />
+              </Column>
+            </Column>
+          </Row>
+
+          <Row isPaddedBottom={true} color="dark-grey" height={"100px"}>         
+            <Column style="2-3" isCenteredText={true} isCentered={true}>
+              <Column style="0" minWidth={"iconsize"} isInline={"grid"} isCenteredText={true}
+                 padding={"2% 0"} position={"relative"} float={"left"} margin={"0 50px 0 0"}>
+                <ImageView src={this.state.app.logo} width={iconsize} height={iconsize} 
+                  description={this.state.app.name + " logo"} isCentered={true} margin={"0 auto 0 0"}/>
               </Column>
               <Column style="1-4" minWidth={iconsize} isInline={"grid"} isCenteredText={true} 
                 padding={"3% 0"} position={"relative"} float={"left"}>
@@ -218,7 +231,8 @@ class AppPage extends React.Component {
           <Row isPaddedBottom={true} color="dark-grey">         
             <Column style="2-3" isCentered={true} isCenteredItems={true}>
               {this.state.app.screenshots.map((img, i) => ( 
-                <CardView width={"30%"} minWidth={"small"} cardType={"wrap-around"} height={screenshotheight}>
+                <CardView width={"fit-content"} minWidth={"small"} cardType={"wrap-around"} 
+                  height={screenshotheight} padding={"0px 50px 0px 0px"}>
                   <ImageView src={img} width={screenshotwidth} height={screenshotheight}
                     description={this.state.app.name + " screenshot number " + i} isCentered={true} />
                 </CardView>

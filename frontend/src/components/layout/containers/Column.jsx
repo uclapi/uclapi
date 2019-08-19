@@ -52,6 +52,7 @@ export default class Column extends React.Component {
     if(this.props.color) { content_class_name +=  " " + this.props.color;}
 
     if(this.props.padding) { content_style['padding'] = this.props.padding;}
+    if(this.props.margin) { content_style['margin'] = this.props.margin;}
     if(this.props.position) { content_style['position'] = this.props.position;}
     if(this.props.float) { content_style['float'] = this.props.float;}
 

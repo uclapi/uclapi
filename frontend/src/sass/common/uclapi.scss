@@ -157,14 +157,16 @@ a:hover { color: #BBBBBB; }
 	text-decoration: none;
 }
 
+.circular-button { border-radius: 25%; }
+
 .default-button { background-color: #313537; color: white; }
 .default-button:hover, .uclapi-card-clicked-default:hover { background-color: #75797B;  }
 
 .alternate-button { background-color: #FFFFFF; color: black; }
 .alternate-button:hover, .uclapi-card-clicked-alternate:hover { background-color: #CCCCCC;  }
 
-.emphasis-button { background-color: #FC9685; color: black; }
-.emphasis-button:hover, .uclapi-card-clicked-emphasis:hover { background-color: #C95241;  }
+.emphasis-button, .image-button { background-color: #FC9685; color: black; }
+.emphasis-button:hover, .uclapi-card-clicked-emphasis:hover, .image-button:hover { background-color: #C95241;  }
 
 /** Transitions **/
 

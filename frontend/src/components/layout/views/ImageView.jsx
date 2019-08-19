@@ -26,6 +26,7 @@ export default class ImageView extends React.Component {
     if(this.props.isPadded) { image_class_name += " vertical-padding-top vertical-padding-bottom"; }
     if(this.props.isPaddedTop) { image_class_name += " vertical-padding-top"; }
     if(this.props.isPaddedBottom) { image_class_name += " vertical-padding-bottom"; }
+    if(this.props.margin) { content_style['margin'] = this.props.margin; }
 
     return (
        <div className={image_class_name} style={content_style}>
