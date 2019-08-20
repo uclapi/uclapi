@@ -108,9 +108,14 @@ class HomePage extends React.Component {
 
   constructor (props) {
     super(props);
+  
+    let loggedIn = false;
+    if (window.initialData.logged_in === "True") { loggedIn = true; }
+
     this.state = {
       articles: window.initialData.medium_articles,
-      host: window.location.hostname
+      host: window.location.hostname,
+      loggedIn: loggedIn
     };
   }
 
@@ -118,8 +123,16 @@ class HomePage extends React.Component {
     var iconsize = "150px";
     var now = new Date();
 
+    let startLabel = "START BUILDING";
+
+    if (this.state.loggedIn) {
+      startLabel = "DASHBOARD";
+    }
+
     return (
-      <div className="landing-page-container">
+      <React.Fragment>
+
+      <NavBar isScroll={"true"}/>
 
       {this.state.host == "staging.ninja" && (
         <Row isPadded = {true} color="warning-red">         
@@ -134,7 +147,7 @@ class HomePage extends React.Component {
         <Column style="1-1" isCentered={true} isVerticalAlign={true} isCenteredText={true}>
           <TextView text={"UCL API"} heading={1} align={"center"}/>
           <TextView text={"UCL API is a student-built platform for student developers to improve the student experience of everyone at UCL."} heading={2} align={"center"}/>
-          <ButtonView inline={true} text={"DASHBOARD"} link={"/dashboard"}/>
+          <ButtonView inline={true} text={startLabel} link={"/dashboard"}/>
           <ButtonView inline={true} text={"DOCS"} link={"/docs"} buttonType={"alternate"}/>
         </Column>
       </Row>
