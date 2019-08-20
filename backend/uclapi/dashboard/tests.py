@@ -385,29 +385,6 @@ class WebHookRequestViewTests(TestCase):
             "https://uclapi.com/docs#webhook/challenge-event"
         )
 
-    @patch("dashboard.webhook_views.verify_ownership", lambda *args: True)
-    @patch("dashboard.webhook_views.is_url_unsafe", lambda *args: False)
-    @patch("keen.add_event", lambda *args: None)
-    def test_edit_webhook_POST_user_owns_app_changing_url_verification_ok(
-        self
-    ):
-
-        request = self.factory.post(
-            '/',
-            {
-                'app_id': self.app1.id, 'siteid': 2, 'roomid': 2,
-                'contact': 2, 'url': "http://new"
-            }
-        )
-        request.session = {'user_id': self.user1.id}
-        response = edit_webhook(request)
-
-        content = json.loads(response.content.decode())
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(content["ok"])
-        self.assertEqual(content["message"], "Webhook sucessfully changed.")
-
 
 class VerifyOwnershipTestCase(TestCase):
     def mocked_request_correct_challenge_behaviour(*args, **kwargs):
