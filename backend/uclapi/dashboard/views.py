@@ -39,7 +39,7 @@ def shibboleth_callback(request):
     eppn = request.META['HTTP_EPPN']
     groups = request.META['HTTP_UCLINTRANETGROUPS']
     cn = request.META['HTTP_CN']
-    department = request.META['HTTP_DEPARTMENT']
+    department = request.META.get('HTTP_DEPARTMENT', '')
     given_name = request.META['HTTP_GIVENNAME']
     display_name = request.META['HTTP_DISPLAYNAME']
     employee_id = request.META['HTTP_EMPLOYEEID']
@@ -67,7 +67,8 @@ def shibboleth_callback(request):
         request.session["user_id"] = user.id
         user.full_name = display_name
         user.given_name = given_name
-        user.department = department
+        if department:
+            user.department = department
         user.raw_intranet_groups = groups
         user.employee_id = employee_id
         user.save()
