@@ -133,7 +133,12 @@ def shibcallback(request):
 
     eppn = request.META['HTTP_EPPN']
     cn = request.META['HTTP_CN']
-    department = request.META['HTTP_DEPARTMENT']
+    # UCL's Shibboleth isn't passing us the department anymore...
+    # TODO: Ask UCL what on earth are they doing, and remind them we need to to
+    # be informed of these types of changes.
+    # TODO: Some of these fields are non-critical, think of defaults incase UCL
+    # starts removing/renaming more of these fields...
+    department = request.META.get('HTTP_DEPARTMENT', '')
     given_name = request.META['HTTP_GIVENNAME']
     display_name = request.META['HTTP_DISPLAYNAME']
     employee_id = request.META['HTTP_EMPLOYEEID']
@@ -186,7 +191,8 @@ def shibcallback(request):
         user = User.objects.get(email=eppn)
         user.full_name = display_name
         user.given_name = given_name
-        user.department = department
+        if department:  # UCL doesn't pass this anymore it seems...
+            user.department = department
         user.raw_intranet_groups = groups
         user.employee_id = employee_id
         user.save()
