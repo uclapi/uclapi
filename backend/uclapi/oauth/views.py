@@ -191,7 +191,7 @@ def shibcallback(request):
         user = User.objects.get(email=eppn)
         user.full_name = display_name
         user.given_name = given_name
-        if department: # UCL doesn't pass this anymore it seems...
+        if department:  # UCL doesn't pass this anymore it seems...
             user.department = department
         user.raw_intranet_groups = groups
         user.employee_id = employee_id
