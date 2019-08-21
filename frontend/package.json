@@ -25,7 +25,7 @@
     "axios": "^0.19.0",
     "glamor": "^2.20.40",
     "immutability-helper": "^3.0.1",
-    "js-cookie": "^2.2.0",
+    "js-cookie": "^2.2.1",
     "material-ui": "^0.20.2",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
