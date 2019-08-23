@@ -16,7 +16,6 @@ from django.views.decorators.csrf import (
 )
 
 from dashboard.models import App, User
-from dashboard.tasks import keen_add_event_task as keen_add_event
 
 from .app_helpers import (
     generate_random_verification_code,
@@ -183,11 +182,6 @@ def shibcallback(request):
         )
 
         user.save()
-        keen_add_event.delay("signup", {
-            "id": user.id,
-            "email": eppn,
-            "name": display_name
-        })
     else:
         # User exists already, so update the values
         user = User.objects.get(email=eppn)
@@ -198,12 +192,6 @@ def shibcallback(request):
         user.raw_intranet_groups = groups
         user.employee_id = employee_id
         user.save()
-
-        keen_add_event.delay("User data updated", {
-            "id": user.id,
-            "email": eppn,
-            "name": display_name
-        })
 
     # Log the user into the system using their User ID
     request.session["user_id"] = user.id
@@ -623,11 +611,6 @@ def myapps_shibboleth_callback(request):
         new_user.save()
 
         request.session["user_id"] = new_user.id
-        keen_add_event.delay("signup", {
-            "id": new_user.id,
-            "email": eppn,
-            "name": display_name
-        })
     else:
         # user exists already, update values
         request.session["user_id"] = user.id
@@ -637,12 +620,6 @@ def myapps_shibboleth_callback(request):
         user.raw_intranet_groups = groups
         user.employee_id = employee_id
         user.save()
-
-        keen_add_event.delay("User data updated", {
-            "id": user.id,
-            "email": eppn,
-            "name": display_name
-        })
 
     return redirect("/oauth/myapps")
 
