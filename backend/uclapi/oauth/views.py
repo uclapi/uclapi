@@ -152,9 +152,7 @@ def shibcallback(request):
     if 'HTTP_UCLINTRANETGROUPS' in request.META:
         groups = request.META['HTTP_UCLINTRANETGROUPS']
     else:
-        if department == "Shibtests":
-            groups = "shibtests"
-        elif eppn == SHIB_TEST_USER:
+        if department == "Shibtests" or eppn == SHIB_TEST_USER:
             groups = "shibtests"
         else:
             response = HttpResponse(
