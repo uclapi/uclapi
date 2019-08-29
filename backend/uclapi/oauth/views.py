@@ -24,7 +24,7 @@ from .app_helpers import (
 from .models import OAuthToken
 from .scoping import Scopes
 
-from uclapi.settings import REDIS_UCLAPI_HOST
+from uclapi.settings import REDIS_UCLAPI_HOST, SHIB_TEST_USER
 from common.decorators import uclapi_protected_endpoint, get_var
 from common.helpers import PrettyJsonResponse
 
@@ -152,7 +152,7 @@ def shibcallback(request):
     if 'HTTP_UCLINTRANETGROUPS' in request.META:
         groups = request.META['HTTP_UCLINTRANETGROUPS']
     else:
-        if department == "Shibtests":
+        if department == "Shibtests" or eppn == SHIB_TEST_USER:
             groups = "shibtests"
         else:
             response = HttpResponse(
