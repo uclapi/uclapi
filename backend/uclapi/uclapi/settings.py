@@ -202,13 +202,15 @@ with open(fair_use_policy_path, 'r', encoding='utf-8') as fp:
 
 REDIS_UCLAPI_HOST = os.environ["REDIS_UCLAPI_HOST"]
 
+SHIB_TEST_USER = os.environ["SHIB_TEST_USER"]
+
 # Celery Settings
 CELERY_BROKER_URL = 'redis://' + REDIS_UCLAPI_HOST
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-ROOMBOOKINGS_SETID = 'LIVE-18-19'
+ROOMBOOKINGS_SETID = 'LIVE-19-20'
 
 # This dictates how many Medium articles we scrape
 MEDIUM_ARTICLE_QUANTITY = 3
