@@ -21,7 +21,7 @@
   "dependencies": {
     "@material-ui/core": "^4.3.3",
     "ajv": "^6.10.2",
-    "aphrodite": "^2.3.1",
+    "aphrodite": "^2.4.0",
     "axios": "^0.19.0",
     "glamor": "^2.20.40",
     "immutability-helper": "^3.0.1",
@@ -63,7 +63,7 @@
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "vinyl-transform": "^1.0.0",
-    "webpack": "^4.38.0",
+    "webpack": "^4.39.3",
     "webpack-bundle-tracker": "^0.4.2-beta",
     "webpack-cli": "^3.3.6"
   },
