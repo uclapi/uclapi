@@ -9,7 +9,6 @@ from email.utils import format_datetime
 from functools import wraps
 
 from dashboard.models import App
-from dashboard.tasks import keen_add_event_task as keen_add_event
 
 from oauth.models import OAuthToken
 from oauth.scoping import Scopes
@@ -82,9 +81,6 @@ def log_api_call(request, token, token_type):
             "temp_token": True,
             "token_type": token_type
         }
-
-    keen_add_event.delay("apicall", parameters)
-
 
 def throttle_api_call(token, token_type):
     if token_type == 'general':
