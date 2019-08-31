@@ -8,7 +8,6 @@ import {
   cyan,
   pink,
   grey,
-  white,
 } from '@material-ui/core/colors';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 

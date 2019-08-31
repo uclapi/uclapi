@@ -1,5 +1,5 @@
 import React from 'react';
-import RaisedButton from '@material-ui/core/RaisedButton';
+import Button from '@material-ui/core/Button';
 
 
 export default class NotFound extends React.Component {
@@ -11,7 +11,8 @@ export default class NotFound extends React.Component {
           <div className="container">
             <h1>404</h1>
             <h2>We can't find the page you're looking for.</h2>
-            <RaisedButton
+            <Button
+              variant="contained"
               className="btn"
               label="uclapi.com"
               labelColor={"#ffffff"}

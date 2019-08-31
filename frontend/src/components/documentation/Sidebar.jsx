@@ -1,9 +1,9 @@
 import React from 'react';
 import Drawer from '@material-ui/core/Drawer';
-import { List, ListItem, makeSelectable } from '@material-ui/core/List';
+import { List, ListItem, makeSelectable } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import { spacing, typography, zIndex } from '@material-ui/core/styles';
+import { typography, spacing, zIndex } from '@material-ui/system'
 import apiLogo from './../../images/simpleAPILogoWhite.svg';
 
 /*

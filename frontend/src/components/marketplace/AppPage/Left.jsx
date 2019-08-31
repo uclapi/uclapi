@@ -1,7 +1,7 @@
 import React from 'react';
 import AndroidIcon from '@material-ui/icons/Android';
 
-import RaisedButton from '@material-ui/core/RaisedButton';
+import Button from '@material-ui/core/Button';
 
 
 export default class Left extends React.Component {
@@ -10,7 +10,8 @@ export default class Left extends React.Component {
     let buttons = [];
     if (this.props.app.webLink) {
       buttons.push(
-        <RaisedButton
+        <Button
+          variant="contained"
           key={1}
           className="btn"
           label="Web"
@@ -21,7 +22,8 @@ export default class Left extends React.Component {
 
     if (this.props.app.androidLink) {
       buttons.push(
-        <RaisedButton
+        <Button
+          variant="contained"
           key={2}
           label="Android"
           backgroundColor="#a4c639"
@@ -35,7 +37,8 @@ export default class Left extends React.Component {
 
     if (this.props.app.iosLink) {
       buttons.push(
-        <RaisedButton
+        <Button
+          variant="contained"
           key={3}
           label="iOS"
           backgroundColor="#537DB0"

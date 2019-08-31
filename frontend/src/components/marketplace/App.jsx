@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from '@material-ui/core/Card';
+
+import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 
 

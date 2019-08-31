@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios'
-import { Tabs, Tab } from '@material-ui/core/Tabs';
+import { Tabs, Tab } from '@material-ui/core';
 import Select from 'react-select';
 import { LightAsync as SyntaxHighlighter } from 'react-syntax-highlighter';
 import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript';

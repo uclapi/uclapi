@@ -4,8 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import { getStyles } from '@material-ui/core/AppBar/AppBar';
 import Drawer from '@material-ui/core/Drawer';
 import MenuItem from '@material-ui/core/MenuItem';
-import RaisedButton from '@material-ui/core/RaisedButton';
-import FlatButton from '@material-ui/core/FlatButton';
+import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
@@ -58,13 +57,13 @@ export default class Navbar extends React.Component {
     let rightButtons = (
       <div>
         <a href={"/"}>
-          <FlatButton label="Home" className="active" style={styles.flatButton} />
+          <Button label="Home" className="active" style={styles.flatButton} />
         </a>
         <a href={"/docs/"}>
-          <FlatButton label="Documentation" style={styles.flatButton} />
+          <Button label="Documentation" style={styles.flatButton} />
         </a>
         <a href={"/dashboard/"}>
-          <RaisedButton label="Login" style={styles.raisedButton} />
+          <Button variant="contained" label="Login" style={styles.raisedButton} />
         </a>
       </div>
     )
@@ -73,13 +72,13 @@ export default class Navbar extends React.Component {
       rightButtons = (
         <div>
           <a href={"/"}>
-            <FlatButton label="Home" className="active" style={styles.flatButton} />
+            <Button label="Home" className="active" style={styles.flatButton} />
           </a>
           <a href={"/docs/"}>
-            <FlatButton label="Documentation" style={styles.flatButton} />
+            <Button label="Documentation" style={styles.flatButton} />
           </a>
           <a href={"/dashboard/"}>
-            <FlatButton label="Dashboard" style={styles.flatButton} />
+            <Button label="Dashboard" style={styles.flatButton} />
           </a>
         </div>
       )

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import RaisedButton from '@material-ui/core/RaisedButton';
+import Button from '@material-ui/core/Button';
 
 class LogInLayout extends React.Component {
   render() {
@@ -9,7 +9,7 @@ class LogInLayout extends React.Component {
       <div className="container">
         <h1>Sign in to manage app settings</h1>
         <a href={this.props.url}>
-          <RaisedButton label="Log in" primary={true} />
+          <Button variant="contained" label="Log in" primary={true} />
         </a>
       </div>
     </div>
