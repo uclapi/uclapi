@@ -9,7 +9,6 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const BundleTracker = require('webpack-bundle-tracker');
-const CompressionPlugin = require('compression-webpack-plugin');
 
 const os = require('os');
 
@@ -49,11 +48,6 @@ module.exports = {
       filename: '../backend/uclapi/static/webpack-stats.json'
     }),
     new webpack.HashedModuleIdsPlugin(),
-    new CompressionPlugin({
-      test: /\.(js|css)$/,
-      algorithm: 'gzip',
-      deleteOriginalAssets: true
-    })
   ],
   module: {
     rules: [

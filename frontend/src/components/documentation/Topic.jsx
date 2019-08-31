@@ -3,7 +3,7 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript';
 import py from 'react-syntax-highlighter/dist/esm/languages/hljs/python';
 import sh from 'react-syntax-highlighter/dist/esm/languages/hljs/shell';
-import { androidstudio } from 'react-syntax-highlighter/dist/styles/hljs';
+import { androidstudio } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 SyntaxHighlighter.registerLanguage('javascript', js);
 SyntaxHighlighter.registerLanguage('python', py);
