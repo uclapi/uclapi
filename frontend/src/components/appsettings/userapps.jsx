@@ -18,11 +18,12 @@ class UserApps extends React.Component {
         <div className="settings-title"><h2>Permissions</h2></div>
         <div className="card-settings">
           {this.props.authorised_apps.map((app, i) => {
-              return <AuthAppRow app_name={app.name}
-                app_created={app.created}
-                app_is_auth={app.oauth.scopes[0].enabled=="true" || app.oauth.scopes[1].enabled=="true"}
-                app_scope_id={app.scope_id} 
-                app_id={app.id}
+              return <AuthAppRow app_name={app.app.name}
+                app_created={app.app.creator.name}
+                app_is_auth={app.active}
+                app_id={app.app.id}
+                app_client_id={app.app.client_id}
+                key={i}
               />;
           })}
         </div>

@@ -12,6 +12,11 @@ import requests
     last_modified_redis_key=None  # Served directly from the backend Search API
 )
 def people(request, *args, **kwargs):
+    """
+    Backend for the /search endpoint. Provided a query will search for people
+    in the UCL database with an attribute such as name or e-mail that matches
+    the search parameter.
+    """
     if "query" not in request.GET:
         response = JsonResponse({
             "ok": False,

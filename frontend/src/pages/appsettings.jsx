@@ -32,6 +32,7 @@ const muiTheme = getMuiTheme({
 });
 
 import './../sass/hub.scss';
+import './../sass/navbar.scss';
 
 class AppSettings extends React.Component {
   constructor (props) {
