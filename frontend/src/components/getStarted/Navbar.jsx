@@ -1,7 +1,7 @@
 import React from 'react';
 
 import AppBar from 'material-ui/AppBar';
-import {getStyles} from 'material-ui/AppBar/AppBar';
+import { getStyles } from 'material-ui/AppBar/AppBar';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -26,18 +26,15 @@ export default class Navbar extends React.Component {
       open: false,
       loggedIn: loggedIn
     };
-
-    this.resize = this.resize.bind(this);
-    this.handleToggle = this.handleToggle.bind(this);
   }
 
-  handleToggle() {
+  handleToggle = () => {
     this.setState({
       open: !this.state.open
     });
   }
 
-  resize() {
+  resize = () => {
     this.forceUpdate()
   }
 
@@ -50,24 +47,24 @@ export default class Navbar extends React.Component {
   }
 
   static get contextTypes() {
-    return {muiTheme: React.PropTypes.object.isRequired};
+    return { muiTheme: React.PropTypes.object.isRequired };
   }
 
   render() {
-    const Logo = (<img src={apiLogo}/>)
+    const Logo = (<img src={apiLogo} />)
 
     const styles = getStyles(this.props, this.context);
 
     let rightButtons = (
       <div>
         <a href={"/"}>
-          <FlatButton label="Home" className="active" style={styles.flatButton}/>
+          <FlatButton label="Home" className="active" style={styles.flatButton} />
         </a>
         <a href={"/docs/"}>
-          <FlatButton label="Documentation" style={styles.flatButton}/>
+          <FlatButton label="Documentation" style={styles.flatButton} />
         </a>
         <a href={"/dashboard/"}>
-          <RaisedButton label="Login" style={styles.raisedButton}/>
+          <RaisedButton label="Login" style={styles.raisedButton} />
         </a>
       </div>
     )
@@ -76,13 +73,13 @@ export default class Navbar extends React.Component {
       rightButtons = (
         <div>
           <a href={"/"}>
-            <FlatButton label="Home" className="active" style={styles.flatButton}/>
+            <FlatButton label="Home" className="active" style={styles.flatButton} />
           </a>
           <a href={"/docs/"}>
-            <FlatButton label="Documentation" style={styles.flatButton}/>
+            <FlatButton label="Documentation" style={styles.flatButton} />
           </a>
           <a href={"/dashboard/"}>
-            <FlatButton label="Dashboard" style={styles.flatButton}/>
+            <FlatButton label="Dashboard" style={styles.flatButton} />
           </a>
         </div>
       )
@@ -92,7 +89,7 @@ export default class Navbar extends React.Component {
       rightButtons = (
         <div>
           <IconButton>
-            <ActionMenu style={styles.iconButton} onClick={this.handleToggle}/>
+            <ActionMenu style={styles.iconButton} onClick={this.handleToggle} />
           </IconButton>
           <Drawer open={this.state.open} openSecondary={true} docked={false}>
             <a href={"/"}>
@@ -112,9 +109,9 @@ export default class Navbar extends React.Component {
         rightButtons = (
           <div>
             <IconButton>
-              <ActionMenu style={styles.iconButton} onClick={this.handleToggle}/>
+              <ActionMenu style={styles.iconButton} onClick={this.handleToggle} />
             </IconButton>
-            <Drawer open={this.state.open} openSecondary={true} docked={false}>
+            <Drawer open={this.state.open} openSecondary docked={false}>
               <a href={"/"}>
                 <MenuItem onClick={this.handleToggle}>Home</MenuItem>
               </a>
@@ -130,7 +127,7 @@ export default class Navbar extends React.Component {
       }
     }
 
-    return (<AppBar className="navbar" title="UCL API" iconElementLeft={Logo} iconElementRight={rightButtons}/>);
+    return (<AppBar className="navbar" title="UCL API" iconElementLeft={Logo} iconElementRight={rightButtons} />);
   }
 
 }

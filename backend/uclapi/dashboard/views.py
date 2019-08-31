@@ -4,6 +4,7 @@ from distutils.util import strtobool
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers.json import DjangoJSONEncoder
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.http import quote
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
@@ -13,18 +14,32 @@ from uclapi.settings import FAIR_USE_POLICY
 
 from .app_helpers import get_temp_token, get_articles
 from .models import App, User
-from .tasks import add_user_to_mailing_list_task, \
-                   keen_add_event_task as keen_add_event
+from .tasks import add_user_to_mailing_list_task
 
 
 @csrf_exempt
 def shibboleth_callback(request):
+    # We first check whether the user is a member of any UCL Intranet Groups.
+    # This is a quick litmus test to determine whether they should have
+    # access to the dashboard.
+    # We deny access to test accounts and alumni, neither of which have
+    # this Shibboleth attribute.
+    if 'HTTP_UCLINTRANETGROUPS' not in request.META:
+        response = HttpResponse(
+            (
+                "Error 403 - denied. <br>"
+                "The API Dashboard is only assessible to active UCL users."
+            )
+        )
+        response.status_code = 403
+        return response
+
     # should auth user login or signup
     # then redirect to dashboard homepage
     eppn = request.META['HTTP_EPPN']
     groups = request.META['HTTP_UCLINTRANETGROUPS']
     cn = request.META['HTTP_CN']
-    department = request.META['HTTP_DEPARTMENT']
+    department = request.META.get('HTTP_DEPARTMENT', '')
     given_name = request.META['HTTP_GIVENNAME']
     display_name = request.META['HTTP_DISPLAYNAME']
     employee_id = request.META['HTTP_EMPLOYEEID']
@@ -47,26 +62,16 @@ def shibboleth_callback(request):
         add_user_to_mailing_list_task.delay(new_user.email, new_user.full_name)
 
         request.session["user_id"] = new_user.id
-        keen_add_event.delay("signup", {
-            "id": new_user.id,
-            "email": eppn,
-            "name": display_name
-        })
     else:
         # user exists already, update values
         request.session["user_id"] = user.id
         user.full_name = display_name
         user.given_name = given_name
-        user.department = department
+        if department:
+            user.department = department
         user.raw_intranet_groups = groups
         user.employee_id = employee_id
         user.save()
-
-        keen_add_event.delay("User data updated", {
-            "id": user.id,
-            "email": eppn,
-            "name": display_name
-        })
 
     return redirect(dashboard)
 
