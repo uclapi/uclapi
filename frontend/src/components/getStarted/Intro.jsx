@@ -1,6 +1,5 @@
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
+import Button from '@material-ui/core/Button';
 
 export default class Intro extends React.Component {
 
@@ -30,10 +29,10 @@ export default class Intro extends React.Component {
           <h1>UCL API</h1>
           <h2>UCL API is a <b>student-built</b> platform for <b>student developers</b> to improve the <b>student experience</b> of everyone at UCL.</h2>
           <a href={"/dashboard/"}>
-            <RaisedButton label={startLabel} primary={true} />
+            <Button variant="contained" label={startLabel} primary={true} />
           </a>
           <a href={"/docs/"}>
-            <RaisedButton label="Docs" />
+            <Button variant="contained" label="Docs" />
           </a>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React from 'react';
-import ActionAndroid from 'material-ui/svg-icons/action/android';
+import AndroidIcon from '@material-ui/icons/Android';
 
-import RaisedButton from 'material-ui/RaisedButton';
+import RaisedButton from '@material-ui/core/RaisedButton';
 
 
 export default class Left extends React.Component {
@@ -28,7 +28,7 @@ export default class Left extends React.Component {
           labelColor={"#ffffff"}
           className="btn"
           href={this.props.app.andoridLink}
-          icon={<ActionAndroid />}
+          icon={<AndroidIcon />}
         />
       )
     }
@@ -48,7 +48,7 @@ export default class Left extends React.Component {
     return (
       <div className="left">
         <img className="logo" src={this.props.app.logo} />
-        { buttons }
+        {buttons}
         <br />
         <p>Contact Developer at <a href={this.props.app.developerContact}>{this.props.app.developerContact}</a></p>
       </div>

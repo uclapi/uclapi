@@ -1,10 +1,9 @@
 import React from 'react';
-import Drawer from 'material-ui/Drawer';
-import {List, ListItem, makeSelectable} from 'material-ui/List';
-import Divider from 'material-ui/Divider';
-import Subheader from 'material-ui/Subheader';
-import MenuItem from 'material-ui/MenuItem';
-import {spacing, typography, zIndex} from 'material-ui/styles';
+import Drawer from '@material-ui/core/Drawer';
+import { List, ListItem, makeSelectable } from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import { spacing, typography, zIndex } from '@material-ui/core/styles';
 import apiLogo from './../../images/simpleAPILogoWhite.svg';
 
 /*
@@ -52,7 +51,7 @@ export default class Sidebar extends React.Component {
         open={true}>
         <div style={styles.logo}>
           <span className="sidebarLogo">
-            <img src={apiLogo}/>
+            <img src={apiLogo} />
             UCL API
           </span>
         </div>
@@ -231,7 +230,7 @@ export default class Sidebar extends React.Component {
         <SelectableList
           value=""
         >
-          <Subheader>Links</Subheader>
+          <ListSubheader>Links</ListSubheader>
           <ListItem primaryText="GitHub" href="https://github.com/uclapi" />
           <ListItem primaryText="Facebook" href="https://facebook.com/uclapi" />
           <ListItem primaryText="Twitter" href="https://twitter.com/uclapi" />

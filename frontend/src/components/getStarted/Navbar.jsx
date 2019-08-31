@@ -1,13 +1,13 @@
 import React from 'react';
 
-import AppBar from 'material-ui/AppBar';
-import { getStyles } from 'material-ui/AppBar/AppBar';
-import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
-import IconButton from 'material-ui/IconButton';
-import ActionMenu from 'material-ui/svg-icons/navigation/menu';
+import AppBar from '@material-ui/core/AppBar';
+import { getStyles } from '@material-ui/core/AppBar/AppBar';
+import Drawer from '@material-ui/core/Drawer';
+import MenuItem from '@material-ui/core/MenuItem';
+import RaisedButton from '@material-ui/core/RaisedButton';
+import FlatButton from '@material-ui/core/FlatButton';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
 import apiLogo from './../../images/simpleAPILogoWhite.svg';
 
@@ -88,10 +88,10 @@ export default class Navbar extends React.Component {
     if (window.innerWidth < 700) {
       rightButtons = (
         <div>
-          <IconButton>
-            <ActionMenu style={styles.iconButton} onClick={this.handleToggle} />
+          <IconButton onClick={this.handleToggle} style={styles.iconButton}>
+            <MenuIcon />
           </IconButton>
-          <Drawer open={this.state.open} openSecondary={true} docked={false}>
+          <Drawer open={this.state.open} openSecondary docked={false}>
             <a href={"/"}>
               <MenuItem onClick={this.handleToggle}>Home</MenuItem>
             </a>

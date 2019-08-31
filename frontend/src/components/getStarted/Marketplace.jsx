@@ -1,5 +1,5 @@
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
+import RaisedButton from '@material-ui/core/RaisedButton';
 
 
 export default class Marketplace extends React.Component {

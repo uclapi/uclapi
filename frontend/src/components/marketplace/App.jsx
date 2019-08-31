@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import Avatar from 'material-ui/Avatar';
+import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from '@material-ui/core/Card';
+import Avatar from '@material-ui/core/Avatar';
 
 
 export default class App extends React.Component {

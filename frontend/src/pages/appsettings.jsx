@@ -5,15 +5,26 @@ import LogInLayout from '../components/appsettings/loginlayout.jsx';
 import UserApps from '../components/appsettings/userapps.jsx';
 
 import {
-  cyan500,
-  pinkA200,
-  grey100, grey300, grey400, grey500,
-  white, darkBlack, fullBlack,
-} from 'material-ui/styles/colors';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+  cyan,
+  pink,
+  grey,
+  white,
+} from '@material-ui/core/colors';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 
-const muiTheme = getMuiTheme({
+const { 500: cyan500 } = cyan
+const { A200: pinkA200 } = pink
+const {
+  100: grey100,
+  300: grey300,
+  400: grey400,
+  500: grey500,
+  900: darkBlack,
+} = grey
+const white = `#ffffff`
+const fullBlack = `#000000`
+
+const muiTheme = createMuiTheme({
   fontFamily: 'Roboto, sans-serif',
   palette: {
     primary1Color: "#434343",
@@ -48,13 +59,13 @@ class AppSettings extends React.Component {
       apps
     } } = this.state
     if (status !== "ONLINE") {
-      return <MuiThemeProvider muiTheme={muiTheme}>
+      return <MuiThemeProvider theme={muiTheme}>
         <Hub>
           <LogInLayout url={url} />
         </Hub>
       </MuiThemeProvider>;
     } else {
-      return <MuiThemeProvider muiTheme={muiTheme}>
+      return <MuiThemeProvider theme={muiTheme}>
         <Hub>
           <UserApps
             fullname={fullname}

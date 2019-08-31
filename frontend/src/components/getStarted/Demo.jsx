@@ -1,12 +1,12 @@
 import React from 'react';
-import { Tabs, Tab } from 'material-ui/Tabs';
-import AutoComplete from 'material-ui/AutoComplete';
-import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+import axios from 'axios'
+import { Tabs, Tab } from '@material-ui/core/Tabs';
+import Select from 'react-select';
+import { LightAsync as SyntaxHighlighter } from 'react-syntax-highlighter';
 import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript';
 import py from 'react-syntax-highlighter/dist/esm/languages/hljs/python';
 import sh from 'react-syntax-highlighter/dist/esm/languages/hljs/shell';
 import { androidstudio } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import 'whatwg-fetch';
 
 SyntaxHighlighter.registerLanguage('javascript', js);
 SyntaxHighlighter.registerLanguage('python', py);
@@ -428,12 +428,14 @@ fetch(
     ]
   }
 
-  getSchedule(roomName) {
-    this.state.roomNameMap = {
-      'python': `\n  "roomname": "${roomName}",`,
-      'javascript': `\n  + "&roomname=${roomName}"`,
-      'bash': `\\ \n-d roomname='${roomName}'`
-    }
+  getSchedule = async (roomName) => {
+    this.setState({
+      roomNameMap: {
+        python: `\n  "roomname": "${roomName}",`,
+        javascript: `\n  + "&roomname=${roomName}"`,
+        bash: `\\ \n-d roomname='${roomName}'`
+      }
+    })
 
     let now = new Date();
 
@@ -441,12 +443,9 @@ fetch(
     // Need to create development environment in package.json
     let url = `${this.state.rootURL}/roombookings/bookings?token=` + window.initialData.temp_token + "&roomname=" + roomName + "&date=" + now.toISOString().substring(0, 10).replace(/-/g, "");
 
-    fetch(url).then(response => {
-      return response.json();
-    }).then((data) => {
-      this.setState({
-        schedule: JSON.stringify(data, null, 4)
-      });
+    const { data } = (await axios.get(url))
+    this.setState({
+      schedule: JSON.stringify(data, null, 4)
     })
   }
 
@@ -467,7 +466,20 @@ fetch(
 
         <div className="text">
           <h2>Try out the Room Bookings API</h2>
-          <AutoComplete fullWidth={true} floatingLabelText="Room Name" filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} dataSource={rooms} onNewRequest={this.getSchedule} />
+          <Select
+            value={selectedOption}
+            onChange={this.getSchedule}
+            options={rooms.map(r => ({ label: r, value: r }))}
+            placeholder="Room Name"
+          />
+          {/* <AutoComplete
+            fullWidth={true}
+            floatingLabelText="Room Name"
+            filter={AutoComplete.caseInsensitiveFilter}
+            openOnFocus={true}
+            dataSource={rooms}
+            onNewRequest={this.getSchedule}
+          /> */}
         </div>
 
         <div className="code">

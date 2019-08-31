@@ -1,18 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {cyan500, cyan700,
-  pinkA200,
-  grey100, grey300, grey400, grey500,
-  white, darkBlack, fullBlack,
-} from 'material-ui/styles/colors';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import {
+  cyan,
+  pink,
+  grey,
+} from '@material-ui/core/colors';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import GetStartedComponent from '../components/getStarted/getStarted.jsx';
 
 import './../sass/getStarted.scss';
 import './../sass/navbar.scss';
 
-const muiTheme = getMuiTheme({
+const {
+  500: cyan500,
+  700: cyan700
+} = cyan
+const { A200: pinkA200 } = pink
+const {
+  100: grey100,
+  300: grey300,
+  400: grey400,
+  500: grey500,
+  900: darkBlack,
+} = grey
+
+const white = `#ffffff`
+const fullBlack = `#000000`
+
+const muiTheme = createMuiTheme({
   fontFamily: 'Roboto, sans-serif',
   palette: {
     primary1Color: "#434343",
@@ -32,9 +47,9 @@ const muiTheme = getMuiTheme({
 
 class GetStarted extends React.Component {
 
-  render () {
+  render() {
     return (
-      <MuiThemeProvider muiTheme={muiTheme}>
+      <MuiThemeProvider theme={muiTheme}>
         <GetStartedComponent />
       </MuiThemeProvider>
     )

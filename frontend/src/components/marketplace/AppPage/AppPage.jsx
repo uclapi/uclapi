@@ -1,5 +1,5 @@
 import React from 'react';
-import Paper from 'material-ui/Paper';
+import Paper from '@material-ui/core/Paper';
 
 import allApps from './../allApps.jsx';
 import Header from './Header.jsx';
@@ -46,9 +46,9 @@ export default class AppPageComponent extends React.Component {
             </Paper>
           </div>
         </div>
-      ): (
-        <NotFound />
-      )
+      ) : (
+          <NotFound />
+        )
     )
   }
 

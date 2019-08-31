@@ -1,5 +1,5 @@
 import React from 'react';
-import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { LightAsync as SyntaxHighlighter } from 'react-syntax-highlighter';
 import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript';
 import py from 'react-syntax-highlighter/dist/esm/languages/hljs/python';
 import sh from 'react-syntax-highlighter/dist/esm/languages/hljs/shell';
