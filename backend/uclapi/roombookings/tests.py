@@ -451,7 +451,7 @@ class GetRoomsEndpointTest(TestCase):
 
         # Standard Token data
         self.user_ = User.objects.create(cn="test", employee_id=7357)
-        self.app = App.objects.create(user=self.user_, name="An App"
+        self.app = App.objects.create(user=self.user_, name="An App")
 
     # TODO: Github Issue #1155
     # def test_get_rooms_default(self):
