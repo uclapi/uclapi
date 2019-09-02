@@ -9,7 +9,6 @@ from email.utils import format_datetime
 from functools import wraps
 
 from dashboard.models import App
-from dashboard.tasks import keen_add_event_task as keen_add_event
 
 from oauth.models import OAuthToken
 from oauth.scoping import Scopes
@@ -48,6 +47,7 @@ def how_many_seconds_until_midnight():
 
 
 def log_api_call(request, token, token_type):
+    """This functions handles logging of api calls using keen events."""
     service = request.path.split("/")[1]
     method = request.path.split("/")[2]
 
@@ -82,9 +82,6 @@ def log_api_call(request, token, token_type):
             "token_type": token_type
         }
 
-    keen_add_event.delay("apicall", parameters)
-
-
 def throttle_api_call(token, token_type):
     if token_type == 'general':
         cache_key = token.user.email
@@ -106,7 +103,9 @@ def throttle_api_call(token, token_type):
 
     secs = how_many_seconds_until_midnight()
     if count_data is None:
-        r.set(cache_key, 1, secs)
+        # Conditional fixes bug where a call is made exactly at midnight.
+        # Redis cannot have key with TTL of 0
+        r.set(cache_key, 1, secs if secs > 0 else 86400)
         return (False, limit, limit - 1, secs)
     else:
         count = int(count_data)

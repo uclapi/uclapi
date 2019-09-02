@@ -451,7 +451,7 @@ class GetRoomsEndpointTest(TestCase):
 
         # Standard Token data
         self.user_ = User.objects.create(cn="test", employee_id=7357)
-        self.app = App.objects.create(user=self.user_, name="An App")
+        self.app = App.objects.create(user=self.user_, name="An App"
 
     # TODO: Github Issue #1155
     # def test_get_rooms_default(self):
@@ -459,7 +459,7 @@ class GetRoomsEndpointTest(TestCase):
     #         '/roombookings/rooms',
     #         {'token': self.app.api_token}
     #     )
-    #     response = get_rooms(request)
+    #     response = get_rooms(request
     #     self.assertEqual(response.status_code, 200)
 
     def test_get_rooms_with_invalid_capacity(self):
@@ -468,4 +468,31 @@ class GetRoomsEndpointTest(TestCase):
             {'token': self.app.api_token, 'capacity': '5-'}
         )
         response = get_rooms(request)
+        self.assertEqual(response.status_code, 400)
+
+
+class GetBookingEndpointTest(TestCase):
+
+    def setUp(self):
+        self.factory = APIRequestFactory()
+
+        # Standard Token data
+        self.user_ = User.objects.create(cn="test", employee_id=7357)
+        self.app = App.objects.create(user=self.user_, name="An App")
+
+    # TODO: Github issue #1155
+    # def test_get_booking_default(self):
+    #     request = self.factory.get(
+    #         '/roombookings/bookings',
+    #         {'token': self.app.api_token}
+    #     )
+    #     response = get_bookings(request)
+    #     self.assertEqual(response.status_code, 200)
+
+    def test_get_booking_invalid_results_per_page(self):
+        request = self.factory.get(
+            '/roombookings/bookings',
+            {'token': self.app.api_token, 'results_per_page': 'ten'}
+        )
+        response = get_bookings(request)
         self.assertEqual(response.status_code, 400)

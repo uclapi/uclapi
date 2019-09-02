@@ -8,6 +8,8 @@ import Marketplace from './Marketplace.jsx';
 import Blog from './Blog.jsx';
 import GitHub from './GitHub.jsx';
 import StagingBanner from './StagingBanner.jsx'
+import FAQ from './FAQ.jsx';
+import NavbarConsistent from '../appsettings/navbarconsistent.jsx';
 
 export default class GetStartedComponent extends React.Component {
     constructor(props){
@@ -18,15 +20,16 @@ export default class GetStartedComponent extends React.Component {
       return (
         <div>
           {this.host == "staging.ninja" && <StagingBanner />}
+          <NavbarConsistent isScroll={true} />
           <Intro />
           <Goal />
           <APIs />
           <Demo />
           <Blog />
           <Marketplace />
+          <FAQ />
           <GitHub />
         </div>
       )
     }
-
 }
