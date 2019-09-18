@@ -156,7 +156,7 @@ def shibcallback(request):
     department = request.META.get('HTTP_DEPARTMENT', '')
     given_name = request.META.get('HTTP_GIVENNAME', '')
     display_name = request.META.get('HTTP_DISPLAYNAME', '')
-    groups = request.get('HTTP_UCLINTRANETGROUPS', '')
+    groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
 
     # We check whether the user is a member of any UCL Intranet Groups.
     # This is a quick litmus test to determine whether they should be able to
@@ -631,7 +631,7 @@ def myapps_shibboleth_callback(request):
     department = request.META.get('HTTP_DEPARTMENT', '')
     given_name = request.META.get('HTTP_GIVENNAME', '')
     display_name = request.META.get('HTTP_DISPLAYNAME', '')
-    groups = request.get('HTTP_UCLINTRANETGROUPS', '')
+    groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
 
     try:
         user = User.objects.get(email=eppn)
