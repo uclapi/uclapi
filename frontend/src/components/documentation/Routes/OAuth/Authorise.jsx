@@ -80,7 +80,7 @@ export default class Authorise extends React.Component {
                 description="Gets returned when you have not set a callback URL for your app." />
               <Cell
                 name="UCL has sent incomplete headers"
-                description="Gets if UCL sends us incomplete headers. If the issues persist please contact the UCL API Team to rectify this." />
+                description="Gets returned when UCL sends us incomplete headers. If the issues persist please contact the UCL API Team to rectify this." />
               </Table>
           </Topic>
         </div>
