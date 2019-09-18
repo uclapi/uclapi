@@ -142,7 +142,7 @@ def shibcallback(request):
         # (aka UPI), also unique in the DB
         employee_id = request.META['HTTP_EMPLOYEEID']
     except KeyError:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": ("UCL has sent incomplete headers. If the issues persist"
                       "please contact the UCL API Team to rectify this.")
@@ -617,7 +617,7 @@ def myapps_shibboleth_callback(request):
         # (aka UPI), also unique in the DB
         employee_id = request.META['HTTP_EMPLOYEEID']
     except KeyError:
-        response = JsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": ("UCL has sent incomplete headers. If the issues persist"
                       "please contact the UCL API Team to rectify this.")
