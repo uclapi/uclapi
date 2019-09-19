@@ -550,6 +550,32 @@ class ViewsTestCase(TestCase):
             "Test New Name"
         )
 
+        # Now lets test for when UCL doesn't give us the department.
+        response = self.client.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': signed_data
+            },
+            HTTP_EPPN='testxxx@ucl.ac.uk',
+            HTTP_CN='testxxx',
+            # NOTE: missing HTTP_DEPARTMENT
+            HTTP_GIVENNAME='Test New Name',
+            HTTP_DISPLAYNAME='Test User',
+            HTTP_EMPLOYEEID='xxxtest01',
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # Reload the test user from DB
+        test_user_ = User.objects.get(id=test_user_.id)
+
+        # If no department is passed, we don't want to overwrite the previous
+        # value with an empty string.
+        self.assertEqual(
+            test_user_.department,
+            "Dept of Tests"
+        )
+
     def test_valid_shibcallback_test_account(self):
         dev_user_ = User.objects.create(
             email="testdev@ucl.ac.uk",
