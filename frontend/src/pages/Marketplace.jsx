@@ -6,6 +6,9 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 // Styles
 import 'Styles/common/uclapi.scss';
 
+// Legacy
+import 'Styles/navbar.scss';
+
 // Images
 // Room Buddy
 import roombuddylogo from 'Images/marketplace/roombuddy/logo.png';
@@ -24,26 +27,26 @@ import logo from 'Images/home-page/logo.svg';
 import arrow from 'Images/marketplace/arrow-left.svg';
 
 // Common Components
-import { Row, Column, TextView, ButtonView, CardView, ImageView } from 'Layout/Items.jsx';
+import { Row, Column, TextView, ButtonView, CardView, ImageView, NavBar } from 'Layout/Items.jsx';
 
 // Application config
 let roombuddydescription = (
   <div className="roombuddy-full-description" style={ { "display": "inline-block"} } >
-       <TextView heading={"3"} text={"Finding a place to get your work done can be hard. Every place you've thought of"
-        + " is somehow already filled up: the libraries, the study pods, the benches outside the Print Room Café..."} />
-       <TextView heading={"3"} text={"Room Buddy makes use of UCL API to find and direct you to open study spaces"
-        + " that aren't widely known. These rooms are scarcely booked up for timetables and sit waiting for you to" 
-        + " grace them with your glory."} />
-       <TextView heading={"3"} text={"It's simple: install the app, sign in with your UCL ID, and get going to the"
-        + " closest available space to your current location!"} />
-       <TextView heading={"3"} text={"UCL Room Buddy was built with the UCL API, which gives student developers"
-        + " programmatic access to UCL's data in order to improve the UCL experience for everyone."} />
+       <TextView heading={"3"} text={`Finding a place to get your work done can be hard. Every place you've thought of
+         is somehow already filled up: the libraries, the study pods, the benches outside the Print Room Café...`} />
+       <TextView heading={"3"} text={`Room Buddy makes use of UCL API to find and direct you to open study spaces
+         that aren't widely known. These rooms are scarcely booked up for timetables and sit waiting for you to
+         grace them with your glory.`} />
+       <TextView heading={"3"} text={`It's simple: install the app, sign in with your UCL ID, and get going to the
+         closest available space to your current location!`} />
+       <TextView heading={"3"} text={`UCL Room Buddy was built with the UCL API, which gives student developers
+         programmatic access to UCL's data in order to improve the UCL experience for everyone.`} />
        <TextView heading={"3"} text={"Want to contribute to room buddy? Submit a pull request:"}/>
        <ButtonView buttonType={"alternate"} text={"VISIT GITHUB"} isCentered={true} link={"https://github.com/uclapi/ucl-assistant-app"} />
-       <TextView heading={"3"} text={"This app and its platform have been built by the UCL API Team, a group of students"
-        + " working with UCL's Information Services Division (ISD) to provide students with a brand new ecosystem that allows"
-        + " anyone within the UCL Community to build apps with UCL data. Interested in building an app just like UCL Room Buddy"
-        + " yourself? Head over to uclapi.com and log in with your UCL Account."}/>
+       <TextView heading={"3"} text={`This app and its platform have been built by the UCL API Team, a group of students
+         working with UCL's Information Services Division (ISD) to provide students with a brand new ecosystem that allows
+         anyone within the UCL Community to build apps with UCL data. Interested in building an app just like UCL Room Buddy
+         yourself? Head over to uclapi.com and log in with your UCL Account.`}/>
   </div>
 );
 
@@ -51,23 +54,23 @@ let uclassistantdescription = (
   <div className="uclassistant-full-description" style={ {"display": "inline-block" } } >
        <TextView heading={"3"} text={"✨✨A brand new and beautiful app to manage your student life at UCL!✨✨"} />
        <TextView heading={"3"} text={"✅ View your personal timetable and get instant directions to your lectures."} />
-       <TextView heading={"3"} text={"✅ Check the availability of all UCL libraries and study spaces, including in"
-        + " the new Student Centre. Want to know which floor or room has the most seats free? You now have that"
-        + " information right in the palm of your hand! Not sure which seats are free? No problem! Just use the live"
-        + " seating maps to see every seat that has been unoccupied for over half an hour on whichever library" 
-        + " floor you choose."} />
-       <TextView heading={"3"} text={"✅ Search for members of the UCL community, including students and lecturers,"
-        + " and tap to email them. Nice and easy!"}/>
-       <TextView heading={"3"} text={"✅ Find every centrally bookable room at UCL, see how big it is and whether it is"
-        + " currently in use, and then tap to navigate right there."}/>
+       <TextView heading={"3"} text={`✅ Check the availability of all UCL libraries and study spaces, including in
+         the new Student Centre. Want to know which floor or room has the most seats free? You now have that
+         information right in the palm of your hand! Not sure which seats are free? No problem! Just use the live
+         seating maps to see every seat that has been unoccupied for over half an hour on whichever library 
+         floor you choose`} />
+       <TextView heading={"3"} text={`✅ Search for members of the UCL community, including students and lecturers,
+         and tap to email them. Nice and easy!`}/>
+       <TextView heading={"3"} text={`✅ Find every centrally bookable room at UCL, see how big it is and whether it is 
+         currently in use, and then tap to navigate right there.`}/>
        <TextView heading={"3"} text={"✅ Made with love 💖 by and for students"}/>
-       <TextView heading={"3"} text={"✅ Fully open source. Got feedback, suggestions or even some new code to improve" 
-        + " the app? We welcome it:"}/>
+       <TextView heading={"3"} text={`✅ Fully open source. Got feedback, suggestions or even some new code to improve 
+         the app? We welcome it:`}/>
        <ButtonView buttonType={"alternate"} isCentered={true} text={"VISIT GITHUB"} link={"https://github.com/uclapi/ucl-assistant-app"} />
-       <TextView heading={"3"} text={"This app and its platform have been built by the UCL API Team, a group of students"
-        + " working with UCL's Information Services Division (ISD) to provide students with a brand new ecosystem that allows"
-        + " anyone within the UCL Community to build apps with UCL data. Interested in building an app just like UCL Assistant"
-        + " yourself? Head over to uclapi.com and log in with your UCL Account."}/>
+       <TextView heading={"3"} text={`This app and its platform have been built by the UCL API Team, a group of students
+         working with UCL's Information Services Division (ISD) to provide students with a brand new ecosystem that allows
+         anyone within the UCL Community to build apps with UCL data. Interested in building an app just like UCL Assistant
+         yourself? Head over to uclapi.com and log in with your UCL Account.`}/>
   </div>
 );
 
@@ -111,7 +114,10 @@ class Marketplace extends React.Component {
       var logosize = "150px";
 
       return (
-        <div className="marketplace-container">
+        <React.Fragment>
+
+          <NavBar isScroll={"true"} />
+
           <Row src={market} height="600px" color="ucl-orange" img_size="auto 60%">         
             <Column style="1-1" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
@@ -172,7 +178,7 @@ class Marketplace extends React.Component {
                 <ImageView src={logo} width={logosize} height={logosize} description={"ucl api logo"} isCentered={true} />
             </Column>
           </Row>
-        </div>
+        </React.Fragment>
       );
     }
 }
@@ -196,7 +202,10 @@ class AppPage extends React.Component {
     var screenshotheight = "384px";
 
     return (
-      <div className="marketplace-container">
+      <React.Fragment>
+
+          <NavBar isScroll={"true"} />
+
           <Row src={market} height="600px" color="ucl-orange" img_size="auto 60%">         
             <Column style="1-1" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
@@ -219,7 +228,7 @@ class AppPage extends React.Component {
               <Column style="0" minWidth={"iconsize"} isInline={"grid"} isCenteredText={true}
                  padding={"2% 0"} position={"relative"} float={"left"} margin={"0 50px 0 0"}>
                 <ImageView src={this.state.app.logo} width={iconsize} height={iconsize} 
-                  description={this.state.app.name + " logo"} isCentered={true} margin={"0 auto 0 0"}/>
+                  description={this.state.app.name  + "logo"} isCentered={true} margin={"0 auto 0 0"}/>
               </Column>
               <Column style="1-4" minWidth={iconsize} isInline={"grid"} isCenteredText={true} 
                 padding={"3% 0"} position={"relative"} float={"left"}>
@@ -234,7 +243,7 @@ class AppPage extends React.Component {
                 <CardView width={"fit-content"} minWidth={"small"} cardType={"wrap-around"} 
                   height={screenshotheight} padding={"0px 50px 0px 0px"}>
                   <ImageView src={img} width={screenshotwidth} height={screenshotheight}
-                    description={this.state.app.name + " screenshot number " + i} isCentered={true} />
+                    description={this.state.app.name  + " screenshot number " + i} isCentered={true} />
                 </CardView>
                 ) ) }
             </Column>
@@ -259,7 +268,7 @@ class AppPage extends React.Component {
                 <ImageView src={logo} width={logosize} height={logosize} description={"ucl api logo"} isCentered={true} />
             </Column>
           </Row>
-      </div>
+      </React.Fragment>
     );
   }
 

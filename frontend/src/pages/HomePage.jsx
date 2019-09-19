@@ -131,8 +131,63 @@ class HomePage extends React.Component {
 
     return (
       <React.Fragment>
-
+      
       <NavBar isScroll={"true"}/>
+
+        {this.state.host == "staging.ninja" && (
+          <Row isPadded = {true} color="warning-red">         
+            <Column style="9-10" isCentered={true} >
+              <TextView align={"center"} text={"Warning! This is our bleeding-edge staging environment, and therefore performance, accuracy and reliability of the API cannot be guaranteed. For our stable, supported API please go to:"} heading={1} />
+              <TextView align={"center"} text={"uclapi.com"} heading = {2} link = {"https://uclapi.com"}/>
+            </Column>
+          </Row>
+        )}
+
+        <Row height = "600px" src={splash_screen}>         
+          <Column style="1-1" isCentered={true} isVerticalAlign={true} isCenteredText={true}>
+            <TextView text={"UCL API"} heading={1} align={"center"}/>
+            <TextView text={"UCL API is a student-built platform for student developers to improve the student experience of everyone at UCL."} heading={2} align={"center"}/>
+            <ButtonView inline={true} text={startLabel} link={"/dashboard"}/>
+            <ButtonView inline={true} text={"DOCS"} link={"/docs"} buttonType={"alternate"}/>
+          </Column>
+        </Row>
+
+        <Row isPadded = {true} color="dark-grey">         
+          <Column style="9-10" isCentered={true} >
+            <TextView text={"Our Goals"} heading={1} align={"center"}/>
+          </Column>
+        </Row>
+        <Row isPaddedBottom = {true} color="dark-grey">         
+          <Column style="2-3" isCentered={true} isCenteredText={true}>
+           <Column style="1-3" isInline={"grid"} isMobileFriendly={true} size={"small"}>
+            <TextView text={"Simple Interfaces"} heading={2} align={"center"}/>
+            <TextView text={`The endpoints are streamlined to enable any developer to easily pick up and use the api. We hope that developers of all ability
+                            find our endpoints and website easy to navigate. We do not want to overcomplicate the process of developing
+                            awesome apps, we want to be the easiest part of your development process!`} align={"justify"} heading={5} />
+            <ImageView src={star} width={iconsize} height={iconsize} description={"an icon of a love heart"} isCentered={true} />
+           </Column>
+           <Column style="1-3" isInline={"grid"} isMobileFriendly={true} size={"small"}>
+            <TextView text={"Documentation First"} heading={2} align={"center"}/>
+            <TextView text={`As developers we feel the pain of bad documentation: this is why we are driven by good documentation. We want you 
+                             to spend less time worrying about how to use our api and more time thinking about how to revolutionise the student experience. 
+                             With good documentation we allow you to focus on building helpful applications.`} align={"justify"} heading={5} />
+            <ImageView src={docs} width={iconsize} height={iconsize} description={"an icon of a clipboard"} isCentered={true} />
+           </Column>
+           <Column style="1-3" isInline={"grid"} isMobileFriendly={true} size={"small"}>
+            <TextView text={"Enable Developers"} heading={2} align={"center"}/>
+            <TextView text={`We want the api to be so comprehensive that any idea, no matter how big, can be created in order to improve students lives. We are always
+                             open to suggestions for new endpoints and functionality so we can enable a greater range of applications to be developed. We
+                             cannot wait to see what you will develop!`} align={"justify"} heading={5}/>
+            <ImageView src={heart} width={iconsize} height={iconsize} description={"an icon of a star"} isCentered={true} />
+           </Column>
+          </Column>
+        </Row>
+        <Row isPaddedBottom = {true} color="dark-grey">         
+          <Column style="9-10" isCentered={true} >
+            <TextView align={"center"} text={"The UCL API Roadmap is public. Check it out and vote ✅"} align={"center"} heading = {3} link = {"https://trello.com/b/mimLkk3c/ucl-api-roadmap"}/>
+          </Column>
+        </Row>
+>>>>>>> HEAD~65
 
       {this.state.host == "staging.ninja" && (
         <Row isPadded = {true} color="warning-red">         
