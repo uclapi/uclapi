@@ -31,10 +31,16 @@ export default class Row extends React.Component {
       var img_size = "Cover";
       if(this.props.img_size) { img_size = this.props.img_size; }
 
-       row_style['backgroundImage'] = `url(${this.props.src})`; 
-       row_style['backgroundSize'] = img_size;
-       row_style['backgroundPosition'] = "50%";
-       row_style['backgroundRepeat'] = "no-repeat";
+      console.log(this.props.src);
+
+      if(this.props.src == "url_not_found") {
+        row_style['backgroundImage'] = `url(${placeholder})`; 
+      } else {
+        row_style['backgroundImage'] = `url(${this.props.src})`; 
+      }
+      row_style['backgroundSize'] = img_size;
+      row_style['backgroundPosition'] = "50%";
+      row_style['backgroundRepeat'] = "no-repeat";
     }
 
     return (
