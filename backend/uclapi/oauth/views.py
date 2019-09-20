@@ -172,7 +172,7 @@ def shibcallback(request):
             response = HttpResponse(
                 (
                     "Error 403 - denied. <br>"
-                    "Unfortunately, alumni are not permitted to use UCL Apps."
+                    "Unfortunately, alumni and not fully enrolled students are not permitted to use UCL Apps."
                 )
             )
             response.status_code = 403
