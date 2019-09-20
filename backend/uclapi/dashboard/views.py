@@ -178,7 +178,7 @@ def dashboard(request):
         })
 
     initial_data = json.dumps(user_meta, cls=DjangoJSONEncoder)
-    return render(request, 'dashboard.html', {
+    return render(request, 'Dashboard.html', {
         'initial_data': initial_data
     })
 
