@@ -28,7 +28,7 @@ class Marketplace extends React.Component {
     super(props);
 
     this.state = {
-      DEBUGGING: true,
+      DEBUGGING: false,
     }
 
     if(this.state.DEBUGGING) { console.log("All apps loaded in: " + allApps); }

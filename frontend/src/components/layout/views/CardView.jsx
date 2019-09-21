@@ -5,10 +5,10 @@ REQUIRED ATTRIBUTES:
 this.props.width - e.g 8-10 = 80% 
 
 OPTIONAL ATTRIBUTES:
-this,props.style - e.g default (dark grey => if none given) / alternate (light grey) / emphasis (orange) / fit-content (no padding or margin for inner content)
-this.props.link (Turns the card clickable)
-this.props.minWidth - e.g 300px a minimum width (unset if not given)
-this.props.addPadding - true/false adds a 20px padding
+this,props.style - e.g default (dark grey) / alternate (light grey) / emphasis (orange) / fit-content (no padding or margin for inner content)
+this.props.link (default is not clickable)
+this.props.minWidth - e.g 300px a minimum width (default is unset)
+this.props.addPadding - if true adds a 20px padding (default is false)
 **/
 >>>>>>> HEAD~61
 export default class CardView extends React.Component {
@@ -18,7 +18,7 @@ export default class CardView extends React.Component {
 
     // ALLOWS FOR ANY DEBUGGING
     this.state = {
-      DEBUGGING : true,
+      DEBUGGING : false,
     };
 
     // BINDS FUNCTIONS
@@ -46,9 +46,7 @@ export default class CardView extends React.Component {
     return style;
   }
   render() {
-    if(this.DEBUGGING) {
-      console.log("CardView rendered with the following props: " + this.props);
-    }
+    if(this.DEBUGGING) { console.log("CardView rendered with the following props: " + this.props); }
     
     var card_style = {};
 
