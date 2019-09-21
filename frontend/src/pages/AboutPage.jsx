@@ -15,7 +15,7 @@ import anush from 'Images/team/anush.jpg';
 import alex from 'Images/team/alex.jpg';
 import zak from 'Images/team/zak.jpg';
 
-import splash_screen from 'Images/home-page/splash_screen.png';
+import splash_screen from 'Images/team/intro-team.jpg';
 
 let previous = [
   {
@@ -137,8 +137,8 @@ const member = (info) => (
             <Column style="1-1" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
               <TextView text={info.name} heading={1} align={"center"}/>
               <TextView text={info.title} heading={2} align={"center"}/>
-              <TextView text={info.email} heading={"p"} align={"center"}/>
-              <TextView text={`${info.startYear} - ${info.endYear}`} heading={3} align={"center"}/>
+              <TextView text={info.email} heading={2} align={"center"}/>
+              <TextView text={`${info.startYear} - ${info.endYear}`} heading={2} align={"center"}/>
               <TextView text="View GitHub" heading={2} align="center" link={info.github}/>
             </Column>
           </Row>
@@ -180,12 +180,12 @@ class AboutPage extends React.Component {
             </Column>
           </Row>
 
-          <Row isPadded = {true} color="dark-grey">         
+          <Row isPadded = {true} color="ucl-orange">         
             <Column style="9-10" isCentered={true} >
               <TextView text={"Previous developers"} heading={1} align={"center"}/>
             </Column>
           </Row>
-          <Row isPaddedBottom={true} color="dark-grey">
+          <Row isPaddedBottom={true} color="ucl-orange">
             <Column style="2-3" widthOverride="auto" isCentered={true} isCenteredText={true}>
               {previous.map(x => member(x) )}
             </Column>
