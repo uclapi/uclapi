@@ -17,7 +17,7 @@ import logo from 'Images/home-page/logo.svg';
 import arrow from 'Images/marketplace/arrow-left.svg';
 
 // Common Components
-import { Row, Column, TextView, ButtonView, CardView, ImageView, NavBar } from 'Layout/Items.jsx';
+import { Row, Column, TextView, ButtonView, CardView, ImageView, NavBar, Footer } from 'Layout/Items.jsx';
 
 // Grab titles and descriptions of app
 import { allApps } from 'Layout/data/app_pages.jsx';
@@ -102,19 +102,8 @@ class Marketplace extends React.Component {
             </Column>
           </Row>
 
-          <Row isPadded = {true} src={balloons}>         
-            <Column style="1-2" isCentered={true} isCenteredText={true}>
-                <TextView text={"UCL API"} heading={1} align={"center"}/>
+          <Footer />
 
-                <TextView text={"github "} heading={5} align={"center"} isInline={true} link={"https://github.com/uclapi/uclapi"}/>
-                <TextView text={`-`} heading={5} align={"center"} isInline={true} />
-                <TextView text={" twitter"} heading={5} align={"center"} isInline={true} link={"https://twitter.com/uclapi?lang=en"}/>
-                <TextView text={`-`} heading={5} align={"center"} isInline={true}/>
-                <TextView text={" facebook"} heading={5} align={"center"} isInline={true} link={"https://www.facebook.com/uclapi/"}/>
-
-                <ImageView src={logo} width={logosize} height={logosize} description={"ucl api logo"} isCentered={true} />
-            </Column>
-          </Row>
         </React.Fragment>
       );
     }
@@ -192,19 +181,8 @@ class AppPage extends React.Component {
             </Column>
           </Row>
 
-          <Row isPadded={true} src={balloons}>         
-            <Column style="1-2" isCentered={true} isCenteredText={true}>
-                <TextView text={"UCL API"} heading={1} align={"center"}/>
+          <Footer />
 
-                <TextView text={"github "} heading={5} align={"center"} isInline={true} link={"https://github.com/uclapi/uclapi"}/>
-                <TextView text={`-`} heading={5} align={"center"} isInline={true} />
-                <TextView text={" twitter"} heading={5} align={"center"} isInline={true} link={"https://twitter.com/uclapi?lang=en"}/>
-                <TextView text={`-`} heading={5} align={"center"} isInline={true}/>
-                <TextView text={" facebook"} heading={5} align={"center"} isInline={true} link={"https://www.facebook.com/uclapi/"}/>
-
-                <ImageView src={logo} width={logosize} height={logosize} description={"ucl api logo"} isCentered={true} />
-            </Column>
-          </Row>
       </React.Fragment>
     );
   }

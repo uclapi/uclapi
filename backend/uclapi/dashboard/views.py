@@ -122,14 +122,14 @@ def dashboard(request):
 
     if not user.agreement:
         if request.method != "POST":
-            return render(request, "agreement.html", {
+            return render(request, "Agreement.html", {
                 'fair_use': FAIR_USE_POLICY
                 })
 
         try:
             agreement = strtobool(request.POST["agreement"])
         except (KeyError, ValueError):
-            return render(request, "agreement.html", {
+            return render(request, "Agreement.html", {
                 'fair_use': FAIR_USE_POLICY,
                 "error": "You must agree to the fair use policy"
             })
@@ -138,7 +138,7 @@ def dashboard(request):
             user.agreement = True
             user.save()
         else:
-            return render(request, "agreement.html", {
+            return render(request, "Agreement.html", {
                 'fair_use': FAIR_USE_POLICY,
                 "error": "You must agree to the fair use policy"
             })
@@ -182,6 +182,11 @@ def dashboard(request):
         'initial_data': initial_data
     })
 
+@ensure_csrf_cookie
+def about(request):
+    return render(request, 'AboutPage.html', {
+        'initial_data': {}
+    })
 
 @ensure_csrf_cookie
 def home(request):

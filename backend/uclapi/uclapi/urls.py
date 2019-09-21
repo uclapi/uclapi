@@ -15,13 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from dashboard.views import documentation, home
+from dashboard.views import documentation, home, about
 from marketplace.views import marketplace
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^dashboard/', include('dashboard.urls')),
     url(r'^docs', documentation),
+    url(r'^about', about),
     url(r'^marketplace', marketplace),
     url(r'^roombookings/', include('roombookings.urls')),
     url(r'^oauth/', include('oauth.urls')),

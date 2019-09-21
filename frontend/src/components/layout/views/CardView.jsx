@@ -10,7 +10,6 @@ this.props.link (default is not clickable)
 this.props.minWidth - e.g 300px a minimum width (default is unset)
 this.props.addPadding - if true adds a 20px padding (default is false)
 **/
->>>>>>> HEAD~61
 export default class CardView extends React.Component {
 
   constructor(props) {

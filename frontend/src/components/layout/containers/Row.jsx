@@ -31,8 +31,6 @@ export default class Row extends React.Component {
       var img_size = "Cover";
       if(this.props.img_size) { img_size = this.props.img_size; }
 
-      console.log(this.props.src);
-
       if(this.props.src == "url_not_found") {
         row_style['backgroundImage'] = `url(${placeholder})`; 
       } else {

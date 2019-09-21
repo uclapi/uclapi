@@ -9,6 +9,11 @@ import CardView from './views/CardView.jsx';
 import ImageView from './views/ImageView.jsx';
 import CodeView from './views/CodeView.jsx';
 import Demo from './Demo.jsx';
+<<<<<<< master
+=======
+import NavBar from './NavBar.jsx';
+import Footer from './Footer.jsx';
+>>>>>>> HEAD~58
 
 export {
     Row,
@@ -18,5 +23,11 @@ export {
     CardView,
     ImageView, 
     CodeView,
+<<<<<<< master
     Demo
+=======
+    Demo, 
+    NavBar, 
+    Footer
+>>>>>>> HEAD~58
 }

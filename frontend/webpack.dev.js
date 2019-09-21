@@ -38,7 +38,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.(jpg|png|svg)$/,
+        test: /\.(jpg|png|svg|jpeg)$/,
         loader: 'url-loader'
       },
     ]
@@ -53,10 +53,11 @@ module.exports = {
   entry: {
     HomePage: entryPointsPathPrefix + '/HomePage.jsx',
     Documentation: entryPointsPathPrefix + '/Documentation.jsx',
-    dashboard: entryPointsPathPrefix + '/dashboard.jsx',
+    AboutPage: entryPointsPathPrefix + '/AboutPage.jsx',
+    Dashboard: entryPointsPathPrefix + '/dashboard.jsx',
     Marketplace: entryPointsPathPrefix + '/Marketplace.jsx',
-    authorise: entryPointsPathPrefix + '/authorise.jsx',
-    appsettings: entryPointsPathPrefix + '/appsettings.jsx',
+    Authorise: entryPointsPathPrefix + '/authorise.jsx',
+    Appsettings: entryPointsPathPrefix + '/appsettings.jsx',
     vendors: ['react'],
   },
   output: {

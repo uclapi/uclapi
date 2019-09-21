@@ -14,11 +14,13 @@ import star from 'Images/home-page/star.svg';
 import docs from 'Images/home-page/docs.svg';
 import market from 'Images/home-page/market.svg';
 import splash_screen from 'Images/home-page/splash_screen.png';
-import balloons from 'Images/home-page/balloons.jpg';
-import logo from 'Images/home-page/logo.svg';
 
 // Common Components
+<<<<<<< master
 import { Row, Column, TextView, ButtonView, CardView, ImageView, Demo} from 'Layout/Items.jsx';
+=======
+import { Row, Column, TextView, ButtonView, CardView, ImageView, Demo, NavBar, Footer } from 'Layout/Items.jsx';
+>>>>>>> HEAD~58
 
 let endpoints = [
   { name: "/oauth", description: "Let your users sign in with their UCL credentials", link: "/docs#oauth" },

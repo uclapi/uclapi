@@ -21,7 +21,10 @@ export default class TextView extends React.Component {
     var heading_size = "6";
     if(this.props.heading) { heading_size = this.props.heading; }
 
+    // Font size
     var CustomTag = `h${heading_size}`;
+    if(heading_size=="p") { CustomTag = "p"; }
+
     if(this.props.align) {text_style['textAlign'] = this.props.align; }
     if(this.props.color) {text_style['color'] = this.props.color; text_style['textDecorationColor'] = this.props.color;}
     if(this.props.isInline) {text_style['display'] = "inline-block"; }
