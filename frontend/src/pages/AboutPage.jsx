@@ -132,16 +132,22 @@ import 'Styles/common/uclapi.scss';
 import 'Styles/navbar.scss';
 
 const member = (info) => (
-    <CardView style="alternate" width="1-3" minWidth="500px" >
-          <Row src={info.image} height="400px">
-            <Column style="1-1" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
-              <TextView text={info.name} heading={1} align={"center"}/>
-              <TextView text={info.title} heading={2} align={"center"}/>
-              <TextView text={info.email} heading={2} align={"center"}/>
-              <TextView text={`${info.startYear} - ${info.endYear}`} heading={2} align={"center"}/>
-              <TextView text="View GitHub" heading={2} align="center" link={info.github}/>
-            </Column>
-          </Row>
+    <CardView width={"1-3"} minWidth={"540px"} style={"alternate"} link={info.github}>
+      <Column style="1-1">
+        <Row height = "400px" src={info.image}>
+          <Column style="1-1" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
+              <TextView text={info.name} heading={3} align={"center"}/>
+          </Column>
+        </Row> 
+        <Row height = "140px" color="transparent">
+          <Column style="1-1" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
+              <TextView text={info.title} heading={6} align={"center"} color={"black"} />
+              <TextView text={info.email} heading={6} align={"center"} color={"black"} />
+              <TextView text={`${info.startYear} - ${info.endYear}`} heading={6} align={"center"} color={"black"} />
+              <TextView text="View GitHub" heading={6} align="center" link={info.github} color={"black"} />
+          </Column>
+        </Row>
+      </Column>
     </CardView>
 );
 
