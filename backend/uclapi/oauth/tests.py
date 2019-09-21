@@ -704,41 +704,6 @@ class ViewsTestCase(TestCase):
             "shibtests"
         )
 
-    def test_invalid_or_alumni_account(self):
-        dev_user_ = User.objects.create(
-            email="testdev@ucl.ac.uk",
-            cn="test",
-            given_name="Test Dev",
-            employee_id='testdev01'
-        )
-        app_ = App.objects.create(
-            user=dev_user_,
-            name="An App",
-            callback_url="www.somecallbackurl.com/callback"
-        )
-
-        signer = signing.TimestampSigner()
-        # Generate a random state for testing
-        state = ''.join(
-            random.choices(string.ascii_letters + string.digits, k=32)
-        )
-        data = app_.client_id + state
-        signed_data = signer.sign(data)
-
-        response = self.client.get(
-            '/oauth/shibcallback',
-            {
-                'appdata': signed_data
-            },
-            HTTP_EPPN='testxxx@ucl.ac.uk',
-            HTTP_CN='testxxx',
-            HTTP_DEPARTMENT='Dept of Alumni',
-            HTTP_GIVENNAME='Test',
-            HTTP_DISPLAYNAME='Test User',
-            HTTP_EMPLOYEEID='xxxtest01',
-        )
-        self.assertEqual(response.status_code, 403)
-
 
 class AppHelpersTestCase(TestCase):
     def test_generate_random_verification_code(self):

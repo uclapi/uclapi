@@ -158,25 +158,10 @@ def shibcallback(request):
     display_name = request.META.get('HTTP_DISPLAYNAME', '')
     groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
 
-    # We check whether the user is a member of any UCL Intranet Groups.
-    # This is a quick litmus test to determine whether they should be able to
-    # use an OAuth application.
-    # We deny access to alumni, which does not have this Shibboleth attribute.
-    # Test accounts also do not have this attribute, but we can check the
-    # department attribute for the Shibtests department.
-    # This lets App Store reviewers log in to apps that use the UCL API.
-    if not groups:
-        if department == "Shibtests" or eppn == SHIB_TEST_USER:
-            groups = "shibtests"
-        else:
-            response = HttpResponse(
-                (
-                    "Error 403 - denied. <br>"
-                    "Unfortunately, alumni are not permitted to use UCL Apps."
-                )
-            )
-            response.status_code = 403
-            return response
+    # TODO: Find a way to block access to alumni (do we need this?) without
+    # blocking access to new students too.
+    if not groups and (department  == "Shibtests" or eppn == SHIB_TEST_USER):
+        groups = "shibtests"
 
     # If a user has never used the API before then we need to sign them up
     try:
