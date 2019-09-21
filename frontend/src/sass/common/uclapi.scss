@@ -125,18 +125,6 @@ a:hover { color: #BBBBBB; }
 	transform: translateY(-50%);
 }
 
-/** Sizing **/
-
-.small-size {
-	min-width: 280px
-}
-.medium-size {
-	min-width: 400px;
-}
-.fit-content-size {
-	min-width: 280px;
-}
-
 /** Containers **/
 
 .row {
@@ -183,11 +171,12 @@ a:hover { color: #BBBBBB; }
 /** Cards **/
 
 .uclapi-card {
-	display: inline-flex;
+	display: inline-block;
 	border-radius: 5px;
-	height: 200px;
-	padding: 10px;
-	margin: 20px;
+	height: auto;
+	overflow: hidden;
+	min-height: 200px;
+	margin: 2%;
 }
 
 .uclapi-card-default {

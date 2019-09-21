@@ -9,6 +9,10 @@ Full_DDL.sql
 # C extensions
 *.so
 
+# MERGING
+marketplace.jsx
+
+
 # Distribution / packaging
 .Python
 env/

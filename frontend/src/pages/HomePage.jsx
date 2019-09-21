@@ -240,7 +240,7 @@ class HomePage extends React.Component {
       <Row isPadded = {true} src={balloons}>         
         <Column style="1-2" isCentered={true} isCenteredText={true}>
             <TextView text={"UCL API"} heading={1} align={"center"}/>
-
+            
             <TextView text={"github "} heading={5} align={"center"} isInline={true} link={"https://github.com/uclapi/uclapi"}/>
             <TextView text={`-`} heading={5} align={"center"} isInline={true} />
             <TextView text={" twitter"} heading={5} align={"center"} isInline={true} link={"https://twitter.com/uclapi?lang=en"}/>
@@ -251,16 +251,16 @@ class HomePage extends React.Component {
       </Column>
     </Row>
 
-      <Row isPadded={true} color="dark-grey">         
-        <Column style="2-3" isCentered={true} isCenteredText={true}>
-          <TextView text={"Frequently Asked Questions"} heading={1} align={"center"}/>
-          {FAQ.map(x => ( 
-            questionandanswer(x.question, x.answer)
-          ) ) }
-        </Column>
-      </Row>
+    <Row isPadded={true} color="dark-grey">         
+      <Column style="2-3" isCentered={true} isCenteredText={true}>
+        <TextView text={"Frequently Asked Questions"} heading={1} align={"center"}/>
+        {FAQ.map(x => ( 
+          questionandanswer(x.question, x.answer)
+        ) ) }
+      </Column>
+    </Row>
 
-      </React.Fragment>
+    </React.Fragment>
     );
   }
 

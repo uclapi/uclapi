@@ -131,8 +131,7 @@ class Marketplace extends React.Component {
                <TextView text={"Our favourite usage of the API"} heading={5} align={"left"} />
                { this.state.featuredApps.map((app, i) => {
                   return (
-                    <CardView key={"featured-app-"+i} width={"100%"} size={"small"} isCenteredText={true} 
-                    padding={"50px 0"} link={"/marketplace/" + app.id} margin={"0"} cardType={"emphasis"}>
+                    <CardView key={"featured-app-"+i} width={"1-1"} style={"emphasis"} link={"/marketplace/" + app.id} addPadding={true}>
                       <Column style="1-2" isCentered={true}>
                         <ImageView src={app.logo} width={iconsize} height={iconsize} />
                         <TextView text={app.name} heading={2} align={"center"} color={"white"}/>
@@ -152,8 +151,7 @@ class Marketplace extends React.Component {
                   if(i%2 == 0) {margin = "0 2% 0 0"}
 
                   return (
-                    <CardView key={"all-apps-"+i} width={"49%"} size={"small"} link={"/marketplace/" + app.id} 
-                      cardType={"alternate"} padding={"50px 0"} margin={margin}>
+                    <CardView key={"all-apps-"+i} width={"1-2"} style={"alternate"} link={"/marketplace/" + app.id} addPadding={true}>
                       <Column style="9-10" isCentered={true}>
                         <ImageView src={app.logo} width={iconsize} height={iconsize} />
                         <TextView text={app.name} heading={2} align={"center"} color={"black"}/>
