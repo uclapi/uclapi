@@ -211,14 +211,14 @@ class HomePage extends React.Component {
           <Column width="9-10" horizontalAlignment="center">
             <TextView text={"Check out our blog for tutorials"} heading={1} align={"center"}/>
             {this.state.articles.map(x => ( 
-              <CardView width={"1-3"} minWidth={"350px"} style={"alternate"} link={x.url}>
+              <CardView width="1-3" minWidth="350px" style="alternate" link={x.url}>
                 <Column width="1-1">
                   <Row height = "200px" src={x.image_url}>
                     <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
                       <TextView text={x.title} align={"center"} heading = {3} color={"white"} link={x.url} />
                     </Column>
                   </Row> 
-                  <Row height = "150px" color="transparent">
+                  <Row height = "200px" color="transparent">
                     <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
                       <TextView text={"Created by: " + x.creator} align={"center"} heading = {6} color={"black"} />
                       <TextView text={"Date published: " + x.published} align={"center"} heading = {6} color={"black"} />
