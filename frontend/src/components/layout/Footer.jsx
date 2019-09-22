@@ -18,7 +18,7 @@ export default class Footer extends React.Component {
     
     return (
       <Row isPadded = {true} src={balloons}>         
-          <Column style="1-2" isCentered={true} isCenteredText={true}>
+          <Column width="1-2" horizontalAlignment="center">
               <TextView text={"UCL API"} heading={1} align={"center"}/>
 
               <TextView text={"github "} heading={5} align={"center"} isInline={true} link={"https://github.com/uclapi/uclapi"}/>

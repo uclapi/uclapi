@@ -109,18 +109,26 @@ a:hover { color: #BBBBBB; }
 	height: 100%;
 }
 
+.column {
+    text-align: center;
+}
+
 .center-x {
 	position: relative;
 	margin: auto;
 }
 
-.center-items {
-    display: flow-root;
+.vertical-align {
+	width: 100%;
+	position: absolute;
 }
 
-.vertical-align-buddy {
-	width: inherit;
-	position: absolute;
+.no-vertical-align {
+	width: 100%;
+	position: relative;
+}
+
+.center-y {
 	top: 50%;
 	transform: translateY(-50%);
 }

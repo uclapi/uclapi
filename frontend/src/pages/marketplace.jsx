@@ -58,7 +58,7 @@ class Marketplace extends React.Component {
           <NavBar isScroll={"true"} />
 
           <Row src={market} height="600px" color="ucl-orange" img_size="auto 60%">         
-            <Column style="1-1" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
+            <Column style="2-3" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
               <TextView text={"Apps to improve student life at UCL"} heading={2} align={"center"}/>
             </Column>
@@ -133,7 +133,7 @@ class AppPage extends React.Component {
           <NavBar isScroll={"true"} />
 
           <Row src={market} height="600px" color="ucl-orange" img_size="auto 60%">         
-            <Column style="1-1" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
+            <Column style="2-3" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
               <TextView text={"Apps to improve student life at UCL"} heading={2} align={"center"}/>
             </Column>

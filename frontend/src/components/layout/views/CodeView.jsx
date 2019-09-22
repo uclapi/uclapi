@@ -57,7 +57,7 @@ export default class CodeView extends React.Component {
 
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-          <Column style={"1-1"} color={"code-grey"}>
+          <Column width="1-1">
             <Tabs>
               {languages.map((language, index) => (
                 <Tab key={index} label={language.name}>

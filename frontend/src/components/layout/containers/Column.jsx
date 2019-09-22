@@ -2,15 +2,12 @@ import React from 'react';
 /**
 
 REQUIRED ATTRIBUTES:
-this.props.style (1-3 => 1/3 width)
+this.props.width (1-3 => 1/3 width of a row)
 
 OPTIONAL ATTRIBUTES:
-this.props.isCentered (centers the column within the parent)
-this.props.isCenteredText (centers any text within the column)
-this.props.isJustifiedText (justifies any text within the column)
-this.props.minWidth (Minimum width of the column)
-this.props.isVerticalAlign (Aligns the column vertically inside of a pre-set height layout)
-this.props.isInline (Are there multiple columns in a line on a row)
+this.props.horizontalAlignment (left / center / right)
+this.props.verticalALignment (top / center / bottom) => Row Height must be set otherwise weird behaviour
+this.props.typeOfInline (default none: block / flex / grid)
 
 **/
 export default class Column extends React.Component {
@@ -19,64 +16,101 @@ export default class Column extends React.Component {
     super(props);
 
     this.state = {
-      UNSET_ERROR_WIDTH: "0px"
+      UNSET_ERROR_WIDTH: "0px",
+      DEBUGGING: false,
+      HORIZONTAL_PADDING: 2 + 2,
+      style: [],
+      class: "column",
+      verticalAlignment: "no-vertical-align"
     }
 
-    this.getWidth = this.getWidth.bind(this);
-  }
-
-  getWidth(style) {
-    var fraction = style.split("-")
-    var adaptation = 100;
-    if(this.props.isInline) { var adaptation = 100 - ( 4 * fraction[1] ); }
-    var percentage = fraction[0] / fraction[1] * adaptation;
-    return percentage + "%";
+    this.getColumnWidth = this.getColumnWidth.bind(this);
+    this.setColumnWidthAndPadding = this.setColumnWidthAndPadding.bind(this);
+    this.setHorizontalAlignment = this.setHorizontalAlignment.bind(this);
+    this.setVerticalAlignment = this.setVerticalAlignment.bind(this);
+    this.setupStyle = this.setupStyle.bind(this);
   }
 
   render() {
-    var content_class_name = "content";
-    var content_style = [];
+    this.setupStyle()
 
-    content_style['width'] = this.getWidth(this.props.style);
-    if(this.props.isInline) { 
-      content_style['display'] = "inline-" + this.props.isInline; 
-      content_style['padding'] = "2%"; 
-    }
-
-    if(this.props.isMobileFriendly) {content_class_name += " mobile-friendly"}
-    if(this.props.isCentered) {content_class_name += " center-x"; }
-    if(this.props.isCenteredText) { content_class_name += " centered-text"; }
-    if(this.props.isCenteredItems) {content_class_name += " center-items"; }
-    if(this.props.isJustifiedText) { content_class_name += " justified-text"; }
-    if(this.props.size) { content_class_name += " " + this.props.size + "-size"; }
-    if(this.props.color) { content_class_name +=  " " + this.props.color;}
-
-    if(this.props.padding) { content_style['padding'] = this.props.padding;}
-    if(this.props.margin) { content_style['margin'] = this.props.margin;}
-    if(this.props.position) { content_style['position'] = this.props.position;}
-    if(this.props.float) { content_style['float'] = this.props.float;}
-
-    var isVerticalAlign = this.props.isVerticalAlign;
-
-    if(isVerticalAlign) {
-      content_style['height'] = "100%";
-      content_style['width'] = this.getWidth(this.props.style);
-
-      return (
-        <div style={content_style}>
-          <div className="vertical-align-buddy">
-            <div className={ content_class_name }>
-              {this.props.children}
-            </div>
-          </div>
+    return (
+      <div className= {this.state.verticalAlignment} >
+        <div className={this.state.class} style={this.state.style} >
+            {this.props.children}
         </div>
-      );
-    } else {
-      return (
-          <div className={ content_class_name } style={ content_style }>
-              {this.props.children}
-          </div>
-      );
+      </div>
+    );
+  }
+
+  setupStyle() {
+    // REQUIRED ATTRIBUTES
+    // Set the width and padding of the column
+    this.setColumnWidthAndPadding();
+
+    // OPTIONAL ATTRIBUTES
+    // Handles horizontal alignment
+    if(this.props.horizontalAlignment) { this.setHorizontalAlignment() }
+    // Handles vertical alignment
+    if(this.props.verticalAlignment) { this.setVerticalAlignment() }
+  }
+
+  setVerticalAlignment() {
+    switch(this.props.verticalAlignment) {
+      case "top":
+        // Stub needs implementing 
+      break;
+
+      case "center":
+        this.state.verticalAlignment = 'vertical-align center-y';
+        this.state.style['height'] = '100%';
+      break;
+
+      case "middle":
+        // Stub needs implementing
+      break;
+    }
+  }
+
+  setHorizontalAlignment() {
+   switch(this.props.horizontalAlignment) {
+      case "left":
+        // Stub needs implementing
+      break;
+
+      case "center":
+        this.state.style['margin'] = 'auto';
+      break;
+
+      case "right":
+        // Stub needs implementing
+      break;
+    } 
+  }
+
+  getColumnWidth() {
+    if(typeof this.props.width == "undefined") {console.log("Error no width set for column!"); return 0;}
+
+    var buffer = this.props.width.split("-")
+
+    var numberOfColumns = buffer[1];
+    var fraction = buffer[0] / buffer[1]
+
+    var paddingSpace = 0;
+    if(this.props.TypeOfInline) { paddingSpace = this.state.HORIZONTAL_PADDING * numberOfColumns; }
+
+    var spaceForColumns = 100 - paddingSpace
+
+    var percentage = spaceForColumns * fraction;
+    return percentage + "%";
+  }
+
+  setColumnWidthAndPadding() {
+    this.state.style['width'] = this.getColumnWidth();
+
+    if(this.props.TypeOfInline) {
+      this.state.style['display'] = "inline-" + this.props.TypeOfInline; 
+      this.state.style['padding'] = "2%";
     }
   }
 

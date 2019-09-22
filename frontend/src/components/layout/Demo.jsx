@@ -81,30 +81,30 @@ export default class Demo extends React.Component {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <Row color={"ucl-orange"} height={"fit-content"} isPaddedBottom={true}>
-          <Column style="2-3" isCentered={true} padding={"0 0 50px 0"}>
+          <Column width="2-3" horizontalAlignment="center">
             <TextView text={"Try out the API"} heading={1} align={"center"} />
             <AutoComplete fullWidth={true} floatingLabelText="Room Name" filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true}
              dataSource={rooms} onNewRequest={this.makeRequest}/>
           </Column>
           
-          <Column style={"2-3"} isCentered={true}>
+          <Column width="2-3" horizontalAlignment="center">
             <TextView text={"The request being made:"} heading={3} align={"left"}/>
           </Column>
-          <Column style={"2-3"} color={"code-grey"} isCentered={true}>
+          <Column width="2-3" horizontalAlignment="center">
             <CodeView url={`${this.state.rootURL}/roombookings/bookings`} params={this.state.params} type={"request"}/>
           </Column>
 
           {this.state.response ? (
             <div className="demo-response">
-              <Column style={"2-3"} isCentered={true}>
+              <Column width="2-3" horizontalAlignment="center">
                 <TextView text={"The response from the API:"} heading={3} align={"left"}/>
               </Column>
-              <Column style={"2-3"} isCentered={true} color={code-grey}>
+              <Column width="2-3" horizontalAlignment="center">
                 <CodeView response={this.state.response} type={"real-response"}/>
               </Column>
             </div>
           ) : (
-            <Column style={"2-3"} isCentered={true} padding={"50px 0 0 0"}>
+            <Column width="2-3" horizontalAlignment="center">
               <TextView text={"select a room above to query for room bookings"} heading={5} align={"center"} fontStyle={"italic"}/>
             </Column>
           )}
