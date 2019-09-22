@@ -150,39 +150,33 @@ class HomePage extends React.Component {
           </Column>
         </Row>
 
-        <Row isPadded = {true} color="dark-grey">         
-          <Column width="9-10" horizontalAlignment="center" verticalAlignment="center" >
-            <TextView text={"Our Goals"} heading={1} align={"center"}/>
-          </Column>
-        </Row>
-        <Row isPaddedBottom = {true} color="dark-grey">         
+        <Row color="dark-grey">         
           <Column width="2-3" horizontalAlignment="center" >
+           <TextView text={"Our Goals"} heading={1} align={"center"}/>
+
            <CardView width="1-3" minWidth="300px" style="no-bg">
-            <TextView text={"Simple Interfaces"} heading={2} align={"center"}/>
+            <TextView text={"Make Simple Interfaces"} heading={2} align={"center"}/>
             <TextView text={`The endpoints are streamlined to enable any developer to easily pick up and use the api. We hope that developers of all ability
                             find our endpoints and website easy to navigate. We do not want to overcomplicate the process of developing
                             awesome apps, we want to be the easiest part of your development process!`} align={"justify"} heading={5} />
             <ImageView src={star} width={iconsize} height={iconsize} description={"an icon of a love heart"} isCentered={true} />
            </CardView>
            <CardView width="1-3" minWidth="300px" style="no-bg">
-            <TextView text={"Documentation First"} heading={2} align={"center"}/>
+            <TextView text={"Put Documentation First"} heading={2} align={"center"}/>
             <TextView text={`As developers we feel the pain of bad documentation: this is why we are driven by good documentation. We want you 
                              to spend less time worrying about how to use our api and more time thinking about how to revolutionise the student experience. 
                              With good documentation we allow you to focus on building helpful applications.`} align={"justify"} heading={5} />
             <ImageView src={docs} width={iconsize} height={iconsize} description={"an icon of a clipboard"} isCentered={true} />
            </CardView>
            <CardView width="1-3" minWidth="300px" style="no-bg">
-            <TextView text={"Enable Developers"} heading={2} align={"center"}/>
+            <TextView text={"Enable Student Developers"} heading={2} align={"center"}/>
             <TextView text={`We want the api to be so comprehensive that any idea, no matter how big, can be created in order to improve students lives. We are always
                              open to suggestions for new endpoints and functionality so we can enable a greater range of applications to be developed. We
                              cannot wait to see what you will develop!`} align={"justify"} heading={5}/>
             <ImageView src={heart} width={iconsize} height={iconsize} description={"an icon of a star"} isCentered={true} />
            </CardView>
-          </Column>
-        </Row>
-        <Row isPaddedBottom = {true} color="dark-grey">         
-          <Column width="9-10" horizontalAlignment="center">
-            <TextView align={"center"} text={"The UCL API Roadmap is public. Check it out and vote ✅"} align={"center"} heading = {3} link = {"https://trello.com/b/mimLkk3c/ucl-api-roadmap"}/>
+
+           <TextView align={"center"} text={"The UCL API Roadmap is public. Check it out and vote ✅"} align={"center"} heading = {3} link = {"https://trello.com/b/mimLkk3c/ucl-api-roadmap"}/>
           </Column>
         </Row>
 

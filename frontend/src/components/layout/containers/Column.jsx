@@ -7,7 +7,7 @@ this.props.width (1-3 => 1/3 width of a row)
 OPTIONAL ATTRIBUTES:
 this.props.horizontalAlignment (left / center / right)
 this.props.verticalALignment (top / center / bottom) => Row Height must be set otherwise weird behaviour
-this.props.typeOfInline (default none: block / flex / grid)
+this.props.typeOfInline (default none: block / flex / grid) => `Not sure if useful with addition of transparent cards`
 
 **/
 export default class Column extends React.Component {
@@ -89,7 +89,7 @@ export default class Column extends React.Component {
   }
 
   getColumnWidth() {
-    if(typeof this.props.width == "undefined") {console.log("Error no width set for column!"); return 0;}
+    if(typeof this.props.width == "undefined") {console.exception("EXCEPTION: no width set for column so setting column width to 0"); return 0;}
 
     var buffer = this.props.width.split("-")
 
