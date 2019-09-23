@@ -5,8 +5,6 @@ REQUIRED ATTRIBUTES:
 this.props.color OR this.props.src (remember to set a design for the layout)
 
 OPTIONAL ATTRIBUTES:
-this.props.fill (will make the layout fill an entire screen)
-this.props.isPadded (and variations affect the vertical padding of the layout)
 this.props.height (manually set the height over what the contents)
 
 **/
@@ -17,7 +15,7 @@ export default class Row extends React.Component {
 
     this.state = {
       DEBUGGING: false,
-      DEFAULT_COLOR: 'dark-grey',
+      DEFAULT_COLOR: 'transparent',
       style: [],
       class: 'row'
     }
@@ -26,14 +24,31 @@ export default class Row extends React.Component {
     this.setupBackground = this.setupBackground.bind(this);
   }
 
+  render() {
+    this.setupStyle();
+
+    return (
+      <div className={ this.state.class } style={ this.state.style }>
+          {this.props.children}
+      </div>
+    );
+  }
+
   setupStyle() {
+    // REQUIRED ATTRIBUTES
+    // Either given a color or src
     this.setupBackground();
+
+    // OPTIONAL ATTRIBUTES
+    // Height of container
+    if(this.props.height) { this.state.style['height'] = this.props.height; }
   }
 
   setupBackground() {
+    if(this.state.DEBUGGING) { console.log("DEBUG: Background color / src is : " + this.props.color + " / " + this.props.src); }
+
     if(this.props.color) { 
-      row_class_name += " " + this.props.color;
-      return;
+      this.state.class += " " + this.props.color;
     }
 
     if(this.props.src) {
@@ -41,34 +56,19 @@ export default class Row extends React.Component {
       if(this.props.img_size) { img_size = this.props.img_size; }
 
       if(this.props.src == "url_not_found") {
-        row_style['backgroundImage'] = `url(${placeholder})`; 
+        this.state.style['backgroundImage'] = `url(${placeholder})`; 
       } else {
-        row_style['backgroundImage'] = `url(${this.props.src})`; 
+        this.state.style['backgroundImage'] = `url(${this.props.src})`; 
       }
-      row_style['backgroundSize'] = img_size;
-      row_style['backgroundPosition'] = "50%";
-      row_style['backgroundRepeat'] = "no-repeat";
+      this.state.style['backgroundSize'] = img_size;
+      this.state.style['backgroundPosition'] = "50%";
+      this.state.style['backgroundRepeat'] = "no-repeat";
     }
 
-    console.exception("EXCEPTION: No color or source set for background so resorting to a " + DEFAULT_COLOR + " background");
-    row_class_name += " " + DEFAULT_COLOR;
-  }
-
-  render() {
-    var row_class_name = "row";
-    var row_style = {};
-
-    row_class_name += " vertical-padding-top vertical-padding-bottom";
-
-    if(this.props.fill) { row_class_name += " full-screen"; }
-    if(this.props.isScrollOverflow) { row_style['overflowX'] = "scroll"; }
-    if(this.props.height) { row_style['height'] = this.props.height; }
-
-    return (
-      <div className={ row_class_name } style={ row_style }>
-          {this.props.children}
-      </div>
-    );
+    if(typeof this.props.color == "undefined" && typeof this.props.src == "undefined") {
+      console.log("EXCEPTION: No color or source set for background so resorting to a " + this.state.DEFAULT_COLOR + " background");
+      this.state.class += " " + this.state.DEFAULT_COLOR;
+    }
   }
 
 }

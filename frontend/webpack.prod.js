@@ -82,10 +82,11 @@ module.exports = {
   entry: {
     HomePage: entryPointsPathPrefix + '/HomePage.jsx',
     Documentation: entryPointsPathPrefix + '/Documentation.jsx',
-    Dashboard: entryPointsPathPrefix + '/dashboard.jsx',
+    AboutPage: entryPointsPathPrefix + '/AboutPage.jsx',
+    Dashboard: entryPointsPathPrefix + '/Dashboard.jsx',
     Marketplace: entryPointsPathPrefix + '/Marketplace.jsx',
-    Authorise: entryPointsPathPrefix + '/authorise.jsx',
-    Appsettings: entryPointsPathPrefix + '/appsettings.jsx',
+    Authorise: entryPointsPathPrefix + '/Authorise.jsx',
+    AppSettings: entryPointsPathPrefix + '/AppSettings.jsx',
     vendors: ['react'],
   },
   output: {

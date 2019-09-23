@@ -58,20 +58,20 @@ class Marketplace extends React.Component {
           <NavBar isScroll={"true"} />
 
           <Row src={market} height="600px" color="ucl-orange" img_size="auto 60%">         
-            <Column style="2-3" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
+            <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
               <TextView text={"Apps to improve student life at UCL"} heading={2} align={"center"}/>
             </Column>
           </Row>
 
-          <Row isPadded={true} color="dark-grey">         
-            <Column style="2-3" isCentered={true} isCenteredText={true}>
+          <Row color="dark-grey">         
+            <Column width="2-3" horizontalAlignment="center">
                <TextView text={"Featured App"} heading={2} align={"left"} />
                <TextView text={"Our favourite usage of the API"} heading={5} align={"left"} />
                { this.state.featuredApps.map((app, i) => {
                   return (
                     <CardView key={"featured-app-"+i} width={"1-1"} style={"emphasis"} link={"/marketplace/" + app.id} addPadding={true}>
-                      <Column style="1-2" isCentered={true}>
+                      <Column width="1-2" horizontalAlignment="center">
                         <ImageView src={app.logo} width={iconsize} height={iconsize} />
                         <TextView text={app.name} heading={2} align={"center"} color={"white"}/>
                         <TextView text={app.description} heading={5} align={"center"} color={"white"}/>
@@ -79,10 +79,8 @@ class Marketplace extends React.Component {
                     </CardView>
                   );
                })}
-            </Column>
-          </Row>
-          <Row isPaddedBottom={true} color="dark-grey">         
-            <Column style="2-3" isCentered={true} isCenteredText={true}>
+            </Column>     
+            <Column width="2-3" horizontalAlignment="center">
                <TextView text={"All Apps"} heading={2} align={"left"} />
                <TextView text={"Every app made using the API"} heading={5} align={"left"} />
                { this.state.appsToRender.map((app, i) => {
@@ -91,7 +89,7 @@ class Marketplace extends React.Component {
 
                   return (
                     <CardView key={"all-apps-"+i} width={"1-2"} style={"alternate"} link={"/marketplace/" + app.id} addPadding={true}>
-                      <Column style="9-10" isCentered={true}>
+                      <Column width="9-10" horizontalAlignment="center">
                         <ImageView src={app.logo} width={iconsize} height={iconsize} />
                         <TextView text={app.name} heading={2} align={"center"} color={"black"}/>
                         <TextView text={app.description} heading={5} align={"center"} color={"black"}/>
@@ -129,53 +127,49 @@ class AppPage extends React.Component {
 
     return (
       <React.Fragment>
-
+]
           <NavBar isScroll={"true"} />
 
           <Row src={market} height="600px" color="ucl-orange" img_size="auto 60%">         
-            <Column style="2-3" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
+            <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
               <TextView text={"Apps to improve student life at UCL"} heading={2} align={"center"}/>
             </Column>
           </Row>
 
-          <Row isPaddedTop={true} color="dark-grey" height={"100px"}>         
-            <Column style="2-3" isCenteredText={true} isCentered={true}>
-              <Column style="0" minWidth={iconsize} isInline={"grid"} isCenteredText={true}
-                 padding={"2% 0"} position={"relative"} float={"left"}>
-                <ButtonView src={arrow} width={iconsize} height={iconsize} isCircular={true} isInline={"block"} 
-                  buttonType={"image"} text={"back-to-marketplace"} link={"/marketplace"} margin={"0"} />
+          <Row color="dark-grey" height="100px">      
+            <Column width="2-3" horizontalAlignment="center">
+              <Column width="fit-content" minWidth={iconsize} typeOfInline="grid" horizontalAlignment="left">
+                <ButtonView src={arrow} width={iconsize} height={iconsize} isCircular={true} isInline="block" 
+                  buttonType="image" text="back-to-marketplace" link="/marketplace" margin="0" />
               </Column>
             </Column>
           </Row>
 
-          <Row isPaddedBottom={true} color="dark-grey" height={"100px"}>         
-            <Column style="2-3" isCenteredText={true} isCentered={true}>
-              <Column style="0" minWidth={"iconsize"} isInline={"grid"} isCenteredText={true}
-                 padding={"2% 0"} position={"relative"} float={"left"} margin={"0 50px 0 0"}>
+          <Row color="dark-grey" height="100px">   
+            <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
+              <Column width="fit-content" minWidth={iconsize} typeOfInline="grid" horizontalAlignment="left">
                 <ImageView src={this.state.app.logo} width={iconsize} height={iconsize} 
                   description={this.state.app.name  + "logo"} isCentered={true} margin={"0 auto 0 0"}/>
               </Column>
-              <Column style="1-4" minWidth={iconsize} isInline={"grid"} isCenteredText={true} 
-                padding={"3% 0"} position={"relative"} float={"left"}>
+              <Column width="fit-content" minWidth={iconsize} typeOfInline="grid" horizontalAlignment="left">
                <TextView text={this.state.app.name} heading={2} align={"left"} />
                <TextView text={this.state.app.description} heading={5} align={"left"} />
               </Column>
             </Column>
           </Row>
-          <Row isPaddedBottom={true} color="dark-grey">         
-            <Column style="2-3" isCentered={true} isCenteredItems={true}>
+          <Row color="dark-grey">         
+            <Column width="2-3" horizontalAlignment="center">
               {this.state.app.screenshots.map((img, i) => ( 
-                <CardView width={"fit-content"} minWidth={"small"} cardType={"wrap-around"} 
-                  height={screenshotheight} padding={"0px 50px 0px 0px"}>
+                <CardView width="fit-content" minWidth="300px" style={"wrap-around"} height={screenshotheight} horizontalAlignment="left">
                   <ImageView src={img} width={screenshotwidth} height={screenshotheight}
                     description={this.state.app.name  + " screenshot number " + i} isCentered={true} />
                 </CardView>
                 ) ) }
             </Column>
           </Row>
-          <Row isPaddedBottom={true} color="dark-grey">         
-            <Column style="2-3" isCentered={true}>
+          <Row color="dark-grey">         
+            <Column width="2-3" horizontalAlignment="center">
               {this.state.app.detailedDescription}
               <ButtonView isCentered={true} buttonType={"alternate"} text={"DOWNLOAD LINK"} link={this.state.app.androidLink} />
             </Column>

@@ -75,7 +75,7 @@ export default class Column extends React.Component {
   setHorizontalAlignment() {
    switch(this.props.horizontalAlignment) {
       case "left":
-        // Stub needs implementing
+        this.state.style['float'] = 'left';
       break;
 
       case "center":
@@ -83,13 +83,13 @@ export default class Column extends React.Component {
       break;
 
       case "right":
-        // Stub needs implementing
+        this.state.style['float'] = 'right';
       break;
     } 
   }
 
   getColumnWidth() {
-    if(typeof this.props.width == "undefined") {console.exception("EXCEPTION: no width set for column so setting column width to 0"); return 0;}
+    if(typeof this.props.width == "undefined") {console.log("EXCEPTION: no width set for column so setting column width to 0"); return 0;}
 
     var buffer = this.props.width.split("-")
 
@@ -97,7 +97,7 @@ export default class Column extends React.Component {
     var fraction = buffer[0] / buffer[1]
 
     var paddingSpace = 0;
-    if(this.props.TypeOfInline) { paddingSpace = this.state.HORIZONTAL_PADDING * numberOfColumns; }
+    if(this.props.typeOfInline) { paddingSpace = this.state.HORIZONTAL_PADDING * numberOfColumns; }
 
     var spaceForColumns = 100 - paddingSpace
 
@@ -108,8 +108,8 @@ export default class Column extends React.Component {
   setColumnWidthAndPadding() {
     this.state.style['width'] = this.getColumnWidth();
 
-    if(this.props.TypeOfInline) {
-      this.state.style['display'] = "inline-" + this.props.TypeOfInline; 
+    if(this.props.typeOfInline) {
+      this.state.style['display'] = "inline-" + this.props.typeOfInline; 
       this.state.style['padding'] = "2%";
     }
   }

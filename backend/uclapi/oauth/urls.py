@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     url(r'myapps/shibcallback$', views.myapps_shibboleth_callback),
-	url(r'myapps', views.my_apps),
+	url(r'myapps$', views.my_apps),
     url(r'authorise/$', views.authorise),
     url(r'shibcallback', views.shibcallback),
     url(r'token$', views.token),

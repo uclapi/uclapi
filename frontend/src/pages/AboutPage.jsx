@@ -17,15 +17,15 @@ import 'Styles/common/uclapi.scss';
 import 'Styles/navbar.scss';
 
 const member = (info) => (
-    <CardView width={"1-3"} minWidth={"540px"} style={"alternate"} link={info.github}>
-      <Column style="1-1">
+    <CardView width="1-3" minWidth="540px" style="alternate" link={info.github}>
+      <Column width="1-1">
         <Row height = "400px" src={info.image}>
-          <Column style="1-1" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
+          <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
               <TextView text={info.name} heading={1} align={"center"}/>
           </Column>
         </Row> 
         <Row height = "140px" color="transparent">
-          <Column style="1-1" isCentered={true} isCenteredText={true} isVerticalAlign={true}>
+          <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
               <TextView text={info.title} heading={6} align={"center"} color={"black"} />
               <TextView text={info.email} heading={6} align={"center"} color={"black"} />
               <TextView text={`${info.startYear} - ${info.endYear}`} heading={6} align={"center"} color={"black"} />
@@ -52,7 +52,7 @@ class AboutPage extends React.Component {
           <NavBar isScroll={"false"}/>
 
           <Row height = "600px" src={splash_screen}>         
-            <Column style="2-3" isCentered={true} isVerticalAlign={true} isCenteredText={true}>
+            <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <TextView text={"The Team"} heading={1} align={"center"}/>
               <TextView text={`UCL API is a student led project founded by Wilhelm Klopp that opens up the massive amount of
                               data collected by UCL and allows UCL students and staff access to develop with it.`} 
@@ -60,24 +60,20 @@ class AboutPage extends React.Component {
             </Column>
           </Row>
 
-          <Row isPadded = {true} color="dark-grey">         
-            <Column style="9-10" isCentered={true} >
+          <Row color="dark-grey">         
+            <Column width="9-10" horizontalAlignment="center">
               <TextView text={"Current Team"} heading={1} align={"center"}/>
             </Column>
-          </Row>
-          <Row isPaddedBottom={true} color="dark-grey">
-            <Column style="2-3" widthOverride="auto" isCentered={true} isCenteredText={true}>
+            <Column width="2-3" horizontalAlignment="center">
               {current.map(x =>  member(x) )}
             </Column>
           </Row>
 
-          <Row isPadded = {true} color="ucl-orange">         
-            <Column style="9-10" isCentered={true} >
+          <Row color="ucl-orange">         
+            <Column width="9-10" horizontalAlignment="center">
               <TextView text={"Previous developers"} heading={1} align={"center"}/>
             </Column>
-          </Row>
-          <Row isPaddedBottom={true} color="ucl-orange">
-            <Column style="2-3" widthOverride="auto" isCentered={true} isCenteredText={true}>
+            <Column width="2-3" horizontalAlignment="center">
               {previous.map(x => member(x) )}
             </Column>
           </Row>

@@ -2,7 +2,7 @@ import React from 'react';
 
 /**
 REQUIRED ATTRIBUTES:
-this.props.width - e.g 8-10 = 80% 
+this.props.width - e.g 8-10 = 80% (Also can take fit-content)
 
 OPTIONAL ATTRIBUTES:
 this,props.style - e.g default (dark grey) / alternate (light grey) / emphasis (orange) / fit-content (no padding or margin for inner content)
@@ -18,6 +18,7 @@ export default class CardView extends React.Component {
     // ALLOWS FOR ANY DEBUGGING
     this.state = {
       DEBUGGING : false,
+      DEFAULT_WIDTH: 0,
       style: [],
       class: 'uclapi-card uclapi-card-default'
     };
@@ -28,7 +29,7 @@ export default class CardView extends React.Component {
     this.getStyle = this.getStyle.bind(this);
     this.setupStyle = this.setupStyle.bind(this);
   }
-  
+
   setupStyle() {
     // REQUIRED ATTRIBUTES
     // STYLE
@@ -46,9 +47,9 @@ export default class CardView extends React.Component {
   }
 
   render() {
-    if(this.DEBUGGING) { console.log("DEBUG: CardView rendered with the following styles: " + this.state.style " and class: " + this.state.class); }
+    if(this.DEBUGGING) { console.log("DEBUG: CardView rendered with the following styles: " + this.state.style + " and class: " + this.state.class); }
 
-    setupStyle();
+    this.setupStyle();
 
     // RENDER METHOD
     if(this.props.link) {
@@ -69,7 +70,9 @@ export default class CardView extends React.Component {
   }
 
   getWidth() {
-    if(typeof this.props.width == "undefined") {console.exception("EXCEPTION: no width set for card view so setting card view width to 0"); return 0;}
+    if(typeof this.props.width == "undefined") {console.exception("EXCEPTION: no width set for card view so setting card view width to " + DEFAULT_WIDTH); return DEFAULT_WIDTHz;}
+
+    if(this.props.width == "fit-content") { return "fit-content"; }
 
     var fraction = this.props.width.split("-");
     var adaptation = 100 - ( 4 * fraction[1] ); 
