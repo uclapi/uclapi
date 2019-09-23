@@ -13,10 +13,10 @@ params = {
 r = requests.get("https://uclapi.com/workspaces/surveys", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/workspaces/surveys \\
+    shell: `curl -G https://uclapi.com/workspaces/surveys \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb`,
 
-  javascript: `fetch("https://uclapi.com/workspaces/surveys?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
+    javascript: `fetch("https://uclapi.com/workspaces/surveys?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
 .then((response) => {
   return response.json()
 })
@@ -110,6 +110,9 @@ export default class WorkspacesGetSurveys extends React.Component {
                     <h2>Response</h2>
                     <p>
                         The surveys key contains a list of dictionaries, each of which corresponds to a library survey with seating sensors attached. Each survey has a number of maps, corresponding to the regions within the library, such as a different floor or wing.
+                    </p>
+                    <p>
+                        Note that the <code>location[address]</code> field will not always contain a precise address, and may simply contain the address to the UCL campus (i.e. Gower Street, London), which may not be helpful. If it is present, the <code>location[coordinates]</code> will generally be more precise.
                     </p>
                     <Table
                         name="Response">
