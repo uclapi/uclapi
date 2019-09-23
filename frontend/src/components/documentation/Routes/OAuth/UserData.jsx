@@ -85,7 +85,7 @@ export default class UserData extends React.Component {
               name="department"
               extra="string"
               example="Dept Of Computer Science"
-              description="Department the user belongs to." />
+              description="Department the user belongs to. Can be an empty string." />
             <Cell
               name="email"
               extra="string"
@@ -100,12 +100,12 @@ export default class UserData extends React.Component {
               name="full_name"
               extra="string"
               example="Martin Mrkvicka"
-              description="Full name of the user." />
+              description="Full name of the user. Can be an empty string." />
             <Cell
               name="department"
               extra="string"
               example="Dept Of Computer Science"
-              description="Department the user belongs to." />
+              description="Department the user belongs to. Can be an empty string." />
             <Cell
               name="cn"
               extra="string"
@@ -115,7 +115,7 @@ export default class UserData extends React.Component {
               name="given_name"
               extra="string"
               example="Martin"
-              description="Given first name of the user." />
+              description="Given first name of the user. Can be an empty string." />
             <Cell
               name="upi"
               extra="string"
