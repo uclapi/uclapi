@@ -55,8 +55,20 @@ class OccupEyeApi():
                 "active": strtobool(survey_data["active"]),
                 "start_time": survey_data["start_time"],
                 "end_time": survey_data["end_time"],
-                "staff_survey": strtobool(survey_data["staff_survey"])
-            }
+                "staff_survey": strtobool(survey_data["staff_survey"]),
+                "location": {
+                    "coordinates": {
+                        "lat": survey_data["lat"],
+                        "lng": survey_data["long"]
+                        },
+                    "address": [
+                        survey_data["address1"],
+                        survey_data["address2"],
+                        survey_data["address3"],
+                        survey_data["address4"]
+                        ]
+                    }
+                }
             # If we want to filter out staff surveys and this is a staff
             # one then we skip over it.
             if (
