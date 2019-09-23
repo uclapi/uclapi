@@ -160,7 +160,7 @@ def shibcallback(request):
 
     # TODO: Find a way to block access to alumni (do we need this?) without
     # blocking access to new students too.
-    if not groups and (department  == "Shibtests" or eppn == SHIB_TEST_USER):
+    if not groups and (department == "Shibtests" or eppn == SHIB_TEST_USER):
         groups = "shibtests"
 
     # If a user has never used the API before then we need to sign them up
