@@ -82,6 +82,10 @@ p, h1, h2, h3, h4, h5{
 	color: white;
 }
 
+h5 {
+	font-weight: normal
+}
+
 h1 {
 	font-size: 42px;
     font-weight: 700;
@@ -179,7 +183,7 @@ a:hover { color: #BBBBBB; }
 
 .uclapi-card {
 	display: inline-block;
-	border-radius: 5px;
+	border-radius: 10px;
 	height: auto;
 	overflow: hidden;
 	min-height: 200px;
@@ -187,6 +191,7 @@ a:hover { color: #BBBBBB; }
 }
 
 .uclapi-card-default {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 	background-color: #313537;
 }
 
@@ -199,10 +204,12 @@ a:hover { color: #BBBBBB; }
 }
 
 .uclapi-card-alternate {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 	background-color: #FFFFFF; 
 }
 
 .uclapi-card-emphasis {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 	background-color: #FC9685; 
 }
 

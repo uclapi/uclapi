@@ -151,7 +151,7 @@ class HomePage extends React.Component {
         </Row>
 
         <Row color="dark-grey">         
-          <Column width="2-3" horizontalAlignment="center" >
+          <Column width="7-10" horizontalAlignment="center" >
            <TextView text={"Our Goals"} heading={1} align={"center"}/>
 
            <CardView width="1-3" minWidth="300px" style="no-bg">
@@ -175,18 +175,13 @@ class HomePage extends React.Component {
                              cannot wait to see what you will develop!`} align={"justify"} heading={5}/>
             <ImageView src={heart} width={iconsize} height={iconsize} description={"an icon of a star"} isCentered={true} />
            </CardView>
-
-           <TextView align={"center"} text={"The UCL API Roadmap is public. Check it out and vote ✅"} align={"center"} heading = {3} link = {"https://trello.com/b/mimLkk3c/ucl-api-roadmap"}/>
           </Column>
         </Row>
 
-        <Row isPadded = {true} color="ucl-orange">         
-          <Column width="9-10" horizontalAlignment="center" verticalAlignment="center" >
-            <TextView text={"Get Started using our APIs"} heading={1} align={"center"}/>
-          </Column>
-        </Row>
-        <Row isPaddedBottom = {true} color="ucl-orange">
+        <Row color="ucl-orange">
           <Column width="2-3" horizontalAlignment="center">
+            <TextView text={"Get Started using our APIs"} heading={1} align={"center"}/>
+
             {endpoints.map(x => (
               <CardView width={"1-2"} minWidth={"300px"} link={x.link} >
                 <Row height = "200px">
@@ -209,7 +204,7 @@ class HomePage extends React.Component {
                 <Column width="1-1">
                   <Row height = "200px" src={x.image_url}>
                     <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
-                      <TextView text={x.title} align={"center"} heading = {3} color={"white"} link={x.url} />
+                      <TextView text={x.title} align={"center"} heading = {3} color={"white"} />
                     </Column>
                   </Row> 
                   <Row height = "200px" color="transparent">
