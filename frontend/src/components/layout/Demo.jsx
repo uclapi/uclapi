@@ -1,6 +1,6 @@
 import React from 'react';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import AutoComplete from 'material-ui/AutoComplete';
+import Autosuggest from 'react-autosuggest';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import {androidstudio} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -30,6 +30,32 @@ const muiTheme = getMuiTheme({
 import rooms from 'Layout/data/room_names.jsx';
 import {Column, Row, TextView, CodeView} from 'Layout/Items.jsx';
 
+// Teach Autosuggest how to calculate suggestions for any given input value.
+const getSuggestions = (value) => {
+  const inputValue = value.trim().toLowerCase();
+  const inputLength = inputValue.length;
+
+  var suggestions = inputLength === 0 ? [] : rooms.filter(room =>
+    room.toLowerCase().slice(0, inputLength) === inputValue
+  );
+
+  if(suggestions.length > 10) { suggestions.splice(10); }
+
+  return suggestions;
+};
+
+// When suggestion is clicked, Autosuggest needs to populate the input
+// based on the clicked suggestion. Teach Autosuggest how to calculate the
+// input value for every given suggestion.
+const getSuggestionValue = suggestion => suggestion.name;
+
+// Use your imagination to render suggestions.
+const renderSuggestion = suggestion => (
+  <div>
+    {suggestion.name}
+  </div>
+);
+
 export default class Demo extends React.Component {
 
   constructor(props) {
@@ -45,11 +71,49 @@ export default class Demo extends React.Component {
         "date": now.toISOString().substring(0, 10).replace(/-/g, ""),
         "results_per_page": "1"
       },
-      rootURL: rootURL
+      value: '',
+      suggestions: [],
+      rootURL: rootURL,
+      DEBUGGING: true
     };
 
     this.makeRequest = this.makeRequest.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onSuggestionSelected = this.onSuggestionSelected.bind(this);
+    this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this);
+    this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this);
+    
   }
+
+  onChange(event, newValue) {
+    if(this.state.DEBUGGING) { console.log("DEBUG: Autocomplete form changed input to: " + newValue); }
+
+    this.setState({
+      value: newValue
+    });
+  };
+
+  onSuggestionSelected(value) {
+    if(this.state.DEBUGGING) { console.log("DEBUG: Selected autocomplete value of: " + value); }
+    
+    makeRequest(value);
+  };
+
+  onSuggestionsFetchRequested(value) {
+    if(this.state.DEBUGGING) { console.log("DEBUG: Fetch suggestions for value of: " + value); }
+
+    this.setState({
+      suggestions: getSuggestions(value)
+    });
+  };
+
+  onSuggestionsClearRequested() {
+    if(this.state.DEBUGGING) { console.log("DEBUG: Auto complete suggestions cleared"); }
+
+    this.setState({
+      suggestions: []
+    });
+  };
 
   makeRequest(roomName) {
     let now = new Date();
@@ -78,13 +142,29 @@ export default class Demo extends React.Component {
   }
 
   render() {
+    const { value, suggestions } = this.state;
+
+    // Autosuggest will pass through all these props to the input.
+    const inputProps = {
+      placeholder: 'Type a room at UCL',
+      value,
+      onChange: this.onChange
+    };
+
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <Row color={"ucl-orange"} height={"fit-content"} isPaddedBottom={true}>
+        <Row color={"secondary"} height={"fit-content"} isPaddedBottom={true}>
           <Column width="2-3" horizontalAlignment="center">
             <TextView text={"Try out the API"} heading={1} align={"center"} />
-            <AutoComplete fullWidth={true} floatingLabelText="Room Name" filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true}
-             dataSource={rooms} onNewRequest={this.makeRequest}/>
+            <Autosuggest
+              suggestions={suggestions}
+              onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+              onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+              onSuggestionSelected={this.onSuggestionSelected}
+              getSuggestionValue={getSuggestionValue}
+              renderSuggestion={renderSuggestion}
+              inputProps={inputProps}
+            />
           </Column>
           
           <Column width="2-3" horizontalAlignment="center">
@@ -105,7 +185,7 @@ export default class Demo extends React.Component {
             </div>
           ) : (
             <Column width="2-3" horizontalAlignment="center">
-              <TextView text={"select a room above to query for room bookings"} heading={5} align={"center"} fontStyle={"italic"}/>
+              <TextView text={"select a room above to query for room bookings"} heading={3} align={"center"} fontStyle={"italic"}/>
             </Column>
           )}
         </Row>

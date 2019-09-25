@@ -57,14 +57,14 @@ class Marketplace extends React.Component {
 
           <NavBar isScroll={"true"} />
 
-          <Row src={market} height="600px" color="ucl-orange" img_size="auto 60%">         
+          <Row src={market} height="600px" color="primary" img_size="auto 60%">         
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
               <TextView text={"Apps to improve student life at UCL"} heading={2} align={"center"}/>
             </Column>
           </Row>
 
-          <Row color="dark-grey">         
+          <Row color="secondary">         
             <Column width="2-3" horizontalAlignment="center">
                <TextView text={"Featured App"} heading={2} align={"left"} />
                <TextView text={"Our favourite usage of the API"} heading={5} align={"left"} />
@@ -130,14 +130,14 @@ class AppPage extends React.Component {
 ]
           <NavBar isScroll={"true"} />
 
-          <Row src={market} height="600px" color="ucl-orange" img_size="auto 60%">         
+          <Row src={market} height="600px" color="primary" img_size="auto 60%">         
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
               <TextView text={"Apps to improve student life at UCL"} heading={2} align={"center"}/>
             </Column>
           </Row>
 
-          <Row color="dark-grey" height="100px">      
+          <Row color="secondary" height="100px">      
             <Column width="2-3" horizontalAlignment="center">
               <Column width="fit-content" minWidth={iconsize} typeOfInline="grid" horizontalAlignment="left">
                 <ButtonView src={arrow} width={iconsize} height={iconsize} isCircular={true} isInline="block" 
@@ -146,7 +146,7 @@ class AppPage extends React.Component {
             </Column>
           </Row>
 
-          <Row color="dark-grey" height="100px">   
+          <Row color="secondary" height="100px">   
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <Column width="fit-content" minWidth={iconsize} typeOfInline="grid" horizontalAlignment="left">
                 <ImageView src={this.state.app.logo} width={iconsize} height={iconsize} 
@@ -158,7 +158,7 @@ class AppPage extends React.Component {
               </Column>
             </Column>
           </Row>
-          <Row color="dark-grey">         
+          <Row color="secondary">         
             <Column width="2-3" horizontalAlignment="center">
               {this.state.app.screenshots.map((img, i) => ( 
                 <CardView width="fit-content" minWidth="300px" style={"wrap-around"} height={screenshotheight} horizontalAlignment="left">
@@ -168,7 +168,7 @@ class AppPage extends React.Component {
                 ) ) }
             </Column>
           </Row>
-          <Row color="dark-grey">         
+          <Row color="secondary">         
             <Column width="2-3" horizontalAlignment="center">
               {this.state.app.detailedDescription}
               <ButtonView isCentered={true} buttonType={"alternate"} text={"DOWNLOAD LINK"} link={this.state.app.androidLink} />

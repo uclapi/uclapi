@@ -60,7 +60,7 @@ class AboutPage extends React.Component {
             </Column>
           </Row>
 
-          <Row color="dark-grey">         
+          <Row color="secondary">         
             <Column width="9-10" horizontalAlignment="center">
               <TextView text={"Current Team"} heading={1} align={"center"}/>
             </Column>
@@ -69,7 +69,7 @@ class AboutPage extends React.Component {
             </Column>
           </Row>
 
-          <Row color="ucl-orange">         
+          <Row color="primary">         
             <Column width="9-10" horizontalAlignment="center">
               <TextView text={"Previous developers"} heading={1} align={"center"}/>
             </Column>

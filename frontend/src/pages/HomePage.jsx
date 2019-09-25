@@ -150,7 +150,7 @@ class HomePage extends React.Component {
           </Column>
         </Row>
 
-        <Row color="dark-grey">         
+        <Row color="secondary">         
           <Column width="7-10" horizontalAlignment="center" >
            <TextView text={"Our Goals"} heading={1} align={"center"}/>
 
@@ -178,7 +178,7 @@ class HomePage extends React.Component {
           </Column>
         </Row>
 
-        <Row color="ucl-orange">
+        <Row color="primary">
           <Column width="2-3" horizontalAlignment="center">
             <TextView text={"Get Started using our APIs"} heading={1} align={"center"}/>
 
@@ -196,7 +196,7 @@ class HomePage extends React.Component {
 
         <Demo />
 
-        <Row isPadded={true} color="dark-grey">         
+        <Row isPadded={true} color="secondary">         
           <Column width="9-10" horizontalAlignment="center">
             <TextView text={"Check out our blog for tutorials"} heading={1} align={"center"}/>
             {this.state.articles.map(x => ( 
@@ -220,7 +220,7 @@ class HomePage extends React.Component {
           </Column>
         </Row>
 
-        <Row src={market} height="600px" img_size="auto 60%" color="ucl-orange">         
+        <Row src={market} height="600px" img_size="auto 60%" color="primary">         
           <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
             <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
             <TextView text={"Check out the UCL Marketplace to find apps built using UCL API"} heading={2} align={"center"}/>
@@ -228,7 +228,7 @@ class HomePage extends React.Component {
           </Column>
         </Row>
 
-        <Row isPadded={true} color="dark-grey">         
+        <Row isPadded={true} color="secondary">         
           <Column width="2-3" horizontalAlignment="center">
             <TextView text={"Frequently Asked Questions"} heading={1} align={"center"}/>
             {FAQ.map(x => ( 
