@@ -71,29 +71,82 @@ export default class Demo extends React.Component {
         "date": now.toISOString().substring(0, 10).replace(/-/g, ""),
         "results_per_page": "1"
       },
-      value: '',
-      suggestions: [],
+      __value: '',
+      __suggestions: [],
       rootURL: rootURL,
       DEBUGGING: true
     };
 
     this.makeRequest = this.makeRequest.bind(this);
     this.onChange = this.onChange.bind(this);
-    this.onSuggestionSelected = this.onSuggestionSelected.bind(this);
+    this.onSelect = this.onSelect.bind(this);
     this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this);
     this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this);
-    
   }
 
-  onChange(event, newValue) {
-    if(this.state.DEBUGGING) { console.log("DEBUG: Autocomplete form changed input to: " + newValue); }
+  render() {
+    const { __value, __suggestions } = this.state;
+
+    // Autosuggest will pass through all these props to the input.
+    const inputProps = {
+      placeholder: 'Type a room at UCL',
+      value: __value,
+      onChange: this.onChange
+    };
+
+    return (
+      <MuiThemeProvider muiTheme={muiTheme}>
+        <Row color={"primary"} height={"fit-content"} isPaddedBottom={true}>
+          <Column width="2-3" horizontalAlignment="center">
+            <TextView text={"Try out the API"} heading={1} align={"center"} />
+            <Autosuggest
+              suggestions={__suggestions}
+              getItemValue={ item => item.name }
+              onChange={ (event, value) => this.onChange(event, value) }
+              onSelect={ value => this.onSelect(value) }
+              onSuggestionsFetchRequested={ value => this.onSuggestionsFetchRequested(value) }
+              onSuggestionsClearRequested={ () => this.onSuggestionsClearRequested() }
+              getSuggestionValue={getSuggestionValue}
+              renderSuggestion={renderSuggestion}
+              inputProps={inputProps}
+            />
+          </Column>
+          
+          <Column width="2-3" horizontalAlignment="center">
+            <TextView text={"The request being made:"} heading={3} align={"left"}/>
+          </Column>
+          <Column width="2-3" horizontalAlignment="center">
+            <CodeView url={`${this.state.rootURL}/roombookings/bookings`} params={this.state.params} type={"request"}/>
+          </Column>
+
+          {this.state.response ? (
+            <div className="demo-response">
+              <Column width="2-3" horizontalAlignment="center">
+                <TextView text={"The response from the API:"} heading={3} align={"left"}/>
+              </Column>
+              <Column width="2-3" horizontalAlignment="center">
+                <CodeView response={this.state.response} type={"real-response"}/>
+              </Column>
+            </div>
+          ) : (
+            <Column width="2-3" horizontalAlignment="center">
+              <TextView text={"select a room above to query for room bookings"} heading={3} align={"center"} fontStyle={"italic"}/>
+            </Column>
+          )}
+        </Row>
+      </MuiThemeProvider>
+    );
+  }
+
+  onChange(event, value) {
+    if(this.state.DEBUGGING) { console.log("DEBUG: Autocomplete form changed input to: " + value); }
 
     this.setState({
-      value: newValue
+      __value: value
     });
   };
 
-  onSuggestionSelected(value) {
+  onSelect(value) {
     if(this.state.DEBUGGING) { console.log("DEBUG: Selected autocomplete value of: " + value); }
     
     makeRequest(value);
@@ -103,7 +156,7 @@ export default class Demo extends React.Component {
     if(this.state.DEBUGGING) { console.log("DEBUG: Fetch suggestions for value of: " + value); }
 
     this.setState({
-      suggestions: getSuggestions(value)
+      __suggestions: getSuggestions(value)
     });
   };
 
@@ -139,58 +192,6 @@ export default class Demo extends React.Component {
         response: JSON.stringify(data, null, 4)
       });
     });
-  }
-
-  render() {
-    const { value, suggestions } = this.state;
-
-    // Autosuggest will pass through all these props to the input.
-    const inputProps = {
-      placeholder: 'Type a room at UCL',
-      value,
-      onChange: this.onChange
-    };
-
-    return (
-      <MuiThemeProvider muiTheme={muiTheme}>
-        <Row color={"secondary"} height={"fit-content"} isPaddedBottom={true}>
-          <Column width="2-3" horizontalAlignment="center">
-            <TextView text={"Try out the API"} heading={1} align={"center"} />
-            <Autosuggest
-              suggestions={suggestions}
-              onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-              onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-              onSuggestionSelected={this.onSuggestionSelected}
-              getSuggestionValue={getSuggestionValue}
-              renderSuggestion={renderSuggestion}
-              inputProps={inputProps}
-            />
-          </Column>
-          
-          <Column width="2-3" horizontalAlignment="center">
-            <TextView text={"The request being made:"} heading={3} align={"left"}/>
-          </Column>
-          <Column width="2-3" horizontalAlignment="center">
-            <CodeView url={`${this.state.rootURL}/roombookings/bookings`} params={this.state.params} type={"request"}/>
-          </Column>
-
-          {this.state.response ? (
-            <div className="demo-response">
-              <Column width="2-3" horizontalAlignment="center">
-                <TextView text={"The response from the API:"} heading={3} align={"left"}/>
-              </Column>
-              <Column width="2-3" horizontalAlignment="center">
-                <CodeView response={this.state.response} type={"real-response"}/>
-              </Column>
-            </div>
-          ) : (
-            <Column width="2-3" horizontalAlignment="center">
-              <TextView text={"select a room above to query for room bookings"} heading={3} align={"center"} fontStyle={"italic"}/>
-            </Column>
-          )}
-        </Row>
-      </MuiThemeProvider>
-    )
   }
 
 }

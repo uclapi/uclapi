@@ -39,7 +39,7 @@ html, body {
 
 /** Color Scheme **/
 
-$primary-color: #3498db;
+$primary-color: #2980b9;
 $secondary-color: #313537;
 
 $accent-color: #8D6E63;
@@ -250,7 +250,7 @@ a:hover { color: #BBBBBB; }
   }
 
   > .rc-collapse-item-disabled > .rc-collapse-header {
-    background-color: ($primary-color)-2;
+    background-color: $primary-color;
     color: white;
     cursor: not-allowed;
   }
