@@ -15,27 +15,33 @@ export default class Column extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      UNSET_ERROR_WIDTH: "0px",
-      DEBUGGING: false,
-      HORIZONTAL_PADDING: 2 + 2,
-      style: [],
-      class: "column",
-      verticalAlignment: "no-vertical-align"
-    }
+    this.UNSET_ERROR_WIDTH = "0px";
+    this.DEBUGGING = false;
+    this.HORIZONTAL_PADDING = 2 + 2;
 
     this.getColumnWidth = this.getColumnWidth.bind(this);
     this.setColumnWidthAndPadding = this.setColumnWidthAndPadding.bind(this);
     this.setHorizontalAlignment = this.setHorizontalAlignment.bind(this);
     this.setVerticalAlignment = this.setVerticalAlignment.bind(this);
-    this.setupStyle = this.setupStyle.bind(this);
+    this.setStyleKeyValuePair = this.setStyleKeyValuePair.bind(this);
+    this.setTheme = this.setTheme.bind(this);
+
+    this.class = "column";
+    this.style = [];
+    this.verticalAlignment = "no-vertical-align";
+
+    this.setTheme();
+
+    this.state = {
+      class: this.class,
+      style: this.style,
+      verticalAlignment: this.verticalAlignment
+    };
   }
 
   render() {
-    this.setupStyle()
-
     return (
-      <div className= {this.state.verticalAlignment} >
+      <div className={this.state.verticalAlignment} >
         <div className={this.state.class} style={this.state.style} >
             {this.props.children}
         </div>
@@ -43,7 +49,12 @@ export default class Column extends React.Component {
     );
   }
 
-  setupStyle() {
+  setStyleKeyValuePair(key, value) {
+    this.style[key] = value;
+    if(this.DEBUGGING) { console.log("DEBUG: style updated to: " + this.style); }
+  }
+
+  setTheme() {
     // REQUIRED ATTRIBUTES
     // Set the width and padding of the column
     this.setColumnWidthAndPadding();
@@ -62,8 +73,8 @@ export default class Column extends React.Component {
       break;
 
       case "center":
-        this.state.verticalAlignment = 'vertical-align center-y';
-        this.state.style['height'] = '100%';
+        this.verticalAlignment = 'vertical-align center-y';
+        this.setStyleKeyValuePair("height", '100%');
       break;
 
       case "middle":
@@ -75,15 +86,15 @@ export default class Column extends React.Component {
   setHorizontalAlignment() {
    switch(this.props.horizontalAlignment) {
       case "left":
-        this.state.style['float'] = 'left';
+        this.setStyleKeyValuePair("float", 'left');
       break;
 
       case "center":
-        this.state.style['margin'] = 'auto';
+        this.setStyleKeyValuePair("margin", 'auto');
       break;
 
       case "right":
-        this.state.style['float'] = 'right';
+        this.setStyleKeyValuePair("float", 'right');
       break;
     } 
   }
@@ -94,10 +105,10 @@ export default class Column extends React.Component {
     var buffer = this.props.width.split("-")
 
     var numberOfColumns = buffer[1];
-    var fraction = buffer[0] / buffer[1]
+    var fraction = buffer[0] / buffer[1];
 
     var paddingSpace = 0;
-    if(this.props.typeOfInline) { paddingSpace = this.state.HORIZONTAL_PADDING * numberOfColumns; }
+    if(this.props.typeOfInline) { paddingSpace = this.HORIZONTAL_PADDING * numberOfColumns; }
 
     var spaceForColumns = 100 - paddingSpace
 
@@ -106,11 +117,11 @@ export default class Column extends React.Component {
   }
 
   setColumnWidthAndPadding() {
-    this.state.style['width'] = this.getColumnWidth();
+    this.setStyleKeyValuePair("width", this.getColumnWidth());
 
     if(this.props.typeOfInline) {
-      this.state.style['display'] = "inline-" + this.props.typeOfInline; 
-      this.state.style['padding'] = "2%";
+      this.setStyleKeyValuePair("display", "inline-" + this.props.typeOfInline);
+      this.setStyleKeyValuePair("padding", "2%");
     }
   }
 

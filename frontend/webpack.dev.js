@@ -13,9 +13,6 @@ module.exports = {
     minimizer: []  // This list is built below as per platform requirements
   },
   plugins: [
-    new UglifyJsPlugin({
-      sourceMap: true
-    }),
     new BundleTracker({
       filename: '../backend/uclapi/static/webpack-stats.json'
     })

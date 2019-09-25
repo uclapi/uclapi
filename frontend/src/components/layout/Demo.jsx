@@ -41,6 +41,8 @@ const getSuggestions = (value) => {
 
   if(suggestions.length > 10) { suggestions.splice(10); }
 
+  console.log("DEBUG: New suggestions found: " + suggestions);
+
   return suggestions;
 };
 
@@ -51,13 +53,14 @@ const getSuggestionValue = suggestion => suggestion.name;
 
 // Use your imagination to render suggestions.
 const renderSuggestion = suggestion => (
-  <div>
-    {suggestion.name}
-  </div>
+  <Row color="secondary" height="0">         
+    <CardView width="9-10" link={"no-action"}>
+      <TextView align={"center"} text={suggestion} heading = {5}/>
+    </CardView>
+  </Row>
 );
 
 export default class Demo extends React.Component {
-
   constructor(props) {
     super(props);
 
@@ -79,7 +82,6 @@ export default class Demo extends React.Component {
 
     this.makeRequest = this.makeRequest.bind(this);
     this.onChange = this.onChange.bind(this);
-    this.onSelect = this.onSelect.bind(this);
     this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this);
     this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this);
   }
@@ -101,11 +103,8 @@ export default class Demo extends React.Component {
             <TextView text={"Try out the API"} heading={1} align={"center"} />
             <Autosuggest
               suggestions={__suggestions}
-              getItemValue={ item => item.name }
-              onChange={ (event, value) => this.onChange(event, value) }
-              onSelect={ value => this.onSelect(value) }
-              onSuggestionsFetchRequested={ value => this.onSuggestionsFetchRequested(value) }
-              onSuggestionsClearRequested={ () => this.onSuggestionsClearRequested() }
+              onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+              
               getSuggestionValue={getSuggestionValue}
               renderSuggestion={renderSuggestion}
               inputProps={inputProps}
@@ -131,21 +130,17 @@ export default class Demo extends React.Component {
     );
   }
 
-  onChange(event, value) {
-    if(this.state.DEBUGGING) { console.log("DEBUG: Autocomplete form changed input to: " + value); }
+  onChange = (event, { newValue }) => {
+    if(this.state.DEBUGGING) { console.log("DEBUG: Autocomplete form changed input to: " + newValue); }
 
     this.setState({
-      __value: value
+      __value: newValue
     });
   };
 
-  onSelect(value) {
-    if(this.state.DEBUGGING) { console.log("DEBUG: Selected autocomplete value of: " + value); }
-    
-    makeRequest(value);
-  };
-
-  onSuggestionsFetchRequested(value) {
+  // Autosuggest will call this function every time you need to update suggestions.
+  // You already implemented this logic above, so just use it.
+  onSuggestionsFetchRequested = ({ value }) => {
     if(this.state.DEBUGGING) { console.log("DEBUG: Fetch suggestions for value of: " + value); }
 
     this.setState({
@@ -153,12 +148,15 @@ export default class Demo extends React.Component {
     });
   };
 
-  onSuggestionsClearRequested() {
-    if(this.state.DEBUGGING) { console.log("DEBUG: Auto complete suggestions cleared"); }
+  // Autosuggest will call this function every time you need to clear suggestions.
+  onSuggestionsClearRequested = () => {
+    if(this.state.DEBUGGING) { console.log("DEBUG: Cleared suggestions for Autocomplete"); }
 
-    this.setState({
-      suggestions: []
-    });
+    if(!this.state.DEBUGGING) {
+      this.setState({
+        __suggestions: []
+      });
+    }
   };
 
   makeRequest(roomName) {

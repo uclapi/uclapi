@@ -6,7 +6,7 @@ this.props.width - e.g 8-10 = 80% (Also can take fit-content)
 
 OPTIONAL ATTRIBUTES:
 this,props.style - e.g default (dark grey) / alternate (light grey) / emphasis (orange) / fit-content (no padding or margin for inner content)
-this.props.link (default is not clickable)
+this.props.link (default is not clickable) => "no-action" enables hover but does not reroute
 this.props.minWidth - e.g 300px a minimum width (default is unset)
 this.props.addPadding - if true adds a 20px padding (default is false)
 **/
@@ -51,8 +51,10 @@ export default class CardView extends React.Component {
 
     this.setupStyle();
 
+    var doesLinkRoute = (typeof this.props.link != "undefined") && (this.props.link != "no-action");
+
     // RENDER METHOD
-    if(this.props.link) {
+    if(doesLinkRoute) {
       return (
           <a href = {this.props.link}>
             <div className={this.state.class} style={this.state.style}>
