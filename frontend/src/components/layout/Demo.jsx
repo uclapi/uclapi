@@ -96,7 +96,7 @@ export default class Demo extends React.Component {
 
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <Row color={"primary"} height={"fit-content"} isPaddedBottom={true}>
+        <Row color={"secondary"} height={"fit-content"} isPaddedBottom={true}>
           <Column width="2-3" horizontalAlignment="center">
             <TextView text={"Try out the API"} heading={1} align={"center"} />
             <Autosuggest
@@ -113,9 +113,6 @@ export default class Demo extends React.Component {
           </Column>
           
           <Column width="2-3" horizontalAlignment="center">
-            <TextView text={"The request being made:"} heading={3} align={"left"}/>
-          </Column>
-          <Column width="2-3" horizontalAlignment="center">
             <CodeView url={`${this.state.rootURL}/roombookings/bookings`} params={this.state.params} type={"request"}/>
           </Column>
 
@@ -128,11 +125,7 @@ export default class Demo extends React.Component {
                 <CodeView response={this.state.response} type={"real-response"}/>
               </Column>
             </div>
-          ) : (
-            <Column width="2-3" horizontalAlignment="center">
-              <TextView text={"select a room above to query for room bookings"} heading={3} align={"center"} fontStyle={"italic"}/>
-            </Column>
-          )}
+          ) : null }
         </Row>
       </MuiThemeProvider>
     );
