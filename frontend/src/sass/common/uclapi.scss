@@ -50,7 +50,7 @@ $highlight-color: #B18453;
 
 /** Row Colours **/
 
-.primary { 
+.splash-parallax { 
   background-image: url("http://anush.me/splash_screen.png");
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4); 
   
@@ -64,7 +64,22 @@ $highlight-color: #B18453;
   background-size: cover;
 }
 
+.team-parallax { 
+  background-image: url("http://anush.me/teambg.jpg");
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4); 
+  
+  /* Full height */
+  height: 100%; 
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 .primary-highlight { background-color: $primary-highlight-color }
+.primary { background-color: $primary-color }
 
 .secondary { background-color: $secondary-color;}
 .warning-red { background-color: red; }
@@ -208,7 +223,7 @@ a:hover { color: #BBBBBB; }
 }
 
 .uclapi-card-alternate {
-	background-color: #FFFFFF; 
+  background-color: #FFFFFF;
 }
 
 .uclapi-card-emphasis {

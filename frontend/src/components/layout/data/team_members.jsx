@@ -86,7 +86,7 @@ export const current = [
       "name": "Huey",
       "startYear": "2019",
       "endYear": "present",
-      "title": "Senior React Developer",
+      "title": "Legal Counsel",
       "email": "huey.lee.18@ucl.ac.uk",
       "github": "https://github.com/hueyy",
       "image": huey
@@ -104,7 +104,7 @@ export const current = [
       "name": "Anush",
       "startYear": "2019",
       "endYear": "present",
-      "title": "Medic",
+      "title": "First Aid + Design Enthusiast",
       "email": "anush.shashidhara.15@ucl.ac.uk",
       "github": "https://github.com/anushhks",
       "image": anush

@@ -17,22 +17,20 @@ import 'Styles/common/uclapi.scss';
 import 'Styles/navbar.scss';
 
 const member = (info) => (
-    <CardView width="1-3" minWidth="540px" style="alternate" link={info.github}>
-      <Column width="1-1">
-        <Row height = "400px" src={info.image}>
+    <CardView width="1-6" minWidth="120px" style="alternate" link={info.github}>
+      <Row color="primary">
+      <Column width="1-1" horizontalAlignment="center">
+        <TextView text={info.name} heading={2} align={"center"} color={"white"}/>
+        <Row height = "100px" src={info.image}></Row>
+        <Row height = "50px" color="primary">
           <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
-              <TextView text={info.name} heading={1} align={"center"}/>
-          </Column>
-        </Row> 
-        <Row height = "140px" color="transparent">
-          <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
-              <TextView text={info.title} heading={6} align={"center"} color={"black"} />
-              <TextView text={info.email} heading={6} align={"center"} color={"black"} />
-              <TextView text={`${info.startYear} - ${info.endYear}`} heading={6} align={"center"} color={"black"} />
-              <TextView text="View GitHub" heading={6} align="center" link={info.github} color={"black"} />
+              <TextView text={info.title} heading={6} align={"center"} color={"white"} />
+              <TextView text={info.email} heading={6} align={"center"} color={"white"} />
+              <TextView text="Find out more" heading={6} align="center" link={info.github} color={"white"} />
           </Column>
         </Row>
       </Column>
+      </Row>
     </CardView>
 );
 
@@ -51,7 +49,7 @@ class AboutPage extends React.Component {
         <React.Fragment>
           <NavBar isScroll={"false"}/>
 
-          <Row height = "600px" src={splash_screen}>         
+          <Row height = "600px" color="team-parallax">         
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <TextView text={"The Team"} heading={1} align={"center"}/>
               <TextView text={`UCL API is a student led project founded by Wilhelm Klopp that opens up the massive amount of
@@ -64,16 +62,16 @@ class AboutPage extends React.Component {
             <Column width="9-10" horizontalAlignment="center">
               <TextView text={"Current Team"} heading={1} align={"center"}/>
             </Column>
-            <Column width="2-3" horizontalAlignment="center">
+            <Column width="1-1" horizontalAlignment="center">
               {current.map(x =>  member(x) )}
             </Column>
           </Row>
 
-          <Row color="primary">         
+          <Row color="team-parallax">         
             <Column width="9-10" horizontalAlignment="center">
               <TextView text={"Previous developers"} heading={1} align={"center"}/>
             </Column>
-            <Column width="2-3" horizontalAlignment="center">
+            <Column width="1-1" horizontalAlignment="center">
               {previous.map(x => member(x) )}
             </Column>
           </Row>

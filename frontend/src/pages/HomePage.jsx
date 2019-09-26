@@ -118,7 +118,7 @@ class HomePage extends React.Component {
           </Row>
         )}
 
-        <Row height = "600px" color="primary">         
+        <Row height = "600px" color="splash-parallax">         
           <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
             <TextView text={"UCL API"} heading={1} align={"center"}/>
             <TextView text={"UCL API is a student-built platform for student developers to improve the student experience of everyone at UCL."} heading={2} align={"center"}/>
@@ -155,7 +155,7 @@ class HomePage extends React.Component {
           </Column>
         </Row>
 
-        <Row color="primary">
+        <Row color="splash-parallax">
           <Column width="2-3" horizontalAlignment="center">
             <TextView text={"Get Started using our APIs"} heading={1} align={"center"}/>
 
@@ -173,7 +173,7 @@ class HomePage extends React.Component {
 
         <Demo />
 
-        <Row isPadded={true} color="primary">         
+        <Row isPadded={true} color="splash-parallax">         
           <Column width="9-10" horizontalAlignment="center">
             <TextView text={"Check out our blog for tutorials"} heading={1} align={"center"}/>
             {this.state.articles.map(x => ( 
@@ -205,7 +205,7 @@ class HomePage extends React.Component {
           </Column>
         </Row>
 
-        <Row isPadded={true} color="primary">         
+        <Row isPadded={true} color="splash-parallax">         
           <Column width="2-3" horizontalAlignment="center">
             <TextView text={"Frequently Asked Questions"} heading={1} align={"center"}/>
             {FAQ.map(x => ( 
