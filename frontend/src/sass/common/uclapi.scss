@@ -40,7 +40,7 @@ html, body {
 
 /** Color Scheme **/
 
-$primary-color: #2980b9;
+$primary-color: #296da7;
 $primary-highlight-color: #3498db;
 
 $secondary-color: #313537;
@@ -105,8 +105,8 @@ h1 {
 a{ color: white; text-decoration-color: white; }
 a:hover { color: #BBBBBB; }
 
-.alt-text { color: #313537; text-decoration-color: #313537; }
-.alt-text:hover { color: #75797B; }
+.alt-text { color: $primary-color; text-decoration-color: #313537; }
+.alt-text:hover { color: $primary-highlight-color; }
 
 /** Alignments **/
 
@@ -237,11 +237,12 @@ a:hover { color: #BBBBBB; }
 /** RC Collapse **/
 
 .rc-collapse {
-  background-color: $primary-highlight-color;
+  background-color: $secondary-color;
   border-radius: 10px;
   margin: 5px 0;
   color: white;
   font-size: 28px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 
   @media screen and (max-width: $break-small) {
     font-size: 18px;
@@ -257,6 +258,8 @@ a:hover { color: #BBBBBB; }
       outline: 0;
       padding: 10px 0 10px 16px;
       cursor: pointer;
+      font-weight: 600;
+      font-size: 20px;
 
       .arrow {
         border-bottom: 1px solid transparent;
@@ -304,13 +307,15 @@ a:hover { color: #BBBBBB; }
 
   > .rc-collapse-content-box {
     margin-bottom: 16px;
-    margin-top: 16px;
+    border-top: 1px dotted rgba(255, 255, 255, 0.455);
   }
 }
 
 .rc-collapse-content p {
     color: white;
-    font-size: 20px;
+    font-size: 14px;
+    text-align: justify;
+    margin-top:10px;
 }
 
 

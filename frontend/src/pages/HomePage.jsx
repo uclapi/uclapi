@@ -32,29 +32,19 @@ let linkclass = "alt-text color-transition default-transition";
 let FAQ = [
     {
       'question': `What is UCL API?`,
-      'answer': (<p>UCL API is a platform for interacting with data that is usually difficult 
+      'answer': (<React.Fragment><p>UCL API is a platform for interacting with data that is usually difficult 
       to obtain or hidden in internal UCL systems. The aim is to enable student developers 
       to develop tools for other UCL students to enrich their lives at UCL. Almost every 
-      API returns JSON which is simple to parse and interpret in most modern programming languages.</p>)
-    },
-    {
-      'question': `Who is running this?`,
-      'answer': (<p>UCL API is a student-built platform, backed and supported by UCL's 
+      API returns JSON which is simple to parse and interpret in most modern programming languages.</p>
+      <p>It is student-built platform, backed and supported by UCL's 
       <a className={linkclass} href="https://www.ucl.ac.uk/isd/"> Information Services Division (ISD) </a> 
       This means that all of the features in UCL API have been developed by students 
-      and are aimed at students such as yourself, so jump right in!</p>)
+      and are aimed at students such as yourself, so jump right in!</p></React.Fragment>)
     },
     {
       'question': `Do I need to be from UCL to use the UCL API?`,
       'answer': (<p>You need to be affiliated with UCL because authentication (for both
        developers & end users) is done via the UCL login system.</p>)
-    },
-    {
-      'question': `Do I need to write my apps in a particular programming language?`,
-      'answer': (<p>UCL API is a RESTful API hence you can use any language you like. Our
-       <a className={linkclass} href='/docs'> docs  </a> currently includes instructions on how to get up
-        and running with Javascript, Python and the Unix shell using cURL. However,
-         you may use any other programming language so long as it can make HTTP requests.</p>)
     },
     {
       'question': `How do I get involved?`,
@@ -70,19 +60,6 @@ let FAQ = [
     {
       'question': `Does this cost anything?`,
       'answer': `UCL API is and always will be completely free to use.`
-    },
-    {
-      'question': `What have other people built?`,
-      'answer': (<p>From small Computer Science projects, to running lecture theatre
-       central heating systems right up to UCL Assistant, UCL API is being used across
-        UCL for many projects public and private. A full list of all (known!) applications
-         available to the UCL community can be found at the <a className={linkclass} href="/marketplace">Marketplace.</a></p>)
-    },
-    {
-      'question': `How can I get in touch?`,
-      'answer': (<p>If you have any other queries get in touch with us on <a className={linkclass} href="https://www.facebook.com/uclapi/">
-       Facebook </a> or <a className={linkclass} href="https://twitter.com/uclapi"> Twitter </a>.  We also
-       respond to emails to <a className={linkclass} href="mailto:isd.apiteam@ucl.ac.uk"> isd.apiteam@ucl.ac.uk </a>.</p>)
     },
     {
       'question': `Who owns the Intellectual Property (IP) of what I build?`,
@@ -184,7 +161,7 @@ class HomePage extends React.Component {
 
             {endpoints.map(x => (
               <CardView width={"1-2"} minWidth={"300px"} link={x.link}>
-                <Row height = "200px">
+                <Row height = "100px">
                   <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
                     <TextView text={x.name} heading={2} align={"center"}/>
                     <TextView text={x.description} heading={5} align={"center"}/>
@@ -200,18 +177,17 @@ class HomePage extends React.Component {
           <Column width="9-10" horizontalAlignment="center">
             <TextView text={"Check out our blog for tutorials"} heading={1} align={"center"}/>
             {this.state.articles.map(x => ( 
-              <CardView width="1-3" minWidth="350px" style="alternate" link={x.url}>
+              <CardView width="1-3" minWidth="350px" style="default" link={x.url}>
                 <Column width="1-1">
                   <Row height = "200px" src={x.image_url}>
                     <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
                       <TextView text={x.title} align={"center"} heading = {3} color={"white"} />
                     </Column>
                   </Row> 
-                  <Row height = "200px" color="transparent">
+                  <Row color="transparent">
                     <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
-                      <TextView text={"Created by: " + x.creator} align={"center"} heading = {6} color={"black"} />
-                      <TextView text={"Date published: " + x.published} align={"center"} heading = {6} color={"black"} />
-                      <TextView text={x.tags} align={"center"} heading = {6} color={"black"} />
+                      <TextView text={x.creator} align={"center"} heading = {6} color={"white"} />
+                      <TextView text={x.published.substring(0,16)} align={"center"} heading = {6} color={"white"} />
                     </Column>
                   </Row>
                 </Column>
