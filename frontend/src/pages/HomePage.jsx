@@ -141,7 +141,7 @@ class HomePage extends React.Component {
           </Row>
         )}
 
-        <Row height = "600px" src={splash_screen}>         
+        <Row height = "600px" color="primary">         
           <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
             <TextView text={"UCL API"} heading={1} align={"center"}/>
             <TextView text={"UCL API is a student-built platform for student developers to improve the student experience of everyone at UCL."} heading={2} align={"center"}/>

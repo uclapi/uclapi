@@ -8,12 +8,11 @@ import ButtonView from './views/ButtonView.jsx';
 import CardView from './views/CardView.jsx';
 import ImageView from './views/ImageView.jsx';
 import CodeView from './views/CodeView.jsx';
+import AutoCompleteView from './views/AutoCompleteView.jsx';
+// Custom UCL API Components
 import Demo from './Demo.jsx';
-<<<<<<< master
-=======
 import NavBar from './NavBar.jsx';
 import Footer from './Footer.jsx';
->>>>>>> HEAD~58
 
 export {
     Row,
@@ -23,11 +22,8 @@ export {
     CardView,
     ImageView, 
     CodeView,
-<<<<<<< master
-    Demo
-=======
     Demo, 
     NavBar, 
-    Footer
->>>>>>> HEAD~58
+    Footer, 
+    AutoCompleteView
 }
