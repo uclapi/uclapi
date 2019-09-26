@@ -220,11 +220,12 @@ class HomePage extends React.Component {
           </Column>
         </Row>
 
-        <Row src={market} height="600px" img_size="auto 60%" color="secondary">         
+        <Row src={market} height="400px" img_size="auto 70%" color="secondary">         
+          <Column width="2-3" horizontalAlignment="center">
+            <TextView text="UCL API App Marketplace" heading={1} align={"center"}/>
+          </Column>
           <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
-            <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
-            <TextView text={"Check out the UCL Marketplace to find apps built using UCL API"} heading={2} align={"center"}/>
-            <ButtonView inline={true} text={"UCL MARKETPLACE"} link={"/marketplace"}/>
+            <ButtonView inline={true} buttonType="alternate" text="UCL MARKETPLACE" link="/marketplace"/>
           </Column>
         </Row>
 
