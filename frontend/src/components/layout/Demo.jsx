@@ -28,7 +28,7 @@ const muiTheme = getMuiTheme({
 
 // Required components
 import rooms from 'Layout/data/room_names.jsx';
-import {Column, Row, TextView, CodeView} from 'Layout/Items.jsx';
+import {Column, Row, TextView, CodeView, CardView} from 'Layout/Items.jsx';
 
 // Teach Autosuggest how to calculate suggestions for any given input value.
 const getSuggestions = (value) => {
@@ -51,12 +51,19 @@ const getSuggestions = (value) => {
 // input value for every given suggestion.
 const getSuggestionValue = suggestion => suggestion.name;
 
+const row_size = 40;
 // Use your imagination to render suggestions.
 const renderSuggestion = suggestion => (
-  <Row color="secondary" height="0">         
-    <CardView width="9-10" link={"no-action"}>
-      <TextView align={"center"} text={suggestion} heading = {5}/>
-    </CardView>
+   <Row color="secondary" height={row_size + "px"} noPadding>         
+    <Column width="9-10" horizontalAlignment="center" verticalAlignment="center">
+      <CardView width="9-10" style="default-no-shadow" link="no-action">
+        <Row height = {(row_size-12) + "px"} noPadding>
+          <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
+              <TextView align="center" text={suggestion} heading={6}/>
+          </Column>
+        </Row>
+      </CardView>
+    </Column>
   </Row>
 );
 

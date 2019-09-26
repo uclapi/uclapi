@@ -5,7 +5,7 @@ REQUIRED ATTRIBUTES:
 this.props.width - e.g 8-10 = 80% (Also can take fit-content)
 
 OPTIONAL ATTRIBUTES:
-this,props.style - e.g default (dark grey) / alternate (light grey) / emphasis (orange) / fit-content (no padding or margin for inner content)
+this,props.style - e.g default (dark grey) / default-no-shadow (dark grey no shadow) / alternate (light grey) / emphasis (orange) / fit-content (no padding or margin for inner content)
 this.props.link (default is not clickable) => "no-action" enables hover but does not reroute
 this.props.minWidth - e.g 300px a minimum width (default is unset)
 this.props.addPadding - if true adds a 20px padding (default is false)
@@ -15,41 +15,28 @@ export default class CardView extends React.Component {
   constructor(props) {
     super(props);
 
-    // ALLOWS FOR ANY DEBUGGING
-    this.state = {
-      DEBUGGING : false,
-      DEFAULT_WIDTH: 0,
-      style: [],
-      class: 'uclapi-card uclapi-card-default'
-    };
+    this.DEFAULT_WIDTH = 0;
+    this.DEBUGGING = false;
 
-    // BINDS FUNCTIONS
     this.getWidth = this.getWidth.bind(this);
     this.getMinWidth = this.getMinWidth.bind(this);
     this.getStyle = this.getStyle.bind(this);
-    this.setupStyle = this.setupStyle.bind(this);
-  }
+    this.setStyleKeyValuePair = this.setStyleKeyValuePair.bind(this);
+    this.setTheme = this.setTheme.bind(this);
 
-  setupStyle() {
-    // REQUIRED ATTRIBUTES
-    // STYLE
-    this.state.class = "uclapi-card uclapi-card-"+this.getStyle();
-    // WIDTH
-    this.state.style['width'] = this.getWidth();
-    // MIN WIDTH
-    this.state.style['minWidth'] = this.getMinWidth();
+    this.style = [];
+    this.class = 'uclapi-card';
 
-    // OPTIONAL ATTRIBUTES
-    // LINK
-    if(this.props.link) { this.state.class += " default-transition background-color-transition clickable uclapi-card-clicked-"+this.getStyle(); }
-    // ADD PADDING
-    if(this.props.addPadding) { this.state.style['padding'] = "20px 0"; }
+    this.setTheme();
+
+    this.state = {
+      style: this.style,
+      class: this.class
+    };
   }
 
   render() {
     if(this.DEBUGGING) { console.log("DEBUG: CardView rendered with the following styles: " + this.state.style + " and class: " + this.state.class); }
-
-    this.setupStyle();
 
     var doesLinkRoute = (typeof this.props.link != "undefined") && (this.props.link != "no-action");
 
@@ -69,6 +56,27 @@ export default class CardView extends React.Component {
           </div>
       );
     }
+  }
+
+  setTheme() {
+    // REQUIRED ATTRIBUTES
+    // STYLE
+    this.class += " uclapi-card-"+this.getStyle();
+    // WIDTH
+    this.setStyleKeyValuePair("width", this.getWidth());
+    // MIN WIDTH
+    this.setStyleKeyValuePair("minWidth", this.getMinWidth());
+
+    // OPTIONAL ATTRIBUTES
+    // LINK
+    if(this.props.link) { this.class += " default-transition background-color-transition clickable uclapi-card-clicked-"+this.getStyle(); }
+    // ADD PADDING
+    if(this.props.addPadding) { this.setStyleKeyValuePair("padding","20px 0"); }
+  }
+
+  setStyleKeyValuePair(key, value) {
+    this.style[key] = value;
+    if(this.DEBUGGING) { console.log("DEBUG: style updated to: " + this.style); }
   }
 
   getWidth() {
