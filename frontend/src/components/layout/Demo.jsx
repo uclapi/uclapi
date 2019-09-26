@@ -32,8 +32,13 @@ import {Column, Row, TextView, CodeView, CardView} from 'Layout/Items.jsx';
 
 // Teach Autosuggest how to calculate suggestions for any given input value.
 const getSuggestions = (value) => {
-  const inputValue = value.trim().toLowerCase();
-  const inputLength = inputValue.length;
+  var inputValue = "a"; var inputLength = 1; 
+  if( typeof value != "undefined") {
+    inputValue = value.trim().toLowerCase();
+    inputLength = inputValue.length;
+  }
+
+  console.log("DEBUG: Suggestions looked for with: " + inputValue + " of length: " + inputLength);
 
   var suggestions = inputLength === 0 ? [] : rooms.filter(room =>
     room.toLowerCase().slice(0, inputLength) === inputValue
@@ -54,9 +59,9 @@ const getSuggestionValue = suggestion => suggestion.name;
 const row_size = 40;
 // Use your imagination to render suggestions.
 const renderSuggestion = suggestion => (
-   <Row color="secondary" height={row_size + "px"} noPadding>         
+   <Row color="primary-highlight" height={row_size + "px"} noPadding>         
     <Column width="9-10" horizontalAlignment="center" verticalAlignment="center">
-      <CardView width="9-10" style="default-no-shadow" link="no-action">
+      <CardView width="9-10" style="emphasis" fakeLink noShadow>
         <Row height = {(row_size-12) + "px"} noPadding>
           <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
               <TextView align="center" text={suggestion} heading={6}/>
@@ -89,6 +94,7 @@ export default class Demo extends React.Component {
 
     this.makeRequest = this.makeRequest.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.onSuggestionSelected = this.onSuggestionSelected.bind(this);
     this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this);
     this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this);
   }
@@ -108,16 +114,19 @@ export default class Demo extends React.Component {
         <Row color={"secondary"} height={"fit-content"} isPaddedBottom={true}>
           <Column width="2-3" horizontalAlignment="center">
             <TextView text={"Try out the API"} heading={1} align={"center"} />
-            <Autosuggest
-              suggestions={__suggestions}
-              onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-              
-              getSuggestionValue={getSuggestionValue}
-              renderSuggestion={renderSuggestion}
-              inputProps={inputProps}
-            />
+              <Autosuggest
+                suggestions={__suggestions}
+                onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                onSuggestionSelected={this.getSuggestionValue}
+                getSuggestionValue={getSuggestionValue}
+                renderSuggestion={renderSuggestion}
+                inputProps={inputProps}
+              />
           </Column>
           
+          <Row height="20px" noPadding/>
+
           <Column width="2-3" horizontalAlignment="center">
             <CodeView url={`${this.state.rootURL}/roombookings/bookings`} params={this.state.params} type={"request"}/>
           </Column>
@@ -135,6 +144,16 @@ export default class Demo extends React.Component {
         </Row>
       </MuiThemeProvider>
     );
+  }
+
+  onSuggestionSelected = ({ value }) => {
+    if(this.state.DEBUGGING) { console.log("DEBUG: Suggestions clicked with a value of: " + value); }
+
+    makeRequest(value);
+
+    this.setState({
+      __value: newValue
+    });
   }
 
   onChange = (event, { newValue }) => {

@@ -41,6 +41,8 @@ html, body {
 /** Color Scheme **/
 
 $primary-color: #2980b9;
+$primary-highlight-color: #3498db;
+
 $secondary-color: #313537;
 
 $accent-color: #8D6E63;
@@ -61,6 +63,8 @@ $highlight-color: #B18453;
   background-repeat: no-repeat;
   background-size: cover;
 }
+
+.primary-highlight { background-color: $primary-highlight-color }
 
 .secondary { background-color: $secondary-color;}
 .warning-red { background-color: red; }
@@ -163,13 +167,13 @@ a:hover { color: #BBBBBB; }
 .circular-button { border-radius: 25%; }
 
 .default-button { background-color: #313537; color: white; }
-.default-button:hover, .uclapi-card-clicked-default:hover, .uclapi-card-clicked-default-no-shadow:hover { background-color: #75797B;  }
+.default-button:hover, .uclapi-card-clicked-default:hover { background-color: #75797B;  }
 
 .alternate-button { background-color: #FFFFFF; color: black; }
 .alternate-button:hover, .uclapi-card-clicked-alternate:hover { background-color: #CCCCCC;  }
 
-.emphasis-button, .image-button { background-color: #FC9685; color: black; }
-.emphasis-button:hover, .uclapi-card-clicked-emphasis:hover, .image-button:hover { background-color: #C95241;  }
+.emphasis-button, .image-button { background-color: $primary-highlight-color; color: black; }
+.emphasis-button:hover, .uclapi-card-clicked-emphasis:hover, .image-button:hover { background-color: $primary-color;  }
 
 /** Transitions **/
 
@@ -188,15 +192,10 @@ a:hover { color: #BBBBBB; }
 	height: auto;
 	overflow: hidden;
 	min-height: fit-content;
-	margin: 0 2%;
-}
-
-.uclapi-card-default-no-shadow {
-  background-color: #313537;
+	margin: 2%;
 }
 
 .uclapi-card-default {
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 	background-color: #313537;
 }
 
@@ -209,13 +208,15 @@ a:hover { color: #BBBBBB; }
 }
 
 .uclapi-card-alternate {
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 	background-color: #FFFFFF; 
 }
 
 .uclapi-card-emphasis {
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-	background-color: #FC9685; 
+	background-color: $primary-highlight-color; 
+}
+
+.uclapi-card-shadow {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .clickable {
@@ -236,7 +237,7 @@ a:hover { color: #BBBBBB; }
 /** RC Collapse **/
 
 .rc-collapse {
-  background-color: #3498db;
+  background-color: $primary-highlight-color;
   border-radius: 10px;
   margin: 5px 0;
   color: white;
@@ -324,14 +325,20 @@ a:hover { color: #BBBBBB; }
 
 input {
   padding: 2%;
-  border-radius: 10px;
   border: none;
   float: left;
   margin: 0;
   width: 96%;
-  background-color: $secondary-color;
+  background-color: $primary-highlight-color;
   color: white;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+input::placeholder { 
+  color: white;
+}
+
+input:focus{
+    outline: none;
 }
 /** For Autocomplete forms **/
 

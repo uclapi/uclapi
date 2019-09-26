@@ -183,7 +183,7 @@ class HomePage extends React.Component {
             <TextView text={"Get Started using our APIs"} heading={1} align={"center"}/>
 
             {endpoints.map(x => (
-              <CardView width={"1-2"} minWidth={"300px"} link={x.link} >
+              <CardView width={"1-2"} minWidth={"300px"} link={x.link}>
                 <Row height = "200px">
                   <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
                     <TextView text={x.name} heading={2} align={"center"}/>

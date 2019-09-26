@@ -9,6 +9,8 @@ this,props.style - e.g default (dark grey) / default-no-shadow (dark grey no sha
 this.props.link (default is not clickable) => "no-action" enables hover but does not reroute
 this.props.minWidth - e.g 300px a minimum width (default is unset)
 this.props.addPadding - if true adds a 20px padding (default is false)
+this.props.noShadow - disables box shadow
+this.props.fakeLink - same behaviour as a link
 **/
 export default class CardView extends React.Component {
 
@@ -38,7 +40,7 @@ export default class CardView extends React.Component {
   render() {
     if(this.DEBUGGING) { console.log("DEBUG: CardView rendered with the following styles: " + this.state.style + " and class: " + this.state.class); }
 
-    var doesLinkRoute = (typeof this.props.link != "undefined") && (this.props.link != "no-action");
+    var doesLinkRoute = (typeof this.props.link != "undefined") && (typeof this.props.fakeLink != "undefined");
 
     // RENDER METHOD
     if(doesLinkRoute) {
@@ -69,9 +71,11 @@ export default class CardView extends React.Component {
 
     // OPTIONAL ATTRIBUTES
     // LINK
-    if(this.props.link) { this.class += " default-transition background-color-transition clickable uclapi-card-clicked-"+this.getStyle(); }
+    if(this.props.link || this.props.fakeLink) { this.class += " default-transition background-color-transition clickable uclapi-card-clicked-"+this.getStyle(); }
     // ADD PADDING
     if(this.props.addPadding) { this.setStyleKeyValuePair("padding","20px 0"); }
+    // ADD SHADOW AS DEFAULT
+    if(typeof this.props.noShadow === "undefined" && this.getStyle() != "no-bg") { this.class += " uclapi-card-shadow"}
   }
 
   setStyleKeyValuePair(key, value) {
