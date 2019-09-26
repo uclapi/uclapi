@@ -27,10 +27,12 @@
 
 /** Setup **/
 
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
+
 $break-small: 780px;
 
 html, button, input, select, textarea {
-	font-family: 'Roboto', sans-serif;
+	font-family: 'Source Sans Pro','Roboto', sans-serif;
 }
 
 html, body {
@@ -89,7 +91,7 @@ $highlight-color: #B18453;
 /** Text **/
 
 p, h1, h2, h3, h4, h5, h6 {
-	font-family: 'Roboto', sans-serif;
+	font-family: 'Source Sans Pro', 'Roboto', sans-serif;
 	color: white;
 }
 
