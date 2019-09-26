@@ -67,14 +67,9 @@ export default class Demo extends React.Component {
           </Column>
 
           {this.state.response ? (
-            <div className="demo-response">
-              <Column width="2-3" horizontalAlignment="center">
-                <TextView text={"The response from the API:"} heading={3} align={"left"}/>
-              </Column>
-              <Column width="2-3" horizontalAlignment="center">
-                <CodeView response={this.state.response} type={"real-response"}/>
-              </Column>
-            </div>
+            <Column width="2-3" horizontalAlignment="center">
+              <CodeView response={this.state.response} type={"real-response"}/>
+            </Column>
           ) : null }
         </Row>
       </MuiThemeProvider>

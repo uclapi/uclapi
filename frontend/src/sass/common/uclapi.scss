@@ -22,6 +22,7 @@
 	- RC-Collapse
   - Input Forms
   - Auto complete forms
+  - Code View
 
 **/
 
@@ -374,4 +375,36 @@ li {
     margin: 0;
     float: left;
     width: 100%;
+}
+
+/** Code View styling **/
+
+pre {
+  margin: 0;
+}
+
+.react-tabs__tab-panel {
+  display: inline-block;
+}
+
+.react-tabs__tab-list li {
+  cursor: pointer;
+  background-color: $primary-highlight-color;
+  color: white;
+  list-style-type: none;
+  margin: 0;
+  float: left;
+  width: 100%;
+  display: inline-block;
+  width: fit-content;
+  padding: 10px 50px;
+  margin-right: 5px;
+  transition-duration: 200ms;
+  transition-timing-function: linear;
+  transition-property: background-color;
+}
+
+.react-tabs__tab-list li:hover,
+.react-tabs__tab-list li:active {
+  background-color: $primary-color;
 }

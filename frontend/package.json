@@ -37,6 +37,7 @@
     "react-pose": "^4.0.9",
     "react-router-dom": "^5.1.2",
     "react-syntax-highlighter": "^11.0.2",
+    "react-tabs": "^3.0.0",
     "react-transition-group": "^4.3.0",
     "whatwg-fetch": "^3.0.0"
   },

@@ -2,31 +2,10 @@
 import React from 'react'; 
 
 // DEPENDENCIES
-import {Tabs, Tab} from 'material-ui/Tabs';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import {androidstudio} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import 'whatwg-fetch';
-
-// Material UI Styling
-import {cyan500, cyan700,
-  pinkA200,
-  grey100, grey300, grey400, grey500,
-  white, darkBlack, fullBlack,
-} from 'material-ui/styles/colors';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
-const muiTheme = getMuiTheme({
-  fontFamily: 'Roboto, sans-serif',
-  palette: {
-    primary1Color: "#434343",
-    primary3Color: grey100,
-    accent1Color: pinkA200,
-    textColor: white,
-    alternateTextColor: white,
-    canvasColor: "#434343",
-  },
-});
 
 // Common Components 
 import {Column, TextView} from 'Layout/Items.jsx'
@@ -56,19 +35,22 @@ export default class CodeView extends React.Component {
     if(this.props.type == "real-response") {languages = this.getResponse(this.props.response);}
 
     return (
-      <MuiThemeProvider muiTheme={muiTheme}>
-          <Column width="1-1">
-            <Tabs>
+        <Column width="1-1">
+          <Tabs>
+            <TabList>
               {languages.map((language, index) => (
-                <Tab key={index} label={language.name}>
-                  <div>
+                <Tab>{language.name}</Tab>
+              ))}
+            </TabList>
+              {languages.map((language, index) => (
+                <TabPanel>
+                  <div className="default-transition background-color-transition" style={ {"text-align" : "left"} }>
                     <SyntaxHighlighter language={language.name} style={androidstudio}>{language.code}</SyntaxHighlighter>
                   </div>
-                </Tab>
+                </TabPanel>
               ))}
-            </Tabs>
-          </Column>
-      </MuiThemeProvider>
+          </Tabs>
+        </Column>
     );
   }
 
