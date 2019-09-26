@@ -1,6 +1,5 @@
 const os = require('os');
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const BundleTracker = require('webpack-bundle-tracker');
 
 var entryPointsPathPrefix = './src/pages';
@@ -63,19 +62,3 @@ module.exports = {
     filename: '[name].js'
   }
 };
-if (os.platform == "linux" && os.release().indexOf("Microsoft") != -1) {
-  module.exports.optimization.minimizer.push(
-    new UglifyJsPlugin({
-      cache: true,
-      sourceMap: true
-    })
-  );
-} else {
-  module.exports.optimization.minimizer.push(
-    new UglifyJsPlugin({
-      cache: true,
-      sourceMap: true,
-      parallel: true
-    })
-  );
-}
