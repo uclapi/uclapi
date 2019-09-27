@@ -17,18 +17,18 @@ import 'Styles/common/uclapi.scss';
 import 'Styles/navbar.scss';
 
 const member = (info) => (
-    <CardView width="1-6" minWidth="120px" style="alternate" link={info.github}>
-      <Row color="primary">
-      <Column width="1-1" horizontalAlignment="center">
-        <TextView text={info.name} heading={2} align={"center"} color={"white"}/>
-        <Row height = "100px" src={info.image}></Row>
-        <Row height = "50px" color="primary">
-          <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
-              <TextView text={info.title} heading={6} align={"center"} color={"white"} />
-              <TextView text="Find out more" heading={6} align="center" link={info.github} color={"white"} />
-          </Column>
-        </Row>
-      </Column>
+    <CardView width="1-6" minWidth="120px" style="emphasis" link={info.github}>
+      <Row>
+        <Column width="1-1" horizontalAlignment="center">
+          <TextView text={info.name} heading={2} align={"center"} color={"white"}/>
+          <Row height = "100px" src={info.image}></Row>
+          <Row height = "50px">
+            <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
+                <TextView text={info.title} heading={6} align={"center"} color={"white"} />
+                <TextView text="Click to find out more" heading={6} align="center" link={info.github} color={"white"} />
+            </Column>
+          </Row>
+        </Column>
       </Row>
     </CardView>
 );
