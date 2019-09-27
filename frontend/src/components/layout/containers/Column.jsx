@@ -69,7 +69,7 @@ export default class Column extends React.Component {
   setVerticalAlignment() {
     switch(this.props.verticalAlignment) {
       case "top":
-        // Stub needs implementing 
+        // Stub needs implementing
       break;
 
       case "center":
@@ -77,8 +77,8 @@ export default class Column extends React.Component {
         this.setStyleKeyValuePair("height", '100%');
       break;
 
-      case "middle":
-        // Stub needs implementing
+      case "bottom":
+        this.verticalAlignment = 'vertical-align bottom-y';
       break;
     }
   }
