@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import posed from 'react-pose';
 
 const Bounce = posed.div({
-  up: { marginTop: "-3px" },
-  down: { marginTop: "3px" }
+  up: { marginTop: "-15px" },
+  down: { marginTop: "0px" }
 });
 
 class Link extends React.Component {

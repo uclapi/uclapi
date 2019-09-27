@@ -61,7 +61,7 @@ $navbarHeight: 60px;
     width: 16px;
     height: 16px;
     transition-property: margin-top;
-    transition-timing-function: linear;
+    transition-timing-function: ease-in-out;
     transition-duration: 0.2s;
 }
 .link-to-page { 
