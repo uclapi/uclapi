@@ -196,7 +196,7 @@ class HomePage extends React.Component {
           </Column>
         </Row>
 
-        <Row src={market} height="550px" img_size="auto 70%" color="secondary">         
+        <Row src={market} height="375px" img_size="auto 55%" color="secondary">         
           <Column width="2-3" horizontalAlignment="center">
             <TextView text="Check out what other people made!" heading={1} align={"center"}/>
           </Column>

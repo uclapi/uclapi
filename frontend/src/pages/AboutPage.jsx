@@ -25,7 +25,7 @@ const member = (info) => (
           <Row height = "50px">
             <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
                 <TextView text={info.title} heading={6} align={"center"} color={"white"} />
-                <TextView text="Click to find out more" heading={6} align="center" link={info.github} color={"white"} />
+                <TextView text="Click to find out more" heading={6} align="center" color={"white"} />
             </Column>
           </Row>
         </Column>
