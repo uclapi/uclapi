@@ -384,12 +384,12 @@ pre {
 }
 
 .react-tabs__tab-panel {
-  display: inline-block;
+  display: flex;
+  width: 100%;
 }
 
 .react-tabs__tab-list li {
   cursor: pointer;
-  background-color: $primary-highlight-color;
   color: white;
   list-style-type: none;
   margin: 0;
@@ -404,7 +404,14 @@ pre {
   transition-property: background-color;
 }
 
-.react-tabs__tab-list li:hover,
-.react-tabs__tab-list li:active {
+.unselected-tab {
+  background-color: $primary-highlight-color;
+}
+
+.selected-tab {
+  background-color: $primary-color;
+}
+
+.react-tabs__tab-list li:hover {
   background-color: $primary-color;
 }

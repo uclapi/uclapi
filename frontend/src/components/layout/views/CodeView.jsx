@@ -17,6 +17,12 @@ export default class CodeView extends React.Component {
   constructor(props) {
     super(props);
 
+    this.DEBUGGING = true;
+
+    this.state = {
+      tabIndex: 0,
+    }
+
     this.getResponse = this.getResponse.bind(this);
   }
 
@@ -34,17 +40,21 @@ export default class CodeView extends React.Component {
     if(this.props.type == "request") {languages = RequestGenerator.getRequest(this.props.url, this.props.params, true);}
     if(this.props.type == "real-response") {languages = this.getResponse(this.props.response);}
 
+    if(this.DEBUGGING) { console.log("DEBUG: currently selected tab is: " + this.state.tabIndex); }
+
     return (
         <Column width="1-1">
-          <Tabs>
+          <Tabs selectedIndex={this.state.tabIndex} onSelect={tabIndex => this.setState({ tabIndex })}>
             <TabList>
               {languages.map((language, index) => (
-                <Tab>{language.name}</Tab>
+                <Tab className={index==this.state.tabIndex ? 'selected-tab' : 'unselected-tab'}>
+                  {language.name}
+                </Tab>
               ))}
             </TabList>
               {languages.map((language, index) => (
                 <TabPanel>
-                  <div className="default-transition background-color-transition" style={ {"text-align" : "left"} }>
+                  <div className="default-transition background-color-transition" style={ {"textAlign" : "left"} }>
                     <SyntaxHighlighter language={language.name} style={androidstudio}>{language.code}</SyntaxHighlighter>
                   </div>
                 </TabPanel>
