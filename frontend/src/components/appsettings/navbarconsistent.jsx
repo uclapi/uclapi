@@ -23,9 +23,14 @@ let links = [
 	// 	src: "settings", 
 	// },
 	{
+		name: "about",
+		link: "/about",
+		src: "about",
+	},
+	{
 		name: "documentation",
 		link: "/docs",
-		src: "contract",
+		src: "docs",
 	},
 	{
 		name: "dashboard",
@@ -35,7 +40,7 @@ let links = [
 	{
 		name: "marketplace",
 		link: "/marketplace",
-		src: "store",
+		src: "market",
 	},
 ]
 const maxScreen = 770;
