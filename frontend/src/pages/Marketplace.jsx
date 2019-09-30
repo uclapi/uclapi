@@ -173,7 +173,17 @@ class AppPage extends React.Component {
           <Row color="secondary">         
             <Column width="2-3" horizontalAlignment="center" textAlign="left">
               {this.state.app.detailedDescription}
-              <ButtonView isCentered={true} buttonType={"alternate"} text={"DOWNLOAD LINK"} link={this.state.app.androidLink} />
+            </Column>
+          </Row>
+          <Row color="splash-parallax">         
+            <Column width="2-3" horizontalAlignment="center">
+              <CardView width={"1-2"} minWidth={"300px"} link={this.state.app.androidLink}>
+                <Row height = "75px">
+                  <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
+                    <TextView text="Download Link" heading={2} align={"center"}/>
+                  </Column>
+                </Row>
+              </CardView>
             </Column>
           </Row>
 
