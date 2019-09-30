@@ -82,20 +82,15 @@ export default class UserData extends React.Component {
             <Table
               name="Response">
             <Cell
-              name="department"
-              extra="string"
-              example="Dept Of Computer Science"
-              description="Department the user belongs to. Can be an empty string." />
+              name="ok"
+              extra="boolean"
+              example="true"
+              description="Returns if the query was successful." />
             <Cell
               name="email"
               extra="string"
               example="zcabmrk@ucl.ac.uk"
               description="E-mail for the given user." />
-            <Cell
-              name="ok"
-              extra="boolean"
-              example="true"
-              description="Returns if the query was successful." />
             <Cell
               name="full_name"
               extra="string"
@@ -109,8 +104,8 @@ export default class UserData extends React.Component {
             <Cell
               name="cn"
               extra="string"
-              example="."
-              description="No idea." />
+              example="zcabmrk"
+              description="UCL username of the given user." />
             <Cell
               name="given_name"
               extra="string"
