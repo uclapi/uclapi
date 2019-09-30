@@ -57,7 +57,7 @@ class Marketplace extends React.Component {
 
           <NavBar isScroll={"true"} />
 
-          <Row src={market} height="600px" color="primary" img_size="auto 60%">         
+          <Row height="600px" color="splash-parallax" img_size="auto 60%">         
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
               <TextView text={"Apps to improve student life at UCL"} heading={2} align={"center"}/>
@@ -79,7 +79,10 @@ class Marketplace extends React.Component {
                     </CardView>
                   );
                })}
-            </Column>     
+            </Column>    
+          </Row>
+
+          <Row color="splash-parallax">
             <Column width="2-3" horizontalAlignment="center">
                <TextView text={"All Apps"} heading={2} align={"left"} />
                <TextView text={"Every app made using the API"} heading={5} align={"left"} />
@@ -99,7 +102,7 @@ class Marketplace extends React.Component {
                })}
             </Column>
           </Row>
-
+          
           <Footer />
 
         </React.Fragment>
