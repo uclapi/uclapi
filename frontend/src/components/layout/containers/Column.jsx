@@ -8,6 +8,7 @@ OPTIONAL ATTRIBUTES:
 this.props.horizontalAlignment (left / center / right)
 this.props.verticalALignment (top / center / bottom) => Row Height must be set otherwise weird behaviour
 this.props.typeOfInline (default none: block / flex / grid) => `Not sure if useful with addition of transparent cards`
+this.props.textAlign (like the normal inline tag)
 
 **/
 export default class Column extends React.Component {
@@ -16,7 +17,7 @@ export default class Column extends React.Component {
     super(props);
 
     this.UNSET_ERROR_WIDTH = "0px";
-    this.DEBUGGING = false;
+    this.DEBUGGING = true;
     this.HORIZONTAL_PADDING = 2 + 2;
 
     this.getColumnWidth = this.getColumnWidth.bind(this);
@@ -51,7 +52,7 @@ export default class Column extends React.Component {
 
   setStyleKeyValuePair(key, value) {
     this.style[key] = value;
-    if(this.DEBUGGING) { console.log("DEBUG: style updated to: " + this.style); }
+    if(this.DEBUGGING) { console.log("DEBUG: " + key + " updated to: " + value); }
   }
 
   setTheme() {
@@ -64,6 +65,9 @@ export default class Column extends React.Component {
     if(this.props.horizontalAlignment) { this.setHorizontalAlignment() }
     // Handles vertical alignment
     if(this.props.verticalAlignment) { this.setVerticalAlignment() }
+    // Handles the text alignment
+    if(this.props.textAlign) { this.setStyleKeyValuePair('textAlign', this.props.textAlign); }
+
   }
 
   setVerticalAlignment() {

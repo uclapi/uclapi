@@ -57,7 +57,7 @@ class Marketplace extends React.Component {
 
           <NavBar isScroll={"true"} />
 
-          <Row height="600px" color="splash-parallax" img_size="auto 60%">         
+          <Row height="600px" color="splash-parallax">         
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
               <TextView text={"Apps to improve student life at UCL"} heading={2} align={"center"}/>
@@ -102,7 +102,7 @@ class Marketplace extends React.Component {
                })}
             </Column>
           </Row>
-          
+
           <Footer />
 
         </React.Fragment>
@@ -130,17 +130,16 @@ class AppPage extends React.Component {
 
     return (
       <React.Fragment>
-]
           <NavBar isScroll={"true"} />
 
-          <Row src={market} height="600px" color="primary" img_size="auto 60%">         
+          <Row height="600px" color="splash-parallax">         
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
               <TextView text={"Apps to improve student life at UCL"} heading={2} align={"center"}/>
             </Column>
           </Row>
 
-          <Row color="secondary" height="100px">      
+          <Row color="secondary" height="100px" noPadding>      
             <Column width="2-3" horizontalAlignment="center">
               <Column width="fit-content" minWidth={iconsize} typeOfInline="grid" horizontalAlignment="left">
                 <ButtonView src={arrow} width={iconsize} height={iconsize} isCircular={true} isInline="block" 
@@ -149,22 +148,22 @@ class AppPage extends React.Component {
             </Column>
           </Row>
 
-          <Row color="secondary" height="100px">   
+          <Row color="secondary" height="100px" noPadding>   
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <Column width="fit-content" minWidth={iconsize} typeOfInline="grid" horizontalAlignment="left">
                 <ImageView src={this.state.app.logo} width={iconsize} height={iconsize} 
                   description={this.state.app.name  + "logo"} isCentered={true} margin={"0 auto 0 0"}/>
               </Column>
-              <Column width="fit-content" minWidth={iconsize} typeOfInline="grid" horizontalAlignment="left">
-               <TextView text={this.state.app.name} heading={2} align={"left"} />
-               <TextView text={this.state.app.description} heading={5} align={"left"} />
+              <Column width="fit-content" minWidth={iconsize} typeOfInline="grid" horizontalAlignment="left" textAlign="left">
+               <TextView text={this.state.app.name} heading={2} />
+               <TextView text={this.state.app.description} heading={5} />
               </Column>
             </Column>
           </Row>
           <Row color="secondary">         
             <Column width="2-3" horizontalAlignment="center">
               {this.state.app.screenshots.map((img, i) => ( 
-                <CardView width="fit-content" minWidth="300px" style={"wrap-around"} height={screenshotheight} horizontalAlignment="left">
+                <CardView width="1-3" minWidth={screenshotwidth} style="no-bg">
                   <ImageView src={img} width={screenshotwidth} height={screenshotheight}
                     description={this.state.app.name  + " screenshot number " + i} isCentered={true} />
                 </CardView>
@@ -172,7 +171,7 @@ class AppPage extends React.Component {
             </Column>
           </Row>
           <Row color="secondary">         
-            <Column width="2-3" horizontalAlignment="center">
+            <Column width="2-3" horizontalAlignment="center" textAlign="left">
               {this.state.app.detailedDescription}
               <ButtonView isCentered={true} buttonType={"alternate"} text={"DOWNLOAD LINK"} link={this.state.app.androidLink} />
             </Column>

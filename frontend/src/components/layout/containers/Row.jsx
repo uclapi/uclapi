@@ -41,7 +41,7 @@ export default class Row extends React.Component {
 
   setStyleKeyValuePair(key, value) {
     this.style[key] = value;
-    if(this.DEBUGGING) { console.log("DEBUG: style updated to: " + this.style); }
+    if(this.DEBUGGING) { console.log("DEBUG: " + key + " updated to: " + value); }
   }
 
   setTheme() {

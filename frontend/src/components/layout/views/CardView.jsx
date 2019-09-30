@@ -40,7 +40,7 @@ export default class CardView extends React.Component {
   render() {
     if(this.DEBUGGING) { console.log("DEBUG: CardView rendered with the following styles: " + this.state.style + " and class: " + this.state.class); }
 
-    var doesLinkRoute = (typeof this.props.link != "undefined") && (typeof this.props.fakeLink != "undefined");
+    var doesLinkRoute = (typeof this.props.link != "undefined") && (typeof this.props.fakeLink == "undefined");
 
     // RENDER METHOD
     if(doesLinkRoute) {
