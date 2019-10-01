@@ -50,15 +50,15 @@ export default class Sidebar extends React.Component {
       <Drawer
         docked={true}
         open={true}>
-        <div style={styles.logo}>
-          <span className="sidebarLogo">
-            <img src={apiLogo}/>
-            UCL API
-          </span>
-        </div>
         <SelectableList
           value={location.pathname}
         >
+          <ListItem
+            href="#"
+            primaryText="TEMPORARY"
+            primaryTogglesNestedList={true}
+            nestedItems={[]}
+          />
           <ListItem
             href="#welcome"
             primaryText="Meta"

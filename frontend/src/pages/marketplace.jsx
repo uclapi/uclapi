@@ -55,7 +55,7 @@ class Marketplace extends React.Component {
       return (
         <React.Fragment>
 
-          <NavBar isScroll={"true"} />
+          <NavBar isScroll={false} />
 
           <Row height="600px" color="splash-parallax">         
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
@@ -130,7 +130,7 @@ class AppPage extends React.Component {
 
     return (
       <React.Fragment>
-          <NavBar isScroll={"true"} />
+          <NavBar isScroll={false} />
 
           <Row height="600px" color="splash-parallax">         
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">

@@ -46,7 +46,7 @@ class AboutPage extends React.Component {
   render () {
       return (
         <React.Fragment>
-          <NavBar isScroll={"false"}/>
+          <NavBar isScroll={false}/>
 
           <Row height = "600px" color="team-parallax">         
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
