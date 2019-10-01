@@ -133,19 +133,19 @@ class DashboardTestCase(TestCase):
 
     def test_get_agreement(self):
         res = self.client.get('/dashboard/')
-        self.assertTemplateUsed(res, "agreement.html")
+        self.assertTemplateUsed(res, "Agreement.html")
 
     def test_post_agreement(self):
         res = self.client.post('/dashboard/')
-        self.assertTemplateUsed(res, "agreement.html")
+        self.assertTemplateUsed(res, "Agreement.html")
         self.assertContains(res, "You must agree to the fair use policy")
 
         res = self.client.post('/dashboard/', {'agreement': 'some rubbish'})
-        self.assertTemplateUsed(res, "agreement.html")
-        self.assertContains(res, "You must agree to the fair use policy")
+        self.assertTemplateUsed(res, "Agreement.html")
+        self.assertContains(res, "You Aust agree to the fair use policy")
 
         res = self.client.post('/dashboard/', {'agreement': 'True'})
-        self.assertTemplateUsed(res, "dashboard.html")
+        self.assertTemplateUsed(res, "Dashboard.html")
         self.assertContains(res, "An App")
         self.assertContains(res, "Test testington")
 
