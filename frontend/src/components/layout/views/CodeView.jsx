@@ -11,7 +11,7 @@ import 'whatwg-fetch';
 import {Column, TextView} from 'Layout/Items.jsx'
 
 // Code Generator 
-import * as RequestGenerator from 'Layout/Data/RequestGenerator.jsx';
+import * as RequestGenerator from 'Layout/data/RequestGenerator.jsx';
 
 export default class CodeView extends React.Component {
   constructor(props) {
