@@ -4,6 +4,7 @@ import redis
 import xml.etree.ElementTree as ET
 from requests import get as rget
 
+
 class Command(BaseCommand):
 
     help = 'Updates medium blogs on website'
