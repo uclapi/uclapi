@@ -182,11 +182,13 @@ def dashboard(request):
         'initial_data': initial_data
     })
 
+
 @ensure_csrf_cookie
 def about(request):
     return render(request, 'AboutPage.html', {
         'initial_data': {}
     })
+
 
 @ensure_csrf_cookie
 def home(request):

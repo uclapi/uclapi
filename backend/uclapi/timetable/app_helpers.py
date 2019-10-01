@@ -366,7 +366,6 @@ def _get_timetable_events(full_modules):
                         event_data["module"]["lecturer"] = \
                             _lecturers_cache[None]
 
-
                     date_str = booking.startdatetime.strftime("%Y-%m-%d")
                     if date_str not in full_timetable:
                         full_timetable[date_str] = []

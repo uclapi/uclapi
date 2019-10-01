@@ -6,7 +6,6 @@ import redis
 from django.core import signing
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.signing import TimestampSigner
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.http import quote
 from django.views.decorators.csrf import (
