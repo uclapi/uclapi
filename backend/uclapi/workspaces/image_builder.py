@@ -124,8 +124,8 @@ class ImageBuilder():
                 occupied = False
             except KeyError:
                 # Fix for API-4Y, i.e. UCL added a sensor called 'HOST653'
-                # which isn't actually a sensor. Hence the sensor status doesn't
-                # exist...
+                # which isn't actually a sensor. Hence the sensor status
+                # doesn't exist...
                 occupied = False
                 circle.attrib["opacity"] = "0"
 
