@@ -134,7 +134,7 @@ def dashboard(request):
                 "error": "You must agree to the fair use policy"
             })
 
-        if agreement == "True":
+        if agreement:
             user.agreement = True
             user.save()
         else:

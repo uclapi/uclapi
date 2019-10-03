@@ -142,7 +142,7 @@ class DashboardTestCase(TestCase):
 
         res = self.client.post('/dashboard/', {'agreement': 'some rubbish'})
         self.assertTemplateUsed(res, "Agreement.html")
-        self.assertContains(res, "You Aust agree to the fair use policy")
+        self.assertContains(res, "You must agree to the fair use policy")
 
         res = self.client.post('/dashboard/', {'agreement': 'True'})
         self.assertTemplateUsed(res, "Dashboard.html")
