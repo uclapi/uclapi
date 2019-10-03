@@ -15,7 +15,7 @@ import docs from 'Images/home-page/docs.svg';
 import market from 'Images/home-page/market.svg';
 import splash_screen from 'Images/home-page/splash_screen.png';
 
-// Common Components
+// Components
 import { Row, Column, TextView, ButtonView, CardView, ImageView, Demo, NavBar, Footer } from 'Layout/Items.jsx';
 
 import { FAQ, endpoints } from 'Layout/data/homepage_constants.jsx'
