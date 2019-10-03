@@ -91,7 +91,7 @@ def shibboleth_callback(request):
         request.session["user_id"] = new_user.id
     else:
         # User exists already, so update the values if new ones are non-empty.
-        user = User.objects.get(email=eppn)
+        request.session["user_id"] = user.id
         user.employee_id = employee_id
         if display_name:
             user.full_name = display_name
