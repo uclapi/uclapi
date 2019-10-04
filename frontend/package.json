@@ -64,7 +64,7 @@
     "vinyl-source-stream": "^2.0.0",
     "vinyl-transform": "^1.0.0",
     "webpack": "^4.39.3",
-    "webpack-bundle-tracker": "^0.4.2-beta",
+    "webpack-bundle-tracker": "^0.4.3",
     "webpack-cli": "^3.3.8"
   },
   "browserify": {
