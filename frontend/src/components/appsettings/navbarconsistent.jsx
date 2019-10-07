@@ -11,10 +11,6 @@ const Toast = posed.div({
 	hidden: { top: '-60px' },
 	shown: { top: 0 }
 });
-const SlideDown = posed.div({
-	shown: { height: '105px', paddingBottom: '25px' },
-	hidden: { height: 0, paddingBottom: 0 },
-});
 
 let links = [
 	// {
@@ -43,6 +39,10 @@ let links = [
 		src: "market",
 	},
 ]
+const SlideDown = posed.div({
+	shown: { height: ((links.length*34) + 30) +"px" },
+	hidden: { height: 0 },
+});
 const maxScreen = 770;
 
 
