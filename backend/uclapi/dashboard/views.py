@@ -122,14 +122,14 @@ def dashboard(request):
 
     if not user.agreement:
         if request.method != "POST":
-            return render(request, "Agreement.html", {
+            return render(request, "agreement.html", {
                 'fair_use': FAIR_USE_POLICY
                 })
 
         try:
             agreement = strtobool(request.POST["agreement"])
         except (KeyError, ValueError):
-            return render(request, "Agreement.html", {
+            return render(request, "agreement.html", {
                 'fair_use': FAIR_USE_POLICY,
                 "error": "You must agree to the fair use policy"
             })
@@ -138,7 +138,7 @@ def dashboard(request):
             user.agreement = True
             user.save()
         else:
-            return render(request, "Agreement.html", {
+            return render(request, "agreement.html", {
                 'fair_use': FAIR_USE_POLICY,
                 "error": "You must agree to the fair use policy"
             })
@@ -178,14 +178,14 @@ def dashboard(request):
         })
 
     initial_data = json.dumps(user_meta, cls=DjangoJSONEncoder)
-    return render(request, 'Dashboard.html', {
+    return render(request, 'dashboard.html', {
         'initial_data': initial_data
     })
 
 
 @ensure_csrf_cookie
 def about(request):
-    return render(request, 'AboutPage.html', {
+    return render(request, 'about.html', {
         'initial_data': {}
     })
 
@@ -202,7 +202,7 @@ def home(request):
     articles = get_articles()
     token = get_temp_token()
 
-    return render(request, 'HomePage.html', {
+    return render(request, 'index.html', {
         'initial_data': {
             'temp_token': token,
             'logged_in': str(logged_in),
@@ -213,4 +213,4 @@ def home(request):
 
 @ensure_csrf_cookie
 def documentation(request):
-    return render(request, 'Documentation.html')
+    return render(request, 'documentation.html')

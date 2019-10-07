@@ -704,7 +704,7 @@ def my_apps(request):
     }
 
     initial_data = json.dumps(initial_data_dict, cls=DjangoJSONEncoder)
-    return render(request, 'AppSettings.html', {
+    return render(request, 'settings.html', {
         'initial_data': initial_data
     })
 

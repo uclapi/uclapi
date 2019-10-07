@@ -80,13 +80,13 @@ module.exports = {
     }
   },
   entry: {
-    HomePage: entryPointsPathPrefix + '/HomePage.jsx',
-    Documentation: entryPointsPathPrefix + '/Documentation.jsx',
-    AboutPage: entryPointsPathPrefix + '/AboutPage.jsx',
-    Dashboard: entryPointsPathPrefix + '/Dashboard.jsx',
-    Marketplace: entryPointsPathPrefix + '/Marketplace.jsx',
-    Authorise: entryPointsPathPrefix + '/Authorise.jsx',
-    AppSettings: entryPointsPathPrefix + '/AppSettings.jsx',
+    index: entryPointsPathPrefix + '/HomePage.jsx',
+    documentation: entryPointsPathPrefix + '/Documentation.jsx',
+    about: entryPointsPathPrefix + '/AboutPage.jsx',
+    dashboard: entryPointsPathPrefix + '/Dashboard.jsx',
+    marketplace: entryPointsPathPrefix + '/Marketplace.jsx',
+    authorise: entryPointsPathPrefix + '/Authorise.jsx',
+    settings: entryPointsPathPrefix + '/AppSettings.jsx',
     vendors: ['react'],
   },
   output: {
