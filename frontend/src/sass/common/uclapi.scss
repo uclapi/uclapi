@@ -402,7 +402,6 @@ pre {
   list-style-type: none;
   margin: 0;
   float: left;
-  width: 100%;
   display: inline-block;
   width: fit-content;
   padding: 10px 50px;
@@ -422,4 +421,14 @@ pre {
 
 .react-tabs__tab-list li:hover {
   background-color: $primary-color;
+}
+@media screen and (max-width: 700px) {
+  .react-tabs__tab-list li {
+    width: 100%;
+    text-align: left;
+  }
+  input {
+    width: 96%;
+    padding: 20px 2%;
+  }
 }
