@@ -30,21 +30,21 @@
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
     "rc-collapse": "^1.11.7",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
     "react-pose": "^4.0.8",
-    "react-router-dom": "^5.0.1",
+    "react-router-dom": "^5.1.2",
     "react-syntax-highlighter": "^11.0.2",
     "react-transition-group": "^4.3.0",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.6.0",
+    "@babel/core": "^7.6.2",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-env": "^7.6.2",
     "@babel/preset-react": "^7.0.0",
     "babel-eslint": "^10.0.3",
-    "eslint": "^6.3.0",
+    "eslint": "^6.5.1",
     "eslint-plugin-react": "^7.14.3",
     "babel-loader": "^8.0.6",
     "babelify": "^10.0.0",
@@ -63,9 +63,9 @@
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "vinyl-transform": "^1.0.0",
-    "webpack": "^4.39.3",
-    "webpack-bundle-tracker": "^0.4.2-beta",
-    "webpack-cli": "^3.3.8"
+    "webpack": "^4.41.0",
+    "webpack-bundle-tracker": "^0.4.3",
+    "webpack-cli": "^3.3.9"
   },
   "browserify": {
     "transform": [
