@@ -60,9 +60,9 @@ $navbarHeight: 60px;
     display: inline-block;
     width: 16px;
     height: 16px;
-    transition-property: margin-top;
-    transition-timing-function: ease-in-out;
-    transition-duration: 0.2s;
+    transition-property: margin-right;
+    transition-timing-function: linear;
+    transition-duration: 0.15s;
 }
 .link-to-page { 
     display: inline-block;
@@ -79,12 +79,17 @@ $navbarHeight: 60px;
 .link-to-page h1 {
     border: solid;
     border-color: #FFF;
-    border-width: 0;
-    border-left-width: 1px;
-    padding-left: 20px;
+    border-width: 0 0 0 1px;
+    padding: 0 20px;
     margin: 0;
     font-size: 1em;
     font-weight: normal;
+    transition-property: border-width;
+    transition-timing-function: linear;
+    transition-duration: 0.15s;
+}
+.link-to-page h1:hover {
+    border-width: 0 5px;
 }
 .link-to-page a {
     display: inline-block;

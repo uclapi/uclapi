@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import posed from 'react-pose';
 
 const Bounce = posed.div({
-  up: { marginTop: "-15px" },
-  down: { marginTop: "0px" }
+  up: { marginRight: "10px" },
+  down: { marginRight: "0px" }
 });
 
 class Link extends React.Component {
@@ -32,7 +32,7 @@ class Link extends React.Component {
         	if(this.state.hover) {
         		this.bounce();
         	} 
-        }, 400);
+        }, 450);
     }
     onMouseLeaveHandler() {
 		window.clearInterval(this.mInterval);
