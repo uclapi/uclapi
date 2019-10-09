@@ -105,12 +105,12 @@ def cache_table_process(index, destination_table_index, options):
     if table_data[5]:
         oracle_cursor = connections['roombookings'].cursor()
         if table_data[3]:
-            query = "SELECT COUNT(SETID) FROM {} WHERE SETID = '{}'".format(
+            query = "SELECT COUNT(*) FROM (SELECT DISTINCT * FROM {} WHERE SETID = '{}')".format(
                 table_data[0]._meta.db_table,
                 settings.ROOMBOOKINGS_SETID
             )
         else:
-            query = "SELECT COUNT(*) FROM {}".format(
+            query = "SELECT COUNT(*) FROM (SELECT DISTINCT * FROM {})".format(
                 table_data[0]._meta.db_table
             )
 
@@ -119,12 +119,12 @@ def cache_table_process(index, destination_table_index, options):
         total_records = count_data[0]
 
         if table_data[3]:
-            query = "SELECT * FROM {} WHERE SETID = '{}'".format(
+            query = "SELECT DISTINCT * FROM {} WHERE SETID = '{}'".format(
                 table_data[0]._meta.db_table,
                 settings.ROOMBOOKINGS_SETID
             )
         else:
-            query = "SELECT * FROM {}".format(
+            query = "SELECT DISTINCT * FROM {}".format(
                 table_data[0]._meta.db_table
             )
 

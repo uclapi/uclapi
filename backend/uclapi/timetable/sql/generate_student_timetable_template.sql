@@ -49,6 +49,9 @@ DECLARE
     -- co_course_id     TEXT;
     co_course_year   TEXT;
     overall_year     TEXT;
+-- This function generates the following temporary timetables:
+-- 1. tt_tmp_hasgroupnum
+--     * 
 BEGIN
 -- qtype2 (UPI Field) is stored all caps in the database
     upi := UPPER(upi);
@@ -60,7 +63,7 @@ BEGIN
     DROP TABLE IF EXISTS tt_tmp_timetable_events;
 
 -- Get basic information about the student
-
+-- and store in the general calculation variables.
     SELECT  s.studentid,
             s.courseid,
             s.courseyear,
@@ -81,13 +84,14 @@ BEGIN
 
 -- Modules where the student is in a specific group
 CREATE TEMP TABLE tt_tmp_hasgroupnum (
-    groupnum,
+    groupnum, -- TODO: what is this used for.
     moduleid,
     instid,
-    instcode
+    instcode,
+    modgrpcode
 )
 AS
-SELECT mg.groupnum, mg.moduleid, ci.instid, ci.instcode
+SELECT mg.groupnum, mg.moduleid, ci.instid, ci.instcode, mg.grpcode
 FROM timetable_stumodules{{ bucket_id | sqlsafe }} sm
 JOIN timetable_modulegroups{{ bucket_id | sqlsafe }} mg
     ON (
@@ -132,6 +136,7 @@ FROM (
            ci.instid,
            ci.instcode
     FROM timetable_stumodules{{ bucket_id | sqlsafe }} sm
+    -- get modules and module groups from the same module.
     JOIN timetable_modulegroups{{ bucket_id | sqlsafe }} mg
         ON sm.moduleid = mg.moduleid
     LEFT OUTER JOIN timetable_cminstances{{ bucket_id | sqlsafe }} ci
@@ -139,11 +144,11 @@ FROM (
         AND sm.setid = ci.setid
         AND ci.setid = set_id
     WHERE NOT EXISTS (
-        SELECT 1
+        SELECT 1 -- Optimisation to not fetch field we won't read
         FROM tt_tmp_hasgroupnum hg
         WHERE hg.moduleid = mg.moduleid
             AND hg.instid = mg.instid
-            AND hg.groupnum = mg.groupnum
+            AND hg.modgrpcode = mg.modgrpcode
     )
     AND sm.studentid = student_id
     AND sm.modgrpcode IS NULL
