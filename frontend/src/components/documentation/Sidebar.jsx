@@ -50,7 +50,7 @@ export default class Sidebar extends React.Component {
       <Drawer
         docked={true}
         open={true}
-        style={{"top" : "60px"}}>
+        >
         <SelectableList
           value={location.pathname}
         >
