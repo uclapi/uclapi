@@ -49,16 +49,11 @@ export default class Sidebar extends React.Component {
     return (
       <Drawer
         docked={true}
-        open={true}>
+        open={true}
+        style={{"top" : "60px"}}>
         <SelectableList
           value={location.pathname}
         >
-          <ListItem
-            href="#"
-            primaryText="TEMPORARY"
-            primaryTogglesNestedList={true}
-            nestedItems={[]}
-          />
           <ListItem
             href="#welcome"
             primaryText="Meta"
