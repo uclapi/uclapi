@@ -51,6 +51,12 @@ export default class Sidebar extends React.Component {
         docked={true}
         open={true}
         >
+        <div style={styles.logo}>
+          <span className="sidebarLogo">
+            <img src={apiLogo}/>
+            UCL API
+          </span>
+        </div>
         <SelectableList
           value={location.pathname}
         >
