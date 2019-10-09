@@ -1,0 +1,11 @@
+fail_on_violations: true
+
+python:
+  enabled: true
+
+scss:
+  enabled: false
+
+eslint:
+  enabled: true
+  config_file: frontend/.eslintrc
