@@ -32,7 +32,7 @@
     "rc-collapse": "^1.11.7",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
-    "react-pose": "^4.0.8",
+    "react-pose": "^4.0.9",
     "react-router-dom": "^5.1.2",
     "react-syntax-highlighter": "^11.0.2",
     "react-transition-group": "^4.3.0",
