@@ -110,7 +110,11 @@ AND sm.setid = mg.setid
 AND sm.setid = set_id
 AND sm.modgrpcode IS NOT NULL;
 
--- Modules the student is taking
+-- List of all groups the person is in. At least one group per module.
+-- There are multiple entries for each module. One for every way the whole class
+-- of students taking the module can be split. There will be an entry for each
+-- module group (can be 0) plus a NULL grpcode if everyone taking the module has
+-- a timetabled event where they are all present (usually a lecture).
 CREATE TEMP TABLE tt_tmp_taking (
     moduleid,
     grpcode,
@@ -120,6 +124,7 @@ CREATE TEMP TABLE tt_tmp_taking (
     instcode
 )
 AS
+-- Get entries where students are split into groups.
 SELECT sm.moduleid, sm.modgrpcode, 'Y', sm.fixingrp, ci.instid, ci.instcode
 FROM timetable_stumodules{{ bucket_id | sqlsafe }} sm
 JOIN timetable_modulegroups{{ bucket_id | sqlsafe }} mg
@@ -136,6 +141,7 @@ WHERE sm.studentid = student_id
 AND sm.setid = mg.setid
 AND sm.setid = set_id
 UNION
+-- Get students where all students are present (i.e. modgrpode IS NULL)
 SELECT sm.moduleid, sm.modgrpcode, 'Y', sm.fixingrp, ci.instid, ci.instcode
 FROM timetable_stumodules{{ bucket_id | sqlsafe }} sm
 LEFT OUTER JOIN timetable_cminstances{{ bucket_id | sqlsafe }} ci
