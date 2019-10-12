@@ -92,12 +92,7 @@ CREATE TEMP TABLE tt_tmp_hasgroupnum (
     instcode
 )
 AS
--- NOTE: If you see a bug, maybe this DISTINCT is to blame?
--- Distinct otherwise you get duplicates..
--- TODO: modgrpcode instead of groupnum?
--- modgrpcode seems actually useful, not entirely sure
--- what the point of groupnum is...
-SELECT  mg.groupnum, mg.moduleid, ci.instid, ci.instcode
+SELECT mg.groupnum, mg.moduleid, ci.instid, ci.instcode
 FROM timetable_stumodules{{ bucket_id | sqlsafe }} sm
 -- Join to get more information about the module groups
 JOIN timetable_modulegroups{{ bucket_id | sqlsafe }} mg
@@ -129,13 +124,7 @@ SELECT sm.moduleid, sm.modgrpcode, 'Y', sm.fixingrp, ci.instid, ci.instcode
 FROM timetable_stumodules{{ bucket_id | sqlsafe }} sm
 JOIN timetable_modulegroups{{ bucket_id | sqlsafe }} mg
     ON sm.moduleid = mg.moduleid
-    AND (
-        sm.modgrpcode = mg.grpcode
-        OR (
-            sm.modgrpcode IS NULL
-            AND mg.grpcode IS NULL
-        )
-    )
+    AND sm.modgrpcode = mg.grpcode
     AND sm.instid = mg.instid
     AND sm.setid = mg.setid
     AND mg.setid = set_id
