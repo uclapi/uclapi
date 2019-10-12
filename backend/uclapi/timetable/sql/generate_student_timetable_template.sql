@@ -97,7 +97,7 @@ AS
 -- TODO: modgrpcode instead of groupnum?
 -- modgrpcode seems actually useful, not entirely sure
 -- what the point of groupnum is...
-SELECT DISTINCT mg.groupnum, mg.moduleid, ci.instid, ci.instcode
+SELECT  mg.groupnum, mg.moduleid, ci.instid, ci.instcode
 FROM timetable_stumodules{{ bucket_id | sqlsafe }} sm
 -- Join to get more information about the module groups
 JOIN timetable_modulegroups{{ bucket_id | sqlsafe }} mg
