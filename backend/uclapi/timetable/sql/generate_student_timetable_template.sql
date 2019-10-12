@@ -54,7 +54,7 @@ BEGIN
     upi := UPPER(upi);
 
 -- Drop any stale temporary tables that already exist
-    DROP TABLE IF EXISTS tt_tmp_hasgroupnum;
+    DROP TABLE IF EXISTS tt_tmp_hasgroupnum; -- Not necessary now!
     DROP TABLE IF EXISTS tt_tmp_taking;
     DROP TABLE IF EXISTS tt_tmp_events_slot_id;
     DROP TABLE IF EXISTS tt_tmp_timetable_events;
@@ -77,38 +77,6 @@ BEGIN
     -- LEFT OUTER JOIN timetable_course{{ bucket_id | sqlsafe }} c
     --     ON (c.setid = s.setid AND c.linkcode = s.linkcode)
     WHERE  s.qtype2 = upi AND s.setid = set_id;
-
-
--- Modules where the student is in a specific group
--- Note that this usually happens in labs and tutorials e.g. modgrpcode=LABA
--- This can also happen for module lectures as well. For example if the class
--- has to be split due to size constraints or if a module has separate streams.
--- One example is ENGF0001, a faculty level module where students are split into
--- department streams, e.g. modgrpcode=CS_deps
-CREATE TEMP TABLE tt_tmp_hasgroupnum (
-    groupnum,
-    moduleid,
-    instid,
-    instcode
-)
-AS
-SELECT mg.groupnum, mg.moduleid, ci.instid, ci.instcode
-FROM timetable_stumodules{{ bucket_id | sqlsafe }} sm
--- Join to get more information about the module groups
-JOIN timetable_modulegroups{{ bucket_id | sqlsafe }} mg
-    ON (
-        sm.moduleid = mg.moduleid
-        AND sm.modgrpcode = mg.grpcode
-    )
--- Join to get the instcode
-LEFT OUTER JOIN timetable_cminstances{{ bucket_id | sqlsafe }} ci
-        ON sm.instid = ci.instid
-    AND sm.setid = set_id
-    AND ci.setid = set_id
-WHERE sm.studentid = student_id
-AND sm.setid = mg.setid
-AND sm.setid = set_id
-AND sm.modgrpcode IS NOT NULL;
 
 -- List of all groups the person is in. At least one group per module.
 -- There are multiple entries for each module. One for every way the whole class
