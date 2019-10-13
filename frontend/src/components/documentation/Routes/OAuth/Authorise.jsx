@@ -78,6 +78,9 @@ export default class Authorise extends React.Component {
               <Cell
                 name="No callback URL set for this app."
                 description="Gets returned when you have not set a callback URL for your app." />
+              <Cell
+                name="UCL has sent incomplete headers"
+                description="Gets returned when UCL sends us incomplete headers. If the issues persist please contact the UCL API Team to rectify this." />
               </Table>
           </Topic>
         </div>
