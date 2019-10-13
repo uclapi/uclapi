@@ -1,4 +1,4 @@
-amqp==2.5.0
+amqp==2.5.1
 boto3==1.9.247
 botocore==1.12.247
 celery==4.3.0
@@ -16,7 +16,7 @@ django-storages==1.7.1
 djangorestframework==3.10.2
 django-postgrespool2==0.2.0
 docutils==0.15.2
-eventlet==0.25.0
+eventlet==0.25.1
 gevent==1.4.0
 freezegun==0.3.12
 greenlet==0.4.15
@@ -33,7 +33,7 @@ Markupsafe==1.1.1
 mock==3.0.5
 model-mommy==1.6.0
 pbr==5.4.2
-pycryptodome==3.8.2
+pycryptodome==3.9.0
 psycopg2-binary==2.8.3
 python-dateutil==2.8.0
 pytz==2019.2
