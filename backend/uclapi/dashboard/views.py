@@ -14,18 +14,51 @@ from uclapi.settings import FAIR_USE_POLICY
 
 from .app_helpers import get_temp_token, get_articles
 from .models import App, User
-from .tasks import add_user_to_mailing_list_task, \
-                   keen_add_event_task as keen_add_event
+from .tasks import add_user_to_mailing_list_task
 
 
 @csrf_exempt
 def shibboleth_callback(request):
+    # should auth user login or signup
+    # then redirect to dashboard homepage
+
+    # Sometimes UCL doesn't give us the expected headers.
+    # If a critical header is missing we error out.
+    # If non-critical headers are missing we simply put a placeholder string.
+    try:
+        # This is used to find the correct user
+        eppn = request.META['HTTP_EPPN']
+        # We don't really use cn but because it's unique in the DB we can't
+        # really put a place holder value.
+        cn = request.META['HTTP_CN']
+        # (aka UPI), also unique in the DB
+        employee_id = request.META['HTTP_EMPLOYEEID']
+    except KeyError:
+        response = HttpResponse(
+            (
+
+                "Error 400 - Bad Request. <br>"
+                "UCL has sent incomplete headers. If the issues persist please"
+                "contact the UCL API Team to rectify this."
+            )
+        )
+        response.status_code = 400
+        return response
+
+    # TODO: Ask UCL what on earth are they doing by missing out headers, and
+    # remind them we need to to be informed of these types of changes.
+    # TODO: log to sentry that fields were missing...
+    department = request.META.get('HTTP_DEPARTMENT', '')
+    given_name = request.META.get('HTTP_GIVENNAME', '')
+    display_name = request.META.get('HTTP_DISPLAYNAME', '')
+    groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
+
     # We first check whether the user is a member of any UCL Intranet Groups.
     # This is a quick litmus test to determine whether they should have
     # access to the dashboard.
     # We deny access to test accounts and alumni, neither of which have
     # this Shibboleth attribute.
-    if 'HTTP_UCLINTRANETGROUPS' not in request.META:
+    if not groups:
         response = HttpResponse(
             (
                 "Error 403 - denied. <br>"
@@ -35,17 +68,10 @@ def shibboleth_callback(request):
         response.status_code = 403
         return response
 
-    # should auth user login or signup
-    # then redirect to dashboard homepage
-    eppn = request.META['HTTP_EPPN']
-    groups = request.META['HTTP_UCLINTRANETGROUPS']
-    cn = request.META['HTTP_CN']
-    department = request.META['HTTP_DEPARTMENT']
-    given_name = request.META['HTTP_GIVENNAME']
-    display_name = request.META['HTTP_DISPLAYNAME']
-    employee_id = request.META['HTTP_EMPLOYEEID']
-
     try:
+        # TODO: Handle MultipleObjectsReturned exception.
+        # email field isn't unique at database level (on our side).
+        # Alternatively, switch to employee_id (which is unique).
         user = User.objects.get(email=eppn)
     except ObjectDoesNotExist:
         # create a new user
@@ -63,26 +89,19 @@ def shibboleth_callback(request):
         add_user_to_mailing_list_task.delay(new_user.email, new_user.full_name)
 
         request.session["user_id"] = new_user.id
-        keen_add_event.delay("signup", {
-            "id": new_user.id,
-            "email": eppn,
-            "name": display_name
-        })
     else:
-        # user exists already, update values
+        # User exists already, so update the values if new ones are non-empty.
         request.session["user_id"] = user.id
-        user.full_name = display_name
-        user.given_name = given_name
-        user.department = department
-        user.raw_intranet_groups = groups
         user.employee_id = employee_id
+        if display_name:
+            user.full_name = display_name
+        if given_name:
+            user.given_name = given_name
+        if department:
+            user.department = department
+        if groups:
+            user.raw_intranet_groups = groups
         user.save()
-
-        keen_add_event.delay("User data updated", {
-            "id": user.id,
-            "email": eppn,
-            "name": display_name
-        })
 
     return redirect(dashboard)
 
