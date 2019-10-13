@@ -54,7 +54,7 @@ BEGIN
     upi := UPPER(upi);
 
 -- Drop any stale temporary tables that already exist
-    DROP TABLE IF EXISTS tt_tmp_hasgroupnum;
+    DROP TABLE IF EXISTS tt_tmp_hasgroupnum; -- Not necessary now!
     DROP TABLE IF EXISTS tt_tmp_taking;
     DROP TABLE IF EXISTS tt_tmp_events_slot_id;
     DROP TABLE IF EXISTS tt_tmp_timetable_events;
@@ -78,101 +78,47 @@ BEGIN
     --     ON (c.setid = s.setid AND c.linkcode = s.linkcode)
     WHERE  s.qtype2 = upi AND s.setid = set_id;
 
-
--- Modules where the student is in a specific group
-CREATE TEMP TABLE tt_tmp_hasgroupnum (
-    groupnum,
-    moduleid,
-    instid,
-    instcode
-)
-AS
-SELECT mg.groupnum, mg.moduleid, ci.instid, ci.instcode
-FROM timetable_stumodules{{ bucket_id | sqlsafe }} sm
-JOIN timetable_modulegroups{{ bucket_id | sqlsafe }} mg
-    ON (
-        sm.moduleid = mg.moduleid
-        AND sm.modgrpcode = mg.grpcode
-    )
-LEFT OUTER JOIN timetable_cminstances{{ bucket_id | sqlsafe }} ci
-        ON sm.instid = ci.instid
-    AND sm.setid = set_id
-    AND ci.setid = set_id
-WHERE sm.studentid = student_id
-AND sm.setid = mg.setid
-AND sm.setid = set_id
-AND sm.modgrpcode IS NOT NULL;
-
--- Modules the student is taking
+-- List of all groups the person is in. At least one group per module.
+-- There are multiple entries for each module. One for every way the whole class
+-- of students taking the module can be split. There will be an entry for each
+-- module group (can be 0) plus a NULL grpcode if everyone taking the module has
+-- a timetabled event where they are all present (usually a lecture).
 CREATE TEMP TABLE tt_tmp_taking (
     moduleid,
     grpcode,
-    groupnum,
     stumodselstatus,
     unfitted,
     instid,
     instcode
 )
 AS
-SELECT smUnion.moduleid,
-        smUnion.grpcode,
-        smUnion.groupnum,
-    --    usm.status_flag,
-        'Y', -- Temporarily using this as the stumodselstatus
-        smUnion.unfitted,
-        smUnion.instid,
-        smUnion.instcode
-FROM (
-    SELECT sm.setid,
-           sm.studentid,
-           sm.moduleid,
-           mg.grpcode,
-           mg.groupnum,
-           'Y' as unfitted,
-           ci.instid,
-           ci.instcode
-    FROM timetable_stumodules{{ bucket_id | sqlsafe }} sm
-    JOIN timetable_modulegroups{{ bucket_id | sqlsafe }} mg
-        ON sm.moduleid = mg.moduleid
-    LEFT OUTER JOIN timetable_cminstances{{ bucket_id | sqlsafe }} ci
-        ON sm.instid = ci.instid
-        AND sm.setid = ci.setid
-        AND ci.setid = set_id
-    WHERE NOT EXISTS (
-        SELECT 1
-        FROM tt_tmp_hasgroupnum hg
-        WHERE hg.moduleid = mg.moduleid
-            AND hg.instid = mg.instid
-            AND hg.groupnum = mg.groupnum
-    )
-    AND sm.studentid = student_id
-    AND sm.modgrpcode IS NULL
+-- Get entries where students are split into groups.
+SELECT sm.moduleid, sm.modgrpcode, 'Y', sm.fixingrp, ci.instid, ci.instcode
+FROM timetable_stumodules{{ bucket_id | sqlsafe }} sm
+JOIN timetable_modulegroups{{ bucket_id | sqlsafe }} mg
+    ON sm.moduleid = mg.moduleid
+    AND sm.modgrpcode = mg.grpcode
+    AND sm.instid = mg.instid
     AND sm.setid = mg.setid
-    AND sm.setid = set_id
-UNION all
-SELECT sm2.setid,
-        sm2.studentid,
-        sm2.moduleid,
-        sm2.modgrpcode,
-        NULL,
-        'N' as unfitted,
-        ci.instid,
-        ci.instcode
-FROM timetable_stumodules{{ bucket_id | sqlsafe }} sm2
+    AND mg.setid = set_id
 LEFT OUTER JOIN timetable_cminstances{{ bucket_id | sqlsafe }} ci
-    ON sm2.instid = ci.instid
-    AND sm2.setid = ci.setid
+    ON sm.instid = ci.instid
+    AND sm.setid = ci.setid
     AND ci.setid = set_id
-WHERE sm2.studentid = student_id
-    AND sm2.setid = set_id
-) smUnion
-    LEFT OUTER JOIN timetable_stumodules{{ bucket_id | sqlsafe }} usm
-        ON (
-            smUnion.setid = usm.setid
-            AND smUnion.studentid = usm.studentid
-            AND smUnion.moduleid = usm.moduleid
-            AND smUnion.instid = usm.instid
-        );
+WHERE sm.studentid = student_id
+AND sm.setid = mg.setid
+AND sm.setid = set_id
+UNION
+-- Get students where all students are present (i.e. modgrpode IS NULL)
+SELECT sm.moduleid, sm.modgrpcode, 'Y', sm.fixingrp, ci.instid, ci.instcode
+FROM timetable_stumodules{{ bucket_id | sqlsafe }} sm
+LEFT OUTER JOIN timetable_cminstances{{ bucket_id | sqlsafe }} ci
+    ON sm.instid = ci.instid
+    AND sm.setid = ci.setid
+    AND ci.setid = set_id
+WHERE sm.studentid = student_id
+AND sm.setid = set_id
+AND sm.modgrpcode IS NULL;
 
 CREATE TEMP TABLE tt_tmp_events_slot_id (
     slotid,          -- tt.slotid     | tt.slotid
@@ -200,6 +146,7 @@ AS
             tt.siteid   :: TEXT,
             tt.roomid   :: TEXT
     FROM timetable_timetable{{ bucket_id | sqlsafe }} tt
+    -- Join to get instance info.
     LEFT OUTER JOIN timetable_cminstances{{ bucket_id | sqlsafe }} ci
             ON tt.instid = ci.instid
         AND tt.setid  = ci.setid
