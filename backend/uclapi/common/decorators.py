@@ -82,7 +82,6 @@ def log_api_call(request, token, token_type):
             "token_type": token_type
         }
 
-
 def throttle_api_call(token, token_type):
     if token_type == 'general':
         cache_key = token.user.email

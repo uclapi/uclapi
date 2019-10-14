@@ -4,7 +4,6 @@ from binascii import hexlify
 
 from timetable.models import Lock, StudentsA, StudentsB
 
-
 def generate_user_token():
     key = hexlify(os.urandom(30)).decode()
     dashes_key = '-'.join(textwrap.wrap(key, 15))
@@ -20,11 +19,11 @@ def generate_random_verification_code():
 
 
 def get_student_by_upi(upi):
-    # Returns a StudentA or StudentB object by UPI
+    """Returns a StudentA or StudentB object by UPI"""
     students = StudentsA \
-        if Lock.objects.all()[0].a \
-        else StudentsB
-    
+               if Lock.objects.all()[0].a \
+               else StudentsB
+
     # Assume the current Set ID due to caching
     upi_upper = upi.upper()
     student = students.objects.filter(
