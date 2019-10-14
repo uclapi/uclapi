@@ -7,6 +7,8 @@ import Collapse, { Panel } from 'rc-collapse';
 
 // Styles
 import 'Styles/common/uclapi.scss';
+// Legacy
+import 'Styles/navbar.scss';
 
 // Images
 import heart from 'Images/home-page/heart.svg';
@@ -162,16 +164,8 @@ class HomePage extends React.Component {
             ) ) }
           </Column>
         </Row>
->>>>>>> HEAD~55
 
-    <Row isPadded={true} color="dark-grey">         
-      <Column style="2-3" isCentered={true} isCenteredText={true}>
-        <TextView text={"Frequently Asked Questions"} heading={1} align={"center"}/>
-        {FAQ.map(x => ( 
-          questionandanswer(x.question, x.answer)
-        ) ) }
-      </Column>
-    </Row>
+        <Footer />
 
     </React.Fragment>
     );

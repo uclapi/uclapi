@@ -1,5 +1,7 @@
 import React from 'react';
 
+import placeholder from 'Images/home-page/splash_screen.png';
+
 /**
 REQUIRED ATTRIBUTES:
 this.props.color OR this.props.src (remember to set a design for the layout)
