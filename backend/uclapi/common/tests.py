@@ -37,7 +37,6 @@ import json
 import redis
 import time
 
-
 class SecondsUntilMidnightTestCase(SimpleTestCase):
     def test_seconds_until_midnight(self):
         arg_list = [
