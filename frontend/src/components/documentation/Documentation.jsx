@@ -29,6 +29,7 @@ import GetTimetableByModules from './Routes/Timetable/GetTimetableByModules.jsx'
 import GetDataCourses from './Routes/Timetable/GetDataCourses.jsx';
 import GetDataCoursesModules from './Routes/Timetable/GetDataCoursesModules.jsx';
 
+
 import ResourcesVersionHeader from './Routes/Resources/VersionHeader.jsx';
 import DesktopAvailability from './Routes/Resources/DesktopAvailability.jsx';
 
@@ -45,10 +46,8 @@ import GetInvolved from './GetInvolved/GetInvolved.jsx';
 import LanguageTabs from './LanguageTabs.jsx';
 import Sidebar from './Sidebar.jsx';
 
-// Legacy
+// UCL API navbar
 import 'Styles/navbar.scss';
-
-// Common Components
 import { NavBar } from 'Layout/Items.jsx';
 
 export default class DocumentationComponent extends React.Component {
