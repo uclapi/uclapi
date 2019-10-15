@@ -359,7 +359,7 @@ input {
   border: none;
   float: left;
   margin: 0;
-  width: 75%;
+  width: 100%;
   background-color: $primary-highlight-color;
   color: white;
 }
@@ -406,6 +406,8 @@ pre {
   width: fit-content;
   padding: 10px 50px;
   margin-right: 5px;
+  width: 50%;
+  text-align: left;
   transition-duration: 200ms;
   transition-timing-function: linear;
   transition-property: background-color;
