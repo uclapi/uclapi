@@ -17,7 +17,7 @@ export default class CodeView extends React.Component {
   constructor(props) {
     super(props);
 
-    this.DEBUGGING = true;
+    this.DEBUGGING = false;
 
     this.state = {
       tabIndex: 0,

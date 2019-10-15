@@ -17,7 +17,7 @@ export default class Column extends React.Component {
     super(props);
 
     this.UNSET_ERROR_WIDTH = "0px";
-    this.DEBUGGING = true;
+    this.DEBUGGING = false;
     this.HORIZONTAL_PADDING = 2 + 2;
 
     this.getColumnWidth = this.getColumnWidth.bind(this);

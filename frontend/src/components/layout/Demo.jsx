@@ -36,7 +36,7 @@ export default class Demo extends React.Component {
     let rootURL = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
     let now = new Date();
 
-    this.DEBUGGING = true;
+    this.DEBUGGING = false;
 
     this.state = {
       response: "",
