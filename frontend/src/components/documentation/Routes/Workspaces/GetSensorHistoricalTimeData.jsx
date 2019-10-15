@@ -4,16 +4,34 @@ import Topic from './../../Topic.jsx';
 import Table from './../../Table.jsx';
 import Cell from './../../Cell.jsx';
 
-// Code Generator 
-import * as RequestGenerator from 'Layout/data/RequestGenerator.jsx';
+let codeExamples = {
+    python: `import requests
 
-let params = {
+params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
   "days": 30,
   "survey_ids": "46,45"
 }
 
-let codeExamples = RequestGenerator.getRequest("https://uclapi.com/workspaces/sensors/averages/time", params);
+r = requests.get("https://uclapi.com/workspaces/sensors/averages/time", params=params)
+print(r.json())`,
+
+  shell: `curl -G https://uclapi.com/workspaces/sensors/averages/time \\
+-d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
+-d days=30 \
+-d survey_ids=46,45`,
+
+  javascript: `fetch("https://uclapi.com/workspaces/sensors/averages/time?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&days=40&survey_ids=46,45",
+{
+    method: "GET",
+})
+.then((response) => {
+  return response.json()
+})
+.then((json) => {
+  console.log(json);
+})`
+}
 
 let response = `{
     {

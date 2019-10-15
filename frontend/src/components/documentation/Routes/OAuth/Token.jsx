@@ -4,16 +4,31 @@ import Topic from './../../Topic.jsx';
 import Table from './../../Table.jsx';
 import Cell from './../../Cell.jsx';
 
-// Code Generator 
-import * as RequestGenerator from 'Layout/data/RequestGenerator.jsx';
 
-let params = {
+let codeExamples = {
+  python: `import requests
+
+params = {
   "client_id": "123.456",
   "code": "1",
   "client_secret": "secret",
 }
+r = requests.get("https://uclapi.com/oauth/token", params=params)
+print(r.json())`,
 
-let codeExamples = RequestGenerator.getRequest("https://uclapi.com/oauth/token", params);
+  shell: `curl -G https://uclapi.com/oauth/token \
+-d code=mysecretcode \
+-d client_id=123.456 \\
+-d client_secret=secret`,
+
+  javascript: `fetch("https://uclapi.com/oauth/token?code=mysecretcode&client_id=123.456&client_secret=secret")
+.then((response) => {
+  return response.json()
+})
+.then((json) => {
+  console.log(json);
+})`
+}
 
 let response = `{
     "scope": "[]",
@@ -29,6 +44,7 @@ let responseCodeExample = {
   javascript: response,
   shell: response
 }
+
 
 export default class Token extends React.Component {
 

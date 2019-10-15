@@ -4,15 +4,30 @@ import Topic from './../../Topic.jsx';
 import Table from './../../Table.jsx';
 import Cell from './../../Cell.jsx';
 
-// Code Generator 
-import * as RequestGenerator from 'Layout/data/RequestGenerator.jsx';
 
-let params = {
+let codeExamples = {
+  python: `import requests
+
+params = {
   "client_id": "123.456",
   "state": "1",
 }
+r = requests.get("https://uclapi.com/oauth/authorise", params=params)
+print(r.json())`,
 
-let codeExamples = RequestGenerator.getRequest("https://uclapi.com/oauth/authorise", params);
+  shell: `curl -G https://uclapi.com/oauth/authorise/ \
+-d client_id=123.456 \
+-d state=1`,
+
+  javascript: `fetch("https://uclapi.com/oauth/authorise/?client_id=123.456&state=1")
+.then((response) => {
+  return response.json()
+})
+.then((json) => {
+  console.log(json);
+})`
+}
+
 
 export default class Authorise extends React.Component {
 

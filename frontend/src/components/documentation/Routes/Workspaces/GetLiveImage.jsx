@@ -4,16 +4,34 @@ import Topic from './../../Topic.jsx';
 import Table from './../../Table.jsx';
 import Cell from './../../Cell.jsx';
 
-// Code Generator 
-import * as RequestGenerator from 'Layout/data/RequestGenerator.jsx';
+let codeExamples = {
+    python: `import requests
 
-let params = {
+params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
   "survey_id": "38",
   "map_id": "105"
 }
 
-let codeExamples = RequestGenerator.getRequest("https://uclapi.com/workspaces/images/map/live", params);
+r = requests.get("https://uclapi.com/workspaces/images/map/live", params=params)
+print(r.json())`,
+
+  shell: `curl -G https://uclapi.com/workspaces/images/map/live \\
+-d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
+-d survey_id=38 \
+-d map_id=105`,
+
+  javascript: `fetch("https://uclapi.com/workspaces/images/map/live?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=38&map_id=105",
+{
+    method: "GET",
+})
+.then((response) => {
+  return response.json()
+})
+.then((json) => {
+  console.log(json);
+})`
+}
 
 let response = `
 <svg xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">

@@ -4,16 +4,34 @@ import Topic from './../../Topic.jsx';
 import Table from './../../Table.jsx';
 import Cell from './../../Cell.jsx';
 
-// Code Generator 
-import * as RequestGenerator from 'Layout/data/RequestGenerator.jsx';
+let codeExamples = {
+    python: `import requests
 
-let params = {
+params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
   "image_id": "79",
   "image_format": "base64"
 }
 
-let codeExamples = RequestGenerator.getRequest("https://uclapi.com/workspaces/images/map", params);
+r = requests.get("https://uclapi.com/workspaces/images/map", params=params)
+print(r.json())`,
+
+  shell: `curl -G https://uclapi.com/workspaces/images/map \\
+-d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
+-d image_id=79 \
+-d image_format=base64`,
+
+  javascript: `fetch("https://uclapi.com/workspaces/images/map?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&image_id=46&image_format=base64",
+{
+    method: "GET",
+})
+.then((response) => {
+  return response.json()
+})
+.then((json) => {
+  console.log(json);
+})`
+}
 
 let response = `{
     "content_type": "image/png",
