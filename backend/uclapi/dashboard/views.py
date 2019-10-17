@@ -187,7 +187,8 @@ def dashboard(request):
 def about(request):
     return render(request, 'about.html', {
         'initial_data': {}
-    });
+    })
+
 
 @ensure_csrf_cookie
 def home(request):
