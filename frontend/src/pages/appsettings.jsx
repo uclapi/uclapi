@@ -47,7 +47,7 @@ class AppSettings extends React.Component {
       department,
       apps
     } } = this.state
-    if (status !== "ONLINE") {
+    if (status !== `ONLINE`) {
       return <MuiThemeProvider muiTheme={muiTheme}>
         <Hub>
           <LogInLayout url={url} />
