@@ -9,10 +9,6 @@ Full_DDL.sql
 # C extensions
 *.so
 
-# MERGING
-marketplace.jsx
-documentation.jsx
-
 # Distribution / packaging
 .Python
 env/
@@ -147,4 +143,3 @@ yarn.lock
 # django-webpack-loader
 webpack-stats.json
 backend/uclapi/src
-frontend/webpack.dev.js
