@@ -2,18 +2,9 @@
   "name": "api-dashboard",
   "version": "1.0.0",
   "description": "Dashboard for the UCL API",
-<<<<<<< HEAD
   "homepage": "https://uclapi.com",
   "bugs": {
     "url": "https://github.com/uclapi/uclapi/issues"
-=======
-  "scripts": {
-    "start": "NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors",
-    "build": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint src",
-    "profile": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors --profile --json > stats.json"
->>>>>>> 99ae8edc615a0d3a382932269ef06f23cc038e89
   },
   "repository": {
     "type": "git",
