@@ -189,6 +189,7 @@ def about(request):
         'initial_data': {}
     });
 
+
 @ensure_csrf_cookie
 def home(request):
     logged_in = True
