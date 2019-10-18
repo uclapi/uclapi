@@ -19,6 +19,7 @@ docutils==0.15.2
 eventlet==0.25.1
 gevent==1.4.0
 freezegun==0.3.12
+flake8==3.7.8
 greenlet==0.4.15
 gunicorn==19.9.0
 hiredis==1.0.0

@@ -6,6 +6,7 @@
     "start": "NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors",
     "build": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src",
     "profile": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors --profile --json > stats.json"
   },
   "repository": {
