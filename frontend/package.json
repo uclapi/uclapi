@@ -2,33 +2,39 @@
   "name": "api-dashboard",
   "version": "1.0.0",
   "description": "Dashboard for the UCL API",
-  "scripts": {
-    "start": "NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors",
-    "build": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint src",
-    "profile": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors --profile --json > stats.json"
+  "homepage": "https://uclapi.com",
+  "bugs": {
+    "url": "https://github.com/uclapi/uclapi/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/uclapi/uclapi.git"
   },
-  "author": "UCL API",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/uclapi/uclapi/issues"
+  "author": "UCL API",
+  "scripts": {
+    "analyse": "npx webpack-bundle-analyzer stats.json",
+    "build": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors",
+    "profile": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors --profile --json > stats.json",
+    "start": "NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "homepage": "https://uclapi.com",
+  "browserify": {
+    "transform": [
+      "babelify",
+      "envify"
+    ]
+  },
   "dependencies": {
     "@material-ui/core": "^4.4.2",
     "ajv": "^6.10.2",
     "aphrodite": "^2.4.0",
     "axios": "^0.19.0",
+    "dayjs": "^1.8.14",
     "glamor": "^2.20.40",
     "immutability-helper": "^3.0.1",
     "js-cookie": "^2.2.1",
     "material-ui": "^0.20.2",
-    "moment": "^2.24.0",
     "prop-types": "^15.7.2",
     "rc-collapse": "^1.11.7",
     "react": "^16.10.2",
@@ -41,23 +47,26 @@
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/preset-env": "^7.6.3",
     "@babel/preset-react": "^7.6.3",
     "babel-eslint": "^10.0.3",
-    "eslint": "^6.5.1",
-    "eslint-plugin-react": "^7.16.0",
     "babel-loader": "^8.0.6",
+    "babel-plugin-transform-imports": "^1.5.1",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "babelify": "^10.0.0",
     "css-loader": "^3.1.0",
     "dotenv": "^8.1.0",
+    "eslint": "^6.5.1",
+    "eslint-plugin-react": "^7.16.0",
     "file-loader": "^4.1.0",
     "glob": "^7.1.4",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.12.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "react-modal": "^3.10.1",
-    "sass-loader": "^7.3.1",
+    "sass-loader": "^8.0.0",
     "style-loader": "^1.0.0",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "url-loader": "^2.2.0",
@@ -67,11 +76,5 @@
     "webpack": "^4.41.0",
     "webpack-bundle-tracker": "^0.4.3",
     "webpack-cli": "^3.3.9"
-  },
-  "browserify": {
-    "transform": [
-      "babelify",
-      "envify"
-    ]
   }
 }
