@@ -1,11 +1,16 @@
 import React from 'react';
-import {Tabs, Tab} from 'material-ui/Tabs';
+import { Tabs, Tab } from 'material-ui/Tabs';
 import AutoComplete from 'material-ui/AutoComplete';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import {androidstudio} from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import RaisedButton from 'material-ui/RaisedButton';
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript';
+import py from 'react-syntax-highlighter/dist/esm/languages/hljs/python';
+import sh from 'react-syntax-highlighter/dist/esm/languages/hljs/shell';
+import { androidstudio } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import 'whatwg-fetch';
 
+SyntaxHighlighter.registerLanguage('javascript', js);
+SyntaxHighlighter.registerLanguage('python', py);
+SyntaxHighlighter.registerLanguage('shell', sh);
 
 let rooms = [
   'Wilkins Building (Main Building) Portico',
@@ -450,7 +455,7 @@ fetch(
 
     if (this.state.schedule) {
       response = <div>
-        <hr/>
+        <hr />
         <SyntaxHighlighter language={"javascript"} style={androidstudio}>
           {this.state.schedule}
         </SyntaxHighlighter>
@@ -462,7 +467,7 @@ fetch(
 
         <div className="text">
           <h2>Try out the Room Bookings API</h2>
-          <AutoComplete fullWidth={true} floatingLabelText="Room Name" filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} dataSource={rooms} onNewRequest={this.getSchedule}/>
+          <AutoComplete fullWidth={true} floatingLabelText="Room Name" filter={AutoComplete.caseInsensitiveFilter} openOnFocus={true} dataSource={rooms} onNewRequest={this.getSchedule} />
         </div>
 
         <div className="code">
