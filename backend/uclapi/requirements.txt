@@ -1,4 +1,4 @@
-amqp==2.5.1
+amqp==2.5.2
 botocore==1.12.253
 boto3==1.9.253
 celery==4.3.0
@@ -37,9 +37,9 @@ pbr==5.4.2
 pycryptodome==3.9.0
 psycopg2-binary==2.8.3
 python-dateutil==2.8.0
-pytz==2019.2
+pytz==2019.3
 raven==6.10.0
-redis==3.3.8
+redis==3.3.11
 requests==2.22.0
 requests-file==1.4.3
 requests-futures==1.0.0
