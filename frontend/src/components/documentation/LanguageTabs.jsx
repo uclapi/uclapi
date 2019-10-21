@@ -1,5 +1,5 @@
 import React from 'react';
-import {Tabs, Tab} from 'material-ui/Tabs';
+import { Tabs, Tab } from 'material-ui/Tabs';
 
 
 /*
@@ -17,22 +17,17 @@ export default class LanguageTabs extends React.Component {
     this.state = {
       activeLanguage: "python"
     }
-
-    this.changeActiveLanguage = this.changeActiveLanguage.bind(this);
-    this.renderChildren = this.renderChildren.bind(this);
   }
 
-  changeActiveLanguage(language) {
-    this.setState({activeLanguage: language})
+  changeActiveLanguage = (language) => {
+    this.setState({ activeLanguage: language })
   }
 
-  renderChildren(props) {
-    return React.Children.map(props.children, (child, i) => {
-      return React.cloneElement(child, {
-        activeLanguage: this.state.activeLanguage
-      })
+  renderChildren = (props) => React.Children.map(props.children, (child, i) =>
+    React.cloneElement(child, {
+      activeLanguage: this.state.activeLanguage
     })
-  }
+  )
 
   render() {
     return (

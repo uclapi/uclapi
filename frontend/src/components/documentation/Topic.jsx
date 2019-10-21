@@ -1,7 +1,13 @@
 import React from 'react';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import {androidstudio} from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript';
+import py from 'react-syntax-highlighter/dist/esm/languages/hljs/python';
+import sh from 'react-syntax-highlighter/dist/esm/languages/hljs/shell';
+import { androidstudio } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
+SyntaxHighlighter.registerLanguage('javascript', js);
+SyntaxHighlighter.registerLanguage('python', py);
+SyntaxHighlighter.registerLanguage('shell', sh);
 
 /*
   This is the main component that contains content for the documentation.
@@ -44,7 +50,7 @@ export default class Topic extends React.Component {
             but converting to markdown will prevent us from doing that
             I guess it depends on how we generate the sidebar
           */}
-          { this.props.children }
+          {this.props.children}
         </div>
         <div className="col code">
           {
