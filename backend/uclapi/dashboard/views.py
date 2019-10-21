@@ -190,7 +190,6 @@ def about(request):
     })
 
 
-
 @ensure_csrf_cookie
 def home(request):
     logged_in = True
