@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 import Hub from '../components/appsettings/hub.jsx';
 import LogInLayout from '../components/appsettings/loginlayout.jsx';
 import UserApps from '../components/appsettings/userapps.jsx';
-import moment from 'moment';
 
-import {cyan500, cyan700,
+import {
+  cyan500,
   pinkA200,
   grey100, grey300, grey400, grey500,
   white, darkBlack, fullBlack,
@@ -35,21 +35,32 @@ import './../sass/hub.scss';
 import './../sass/navbar.scss';
 
 class AppSettings extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
-    this.state = {data: window.initialData};
+    this.state = { data: window.initialData };
   }
-  render () {
-    if(this.state.data.status!="ONLINE") {
+  render() {
+    const { data: {
+      status,
+      url,
+      fullname,
+      department,
+      apps
+    } } = this.state
+    if (status !== `ONLINE`) {
       return <MuiThemeProvider muiTheme={muiTheme}>
-          <Hub>   
-            <LogInLayout url={this.state.data.url} />
-          </Hub>
-        </MuiThemeProvider>;
+        <Hub>
+          <LogInLayout url={url} />
+        </Hub>
+      </MuiThemeProvider>;
     } else {
       return <MuiThemeProvider muiTheme={muiTheme}>
-        <Hub> 
-          <UserApps fullname={this.state.data.fullname} department={this.state.data.department} authorised_apps={this.state.data.apps} />  
+        <Hub>
+          <UserApps
+            fullname={fullname}
+            department={department}
+            authorised_apps={apps}
+          />
         </Hub>
       </MuiThemeProvider>;
     }

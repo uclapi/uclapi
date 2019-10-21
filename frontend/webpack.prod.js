@@ -38,7 +38,7 @@ module.exports = {
       sourceMap: true
     }),
     new webpack.DefinePlugin({
-     'process.env.NODE_ENV': JSON.stringify('production')
+      'process.env.NODE_ENV': JSON.stringify('production')
     }),
     new MiniCssExtractPlugin({
       filename: "[name]-[contenthash].css",
@@ -47,7 +47,7 @@ module.exports = {
     new BundleTracker({
       filename: '../backend/uclapi/static/webpack-stats.json'
     }),
-    new webpack.HashedModuleIdsPlugin()
+    new webpack.HashedModuleIdsPlugin(),
   ],
   module: {
     rules: [
