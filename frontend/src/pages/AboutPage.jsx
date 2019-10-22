@@ -2,8 +2,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import splash_screen from 'Images/team/people.jpg';
-
 // Common Components
 import { Row, Column, TextView, ButtonView, CardView, ImageView, Demo, NavBar, Footer } from 'Layout/Items.jsx';
 
@@ -18,14 +16,13 @@ import 'Styles/navbar.scss';
 
 const member = (info) => (
     <CardView width="1-6" minWidth="120px" style="emphasis" link={info.github}>
-      <Row>
+      <Row height="300px" padding="20px 0">
         <Column width="1-1" horizontalAlignment="center">
           <TextView text={info.name} heading={2} align={"center"} color={"white"}/>
-          <Row height = "100px" src={info.image}></Row>
-          <Row height = "50px">
+          <Row height="100px" src={info.image}></Row>
+          <Row height="30px" padding="20px 0">
             <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
                 <TextView text={info.title} heading={6} align={"center"} color={"white"} />
-                <TextView text="Click to find out more" heading={6} align="center" color={"white"} />
             </Column>
           </Row>
         </Column>
@@ -50,9 +47,9 @@ class AboutPage extends React.Component {
 
           <Row height = "600px" color="team-parallax">         
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
-              <TextView text={"The Team"} heading={1} align={"center"}/>
-              <TextView text={`UCL API is a student led project founded by Wilhelm Klopp that opens up the massive amount of
-                              data collected by UCL and allows UCL students and staff access to develop with it.`} 
+              <TextView text={"About Us"} heading={1} align={"center"}/>
+              <TextView text={`UCL API is a student led project, founded by Wilhelm Klopp, that opens up the massive amount of
+                              data collected by UCL. This allows UCL alumni and staff to develop apps with UCL data.`} 
                               heading={2} align={"center"}/>
             </Column>
           </Row>

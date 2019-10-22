@@ -8,6 +8,8 @@ this.props.color OR this.props.src (remember to set a design for the layout)
 
 OPTIONAL ATTRIBUTES:
 this.props.height (manually set the height over what the contents)
+padding TO REMOVE
+margin TO REMOVE
 
 **/
 export default class Row extends React.Component {
@@ -53,6 +55,8 @@ export default class Row extends React.Component {
     // Override for padding
     if(!this.props.noPadding && !this.props.padding) {this.class += " vertical-padding"}
     if(this.props.padding) { this.setStyleKeyValuePair("padding", this.props.padding); }
+    // Override for margin
+    if(this.props.margin) { this.setStyleKeyValuePair("margin", this.props.margin); }
 
     // OPTIONAL ATTRIBUTES
     // Height of container

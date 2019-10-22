@@ -57,10 +57,10 @@ class Marketplace extends React.Component {
 
           <NavBar isScroll={false} />
 
-          <Row height="600px" color="splash-parallax">         
+          <Row height="300px" margin="60px 0 0 0" color="splash-parallax">         
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
-              <TextView text={"Apps to improve student life at UCL"} heading={2} align={"center"}/>
+              <TextView text={"Apps that use UCL API"} heading={2} align={"center"}/>
             </Column>
           </Row>
 
@@ -132,10 +132,10 @@ class AppPage extends React.Component {
       <React.Fragment>
           <NavBar isScroll={false} />
 
-          <Row height="600px" color="splash-parallax">         
+          <Row height="300px" margin="60px 0 0 0" color="splash-parallax">         
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
-              <TextView text={"Apps to improve student life at UCL"} heading={2} align={"center"}/>
+              <TextView text={"Apps that use UCL API"} heading={2} align={"center"}/>
             </Column>
           </Row>
 

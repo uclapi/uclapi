@@ -126,7 +126,7 @@ class HomePage extends React.Component {
 
         <Row isPadded={true} color="splash-parallax">         
           <Column width="9-10" horizontalAlignment="center">
-            <TextView text={"Check out our blog for tutorials"} heading={1} align={"center"}/>
+            <TextView text={"Check out our blog"} heading={1} align={"center"}/>
             {this.state.articles.map(x => ( 
               <CardView width="1-3" minWidth="200px" style="default" link={x.url}>
                 <Column width="1-1">

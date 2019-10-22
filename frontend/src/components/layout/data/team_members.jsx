@@ -14,6 +14,7 @@ import kimia from 'Images/team/kimia.jpg';
 import anush from 'Images/team/anush.jpg';
 import alex from 'Images/team/alex.jpg';
 import zak from 'Images/team/zak.jpg';
+import wilhelm from 'Images/team/wilhelm.jpg';
 
 export const previous = [
   {
@@ -60,6 +61,15 @@ export const previous = [
     "email": "henry@ucl.ac.uk",
     "github": "https://github.com/hennersz",
     "image": henry
+  },
+  {
+    "name": "Wilhelm",
+    "startYear": "2016",
+    "endYear": "2017",
+    "title": "Founder",
+    "email": "wilhelm@ucl.ac.uk",
+    "github": "https://github.com/wilhelmklopp",
+    "image": wilhelm
   }
 ]
 

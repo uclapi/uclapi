@@ -322,13 +322,16 @@ Download docker for windows
 
 Install uclapi into a common source folder on your computer using:
 
+```
 git clone https://github.com/uclapi/uclapi.git
+```
 
 ### Building the frontend
 
+```
 cd frontend
-
 npm start
+```
 
 ### Running docker
 
@@ -338,12 +341,15 @@ navigate to docker settings > shared drives > enable c
 
 run the following command inside WSL:
 
-`export DOCKER_HOST=tcp://localhost:2375" >> ~/.bashrc && source ~/.bashrc`
+```
+export DOCKER_HOST=tcp://localhost:2375" >> ~/.bashrc && source ~/.bashrc
+```
 
 Finally run the following command in a new terminal inside uclapi:
 
+```
 docker-compose up -d
-
+```
 
 ## Documentation
 As well as the user-facing documentation we also now ship our own internal Documentation
