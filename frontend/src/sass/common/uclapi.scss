@@ -96,13 +96,12 @@ p, h1, h2, h3, h4, h5, h6 {
 	color: white;
 }
 
-p, h1, h2, h3, h4, h5 {
+p, h1, h2, h3, h4 {
   margin-top: 0;
 }
 
 h5 {
 	font-weight: normal;
-  margin: 0;
 }
 
 h1 {
@@ -124,8 +123,8 @@ h1 {
 a{ color: white; text-decoration-color: white; }
 a:hover { color: #BBBBBB; }
 
-.alt-text { color: $primary-color; text-decoration-color: #313537; }
-.alt-text:hover { color: $primary-highlight-color; }
+.alt-text { color: lighten($primary-highlight-color, 10%); text-decoration-color: #313537; }
+.alt-text:hover { color: lighten($primary-highlight-color, 20%); }
 
 /** Alignments **/
 

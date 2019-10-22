@@ -29,6 +29,7 @@ export default class TextView extends React.Component {
     if(this.props.color) {text_style['color'] = this.props.color; text_style['textDecorationColor'] = this.props.color;}
     if(this.props.isInline) {text_style['display'] = "inline-block"; }
     if(this.props.fontStyle) {text_style['fontStyle'] = this.props.fontStyle; }
+    if(this.props.noMargin) {text_style['margin'] = "0"; }
 
     var isLink = false;
     if(this.props.link) {isLink = true;}

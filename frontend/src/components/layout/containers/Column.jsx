@@ -9,6 +9,7 @@ this.props.horizontalAlignment (left / center / right)
 this.props.verticalALignment (top / center / bottom) => Row Height must be set otherwise weird behaviour
 this.props.typeOfInline (default none: block / flex / grid) => `Not sure if useful with addition of transparent cards`
 this.props.textAlign (like the normal inline tag)
+max width
 
 **/
 export default class Column extends React.Component {
@@ -127,6 +128,9 @@ export default class Column extends React.Component {
       this.setStyleKeyValuePair("display", "inline-" + this.props.typeOfInline);
       this.setStyleKeyValuePair("padding", "2%");
     }
+
+    if(this.props.maxWidth) {this.setStyleKeyValuePair("maxWidth", this.props.maxWidth);}
+    if(this.props.minWidth) {this.setStyleKeyValuePair("minWidth", this.props.minWidth);}
   }
 
 }

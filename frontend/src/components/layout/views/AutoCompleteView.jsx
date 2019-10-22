@@ -17,7 +17,7 @@ const renderSuggestion = suggestion => (
    <Row color="primary-highlight" height={row_size + "px"} noPadding>         
     <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
       <CardView width="1-1" style="emphasis" fakeLink noShadow>
-        <Row height = {(row_size-12) + "px"} padding="4px 0">
+        <Row height = {(row_size-12) + "px"} padding="5px 2px">
           <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
               <TextView align="center" text={suggestion} heading={5}/>
           </Column>
