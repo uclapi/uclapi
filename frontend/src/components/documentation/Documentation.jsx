@@ -46,12 +46,16 @@ import GetInvolved from './GetInvolved/GetInvolved.jsx';
 import LanguageTabs from './LanguageTabs.jsx';
 import Sidebar from './Sidebar.jsx';
 
+// UCL API navbar
+import 'Styles/navbar.scss';
+import { NavBar } from 'Layout/Items.jsx';
 
 export default class DocumentationComponent extends React.Component {
 
     render () {
       return (
         <div>
+          <NavBar isScroll={false} />
           <Sidebar />
           <LanguageTabs>
             <Welcome />

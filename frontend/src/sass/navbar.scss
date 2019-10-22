@@ -12,7 +12,7 @@ $navbarHeight: 60px;
     top: 60px;
     transition-property: all;
     transition-timing-function: linear;
-    transition-duration: 0.7s;
+    transition-duration: 0.3s;
 
     .link-to-page {
       width: 100%;
@@ -20,16 +20,14 @@ $navbarHeight: 60px;
   }
 }
 .navbarconsistent {
-  z-index: 2;
+  z-index: 1299;
   position: fixed;
   border-bottom: 1px solid rgba(0, 0, 0, 0.14);
   height: $navbarHeight;
   width: 100%;
   top: 0;
 
-  background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("./../images/logoCover2.png");
-  background-position: 50% 0%;
-  background-size: cover;
+  background-color: #313537;
 
   display: flex;
   align-items: center;
@@ -61,9 +59,9 @@ $navbarHeight: 60px;
     display: inline-block;
     width: 16px;
     height: 16px;
-    transition-property: margin-top;
+    transition-property: margin-right;
     transition-timing-function: linear;
-    transition-duration: 0.2s;
+    transition-duration: 0.15s;
 }
 .link-to-page { 
     display: inline-block;
@@ -80,9 +78,8 @@ $navbarHeight: 60px;
 .link-to-page h1 {
     border: solid;
     border-color: #FFF;
-    border-width: 0;
-    border-left-width: 1px;
-    padding-left: 20px;
+    border-width: 0 0 0 1px;
+    padding: 0 20px;
     margin: 0;
     font-size: 1em;
     font-weight: normal;

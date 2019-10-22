@@ -1,0 +1,440 @@
+/**
+	UCL API WEBSITE STYLES 
+	As of July 2019
+
+	Hopefully these stylings bring together
+	the amazing work of previous developers
+	and make it so that the horrendous task
+	of interacting with css is removed.
+
+	Table of contents:
+
+	- Setup
+	- Color Scheme
+	- Sizings
+	- Text
+	- Alignments
+	- Containers
+	- Buttons
+	- Transitions
+	- Cards
+	- Code Segments
+	- RC-Collapse
+  - Input Forms
+  - Auto complete forms
+  - Code View
+
+**/
+
+/** Setup **/
+
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
+
+$break-small: 780px;
+
+html, button, input, select, textarea {
+	font-family: 'Source Sans Pro','Roboto', sans-serif;
+}
+
+html, body {
+  margin: 0;
+  background-color: white;
+}
+
+/** Color Scheme **/
+
+$primary-color: #296da7;
+$primary-highlight-color: #3498db;
+
+$secondary-color: #313537;
+
+$accent-color: #8D6E63;
+$highlight-color: #B18453;
+
+/** Row Colours **/
+
+.splash-parallax { 
+  background-image: url("~Images/home-page/splash_screen.png");
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4); 
+  
+  /* Full height */
+  height: 100%; 
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.team-parallax { 
+  background-image: url("~Images/team/teambg.jpg");
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4); 
+  
+  /* Full height */
+  height: 100%; 
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.primary-highlight { background-color: $primary-highlight-color }
+.primary { background-color: $primary-color }
+
+.secondary { background-color: $secondary-color;}
+.warning-red { background-color: red; }
+.market-green { background-color: #03B77B; }
+.transparent { background-color: #FFFFFF00; }
+
+/** Text **/
+
+p, h1, h2, h3, h4, h5, h6 {
+	font-family: 'Source Sans Pro', 'Roboto', sans-serif;
+	color: white;
+}
+
+p, h1, h2, h3, h4 {
+  margin-top: 0;
+}
+
+h5 {
+	font-weight: normal;
+}
+
+h1 {
+	font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    margin-top: 0;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.45);
+}
+
+.justified-text {
+  text-align: justify;
+}
+
+.centered-text {
+	text-align: center;
+}
+
+a{ color: white; text-decoration-color: white; }
+a:hover { color: #BBBBBB; }
+
+.alt-text { color: lighten($primary-highlight-color, 10%); text-decoration-color: #313537; }
+.alt-text:hover { color: lighten($primary-highlight-color, 20%); }
+
+/** Alignments **/
+
+.full-screen {
+	height: 100%;
+}
+
+.column {
+    text-align: center;
+    overflow: hidden;
+}
+
+.center-x {
+	position: relative;
+	margin: auto;
+}
+
+.vertical-align {
+	width: 100%;
+	position: absolute;
+}
+
+.no-vertical-align {
+	width: 100%;
+	position: relative;
+}
+
+.center-y {
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.bottom-y {
+  bottom: 50px;
+}
+
+/** Containers **/
+
+.row {
+	width: 100%;
+  	position: relative;
+	height: auto;
+	min-height: 100% !important;
+}
+
+.vertical-padding {
+  padding: 50px 0;
+}
+
+/** Buttons **/
+
+.uclapi-button {
+	padding: 10px 20px;
+	margin: 10px;
+	border-radius: 2px;
+	width: fit-content;
+	display: inline-block;
+  text-decoration: none;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.circular-button { border-radius: 25%; }
+
+.default-button { background-color: #313537; color: white; }
+.default-button:hover, .uclapi-card-clicked-default:hover { background-color: #75797B;  }
+
+.alternate-button, .image-button { background-color: #FFFFFF; color: black; }
+.alternate-button:hover, .image-button:hover, .uclapi-card-clicked-alternate:hover { background-color: #CCCCCC;  }
+
+.emphasis-button, { background-color: $primary-highlight-color; color: black; }
+.emphasis-button:hover { background-color: $primary-color;  }
+
+/** Transitions **/
+
+.default-transition {
+	transition-duration: 200ms;
+	transition-timing-function: linear;
+}
+.background-color-transition { transition-property: background-color; }
+.color-transition { transition-property: color; }
+
+/** Cards **/
+
+.uclapi-card {
+	display: inline-block;
+	border-radius: 10px;
+	height: auto;
+	overflow: hidden;
+	min-height: fit-content;
+	margin: 2%;
+}
+
+.uclapi-card-default {
+	background-color: #313537;
+}
+
+.uclapi-card-wrap-around {
+	display: flex;
+  float: left;
+	background-color: #00000000;
+	margin: 0;
+	padding: 0;
+}
+
+.uclapi-card-alternate {
+  background-color: #FFFFFF;
+}
+
+.uclapi-card-emphasis {
+	background-color: $primary-color; 
+}
+
+.uclapi-card-emphasis:hover {
+  background-color: $primary-highlight-color; 
+}
+
+.uclapi-card-shadow {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.clickable {
+	text-decoration: none;
+	cursor: pointer;
+}
+
+/** Update cards and columns when the size approaches phone screen size **/
+@media only screen and (max-width: 540px) {
+	.mobile-friendly {
+		min-width: 90%;
+		padding: 0;
+	}
+}
+
+/** Code Segments **/
+
+/** RC Collapse **/
+
+.rc-collapse {
+  background-color: $secondary-color;
+  border-radius: 10px;
+  margin: 5px 0;
+  color: white;
+  font-size: 28px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+  @media screen and (max-width: $break-small) {
+    font-size: 18px;
+  }
+
+  > .rc-collapse-item {
+
+    > .rc-collapse-header {
+      color: white;
+      cursor: pointer;
+      line-height: 38px;
+      text-indent: 0px;
+      outline: 0;
+      padding: 10px 0 10px 0;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 20px;
+
+      .arrow {
+        border-bottom: 1px solid transparent;
+        border-left: 1px solid black;
+        border-top: 1px solid transparent;
+        content: '\20';
+        display: inline-block;
+        font-size: 0;
+        height: 0;
+        line-height: 0;
+        margin-right: 8px;
+        vertical-align: middle;
+        width: 0;
+      }
+    }
+  }
+
+  > .rc-collapse-item:first-child {
+    border-top: 0;
+  }
+
+  > .rc-collapse-item-disabled > .rc-collapse-header {
+    background-color: $primary-color;
+    color: white;
+    cursor: not-allowed;
+  }
+
+  > .rc-collapse-item-active > .rc-collapse-header .arrow {
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-top: 1px solid black;
+    margin-right: 6px;
+  }
+
+}
+
+.rc-collapse-anim-active {
+  transition: height .2s ease-out;
+}
+
+
+.rc-collapse-content {
+    overflow: hidden;
+    padding: 0 16px;
+
+  > .rc-collapse-content-box {
+    margin-bottom: 16px;
+    border-top: 1px dotted rgba(255, 255, 255, 0.455);
+  }
+}
+
+.rc-collapse-content p {
+    color: white;
+    font-size: 14px;
+    text-align: justify;
+    margin-top:10px;
+}
+
+
+.rc-collapse-content-inactive {
+  display: none;
+}
+
+.rc-collapse-item:last-child > .rc-collapse-content {
+  border-radius: 0 0 3px 3px;
+}
+/** Input Forms **/
+
+input {
+  padding: 20px 0;
+  border: none;
+  float: left;
+  margin: 0;
+  width: 100%;
+  background-color: $primary-highlight-color;
+  color: white;
+  text-align: center;
+}
+
+input::placeholder { 
+  color: white;
+}
+
+input:focus{
+    outline: none;
+}
+/** For Autocomplete forms **/
+
+ul {
+    margin: 0;
+    padding-left: 0;
+    border-radius: 10px
+}
+li {
+    list-style-type: none;
+    margin: 0;
+    float: left;
+    width: 100%;
+}
+
+/** Code View styling **/
+
+pre {
+  margin: 0;
+}
+
+.react-tabs__tab-panel {
+  display: flex;
+  width: 100%;
+}
+
+.react-tabs__tab-list li {
+  cursor: pointer;
+  color: white;
+  list-style-type: none;
+  margin: 0;
+  float: left;
+  display: inline-block;
+  width: fit-content;
+  padding: 10px 50px;
+  margin-right: 5px;
+  width: 50%;
+  text-align: left;
+  transition-duration: 200ms;
+  transition-timing-function: linear;
+  transition-property: background-color;
+}
+
+.unselected-tab {
+  background-color: $primary-highlight-color;
+}
+
+.selected-tab {
+  background-color: $primary-color;
+}
+
+.react-tabs__tab-list li:hover {
+  background-color: $primary-color;
+}
+@media screen and (max-width: 700px) {
+  .react-tabs__tab-list li {
+    width: 100%;
+    text-align: left;
+  }
+  input {
+    width: 96%;
+    padding: 20px 2%;
+  }
+  .arrow {
+    display: none;
+  }
+}

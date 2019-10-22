@@ -310,6 +310,47 @@ python manage.py feed_occupeye_cache_mini
 ```
 **Note: As said previously these require valid credentials and for you to be on the UCL network to use**
 
+## Developing using docker
+
+### Installation of docker (Windows using WSL)
+
+Make sure to have an installation of Windows 10 Education (Free licence through UCL) 
+
+Download docker for windows
+
+### Cloning the repository
+
+Install uclapi into a common source folder on your computer using:
+
+```
+git clone https://github.com/uclapi/uclapi.git
+```
+
+### Building the frontend
+
+```
+cd frontend
+npm start
+```
+
+### Running docker
+
+copy the .env.example into the root/uclapi folder and rename to .env
+
+navigate to docker settings > shared drives > enable c
+
+run the following command inside WSL:
+
+```
+export DOCKER_HOST=tcp://localhost:2375" >> ~/.bashrc && source ~/.bashrc
+```
+
+Finally run the following command in a new terminal inside uclapi:
+
+```
+docker-compose up -d
+```			
+
 ## Documentation
 As well as the user-facing documentation we also now ship our own internal Documentation
 which aims to help developers contribute to our code. To make it simply run ```make html```

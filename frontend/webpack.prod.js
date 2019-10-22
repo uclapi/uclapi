@@ -47,7 +47,7 @@ module.exports = {
     new BundleTracker({
       filename: '../backend/uclapi/static/webpack-stats.json'
     }),
-    new webpack.HashedModuleIdsPlugin(),
+    new webpack.HashedModuleIdsPlugin()
   ],
   module: {
     rules: [
@@ -67,18 +67,26 @@ module.exports = {
         ]
       },
       {
-        test: /\.(jpg|png|svg)$/,
+        test: /\.(jpg|png|svg|jpeg)$/,
         loader: 'file-loader'
       },
     ]
   },
+  resolve: {
+    alias: {
+      'Images': path.resolve(__dirname, './src/images'),
+      'Layout': path.resolve(__dirname, './src/components/layout'),
+      'Styles': path.resolve(__dirname, './src/components/sass'),
+    }
+  },
   entry: {
-    getStarted: entryPointsPathPrefix + '/getStarted.jsx',
-    documentation: entryPointsPathPrefix + '/documentation.jsx',
-    dashboard: entryPointsPathPrefix + '/dashboard.jsx',
-    marketplace: entryPointsPathPrefix + '/marketplace.jsx',
-    authorise: entryPointsPathPrefix + '/authorise.jsx',
-    appsettings: entryPointsPathPrefix + '/appsettings.jsx',
+    index: entryPointsPathPrefix + '/HomePage.jsx',
+    documentation: entryPointsPathPrefix + '/Documentation.jsx',
+    about: entryPointsPathPrefix + '/AboutPage.jsx',
+    dashboard: entryPointsPathPrefix + '/Dashboard.jsx',
+    marketplace: entryPointsPathPrefix + '/Marketplace.jsx',
+    authorise: entryPointsPathPrefix + '/Authorise.jsx',
+    settings: entryPointsPathPrefix + '/AppSettings.jsx',
     vendors: ['react'],
   },
   output: {

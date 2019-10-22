@@ -1,6 +1,5 @@
 const os = require('os');
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const BundleTracker = require('webpack-bundle-tracker');
 
 var entryPointsPathPrefix = './src/pages';
@@ -13,9 +12,6 @@ module.exports = {
     minimizer: []  // This list is built below as per platform requirements
   },
   plugins: [
-    new UglifyJsPlugin({
-      sourceMap: true
-    }),
     new BundleTracker({
       filename: '../backend/uclapi/static/webpack-stats.json'
     })
@@ -38,18 +34,26 @@ module.exports = {
         ]
       },
       {
-        test: /\.(jpg|png|svg)$/,
+        test: /\.(jpg|png|svg|jpeg)$/,
         loader: 'url-loader'
       },
     ]
   },
+  resolve: {
+    alias: {
+      'Images': path.resolve(__dirname, './src/images'),
+      'Layout': path.resolve(__dirname, './src/components/layout'),
+      'Styles': path.resolve(__dirname, './src/sass'),
+    }
+  },
   entry: {
-    getStarted: entryPointsPathPrefix + '/getStarted.jsx',
-    documentation: entryPointsPathPrefix + '/documentation.jsx',
-    dashboard: entryPointsPathPrefix + '/dashboard.jsx',
-    marketplace: entryPointsPathPrefix + '/marketplace.jsx',
-    authorise: entryPointsPathPrefix + '/authorise.jsx',
-    appsettings: entryPointsPathPrefix + '/appsettings.jsx',
+    index: entryPointsPathPrefix + '/HomePage.jsx',
+    documentation: entryPointsPathPrefix + '/Documentation.jsx',
+    about: entryPointsPathPrefix + '/AboutPage.jsx',
+    dashboard: entryPointsPathPrefix + '/Dashboard.jsx',
+    marketplace: entryPointsPathPrefix + '/Marketplace.jsx',
+    authorise: entryPointsPathPrefix + '/Authorise.jsx',
+    settings: entryPointsPathPrefix + '/AppSettings.jsx',
     vendors: ['react'],
   },
   output: {
@@ -58,19 +62,3 @@ module.exports = {
     filename: '[name].js'
   }
 };
-if (os.platform == "linux" && os.release().indexOf("Microsoft") != -1) {
-  module.exports.optimization.minimizer.push(
-    new UglifyJsPlugin({
-      cache: true,
-      sourceMap: true
-    })
-  );
-} else {
-  module.exports.optimization.minimizer.push(
-    new UglifyJsPlugin({
-      cache: true,
-      sourceMap: true,
-      parallel: true
-    })
-  );
-}
