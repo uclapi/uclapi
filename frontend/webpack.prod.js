@@ -41,8 +41,8 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
     new MiniCssExtractPlugin({
-      filename: "[name]-[contenthash].css",
-      chunkFilename: "[id]-[contenthash].css"
+      filename: '[name]-[contenthash].css',
+      chunkFilename: '[id]-[contenthash].css'
     }),
     new BundleTracker({
       filename: '../backend/uclapi/static/webpack-stats.json'
@@ -55,15 +55,15 @@ module.exports = {
         test: /\.jsx$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
+          loader: 'babel-loader'
         }
       },
       {
         test: /\.scss$/,
         use: [
           MiniCssExtractPlugin.loader,
-          { loader: "css-loader" },
-          { loader: "sass-loader" }
+          { loader: 'css-loader' },
+          { loader: 'sass-loader' }
         ]
       },
       {
@@ -76,7 +76,7 @@ module.exports = {
     alias: {
       'Images': path.resolve(__dirname, './src/images'),
       'Layout': path.resolve(__dirname, './src/components/layout'),
-      'Styles': path.resolve(__dirname, './src/components/sass'),
+      'Styles': path.resolve(__dirname, './src/sass'),
     }
   },
   entry: {
@@ -99,7 +99,7 @@ module.exports = {
 // Do not enable parallelisation for Windows Subsystem for Linux
 // https://github.com/webpack-contrib/uglifyjs-webpack-plugin/issues/302
 // https://stackoverflow.com/a/44356310/5297057
-if (os.platform == "linux" && os.release().indexOf("Microsoft") != -1) {
+if (os.platform == 'linux' && os.release().indexOf('Microsoft') != -1) {
   module.exports.optimization.minimizer.push(
     new UglifyJsPlugin({
       cache: true,
