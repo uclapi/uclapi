@@ -38,7 +38,7 @@ module.exports = {
       sourceMap: true
     }),
     new webpack.DefinePlugin({
-     'process.env.NODE_ENV': JSON.stringify('production')
+      'process.env.NODE_ENV': JSON.stringify('production')
     }),
     new MiniCssExtractPlugin({
       filename: "[name]-[contenthash].css",

@@ -3,28 +3,28 @@ import ReactDOM from 'react-dom';
 import Layout from '../components/dashboard/layout.jsx';
 import Profile from '../components/dashboard/profile.jsx';
 import AppList from '../components/dashboard/appList.jsx';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import './../sass/dashboard.scss';
 
 class Dashboard extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     window.initialData.apps.sort((a, b) => {
-      let dateA = moment(a.created);
-      let dateB = moment(b.created);
+      let dateA = dayjs(a.created);
+      let dateB = dayjs(b.created);
 
-      if(dateA.isBefore(dateB)){
+      if (dateA.isBefore(dateB)) {
         return -1;
-      } else if (dateB.isBefore(dateA)){
+      } else if (dateB.isBefore(dateA)) {
         return 1;
       } else {
         return 0;
       }
     });
-    this.state = {data: window.initialData};
+    this.state = { data: window.initialData };
   }
-  render () {
+  render() {
     return <div>
       <Layout>
         <Profile name={this.state.data.name} cn={this.state.data.cn} />
