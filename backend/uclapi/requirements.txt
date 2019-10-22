@@ -7,7 +7,7 @@ chardet==3.0.4
 ciso8601==2.1.2
 cx-Oracle==7.2.3
 decorator==4.4.0
-deepdiff==4.0.7
+deepdiff==4.0.8
 Django==1.11.25
 django-cors-headers==3.1.1
 django-dotenv==1.4.2
@@ -33,7 +33,7 @@ lxml==4.4.1
 Markupsafe==1.1.1
 mock==3.0.5
 model-mommy==1.6.0
-pbr==5.4.2
+pbr==5.4.3
 pycryptodome==3.9.0
 psycopg2-binary==2.8.4
 python-dateutil==2.8.0
