@@ -356,13 +356,14 @@ a:hover { color: #BBBBBB; }
 /** Input Forms **/
 
 input {
-  padding: 20px;
+  padding: 20px 0;
   border: none;
   float: left;
   margin: 0;
   width: 100%;
   background-color: $primary-highlight-color;
   color: white;
+  text-align: center;
 }
 
 input::placeholder { 

@@ -349,7 +349,7 @@ Finally run the following command in a new terminal inside uclapi:
 
 ```
 docker-compose up -d
-```
+```			
 
 ## Documentation
 As well as the user-facing documentation we also now ship our own internal Documentation
