@@ -83,12 +83,6 @@ $navbarHeight: 60px;
     margin: 0;
     font-size: 1em;
     font-weight: normal;
-    transition-property: border-width;
-    transition-timing-function: linear;
-    transition-duration: 0.15s;
-}
-.link-to-page h1:hover {
-    border-width: 0 5px;
 }
 .link-to-page a {
     display: inline-block;

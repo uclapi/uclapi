@@ -112,8 +112,8 @@ class HomePage extends React.Component {
 
             {endpoints.map(x => (
               <CardView width={"1-2"} minWidth={"200px"} link={x.link}>
-                <Row height = "100px">
-                  <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
+                <Row height = "100px" padding="20px 0">
+                  <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
                     <TextView text={x.name} heading={2} align={"center"}/>
                     <TextView text={x.description} heading={5} align={"center"}/>
                   </Column>
@@ -131,7 +131,7 @@ class HomePage extends React.Component {
               <CardView width="1-3" minWidth="200px" style="default" link={x.url}>
                 <Column width="1-1">
                   <Row height = "200px" src={x.image_url}>
-                    <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
+                    <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
                       <TextView text={x.title} align={"center"} heading = {3} color={"white"} />
                     </Column>
                   </Row> 

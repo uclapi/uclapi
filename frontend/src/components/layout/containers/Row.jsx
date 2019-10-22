@@ -51,7 +51,8 @@ export default class Row extends React.Component {
     // Either given a color or src
     this.setupBackground();
     // Override for padding
-    if(!this.props.noPadding) {this.class += " vertical-padding"}
+    if(!this.props.noPadding && !this.props.padding) {this.class += " vertical-padding"}
+    if(this.props.padding) { this.setStyleKeyValuePair("padding", this.props.padding); }
 
     // OPTIONAL ATTRIBUTES
     // Height of container
