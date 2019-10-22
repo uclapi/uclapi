@@ -32,7 +32,7 @@ kombu==4.6.3
 lxml==4.4.1
 Markupsafe==1.1.1
 mock==3.0.5
-model-mommy==1.6.0
+model-mommy==2.0.0
 pbr==5.4.3
 pycryptodome==3.9.0
 psycopg2-binary==2.8.4
