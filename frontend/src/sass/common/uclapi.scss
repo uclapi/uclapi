@@ -328,8 +328,8 @@ a:hover { color: #BBBBBB; }
 
 
 .rc-collapse-content {
-    overflow: hidden;
-    padding: 0 40px;
+  overflow: hidden;
+  padding: 0 40px;
 
   > .rc-collapse-content-box {
     margin-bottom: 16px;
@@ -341,7 +341,7 @@ a:hover { color: #BBBBBB; }
     color: white;
     font-size: 14px;
     text-align: justify;
-    margin-top:10px;
+    margin-top: 10px;
 }
 
 
@@ -356,10 +356,10 @@ a:hover { color: #BBBBBB; }
 
 input {
   background-color: $primary-highlight-color;
-  border: none;
+  border: 0;
   color: white;
   float: left;
-  margin: 30px 0 0 0;
+  margin: 30px 0 0;
   padding: 15px 0;
   text-align: center;
   width: 100%;
