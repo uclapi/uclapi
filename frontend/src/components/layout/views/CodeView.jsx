@@ -54,7 +54,7 @@ export default class CodeView extends React.Component {
             </TabList>
               {languages.map((language, index) => (
                 <TabPanel>
-                  <div className="default-transition background-color-transition inner-tab" style={ {"textAlign" : "left"} }>
+                  <div className='default-transition background-color-transition inner-tab' style={ {"textAlign" : "left"} }>
                     <SyntaxHighlighter language={language.name} style={androidstudio}>{language.code}</SyntaxHighlighter>
                   </div>
                 </TabPanel>

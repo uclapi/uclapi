@@ -355,15 +355,14 @@ a:hover { color: #BBBBBB; }
 /** Input Forms **/
 
 input {
-  padding: 15px 0;
-  border: none;
-  float: left;
-  margin: 0;
-  margin-top: 30px;
-  width: 100%;
   background-color: $primary-highlight-color;
+  border: none;
   color: white;
+  float: left;
+  margin: 30px 0 0 0;
+  padding: 15px 0;
   text-align: center;
+  width: 100%;
 }
 
 input::placeholder { 
@@ -413,7 +412,6 @@ pre {
   margin: 0;
   float: left;
   display: inline-block;
-  width: fit-content;
   padding: 10px 50px;
   margin-right: 5px;
   width: 100%;
