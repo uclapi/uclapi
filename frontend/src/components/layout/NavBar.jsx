@@ -43,7 +43,7 @@ const SlideDown = posed.div({
 	shown: { height: ((links.length*34) + 30) +"px" },
 	hidden: { height: 0 },
 });
-const maxScreen = 770;
+const maxScreen = 1030;
 
 class NavBar extends React.Component {
 	constructor(props) {
