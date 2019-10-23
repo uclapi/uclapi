@@ -43,7 +43,6 @@ export default class CodeView extends React.Component {
     if(this.DEBUGGING) { console.log("DEBUG: currently selected tab is: " + this.state.tabIndex); }
 
     return (
-      <Row noPadding>
         <Column width="1-1">
           <Tabs selectedIndex={this.state.tabIndex} onSelect={tabIndex => this.setState({ tabIndex })}>
             <TabList>
@@ -62,7 +61,6 @@ export default class CodeView extends React.Component {
               ))}
           </Tabs>
         </Column>
-      </Row>
     );
   }
 
