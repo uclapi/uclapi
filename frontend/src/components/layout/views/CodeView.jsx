@@ -8,7 +8,7 @@ import {androidstudio} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import 'whatwg-fetch';
 
 // Common Components 
-import {Column, TextView} from 'Layout/Items.jsx'
+import {Column, TextView, Row} from 'Layout/Items.jsx'
 
 // Code Generator 
 import * as RequestGenerator from 'Layout/data/RequestGenerator.jsx';
@@ -54,7 +54,7 @@ export default class CodeView extends React.Component {
             </TabList>
               {languages.map((language, index) => (
                 <TabPanel>
-                  <div className="default-transition background-color-transition" style={ {"textAlign" : "left"} }>
+                  <div className='default-transition background-color-transition inner-tab' style={ {"textAlign" : "left"} }>
                     <SyntaxHighlighter language={language.name} style={androidstudio}>{language.code}</SyntaxHighlighter>
                   </div>
                 </TabPanel>

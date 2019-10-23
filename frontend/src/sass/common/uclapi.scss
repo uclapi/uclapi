@@ -282,7 +282,7 @@ a:hover { color: #BBBBBB; }
       line-height: 38px;
       text-indent: 0px;
       outline: 0;
-      padding: 10px 0 10px 0;
+      padding: 10px 40px;
       cursor: pointer;
       font-weight: 600;
       font-size: 20px;
@@ -328,22 +328,21 @@ a:hover { color: #BBBBBB; }
 
 
 .rc-collapse-content {
-    overflow: hidden;
-    padding: 0 16px;
+  overflow: hidden;
+  padding: 0 40px;
 
   > .rc-collapse-content-box {
     margin-bottom: 16px;
     border-top: 1px dotted rgba(255, 255, 255, 0.455);
   }
-}
 
-.rc-collapse-content p {
+  p {
     color: white;
     font-size: 14px;
     text-align: justify;
-    margin-top:10px;
+    margin-top: 10px;
+  }
 }
-
 
 .rc-collapse-content-inactive {
   display: none;
@@ -355,14 +354,14 @@ a:hover { color: #BBBBBB; }
 /** Input Forms **/
 
 input {
-  padding: 20px 0;
-  border: none;
-  float: left;
-  margin: 0;
-  width: 100%;
   background-color: $primary-highlight-color;
+  border: 0;
   color: white;
+  float: left;
+  margin: 30px 0 0;
+  padding: 15px 0;
   text-align: center;
+  width: 100%;
 }
 
 input::placeholder { 
@@ -370,20 +369,20 @@ input::placeholder {
 }
 
 input:focus{
-    outline: none;
+  outline: none;
 }
 /** For Autocomplete forms **/
 
 ul {
-    margin: 0;
-    padding-left: 0;
-    border-radius: 10px
+  margin: 0;
+  padding-left: 0;
+  border-radius: 10px
 }
 li {
-    list-style-type: none;
-    margin: 0;
-    float: left;
-    width: 100%;
+  list-style-type: none;
+  margin: 0;
+  float: left;
+  width: 100%;
 }
 
 /** Code View styling **/
@@ -392,9 +391,17 @@ pre {
   margin: 0;
 }
 
+.react-tabs {
+  margin-top: 30px;
+}
+
 .react-tabs__tab-panel {
   display: flex;
   width: 100%;
+
+  .inner-tab {
+    width: 100%;
+  }
 }
 
 .react-tabs__tab-list li {
@@ -404,10 +411,9 @@ pre {
   margin: 0;
   float: left;
   display: inline-block;
-  width: fit-content;
   padding: 10px 50px;
   margin-right: 5px;
-  width: 50%;
+  width: 100%;
   text-align: left;
   transition-duration: 200ms;
   transition-timing-function: linear;
