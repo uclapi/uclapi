@@ -8,7 +8,7 @@ import {androidstudio} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import 'whatwg-fetch';
 
 // Common Components 
-import {Column, TextView} from 'Layout/Items.jsx'
+import {Column, TextView, Row} from 'Layout/Items.jsx'
 
 // Code Generator 
 import * as RequestGenerator from 'Layout/data/RequestGenerator.jsx';
@@ -43,6 +43,7 @@ export default class CodeView extends React.Component {
     if(this.DEBUGGING) { console.log("DEBUG: currently selected tab is: " + this.state.tabIndex); }
 
     return (
+      <Row noPadding>
         <Column width="1-1">
           <Tabs selectedIndex={this.state.tabIndex} onSelect={tabIndex => this.setState({ tabIndex })}>
             <TabList>
@@ -54,13 +55,14 @@ export default class CodeView extends React.Component {
             </TabList>
               {languages.map((language, index) => (
                 <TabPanel>
-                  <div className="default-transition background-color-transition" style={ {"textAlign" : "left"} }>
+                  <div className="default-transition background-color-transition inner-tab" style={ {"textAlign" : "left"} }>
                     <SyntaxHighlighter language={language.name} style={androidstudio}>{language.code}</SyntaxHighlighter>
                   </div>
                 </TabPanel>
               ))}
           </Tabs>
         </Column>
+      </Row>
     );
   }
 
