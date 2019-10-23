@@ -335,15 +335,14 @@ a:hover { color: #BBBBBB; }
     margin-bottom: 16px;
     border-top: 1px dotted rgba(255, 255, 255, 0.455);
   }
-}
 
-.rc-collapse-content p {
+  p {
     color: white;
     font-size: 14px;
     text-align: justify;
     margin-top: 10px;
+  }
 }
-
 
 .rc-collapse-content-inactive {
   display: none;
@@ -370,20 +369,20 @@ input::placeholder {
 }
 
 input:focus{
-    outline: none;
+  outline: none;
 }
 /** For Autocomplete forms **/
 
 ul {
-    margin: 0;
-    padding-left: 0;
-    border-radius: 10px
+  margin: 0;
+  padding-left: 0;
+  border-radius: 10px
 }
 li {
-    list-style-type: none;
-    margin: 0;
-    float: left;
-    width: 100%;
+  list-style-type: none;
+  margin: 0;
+  float: left;
+  width: 100%;
 }
 
 /** Code View styling **/
