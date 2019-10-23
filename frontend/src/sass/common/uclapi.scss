@@ -358,7 +358,8 @@ input {
   padding: 15px 0;
   border: none;
   float: left;
-  margin: 30px 0;
+  margin: 0;
+  margin-top: 30px;
   width: 100%;
   background-color: $primary-highlight-color;
   color: white;
@@ -390,6 +391,10 @@ li {
 
 pre {
   margin: 0;
+}
+
+.react-tabs {
+  margin-top: 30px;
 }
 
 .react-tabs__tab-panel {
