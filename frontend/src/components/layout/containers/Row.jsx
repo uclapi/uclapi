@@ -17,7 +17,7 @@ export default class Row extends React.Component {
   constructor(props) {
     super(props);
 
-    this.DEBUGGING = false;
+    this.DEBUGGING = true;
     this.DEFAULT_COLOR ='transparent';
 
     this.setStyleKeyValuePair = this.setStyleKeyValuePair.bind(this);
