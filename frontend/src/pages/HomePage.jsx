@@ -124,7 +124,7 @@ class HomePage extends React.Component {
 
         <Demo />
 
-        <Row isPadded={true} color="splash-parallax">         
+        <Row color="splash-parallax">         
           <Column width="9-10" horizontalAlignment="center">
             <TextView text={"Check out our blog"} heading={1} align={"center"}/>
             {this.state.articles.map(x => ( 
@@ -147,12 +147,18 @@ class HomePage extends React.Component {
           </Column>
         </Row>
 
-        <Row src={market} height="375px" img_size="auto 55%" color="secondary">         
-          <Column width="2-3" horizontalAlignment="center">
-            <TextView text="Check out what other people made!" heading={1} align={"center"}/>
-          </Column>
-          <Column width="2-3" horizontalAlignment="center" verticalAlignment="bottom">
-            <ButtonView inline={true} buttonType="alternate" text="UCL MARKETPLACE" link="/marketplace"/>
+        <Row color="secondary" >
+          <Column width="1-3" horizontalAlignment="center">
+              <TextView text="UCL MARKETPLACE" heading={1} align="center"/>
+
+              <TextView text={`The UCL Marketplace contains all of the applications written
+                using UCL API for some of their functionality. We are constantly looking for 
+                applications to add to the marketplace and promote so we would love to hear
+                about your creations so we can add them!`} heading={5} align={"justify"}/>
+              
+              <CardView width={"1-1"} link="/marketplace" style="emphasis">
+                <Row height = "50px" padding="20px 0" src={market} img_size="auto 80%"></Row>
+              </CardView> 
           </Column>
         </Row>
 

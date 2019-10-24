@@ -5,9 +5,10 @@ REQUIRED ATTRIBUTES:
 this.props.width - e.g 8-10 = 80% (Also can take fit-content)
 
 OPTIONAL ATTRIBUTES:
-this,props.style - e.g default (dark grey) / default-no-shadow (dark grey no shadow) / alternate (light grey) / emphasis (orange) / fit-content (no padding or margin for inner content)
+this.props.style - e.g default (dark grey) / default-no-shadow (dark grey no shadow) / alternate (light grey) / emphasis (orange) / fit-content (no padding or margin for inner content)
 this.props.link (default is not clickable) => "no-action" enables hover but does not reroute
 this.props.minWidth - e.g 300px a minimum width (default is unset)
+this.props.maxWidth - e.g 300px a minimum width (default is unset)
 this.props.addPadding - if true adds a 20px padding (default is false)
 this.props.noShadow - disables box shadow
 this.props.fakeLink - same behaviour as a link
@@ -68,6 +69,8 @@ export default class CardView extends React.Component {
     this.setStyleKeyValuePair("width", this.getWidth());
     // MIN WIDTH
     this.setStyleKeyValuePair("minWidth", this.getMinWidth());
+    // MAX WIDTH
+    this.setStyleKeyValuePair("maxWidth", this.getMaxWidth());
 
     // OPTIONAL ATTRIBUTES
     // LINK
@@ -98,6 +101,12 @@ export default class CardView extends React.Component {
     var minWidth = "unset";
     if(this.props.minWidth) {minWidth=this.props.minWidth;}
     return minWidth;
+  }
+
+  getMaxWidth() {
+    var maxWidth = "unset";
+    if(this.props.maxWidth) {maxWidth=this.props.maxWidth;}
+    return maxWidth;
   }
 
   getStyle() {

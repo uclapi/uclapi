@@ -32,8 +32,8 @@ export const FAQ = [
     {
       'question': `How do I get involved?`,
       'answer': (<p>UCL API is open source. Our source code is available on
-       <a className={linkclass} href="https://github.com/uclapi/uclapi"> a public Github repository</a> 
-       for anybody to clone and inspect. Find an bug? Feel free to open an 
+       <a className={linkclass} href="https://github.com/uclapi/uclapi"> a public Github repository</a> for
+       anybody to clone and inspect. Find an bug? Feel free to open an 
        <a className={linkclass} href="https://github.com/uclapi/uclapi/issues"> Issue </a> 
        or even a <a className={linkclass} href="https://github.com/uclapi/uclapi/pulls">
         Pull Request </a> with a proposed fix! We also have annual hiring 
