@@ -23,6 +23,7 @@
   - Input Forms
   - Auto complete forms
   - Code View
+  - Social Media Button Stylings
 
 **/
 
@@ -443,4 +444,30 @@ pre {
   .arrow {
     display: none;
   }
+}
+
+/** Social Media Icons **/
+
+.uclapi-card-facebook,
+.uclapi-card-github,
+.uclapi-card-twitter {
+  background-color: white;
+
+  transition-property: background-color;
+  transition-duration: 0.5s;
+  transition-timing-function: ease-out;
+
+  margin-top: 10px;
+
+  padding: 10px 0;
+}
+
+.uclapi-card-facebook:hover {
+  background-color: #3b5998;
+}
+.uclapi-card-twitter:hover {
+  background-color: #38A1F3;
+}
+.uclapi-card-github:hover{
+  background-color: black;
 }

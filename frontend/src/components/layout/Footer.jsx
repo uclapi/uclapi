@@ -1,7 +1,11 @@
 import React from 'react';
 
-import balloons from 'Images/home-page/balloons.jpg';
+// UCL API Logo
 import logo from 'Images/home-page/logo.svg';
+// Social Media
+import facebook from 'Images/home-page/facebook.png';
+import github from 'Images/home-page/github.png';
+import twitter from 'Images/home-page/twitter.png';
 
 // Common Components
 import { Row, Column, TextView, ButtonView, CardView, ImageView, Demo, NavBar } from 'Layout/Items.jsx';
@@ -13,21 +17,27 @@ export default class Footer extends React.Component {
   }
 
   render() {
-    var iconsize = "100px";
-    var logosize = "150px";
+    var iconsize = "50px";
+    var logosize = "20px";
     
     return (
-      <Row Row color={"secondary"} height={"fit-content"} isPaddedBottom={true}>         
+      <Row color="secondary" padding="20px 0">
           <Column width="1-2" horizontalAlignment="center">
-              <TextView text={"UCL API"} heading={1} align={"center"}/>
-
-              <TextView text={"github "} heading={5} align={"center"} isInline={true} link={"https://github.com/uclapi/uclapi"}/>
-              <TextView text={`-`} heading={5} align={"center"} isInline={true} />
-              <TextView text={" twitter"} heading={5} align={"center"} isInline={true} link={"https://twitter.com/uclapi?lang=en"}/>
-              <TextView text={`-`} heading={5} align={"center"} isInline={true}/>
-              <TextView text={" facebook"} heading={5} align={"center"} isInline={true} link={"https://www.facebook.com/uclapi/"}/>
-
-              <ImageView src={logo} width={iconsize} height={iconsize} description={"ucl api logo"} isCentered={true} />
+              <ImageView src={logo} width={iconsize} height={iconsize} description="UCL API Logo"/>
+              
+              <Column maxWidth="160px" width="1-1" horizontalAlignment="center">
+                <CardView width="1-3" style="github" link="https://github.com/uclapi">
+                  <ImageView src={github} width={logosize} height={logosize} description={"github logo"} isCentered={true} />
+                </CardView>
+                
+                <CardView width="1-3" style="facebook" link="https://www.facebook.com/uclapi/">
+                  <ImageView src={facebook} width={logosize} height={logosize} description={"facebook logo"} isCentered={true} />
+                </CardView>
+                
+                <CardView width="1-3" style="twitter" link="https://twitter.com/uclapi">
+                  <ImageView src={twitter} width={logosize} height={logosize} description={"twitter logo"} isCentered={true} />
+                </CardView>
+              </Column>
           </Column>
       </Row>
     );
