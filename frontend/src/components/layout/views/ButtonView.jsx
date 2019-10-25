@@ -9,6 +9,7 @@ export default class ButtonView extends React.Component {
   render() {
     var button_class_name = "uclapi-button default-transition background-color-transition";
     var button_style = [];
+    var link_style = [];
 
     if(!this.props.buttonType) {button_class_name += " default-button";}
     else {button_class_name += " " + this.props.buttonType + "-button";}
@@ -23,7 +24,7 @@ export default class ButtonView extends React.Component {
 
     if(this.props.buttonType == "image") {
       return (
-        <a href={this.props.link}>
+        <a href={this.props.link} style={link_style}>
               <div className={button_class_name} style={button_style}>
                 <img src={this.props.src} alt={this.props.text} />
               </div>
@@ -31,7 +32,7 @@ export default class ButtonView extends React.Component {
       );
     } else {
       return (
-         <a href={this.props.link}>
+         <a href={this.props.link} style={link_style}>
               <div className={button_class_name} style={button_style}>
                 {this.props.text}
               </div>
