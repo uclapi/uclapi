@@ -16,6 +16,7 @@ import star from 'Images/home-page/star.svg';
 import docs from 'Images/home-page/docs.svg';
 import market from 'Images/home-page/market.svg';
 import splash_screen from 'Images/home-page/splash_screen.png';
+import uclassistantmarket from 'Images/home-page/uclassistantmarket.png';
 
 // Components
 import { Row, Column, TextView, ButtonView, CardView, ImageView, Demo, NavBar, Footer } from 'Layout/Items.jsx';
@@ -156,6 +157,12 @@ class HomePage extends React.Component {
                 applications to add to the marketplace and promote so we would love to hear
                 about your creations so we can add them!`} heading={5} align={"justify"}/>
               
+              <TextView text={`One of these applications is UCL Assistant! An app created
+                by the UCL API team to provide students with a reliable way to check their 
+                timetable, find empty rooms and locate study spaces.`} heading={5} align={"justify"}/>
+
+              <ImageView src={uclassistantmarket} width="245px" height="270px" description="ucl asssitant screen shot" />
+
               <CardView width={"1-1"} link="/marketplace" style="emphasis">
                 <Row height = "50px" padding="20px 0" src={market} img_size="auto 80%"></Row>
               </CardView> 
