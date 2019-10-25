@@ -148,8 +148,8 @@ class HomePage extends React.Component {
         </Row>
 
         <Row color="secondary" >
-          <Column width="1-3" horizontalAlignment="center">
-              <TextView text="UCL MARKETPLACE" heading={1} align="center"/>
+          <Column width="1-3" minWidth="250px" horizontalAlignment="center">
+              <TextView text="UCL MARKET" heading={1} align="center"/>
 
               <TextView text={`The UCL Marketplace contains all of the applications written
                 using UCL API for some of their functionality. We are constantly looking for 
