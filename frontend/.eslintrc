@@ -1,10 +1,94 @@
 {
   "env": {
     "node": true,
-	"browser": true
+    "browser": true
   },
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings"
+  ],
   "rules": {
-	"quotes": [2, "single"]
+    "semi": [
+      "error",
+      "never"
+    ],
+    "quotes": [
+      "error",
+      "backtick"
+    ],
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "no-secrets/no-secrets": "error",
+    "react/jsx-indent-props": [
+      "error",
+      2
+    ],
+    "react/jsx-closing-bracket-location": [
+      "error"
+    ],
+    "react/static-property-placement": [
+      "error",
+      "static public field"
+    ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "packageDir": "./",
+        "devDependencies": true,
+        "optionalDependencies": false,
+        "peerDependencies": false
+      }
+    ],
+    "simple-import-sort/sort": "error"
   },
-  "parser": "babel-eslint"
+  "plugins": [
+    "react",
+    "import",
+    "security",
+    "no-secrets",
+    "json-format",
+    "simple-import-sort",
+    "sonarjs"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    },
+    "import/resolver": {
+      "alias": {
+        "map": [
+          [
+            "Images",
+            "./src/images"
+          ],
+          [
+            "Layout",
+            "./src/components/layout"
+          ],
+          [
+            "Styles",
+            "./src/sass"
+          ]
+        ],
+        "extensions": [
+          "jpg",
+          "png",
+          "svg",
+          "jpeg",
+          "js",
+          "jsx",
+          "scss"
+        ]
+      }
+    }
+  }
 }

@@ -15,9 +15,20 @@
   "scripts": {
     "analyse": "npx webpack-bundle-analyzer stats.json",
     "build": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors",
+    "pre-commit": "lint-staged",
     "profile": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors --profile --json > stats.json",
-    "start": "NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run pre-commit"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,json}": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "browserify": {
     "transform": [
@@ -62,16 +73,26 @@
     "css-loader": "^3.2.0",
     "dotenv": "^8.2.0",
     "eslint": "^6.6.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-json-format": "^2.0.1",
+    "eslint-plugin-no-secrets": "^0.3.4",
+    "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-security": "^1.4.0",
+    "eslint-plugin-simple-import-sort": "^4.0.0",
+    "eslint-plugin-sonarjs": "^0.4.0",
     "file-loader": "^4.2.0",
     "glob": "^7.1.5",
     "husky": "^3.0.9",
+    "lint-staged": "^9.4.2",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.13.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "react-modal": "^3.11.1",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.0",
+    "stylelint": "^11.1.1",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "url-loader": "^2.2.0",
     "vinyl-buffer": "^1.0.1",
