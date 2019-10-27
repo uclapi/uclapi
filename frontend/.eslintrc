@@ -68,6 +68,7 @@
   ],
   "parser": "babel-eslint",
   "parserOptions": {
+    "ecmaVersion": 6,
     "ecmaFeatures": {
       "jsx": true
     },
@@ -105,5 +106,9 @@
     "react": {
       "version": "detect"
     }
+  },
+  "globals": {
+    "__dirname": "readonly",
+    "require": "readonly"
   }
 }
