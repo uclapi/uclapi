@@ -37,7 +37,6 @@
     ]
   },
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@material-ui/core": "^4.4.2",
     "ajv": "^6.10.2",
     "aphrodite": "^2.4.0",
@@ -74,6 +73,7 @@
     "dotenv": "^8.2.0",
     "eslint": "^6.6.0",
     "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-import-resolver-webpack": "^0.11.1",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-json-format": "^2.0.1",
     "eslint-plugin-no-secrets": "^0.3.4",

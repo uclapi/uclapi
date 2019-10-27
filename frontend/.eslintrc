@@ -4,9 +4,12 @@
     "browser": true
   },
   "extends": [
+    "eslint:recommended",
     "plugin:react/recommended",
     "plugin:import/errors",
-    "plugin:import/warnings"
+    "plugin:import/warnings",
+    "plugin:security/recommended",
+    "plugin:sonarjs/recommended"
   ],
   "rules": {
     "semi": [
@@ -21,6 +24,7 @@
       "error",
       "always-multiline"
     ],
+    "no-var": "error",
     "no-secrets/no-secrets": "error",
     "react/jsx-indent-props": [
       "error",
@@ -32,6 +36,14 @@
     "react/static-property-placement": [
       "error",
       "static public field"
+    ],
+    "react/jsx-fragments": [
+      "error",
+      "syntax"
+    ],
+    "react/jsx-boolean-value": [
+      "error",
+      "never"
     ],
     "import/no-extraneous-dependencies": [
       "error",
@@ -60,10 +72,8 @@
     }
   },
   "settings": {
-    "react": {
-      "version": "detect"
-    },
     "import/resolver": {
+      "webpack": true,
       "alias": {
         "map": [
           [
@@ -89,6 +99,9 @@
           "scss"
         ]
       }
+    },
+    "react": {
+      "version": "detect"
     }
   }
 }
