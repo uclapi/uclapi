@@ -1,40 +1,41 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Cookies from 'js-cookie';
-import Navbar from '../components/dashboard/navbar.jsx';
-import { css } from 'glamor';
+import './../sass/dashboard.scss'
 
-import './../sass/dashboard.scss';
+import { css } from 'glamor'
+import Cookies from 'js-cookie'
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+import Navbar from '../components/dashboard/navbar.jsx'
 
 const appName = css({
-  fontWeight: 'bold',
-});
+  fontWeight: `bold`,
+})
 
 const cardTitle = css({
-  fontWeight: 'normal',
-});
+  fontWeight: `normal`,
+})
 
 const creator = css({
-  color: 'grey',
-});
+  color: `grey`,
+})
 
 const willHaveAccess = css({
-  fontSize: 'larger',
-});
+  fontSize: `larger`,
+})
 
 const formButton = css({
-  display: 'inline',
-});
+  display: `inline`,
+})
 
 const bottomMessage = css({
-  fontSize: 'smaller',
-});
+  fontSize: `smaller`,
+})
 
 
 class AuthoriseApp extends React.Component {
   constructor (props) {
-    super(props);
-    this.state = {data: window.initialData};
+    super(props)
+    this.state = {data: window.initialData}
   }
   render () {
     return <div>
@@ -65,13 +66,13 @@ class AuthoriseApp extends React.Component {
             <form method="post" action="/oauth/user/allow" className={formButton}>
               <button type="submit" className="pure-button pure-button-primary padded">Authorise {this.state.data.app_name}</button>
               <input type="hidden" name="signed_app_data" value={this.state.data.signed_data}/>
-              <input type="hidden" name="csrfmiddlewaretoken" value={Cookies.get('csrftoken')}/>
+              <input type="hidden" name="csrfmiddlewaretoken" value={Cookies.get(`csrftoken`)}/>
             </form>
 
             <form method="post" action="/oauth/user/deny" className={formButton}>
               <button className="pure-button padded">Deny</button>
               <input type="hidden" name="signed_app_data" value={this.state.data.signed_data}/>
-              <input type="hidden" name="csrfmiddlewaretoken" value={Cookies.get('csrftoken')}/>
+              <input type="hidden" name="csrfmiddlewaretoken" value={Cookies.get(`csrftoken`)}/>
             </form>
             <hr/>
             <em className={bottomMessage}>
@@ -81,11 +82,11 @@ class AuthoriseApp extends React.Component {
           </div>
         <div className="pure-u-md-1-4"></div>
       </div>
-    </div>;
+    </div>
   }
 }
 
 ReactDOM.render(
   <AuthoriseApp />,
-  document.querySelector('.app')
-);
+  document.querySelector(`.app`)
+)
