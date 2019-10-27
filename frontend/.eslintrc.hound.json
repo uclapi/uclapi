@@ -59,7 +59,6 @@
     "react",
     "import",
     "security",
-    "json-format",
     "simple-import-sort"
   ],
   "parser": "babel-eslint",
