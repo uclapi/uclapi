@@ -54,7 +54,8 @@
         "peerDependencies": false
       }
     ],
-    "simple-import-sort/sort": "error"
+    "simple-import-sort/sort": "error",
+    "security/detect-non-literal-require": "off" // until https://github.com/nodesecurity/eslint-plugin-security/pull/32 is merged
   },
   "plugins": [
     "react",
@@ -69,7 +70,8 @@
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
-    }
+    },
+    "sourceType": "module"
   },
   "settings": {
     "import/resolver": {

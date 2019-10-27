@@ -11,3 +11,4 @@ scss:
 eslint:
   enabled: true
   config_file: frontend/.eslintrc.json
+  version: 6.3.0
