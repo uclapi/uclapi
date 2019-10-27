@@ -10,5 +10,6 @@ scss:
 
 eslint:
   enabled: true
-  config_file: frontend/.eslintrc.json
+  config_file: frontend/.eslintrc
+  ignore_file: frontend/.eslintignore
   version: 6.3.0
