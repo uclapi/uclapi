@@ -32,6 +32,11 @@
     "*.{scss}": [
       "stylelint --fix",
       "git add"
+    ],
+    "../**/*.py": [
+      "autopep8 --in-place --global-config ../backend/uclapi/.flake8.ini",
+      "flake8",
+      "git add"
     ]
   },
   "browserify": {
