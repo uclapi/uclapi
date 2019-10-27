@@ -8,8 +8,7 @@
     "plugin:react/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
-    "plugin:security/recommended",
-    "plugin:sonarjs/recommended"
+    "plugin:security/recommended"
   ],
   "rules": {
     "semi": [
@@ -63,8 +62,7 @@
     "security",
     "no-secrets",
     "json-format",
-    "simple-import-sort",
-    "sonarjs"
+    "simple-import-sort"
   ],
   "parser": "babel-eslint",
   "parserOptions": {
