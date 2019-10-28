@@ -15,7 +15,7 @@ import 'Styles/common/uclapi.scss';
 import 'Styles/navbar.scss';
 
 const member = (info) => (
-    <CardView width="1-6" minWidth="120px" style="emphasis" link={info.github}>
+    <CardView width="1-6" minWidth="120px" type="emphasis" link={info.github}>
       <Row height="300px" padding="20px 0">
         <Column width="1-1" horizontalAlignment="center">
           <TextView text={info.name} heading={2} align={"center"} color={"white"}/>

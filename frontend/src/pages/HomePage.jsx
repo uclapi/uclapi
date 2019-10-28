@@ -82,21 +82,21 @@ class HomePage extends React.Component {
           <Column width="2-3" horizontalAlignment="center" maxWidth="1000px" minWidth="300px">
            <TextView text={"Our Goals"} heading={1} align={"center"}/>
 
-           <CardView width="1-3" minWidth="280px" style="no-bg">
+           <CardView width="1-3" minWidth="280px" type="no-bg">
             <TextView text={"Make Simple Interfaces"} heading={2} align={"center"}/>
             <TextView text={`The endpoints are streamlined to enable any developer to easily pick up and use the api. We hope that developers of all ability
                             find our endpoints and website easy to navigate. We do not want to overcomplicate the process of developing
                             awesome apps, we want to be the easiest part of your development process!`} align={"justify"} heading={5}/>
             <ImageView src={star} width={iconsize} height={iconsize} description={"an icon of a love heart"} centred={true} />
            </CardView>
-           <CardView width="1-3" minWidth="280px" style="no-bg">
+           <CardView width="1-3" minWidth="280px" type="no-bg">
             <TextView text={"Put Documentation First"} heading={2} align={"center"}/>
             <TextView text={`As developers we feel the pain of bad documentation: this is why we are driven by good documentation. We want you 
                              to spend less time worrying about how to use our api and more time thinking about how to revolutionise the student experience. 
                              With good documentation we allow you to focus on building helpful applications.`} align={"justify"} heading={5} />
             <ImageView src={docs} width={iconsize} height={iconsize} description={"an icon of a clipboard"} centred={true} />
            </CardView>
-           <CardView width="1-3" minWidth="280px" style="no-bg">
+           <CardView width="1-3" minWidth="280px" type="no-bg">
             <TextView text={"Enable Developers"} heading={2} align={"center"}/>
             <TextView text={`We want the api to be so comprehensive that any idea, no matter how big, can be created in order to improve students lives. We are always
                              open to suggestions for new endpoints and functionality so we can enable a greater range of applications to be developed. We
@@ -128,7 +128,7 @@ class HomePage extends React.Component {
           <Column width="9-10" horizontalAlignment="center">
             <TextView text={"Check out our blog"} heading={1} align={"center"}/>
             {this.state.articles.map(x => ( 
-              <CardView width="1-3" minWidth="200px" style="default" link={x.url}>
+              <CardView width="1-3" minWidth="200px" type="default" link={x.url}>
                 <Column width="1-1">
                   <Row height = "200px" src={x.image_url}>
                     <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
