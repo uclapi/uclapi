@@ -68,7 +68,7 @@ export default class Demo extends React.Component {
 
           {this.state.response ? (
             <Column width="2-3" horizontalAlignment="center">
-              <CodeView response={this.state.response} type={"real-response"}/>
+              <CodeView response={this.state.response} type={"response"}/>
             </Column>
           ) : null }
         </Row>
