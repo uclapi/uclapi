@@ -16,11 +16,11 @@ import 'Styles/navbar.scss';
 
 const member = (info) => (
     <CardView width="1-6" minWidth="120px" type="emphasis" link={info.github}>
-      <Row height="300px" padding="20px 0">
+      <Row height="300px" style={ { padding : "20px 0" } }>
         <Column width="1-1" horizontalAlignment="center">
           <TextView text={info.name} heading={2} align={"center"} color={"white"}/>
-          <Row height="100px" src={info.image}></Row>
-          <Row height="30px" padding="20px 0">
+          <Row height="100px" src={info.image} style={ { backgroundSize : "Cover"  } }></Row>
+          <Row height="30px" style={ { padding : "20px 0" } }>
             <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
                 <TextView text={info.title} heading={6} align={"center"} color={"white"} />
             </Column>
@@ -45,7 +45,7 @@ class AboutPage extends React.Component {
         <React.Fragment>
           <NavBar isScroll={false}/>
 
-          <Row height = "600px" color="team-parallax">         
+          <Row height = "600px" styling="team-parallax">         
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <TextView text={"About Us"} heading={1} align={"center"}/>
               <TextView text={`UCL API is a student led project, founded by Wilhelm Klopp, that opens up the massive amount of
@@ -54,7 +54,7 @@ class AboutPage extends React.Component {
             </Column>
           </Row>
 
-          <Row color="secondary">         
+          <Row styling="secondary">         
             <Column width="9-10" horizontalAlignment="center">
               <TextView text={"Current Team"} heading={1} align={"center"}/>
             </Column>
@@ -63,7 +63,7 @@ class AboutPage extends React.Component {
             </Column>
           </Row>
 
-          <Row color="team-parallax">         
+          <Row styling="team-parallax">         
             <Column width="9-10" horizontalAlignment="center">
               <TextView text={"Previous developers"} heading={1} align={"center"}/>
             </Column>

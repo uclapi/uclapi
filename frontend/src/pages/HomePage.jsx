@@ -61,7 +61,7 @@ class HomePage extends React.Component {
         <NavBar isScroll={false}/>
 
         {this.state.host == "staging.ninja" && (
-          <Row isPadded = {true} color="warning-red">         
+          <Row isPadded = {true} styling="warning-red">         
             <Column width="9-10" horizontalAlignment={"center"} >
               <TextView align={"center"} text={"Warning! This is our bleeding-edge staging environment, and therefore performance, accuracy and reliability of the API cannot be guaranteed. For our stable, supported API please go to:"} heading={1} />
               <TextView align={"center"} text={"uclapi.com"} heading = {2} link = {"https://uclapi.com"}/>
@@ -69,7 +69,7 @@ class HomePage extends React.Component {
           </Row>
         )}
 
-        <Row height = "600px" color="splash-parallax">         
+        <Row height = "600px" styling="splash-parallax">         
           <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
             <TextView text={"UCL API"} heading={1} align={"center"}/>
             <TextView text={"UCL API is a student-built platform for student developers to improve the student experience of everyone at UCL."} heading={2} align={"center"}/>
@@ -78,7 +78,7 @@ class HomePage extends React.Component {
           </Column>
         </Row>
 
-        <Row color="secondary">         
+        <Row styling="secondary">         
           <Column width="2-3" horizontalAlignment="center" maxWidth="1000px" minWidth="300px">
            <TextView text={"Our Goals"} heading={1} align={"center"}/>
 
@@ -106,7 +106,7 @@ class HomePage extends React.Component {
           </Column>
         </Row>
 
-        <Row color="splash-parallax">
+        <Row styling="splash-parallax">
           <Column width="2-3" horizontalAlignment="center" maxWidth="1000px" minWidth="300px">
             <TextView text={"Get Started using our APIs"} heading={1} align={"center"}/>
 
@@ -124,7 +124,7 @@ class HomePage extends React.Component {
 
         <Demo />
 
-        <Row isPadded={true} color="splash-parallax">         
+        <Row styling="splash-parallax">         
           <Column width="9-10" horizontalAlignment="center">
             <TextView text={"Check out our blog"} heading={1} align={"center"}/>
             {this.state.articles.map(x => ( 
@@ -147,7 +147,7 @@ class HomePage extends React.Component {
           </Column>
         </Row>
 
-        <Row src={market} height="375px" img_size="auto 55%" color="secondary">         
+        <Row src={market} height="375px" style={ { backgroundSize : "auto 55%"} } styling="secondary">         
           <Column width="2-3" horizontalAlignment="center">
             <TextView text="Check out what other people made!" heading={1} align={"center"}/>
           </Column>
@@ -156,7 +156,7 @@ class HomePage extends React.Component {
           </Column>
         </Row>
 
-        <Row isPadded={true} color="splash-parallax">         
+        <Row styling="splash-parallax">         
           <Column width="2-3" horizontalAlignment="center">
             <TextView text={"Frequently Asked Questions"} heading={1} align={"center"}/>
             {FAQ.map(x => ( 

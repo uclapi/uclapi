@@ -57,14 +57,14 @@ class Marketplace extends React.Component {
 
           <NavBar isScroll={false} />
 
-          <Row height="300px" margin="60px 0 0 0" color="splash-parallax">         
+          <Row height="300px" style={ { margin : "60px 0 0 0" } } styling="splash-parallax">         
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
               <TextView text={"Apps that use UCL API"} heading={2} align={"center"}/>
             </Column>
           </Row>
 
-          <Row color="secondary">         
+          <Row styling="secondary">         
             <Column width="2-3" horizontalAlignment="center">
                <TextView text={"Featured App"} heading={2} align={"left"} />
                <TextView text={"Our favourite usage of the API"} heading={5} align={"left"} />
@@ -83,7 +83,7 @@ class Marketplace extends React.Component {
             </Column>    
           </Row>
 
-          <Row color="splash-parallax">
+          <Row styling="splash-parallax">
             <Column width="2-3" horizontalAlignment="center">
                <TextView text={"All Apps"} heading={2} align={"left"} />
                <TextView text={"Every app made using the API"} heading={5} align={"left"} />
@@ -134,14 +134,14 @@ class AppPage extends React.Component {
       <React.Fragment>
           <NavBar isScroll={false} />
 
-          <Row height="300px" margin="60px 0 0 0" color="splash-parallax">         
+          <Row height="300px" style={ { margin : "60px 0 0 0" } } styling="splash-parallax">         
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <TextView text={"UCL Marketplace"} heading={1} align={"center"}/>
               <TextView text={"Apps that use UCL API"} heading={2} align={"center"}/>
             </Column>
           </Row>
 
-          <Row color="secondary" height="100px" noPadding>      
+          <Row styling="secondary" height="100px" noPadding>      
             <Column width="2-3" horizontalAlignment="center">
               <Column width="fit-content" minWidth={iconsize} typeOfInline="grid" horizontalAlignment="left">
                 <ButtonView src={arrow} width={iconsize} height={iconsize} isCircular={true} isInline="block" 
@@ -150,7 +150,7 @@ class AppPage extends React.Component {
             </Column>
           </Row>
 
-          <Row color="secondary" height="100px" noPadding>   
+          <Row styling="secondary" height="100px" noPadding>   
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <Column width="fit-content" minWidth={iconsize} typeOfInline="grid" horizontalAlignment="left">
                 <ImageView src={this.state.app.logo} width={iconsize} height={iconsize} 
@@ -162,7 +162,7 @@ class AppPage extends React.Component {
               </Column>
             </Column>
           </Row>
-          <Row color="secondary">         
+          <Row styling="secondary">         
             <Column width="2-3" horizontalAlignment="center">
               {this.state.app.screenshots.map((img, i) => ( 
                 <CardView width="1-3" minWidth={screenshotwidth} type="no-bg">
@@ -172,12 +172,12 @@ class AppPage extends React.Component {
                 ) ) }
             </Column>
           </Row>
-          <Row color="secondary">         
+          <Row styling="secondary">         
             <Column width="2-3" horizontalAlignment="center" textAlign="left">
               {this.state.app.detailedDescription}
             </Column>
           </Row>
-          <Row color="splash-parallax">         
+          <Row styling="splash-parallax">         
             <Column width="2-3" horizontalAlignment="center">
               <CardView width={"1-2"} minWidth={"300px"} link={this.state.app.androidLink}>
                 <Row height = "75px">

@@ -4,12 +4,14 @@ import placeholder from 'Images/home-page/splash_screen.png';
 
 /**
 REQUIRED ATTRIBUTES:
-this.props.color OR this.props.src (remember to set a design for the layout)
+this.props.styling ( styling types "warning red" - red, "splash-parallex" - primary color background, "secondary" - dark grey, "team-parallax" - hackathon scroll bg )
+                OR / AND
+this.props.src (pass an image to overlay in the backgorund of the row)
 
 OPTIONAL ATTRIBUTES:
 this.props.height (manually set the height over what the contents)
-padding TO REMOVE
-margin TO REMOVE
+this.props.style (An array of styles to add to the component)
+this.props.noPadding (Removes the default padding of 50px)
 
 **/
 export default class Row extends React.Component {
@@ -26,6 +28,8 @@ export default class Row extends React.Component {
 
     this.class = "row";
     this.style = [];
+
+    if(this.props.style) { this.style = this.props.style; }
 
     this.setTheme();
 
@@ -53,10 +57,7 @@ export default class Row extends React.Component {
     // Either given a color or src
     this.setupBackground();
     // Override for padding
-    if(!this.props.noPadding && !this.props.padding) {this.class += " vertical-padding"}
-    if(this.props.padding) { this.setStyleKeyValuePair("padding", this.props.padding); }
-    // Override for margin
-    if(this.props.margin) { this.setStyleKeyValuePair("margin", this.props.margin); }
+    if(!this.props.noPadding) {this.class += " vertical-padding"}
 
     // OPTIONAL ATTRIBUTES
     // Height of container
@@ -64,26 +65,22 @@ export default class Row extends React.Component {
   }
 
   setupBackground() {
-    if(this.DEBUGGING) { console.log("DEBUG: Background color / src is : " + this.props.color + " / " + this.props.src); }
+    if(this.DEBUGGING) { console.log("Row.setupBackground: DEBUG Background color / src is : " + this.props.styling + " / " + this.props.src); }
 
-    if(this.props.color) { this.class += " " + this.props.color; }
+    if(this.props.styling) { this.class += " " + this.props.styling; }
 
     if(this.props.src) {
-      var img_size = "Cover";
-      if(this.props.img_size) { img_size = this.props.img_size; }
-
       if(this.props.src == "url_not_found") {
         this.setStyleKeyValuePair("backgroundImage", `url(${placeholder})`); 
       } else {
         this.setStyleKeyValuePair("backgroundImage",`url(${this.props.src})`); 
       }
-      this.setStyleKeyValuePair("backgroundSize", img_size);
       this.setStyleKeyValuePair("backgroundPosition", "50%");
       this.setStyleKeyValuePair("backgroundRepeat", "no-repeat");
     }
 
-    if(typeof this.props.color == "undefined" && typeof this.props.src == "undefined") {
-      console.log("EXCEPTION: No color or source set for background so resorting to a " + this.DEFAULT_COLOR + " background");
+    if(typeof this.props.styling == "undefined" && typeof this.props.src == "undefined") {
+      console.log("Row.setupBackground: EXCEPTION No color or source set for background so resorting to a " + this.DEFAULT_COLOR + " background");
       this.class += " " + this.DEFAULT_COLOR; 
     }
   }

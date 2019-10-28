@@ -17,7 +17,7 @@ export default class Footer extends React.Component {
     var logosize = "150px";
     
     return (
-      <Row color={"secondary"} height={"fit-content"} >
+      <Row styling={"secondary"} height={"fit-content"} >
           <Column width="1-2" horizontalAlignment="center">
               <TextView text={"UCL API"} heading={1} align={"center"}/>
 
