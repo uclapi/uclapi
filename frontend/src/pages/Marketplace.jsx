@@ -152,7 +152,7 @@ class AppPage extends React.Component {
             <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
               <Column width="fit-content" minWidth={iconsize} typeOfInline="grid" horizontalAlignment="left">
                 <ImageView src={this.state.app.logo} width={iconsize} height={iconsize} 
-                  description={this.state.app.name  + "logo"} isCentered={true} margin={"0 auto 0 0"}/>
+                  description={this.state.app.name  + "logo"} centred={true} style={ {"margin" :  "0 auto 0 0"} }/>
               </Column>
               <Column width="fit-content" minWidth={iconsize} typeOfInline="grid" horizontalAlignment="left" textAlign="left">
                <TextView text={this.state.app.name} heading={2} />
@@ -165,7 +165,7 @@ class AppPage extends React.Component {
               {this.state.app.screenshots.map((img, i) => ( 
                 <CardView width="1-3" minWidth={screenshotwidth} style="no-bg">
                   <ImageView src={img} width={screenshotwidth} height={screenshotheight}
-                    description={this.state.app.name  + " screenshot number " + i} isCentered={true} />
+                    description={this.state.app.name  + " screenshot number " + i} centred={true} />
                 </CardView>
                 ) ) }
             </Column>

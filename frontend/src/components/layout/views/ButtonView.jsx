@@ -67,11 +67,7 @@ export default class ButtonView extends React.Component {
 
   setTheme() {
     // "centred" - Center the button inside of its parent
-    if(this.props.centred) {
-      setStyleKeyValuePair("marginRight","auto");
-      setStyleKeyValuePair("marginLeft", "auto");
-      setStyleKeyValuePair("display", "flex");
-    }
+    if(this.props.centred) {this.class += " " + "center-x";}
   }
 
 }
