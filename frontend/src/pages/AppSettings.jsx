@@ -1,9 +1,10 @@
 import {
   cyan500,
-darkBlack, fullBlack,
+  darkBlack, fullBlack,
   grey100, grey300, grey400, grey500,
   pinkA200,
-  white } from 'material-ui/styles/colors'
+  white,
+} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import React from 'react'
@@ -31,8 +32,8 @@ const muiTheme = getMuiTheme({
   },
 })
 
-import './../sass/hub.scss'
-import './../sass/navbar.scss'
+import 'Styles/hub.scss'
+import 'Styles/navbar.scss'
 
 class AppSettings extends React.Component {
   constructor(props) {

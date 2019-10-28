@@ -1,4 +1,4 @@
-import './../sass/dashboard.scss'
+import 'Styles/dashboard.scss'
 
 import dayjs from 'dayjs'
 import React from 'react'
