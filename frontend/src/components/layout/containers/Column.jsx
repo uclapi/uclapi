@@ -7,9 +7,8 @@ this.props.width (1-3 => 1/3 width of a row)
 OPTIONAL ATTRIBUTES:
 this.props.horizontalAlignment (left / center / right)
 this.props.verticalALignment (top / center / bottom) => Row Height must be set otherwise weird behaviour
-this.props.typeOfInline (default none: block / flex / grid) => `Not sure if useful with addition of transparent cards`
 this.props.textAlign (like the normal inline tag)
-max width
+this.props.style (array of extra stylings)
 
 **/
 export default class Column extends React.Component {
@@ -28,8 +27,13 @@ export default class Column extends React.Component {
     this.setStyleKeyValuePair = this.setStyleKeyValuePair.bind(this);
     this.setTheme = this.setTheme.bind(this);
 
+    if(typeof this.props.width == "undefined") {console.log("EXCEPTION: Column.constructor: no width defined");}
+
     this.class = "column";
     this.style = [];
+
+    if(this.props.style) { this.style = this.props.style; }
+
     this.verticalAlignment = "no-vertical-align";
 
     this.setTheme();
@@ -113,7 +117,6 @@ export default class Column extends React.Component {
     var fraction = buffer[0] / buffer[1];
 
     var paddingSpace = 0;
-    if(this.props.typeOfInline) { paddingSpace = this.HORIZONTAL_PADDING * numberOfColumns; }
 
     var spaceForColumns = 100 - paddingSpace
 
@@ -123,11 +126,6 @@ export default class Column extends React.Component {
 
   setColumnWidthAndPadding() {
     this.setStyleKeyValuePair("width", this.getColumnWidth());
-
-    if(this.props.typeOfInline) {
-      this.setStyleKeyValuePair("display", "inline-" + this.props.typeOfInline);
-      this.setStyleKeyValuePair("padding", "2%");
-    }
 
     if(this.props.maxWidth) {this.setStyleKeyValuePair("maxWidth", this.props.maxWidth);}
     if(this.props.minWidth) {this.setStyleKeyValuePair("minWidth", this.props.minWidth);}
