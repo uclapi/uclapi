@@ -69,7 +69,7 @@
   },
   "settings": {
     "import/resolver": {
-      "webpack": true,
+      "webpack": "webpack.prod.js",
       "alias": {
         "map": [
           [
