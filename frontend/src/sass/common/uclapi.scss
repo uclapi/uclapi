@@ -70,9 +70,10 @@ $color-white-transparent-0455: rgba(255, 255, 255, 0.455);
 $color-facebook: #3b5998;
 $color-twitter: #38a1f3;
 
-html, body {
-  margin: 0;
+html,
+body {
   background-color: $color-white;
+  margin: 0;
 }
 
 /** Row Colours **/
@@ -115,12 +116,22 @@ html, body {
 
 /** Text **/
 
-p, h1, h2, h3, h4, h5, h6 {
-  font-family: 'Source Sans Pro', 'Roboto', sans-serif;
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: $color-white;
+  font-family: 'Source Sans Pro', 'Roboto', sans-serif;
 }
 
-p, h1, h2, h3, h4 {
+p,
+h1,
+h2,
+h3,
+h4 {
   margin-top: 0;
 }
 
