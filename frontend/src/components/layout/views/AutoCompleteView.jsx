@@ -3,6 +3,7 @@ import React from 'react';
 import {Column, Row, TextView, CodeView, CardView} from 'Layout/Items.jsx';
 
 import Autosuggest from 'react-autosuggest';
+
 /**
 REQUIRED ATTRIBUTES:
 this.props.suggestions (an array containing english words suggestions)
