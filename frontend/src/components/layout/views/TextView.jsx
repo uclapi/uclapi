@@ -24,8 +24,8 @@ export default class TextView extends React.Component {
     this.setTheme = this.setTheme.bind(this);
 
     // Every button view should contain a link and text
-    if(typeof this.props.header == "undefined") {console.log("EXCEPTION: TextView.constructor: no header defined");}
-    if(typeof this.props.text == "undefined") {console.log("EXCEPTION: TextView.constructor: no text defined");}
+    if(typeof this.props.header == 'undefined') {console.log('EXCEPTION: TextView.constructor: no header defined');}
+    if(typeof this.props.text == 'undefined') {console.log('EXCEPTION: TextView.constructor: no text defined');}
 
     // Set type of button
     this.style = [];
@@ -49,12 +49,12 @@ export default class TextView extends React.Component {
   render() {
     return (
         <this.state.heading style={this.state.style}>
-          {this.state.link ? ( 
-            <a className="default-transition color-transition" href={this.props.link}>
+          {this.state.link ? (
+            <a className='default-transition color-transition' href={this.props.link}>
               <div style={this.state.style}>
                 {this.props.text}
               </div>
-            </a> 
+            </a>
           ) : (
             <div style={this.state.style}>
               {this.props.text}
@@ -65,28 +65,28 @@ export default class TextView extends React.Component {
   }
 
   getHeader() {
-    var heading_size = "6";
+    var heading_size = '6';
     if(this.props.heading) { heading_size = this.props.heading; }
 
     // Font size
     var CustomTag = `h${heading_size}`;
-    if(heading_size=="p") { CustomTag = "p"; }
+    if(heading_size=='p') { CustomTag = 'p'; }
 
     return CustomTag;
   }
 
   setStyleKeyValuePair(key, value) {
     this.style[key] = value;
-    if(this.DEBUGGING) { console.log("DEBUG: " + key + " updated to: " + value); }
+    if(this.DEBUGGING) { console.log('DEBUG: ' + key + ' updated to: ' + value); }
   }
 
   setTheme() {
     // align - Set up alignment of the text
-    if(this.props.align) { this.setStyleKeyValuePair("textAlign", this.props.align); }
+    if(this.props.align) { this.setStyleKeyValuePair('textAlign', this.props.align); }
     // color - Used to change the color of the text
-    if(this.props.color) { 
-      this.setStyleKeyValuePair("color", this.props.color); 
-      this.setStyleKeyValuePair("textDecorationColor", this.props.color); 
+    if(this.props.color) {
+      this.setStyleKeyValuePair('color', this.props.color);
+      this.setStyleKeyValuePair('textDecorationColor', this.props.color);
     }
   }
 }
