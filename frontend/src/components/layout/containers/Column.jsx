@@ -16,7 +16,7 @@ export default class Column extends React.Component {
   constructor(props) {
     super(props);
 
-    this.UNSET_ERROR_WIDTH = "0px";
+    this.UNSET_ERROR_WIDTH = '0px';
     this.DEBUGGING = false;
     this.HORIZONTAL_PADDING = 2 + 2;
 
@@ -27,14 +27,14 @@ export default class Column extends React.Component {
     this.setStyleKeyValuePair = this.setStyleKeyValuePair.bind(this);
     this.setTheme = this.setTheme.bind(this);
 
-    if(typeof this.props.width == "undefined") {console.log("EXCEPTION: Column.constructor: no width defined");}
+    if(typeof this.props.width == 'undefined') {console.log('EXCEPTION: Column.constructor: no width defined');}
 
-    this.class = "column";
+    this.class = 'column';
     this.style = [];
 
     if(this.props.style) { this.style = this.props.style; }
 
-    this.verticalAlignment = "no-vertical-align";
+    this.verticalAlignment = 'no-vertical-align';
 
     this.setTheme();
 
@@ -57,7 +57,7 @@ export default class Column extends React.Component {
 
   setStyleKeyValuePair(key, value) {
     this.style[key] = value;
-    if(this.DEBUGGING) { console.log("DEBUG: " + key + " updated to: " + value); }
+    if(this.DEBUGGING) { console.log('DEBUG: ' + key + ' updated to: ' + value); }
   }
 
   setTheme() {
@@ -77,16 +77,16 @@ export default class Column extends React.Component {
 
   setVerticalAlignment() {
     switch(this.props.verticalAlignment) {
-      case "top":
+      case 'top':
         // Stub needs implementing
       break;
 
-      case "center":
+      case 'center':
         this.verticalAlignment = 'vertical-align center-y';
-        this.setStyleKeyValuePair("height", '100%');
+        this.setStyleKeyValuePair('height', '100%');
       break;
 
-      case "bottom":
+      case 'bottom':
         this.verticalAlignment = 'vertical-align bottom-y';
       break;
     }
@@ -94,24 +94,24 @@ export default class Column extends React.Component {
 
   setHorizontalAlignment() {
    switch(this.props.horizontalAlignment) {
-      case "left":
-        this.setStyleKeyValuePair("float", 'left');
+      case 'left':
+        this.setStyleKeyValuePair('float', 'left');
       break;
 
-      case "center":
-        this.setStyleKeyValuePair("margin", 'auto');
+      case 'center':
+        this.setStyleKeyValuePair('margin', 'auto');
       break;
 
-      case "right":
-        this.setStyleKeyValuePair("float", 'right');
+      case 'right':
+        this.setStyleKeyValuePair('float', 'right');
       break;
-    } 
+    }
   }
 
   getColumnWidth() {
-    if(typeof this.props.width == "undefined") {console.log("EXCEPTION: no width set for column so setting column width to 0"); return 0;}
+    if(typeof this.props.width == 'undefined') {console.log('EXCEPTION: no width set for column so setting column width to 0'); return 0;}
 
-    var buffer = this.props.width.split("-")
+    var buffer = this.props.width.split('-')
 
     var numberOfColumns = buffer[1];
     var fraction = buffer[0] / buffer[1];
@@ -121,14 +121,14 @@ export default class Column extends React.Component {
     var spaceForColumns = 100 - paddingSpace
 
     var percentage = spaceForColumns * fraction;
-    return percentage + "%";
+    return percentage + '%';
   }
 
   setColumnWidthAndPadding() {
-    this.setStyleKeyValuePair("width", this.getColumnWidth());
+    this.setStyleKeyValuePair('width', this.getColumnWidth());
 
-    if(this.props.maxWidth) {this.setStyleKeyValuePair("maxWidth", this.props.maxWidth);}
-    if(this.props.minWidth) {this.setStyleKeyValuePair("minWidth", this.props.minWidth);}
+    if(this.props.maxWidth) {this.setStyleKeyValuePair('maxWidth', this.props.maxWidth);}
+    if(this.props.minWidth) {this.setStyleKeyValuePair('minWidth', this.props.minWidth);}
   }
 
 }

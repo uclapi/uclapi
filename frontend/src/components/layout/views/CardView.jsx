@@ -8,7 +8,7 @@ OPTIONAL ATTRIBUTES:
 this.props.type - e.g default (dark grey) / default-no-shadow (dark grey no shadow) / alternate (light grey) / emphasis (orange) / fit-content (no padding or margin for inner content)
 this.props.style (An array of styles to add to the component)
 
-this.props.link (default is not clickable) => "no-action" enables hover but does not reroute
+this.props.link (default is not clickable) => 'no-action' enables hover but does not reroute
 this.props.fakeLink - same behaviour as a link
 
 this.props.minWidth - e.g 300px a minimum width (default is unset)
@@ -43,9 +43,9 @@ export default class CardView extends React.Component {
   }
 
   render() {
-    if(this.DEBUGGING) { console.log("DEBUG: CardView rendered with the following styles: " + this.state.type + " and class: " + this.state.class); }
+    if(this.DEBUGGING) { console.log('DEBUG: CardView rendered with the following styles: ' + this.state.type + ' and class: ' + this.state.class); }
 
-    var doesLinkRoute = (typeof this.props.link != "undefined") && (typeof this.props.fakeLink == "undefined");
+    var doesLinkRoute = (typeof this.props.link != 'undefined') && (typeof this.props.fakeLink == 'undefined');
 
     // RENDER METHOD
     if(doesLinkRoute) {
@@ -68,43 +68,43 @@ export default class CardView extends React.Component {
   setTheme() {
     // REQUIRED ATTRIBUTES
     // STYLE
-    this.class += " uclapi-card-"+this.getStyle();
+    this.class += ' uclapi-card-'+this.getStyle();
     // WIDTH
-    this.setStyleKeyValuePair("width", this.getWidth());
+    this.setStyleKeyValuePair('width', this.getWidth());
     // MIN WIDTH
-    this.setStyleKeyValuePair("minWidth", this.getMinWidth());
+    this.setStyleKeyValuePair('minWidth', this.getMinWidth());
 
     // OPTIONAL ATTRIBUTES
     // LINK
-    if(this.props.link || this.props.fakeLink) { this.class += " default-transition background-color-transition clickable uclapi-card-clicked-"+this.getStyle(); }
+    if(this.props.link || this.props.fakeLink) { this.class += ' default-transition background-color-transition clickable uclapi-card-clicked-'+this.getStyle(); }
     // ADD SHADOW AS DEFAULT
-    if(typeof this.props.noShadow === "undefined" && this.getStyle() != "no-bg") { this.class += " uclapi-card-shadow"}
+    if(typeof this.props.noShadow === 'undefined' && this.getStyle() != 'no-bg') { this.class += ' uclapi-card-shadow'}
   }
 
   setStyleKeyValuePair(key, value) {
     this.style[key] = value;
-    if(this.DEBUGGING) { console.log("DEBUG: style updated to: " + this.style); }
+    if(this.DEBUGGING) { console.log('DEBUG: style updated to: ' + this.style); }
   }
 
   getWidth() {
-    if(typeof this.props.width == "undefined") {console.exception("EXCEPTION: no width set for card view so setting card view width to " + DEFAULT_WIDTH); return DEFAULT_WIDTHz;}
+    if(typeof this.props.width == 'undefined') {console.exception('EXCEPTION: no width set for card view so setting card view width to ' + DEFAULT_WIDTH); return DEFAULT_WIDTHz;}
 
-    if(this.props.width == "fit-content") { return "fit-content"; }
+    if(this.props.width == 'fit-content') { return 'fit-content'; }
 
-    var fraction = this.props.width.split("-");
-    var adaptation = 100 - ( 4 * fraction[1] ); 
+    var fraction = this.props.width.split('-');
+    var adaptation = 100 - ( 4 * fraction[1] );
     var percentage = fraction[0] / fraction[1] * adaptation;
-    return percentage + "%";
+    return percentage + '%';
   }
 
   getMinWidth() {
-    var minWidth = "unset";
+    var minWidth = 'unset';
     if(this.props.minWidth) {minWidth=this.props.minWidth;}
     return minWidth;
   }
 
   getStyle() {
-    var style = "default";
+    var style = 'default';
     if(this.props.type) {style=this.props.type;}
     return style;
   }

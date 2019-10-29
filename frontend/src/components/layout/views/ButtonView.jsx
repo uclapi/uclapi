@@ -25,8 +25,8 @@ export default class ButtonView extends React.Component {
     this.setTheme = this.setTheme.bind(this);
 
     // Every button view should contain a link and text
-    if(typeof this.props.link == "undefined") {console.log("EXCEPTION: ButtonView.constructor: no link defined");}
-    if(typeof this.props.text == "undefined") {console.log("EXCEPTION: ButtonView.constructor: no text defined");}
+    if(typeof this.props.link == 'undefined') {console.log('EXCEPTION: ButtonView.constructor: no link defined');}
+    if(typeof this.props.text == 'undefined') {console.log('EXCEPTION: ButtonView.constructor: no text defined');}
 
     // Set type of button
     this.class = this.getClassName();
@@ -55,19 +55,19 @@ export default class ButtonView extends React.Component {
 
   setStyleKeyValuePair(key, value) {
     this.style[key] = value;
-    if(this.DEBUGGING) { console.log("DEBUG: " + key + " updated to: " + value); }
+    if(this.DEBUGGING) { console.log('DEBUG: ' + key + ' updated to: ' + value); }
   }
 
   getClassName() {
-    var buttonType = "default";
-    var className = "uclapi-button default-transition background-color-transition"; 
+    var buttonType = 'default';
+    var className = 'uclapi-button default-transition background-color-transition';
     if(this.props.type) { buttonType = this.props.type; }
-    return className + " " + buttonType + "-button";
+    return className + ' ' + buttonType + '-button';
   }
 
   setTheme() {
-    // "centred" - Center the button inside of its parent
-    if(this.props.centred) {this.class += " " + "center-x";}
+    // 'centred' - Center the button inside of its parent
+    if(this.props.centred) {this.class += ' ' + 'center-x';}
   }
 
 }

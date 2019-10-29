@@ -16,12 +16,12 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 const muiTheme = getMuiTheme({
   fontFamily: 'Roboto, sans-serif',
   palette: {
-    primary1Color: "#434343",
+    primary1Color: '#434343',
     primary3Color: grey100,
     accent1Color: pinkA200,
     textColor: white,
     alternateTextColor: white,
-    canvasColor: "#434343",
+    canvasColor: '#434343',
   },
 });
 
@@ -39,11 +39,11 @@ export default class Demo extends React.Component {
     this.DEBUGGING = false;
 
     this.state = {
-      response: "",
+      response: '',
       params: {
-        "token": window.initialData.temp_token,
-        "date": now.toISOString().substring(0, 10).replace(/-/g, ""),
-        "results_per_page": "1"
+        'token': window.initialData.temp_token,
+        'date': now.toISOString().substring(0, 10).replace(/-/g, ''),
+        'results_per_page': '1'
       },
       rootURL: rootURL,
     };
@@ -54,21 +54,21 @@ export default class Demo extends React.Component {
   render() {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <Row styling={"secondary"} height={"fit-content"} isPaddedBottom={true}>
-          <Column width="2-3" horizontalAlignment="center">
-            <TextView text={"Try out the API"} heading={1} align={"center"} />
+        <Row styling={'secondary'} height={'fit-content'} isPaddedBottom={true}>
+          <Column width='2-3' horizontalAlignment='center'>
+            <TextView text={'Try out the API'} heading={1} align={'center'} />
             <AutoCompleteView suggestions={rooms} onSubmit={this.makeRequest}/>
           </Column>
-          
-          <Row height="20px" noPadding/>
 
-          <Column width="2-3" horizontalAlignment="center">
-            <CodeView url={`${this.state.rootURL}/roombookings/bookings`} params={this.state.params} type={"request"}/>
+          <Row height='20px' noPadding/>
+
+          <Column width='2-3' horizontalAlignment='center'>
+            <CodeView url={`${this.state.rootURL}/roombookings/bookings`} params={this.state.params} type={'request'}/>
           </Column>
 
           {this.state.response ? (
-            <Column width="2-3" horizontalAlignment="center">
-              <CodeView response={this.state.response} type={"response"}/>
+            <Column width='2-3' horizontalAlignment='center'>
+              <CodeView response={this.state.response} type={'response'}/>
             </Column>
           ) : null }
         </Row>
@@ -79,21 +79,21 @@ export default class Demo extends React.Component {
   makeRequest(roomName) {
     let now = new Date();
 
-    if(this.DEBUGGING) { console.log("DEBUG: Looking for room bookings in the room: " + roomName)}
+    if(this.DEBUGGING) { console.log('DEBUG: Looking for room bookings in the room: ' + roomName)}
 
     this.setState({
       params: {
-        "token": window.initialData.temp_token,
-        "date": now.toISOString().substring(0, 10).replace(/-/g, ""),
-        "results_per_page": "1",
-        "roomName": roomName
+        'token': window.initialData.temp_token,
+        'date': now.toISOString().substring(0, 10).replace(/-/g, ''),
+        'results_per_page': '1',
+        'roomName': roomName
       }
     });
 
     // TODO:
     // Need to create development environment in package.json
-    let url = `${this.state.rootURL}/roombookings/bookings?token=` + window.initialData.temp_token 
-      + "&roomname=" + roomName + "&date=" + now.toISOString().substring(0, 10).replace(/-/g, "");
+    let url = `${this.state.rootURL}/roombookings/bookings?token=` + window.initialData.temp_token
+      + '&roomname=' + roomName + '&date=' + now.toISOString().substring(0, 10).replace(/-/g, '');
 
     fetch(url).then(response => {
       return response.json();
