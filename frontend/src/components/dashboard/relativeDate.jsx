@@ -1,13 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import PropTypes from 'prop-types'
+import React from 'react'
 
 dayjs.extend(utc)
 
 class RelativeDate extends React.Component {
+  static propTypes = {
+    date: PropTypes.string,
+    label: PropTypes.string,
+  }
+
   constructor(props) {
-    super(props);
+    super(props)
 
     /*
       Make day.js say 'just now' if the time difference is less
@@ -19,26 +24,20 @@ class RelativeDate extends React.Component {
     dayjs.prototype.fromNowOrNow = function (a) {
       console.log(this)
       if (Math.abs(dayjs().diff(this)) < 5000) {
-        return 'just now';
+        return `just now`
       }
-      return this.fromNow(a);
-    };
+      return this.fromNow(a)
+    }
   }
 
   render() {
     const { date, label } = this.props
     return (
-      <div title={dayjs().utc(date).local().format('dddd, Do MMMM YYYY, h:mm:ss a')}>
-        {label} {dayjs().utc(date).local().fromNowOrNow()}
+      <div title={dayjs.utc(date).local().format(`dddd, Do MMMM YYYY, h:mm:ss a`)}>
+        {label} {dayjs.utc(date).local().fromNowOrNow()}
       </div>
-    );
+    )
   }
 }
 
-
-RelativeDate.propTypes = {
-  date: PropTypes.string,
-  label: PropTypes.string
-};
-
-export default RelativeDate;
+export default RelativeDate

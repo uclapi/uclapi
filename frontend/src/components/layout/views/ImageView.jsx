@@ -1,4 +1,7 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
+// remove this ^ when ready to add prop-types
+
+import React from 'react'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -8,31 +11,63 @@ this.props.width (need the width of the image)
 this.props.height (need the height of the image)
 
 OPTIONAL ATTRIBUTES:
-this.props.isCentered (centers the image inside of its parent)
-this.props.isPadded (and variations affect the vertical padding of the layout)
+this.props.centred (centers the image inside of its parent)
+this.props.style (array containing any extra style tags)
 **/
 
 export default class ImageView extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
+
+    this.DEBUGGING = false
+
+    // Bind functions
+    this.setTheme = this.setTheme.bind(this)
+
+    const {
+      src,
+      description,
+      width,
+      height,
+      style,
+    } = this.props
+
+    // Every image view should contain a source, description, width and height
+    if (typeof src == `undefined`) { console.log(`EXCEPTION: ImageView.constructor: no src defined`) }
+    if (typeof description == `undefined`) { console.log(`EXCEPTION: ImageView.constructor: no description defined`) }
+    if (typeof width == `undefined`) { console.log(`EXCEPTION: ImageView.constructor: no width defined`) }
+    if (typeof height == `undefined`) { console.log(`EXCEPTION: ImageView.constructor: no height defined`) }
+
+    this.class = `image-view`
+    this.style = []
+    // If custom styling then include
+    if (style) { this.style = style }
+    // Set up button tags
+    this.setTheme()
+
+    // Save class and stylings to the state
+    this.state = {
+      class: this.class,
+      style: this.style,
+    }
   }
 
   render() {
-    var image_class_name = "image-view"
-    var content_style = [];
-
-    if(this.props.isCentered) { image_class_name += " center-x"; }
-    if(this.props.isPadded) { image_class_name += " vertical-padding-top vertical-padding-bottom"; }
-    if(this.props.isPaddedTop) { image_class_name += " vertical-padding-top"; }
-    if(this.props.isPaddedBottom) { image_class_name += " vertical-padding-bottom"; }
-    if(this.props.margin) { content_style['margin'] = this.props.margin; }
-
+    const { class: className, style } = this.state
+    const { src, description, width, height } = this.props
     return (
-       <div className={image_class_name} style={content_style}>
-        <img src={this.props.src} alt={this.props.description} width={this.props.width} height={this.props.height}></img>
-       </div>
-    );
+      <div className={className} style={style}>
+        <img src={src} alt={description} width={width} height={height}></img>
+      </div>
+    )
   }
+
+  setTheme() {
+    // 'centred' - Center the button inside of its parent
+    const { centred } = this.props
+    if (centred) { this.class += ` ` + `center-x` }
+  }
+
 
 }

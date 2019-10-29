@@ -25,6 +25,7 @@
       "always-multiline"
     ],
     "no-var": "error",
+    "prefer-const": "error",
     "no-secrets/no-secrets": "error",
     "react/jsx-indent-props": [
       "error",
@@ -45,6 +46,16 @@
       "error",
       "never"
     ],
+    "react/destructuring-assignment": [
+      "warn",
+      "always"
+    ],
+    "react/jsx-no-bind": [
+      "error",
+      {
+        "ignoreRefs": true
+      }
+    ],
     "import/no-extraneous-dependencies": [
       "error",
       {
@@ -55,7 +66,8 @@
       }
     ],
     "simple-import-sort/sort": "error",
-    "security/detect-non-literal-require": "off" // until https://github.com/nodesecurity/eslint-plugin-security/pull/32 is merged
+    "security/detect-non-literal-require": "off", // until https://github.com/nodesecurity/eslint-plugin-security/pull/32 is merged
+    "security/detect-object-injection": "warn"
   },
   "plugins": [
     "react",
