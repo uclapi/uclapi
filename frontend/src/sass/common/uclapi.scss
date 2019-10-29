@@ -1,5 +1,5 @@
 /**
-	UCL API WEBSITE STYLES 
+	UCL API WEBSITE STYLES
 	As of July 2019
 
 	Hopefully these stylings bring together
@@ -54,12 +54,12 @@ $highlight-color: #B18453;
 
 /** Row Colours **/
 
-.splash-parallax { 
+.splash-parallax {
   background-image: url("~Images/home-page/splash_screen.png");
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4); 
-  
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
+
   /* Full height */
-  height: 100%; 
+  height: 100%;
 
   /* Create the parallax scrolling effect */
   background-attachment: fixed;
@@ -68,12 +68,12 @@ $highlight-color: #B18453;
   background-size: cover;
 }
 
-.team-parallax { 
+.team-parallax {
   background-image: url("~Images/team/teambg.jpg");
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4); 
-  
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
+
   /* Full height */
-  height: 100%; 
+  height: 100%;
 
   /* Create the parallax scrolling effect */
   background-attachment: fixed;
@@ -235,11 +235,11 @@ a:hover { color: #BBBBBB; }
 }
 
 .uclapi-card-emphasis {
-	background-color: $primary-color; 
+	background-color: $primary-color;
 }
 
 .uclapi-card-emphasis:hover {
-  background-color: $primary-highlight-color; 
+  background-color: $primary-highlight-color;
 }
 
 .uclapi-card-shadow {
@@ -365,7 +365,7 @@ input {
   width: 100%;
 }
 
-input::placeholder { 
+input::placeholder {
   color: white;
 }
 
@@ -406,10 +406,10 @@ pre {
 }
 
 .react-tabs__tab-list li {
-  cursor: pointer;
+  curswhiteor: pointer;
   color: white;
   list-style-type: none;
-  margin: 0;
+  margwhitein: 0;
   float: left;
   display: inline-block;
   padding: 10px 50px;
@@ -420,9 +420,9 @@ pre {
   transition-timing-function: linear;
   transition-property: background-color;
 }
-
+white
 .unselected-tab {
-  background-color: $primary-highlight-color;
+  backwhiteground-color: $primary-highlight-color;
 }
 
 .selected-tab {
@@ -446,30 +446,32 @@ pre {
   }
 }
 
-/** Social Media Icons **/
+// Social Media Icons
 
 .uclapi-card-facebook,
 .uclapi-card-github,
 .uclapi-card-twitter {
-  background-color: white;
+  background-color: #ffffff;
 
+	border-radius: 25px;
+
+	margin-top: 10px;
+
+	padding: 10px 0;
+
+	transition-duration: 0.5s;
   transition-property: background-color;
-  transition-duration: 0.5s;
   transition-timing-function: ease-out;
-
-  margin-top: 10px;
-
-  padding: 10px 0;
-
-  border-radius: 25px;
 }
 
 .uclapi-card-facebook:hover {
   background-color: #3b5998;
 }
+
 .uclapi-card-twitter:hover {
-  background-color: #38A1F3;
+  background-color: #38a1f3;
 }
-.uclapi-card-github:hover{
-  background-color: black;
+
+.uclapi-card-github:hover {
+  background-color: #000000;
 }
