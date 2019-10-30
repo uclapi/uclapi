@@ -178,8 +178,8 @@ a:hover { color: $color-grey-light; }
 }
 
 .vertical-align {
-  position: absolute;
-  width: 100%;
+	width: inherit;
+	position: absolute;
 }
 
 .no-vertical-align {
@@ -200,7 +200,7 @@ a:hover { color: $color-grey-light; }
 
 .row {
   height: auto;
-  min-height: 100% !important;
+  min-height: 100%;
   position: relative;
   width: 100%;
 }
@@ -235,8 +235,8 @@ a:hover { color: $color-grey-light; }
 .image-button:hover,
 .uclapi-card-clicked-alternate:hover { background-color: $color-grey-light2;  }
 
-.emphasis-button, { background-color: $primary-highlight-color; color: $color-black; }
-.emphasis-button:hover { background-color: $primary-color;  }
+.emphasis-button, { background-color: lighten($primary-highlight-color, 10%); color: black; }
+.emphasis-button:hover { background-color: lighten($primary-highlight-color, 20%);  }
 
 /** Transitions **/
 
