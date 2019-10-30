@@ -15,10 +15,10 @@ const getSuggestionValue = suggestion => suggestion;
 
 const row_size = 40;
 const renderSuggestion = suggestion => (
-   <Row color="primary-highlight" height={row_size + "px"} noPadding>         
+   <Row styling="primary-highlight" height={row_size + "px"} style = { { "padding" : "0" } } >         
     <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
-      <CardView width="1-1" style="emphasis" fakeLink noShadow>
-        <Row height = {(row_size-12) + "px"} padding="5px 2px">
+      <CardView width="1-1" type="emphasis" fakeLink noShadow>
+        <Row height={(row_size-12) + "px"} style={ { "padding" : "5px 2px" } }>
           <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
               <TextView align="center" text={suggestion} heading={5}/>
           </Column>
