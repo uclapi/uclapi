@@ -130,7 +130,7 @@ class HomePage extends React.Component {
             {this.state.articles.map(x => ( 
               <CardView width="1-3" minWidth="200px" type="default" link={x.url}>
                 <Column width="1-1">
-                  <Row height = "200px" src={x.image_url}>
+                  <Row height = "200px" src={x.image_url} style={ { "backgroundSize" : "Cover" } } >
                     <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
                       <TextView text={x.title} align={"center"} heading = {3} color={"white"} />
                     </Column>
