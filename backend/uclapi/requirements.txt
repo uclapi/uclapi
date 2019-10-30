@@ -6,7 +6,7 @@ certifi==2019.9.11
 chardet==3.0.4
 ciso8601==2.1.2
 cx-Oracle==7.2.3
-decorator==4.4.0
+decorator==4.4.1
 deepdiff==4.0.8
 Django==1.11.25
 django-cors-headers==3.1.1
@@ -19,7 +19,7 @@ docutils==0.15.2
 eventlet==0.25.1
 gevent==1.4.0
 freezegun==0.3.12
-flake8==3.7.8
+flake8==3.7.9
 greenlet==0.4.15
 gunicorn==19.9.0
 hiredis==1.0.0
