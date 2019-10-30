@@ -104,8 +104,8 @@ class HomePage extends React.Component {
                         by the UCL API team to provide students with a reliable way to check their 
                         timetable, find empty rooms and locate study spaces.`} heading={5} align={"center"}/>
 
-                      <ButtonView inline={true} text={"MARKETPLACE"} link={"/marketplace"} noMargin/>
-                      <ButtonView inline={true} text={"UCL ASSISTANT"} link={"https://play.google.com/store/apps/details?id=com.uclapi.uclassistant&hl=en_GB"} buttonType={"alternate"}/>
+                      <ButtonView text={"MARKETPLACE"} link={"/marketplace"} style={ { "marginLeft" : "0" } }/>
+                    <ButtonView text={"UCL ASSISTANT"} link={"https://play.google.com/store/apps/details?id=com.uclapi.uclassistant&hl=en_GB"} type='alternate'/>
                   </Column>
                 </Row>
               );
@@ -130,8 +130,8 @@ class HomePage extends React.Component {
                       by the UCL API team to provide students with a reliable way to check their 
                       timetable, find empty rooms and locate study spaces.`} heading={5} align={"left"}/>
 
-                    <ButtonView inline={true} text={"MARKETPLACE"} link={"/marketplace"} noMargin/>
-                    <ButtonView inline={true} text={"UCL ASSISTANT"} link={"https://play.google.com/store/apps/details?id=com.uclapi.uclassistant&hl=en_GB"} buttonType={"alternate"}/>
+                    <ButtonView text={"MARKETPLACE"} link={"/marketplace"} style={ { "marginLeft" : "0" } }/>
+                    <ButtonView text={"UCL ASSISTANT"} link={"https://play.google.com/store/apps/details?id=com.uclapi.uclassistant&hl=en_GB"} type='alternate'/>
                   </Column>
                 </Column>
               </Row>
