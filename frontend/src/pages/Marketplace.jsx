@@ -141,11 +141,10 @@ class AppPage extends React.Component {
             </Column>
           </Row>
 
-          <Row styling='secondary' height='100px' noPadding>
+          <Row styling='secondary' height='70px' style={ { "padding" : "10px 0" } }>
             <Column width='2-3' horizontalAlignment='center'>
               <Column width='fit-content' minWidth={iconsize} typeOfInline='grid' horizontalAlignment='left'>
-                <ButtonView src={arrow} width={iconsize} height={iconsize} isCircular={true} isInline='block'
-                  buttonType='image' text='back-to-marketplace' link='/marketplace' margin='0' />
+                <ButtonView type='alternate' text='back to marketplace' link='/marketplace' style = { { margin : '10px 0' } } />
               </Column>
             </Column>
           </Row>
@@ -156,7 +155,7 @@ class AppPage extends React.Component {
                 <ImageView src={this.state.app.logo} width={iconsize} height={iconsize}
                   description={this.state.app.name  + 'logo'} centred={true} style={ {'margin' :  '0 auto 0 0'} }/>
               </Column>
-              <Column width='fit-content' minWidth={iconsize} typeOfInline='grid' horizontalAlignment='left' textAlign='left'>
+              <Column width='fit-content' minWidth={iconsize} horizontalAlignment='left' textAlign='left' style= { { "paddingLeft" : "20px" } }>
                <TextView text={this.state.app.name} heading={2} />
                <TextView text={this.state.app.description} heading={5} />
               </Column>

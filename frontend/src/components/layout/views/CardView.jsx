@@ -21,7 +21,7 @@ export default class CardView extends React.Component {
     super(props);
 
     this.DEFAULT_WIDTH = 0;
-    this.DEBUGGING = false;
+    this.DEBUGGING = true;
 
     this.getWidth = this.getWidth.bind(this);
     this.getMinWidth = this.getMinWidth.bind(this);
@@ -73,7 +73,7 @@ export default class CardView extends React.Component {
     this.setStyleKeyValuePair('width', this.getWidth());
     // MIN WIDTH
     this.setStyleKeyValuePair('minWidth', this.getMinWidth());
-
+    
     // OPTIONAL ATTRIBUTES
     // LINK
     if(this.props.link || this.props.fakeLink) { this.class += ' default-transition background-color-transition clickable uclapi-card-clicked-'+this.getStyle(); }
@@ -82,6 +82,7 @@ export default class CardView extends React.Component {
   }
 
   setStyleKeyValuePair(key, value) {
+    if(this.DEBUGGING) { console.log('DEBUG: ' + key + ' updated to ' + value); }
     this.style[key] = value;
     if(this.DEBUGGING) { console.log('DEBUG: style updated to: ' + this.style); }
   }
@@ -101,6 +102,12 @@ export default class CardView extends React.Component {
     var minWidth = 'unset';
     if(this.props.minWidth) {minWidth=this.props.minWidth;}
     return minWidth;
+  }
+
+  getMaxWidth() {
+    var maxWidth = "unset";
+    if(this.props.maxWidth) {maxWidth=this.props.maxWidth;}
+    return maxWidth;
   }
 
   getStyle() {
