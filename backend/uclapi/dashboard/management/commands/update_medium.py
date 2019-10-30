@@ -52,7 +52,7 @@ class Command(BaseCommand):
 
             if content.startswith("<figure><img"):
                 link = content[25:]
-                split = link.split(" />")
+                split = link.split('" />')
                 link = split[0]
 
             pipe.set(redis_key_title, title)
