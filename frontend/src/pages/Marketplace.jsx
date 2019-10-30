@@ -1,17 +1,23 @@
-// Standard React imports
+/* eslint-disable react/prop-types */
+// remove this ^ when ready to add prop-types
+
+
 // Styles
 import 'Styles/common/uclapi.scss'
 // Legacy
 import 'Styles/navbar.scss'
 
-import PropTypes from 'prop-types'
+// Standard React imports
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 // Images
 // Backgrounds
-import arrow from 'Images/marketplace/arrow-left.svg'
+// import balloons from 'Images/home-page/balloons.jpg'
+// import logo from 'Images/home-page/logo.svg'
+// import arrow from 'Images/marketplace/arrow-left.svg'
+// import market from 'Images/marketplace/market.svg'
 // Grab titles and descriptions of app
 import { allApps } from 'Layout/data/app_pages.jsx'
 // Common Components
@@ -21,12 +27,8 @@ class Marketplace extends React.Component {
 
   constructor(props) {
     super(props)
+    const DEBUGGING = false
 
-    this.state = {
-      DEBUGGING: false,
-    }
-
-    const { DEBUGGING } = this.state
     if (DEBUGGING) { console.log(`All apps loaded in: ` + allApps) }
 
     // Set up the 'featured' apps section
@@ -46,7 +48,11 @@ class Marketplace extends React.Component {
 
   render() {
     const iconsize = `100px`
-    const { appsToRender, featuredApps } = this.state
+    // const logosize = `150px`
+    const {
+      featuredApps,
+      appsToRender,
+    } = this.state
 
     return (
       <>
@@ -84,17 +90,22 @@ class Marketplace extends React.Component {
           <Column width='2-3' horizontalAlignment='center'>
             <TextView text={`All Apps`} heading={2} align={`left`} />
             <TextView text={`Every app made using the API`} heading={5} align={`left`} />
-            {appsToRender.map((app, i) => (
-              <CardView key={`all-apps-` + i} width={`1-2`} type={`alternate`} link={`/marketplace/` + app.id}
-                style={{ 'padding': `20px 0 ` }}
-              >
-                <Column width='9-10' horizontalAlignment='center'>
-                  <ImageView src={app.logo} width={iconsize} height={iconsize} />
-                  <TextView text={app.name} heading={2} align={`center`} color={`black`} />
-                  <TextView text={app.description} heading={5} align={`center`} color={`black`} />
-                </Column>
-              </CardView>
-            ))}
+            {appsToRender.map((app, i) => {
+              // let margin = `0`
+              // if (i % 2 == 0) { margin = `0 2% 0 0` }
+
+              return (
+                <CardView key={`all-apps-` + i} width={`1-2`} type={`alternate`} link={`/marketplace/` + app.id}
+                  style={{ 'padding': `20px 0 ` }}
+                >
+                  <Column width='9-10' horizontalAlignment='center'>
+                    <ImageView src={app.logo} width={iconsize} height={iconsize} />
+                    <TextView text={app.name} heading={2} align={`center`} color={`black`} />
+                    <TextView text={app.description} heading={5} align={`center`} color={`black`} />
+                  </Column>
+                </CardView>
+              )
+            })}
           </Column>
         </Row>
 
@@ -106,16 +117,9 @@ class Marketplace extends React.Component {
 }
 
 class AppPage extends React.Component {
-  static propTypes = {
-    appId: PropTypes.string.isRequired,
-  }
-
   constructor(props) {
     super(props)
-
-
     const { appId } = this.props
-
     // Grab the app that this page is dealing with
     const app = allApps[appId]
     this.state = {
@@ -124,20 +128,22 @@ class AppPage extends React.Component {
   }
 
   render() {
+    const iconsize = `100px`
+    // const logosize = `150px`
+
+    const screenshotwidth = `216px`
+    const screenshotheight = `384px`
+
     const {
       app: {
-        name,
         logo,
+        name,
         description,
         screenshots,
         detailedDescription,
         androidLink,
       },
     } = this.state
-    const iconsize = `100px`
-
-    const screenshotwidth = `216px`
-    const screenshotheight = `384px`
 
     return (
       <>
@@ -150,12 +156,10 @@ class AppPage extends React.Component {
           </Column>
         </Row>
 
-        <Row styling='secondary' height='100px' noPadding>
+        <Row styling='secondary' height='70px' style={{ "padding": `10px 0` }}>
           <Column width='2-3' horizontalAlignment='center'>
             <Column width='fit-content' minWidth={iconsize} typeOfInline='grid' horizontalAlignment='left'>
-              <ButtonView src={arrow} width={iconsize} height={iconsize} isCircular isInline='block'
-                buttonType='image' text='back-to-marketplace' link='/marketplace' margin='0'
-              />
+              <ButtonView type='alternate' text='back to marketplace' link='/marketplace' style={{ margin: `10px 0` }} />
             </Column>
           </Column>
         </Row>
@@ -167,7 +171,7 @@ class AppPage extends React.Component {
                 description={name + `logo`} centred style={{ 'margin': `0 auto 0 0` }}
               />
             </Column>
-            <Column width='fit-content' minWidth={iconsize} typeOfInline='grid' horizontalAlignment='left' textAlign='left'>
+            <Column width='fit-content' minWidth={iconsize} horizontalAlignment='left' textAlign='left' style={{ "paddingLeft": `20px` }}>
               <TextView text={name} heading={2} />
               <TextView text={description} heading={5} />
             </Column>
@@ -176,7 +180,7 @@ class AppPage extends React.Component {
         <Row styling='secondary'>
           <Column width='2-3' horizontalAlignment='center'>
             {screenshots.map((img, i) => (
-              <CardView width='1-3' minWidth={screenshotwidth} type='no-bg' key={`${name} screenshot number ${i}`}>
+              <CardView width='1-3' minWidth={screenshotwidth} type='no-bg' key={name + ` screenshot number ` + i}>
                 <ImageView src={img} width={screenshotwidth} height={screenshotheight}
                   description={name + ` screenshot number ` + i} centred
                 />
@@ -209,16 +213,7 @@ class AppPage extends React.Component {
 
 }
 
-
-
 class Main extends React.Component {
-  static propTypes = {
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        appId: PropTypes.string.isRequired,
-      }),
-    }),
-  }
   renderAppPage = (props) => (
     <AppPage appId={props.match.params.appId} />
   )

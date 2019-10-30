@@ -24,7 +24,7 @@ export default class CardView extends React.Component {
     super(props)
 
     this.DEFAULT_WIDTH = 0
-    this.DEBUGGING = false
+    this.DEBUGGING = true
 
     this.getWidth = this.getWidth.bind(this)
     this.getMinWidth = this.getMinWidth.bind(this)
@@ -85,15 +85,13 @@ export default class CardView extends React.Component {
   }
 
   setStyleKeyValuePair(key, value) {
+    if (this.DEBUGGING) { console.log(`DEBUG: ` + key + ` updated to ` + value) }
     this.style[key] = value
     if (this.DEBUGGING) { console.log(`DEBUG: style updated to: ` + this.style) }
   }
 
   getWidth() {
-    if (typeof this.props.width == `undefined`) {
-      console.exception(`EXCEPTION: no width set for card view so setting card view width to ` + this.DEFAULT_WIDTH)
-      return this.DEFAULT_WIDTH
-    }
+    if (typeof this.props.width == `undefined`) { console.exception(`EXCEPTION: no width set for card view so setting card view width to ` + this.DEFAULT_WIDTH); return this.DEFAULT_WIDTH }
 
     if (this.props.width == `fit-content`) { return `fit-content` }
 
@@ -107,6 +105,12 @@ export default class CardView extends React.Component {
     let minWidth = `unset`
     if (this.props.minWidth) { minWidth = this.props.minWidth }
     return minWidth
+  }
+
+  getMaxWidth() {
+    let maxWidth = `unset`
+    if (this.props.maxWidth) { maxWidth = this.props.maxWidth }
+    return maxWidth
   }
 
   getStyle() {

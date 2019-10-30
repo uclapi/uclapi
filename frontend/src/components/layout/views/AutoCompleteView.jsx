@@ -17,10 +17,10 @@ const getSuggestionValue = suggestion => suggestion
 
 const row_size = 40
 const renderSuggestion = suggestion => (
-  <Row color="primary-highlight" height={row_size + `px`} noPadding>
+  <Row styling="primary-highlight" height={row_size + `px`} style={{ "padding": `0` }} >
     <Column width="2-3" horizontalAlignment="center" verticalAlignment="center">
-      <CardView width="1-1" style="emphasis" fakeLink noShadow>
-        <Row height={(row_size - 12) + `px`} padding="5px 2px">
+      <CardView width="1-1" type="emphasis" fakeLink noShadow>
+        <Row height={(row_size - 12) + `px`} style={{ "padding": `5px 2px` }}>
           <Column width="1-1" horizontalAlignment="center" verticalAlignment="center">
             <TextView align="center" text={suggestion} heading={5} />
           </Column>
@@ -40,16 +40,6 @@ export default class AutoCompleteView extends React.Component {
       __value: ``,
       __suggestions: [],
     }
-
-    // Setting up theme
-    this.getSuggestions = this.getSuggestions.bind(this)
-    this.getInputProps = this.getInputProps.bind(this)
-    // Setting up auto complete functions
-    this.onChange = this.onChange.bind(this)
-    this.onSuggestionSelected = this.onSuggestionSelected.bind(this)
-    this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this)
-    this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this)
-    this.getSuggestions = this.getSuggestions.bind(this)
   }
 
   render() {
@@ -71,7 +61,7 @@ export default class AutoCompleteView extends React.Component {
     )
   }
 
-  getSuggestions(value) {
+  getSuggestions = (value) => {
     let inputValue = `a`; let inputLength = 1
     if (typeof value != `undefined`) {
       inputValue = value.trim().toLowerCase()

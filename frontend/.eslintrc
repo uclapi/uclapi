@@ -26,6 +26,13 @@
     ],
     "no-var": "error",
     "prefer-const": "error",
+    "max-len": [
+      "warn",
+      {
+        "code": 80
+      }
+    ],
+    "object-property-newline": "error",
     "no-secrets/no-secrets": "error",
     "react/jsx-indent-props": [
       "error",

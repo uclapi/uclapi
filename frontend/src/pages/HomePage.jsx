@@ -9,11 +9,11 @@ import Collapse, { Panel } from 'rc-collapse'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import docs from 'Images/home-page/docs.svg'
 // Images
+import docs from 'Images/home-page/docs.svg'
 import heart from 'Images/home-page/heart.svg'
-import market from 'Images/home-page/market.svg'
 import star from 'Images/home-page/star.svg'
+import uclassistantmarket from 'Images/home-page/uclassistantmarket.png'
 import { endpoints, FAQ } from 'Layout/data/homepage_constants.jsx'
 // Components
 import { ButtonView, CardView, Column, Demo, Footer, ImageView, NavBar, Row, TextView } from 'Layout/Items.jsx'
@@ -38,6 +38,107 @@ class HomePage extends React.Component {
       articles: window.initialData.medium_articles,
       host: window.location.hostname,
       loggedIn: loggedIn,
+      sizing: `default`,
+    }
+  }
+
+  updateDimensions = () => {
+    if (typeof (window) === `undefined`) {
+      return null
+    }
+    const w = window,
+      d = document,
+      documentElement = d.documentElement,
+      body = d.getElementsByTagName(`body`)[0],
+      width = w.innerWidth || documentElement.clientWidth || body.clientWidth
+    // height = w.innerHeight || documentElement.clientHeight || body.clientHeight
+
+    const mobileCutOff = 700
+    const tabletCutOff = 1130
+
+    const { sizing } = this.state
+
+    if (width > tabletCutOff) {
+      if (sizing != `default`) { this.setState({ sizing: `default` }) }
+    } else if (width > mobileCutOff) {
+      if (sizing != `tablet`) { this.setState({ sizing: `tablet` }) }
+    } else {
+      if (sizing != `mobile`) { this.setState({ sizing: `mobile` }) }
+    }
+
+    console.log(sizing)
+  }
+
+  UNSAFE_componentWillMount() {
+    setTimeout(this.updateDimensions, 50)
+  }
+  componentDidMount() {
+    window.addEventListener(`resize`, this.updateDimensions)
+  }
+  componentWillUnmount() {
+    window.removeEventListener(`resize`, this.updateDimensions)
+  }
+
+  getView = (name) => {
+    const { sizing } = this.state
+    // remove this when this function is refactored
+    // eslint-disable-next-line sonarjs/no-small-switch
+    switch (name) {
+      case `marketplace`:
+        switch (sizing) {
+          case `mobile`:
+          case `tablet`:
+            return (
+              <Row styling="secondary" >
+                <Column width="2-3" textAlign="center" minWidth="250px" horizontalAlignment="center">
+                  <TextView text="UCL MARKET" heading={1} align="center" />
+
+                  <TextView text={`The UCL Marketplace contains all of the applications written
+                        using UCL API for some of their functionality. We are constantly looking for 
+                        applications to add to the marketplace and promote so we would love to hear
+                        about your creations so we can add them!`} heading={5} align={`center`}
+                  />
+
+                  <TextView text={`One of these applications is UCL Assistant! An app created
+                        by the UCL API team to provide students with a reliable way to check their 
+                        timetable, find empty rooms and locate study spaces.`} heading={5} align={`center`}
+                  />
+
+                  <ButtonView text={`MARKETPLACE`} link={`/marketplace`} style={{ "marginLeft": `0` }} />
+                  <ButtonView text={`UCL ASSISTANT`} link={`https://play.google.com/store/apps/details?id=com.uclapi.uclassistant&hl=en_GB`} type='alternate' />
+                </Column>
+              </Row>
+            )
+
+          case `default`:
+            return (
+              <Row styling="secondary" >
+                <Column width="2-3" minWidth="250px" horizontalAlignment="center">
+                  <Column width="1-2" minWidth="200px">
+                    <ImageView src={uclassistantmarket} width="367px" height="405px" description="ucl asssitant screen shot" />
+                  </Column>
+
+                  <Column width="1-2" minWidth="200px" textAlign="left" horizontalAlignment="right" verticalAlignment="center">
+                    <TextView text="UCL MARKET" heading={1} align="left" />
+
+                    <TextView text={`The UCL Marketplace contains all of the applications written
+                      using UCL API for some of their functionality. We are constantly looking for 
+                      applications to add to the marketplace and promote so we would love to hear
+                      about your creations so we can add them!`} heading={5} align={`left`}
+                    />
+
+                    <TextView text={`One of these applications is UCL Assistant! An app created
+                      by the UCL API team to provide students with a reliable way to check their 
+                      timetable, find empty rooms and locate study spaces.`} heading={5} align={`left`}
+                    />
+
+                    <ButtonView text={`MARKETPLACE`} link={`/marketplace`} style={{ "marginLeft": `0` }} />
+                    <ButtonView text={`UCL ASSISTANT`} link={`https://play.google.com/store/apps/details?id=com.uclapi.uclassistant&hl=en_GB`} type='alternate' />
+                  </Column>
+                </Column>
+              </Row>
+            )
+        }
     }
   }
 
@@ -129,7 +230,7 @@ class HomePage extends React.Component {
             {articles.map(x => (
               <CardView width='1-3' minWidth='200px' type='default' link={x.url} key={x.link}>
                 <Column width='1-1'>
-                  <Row height='200px' src={x.image_url}>
+                  <Row height='200px' src={x.image_url} style={{ "backgroundSize": `Cover` }} >
                     <Column width='2-3' horizontalAlignment='center' verticalAlignment='center'>
                       <TextView text={x.title} align={`center`} heading={3} color={`white`} />
                     </Column>
@@ -146,14 +247,7 @@ class HomePage extends React.Component {
           </Column>
         </Row>
 
-        <Row src={market} height='375px' style={{ backgroundSize: `auto 55%` }} styling='secondary'>
-          <Column width='2-3' horizontalAlignment='center'>
-            <TextView text='Check out what other people made!' heading={1} align={`center`} />
-          </Column>
-          <Column width='2-3' horizontalAlignment='center' verticalAlignment='bottom'>
-            <ButtonView type='alternate' text='UCL MARKETPLACE' link='/marketplace' />
-          </Column>
-        </Row>
+        {this.getView(`marketplace`)}
 
         <Row styling='splash-parallax'>
           <Column width='2-3' horizontalAlignment='center'>
