@@ -491,8 +491,6 @@ pre {
 .uclapi-card-facebook,
 .uclapi-card-github,
 .uclapi-card-twitter {
-  background-color: $color-white;
-
   border-radius: 25px;
 
   margin-top: 10px;
@@ -504,14 +502,23 @@ pre {
   transition-timing-function: ease-out;
 }
 
-.uclapi-card-facebook:hover {
+.uclapi-card-facebook {
   background-color: $color-facebook;
 }
-
-.uclapi-card-twitter:hover {
-  background-color: $color-twitter;
+.uclapi-card-facebook:hover {
+  background-color: lighten($color-facebook, 15%);
 }
 
-.uclapi-card-github:hover {
+.uclapi-card-twitter {
+  background-color: $color-twitter;
+}
+.uclapi-card-twitter:hover {
+  background-color: lighten($color-twitter, 15%);
+}
+
+.uclapi-card-github {
   background-color: $color-black;
+}
+.uclapi-card-github:hover {
+  background-color: lighten($color-black, 20%);
 }
