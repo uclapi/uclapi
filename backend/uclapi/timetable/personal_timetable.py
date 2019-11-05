@@ -89,6 +89,7 @@ def get_personal_timetable(upi):
             "session_title": row['title'],
             "session_type": row['sessiontypeid'],
             "session_type_str": session_type_str,
+            "session_type_str": row['sessiontypestr'],
             "contact": row['condisplayname'],
             "instance": {
                 "delivery": instance.delivery.get_delivery(),

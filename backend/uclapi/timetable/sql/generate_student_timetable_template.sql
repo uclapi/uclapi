@@ -20,23 +20,24 @@ RETURNS TABLE (
     lecturereppn        TEXT,                   -- 15
     title               VARCHAR,                -- 16
     sessiontypeid       TEXT,                   -- 17
-    condisplayname      TEXT,                   -- 18
-    modgrpcode          TEXT,                   -- 19
-    instcode            TEXT,                   -- 20
-    siteid              TEXT,                   -- 21
-    roomid              TEXT,                   -- 22
-    sitename            TEXT,                   -- 23
-    roomname            VARCHAR,                -- 24
-    roomcapacity        DOUBLE PRECISION,       -- 25
-    roomtype            VARCHAR,                -- 26
-    roomclassification  VARCHAR,                -- 27
-    siteaddr1           TEXT,                   -- 28
-    siteaddr2           TEXT,                   -- 29
-    siteaddr3           TEXT,                   -- 30
-    siteaddr4           TEXT,                   -- 31
-    starttime           VARCHAR,                -- 32
-    finishtime          VARCHAR,                -- 33
-    descrip             VARCHAR                 -- 34
+    sessiontypestr      VARCHAR,                -- 18
+    condisplayname      TEXT,                   -- 19
+    modgrpcode          TEXT,                   -- 20
+    instcode            TEXT,                   -- 21
+    siteid              TEXT,                   -- 22
+    roomid              TEXT,                   -- 23
+    sitename            TEXT,                   -- 24
+    roomname            VARCHAR,                -- 25
+    roomcapacity        DOUBLE PRECISION,       -- 26
+    roomtype            VARCHAR,                -- 27
+    roomclassification  VARCHAR,                -- 28
+    siteaddr1           TEXT,                   -- 29
+    siteaddr2           TEXT,                   -- 30
+    siteaddr3           TEXT,                   -- 31
+    siteaddr4           TEXT,                   -- 32
+    starttime           VARCHAR,                -- 33
+    finishtime          VARCHAR,                -- 34
+    descrip             VARCHAR                 -- 35
 )
 LANGUAGE plpgsql
 AS $$
@@ -245,6 +246,7 @@ SELECT rb.startdatetime     as startdatetime,
        lecturer.linkcode    as lecturereppn,
        rb.title             as title, 
        tt.moduletype        as sessiontypeid,
+       classifications.name as sessiontypestr,
 --     rb.condisplayname    as condisplayname,
        string_agg(DISTINCT rb.condisplayname, ' / ') as condisplayname,
        tes.modgrpcode       as modgrpcode,
@@ -289,6 +291,12 @@ LEFT OUTER JOIN roombookings_room{{ bucket_id | sqlsafe }} rooms
     ON rooms.roomid = tt.roomid
     AND rooms.siteid = tt.siteid
     AND rooms.setid  = tes.setid
+-- This provides a mapping between a session type and its human readable string.
+-- e.g. LAB -> Labaratory Session; T -> Tutorial; L -> Lecture;
+LEFT OUTER JOIN timetable_classifications{{ bucket_id | sqlsafe }} classifications
+    ON tt.moduletype = classifications.classid
+    AND tt.setid = classifications.setid
+    AND classifications.type = 'MOD_TYPE'
 WHERE (
         (tt.weekday IS NOT NULL)
     AND (tt.weekday > 0)
@@ -329,7 +337,8 @@ GROUP BY rb.startdatetime,
             sites.address4,
             rb.starttime,
             rb.finishtime,
-            rb.descrip
+            rb.descrip,
+            classifications.name
 ORDER BY startdatetime,
             moduleid,
             title,
