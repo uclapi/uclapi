@@ -1,17 +1,19 @@
+/* eslint-disable react/prop-types */
+// remove this ^ when ready to add prop-types
+
 // Standard React components
-import React from 'react';
+import 'whatwg-fetch'
 
+import React from 'react'
+import SyntaxHighlighter from 'react-syntax-highlighter'
+import { androidstudio } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 // DEPENDENCIES
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import {androidstudio} from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import 'whatwg-fetch';
-
-// Common Components
-import {Column, TextView, Row} from 'Layout/Items.jsx'
+import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 
 // Code Generator
-import * as RequestGenerator from 'Layout/data/RequestGenerator.jsx';
+import * as RequestGenerator from 'Layout/data/RequestGenerator.jsx'
+// Common Components
+import { Column } from 'Layout/Items.jsx'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -28,73 +30,85 @@ OPTIONAL ATTRIBUTES:
 
 export default class CodeView extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.DEBUGGING = false;
+    this.DEBUGGING = false
 
+    const {
+      type,
+      url,
+      params,
+    } = this.state
     // Every button view should contain a link and text
-    if(typeof this.props.type == 'undefined') {console.log('EXCEPTION: CodeView.constructor: no type defined');}
-    else if (this.props.type == 'request') {
-      if(typeof this.props.url == 'undefined') {console.log('EXCEPTION: CodeView.constructor: request but no url defined');}
-      if(typeof this.props.params == 'undefined') {console.log('EXCEPTION: CodeView.constructor: request but no params defined');}
-    } else if (this.props.type == 'request') {
-      if(typeof this.props.response == 'undefined') {console.log('EXCEPTION: CodeView.constructor: response but no response defined');}
+    if (typeof type == `undefined`) { console.log(`EXCEPTION: CodeView.constructor: no type defined`) }
+    else if (type == `request`) {
+      if (typeof url == `undefined`) { console.log(`EXCEPTION: CodeView.constructor: request but no url defined`) }
+      if (typeof params == `undefined`) { console.log(`EXCEPTION: CodeView.constructor: request but no params defined`) }
     } else {
-      console.log('EXCEPTION: CodeView.constructor: Type of code view is not recognized');
+      console.log(`EXCEPTION: CodeView.constructor: Type of code view is not recognized`)
     }
-
-    this.getLanguages = this.getLanguages.bind(this);
-    this.getResponse = this.getResponse.bind(this);
 
     this.state = {
       languages: this.getLanguages(),
-      tabIndex: 0
+      tabIndex: 0,
     }
   }
 
+  onSelect = tabIndex => this.setState({ tabIndex })
+
   render() {
-    if(this.DEBUGGING) { console.log('DEBUG: currently selected tab is: ' + this.state.tabIndex); }
+    const {
+      tabIndex,
+      languages,
+    } = this.state
+    if (this.DEBUGGING) { console.log(`DEBUG: currently selected tab is: ` + tabIndex) }
 
     return (
-        <Column width='1-1'>
-          <Tabs selectedIndex={this.state.tabIndex} onSelect={tabIndex => this.setState({ tabIndex })}>
-            <TabList>
-              {this.state.languages.map((language, index) => (
-                <Tab className={index==this.state.tabIndex ? 'selected-tab' : 'unselected-tab'}>
-                  {language.name}
-                </Tab>
-              ))}
-            </TabList>
-              {this.state.languages.map((language, index) => (
-                <TabPanel>
-                  <div className='default-transition background-color-transition inner-tab' style={ {'textAlign' : 'left'} }>
-                    <SyntaxHighlighter language={language.name} style={androidstudio}>{language.code}</SyntaxHighlighter>
-                  </div>
-                </TabPanel>
-              ))}
-          </Tabs>
-        </Column>
-    );
+      <Column width='1-1'>
+        <Tabs selectedIndex={tabIndex} onSelect={this.onSelect}>
+          <TabList>
+            {languages.map(({ name }, index) => (
+              <Tab className={index == tabIndex ? `selected-tab` : `unselected-tab`} key={`tab-${name}`}>
+                {name}
+              </Tab>
+            ))}
+          </TabList>
+          {languages.map(({ name, code }) => (
+            <TabPanel key={`TabPanel-${name}`}>
+              <div className='default-transition background-color-transition inner-tab' style={{ 'textAlign': `left` }}>
+                <SyntaxHighlighter language={name} style={androidstudio}>{code}</SyntaxHighlighter>
+              </div>
+            </TabPanel>
+          ))}
+        </Tabs>
+      </Column>
+    )
   }
 
-  getResponse(response) {
+  getResponse = (response) => {
     return [
       {
-        'name' : 'response',
-        'code' : response
-      }
-    ];
+        'name': `response`,
+        'code': response,
+      },
+    ]
   }
 
-  getLanguages() {
-    var languages = [];
+  getLanguages = () => {
+    let languages = []
 
+    const {
+      type,
+      url,
+      params,
+      response,
+    } = this.props
     // type is 'request' - Use request generator to generate what to show
-    if(this.props.type == 'request') {languages = RequestGenerator.getRequest(this.props.url, this.props.params, true);}
+    if (type == `request`) { languages = RequestGenerator.getRequest(url, params, true) }
     // type is 'real-response' - Use the passed response
-    if(this.props.type == 'response') {languages = this.getResponse(this.props.response);}
+    if (type == `response`) { languages = this.getResponse(response) }
 
-    return languages;
+    return languages
   }
 
 }

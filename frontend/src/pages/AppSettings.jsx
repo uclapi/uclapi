@@ -1,23 +1,24 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Hub from '../components/appsettings/hub.jsx';
-import LogInLayout from '../components/appsettings/loginlayout.jsx';
-import UserApps from '../components/appsettings/userapps.jsx';
-
 import {
   cyan500,
-  pinkA200,
+  darkBlack, fullBlack,
   grey100, grey300, grey400, grey500,
-  white, darkBlack, fullBlack,
-} from 'material-ui/styles/colors';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+  pinkA200,
+  white,
+} from 'material-ui/styles/colors'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+import Hub from '../components/appsettings/hub.jsx'
+import LogInLayout from '../components/appsettings/loginlayout.jsx'
+import UserApps from '../components/appsettings/userapps.jsx'
 
 const muiTheme = getMuiTheme({
-  fontFamily: 'Roboto, sans-serif',
+  fontFamily: `Roboto, sans-serif`,
   palette: {
-    primary1Color: '#434343',
-    primary2Color: '#434343',
+    primary1Color: `#434343`,
+    primary2Color: `#434343`,
     primary3Color: grey400,
     accent1Color: pinkA200,
     accent2Color: grey100,
@@ -29,15 +30,15 @@ const muiTheme = getMuiTheme({
     pickerHeaderColor: cyan500,
     shadowColor: fullBlack,
   },
-});
+})
 
-import './../sass/hub.scss';
-import './../sass/navbar.scss';
+import 'Styles/hub.scss'
+import 'Styles/navbar.scss'
 
 class AppSettings extends React.Component {
   constructor(props) {
-    super(props);
-    this.state = { data: window.initialData };
+    super(props)
+    this.state = { data: window.initialData }
   }
   render() {
     const { data: {
@@ -45,14 +46,14 @@ class AppSettings extends React.Component {
       url,
       fullname,
       department,
-      apps
+      apps,
     } } = this.state
-    if (status !== 'ONLINE') {
+    if (status !== `ONLINE`) {
       return <MuiThemeProvider muiTheme={muiTheme}>
         <Hub>
           <LogInLayout url={url} />
         </Hub>
-      </MuiThemeProvider>;
+      </MuiThemeProvider>
     } else {
       return <MuiThemeProvider muiTheme={muiTheme}>
         <Hub>
@@ -62,12 +63,12 @@ class AppSettings extends React.Component {
             authorised_apps={apps}
           />
         </Hub>
-      </MuiThemeProvider>;
+      </MuiThemeProvider>
     }
   }
 }
 
 ReactDOM.render(
   <AppSettings />,
-  document.querySelector('.app')
-);
+  document.querySelector(`.app`)
+)

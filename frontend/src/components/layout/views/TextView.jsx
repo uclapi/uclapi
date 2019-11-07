@@ -1,4 +1,7 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
+// remove this ^ when ready to add prop-types
+
+import React from 'react'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -13,80 +16,80 @@ this.props.style (An array of styles to add to the component)
 export default class TextView extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
     // To enable verbose output
-    this.DEBUGGING = false;
+    this.DEBUGGING = false
 
     // Bind functions
-    this.setStyleKeyValuePair = this.setStyleKeyValuePair.bind(this);
-    this.getHeader = this.getHeader.bind(this);
-    this.setTheme = this.setTheme.bind(this);
+    this.setStyleKeyValuePair = this.setStyleKeyValuePair.bind(this)
+    this.getHeader = this.getHeader.bind(this)
+    this.setTheme = this.setTheme.bind(this)
 
     // Every button view should contain a link and text
-    if(typeof this.props.header == 'undefined') {console.log('EXCEPTION: TextView.constructor: no header defined');}
-    if(typeof this.props.text == 'undefined') {console.log('EXCEPTION: TextView.constructor: no text defined');}
+    if (typeof this.props.header == `undefined`) { console.log(`EXCEPTION: TextView.constructor: no header defined`) }
+    if (typeof this.props.text == `undefined`) { console.log(`EXCEPTION: TextView.constructor: no text defined`) }
 
     // Set type of button
-    this.style = [];
+    this.style = []
     // If custom styling then include
-    if(this.props.style) {this.style = this.props.style;}
+    if (this.props.style) { this.style = this.props.style }
     // Set up button tags
-    this.setTheme();
+    this.setTheme()
 
     // Set whether this is a link
-    this.isLink = false;
-    if(this.props.link) {this.isLink = true;}
+    this.isLink = false
+    if (this.props.link) { this.isLink = true }
 
     // Save class and stylings to the state
     this.state = {
       style: this.style,
       heading: this.getHeader(),
-      link: this.isLink
-    };
+      link: this.isLink,
+    }
   }
 
   render() {
     return (
-        <this.state.heading style={this.state.style}>
-          {this.state.link ? (
-            <a className='default-transition color-transition' href={this.props.link}>
-              <div style={this.state.style}>
-                {this.props.text}
-              </div>
-            </a>
-          ) : (
+      <this.state.heading style={this.state.style}>
+        {this.state.link ? (
+          <a className='default-transition color-transition' href={this.props.link}>
+            <div style={this.state.style}>
+              {this.props.text}
+            </div>
+          </a>
+        ) : (
             <div style={this.state.style}>
               {this.props.text}
             </div>
           )}
-        </this.state.heading>
-    );
+      </this.state.heading>
+    )
   }
 
   getHeader() {
-    var heading_size = '6';
-    if(this.props.heading) { heading_size = this.props.heading; }
+    let heading_size = `6`
+    if (this.props.heading) { heading_size = this.props.heading }
 
     // Font size
-    var CustomTag = `h${heading_size}`;
-    if(heading_size=='p') { CustomTag = 'p'; }
+    let CustomTag = `h${heading_size}`
+    if (heading_size == `p`) { CustomTag = `p` }
 
-    return CustomTag;
+    return CustomTag
   }
 
   setStyleKeyValuePair(key, value) {
-    this.style[key] = value;
-    if(this.DEBUGGING) { console.log('DEBUG: ' + key + ' updated to: ' + value); }
+    this.style[key] = value
+    if (this.DEBUGGING) { console.log(`DEBUG: ` + key + ` updated to: ` + value) }
   }
 
   setTheme() {
     // align - Set up alignment of the text
-    if(this.props.align) { this.setStyleKeyValuePair('textAlign', this.props.align); }
+    if (this.props.align) { this.setStyleKeyValuePair(`textAlign`, this.props.align) }
     // color - Used to change the color of the text
-    if(this.props.color) {
-      this.setStyleKeyValuePair('color', this.props.color);
-      this.setStyleKeyValuePair('textDecorationColor', this.props.color);
+    if (this.props.color) {
+      this.setStyleKeyValuePair(`color`, this.props.color)
+      this.setStyleKeyValuePair(`textDecorationColor`, this.props.color)
     }
   }
 }

@@ -1,6 +1,9 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
+// remove this ^ when ready to add prop-types
 
-import placeholder from 'Images/home-page/splash_screen.png';
+import React from 'react'
+
+import placeholder from 'Images/home-page/splash_screen.png'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -17,71 +20,75 @@ this.props.noPadding (Removes the default padding of 50px)
 export default class Row extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.DEBUGGING = false;
-    this.DEFAULT_COLOR ='transparent';
+    this.DEBUGGING = false
+    this.DEFAULT_COLOR = `transparent`
 
-    this.setStyleKeyValuePair = this.setStyleKeyValuePair.bind(this);
-    this.setupBackground = this.setupBackground.bind(this);
-    this.setTheme = this.setTheme.bind(this);
+    this.class = `row`
+    this.style = []
 
-    this.class = 'row';
-    this.style = [];
+    const { style } = this.props
 
-    if(this.props.style) { this.style = this.props.style; }
+    if (style) { this.style = style }
 
-    this.setTheme();
+    this.setTheme()
 
     this.state = {
       class: this.class,
-      style: this.style
-    };
+      style: this.style,
+    }
   }
 
   render() {
+    const { class: className, style } = this.state
+    const { children } = this.props
     return (
-      <div className={ this.state.class } style={ this.state.style }>
-          {this.props.children}
+      <div className={className} style={style}>
+        {children}
       </div>
-    );
+    )
   }
 
-  setStyleKeyValuePair(key, value) {
-    this.style[key] = value;
-    if(this.DEBUGGING) { console.log('DEBUG: ' + key + ' updated to: ' + value); }
+  setStyleKeyValuePair = (key, value) => {
+    this.style[key] = value
+    if (this.DEBUGGING) { console.log(`DEBUG: ` + key + ` updated to: ` + value) }
   }
 
-  setTheme() {
+  setTheme = () => {
     // REQUIRED ATTRIBUTES
     // Either given a color or src
-    this.setupBackground();
+    this.setupBackground()
+
+    const { noPadding, height } = this.props
+
     // Override for padding
-    if(!this.props.noPadding) {this.class += ' vertical-padding'}
+    if (!noPadding) { this.class += ` vertical-padding` }
 
     // OPTIONAL ATTRIBUTES
     // Height of container
-    if(this.props.height) { this.setStyleKeyValuePair('height', this.props.height); }
+    if (height) { this.setStyleKeyValuePair(`height`, height) }
   }
 
-  setupBackground() {
-    if(this.DEBUGGING) { console.log('Row.setupBackground: DEBUG Background color / src is : ' + this.props.styling + ' / ' + this.props.src); }
+  setupBackground = () => {
+    if (this.DEBUGGING) { console.log(`Row.setupBackground: DEBUG Background color / src is : ` + this.props.styling + ` / ` + this.props.src) }
 
-    if(this.props.styling) { this.class += ' ' + this.props.styling; }
+    const { styling, src } = this.props
+    if (styling) { this.class += ` ` + styling }
 
-    if(this.props.src) {
-      if(this.props.src == 'url_not_found') {
-        this.setStyleKeyValuePair('backgroundImage', `url(${placeholder})`);
+    if (src) {
+      if (src == `url_not_found`) {
+        this.setStyleKeyValuePair(`backgroundImage`, `url(${placeholder})`)
       } else {
-        this.setStyleKeyValuePair('backgroundImage',`url(${this.props.src})`);
+        this.setStyleKeyValuePair(`backgroundImage`, `url(${src})`)
       }
-      this.setStyleKeyValuePair('backgroundPosition', '50%');
-      this.setStyleKeyValuePair('backgroundRepeat', 'no-repeat');
+      this.setStyleKeyValuePair(`backgroundPosition`, `50%`)
+      this.setStyleKeyValuePair(`backgroundRepeat`, `no-repeat`)
     }
 
-    if(typeof this.props.styling == 'undefined' && typeof this.props.src == 'undefined') {
-      console.log('Row.setupBackground: EXCEPTION No color or source set for background so resorting to a ' + this.DEFAULT_COLOR + ' background');
-      this.class += ' ' + this.DEFAULT_COLOR;
+    if (typeof styling == `undefined` && typeof src == `undefined`) {
+      console.log(`Row.setupBackground: EXCEPTION No color or source set for background so resorting to a ` + this.DEFAULT_COLOR + ` background`)
+      this.class += ` ` + this.DEFAULT_COLOR
     }
   }
 

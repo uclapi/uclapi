@@ -1,4 +1,7 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
+// remove this ^ when ready to add prop-types
+
+import React from 'react'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -15,44 +18,55 @@ this.props.style (array containing any extra style tags)
 export default class ImageView extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.DEBUGGING = false;
+    this.DEBUGGING = false
 
     // Bind functions
-    this.setTheme = this.setTheme.bind(this);
+    this.setTheme = this.setTheme.bind(this)
+
+    const {
+      src,
+      description,
+      width,
+      height,
+      style,
+    } = this.props
 
     // Every image view should contain a source, description, width and height
-    if(typeof this.props.src == 'undefined') {console.log('EXCEPTION: ImageView.constructor: no src defined');}
-    if(typeof this.props.description == 'undefined') {console.log('EXCEPTION: ImageView.constructor: no description defined');}
-    if(typeof this.props.width == 'undefined') {console.log('EXCEPTION: ImageView.constructor: no width defined');}
-    if(typeof this.props.height == 'undefined') {console.log('EXCEPTION: ImageView.constructor: no height defined');}
+    if (typeof src == `undefined`) { console.log(`EXCEPTION: ImageView.constructor: no src defined`) }
+    if (typeof description == `undefined`) { console.log(`EXCEPTION: ImageView.constructor: no description defined`) }
+    if (typeof width == `undefined`) { console.log(`EXCEPTION: ImageView.constructor: no width defined`) }
+    if (typeof height == `undefined`) { console.log(`EXCEPTION: ImageView.constructor: no height defined`) }
 
-    this.class = 'image-view'
+    this.class = `image-view`
     this.style = []
     // If custom styling then include
-    if(this.props.style) {this.style = this.props.style;}
+    if (style) { this.style = style }
     // Set up button tags
-    this.setTheme();
+    this.setTheme()
 
     // Save class and stylings to the state
     this.state = {
       class: this.class,
-      style: this.style
-    };
+      style: this.style,
+    }
   }
 
   render() {
+    const { class: className, style } = this.state
+    const { src, description, width, height } = this.props
     return (
-       <div className={this.state.class} style={this.state.style}>
-        <img src={this.props.src} alt={this.props.description} width={this.props.width} height={this.props.height}></img>
-       </div>
-    );
+      <div className={className} style={style}>
+        <img src={src} alt={description} width={width} height={height}></img>
+      </div>
+    )
   }
 
   setTheme() {
     // 'centred' - Center the button inside of its parent
-    if(this.props.centred) {this.class += ' ' + 'center-x';}
+    const { centred } = this.props
+    if (centred) { this.class += ` ` + `center-x` }
   }
 
 

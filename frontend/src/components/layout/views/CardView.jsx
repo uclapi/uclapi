@@ -1,4 +1,7 @@
-import React from 'react'; 
+/* eslint-disable react/prop-types */
+// remove this ^ when ready to add prop-types
+
+import React from 'react'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -18,102 +21,102 @@ this.props.noShadow - disables box shadow
 export default class CardView extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.DEFAULT_WIDTH = 0;
-    this.DEBUGGING = true;
+    this.DEFAULT_WIDTH = 0
+    this.DEBUGGING = true
 
-    this.getWidth = this.getWidth.bind(this);
-    this.getMinWidth = this.getMinWidth.bind(this);
-    this.getStyle = this.getStyle.bind(this);
-    this.setStyleKeyValuePair = this.setStyleKeyValuePair.bind(this);
-    this.setTheme = this.setTheme.bind(this);
+    this.getWidth = this.getWidth.bind(this)
+    this.getMinWidth = this.getMinWidth.bind(this)
+    this.getStyle = this.getStyle.bind(this)
+    this.setStyleKeyValuePair = this.setStyleKeyValuePair.bind(this)
+    this.setTheme = this.setTheme.bind(this)
 
-    this.class = 'uclapi-card';
-    this.style = [];
+    this.class = `uclapi-card`
+    this.style = []
 
-    if(this.props.style) { this.style = this.props.style; }
+    if (this.props.style) { this.style = this.props.style }
 
-    this.setTheme();
+    this.setTheme()
 
     this.state = {
       style: this.style,
-      class: this.class
-    };
+      class: this.class,
+    }
   }
 
   render() {
-    if(this.DEBUGGING) { console.log('DEBUG: CardView rendered with the following styles: ' + this.state.type + ' and class: ' + this.state.class); }
+    if (this.DEBUGGING) { console.log(`DEBUG: CardView rendered with the following styles: ` + this.state.type + ` and class: ` + this.state.class) }
 
-    var doesLinkRoute = (typeof this.props.link != 'undefined') && (typeof this.props.fakeLink == 'undefined');
+    const doesLinkRoute = (typeof this.props.link != `undefined`) && (typeof this.props.fakeLink == `undefined`)
 
     // RENDER METHOD
-    if(doesLinkRoute) {
+    if (doesLinkRoute) {
       return (
-          <a href = {this.props.link}>
-            <div className={this.state.class} style={this.state.style}>
-              {this.props.children}
-            </div>
-          </a>
-      );
-    } else {
-      return (
+        <a href={this.props.link}>
           <div className={this.state.class} style={this.state.style}>
             {this.props.children}
           </div>
-      );
+        </a>
+      )
+    } else {
+      return (
+        <div className={this.state.class} style={this.state.style}>
+          {this.props.children}
+        </div>
+      )
     }
   }
 
   setTheme() {
     // REQUIRED ATTRIBUTES
     // STYLE
-    this.class += ' uclapi-card-'+this.getStyle();
+    this.class += ` uclapi-card-` + this.getStyle()
     // WIDTH
-    this.setStyleKeyValuePair('width', this.getWidth());
+    this.setStyleKeyValuePair(`width`, this.getWidth())
     // MIN WIDTH
-    this.setStyleKeyValuePair('minWidth', this.getMinWidth());
-    
+    this.setStyleKeyValuePair(`minWidth`, this.getMinWidth())
+
     // OPTIONAL ATTRIBUTES
     // LINK
-    if(this.props.link || this.props.fakeLink) { this.class += ' default-transition background-color-transition clickable uclapi-card-clicked-'+this.getStyle(); }
+    if (this.props.link || this.props.fakeLink) { this.class += ` default-transition background-color-transition clickable uclapi-card-clicked-` + this.getStyle() }
     // ADD SHADOW AS DEFAULT
-    if(typeof this.props.noShadow === 'undefined' && this.getStyle() != 'no-bg') { this.class += ' uclapi-card-shadow'}
+    if (typeof this.props.noShadow === `undefined` && this.getStyle() != `no-bg`) { this.class += ` uclapi-card-shadow` }
   }
 
   setStyleKeyValuePair(key, value) {
-    if(this.DEBUGGING) { console.log('DEBUG: ' + key + ' updated to ' + value); }
-    this.style[key] = value;
-    if(this.DEBUGGING) { console.log('DEBUG: style updated to: ' + this.style); }
+    if (this.DEBUGGING) { console.log(`DEBUG: ` + key + ` updated to ` + value) }
+    this.style[key] = value
+    if (this.DEBUGGING) { console.log(`DEBUG: style updated to: ` + this.style) }
   }
 
   getWidth() {
-    if(typeof this.props.width == 'undefined') {console.exception('EXCEPTION: no width set for card view so setting card view width to ' + DEFAULT_WIDTH); return DEFAULT_WIDTHz;}
+    if (typeof this.props.width == `undefined`) { console.exception(`EXCEPTION: no width set for card view so setting card view width to ` + this.DEFAULT_WIDTH); return this.DEFAULT_WIDTH }
 
-    if(this.props.width == 'fit-content') { return 'fit-content'; }
+    if (this.props.width == `fit-content`) { return `fit-content` }
 
-    var fraction = this.props.width.split('-');
-    var adaptation = 100 - ( 4 * fraction[1] );
-    var percentage = fraction[0] / fraction[1] * adaptation;
-    return percentage + '%';
+    const fraction = this.props.width.split(`-`)
+    const adaptation = 100 - (4 * fraction[1])
+    const percentage = fraction[0] / fraction[1] * adaptation
+    return percentage + `%`
   }
 
   getMinWidth() {
-    var minWidth = 'unset';
-    if(this.props.minWidth) {minWidth=this.props.minWidth;}
-    return minWidth;
+    let minWidth = `unset`
+    if (this.props.minWidth) { minWidth = this.props.minWidth }
+    return minWidth
   }
 
   getMaxWidth() {
-    var maxWidth = "unset";
-    if(this.props.maxWidth) {maxWidth=this.props.maxWidth;}
-    return maxWidth;
+    let maxWidth = `unset`
+    if (this.props.maxWidth) { maxWidth = this.props.maxWidth }
+    return maxWidth
   }
 
   getStyle() {
-    var style = 'default';
-    if(this.props.type) {style=this.props.type;}
-    return style;
+    let style = `default`
+    if (this.props.type) { style = this.props.type }
+    return style
   }
 
 }

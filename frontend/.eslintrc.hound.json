@@ -8,8 +8,7 @@
     "plugin:react/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
-    "plugin:security/recommended",
-    "plugin:sonarjs/recommended"
+    "plugin:security/recommended"
   ],
   "rules": {
     "semi": [
@@ -25,15 +24,6 @@
       "always-multiline"
     ],
     "no-var": "error",
-    "prefer-const": "error",
-    "max-len": [
-      "warn",
-      {
-        "code": 80
-      }
-    ],
-    "object-property-newline": "error",
-    "no-secrets/no-secrets": "error",
     "react/jsx-indent-props": [
       "error",
       2
@@ -53,16 +43,6 @@
       "error",
       "never"
     ],
-    "react/destructuring-assignment": [
-      "warn",
-      "always"
-    ],
-    "react/jsx-no-bind": [
-      "error",
-      {
-        "ignoreRefs": true
-      }
-    ],
     "import/no-extraneous-dependencies": [
       "error",
       {
@@ -72,18 +52,12 @@
         "peerDependencies": false
       }
     ],
-    "simple-import-sort/sort": "error",
-    "security/detect-non-literal-require": "off", // until https://github.com/nodesecurity/eslint-plugin-security/pull/32 is merged
-    "security/detect-object-injection": "warn"
+    "security/detect-non-literal-require": "off" // until https://github.com/nodesecurity/eslint-plugin-security/pull/32 is merged
   },
   "plugins": [
     "react",
     "import",
-    "security",
-    "no-secrets",
-    "json-format",
-    "simple-import-sort",
-    "sonarjs"
+    "security"
   ],
   "parser": "babel-eslint",
   "parserOptions": {

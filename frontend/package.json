@@ -15,9 +15,29 @@
   "scripts": {
     "analyse": "npx webpack-bundle-analyzer stats.json",
     "build": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors",
+    "pre-commit": "lint-staged",
     "profile": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors --profile --json > stats.json",
-    "start": "NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run pre-commit"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,json}": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.{scss}": [
+      "stylelint --fix",
+      "git add"
+    ],
+    "../**/*.py": [
+      "autopep8 --in-place --global-config ../backend/uclapi/.flake8.ini",
+      "flake8",
+      "git add"
+    ]
   },
   "browserify": {
     "transform": [
@@ -26,7 +46,6 @@
     ]
   },
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@material-ui/core": "^4.5.2",
     "ajv": "^6.10.2",
     "aphrodite": "^2.4.0",
@@ -56,26 +75,40 @@
     "@babel/preset-react": "^7.6.3",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
-    "babel-plugin-transform-imports": "^1.5.1",
+    "babel-plugin-transform-imports": "^2.0.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "babelify": "^10.0.0",
     "css-loader": "^3.2.0",
     "dotenv": "^8.2.0",
     "eslint": "^6.6.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-import-resolver-webpack": "^0.11.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-json-format": "^2.0.1",
+    "eslint-plugin-no-secrets": "^0.3.4",
+    "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-security": "^1.4.0",
+    "eslint-plugin-simple-import-sort": "^4.0.0",
+    "eslint-plugin-sonarjs": "^0.4.0",
     "file-loader": "^4.2.0",
     "glob": "^7.1.5",
+    "husky": "^3.0.9",
+    "lint-staged": "^9.4.2",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.13.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "react-modal": "^3.11.1",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.0",
+    "stylelint": "^11.1.1",
+    "stylelint-config-recommended": "^3.0.0",
+    "stylelint-scss": "^3.12.0",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "url-loader": "^2.2.0",
     "vinyl-buffer": "^1.0.1",
-    "vinyl-transform": "^1.0.0",
     "vinyl-source-stream": "^2.0.0",
+    "vinyl-transform": "^1.0.0",
     "webpack": "^4.41.0",
     "webpack-bundle-tracker": "^0.4.3",
     "webpack-cli": "^3.3.9"
