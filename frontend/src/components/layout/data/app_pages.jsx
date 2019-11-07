@@ -29,7 +29,7 @@ let roombuddydescription = (
        <TextView heading={"3"} text={`UCL Room Buddy was built with the UCL API, which gives student developers
          programmatic access to UCL's data in order to improve the UCL experience for everyone.`} />
        <TextView heading={"3"} text={"Want to contribute to room buddy? Submit a pull request:"}/>
-       <ButtonView buttonType={"alternate"} text={"VISIT GITHUB"} isCentered={true} link={"https://github.com/uclapi/ucl-assistant-app"} />
+       <ButtonView type={"alternate"} text={"VISIT GITHUB"} style={ { "margin" : "0 0 20px 0" } } link={"https://github.com/uclapi/ucl-assistant-app"} />
        <TextView heading={"3"} text={`This app and its platform have been built by the UCL API Team, a group of students
          working with UCL's Information Services Division (ISD) to provide students with a brand new ecosystem that allows
          anyone within the UCL Community to build apps with UCL data. Interested in building an app just like UCL Room Buddy
@@ -53,7 +53,7 @@ let uclassistantdescription = (
        <TextView heading={"3"} text={"✅ Made with love 💖 by and for students"}/>
        <TextView heading={"3"} text={`✅ Fully open source. Got feedback, suggestions or even some new code to improve 
          the app? We welcome it:`}/>
-       <ButtonView buttonType={"alternate"} isCentered={true} text={"VISIT GITHUB"} link={"https://github.com/uclapi/ucl-assistant-app"} />
+       <ButtonView type={"alternate"} isCentered={true} text={"VISIT GITHUB"} style={ { "margin" : "0 0 20px 0" } } link={"https://github.com/uclapi/ucl-assistant-app"} />
        <TextView heading={"3"} text={`This app and its platform have been built by the UCL API Team, a group of students
          working with UCL's Information Services Division (ISD) to provide students with a brand new ecosystem that allows
          anyone within the UCL Community to build apps with UCL data. Interested in building an app just like UCL Assistant
