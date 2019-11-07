@@ -71,8 +71,8 @@
     "@babel/core": "^7.6.4",
     "@babel/plugin-proposal-class-properties": "^7.7.0",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "@babel/preset-env": "^7.6.3",
-    "@babel/preset-react": "^7.6.3",
+    "@babel/preset-env": "^7.7.1",
+    "@babel/preset-react": "^7.7.0",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
     "babel-plugin-transform-imports": "^2.0.0",
@@ -111,6 +111,6 @@
     "vinyl-transform": "^1.0.0",
     "webpack": "^4.41.0",
     "webpack-bundle-tracker": "^0.4.3",
-    "webpack-cli": "^3.3.9"
+    "webpack-cli": "^3.3.10"
   }
 }
