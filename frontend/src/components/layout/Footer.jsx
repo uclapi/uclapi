@@ -1,33 +1,44 @@
-import React from 'react'
+import React from 'react';
 
-import logo from 'Images/home-page/logo.svg'
+// UCL API Logo
+import logo from 'Images/home-page/logo.svg';
+// Social Media
+import facebook from 'Images/home-page/facebook.png';
+import github from 'Images/home-page/github.png';
+import twitter from 'Images/home-page/twitter.png';
+
 // Common Components
-import { Column, ImageView, Row, TextView } from 'Layout/Items.jsx'
+import { Row, Column, TextView, ButtonView, CardView, ImageView, Demo, NavBar } from 'Layout/Items.jsx';
 
 export default class Footer extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   render() {
-    const iconsize = `100px`
+    var iconsize = '50px';
+    var logosize = '20px';
 
     return (
-      <Row styling={`secondary`} height={`fit-content`} >
-        <Column width='1-2' horizontalAlignment='center'>
-          <TextView text={`UCL API`} heading={1} align={`center`} />
+      <Row styling='secondary' style={ { padding : '20px 0'} }>
+          <Column width='1-2' horizontalAlignment='center'>
+              <Column maxWidth='160px' width='1-1' horizontalAlignment='center'>
+                <CardView width='1-3' type='github' link='https://github.com/uclapi'>
+                  <ImageView src={github} width={logosize} height={logosize} description={'github logo'} isCentered={true} />
+                </CardView>
 
-          <TextView text={`github `} heading={5} align={`center`} style={{ 'display': `inline-block` }} link={`https://github.com/uclapi/uclapi`} />
-          <TextView text={`-`} heading={5} align={`center`} style={{ 'display': `inline-block` }} />
-          <TextView text={` twitter`} heading={5} align={`center`} style={{ 'display': `inline-block` }} link={`https://twitter.com/uclapi?lang=en`} />
-          <TextView text={`-`} heading={5} align={`center`} style={{ 'display': `inline-block` }} />
-          <TextView text={` facebook`} heading={5} align={`center`} style={{ 'display': `inline-block` }} link={`https://www.facebook.com/uclapi/`} />
+                <CardView width='1-3' type='facebook' link='https://www.facebook.com/uclapi/'>
+                  <ImageView src={facebook} width={logosize} height={logosize} description={'facebook logo'} isCentered={true} />
+                </CardView>
 
-          <ImageView src={logo} width={iconsize} height={iconsize} description={`ucl api logo`} isCentered />
-        </Column>
+                <CardView width='1-3' type='twitter' link='https://twitter.com/uclapi'>
+                  <ImageView src={twitter} width={logosize} height={logosize} description={'twitter logo'} isCentered={true} />
+                </CardView>
+              </Column>
+          </Column>
       </Row>
-    )
+    );
   }
 
 }
