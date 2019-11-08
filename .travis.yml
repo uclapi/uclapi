@@ -8,7 +8,7 @@ services:
   - postgresql
   - redis-server
 install:
-  - (sed '/cx.*/d' ./backend/uclapi/requirements.txt) | xargs -n 1 pip3 install
+  - (sed '/cx.*/d' ./backend/uclapi/requirements.txt | sed -e 's/^\-e //') | xargs -n 1 pip3 install
   - pip3 install codecov
 before_script:
   # Install Oracle Instant Client
@@ -26,6 +26,7 @@ before_script:
   # Install cx_Oracle (which depends on Oracle IC)
   - cd ./../backend/uclapi
   - pip3 install $(cat requirements.txt | grep "cx-Oracle")
+  - cp webpack-stats.sample.json ./static/webpack-stats.json
 script:
   - python ./manage.py migrate
   # codecov.io

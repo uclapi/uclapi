@@ -1,0 +1,523 @@
+/**
+  UCL API WEBSITE STYLES
+  As of July 2019
+
+  Hopefully these stylings bring together
+  the amazing work of previous developers
+  and make it so that the horrendous task
+  of interacting with css is removed.
+
+  Table of contents:
+
+  - Setup
+  - Color Scheme
+  - Sizings
+  - Text
+  - Alignments
+  - Containers
+  - Buttons
+  - Transitions
+  - Cards
+  - Code Segments
+  - RC-Collapse
+  - Input Forms
+  - Auto complete forms
+  - Code View
+  - Social Media Button Stylings
+
+**/
+
+/** Setup **/
+
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
+
+$break-small: 780px;
+
+html, button, input, select, textarea {
+  font-family: 'Source Sans Pro','Roboto', sans-serif;
+}
+
+
+/** Color Scheme **/
+
+$primary-color: #296da7;
+$primary-highlight-color: #3498db;
+
+$secondary-color: #313537;
+
+$accent-color: #8D6E63;
+$highlight-color: #B18453;
+
+$color-black: #000000;
+$color-grey-dark: #313537;
+$color-grey-mid: #75797b;
+$color-grey-light: #bbbbbb;
+$color-grey-light2: #cccccc;
+$color-white: #ffffff;
+
+$color-red: #ff0000;
+
+$color-green-market: #03b77b;
+
+$color-black-transparent-0: rgba(0, 0, 0, 0);
+$color-black-transparent-02: rgba(0, 0, 0, 0.2);
+$color-black-transparent-04: rgba(0, 0, 0, 0.4);
+$color-black-transparent-045: rgba(0, 0, 0, 0.45);
+
+$color-white-transparent-0: rgba(255, 255, 255, 0);
+$color-white-transparent-0455: rgba(255, 255, 255, 0.455);
+
+$color-facebook: #3b5998;
+$color-twitter: #38a1f3;
+
+html,
+body {
+  background-color: $color-white;
+  margin: 0;
+}
+
+/** Row Colours **/
+
+.splash-parallax {
+  background-image: url("~Images/home-page/splash_screen.png");
+  box-shadow: inset 0 0 10px $color-black-transparent-04;
+
+  /* Full height */
+  height: 100%;
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.team-parallax {
+  background-image: url("~Images/team/teambg.jpg");
+  box-shadow: inset 0 0 10px $color-black-transparent-04;
+
+  /* Full height */
+  height: 100%;
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.primary-highlight { background-color: $primary-highlight-color }
+.primary { background-color: $primary-color }
+
+.secondary { background-color: $secondary-color;}
+.warning-red { background-color: $color-red; }
+.market-green { background-color: $color-green-market; }
+.transparent { background-color: $color-white-transparent-0; }
+
+/** Text **/
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $color-white;
+  font-family: 'Source Sans Pro', 'Roboto', sans-serif;
+}
+
+p,
+h1,
+h2,
+h3,
+h4 {
+  margin-top: 0;
+}
+
+h5 {
+  font-weight: normal;
+}
+
+h1 {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  margin-top: 0;
+  text-shadow: 0 0 5px $color-black-transparent-045;
+}
+
+.justified-text {
+  text-align: justify;
+}
+
+.centered-text {
+  text-align: center;
+}
+
+a { color: $color-white; text-decoration-color: $color-white; }
+a:hover { color: $color-grey-light; }
+
+.alt-text { color: lighten($primary-highlight-color, 10%); text-decoration-color: $color-grey-dark; }
+.alt-text:hover { color: lighten($primary-highlight-color, 20%); }
+
+/** Alignments **/
+
+.full-screen {
+  height: 100%;
+}
+
+.column {
+    text-align: center;
+    overflow: hidden;
+}
+
+.center-x {
+  margin: auto;
+  position: relative;
+}
+
+.vertical-align {
+	width: inherit;
+	position: absolute;
+}
+
+.no-vertical-align {
+  position: relative;
+  width: 100%;
+}
+
+.center-y {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.bottom-y {
+  bottom: 50px;
+}
+
+/** Containers **/
+
+.row {
+  height: auto;
+  min-height: 100%;
+  position: relative;
+  width: 100%;
+}
+
+.vertical-padding {
+  padding: 50px 0;
+}
+
+/** Buttons **/
+
+.uclapi-button {
+  border-radius: 2px;
+  box-shadow: 0 4px 8px 0 $color-black-transparent-02;
+  display: inline-block;
+  margin: 10px;
+  padding: 10px 20px;
+  text-decoration: none;
+  width: fit-content;
+}
+
+.circular-button { border-radius: 25%; }
+
+.default-button { background-color: $color-grey-dark; color: $color-white; }
+
+.default-button:hover,
+.uclapi-card-clicked-default:hover { background-color: $color-grey-mid;  }
+
+.alternate-button,
+.image-button { background-color: $color-white; color: $color-black; }
+
+.alternate-button:hover,
+.image-button:hover,
+.uclapi-card-clicked-alternate:hover { background-color: $color-grey-light2;  }
+
+.emphasis-button, { background-color: lighten($primary-highlight-color, 10%); color: black; }
+.emphasis-button:hover { background-color: lighten($primary-highlight-color, 20%);  }
+
+/** Transitions **/
+
+.default-transition {
+  transition-duration: 200ms;
+  transition-timing-function: linear;
+}
+.background-color-transition { transition-property: background-color; }
+.color-transition { transition-property: color; }
+
+/** Cards **/
+
+.uclapi-card {
+  border-radius: 10px;
+  display: inline-block;
+  height: auto;
+  margin: 2%;
+  min-height: fit-content;
+  overflow: hidden;
+}
+
+.uclapi-card-default {
+  background-color: $color-grey-dark;
+}
+
+.uclapi-card-wrap-around {
+  background-color: $color-black-transparent-0;
+  display: flex;
+  float: left;
+  margin: 0;
+  padding: 0;
+}
+
+.uclapi-card-alternate {
+  background-color: $color-white;
+}
+
+.uclapi-card-emphasis {
+  background-color: $primary-color;
+}
+
+.uclapi-card-emphasis:hover {
+  background-color: $primary-highlight-color;
+}
+
+.uclapi-card-shadow {
+  box-shadow: 0 4px 8px 0 $color-black-transparent-02;
+}
+
+.clickable {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/** Update cards and columns when the size approaches phone screen size **/
+@media only screen and (max-width: 540px) {
+  .mobile-friendly {
+    min-width: 90%;
+    padding: 0;
+  }
+}
+
+/** Code Segments **/
+
+/** RC Collapse **/
+
+.rc-collapse {
+  background-color: $secondary-color;
+  border-radius: 10px;
+  margin: 5px 0;
+  color: $color-white;
+  font-size: 28px;
+  box-shadow: 0 4px 8px 0 $color-black-transparent-02;
+
+  @media screen and (max-width: $break-small) {
+    font-size: 18px;
+  }
+
+  > .rc-collapse-item {
+
+    > .rc-collapse-header {
+      color: $color-white;
+      cursor: pointer;
+      line-height: 38px;
+      text-indent: 0px;
+      outline: 0;
+      padding: 10px 40px;
+      font-weight: 600;
+      font-size: 20px;
+
+      .arrow {
+        border-bottom: 1px solid transparent;
+        border-left: 1px solid $color-black;
+        border-top: 1px solid transparent;
+        content: '\20';
+        display: inline-block;
+        font-size: 0;
+        height: 0;
+        line-height: 0;
+        margin-right: 8px;
+        vertical-align: middle;
+        width: 0;
+      }
+    }
+  }
+
+  > .rc-collapse-item:first-child {
+    border-top: 0;
+  }
+
+  > .rc-collapse-item-disabled > .rc-collapse-header {
+    background-color: $primary-color;
+    color: $color-white;
+    cursor: not-allowed;
+  }
+
+  > .rc-collapse-item-active > .rc-collapse-header .arrow {
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-top: 1px solid $color-black;
+    margin-right: 6px;
+  }
+
+}
+
+.rc-collapse-anim-active {
+  transition: height .2s ease-out;
+}
+
+
+.rc-collapse-content {
+  overflow: hidden;
+  padding: 0 40px;
+
+  > .rc-collapse-content-box {
+    margin-bottom: 16px;
+    border-top: 1px dotted $color-white-transparent-0455;
+  }
+
+  p {
+    color: $color-white;
+    font-size: 14px;
+    text-align: justify;
+    margin-top: 10px;
+  }
+}
+
+.rc-collapse-content-inactive {
+  display: none;
+}
+
+.rc-collapse-item:last-child > .rc-collapse-content {
+  border-radius: 0 0 3px 3px;
+}
+/** Input Forms **/
+
+input {
+  background-color: $primary-highlight-color;
+  border: 0;
+  color: $color-white;
+  float: left;
+  margin: 30px 0 0;
+  padding: 15px 0;
+  text-align: center;
+  width: 100%;
+}
+
+input::placeholder {
+  color: $color-white;
+}
+
+input:focus{
+  outline: none;
+}
+/** For Autocomplete forms **/
+
+ul {
+  margin: 0;
+  padding-left: 0;
+  border-radius: 10px
+}
+li {
+  list-style-type: none;
+  margin: 0;
+  float: left;
+  width: 100%;
+}
+
+/** Code View styling **/
+
+pre {
+  margin: 0;
+}
+
+.react-tabs {
+  margin-top: 30px;
+}
+
+.react-tabs__tab-panel {
+  display: flex;
+  width: 100%;
+
+  .inner-tab {
+    width: 100%;
+  }
+}
+
+.react-tabs__tab-list li {
+  cursor: pointer;
+  color: $color-white;
+  list-style-type: none;
+  margin: 0;
+  float: left;
+  display: inline-block;
+  padding: 10px 50px;
+  margin-right: 5px;
+  width: 100%;
+  text-align: left;
+  transition-duration: 200ms;
+  transition-timing-function: linear;
+  transition-property: background-color;
+}
+
+.unselected-tab {
+  background-color: $primary-highlight-color;
+}
+
+.selected-tab {
+  background-color: $primary-color;
+}
+
+.react-tabs__tab-list li:hover {
+  background-color: $primary-color;
+}
+@media screen and (max-width: 700px) {
+  .react-tabs__tab-list li {
+    width: 100%;
+    text-align: left;
+  }
+  input {
+    width: 96%;
+    padding: 20px 2%;
+  }
+  .arrow {
+    display: none;
+  }
+}
+
+// Social Media Icons
+
+.uclapi-card-facebook,
+.uclapi-card-github,
+.uclapi-card-twitter {
+  border-radius: 25px;
+
+  margin-top: 10px;
+
+  padding: 10px 0;
+
+  transition-duration: 0.5s;
+  transition-property: background-color;
+  transition-timing-function: ease-out;
+}
+
+.uclapi-card-facebook {
+  background-color: $color-facebook;
+}
+.uclapi-card-facebook:hover {
+  background-color: lighten($color-facebook, 15%);
+}
+
+.uclapi-card-twitter {
+  background-color: $color-twitter;
+}
+.uclapi-card-twitter:hover {
+  background-color: lighten($color-twitter, 15%);
+}
+
+.uclapi-card-github {
+  background-color: $color-black;
+}
+.uclapi-card-github:hover {
+  background-color: lighten($color-black, 20%);
+}

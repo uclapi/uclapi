@@ -3,15 +3,16 @@ import json
 import unittest.mock
 from itertools import chain, repeat
 
+import redis
+
 from django.core.management import call_command
 from django.test import SimpleTestCase, TestCase
 from rest_framework.test import APIRequestFactory
 from django.conf import settings
 from django_mock_queries.query import MockSet, MockModel
 
-from redis import StrictRedis
-
-from dashboard.models import App, TemporaryToken, User
+from dashboard.app_helpers import get_temp_token
+from dashboard.models import App, User
 
 from .helpers import (
     _create_page_token,
@@ -24,9 +25,10 @@ from .helpers import (
     TOKEN_EXPIRY_TIME
 )
 
-from .models import Lock, Room
+from .models import Room
+from timetable.models import Lock
 
-from .views import get_bookings
+from .views import get_bookings, get_rooms
 
 from uclapi.settings import REDIS_UCLAPI_HOST
 
@@ -110,18 +112,18 @@ class ParseDateTimeTestCase(SimpleTestCase):
         ]
 
         expected = [
-            (datetime.datetime(2016, 2, 19, 0, 0, 1),
-                datetime.datetime(2016, 2, 19, 23, 59, 59), True),
-            (datetime.datetime(2017, 3, 20, 0, 0, 1),
-                datetime.datetime(2017, 3, 20, 23, 59, 59), True),
-            (datetime.datetime(2017, 12, 14, 0, 0, 1),
-                datetime.datetime(2017, 12, 14, 23, 59, 59), True),
-            (datetime.datetime(2017, 10, 8, 0, 0, 1),
-                datetime.datetime(2017, 10, 8, 23, 59, 59), True),
-            (datetime.datetime(2017, 1, 1, 0, 0, 1),
-                datetime.datetime(2017, 1, 1, 23, 59, 59), True),
-            (datetime.datetime(2018, 1, 1, 0, 0, 1),
-                datetime.datetime(2018, 1, 1, 23, 59, 59), True),
+            (datetime.datetime(2016, 2, 19, 0, 0, 0, 0),
+                datetime.datetime(2016, 2, 19, 23, 59, 59, 999999), True),
+            (datetime.datetime(2017, 3, 20, 0, 0, 0, 0),
+                datetime.datetime(2017, 3, 20, 23, 59, 59, 999999), True),
+            (datetime.datetime(2017, 12, 14, 0, 0, 0, 0),
+                datetime.datetime(2017, 12, 14, 23, 59, 59, 999999), True),
+            (datetime.datetime(2017, 10, 8, 0, 0, 0, 0),
+                datetime.datetime(2017, 10, 8, 23, 59, 59, 999999), True),
+            (datetime.datetime(2017, 1, 1, 0, 0, 0, 0),
+                datetime.datetime(2017, 1, 1, 23, 59, 59, 999999), True),
+            (datetime.datetime(2018, 1, 1, 0, 0, 0, 0),
+                datetime.datetime(2018, 1, 1, 23, 59, 59, 999999), True),
             (-1, -1, False),
             (-1, -1, False),
             (-1, -1, False),
@@ -225,37 +227,24 @@ class DoesTokenExistTestCase(TestCase):
 
     fake_locks = MockSet(
         MockModel(
-            bookingA=True,
-            bookingB=False
+            a=True,
+            b=False
         )
     )
 
     lock_objects = unittest.mock.patch(
-        'roombookings.models.Lock.objects',
+        'timetable.models.Lock.objects',
         fake_locks
     )
 
     def setUp(self):
         self.factory = APIRequestFactory()
 
-        # This fixes a bug when the `test_temp_token_valid` test would fail
-        TemporaryToken.objects.all().delete()
-
         # General temporary token for tests
-        self.token = TemporaryToken.objects.create()
-        self.token.save()
-
-        # An expired token for the expiry test
-        self.expired_token = TemporaryToken.objects.create()
-        self.expired_token.save()
-        self.expired_token.created = datetime.datetime(
-            2010, 10, 10, 10, 10, 10
-        )
-        self.expired_token.save()
+        self.token = get_temp_token()
 
         # A valid token to use later
-        self.valid_token = TemporaryToken.objects.create()
-        self.valid_token.save()
+        self.valid_token = get_temp_token()
 
         # Standard Token data
         self.user_ = User.objects.create(cn="test", employee_id=7357)
@@ -301,14 +290,17 @@ class DoesTokenExistTestCase(TestCase):
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
         self.assertFalse(content["ok"])
-        self.assertEqual(content["error"], "Invalid temporary token.")
+        self.assertEqual(
+            content["error"],
+            "Temporary token is either invalid or expired."
+        )
 
     @booking_objects
     @bookinga_objects
     @bookingb_objects
     @lock_objects
     def test_temp_token_wrong_path(self):
-        request = self.factory.get('/a/path', {'token': self.token.api_token})
+        request = self.factory.get('/a/path', {'token': self.token})
         response = get_bookings(request)
 
         content = json.loads(response.content.decode())
@@ -327,7 +319,7 @@ class DoesTokenExistTestCase(TestCase):
         request = self.factory.get(
             '/roombookings/bookings',
             {
-                'token': self.token.api_token,
+                'token': self.token,
                 'page_token': 'next_page_comes_here'
             }
         )
@@ -347,7 +339,7 @@ class DoesTokenExistTestCase(TestCase):
     @lock_objects
     def test_temp_token_overused(self):
         request = self.factory.get(
-            '/roombookings/bookings', {'token': self.token.api_token}
+            '/roombookings/bookings', {'token': self.token}
         )
         for _ in repeat(None, 11):
             response = get_bookings(request)
@@ -364,29 +356,9 @@ class DoesTokenExistTestCase(TestCase):
     @bookinga_objects
     @bookingb_objects
     @lock_objects
-    def test_temp_token_expired(self):
-        request = self.factory.get(
-            '/roombookings/bookings', {
-                'token': self.expired_token.api_token
-            }
-        )
-        response = get_bookings(request)
-
-        content = json.loads(response.content.decode())
-        self.assertEqual(response.status_code, 400)
-        self.assertFalse(content["ok"])
-        self.assertEqual(
-            content["error"],
-            "Temporary token expired."
-        )
-
-    @booking_objects
-    @bookinga_objects
-    @bookingb_objects
-    @lock_objects
     def test_temp_token_valid(self):
         request = self.factory.get(
-            '/roombookings/bookings', {'token': self.valid_token.api_token}
+            '/roombookings/bookings', {'token': self.valid_token}
         )
         response = get_bookings(request)
         self.assertEqual(response.status_code, 200)
@@ -445,9 +417,15 @@ class CreateRedisPageTokenTest(TestCase):
             pagination
         )
 
-        r = StrictRedis(host=REDIS_UCLAPI_HOST)
+        r = redis.Redis(host=REDIS_UCLAPI_HOST)
 
-        ttl = int(r.ttl(page_token))
+        ttl = r.ttl(page_token)
+
+        # Python Redis 3.0+ now always returns an int
+        # If it returns:
+        # -1: The key has no TTL set
+        # -2: The key does not exist
+        self.assertTrue(ttl > 0)
         self.assertTrue(ttl <= TOKEN_EXPIRY_TIME)
 
         data = json.loads(r.get(page_token).decode('ascii'))
@@ -464,3 +442,57 @@ class CreateRedisPageTokenTest(TestCase):
             query_decoded["test"],
             "test_data"
         )
+
+
+class GetRoomsEndpointTest(TestCase):
+
+    def setUp(self):
+        self.factory = APIRequestFactory()
+
+        # Standard Token data
+        self.user_ = User.objects.create(cn="test", employee_id=7357)
+        self.app = App.objects.create(user=self.user_, name="An App")
+
+    # TODO: Github Issue #1155
+    # def test_get_rooms_default(self):
+    #     request = self.factory.get(
+    #         '/roombookings/rooms',
+    #         {'token': self.app.api_token}
+    #     )
+    #     response = get_rooms(request
+    #     self.assertEqual(response.status_code, 200)
+
+    def test_get_rooms_with_invalid_capacity(self):
+        request = self.factory.get(
+            '/roombookings/rooms',
+            {'token': self.app.api_token, 'capacity': '5-'}
+        )
+        response = get_rooms(request)
+        self.assertEqual(response.status_code, 400)
+
+
+class GetBookingEndpointTest(TestCase):
+
+    def setUp(self):
+        self.factory = APIRequestFactory()
+
+        # Standard Token data
+        self.user_ = User.objects.create(cn="test", employee_id=7357)
+        self.app = App.objects.create(user=self.user_, name="An App")
+
+    # TODO: Github issue #1155
+    # def test_get_booking_default(self):
+    #     request = self.factory.get(
+    #         '/roombookings/bookings',
+    #         {'token': self.app.api_token}
+    #     )
+    #     response = get_bookings(request)
+    #     self.assertEqual(response.status_code, 200)
+
+    def test_get_booking_invalid_results_per_page(self):
+        request = self.factory.get(
+            '/roombookings/bookings',
+            {'token': self.app.api_token, 'results_per_page': 'ten'}
+        )
+        response = get_bookings(request)
+        self.assertEqual(response.status_code, 400)

@@ -24,9 +24,15 @@ In case you suspect you find a vulnerability in the API, please refrain from cre
 * **Describe the current behavior** and **explain which behavior you expected to see instead** and why.
 * **Explain why this enhancement would be useful** to our API users.
 
-### Pull requests
-* Fill in [the required PR template](.uclapi/PULL_REQUEST_TEMPLATE.md).
-* Do not include issue numbers in the PR title.
+### Pull requests (PRs) and their role in submitting enhancements
+* **Open a new branch** to work on your feature/bug-fix.
+* **Commit your changes** to this new branch.
+* **Fast forward your branch** when it's ready to merge to make sure its up to date with the master branch.
+* **Open your PR.**
+* **Fill in [the required PR template](.uclapi/PULL_REQUEST_TEMPLATE.md).**
+* **Do not include issue numbers in the PR title**, instead refrence them at the bottom of the description saying "Closes #xx".
+* **Wait** for it to pass automated checks and a code review.
+* **Celebrate** your first contribution to the UCL API project!
 
 ## Style guides
 Our codebase consists out of multiple languages (JavaScript for front-end, Python for back-end). You should try to follow the best guidelines for the language, meaning:
@@ -41,4 +47,4 @@ We use [Hound CI](https://houndci.com) to automatically check PR's for style-gui
 * Try to limit the commit message to 50 characters or less. You can always use multiple lines.
 
 ## Closing remarks
-This document was inspired by [CONTRIBUTING.md in atom/atom](https://github.com/atom/atom/blob/master/CONTRIBUTING.md) repository.
+This document was inspired by [Atom's contribution guide](https://github.com/atom/atom/blob/master/CONTRIBUTING.md).

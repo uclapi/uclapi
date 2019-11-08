@@ -1,54 +1,52 @@
-import React from 'react';
+// UCL API navbar
+import 'Styles/navbar.scss'
 
-import SectionHeader from './SectionHeader.jsx';
+import React from 'react'
 
-import Welcome from './Meta/Welcome.jsx';
-import VersionInformation from './Meta/VersionInformation.jsx';
+import { NavBar } from 'Layout/Items.jsx'
 
-import OAuthIntro from './Routes/OAuth/OAuthIntro.jsx';
-import Authorise from './Routes/OAuth/Authorise.jsx';
-import Token from './Routes/OAuth/Token.jsx';
-import UserData from './Routes/OAuth/UserData.jsx';
-import StudentNumber from './Routes/OAuth/StudentNumber.jsx';
-
-import RoomBookingsVersionHeader from './Routes/RoomBookings/VersionHeader.jsx';
-import GetRooms from './Routes/RoomBookings/GetRooms.jsx';
-import GetBookings from './Routes/RoomBookings/GetBookings.jsx';
-import GetEquiment from './Routes/RoomBookings/GetEquipment.jsx';
-import GetFreeRooms from './Routes/RoomBookings/GetFreeRooms.jsx';
-import Webhooks from './Routes/RoomBookings/Webhooks.jsx';
-
-import SearchVersionHeader from './Routes/Search/VersionHeader.jsx';
-import GetPeople from './Routes/Search/GetPeople.jsx';
-
-import TimetableVersionHeader from './Routes/Timetable/VersionHeader.jsx';
-import GetDataDepartments from './Routes/Timetable/GetDataDepartments.jsx';
-import GetDataModules from './Routes/Timetable/GetDataModules.jsx';
-import GetPersonalTimetable from './Routes/Timetable/GetPersonalTimetable.jsx';
-import GetTimetableByModules from './Routes/Timetable/GetTimetableByModules.jsx';
-
-import ResourcesVersionHeader from './Routes/Resources/VersionHeader.jsx';
-import DesktopAvailability from './Routes/Resources/DesktopAvailability.jsx';
-
-import WorkspacesGetSurveys from './Routes/Workspaces/GetSurveys.jsx';
-import WorkspacesGetSensors from './Routes/Workspaces/GetSensors.jsx';
-import WorkspacesGetLastSensorUpdate from './Routes/Workspaces/GetLastSensorUpdate.jsx';
-import WorkspacesGetHistoricalTimeData from './Routes/Workspaces/GetSensorHistoricalTimeData.jsx';
-import WorkspaceGetSensorsSummary from './Routes/Workspaces/GetSensorSummary.jsx';
-import WorkspacesGetImage from './Routes/Workspaces/GetImage.jsx';
-import WorkspacesGetLiveImage from './Routes/Workspaces/GetLiveImage.jsx';
-
-import GetInvolved from './GetInvolved/GetInvolved.jsx';
-
-import LanguageTabs from './LanguageTabs.jsx';
-import Sidebar from './Sidebar.jsx';
-
+import GetInvolved from './GetInvolved/GetInvolved.jsx'
+import LanguageTabs from './LanguageTabs.jsx'
+import VersionInformation from './Meta/VersionInformation.jsx'
+import Welcome from './Meta/Welcome.jsx'
+import Authorise from './Routes/OAuth/Authorise.jsx'
+import OAuthIntro from './Routes/OAuth/OAuthIntro.jsx'
+import StudentNumber from './Routes/OAuth/StudentNumber.jsx'
+import Token from './Routes/OAuth/Token.jsx'
+import UserData from './Routes/OAuth/UserData.jsx'
+import DesktopAvailability from './Routes/Resources/DesktopAvailability.jsx'
+import ResourcesVersionHeader from './Routes/Resources/VersionHeader.jsx'
+import GetBookings from './Routes/RoomBookings/GetBookings.jsx'
+import GetEquiment from './Routes/RoomBookings/GetEquipment.jsx'
+import GetFreeRooms from './Routes/RoomBookings/GetFreeRooms.jsx'
+import GetRooms from './Routes/RoomBookings/GetRooms.jsx'
+import RoomBookingsVersionHeader from './Routes/RoomBookings/VersionHeader.jsx'
+import Webhooks from './Routes/RoomBookings/Webhooks.jsx'
+import GetPeople from './Routes/Search/GetPeople.jsx'
+import SearchVersionHeader from './Routes/Search/VersionHeader.jsx'
+import GetDataCourses from './Routes/Timetable/GetDataCourses.jsx'
+import GetDataCoursesModules from './Routes/Timetable/GetDataCoursesModules.jsx'
+import GetDataDepartments from './Routes/Timetable/GetDataDepartments.jsx'
+import GetDataModules from './Routes/Timetable/GetDataModules.jsx'
+import GetPersonalTimetable from './Routes/Timetable/GetPersonalTimetable.jsx'
+import GetTimetableByModules from './Routes/Timetable/GetTimetableByModules.jsx'
+import TimetableVersionHeader from './Routes/Timetable/VersionHeader.jsx'
+import WorkspacesGetImage from './Routes/Workspaces/GetImage.jsx'
+import WorkspacesGetLastSensorUpdate from './Routes/Workspaces/GetLastSensorUpdate.jsx'
+import WorkspacesGetLiveImage from './Routes/Workspaces/GetLiveImage.jsx'
+import WorkspacesGetHistoricalTimeData from './Routes/Workspaces/GetSensorHistoricalTimeData.jsx'
+import WorkspacesGetSensors from './Routes/Workspaces/GetSensors.jsx'
+import WorkspaceGetSensorsSummary from './Routes/Workspaces/GetSensorSummary.jsx'
+import WorkspacesGetSurveys from './Routes/Workspaces/GetSurveys.jsx'
+import SectionHeader from './SectionHeader.jsx'
+import Sidebar from './Sidebar.jsx'
 
 export default class DocumentationComponent extends React.Component {
 
     render () {
       return (
         <div>
+          <NavBar isScroll={false} />
           <Sidebar />
           <LanguageTabs>
             <Welcome />
@@ -79,6 +77,8 @@ export default class DocumentationComponent extends React.Component {
             <GetTimetableByModules />
             <GetDataDepartments />
             <GetDataModules />
+            <GetDataCourses />
+            <GetDataCoursesModules />
 
             <SectionHeader link="resources" title="Resources" />
             <ResourcesVersionHeader />

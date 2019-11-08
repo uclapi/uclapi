@@ -1,0 +1,142 @@
+@import './helpers';
+
+$primary-color: #eaedf1;
+$primary-dark-color: #313537;
+$secondary-color: #f4f4f4;
+$accent-color: #8D6E63;
+$highlight-color: #B18453;
+
+$break-small: 600px;
+
+body {
+  margin: 0px;
+  font-family: 'Roboto', sans-serif;
+  background: $primary-color;
+  color: #ffffff;
+}
+
+h1 {
+  font-size: 42px;
+  font-weight: bold;
+  margin-top: 0px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 28px;
+  max-width: 900px;
+  margin: 20px auto;
+  font-weight: 400;
+}
+
+h3 {
+  font-size: 20px;
+  max-width: 1000px;
+  margin: 20px auto;
+  font-weight: 400;
+}
+
+.log-in-layout {
+  padding-top: 20%;
+  background: $primary-color;
+  text-align: center;
+
+  a {
+    margin-right: 20px;
+  }
+  h1 {
+  	color: $primary-dark-color;
+  }
+}
+
+.settings-holder { 
+  margin-top: 100px;
+  background: $primary-color;
+  text-align: center;
+}
+.settings-form {
+	width: 50%;
+	max-width: 600px;
+
+	position: relative;
+	margin: auto;
+}
+.settings-title {
+	width: 100%;
+
+	h2 {
+		color: $primary-dark-color;
+	    text-align: left;
+	    font-size: 17px;
+	    margin: 10px auto;
+	}
+}
+.card-settings {
+	background-color: #FFFFFF;
+
+	width: 100%;
+	padding: 10px 20px 10px 20px;
+
+	border-radius: 3px;
+
+	@include boxShadow(2);
+
+	h3 {
+		text-align: left;
+	    color: #666;
+	    font-size: 12px;
+	    margin: 0;
+    	padding: 0 0 2px 0;
+	}
+}
+.profile-card {
+	width: 100%;
+	padding: 9px 0 9px 0;
+}
+.auth-app {
+    width: 100%;
+    height: 36px;
+    padding: 5px 0 5px 0;
+}
+.app-information {
+	float: left;
+	position: relative;
+
+	height: 30px;
+
+	top: 3px;
+
+	h3 {
+		text-align: left;
+	    color: #666;
+	    font-size: 12px;
+	    margin: 0;
+    	padding: 0 0 2px 0;
+	}
+}
+.app-permission-box {
+	float: right; 
+	position: relative;
+
+    height: 36px;
+
+	display: inline-block;
+
+	h3 {
+		text-align: left;
+	    color: #666;
+	    font-size: 12px;
+	    margin: 0;
+    	padding: 0 0 2px 0;
+	}
+}
+
+/* For mobile screens */
+@media screen and (max-width: $break-small) {
+  .settings-form {
+    width: 80%;
+  }
+  .card-settings {
+    padding: 5px;
+  }
+}

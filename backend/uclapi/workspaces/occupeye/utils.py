@@ -7,16 +7,6 @@ from pytz import timezone
 from .exceptions import BadOccupEyeRequest, OccupEyeOtherSensorState
 
 
-def str2bool(v):
-    """
-    Converts a string representation of a boolean
-    into an actual boolean object. This is used
-    to convert the boolean strings from Redis into
-    actual bool objects.
-    """
-    return str(v).lower() in ("yes", "true", "t", "1")
-
-
 def authenticated_request(url, bearer):
     headers = {
         "Authorization": bearer
@@ -31,7 +21,10 @@ def authenticated_request(url, bearer):
 def survey_ids_to_surveys(surveys_data, survey_ids):
         if survey_ids:
             try:
-                survey_ids_list = [int(x) for x in survey_ids.split(',')]
+                # If we use a set instead of a list then we drop duplicates.
+                # This avoids the user specifying a filter with a bad
+                # ID and a duplicate good one, which would cause issues.
+                survey_ids_list = {int(x) for x in survey_ids.split(',')}
             except ValueError:
                 raise BadOccupEyeRequest
         else:

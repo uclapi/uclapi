@@ -1,5 +1,7 @@
 import os
+
 from binascii import hexlify
+from distutils.util import strtobool
 
 import redis
 
@@ -16,7 +18,7 @@ from .occupeye.token import (
 
 class OccupEyeApiTestCase(TestCase):
     def setUp(self):
-        self.r = redis.StrictRedis(
+        self.r = redis.Redis(
             host=settings.REDIS_UCLAPI_HOST,
             charset="utf-8",
             decode_responses=True
@@ -85,20 +87,34 @@ class OccupEyeApiTestCase(TestCase):
             "occupeye:surveys:9991",
             {
                 "id": 9991,
-                "active": True,
+                "active": str(True),
                 "name": "test survey 1",
                 "start_time": "10:00",
-                "end_time": "12:00"
+                "end_time": "12:00",
+                "staff_survey": str(True),
+                "lat": "3.14159",
+                "long": "-0.500100",
+                "address1": "some building",
+                "address2": "some street",
+                "address3": "some city",
+                "address4": "postcode please"
             }
         )
         pipeline.hmset(
             "occupeye:surveys:9992",
             {
                 "id": 9992,
-                "active": False,
+                "active": str(False),
                 "name": "test survey 2",
                 "start_time": "09:00",
-                "end_time": "17:00"
+                "end_time": "17:00",
+                "staff_survey": str(False),
+                "lat": "2.14159",
+                "long": "-1.500100",
+                "address1": "some building2",
+                "address2": "some street2",
+                "address3": "some city2",
+                "address4": "postcode please2"
             }
         )
         pipeline.expire("occupeye:surveys", 20)
@@ -106,12 +122,16 @@ class OccupEyeApiTestCase(TestCase):
         pipeline.expire("occupeye:surveys:9992", 20)
         pipeline.execute()
 
-        surveys = self.api.get_surveys()
+        surveys = self.api.get_surveys("all")
         # When the data comes from the actual API it is backwards
         surveys.reverse()
         self.assertEqual(
             len(surveys),
             2
+        )
+        self.assertEqual(
+            len(surveys[0]),
+            8
         )
 
         self.assertEqual(
@@ -131,6 +151,33 @@ class OccupEyeApiTestCase(TestCase):
             surveys[0]["end_time"],
             "12:00"
         )
+        self.assertTrue(
+            strtobool(str(surveys[0]["staff_survey"]))
+        )
+        self.assertEqual(
+            surveys[0]["location"]["coordinates"]["lat"],
+            "3.14159"
+        )
+        self.assertEqual(
+            surveys[0]["location"]["coordinates"]["lng"],
+            "-0.500100"
+        )
+        self.assertEqual(
+            surveys[0]["location"]["address"][0],
+            "some building"
+        )
+        self.assertEqual(
+            surveys[0]["location"]["address"][1],
+            "some street"
+        )
+        self.assertEqual(
+            surveys[0]["location"]["address"][2],
+            "some city"
+        )
+        self.assertEqual(
+            surveys[0]["location"]["address"][3],
+            "postcode please"
+        )
 
         self.assertEqual(
             surveys[1]["id"],
@@ -148,4 +195,31 @@ class OccupEyeApiTestCase(TestCase):
         self.assertEqual(
             surveys[1]["end_time"],
             "17:00"
+        )
+        self.assertFalse(
+            strtobool(str(surveys[1]["staff_survey"]))
+        )
+        self.assertEqual(
+            surveys[1]["location"]["coordinates"]["lat"],
+            "2.14159"
+        )
+        self.assertEqual(
+            surveys[1]["location"]["coordinates"]["lng"],
+            "-1.500100"
+        )
+        self.assertEqual(
+            surveys[1]["location"]["address"][0],
+            "some building2"
+        )
+        self.assertEqual(
+            surveys[1]["location"]["address"][1],
+            "some street2"
+        )
+        self.assertEqual(
+            surveys[1]["location"]["address"][2],
+            "some city2"
+        )
+        self.assertEqual(
+            surveys[1]["location"]["address"][3],
+            "postcode please2"
         )

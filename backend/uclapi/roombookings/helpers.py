@@ -4,19 +4,20 @@ import datetime
 import json
 from datetime import timedelta
 
+import ciso8601
 import pytz
 import redis
 
+from django.conf import settings
 from django.core.exceptions import FieldError
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Q
 
-import ciso8601
-
-from common.helpers import PrettyJsonResponse
-from .models import BookingA, BookingB, Location, Lock, SiteLocation
 from .api_helpers import generate_token
+from .models import BookingA, BookingB, Location, SiteLocation
+from common.helpers import PrettyJsonResponse
+from timetable.models import Lock
 
-from uclapi.settings import REDIS_UCLAPI_HOST
 
 TOKEN_EXPIRY_TIME = 30 * 60
 
@@ -45,7 +46,7 @@ ROOM_TYPE_MAP = {
 
 
 def _create_page_token(query, pagination):
-    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    r = redis.Redis(host=settings.REDIS_UCLAPI_HOST)
     page_data = {
         "current_page": 0,
         "pagination": pagination,
@@ -57,7 +58,7 @@ def _create_page_token(query, pagination):
 
 
 def _get_paginated_bookings(page_token):
-    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    r = redis.Redis(host=settings.REDIS_UCLAPI_HOST)
     try:
         page_data = json.loads(r.get(page_token).decode('ascii'))
     except (AttributeError, json.decoder.JSONDecodeError):
@@ -89,8 +90,11 @@ def _get_paginated_bookings(page_token):
 def _paginated_result(query, page_number, pagination):
     try:
         lock = Lock.objects.all()[0]
-        curr = BookingA if not lock.bookingA else BookingB
-        all_bookings = curr.objects.filter(**query).order_by('startdatetime')
+        curr = BookingA if lock.a else BookingB
+        all_bookings = curr.objects.filter(
+            Q(bookabletype='CB') | Q(siteid='238') | Q(siteid='240'),
+            **query
+        ).order_by('startdatetime')
     except FieldError:
         return {
             "error": "something wrong with encoded query params"
@@ -156,15 +160,13 @@ def _parse_datetime(start_time, end_time, search_date):
             if search_date:
                 search_date = datetime.datetime.strptime(
                                             search_date, "%Y%m%d").date()
-                day_start = datetime.time(0, 0, 1)  # start of the day
-                day_end = datetime.time(23, 59, 59)  # end of the day
                 parsed_start_time = datetime.datetime.combine(
                     search_date,
-                    day_start
+                    datetime.time.min  # start of the day
                 )
                 parsed_end_time = datetime.datetime.combine(
                     search_date,
-                    day_end
+                    datetime.time.max  # end of the day
                 )
     except (TypeError, NameError, ValueError, AttributeError):
         return -1, -1, False
@@ -199,6 +201,7 @@ def _serialize_rooms(room_set):
                 ]
             }
         }
+
         try:
             location = Location.objects.get(
                 siteid=room.siteid,
@@ -268,16 +271,16 @@ def _kloppify(date_string, date):
     return date_string + "+00:00"
 
 
-def _return_json_bookings(bookings, rate_limiting_data=None):
+def _return_json_bookings(bookings, custom_header_data=None):
     if "error" in bookings:
         return PrettyJsonResponse({
             "ok": False,
             "error": bookings["error"]
-        }, rate_limiting_data)
+        }, custom_header_data)
 
     bookings["ok"] = True
 
-    return PrettyJsonResponse(bookings, rate_limiting_data)
+    return PrettyJsonResponse(bookings, custom_header_data)
 
 
 def how_many_seconds_until_midnight():

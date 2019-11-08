@@ -4,12 +4,22 @@ class ModelRouter(object):
         self.gencache_model_names = [
             "bookinga",
             "bookingb",
+            "rooma",
+            "roomb",
             "cminstancesa",
             "cminstancesb",
+            "coursea",
+            "courseb",
+            "crsavailmodulesa",
+            "crsavailmodulesb",
+            "crscompmodulesa",
+            "crscompmodulesb",
             "lecturera",
             "lecturerb",
             "modulea",
             "moduleb",
+            "modulegroupsa",
+            "modulegroupsb",
             "roomsa",
             "roomsb",
             "sitesa",
@@ -24,11 +34,20 @@ class ModelRouter(object):
             "weekstructureb",
             "studentsa",
             "studentsb",
+            "stuclassesa",
+            "stuclassesb",
             "stumodulesa",
             "stumodulesb",
             "deptsa",
-            "deptsb"
+            "deptsb",
+            "coursea",
+            "courseb",
+            "crsavailmodulesa",
+            "crsavailmodulesb",
+            "crscompmodulesa",
+            "crscompmodulesb"
         ]
+
     def db_for_read(self, model, **hints):
         return getattr(model._meta, "_DATABASE", "default")
 
@@ -36,9 +55,19 @@ class ModelRouter(object):
         return getattr(model._meta, "_DATABASE", "default")
 
     def allow_relation(self, obj1, obj2, **hints):
-        return obj1._state.db in self.managed_db_list and obj2._state.db in self.managed_db_list
+        return obj1._state.db in self.managed_db_list and \
+               obj2._state.db in self.managed_db_list
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
+        # Special rule for stored functions in the Timetable app
+        if (
+            app_label == "timetable" and
+            model_name == None and
+            "type" in hints and
+            hints["type"] == "raw_sql"
+        ):
+            return db == "gencache"
+
         if db == "default":
             return model_name not in self.gencache_model_names
 

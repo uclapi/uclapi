@@ -8,60 +8,73 @@ from .helpers import (PrettyJsonResponse, _create_page_token,
                       _get_paginated_bookings, _parse_datetime,
                       _return_json_bookings, _serialize_equipment,
                       _serialize_rooms, _filter_for_free_rooms, _round_date)
-from .models import BookingA, BookingB, Equipment, Lock, Room
-
+from .models import BookingA, BookingB, Equipment, RoomA, RoomB
+from timetable.models import Lock
 from common.decorators import uclapi_protected_endpoint
 
 
 @api_view(['GET'])
-@uclapi_protected_endpoint()
+@uclapi_protected_endpoint(
+    last_modified_redis_key="gencache"  # Served from our cached Oracle view
+)
 def get_rooms(request, *args, **kwargs):
     # add them to iterables so can be filtered without if-else
     request_params = {}
 
     request_params['roomid'] = request.GET.get('roomid')
     request_params['siteid'] = request.GET.get('siteid')
-    request_params['roomname__contains'] = request.GET.get('roomname')
-    request_params['sitename__contains'] = request.GET.get('sitename')
+    request_params['roomname__icontains'] = request.GET.get('roomname')
+    request_params['sitename__icontains'] = request.GET.get('sitename')
     request_params['category'] = request.GET.get('category')
     request_params['roomclass'] = request.GET.get('classification')
     request_params['capacity__gte'] = request.GET.get('capacity')
     request_params['automated'] = request.GET.get('automated')
+    try:
+        if request_params['capacity__gte']:
+            int(request_params['capacity__gte'])
+    except ValueError:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": "capacity should be an int"
+        }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
 
     # Get available rooms:
     # - Filtered by this academic year only
     # - Anything centrally bookable
     # - All ICH rooms (Site IDs 238 and 240)
-    all_rooms = Room.objects.using("roombookings").filter(
-        Q(setid=settings.ROOMBOOKINGS_SETID),
-        Q(bookabletype='CB') | Q(siteid="238") | Q(siteid="240")
+    lock = Lock.objects.all()[0]
+    curr = RoomA if lock.a else RoomB
+
+    # No filters provided, return all rooms serialised
+    if reduce(lambda x, y: x or y, request_params.values()):
+        request_params = dict((k, v) for k, v in request_params.items() if v)
+    else:
+        request_params = {}
+
+    filtered_rooms = curr.objects.filter(
+        Q(bookabletype='CB') | Q(siteid='238') | Q(siteid='240'),
+        **request_params
     )
 
-    # no filters provided, return all rooms serialised
-    if not reduce(lambda x, y: x or y, request_params.values()):
-        return PrettyJsonResponse({
+    return PrettyJsonResponse(
+        {
             "ok": True,
-            "rooms": _serialize_rooms(all_rooms)
-        }, rate_limiting_data=kwargs)
-
-    request_params = dict((k, v) for k, v in request_params.items() if v)
-
-    filtered_rooms = all_rooms.filter(**request_params)
-
-    return PrettyJsonResponse({
-        "ok": True,
-        "rooms": _serialize_rooms(filtered_rooms)
-    }, rate_limiting_data=kwargs)
+            "rooms": _serialize_rooms(filtered_rooms)
+        }, custom_header_data=kwargs)
 
 
 @api_view(['GET'])
-@uclapi_protected_endpoint()
+@uclapi_protected_endpoint(
+    last_modified_redis_key='gencache'  # Served from our cached Oracle view
+)
 def get_bookings(request, *args, **kwargs):
     # if page_token exists, dont look for query
     page_token = request.GET.get('page_token')
     if page_token:
         bookings = _get_paginated_bookings(page_token)
-        return _return_json_bookings(bookings, rate_limiting_data=kwargs)
+        return _return_json_bookings(bookings, custom_header_data=kwargs)
 
     # query params
     request_params = {}
@@ -82,10 +95,12 @@ def get_bookings(request, *args, **kwargs):
         results_per_page = int(results_per_page)
         results_per_page = results_per_page if results_per_page > 0 else 1000
     except ValueError:
-        return PrettyJsonResponse({
+        response = PrettyJsonResponse({
             "ok": False,
             "error": "results_per_page should be an integer"
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
 
     results_per_page = results_per_page if results_per_page < 1000 else 1000
 
@@ -114,7 +129,7 @@ def get_bookings(request, *args, **kwargs):
         return PrettyJsonResponse({
             "ok": False,
             "error": "date/time isn't formatted as suggested in the docs"
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
 
     # filter the query dict
     request_params = dict((k, v) for k, v in request_params.items() if v)
@@ -126,15 +141,20 @@ def get_bookings(request, *args, **kwargs):
     bookings = _get_paginated_bookings(page_token)
 
     lock = Lock.objects.all()[0]
-    curr = BookingA if not lock.bookingA else BookingB
+    curr = BookingA if lock.a else BookingB
 
-    bookings["count"] = curr.objects.filter(**request_params).count()
+    bookings["count"] = curr.objects.filter(
+        Q(bookabletype='CB') | Q(siteid='238') | Q(siteid='240'),
+        **request_params
+    ).count()
 
-    return _return_json_bookings(bookings, rate_limiting_data=kwargs)
+    return _return_json_bookings(bookings, custom_header_data=kwargs)
 
 
 @api_view(['GET'])
-@uclapi_protected_endpoint()
+@uclapi_protected_endpoint(
+    last_modified_redis_key=None  # Served from Oracle directly
+)
 def get_equipment(request, *args, **kwargs):
     roomid = request.GET.get("roomid")
     siteid = request.GET.get("siteid")
@@ -143,7 +163,7 @@ def get_equipment(request, *args, **kwargs):
         response = PrettyJsonResponse({
             "ok": False,
             "error": "No roomid supplied"
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -151,7 +171,7 @@ def get_equipment(request, *args, **kwargs):
         response = PrettyJsonResponse({
             "ok": False,
             "error": "No siteid supplied"
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -163,11 +183,13 @@ def get_equipment(request, *args, **kwargs):
     return PrettyJsonResponse({
         "ok": True,
         "equipment": _serialize_equipment(equipment)
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)
 
 
 @api_view(['GET'])
-@uclapi_protected_endpoint()
+@uclapi_protected_endpoint(
+    last_modified_redis_key='gencache'  # Real time calculation, cached data
+)
 def get_free_rooms(request, *args, **kwargs):
     request_params = {}
     request_params['startdatetime__gte'] = request.GET.get('start_datetime')
@@ -180,7 +202,7 @@ def get_free_rooms(request, *args, **kwargs):
         return PrettyJsonResponse({
             "ok": False,
             "error": "start_datetime or end_datetime not provided"
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
 
     is_parsed = True
 
@@ -194,7 +216,7 @@ def get_free_rooms(request, *args, **kwargs):
         return PrettyJsonResponse({
             "ok": False,
             "error": "date/time isn't formatted as suggested in the docs"
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
 
     # Rounding down start date to start of day
     request_params["startdatetime__gte"] = _round_date(start)
@@ -211,13 +233,15 @@ def get_free_rooms(request, *args, **kwargs):
     # All bookings in the given time period
     bookings = _get_paginated_bookings(page_token)["bookings"]
 
+    lock = Lock.objects.all()[0]
+    curr = RoomA if lock.a else RoomB
+
     # Get available rooms:
     # - Filtered by this academic year only
     # - Anything centrally bookable
     # - All ICH rooms (Site IDs 238 and 240)
-    all_rooms = Room.objects.using("roombookings").filter(
-        Q(setid=settings.ROOMBOOKINGS_SETID),
-        Q(bookabletype='CB') | Q(siteid="238") | Q(siteid="240")
+    all_rooms = curr.objects.filter(
+        Q(bookabletype='CB') | Q(siteid='238') | Q(siteid='240')
     )
     all_rooms = _serialize_rooms(all_rooms)
 
@@ -227,4 +251,4 @@ def get_free_rooms(request, *args, **kwargs):
         "ok": True,
         "count": len(free_rooms),
         "free_rooms": free_rooms
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)

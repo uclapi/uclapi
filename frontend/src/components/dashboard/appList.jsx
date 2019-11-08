@@ -1,74 +1,64 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import update from 'immutability-helper';
-import 'whatwg-fetch';
-import Modal from 'react-modal';
-import {App} from './app.jsx';
-import {AppForm} from './appForm.jsx';
+import 'whatwg-fetch'
+
+import update from 'immutability-helper'
+import PropTypes from 'prop-types'
+import React from 'react'
+import Modal from 'react-modal'
+
+import { App } from './app.jsx'
+import { AppForm } from './appForm.jsx'
 
 class AppList extends React.Component {
-  constructor (props) {
-    super(props);
+  constructor(props) {
+    super(props)
     this.state = {
       apps: props.apps,
-      showCreate: false
-    };
-    this.addApp = this.addApp.bind(this);
-    this.updateApp = this.updateApp.bind(this);
-    this.getAppIndex = this.getAppIndex.bind(this);
-    this.clickHandler = this.clickHandler.bind(this);
-    this.deleteApp = this.deleteApp.bind(this);
-
-    this.showForm = this.showForm.bind(this);
-    this.hideForm = this.hideForm.bind(this);
+      showCreate: false,
+    }
   }
 
-  addApp(app){
-    this.setState((state) => update(state, {apps: {$push: [app]}}));
+  addApp = (app) => {
+    this.setState((state) => update(state, { apps: { $push: [app] } }))
   }
 
-  updateApp(id, values){
-    let appIndex = this.getAppIndex(id);
-    if(appIndex !== undefined){
-      Object.keys(values).forEach((key)=>{
+  updateApp = (id, values) => {
+    const appIndex = this.getAppIndex(id)
+    if (appIndex !== undefined) {
+      Object.keys(values).forEach((key) => {
         this.setState((state) => {
-          return update(state, {apps: {[appIndex]: {[key]:{$set: values[key]}}}});
-        });
-      });
+          return update(state, { apps: { [appIndex]: { [key]: { $set: values[key] } } } })
+        })
+      })
     }
   }
 
-  deleteApp(appId){
+  deleteApp = (appId) => {
     this.setState((state) => {
-      let appIndex = this.getAppIndex(appId);
-      if(appIndex !== undefined){
-        return update(state, {apps: {$splice: [[appIndex, 1]]}});
+      const appIndex = this.getAppIndex(appId)
+      if (appIndex !== undefined) {
+        return update(state, { apps: { $splice: [[appIndex, 1]] } })
       }
-    });
+    })
   }
 
-  getAppIndex(appId){
-    for(let app of this.state.apps){
-      if(app.id === appId){
-        return this.state.apps.indexOf(app);
+  getAppIndex = (appId) => {
+    for (const app of this.state.apps) {
+      if (app.id === appId) {
+        return this.state.apps.indexOf(app)
       }
     }
   }
 
-  clickHandler(e){
-    e.preventDefault();
-    this.deleteApp('My Cool App');
+  clickHandler = (e) => {
+    e.preventDefault()
+    this.deleteApp(`My Cool App`)
   }
 
-  showForm(){
-    this.setState({showCreate: true});
-  }
+  showForm = () => this.setState({ showCreate: true });
 
-  hideForm(){
-    this.setState({showCreate: false});
-  }
+  hideForm = () => this.setState({ showCreate: false });
 
-  render () {
+  render() {
     return <div className="appList pure-u-1">
       <div className="pure-g">
         {this.state.apps.map((app, i) => {
@@ -82,7 +72,7 @@ class AppList extends React.Component {
             remove={this.deleteApp}
             oauth={app.oauth}
             webhook={app.webhook}
-          />;
+                 />
         })}
       </div>
       <Modal
@@ -92,17 +82,17 @@ class AppList extends React.Component {
         className="Modal"
         overlayClassName="Overlay"
       >
-        <AppForm add={this.addApp} close={this.hideForm}/>
+        <AppForm add={this.addApp} close={this.hideForm} />
       </Modal>
       <div className="flexCentre">
         <button className="roundButton" onClick={this.showForm}>+</button>
       </div>
-    </div>;
+    </div>
   }
 }
 
 AppList.propTypes = {
-  apps: PropTypes.array
-};
+  apps: PropTypes.array,
+}
 
-export default AppList;
+export default AppList

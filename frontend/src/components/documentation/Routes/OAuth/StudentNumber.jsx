@@ -1,11 +1,11 @@
-import React from 'react';
+import React from 'react'
 
-import Topic from './../../Topic.jsx';
-import Table from './../../Table.jsx';
-import Cell from './../../Cell.jsx';
+import Cell from './../../Cell.jsx'
+import Table from './../../Table.jsx'
+import Topic from './../../Topic.jsx'
 
 
-let codeExamples = {
+const codeExamples = {
   python: `import requests
 
 params = {
@@ -15,7 +15,9 @@ params = {
 r = requests.get("https://uclapi.com/oauth/user/studentnumber", params=params)
 print(r.json())`,
 
-  shell: `curl https://uclapi.com/oauth/user/studentnumber?client_secret=secret&token=uclapi-user-abd-def-ghi-jkl`,
+  shell: `curl -G https://uclapi.com/oauth/user/studentnumber \
+-d client_secret=secret \\
+-d token=uclapi-user-abd-def-ghi-jkl`,
 
   javascript: `fetch("https://uclapi.com/oauth/user/studentnumber?client_secret=secret&token=uclapi-user-abd-def-ghi-jkl")
 .then((response) => {
@@ -23,18 +25,18 @@ print(r.json())`,
 })
 .then((json) => {
   console.log(json);
-})`
+})`,
 }
 
-let response = `{
+const response = `{
     "ok": true,
     "student_number": "123456789"
 }`
 
-let responseCodeExample = {
+const responseCodeExample = {
   python: response,
   javascript: response,
-  shell: response
+  shell: response,
 }
 
 
@@ -45,7 +47,8 @@ export default class StudentNumber extends React.Component {
         <div>
           <Topic
             activeLanguage={this.props.activeLanguage}
-            codeExamples={codeExamples}>
+            codeExamples={codeExamples}
+          >
             <h1 id="oauth/user/studentnumber">Student Number</h1>
             <p>
               Endpoint: <code>https://uclapi.com/oauth/user/studentnumber</code>
@@ -58,47 +61,58 @@ export default class StudentNumber extends React.Component {
             </p>
 
             <Table
-              name="Query Parameters">
+              name="Query Parameters"
+            >
               <Cell
                 name="token"
                 requirement="required"
                 example="uclapi-user-abd-def-ghi-jkl"
-                description="OAuth user token." />
+                description="OAuth user token."
+              />
               <Cell
-                name="client_id"
+                name="client_secret"
                 requirement="required"
-                example="123.456"
-                description="Client ID of the authenticating app." />
+                example="secret"
+                description="Client ID of the authenticating app."
+              />
             </Table>
           </Topic>
 
           <Topic
             activeLanguage={this.props.activeLanguage}
-            codeExamples={responseCodeExample}>
+            codeExamples={responseCodeExample}
+          >
             <h2>Response</h2>
             <Table
-              name="Response">
+              name="Response"
+            >
             <Cell
               name="student_number"
               extra="string"
               example="123456789"
-              description="The user's student number. This may be prefixed with a 0 so should be treated as a string, even though it is made up only of digits. The maximum possible length is 12 digits." />
+              description="The user's student number. This may be prefixed with a 0 so should be treated as a string, even though it is made up only of digits. The maximum possible length is 12 digits."
+            />
             </Table>
           </Topic>
 
           <Topic
-            noExamples={true}>
+            noExamples
+          >
             <Table
-              name="Errors">
+              name="Errors"
+            >
               <Cell
                 name="Token does not exist."
-                description="Gets returned when token does not exist." />
+                description="Gets returned when token does not exist."
+              />
               <Cell
                 name="Client secret incorrect."
-                description="Gets returned when the client secret was incorrect." />
+                description="Gets returned when the client secret was incorrect."
+              />
               <Cell
                 name="User is not a student."
-                description="The user is not a student, and therefore has no student number that can be returned." />
+                description="The user is not a student, and therefore has no student number that can be returned."
+              />
             </Table>
           </Topic>
         </div>

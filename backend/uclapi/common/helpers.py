@@ -1,10 +1,12 @@
+import datetime
 import os
 import textwrap
 
 from binascii import hexlify
 
 from django.http import JsonResponse, HttpResponse
-from dotenv import read_dotenv as rd 
+
+from dotenv import read_dotenv as rd
 
 
 def read_dotenv(path=None):
@@ -12,36 +14,42 @@ def read_dotenv(path=None):
         rd(path)
 
 
+LOCAL_TIMEZONE = (
+    datetime.datetime.now(datetime.timezone.utc)
+    .astimezone()
+    .tzinfo
+)
+
+
+CUSTOM_HEADERS = [
+    'Last-Modified',
+    'X-RateLimit-Limit',
+    'X-RateLimit-Remaining',
+    'X-RateLimit-Retry-After'
+]
+
+
 class PrettyJsonResponse(JsonResponse):
-    def __init__(self, data, rate_limiting_data=None):
+    def __init__(self, data, custom_header_data=None):
         # Calls JsonResponse's constructure and requests 4 line indenting
         super().__init__(data, json_dumps_params={'indent': 4})
 
-        # Adds rate limiting headers from a passed view kwargs
-        rate_limit_headers = {
-            'X-RateLimit-Limit',
-            'X-RateLimit-Remaining',
-            'X-RateLimit-Retry-After'
-        }
-        if rate_limiting_data:
-            for header in rate_limit_headers:
-                if header in rate_limiting_data:
-                    self[header] = rate_limiting_data[header]
+        # Adds custom headers from a passed view kwargs
+        if custom_header_data:
+            for header in CUSTOM_HEADERS:
+                if header in custom_header_data:
+                    self[header] = custom_header_data[header]
 
 
 class RateLimitHttpResponse(HttpResponse):
-    def __init__(self, content=b'', rate_limiting_data=None, *args, **kwargs):
+    def __init__(self, content=b'', custom_header_data=None, *args, **kwargs):
         super().__init__(content, *args, **kwargs)
-        # Adds rate limiting headers from a passed view kwargs
-        rate_limit_headers = {
-            'X-RateLimit-Limit',
-            'X-RateLimit-Remaining',
-            'X-RateLimit-Retry-After'
-        }
-        if rate_limiting_data:
-            for header in rate_limit_headers:
-                if header in rate_limiting_data:
-                    self[header] = rate_limiting_data[header]
+
+        # Adds custom headers from a passed view kwargs
+        if custom_header_data:
+            for header in CUSTOM_HEADERS:
+                if header in custom_header_data:
+                    self[header] = custom_header_data[header]
 
 
 def generate_api_token(prefix=None):

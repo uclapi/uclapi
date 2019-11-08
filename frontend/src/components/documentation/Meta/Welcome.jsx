@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react'
 
-import Topic from './../Topic.jsx';
+import Topic from './../Topic.jsx'
 
 
 export default class Welcome extends React.Component {
@@ -8,7 +8,8 @@ export default class Welcome extends React.Component {
     render () {
       return (
         <Topic
-          noExamples={true}>
+          noExamples
+        >
           <h1 id="welcome">Welcome</h1>
           <p>Yay, you made it! 🎉</p>
 
@@ -33,6 +34,17 @@ export default class Welcome extends React.Component {
           </p>
           <p>
             If you would like your rate limit to be increased, contact us at isd.apiteam@ucl.ac.uk
+          </p>
+
+          <h2 id="api-expiry-times">API Data Freshness</h2>
+          <p>
+            Much of the data available from the API is served from cache. Bookings and Timetable data are updated every twenty minutes from UCL, and we update the Library Study Spaces (Workspaces) API every two minutes. The `Last-Modified` header will provide the time that the most recent caching operation completed in <a href="https://stackoverflow.com/a/21121453">RFC 2616</a> format. Endpoints that do not rely on cached data will return the current timestamp in this field instead.
+          </p>
+          <p>
+            This allows your application to judge whether the data is stale, or might need refreshing. For example, if a booking is added to the database and the data you are using is more than twenty minutes old, it may be that the booking is not visible to you yet. Consider creating a fresh request in this case.
+          </p>
+          <p>
+            If you notice that the `Last-Modified` timestamp you see is unreasonably old, please get in contact with us ASAP to report this as it may indicate very stale data and an issue at our end.
           </p>
         </Topic>
       )

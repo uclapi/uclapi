@@ -1,10 +1,10 @@
 import json
 
-from dashboard.tasks import keen_add_event_task as keen_add_event
 from oauth.scoping import Scopes
 from common.helpers import PrettyJsonResponse
 
-from .app_helpers import is_url_safe
+from .app_helpers import (is_url_unsafe, NOT_HTTPS,
+                          NOT_VALID, URL_BLACKLISTED, NOT_PUBLIC)
 from .models import App, User
 
 
@@ -25,7 +25,7 @@ def create_app(request):
     try:
         name = request.POST["name"]
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have name or user."
@@ -37,12 +37,6 @@ def create_app(request):
 
     new_app = App(name=name, user=user)
     new_app.save()
-
-    keen_add_event.delay("App created", {
-        "appid": new_app.id,
-        "name": new_app.name,
-        "userid": user.id
-    })
 
     s = Scopes()
 
@@ -81,7 +75,7 @@ def rename_app(request):
         app_id = request.POST["app_id"]
         new_name = request.POST["new_name"]
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have app_id/new_name"
@@ -104,12 +98,6 @@ def rename_app(request):
         app.name = new_name
         app.save()
 
-        keen_add_event.delay("App renamed", {
-            "appid": app.id,
-            "new_name": app.name,
-            "userid": user.id
-        })
-
         return PrettyJsonResponse({
             "success": True,
             "message": "App sucessfully renamed.",
@@ -129,10 +117,10 @@ def regenerate_app_token(request):
     try:
         app_id = request.POST["app_id"]
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
-            "message": "Request does not have app_id."
+            "message": "Request does not have an app_id."
         })
         response.status_code = 400
         return response
@@ -151,11 +139,6 @@ def regenerate_app_token(request):
         app = apps[0]
         app.regenerate_token()
         new_api_token = app.api_token
-
-        keen_add_event.delay("App token regenerated", {
-            "appid": app.id,
-            "userid": user.id
-        })
 
         return PrettyJsonResponse({
             "success": True,
@@ -180,10 +163,10 @@ def delete_app(request):
     try:
         app_id = request.POST["app_id"]
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
-            "message": "Request does not have app_id."
+            "message": "Request does not have an app_id."
         })
         response.status_code = 400
         return response
@@ -201,12 +184,14 @@ def delete_app(request):
     else:
         app = apps[0]
         app.deleted = True
+        webhook = app.webhook
+        webhook.url = ""
+        webhook.siteid = ""
+        webhook.roomid = ""
+        webhook.contact = ""
+        webhook.enabled = False
+        webhook.save()
         app.save()
-
-        keen_add_event.delay("App deleted", {
-            "appid": app_id,
-            "userid": user.id
-        })
 
         return PrettyJsonResponse({
             "success": True,
@@ -234,7 +219,7 @@ def set_callback_url(request):
 
     try:
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
             "message": "User ID not set in session. Please log in again."
@@ -251,12 +236,20 @@ def set_callback_url(request):
         })
         response.status_code = 400
         return response
-
-    if not is_url_safe(new_callback_url):
+    url_not_safe_saved = is_url_unsafe(new_callback_url)
+    if url_not_safe_saved:
+        if url_not_safe_saved == NOT_HTTPS:
+            message = "The requested callback URL does not "\
+                      "start with 'https://'."
+        elif url_not_safe_saved == NOT_VALID:
+            message = "The requested callback URL is not valid."
+        elif url_not_safe_saved == URL_BLACKLISTED:
+            message = "The requested callback URL is forbidden."
+        elif url_not_safe_saved == NOT_PUBLIC:
+            message = "The requested callback URL is not publicly available."
         response = PrettyJsonResponse({
             "success": False,
-            "message": ("The requested callback URL"
-                        " is not valid.")
+            "message": message
         })
         response.status_code = 400
         return response
@@ -275,12 +268,6 @@ def set_callback_url(request):
     app = apps[0]
     app.callback_url = new_callback_url
     app.save()
-
-    keen_add_event.delay("App callback URL changed", {
-        "appid": app_id,
-        "userid": user.id,
-        "newcallbackurl": new_callback_url
-    })
 
     return PrettyJsonResponse({
         "success": True,
@@ -309,7 +296,7 @@ def update_scopes(request):
 
     try:
         user_id = request.session["user_id"]
-    except KeyError:
+    except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
             "message": "User ID not set in session. Please log in again."
@@ -361,7 +348,7 @@ def update_scopes(request):
             app.scope.scope_number = current
             app.scope.save()
             app.save()
-        except (KeyError, ValueError):
+        except (KeyError, ValueError, TypeError):
             response = PrettyJsonResponse({
                 "success": False,
                 "message": "Invalid scope data that could not be iterated."
@@ -369,13 +356,7 @@ def update_scopes(request):
             response.status_code = 400
             return response
 
-        keen_add_event.delay("App scopes changed", {
-            "appid": app_id,
-            "userid": user.id,
-            "scopes": scopes
-        })
-
         return PrettyJsonResponse({
             "success": True,
-            "message": "Scope successfully changed",
+            "message": "Scope successfully changed.",
         })

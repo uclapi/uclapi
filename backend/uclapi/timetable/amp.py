@@ -31,7 +31,8 @@ class ModuleDelivery:
     def get_delivery(self):
         return {
             "fheq_level": self.fheq_level,
-            "is_undergraduate": self.undergraduate
+            "is_undergraduate": self.undergraduate,
+            "student_type": self.student_type
         }
 
 

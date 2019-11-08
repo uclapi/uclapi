@@ -1,10 +1,10 @@
-import React from 'react';
+import React from 'react'
 
-import Topic from './../../Topic.jsx';
-import Table from './../../Table.jsx';
-import Cell from './../../Cell.jsx';
+import Cell from './../../Cell.jsx'
+import Table from './../../Table.jsx'
+import Topic from './../../Topic.jsx'
 
-let codeExamples = {
+const codeExamples = {
     python: `import requests
 
 params = {
@@ -15,8 +15,8 @@ params = {
 r = requests.get("https://uclapi.com/workspaces/sensors/lastupdated", params=params)
 print(r.json())`,
 
-  shell: `curl -X GET https://uclapi.com/workspaces/sensors/lastupdated \
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \
+  shell: `curl -G https://uclapi.com/workspaces/sensors/lastupdated \\
+-d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d survey_id=46`,
 
   javascript: `fetch("https://uclapi.com/workspaces/sensors/lastupdated?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=46",
@@ -28,19 +28,19 @@ print(r.json())`,
 })
 .then((json) => {
   console.log(json);
-})`
+})`,
 }
 
-let response = `{
+const response = `{
     "last_updated": "2018-02-16T15:33:01",
     "ok": true,
     "survey_id": 46
 }`
 
-let responseCodeExample = {
+const responseCodeExample = {
     python: response,
     javascript: response,
-    shell: response
+    shell: response,
 }
 
 export default class WorkspacesGetLastSensorUpdate extends React.Component {
@@ -48,8 +48,9 @@ export default class WorkspacesGetLastSensorUpdate extends React.Component {
         return (
             <div>
                 <Topic
-                    activeLanguage={this.props.activeLanguage}
-                    codeExamples={codeExamples}>
+                  activeLanguage={this.props.activeLanguage}
+                  codeExamples={codeExamples}
+                >
                     <h1 id="workspaces/sensors/lastupdated">Get Last Sensor Update by Survey</h1>
                     <p>
                         Endpoint: <code>https://uclapi.com/workspaces/sensors/lastupdated</code>
@@ -59,39 +60,46 @@ export default class WorkspacesGetLastSensorUpdate extends React.Component {
                     </p>
 
                     <Table
-                        name="Query Parameters">
+                      name="Query Parameters"
+                    >
                         <Cell
-                            name="token"
-                            requirement="required"
-                            example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
-                            description="Authentication token." />
+                          name="token"
+                          requirement="required"
+                          example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
+                          description="Authentication token."
+                        />
                         <Cell
-                            name="survey_id"
-                            requirement="required"
-                            example="46"
-                            description="The ID of the survey/library you want to get the last sensor update timestamp for." />
+                          name="survey_id"
+                          requirement="required"
+                          example="46"
+                          description="The ID of the survey/library you want to get the last sensor update timestamp for."
+                        />
                     </Table>
                 </Topic>
 
                 <Topic
-                    activeLanguage={this.props.activeLanguage}
-                    codeExamples={responseCodeExample}>
+                  activeLanguage={this.props.activeLanguage}
+                  codeExamples={responseCodeExample}
+                >
                     <h2>Response</h2>
                     <p>
                         This endpoint will return a dictionary with the ID of the survey requested and an ISO86010-formatted timestamp with the last time new data was sent from a sensor to the Cad-Capture backend.
                     </p>
                     <Table
-                        name="Response">
+                      name="Response"
+                    >
                         <Cell
-                            name="survey_id"
-                            extra="integer"
-                            example="46"
-                            description="The ID of the library/survey that was requested in the query parameter." />
+                          name="survey_id"
+                          extra="integer"
+                          example="46"
+                          description="The ID of the library/survey that was requested in the query parameter."
+                        />
                         <Cell
-                            name="last_updated"
-                            extra="ISO8601 timestamp"
-                            example="2018-02-16T15:33:01"
-                            description="The last time that a sensor in the survey requested sent an update to Cad-Capture. If no adjustment for timezone is provided then the time can be assumed to be Europe/London local time." />
+                          name="last_updated"
+                          extra="ISO8601 timestamp"
+                          example="2018-02-16T15:33:01"
+                          description="The last time that a sensor in the survey requested sent an update to Cad-Capture. If no adjustment for timezone is provided then the time can be assumed to be Europe/London local time."
+                        />
                     </Table>
                 </Topic>
             </div>

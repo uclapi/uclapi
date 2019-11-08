@@ -1,1 +1,34 @@
-{"presets": ["@babel/preset-react", "@babel/preset-env"]}
+{
+  "presets": [
+    "@babel/preset-react",
+    [
+      "@babel/preset-env",
+      {}
+    ]
+  ],
+  "plugins": [
+    "@babel/plugin-syntax-dynamic-import",
+    "@babel/plugin-proposal-class-properties",
+    [
+      "transform-imports",
+      {
+        "lodash": {
+          "transform": "lodash/${member}",
+          "preventFullImport": true
+        }
+      }
+    ]
+  ],
+  "env": {
+    "production": {
+      "plugins": [
+        [
+          "transform-react-remove-prop-types",
+          {
+            "mode": "remove"
+          }
+        ]
+      ]
+    }
+  }
+}

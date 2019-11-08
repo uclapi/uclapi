@@ -1,39 +1,45 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment';
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import utc from 'dayjs/plugin/utc'
+import PropTypes from 'prop-types'
+import React from 'react'
+
+dayjs.extend(utc)
+dayjs.extend(relativeTime)
 
 class RelativeDate extends React.Component {
-  constructor(props){
-    super(props);
+  static propTypes = {
+    date: PropTypes.string,
+    label: PropTypes.string,
+  }
+
+  constructor(props) {
+    super(props)
 
     /*
-      Make moment.js say 'just now' if the time difference is less
+      Make day.js say 'just now' if the time difference is less
       than five seconds either way to get round non-sync'd server and
       client time.
       This may make 'a few seconds ago' somewhat redundant, but it's
       worth it.
     */
-    moment.fn.fromNowOrNow = function(a) {
-      if (Math.abs(moment().diff(this)) < 5000) {
-        return 'just now';
+    dayjs.prototype.fromNowOrNow = function (a) {
+      console.log(this)
+      if (Math.abs(dayjs().diff(this)) < 5000) {
+        return `just now`
       }
-      return this.fromNow(a);
-    };
+      return this.fromNow(a)
+    }
   }
 
-  render(){
-    return(
-      <div title={moment.utc(this.props.date).local().format('dddd, Do MMMM YYYY, h:mm:ss a')}>
-        {this.props.label} {moment.utc(this.props.date).local().fromNowOrNow()}
+  render() {
+    const { date, label } = this.props
+    return (
+      <div title={dayjs.utc(date).local().format(`dddd, D MMMM YYYY, h:mm:ss a`)}>
+        {label} {dayjs.utc(date).local().fromNowOrNow()}
       </div>
-    );
+    )
   }
 }
 
-
-RelativeDate.propTypes = {
-  date: PropTypes.string,
-  label: PropTypes.string
-};
-
-export default RelativeDate;
+export default RelativeDate

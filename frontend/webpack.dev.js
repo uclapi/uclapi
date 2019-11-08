@@ -1,40 +1,63 @@
-const path = require('path');
+const path = require(`path`)
+const BundleTracker = require(`webpack-bundle-tracker`)
 
-var entryPointsPathPrefix = './src/pages';
+const entryPointsPathPrefix = `./src/pages`
+
+const publicPath = `/static/`
 
 module.exports = {
+  mode: `development`,
+  optimization: {
+    minimizer: [],  // This list is built below as per platform requirements
+  },
+  plugins: [
+    new BundleTracker({
+      filename: `../backend/uclapi/static/webpack-stats.json`,
+    }),
+  ],
   module: {
     rules: [
       {
         test: /\.jsx$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
-        }
+          loader: `babel-loader`,
+        },
       },
       {
         test: /\.scss$/,
         use: [
-          { loader: "style-loader" },
-          { loader: "css-loader" },
-          { loader: "sass-loader" }
-        ]
+          { loader: `style-loader` },
+          { loader: `css-loader` },
+          { loader: `sass-loader` },
+        ],
       },
       {
-        test: /\.(jpg|png|svg)$/,
-        loader: 'url-loader'
+        test: /\.(jpg|png|svg|jpeg)$/,
+        loader: `url-loader`,
       },
-    ]
+    ],
+  },
+  resolve: {
+    alias: {
+      'Images': path.resolve(__dirname, `./src/images`),
+      'Layout': path.resolve(__dirname, `./src/components/layout`),
+      'Styles': path.resolve(__dirname, `./src/sass`),
+    },
   },
   entry: {
-    'js/getStarted': entryPointsPathPrefix + '/getStarted.jsx',
-    'js/documentation': entryPointsPathPrefix + '/documentation.jsx',
-    'js/dashboard': entryPointsPathPrefix + '/dashboard.jsx',
-    'js/marketplace': entryPointsPathPrefix + '/marketplace.jsx',
-    'js/authorise': entryPointsPathPrefix + '/authorise.jsx',
+    index: entryPointsPathPrefix + `/HomePage.jsx`,
+    documentation: entryPointsPathPrefix + `/Documentation.jsx`,
+    about: entryPointsPathPrefix + `/AboutPage.jsx`,
+    dashboard: entryPointsPathPrefix + `/Dashboard.jsx`,
+    marketplace: entryPointsPathPrefix + `/Marketplace.jsx`,
+    authorise: entryPointsPathPrefix + `/Authorise.jsx`,
+    settings: entryPointsPathPrefix + `/AppSettings.jsx`,
+    vendors: [`react`],
   },
   output: {
-    path: path.resolve(__dirname),
-    filename: '[name].js'
-  }
-};
+    path: path.resolve(__dirname, `../backend/uclapi/static/`),
+    publicPath,
+    filename: `[name].js`,
+  },
+}

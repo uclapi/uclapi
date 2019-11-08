@@ -1,10 +1,12 @@
 import json
 import os
+import urllib.parse
 
 import redis
 from django.core import signing
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.signing import TimestampSigner
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.http import quote
 from django.views.decorators.csrf import (
@@ -14,14 +16,15 @@ from django.views.decorators.csrf import (
 )
 
 from dashboard.models import App, User
-from dashboard.tasks import keen_add_event_task as keen_add_event
-from timetable.app_helpers import get_student_by_upi
 
-from .app_helpers import generate_random_verification_code
+from .app_helpers import (
+    generate_random_verification_code,
+    get_student_by_upi
+)
 from .models import OAuthToken
 from .scoping import Scopes
 
-from uclapi.settings import REDIS_UCLAPI_HOST
+from uclapi.settings import REDIS_UCLAPI_HOST, SHIB_TEST_USER
 from common.decorators import uclapi_protected_endpoint, get_var
 from common.helpers import PrettyJsonResponse
 
@@ -50,10 +53,17 @@ def authorise(request):
         response.status_code = 400
         return response
 
-    if app.callback_url is None:
+    if app.callback_url is None or app.callback_url.strip() == "":
         response = PrettyJsonResponse({
             "ok": False,
-            "error": "No callback URL set for this app."
+            "error": (
+                        "This app does not have a callback URL set. "
+                        "If you are the developer of this app, "
+                        "please ensure you have set a valid callback "
+                        "URL for your application in the Dashboard. "
+                        "If you are a user, please contact the app's "
+                        "developer to rectify this."
+                      )
         })
         response.status_code = 400
         return response
@@ -94,17 +104,21 @@ def shibcallback(request):
     try:
         # Expire our signed tokens after five minutes for added security
         appdata = signer.unsign(appdata_signed, max_age=300)
-    except signing.BadSignature:
-        response = PrettyJsonResponse({
-            "ok": False,
-            "error": "Bad signature. Please try login again."
-        })
-        response.status_code = 400
-        return response
     except signing.SignatureExpired:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": "Signature has expired. Please try login again."
+            "error": ("Login data has expired. Please attempt to log in "
+                      "again. If the issues persist please contact the "
+                      "UCL API Team to rectify this.")
+        })
+        response.status_code = 400
+        return response
+    except signing.BadSignature:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": ("Bad signature. Please attempt to log in again. "
+                      "If the issues persist please contact the UCL API "
+                      "Team to rectify this.")
         })
         response.status_code = 400
         return response
@@ -116,16 +130,44 @@ def shibcallback(request):
     # string sent via Shibboleth
     app = App.objects.get(client_id=client_id)
 
-    eppn = request.META['HTTP_EPPN']
-    groups = request.META['HTTP_UCLINTRANETGROUPS']
-    cn = request.META['HTTP_CN']
-    department = request.META['HTTP_DEPARTMENT']
-    given_name = request.META['HTTP_GIVENNAME']
-    display_name = request.META['HTTP_DISPLAYNAME']
-    employee_id = request.META['HTTP_EMPLOYEEID']
+    # Sometimes UCL doesn't give us the expected headers.
+    # If a critical header is missing we error out.
+    # If non-critical headers are missing we simply put a placeholder string.
+    try:
+        # This is used to find the correct user
+        eppn = request.META['HTTP_EPPN']
+        # We don't really use cn but because it's unique in the DB we can't
+        # really put a place holder value.
+        cn = request.META['HTTP_CN']
+        # (aka UPI), also unique in the DB
+        employee_id = request.META['HTTP_EMPLOYEEID']
+    except KeyError:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": ("UCL has sent incomplete headers. If the issues persist"
+                      "please contact the UCL API Team to rectify this.")
+        })
+        response.status_code = 400
+        return response
+
+    # TODO: Ask UCL what on earth are they doing by missing out headers, and
+    # remind them we need to to be informed of these types of changes.
+    # TODO: log to sentry that fields were missing...
+    department = request.META.get('HTTP_DEPARTMENT', '')
+    given_name = request.META.get('HTTP_GIVENNAME', '')
+    display_name = request.META.get('HTTP_DISPLAYNAME', '')
+    groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
+
+    # TODO: Find a way to block access to alumni (do we need this?) without
+    # blocking access to new students too.
+    if not groups and (department == "Shibtests" or eppn == SHIB_TEST_USER):
+        groups = "shibtests"
 
     # If a user has never used the API before then we need to sign them up
     try:
+        # TODO: Handle MultipleObjectsReturned exception.
+        # email field isn't unique at database level (on our side).
+        # Alternatively, switch to employee_id (which is unique).
         user = User.objects.get(email=eppn)
     except User.DoesNotExist:
         # create a new user
@@ -140,26 +182,19 @@ def shibcallback(request):
         )
 
         user.save()
-        keen_add_event.delay("signup", {
-            "id": user.id,
-            "email": eppn,
-            "name": display_name
-        })
     else:
-        # User exists already, so update the values
+        # User exists already, so update the values if new ones are non-empty.
         user = User.objects.get(email=eppn)
-        user.full_name = display_name
-        user.given_name = given_name
-        user.department = department
-        user.raw_intranet_groups = groups
         user.employee_id = employee_id
+        if display_name:
+            user.full_name = display_name
+        if given_name:
+            user.given_name = given_name
+        if department:
+            user.department = department
+        if groups:
+            user.raw_intranet_groups = groups
         user.save()
-
-        keen_add_event.delay("User data updated", {
-            "id": user.id,
-            "email": eppn,
-            "name": display_name
-        })
 
     # Log the user into the system using their User ID
     request.session["user_id"] = user.id
@@ -298,7 +333,7 @@ def userallow(request):
 
     code = generate_random_verification_code()
 
-    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
 
     verification_data = {
         "client_id": app.client_id,
@@ -339,7 +374,7 @@ def token(request):
         response.status_code = 400
         return response
 
-    r = redis.StrictRedis(host=REDIS_UCLAPI_HOST)
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
     try:
         data_json = r.get(code).decode('ascii')
 
@@ -450,13 +485,17 @@ def token(request):
         "state": state,
         "client_id": app.client_id,
         "token": token.token,
+        "access_token": token.token,
         "scope": json.dumps(s.scope_dict(token.scope.scope_number))
     }
 
     return PrettyJsonResponse(oauth_data)
 
 
-@uclapi_protected_endpoint(personal_data=True)
+@uclapi_protected_endpoint(
+    personal_data=True,
+    last_modified_redis_key="timetable_gencache"
+)
 def userdata(request, *args, **kwargs):
     token = kwargs['token']
     print("Checking student status")
@@ -470,20 +509,20 @@ def userdata(request, *args, **kwargs):
 
     user_data = {
         "ok": True,
-        "full_name": token.user.full_name,
-        "email": token.user.email,
-        "given_name": token.user.given_name,
         "cn": token.user.cn,
         "department": token.user.department,
+        "email": token.user.email,
+        "full_name": token.user.full_name,
+        "given_name": token.user.given_name,
         "upi": token.user.employee_id,
         "scope_number": token.scope.scope_number,
-        "is_student": is_student
+        "is_student": is_student,
+        "ucl_groups": token.user.raw_intranet_groups.split(';')
     }
-    print("Is student: " + str(is_student))
 
     return PrettyJsonResponse(
         user_data,
-        rate_limiting_data=kwargs
+        custom_header_data=kwargs
     )
 
 
@@ -495,7 +534,10 @@ def scope_map(request):
     return PrettyJsonResponse(scope_map)
 
 
-@uclapi_protected_endpoint(personal_data=True)
+@uclapi_protected_endpoint(
+    personal_data=True,
+    last_modified_redis_key=None
+)
 def token_test(request, *args, **kwargs):
     s = Scopes()
 
@@ -510,12 +552,13 @@ def token_test(request, *args, **kwargs):
             pretty_print=False
         ),
         "scope_number": token.scope.scope_number
-    }, rate_limiting_data=kwargs)
+    }, custom_header_data=kwargs)
 
 
 @uclapi_protected_endpoint(
     personal_data=True,
-    required_scopes=['student_number']
+    required_scopes=['student_number'],
+    last_modified_redis_key="timetable_gencache"
 )
 def get_student_number(request, *args, **kwargs):
     token = kwargs['token']
@@ -528,7 +571,7 @@ def get_student_number(request, *args, **kwargs):
         response = PrettyJsonResponse({
             "ok": False,
             "error": "User is not a student."
-        }, rate_limiting_data=kwargs)
+        }, custom_header_data=kwargs)
         response.status_code = 400
         return response
 
@@ -538,5 +581,181 @@ def get_student_number(request, *args, **kwargs):
     }
     return PrettyJsonResponse(
         data,
-        rate_limiting_data=kwargs
+        custom_header_data=kwargs
     )
+
+
+@csrf_exempt
+def myapps_shibboleth_callback(request):
+    # should auth user login or signup
+    # then redirect to my apps homepage
+
+    # Sometimes UCL doesn't give us the expected headers.
+    # If a critical header is missing we error out.
+    # If non-critical headers are missing we simply put a placeholder string.
+    try:
+        # This is used to find the correct user
+        eppn = request.META['HTTP_EPPN']
+        # We don't really use cn but because it's unique in the DB we can't
+        # really put a place holder value.
+        cn = request.META['HTTP_CN']
+        # (aka UPI), also unique in the DB
+        employee_id = request.META['HTTP_EMPLOYEEID']
+    except KeyError:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": ("UCL has sent incomplete headers. If the issues persist"
+                      "please contact the UCL API Team to rectify this.")
+        })
+        response.status_code = 400
+        return response
+
+    # TODO: Ask UCL what on earth are they doing by missing out headers, and
+    # remind them we need to to be informed of these types of changes.
+    # TODO: log to sentry that fields were missing...
+    department = request.META.get('HTTP_DEPARTMENT', '')
+    given_name = request.META.get('HTTP_GIVENNAME', '')
+    display_name = request.META.get('HTTP_DISPLAYNAME', '')
+    groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
+
+    try:
+        user = User.objects.get(email=eppn)
+        # TODO: Handle MultipleObjectsReturned exception.
+        # email field isn't unique at database level (on our side).
+        # Alternatively, switch to employee_id (which is unique).
+    except User.DoesNotExist:
+        # create a new user
+        new_user = User(
+            email=eppn,
+            full_name=display_name,
+            given_name=given_name,
+            department=department,
+            cn=cn,
+            raw_intranet_groups=groups,
+            employee_id=employee_id
+        )
+
+        new_user.save()
+
+        request.session["user_id"] = new_user.id
+    else:
+        # User exists already, so update the values if new ones are non-empty.
+        request.session["user_id"] = user.id
+        user.employee_id = employee_id
+        if display_name:
+            user.full_name = display_name
+        if given_name:
+            user.given_name = given_name
+        if department:
+            user.department = department
+        if groups:
+            user.raw_intranet_groups = groups
+        user.save()
+
+    return redirect("/oauth/myapps")
+
+
+@ensure_csrf_cookie
+def my_apps(request):
+    # Check whether the user is logged in
+    try:
+        user_id = request.session["user_id"]
+    except KeyError:
+        # Build Shibboleth callback URL
+        url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
+        param = urllib.parse.urljoin(
+            request.build_absolute_uri(request.path),
+            "/shibcallback"
+        )
+        param = quote(param)
+        url = url + param
+
+        return redirect(url)
+
+    user = User.objects.get(id=user_id)
+
+    tokens = OAuthToken.objects.filter(user=user)
+
+    authorised_apps = []
+    scopes = Scopes()
+
+    for token in tokens:
+        authorised_apps.append({
+            "id": token.id,
+            "active": token.active,
+            "app": {
+                "id": token.app.id,
+                "creator": {
+                    "name": token.app.user.full_name,
+                    "email": token.app.user.email
+                },
+                "client_id": token.app.client_id,
+                "name": token.app.name,
+                "scopes": scopes.scope_dict_all(token.scope.scope_number)
+            }
+        })
+
+    initial_data_dict = {
+        "status": "ONLINE",
+        "fullname": user.full_name,
+        "user_id": user.id,
+        "department": user.department,
+        "scopes": scopes.get_scope_map(),
+        "apps": authorised_apps
+    }
+
+    initial_data = json.dumps(initial_data_dict, cls=DjangoJSONEncoder)
+    return render(request, 'settings.html', {
+        'initial_data': initial_data
+    })
+
+
+@ensure_csrf_cookie
+def deauthorise_app(request):
+    # Find which user is requesting to deauthorise an app
+    user = User.objects.get(id=request.session["user_id"])
+
+    # Find the app that the user wants to deauthorise
+    client_id = request.GET.get("client_id", None)
+
+    if client_id is None:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": "A Client ID must be provided to deauthorise an app."
+        })
+        response.status_code = 400
+        return response
+
+    try:
+        # We only allow the process to happen if the app exists and has not
+        # been flagged as deleted
+        app = App.objects.filter(client_id=client_id, deleted=False)[0]
+    except IndexError:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": "App does not exist with the Client ID provided."
+        })
+        response.status_code = 400
+        return response
+
+    try:
+        token = OAuthToken.objects.get(app=app, user=user)
+    except OAuthToken.DoesNotExist:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": (
+                "The app with the Client ID provided does not have a "
+                "token for this user, so no action was taken."
+            )
+        })
+        response.status_code = 400
+        return response
+
+    token.delete()
+
+    response = PrettyJsonResponse({
+        "ok": True,
+        "message": "App successfully deauthorised."
+    })
+    response.status_code = 200
+    return response

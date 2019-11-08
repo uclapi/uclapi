@@ -1,0 +1,101 @@
+@import './helpers';
+
+$navbarHeight: 60px;
+
+.navbar-extras {
+  .link-titles-menu {
+    z-index: 2;
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    background-color: #313537;
+    top: 60px;
+    transition-property: all;
+    transition-timing-function: linear;
+    transition-duration: 0.3s;
+
+    .link-to-page {
+      width: 100%;
+    }
+  }
+}
+.navbarconsistent {
+  z-index: 1299;
+  position: fixed;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+  height: $navbarHeight;
+  width: 100%;
+  top: 0;
+
+  background-color: #313537;
+
+  display: flex;
+  align-items: center;
+
+  transition-property: top;
+  transition-duration: 0.2s;
+  transition-timing-function: linear;
+
+  @include boxShadow(1);
+
+  img {
+    height: $navbarHeight - 15px;
+    margin-left: 25px;
+  }
+  .logoTextWhite {
+  	color: #FFF;
+  	display: inline;
+    margin: 10px;
+    font-size: 2em;
+  }
+  .menu-icon {
+    img {
+      margin-top: 7px;
+    }
+  }
+}
+.bounce-image {
+    float: left;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    transition-property: margin-right;
+    transition-timing-function: linear;
+    transition-duration: 0.15s;
+}
+.link-to-page { 
+    display: inline-block;
+    float: right;
+    height: 16px;
+    margin: 20px 25px 0 25px;
+
+    img {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+    }
+}
+.link-to-page h1 {
+    border: solid;
+    border-color: #FFF;
+    border-width: 0 0 0 1px;
+    padding: 0 20px;
+    margin: 0;
+    font-size: 1em;
+    font-weight: normal;
+}
+.link-to-page a {
+    display: inline-block;
+    float: left;
+    text-decoration: none;
+    color: #FFFFFF;
+    transition-property: color;
+    transition-duration: 0.2s;
+    padding-left: 15px;
+    transition-timing-function: linear;
+}
+.link-titles {
+  right: 20px;
+  position: absolute;
+  height: 60px;
+}

@@ -1,10 +1,7 @@
 from __future__ import unicode_literals
 
-import json
-
 from django.db import models
 
-from .api_helpers import generate_token
 
 models.options.DEFAULT_NAMES += ('_DATABASE',)
 
@@ -105,12 +102,50 @@ class Room(models.Model):
         _DATABASE = 'roombookings'
 
 
-class Lock(models.Model):
-    bookingA = models.BooleanField()
-    bookingB = models.BooleanField()
+class RoomA(models.Model):
+    setid = models.CharField(max_length=40, blank=True, null=True)
+    siteid = models.CharField(max_length=40, blank=True, null=True)
+    sitename = models.CharField(max_length=320, blank=True, null=True)
+    address1 = models.CharField(max_length=320, blank=True, null=True)
+    address2 = models.CharField(max_length=320, blank=True, null=True)
+    address3 = models.CharField(max_length=320, blank=True, null=True)
+    address4 = models.CharField(max_length=320, blank=True, null=True)
+    roomid = models.CharField(max_length=40)
+    roomname = models.CharField(max_length=320, blank=True, null=True)
+    roomdeptid = models.CharField(max_length=40, blank=True, null=True)
+    bookabletype = models.CharField(max_length=40, blank=True, null=True)
+    roomclass = models.CharField(max_length=40, blank=True, null=True)
+    zone = models.CharField(max_length=40, blank=True, null=True)
+    webview = models.CharField(max_length=4, blank=True, null=True)
+    automated = models.CharField(max_length=4, blank=True, null=True)
+    capacity = models.FloatField(blank=True, null=True)
+    category = models.CharField(max_length=40, blank=True, null=True)
 
     class Meta:
-        _DATABASE = 'default'
+        _DATABASE = 'gencache'
+
+
+class RoomB(models.Model):
+    setid = models.CharField(max_length=40, blank=True, null=True)
+    siteid = models.CharField(max_length=40, blank=True, null=True)
+    sitename = models.CharField(max_length=320, blank=True, null=True)
+    address1 = models.CharField(max_length=320, blank=True, null=True)
+    address2 = models.CharField(max_length=320, blank=True, null=True)
+    address3 = models.CharField(max_length=320, blank=True, null=True)
+    address4 = models.CharField(max_length=320, blank=True, null=True)
+    roomid = models.CharField(max_length=40)
+    roomname = models.CharField(max_length=320, blank=True, null=True)
+    roomdeptid = models.CharField(max_length=40, blank=True, null=True)
+    bookabletype = models.CharField(max_length=40, blank=True, null=True)
+    roomclass = models.CharField(max_length=40, blank=True, null=True)
+    zone = models.CharField(max_length=40, blank=True, null=True)
+    webview = models.CharField(max_length=4, blank=True, null=True)
+    automated = models.CharField(max_length=4, blank=True, null=True)
+    capacity = models.FloatField(blank=True, null=True)
+    category = models.CharField(max_length=40, blank=True, null=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
 
 
 class Equipment(models.Model):

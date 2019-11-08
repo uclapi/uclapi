@@ -1,11 +1,12 @@
-import React from 'react';
-import Drawer from 'material-ui/Drawer';
-import {List, ListItem, makeSelectable} from 'material-ui/List';
-import Divider from 'material-ui/Divider';
-import Subheader from 'material-ui/Subheader';
-import MenuItem from 'material-ui/MenuItem';
-import {spacing, typography, zIndex} from 'material-ui/styles';
-import apiLogo from './../../images/simpleAPILogoWhite.svg';
+import Divider from 'material-ui/Divider'
+import Drawer from 'material-ui/Drawer'
+import {List, ListItem, makeSelectable} from 'material-ui/List'
+import MenuItem from 'material-ui/MenuItem'
+import {spacing, typography, zIndex} from 'material-ui/styles'
+import Subheader from 'material-ui/Subheader'
+import React from 'react'
+
+import apiLogo from './../../images/simpleAPILogoWhite.svg'
 
 /*
   Got this entire thing from
@@ -19,16 +20,16 @@ import apiLogo from './../../images/simpleAPILogoWhite.svg';
   the href in the Topic component
 */
 
-const SelectableList = makeSelectable(List);
+const SelectableList = makeSelectable(List)
 
 const styles = {
   logo: {
-    cursor: 'pointer',
+    cursor: `pointer`,
     fontSize: 24,
     color: typography.textFullWhite,
     lineHeight: `${spacing.desktopKeylineIncrement}px`,
     fontWeight: typography.fontWeightLight,
-    backgroundColor: "#434343",
+    backgroundColor: `#434343`,
     paddingLeft: spacing.desktopGutter,
     marginBottom: 8,
   },
@@ -36,20 +37,21 @@ const styles = {
     paddingLeft: spacing.desktopGutterLess,
     fontSize: 16,
   },
-};
+}
 
 
 export default class Sidebar extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   render() {
     return (
       <Drawer
-        docked={true}
-        open={true}>
+        docked
+        open
+      >
         <div style={styles.logo}>
           <span className="sidebarLogo">
             <img src={apiLogo}/>
@@ -62,11 +64,12 @@ export default class Sidebar extends React.Component {
           <ListItem
             href="#welcome"
             primaryText="Meta"
-            primaryTogglesNestedList={true}
+            primaryTogglesNestedList
             nestedItems={[
               <ListItem primaryText="Welcome" href="#welcome" />,
               <ListItem primaryText="Get Your API Key" href="#get-api-key" />,
               <ListItem primaryText="API Rate Limits" href="#api-rate-limits" />,
+              <ListItem primaryText="API Data Freshness" href="#api-expiry-times" />,
               <ListItem primaryText="Version Information" href="#version-information" />,
             ]}
           />
@@ -74,7 +77,7 @@ export default class Sidebar extends React.Component {
           <ListItem
             href="#oauth"
             primaryText="OAuth"
-            primaryTogglesNestedList={true}
+            primaryTogglesNestedList
             nestedItems={[
               <ListItem
                 primaryText="Meta"
@@ -95,14 +98,14 @@ export default class Sidebar extends React.Component {
               <ListItem
                 primaryText="Student Number"
                 href="#oauth/user/studentnumber"
-              />
+              />,
             ]}
           />
 
           <ListItem
             href="#roombookings"
             primaryText="Room Bookings"
-            primaryTogglesNestedList={true}
+            primaryTogglesNestedList
             nestedItems={[
               <ListItem
                 primaryText="Get Rooms"
@@ -130,7 +133,7 @@ export default class Sidebar extends React.Component {
           <ListItem
             href="#search"
             primaryText="Search"
-            primaryTogglesNestedList={true}
+            primaryTogglesNestedList
             nestedItems={[
               <ListItem
                 primaryText="Get People"
@@ -142,7 +145,7 @@ export default class Sidebar extends React.Component {
           <ListItem
             href="#timetable"
             primaryText="Timetable"
-            primaryTogglesNestedList={true}
+            primaryTogglesNestedList
             nestedItems={[
               <ListItem
                 primaryText="Get Personal Timetable"
@@ -157,8 +160,16 @@ export default class Sidebar extends React.Component {
                 href="#timetable/data/departments"
               />,
               <ListItem
-                primaryText="Get Department Modules"
+                primaryText="Get List of Department Modules"
                 href="#timetable/data/modules"
+              />,
+              <ListItem
+                primaryText="Get List of Department Courses"
+                href="#timetable/data/courses"
+              />,
+              <ListItem
+                primaryText="Get List of Course Modules"
+                href="#timetable/data/courses/modules"
               />,
             ]}
           />
@@ -166,7 +177,7 @@ export default class Sidebar extends React.Component {
           <ListItem
             href="#resources"
             primaryText="Resources"
-            primaryTogglesNestedList={true}
+            primaryTogglesNestedList
             nestedItems={[
               <ListItem
                 primaryText="Get Desktop availability"
@@ -178,7 +189,7 @@ export default class Sidebar extends React.Component {
           <ListItem
             href="#workspaces"
             primaryText="Workspaces"
-            primaryTogglesNestedList={true}
+            primaryTogglesNestedList
             nestedItems={[
               <ListItem
                 primaryText="Get Surveys"
@@ -207,7 +218,7 @@ export default class Sidebar extends React.Component {
               <ListItem
                 primaryText="Get Live Map Image"
                 href="#workspaces/images/map/live"
-              />
+              />,
             ]}
           />
 
@@ -228,7 +239,7 @@ export default class Sidebar extends React.Component {
           <ListItem primaryText="Twitter" href="https://twitter.com/uclapi" />
         </SelectableList>
       </Drawer>
-    );
+    )
   }
 
 }

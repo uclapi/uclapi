@@ -12,6 +12,7 @@ class ImageBuilder():
     """
     Builds an SVG image with live sensor statuses/
     """
+
     def __init__(self, survey_id, map_id):
         # Confirm integers
         if not survey_id.isdigit():
@@ -24,7 +25,7 @@ class ImageBuilder():
         if not self._api.check_map_exists(survey_id, map_id):
             raise BadOccupEyeRequest
 
-        self._redis = redis.StrictRedis(
+        self._redis = redis.Redis(
             host=settings.REDIS_UCLAPI_HOST,
             charset="utf-8",
             decode_responses=True
@@ -41,7 +42,7 @@ class ImageBuilder():
         self.set_image_scale()
         self.set_circle_radius()
 
-    def set_colours(self, absent="#ABE00C", occupied="#FFC90E"):
+    def set_colours(self, absent="#016810", occupied="#B60202"):
         self._absent_colour = absent
         self._occupied_colour = occupied
 
@@ -72,8 +73,13 @@ class ImageBuilder():
         )
         viewport.attrib["transform"] = scale
         base_map = etree.SubElement(viewport, "image")
-        base_map.attrib["width"] = map_data["VMaxX"]
-        base_map.attrib["height"] = map_data["VMaxY"]
+
+        # ViewBox data looks like this: 0 0 12345 67890
+        # We care about the last two numbers, the width and height
+        viewbox_data = map_data["ViewBox"].split(" ")
+        base_map.attrib["width"] = viewbox_data[2]
+        base_map.attrib["height"] = viewbox_data[3]
+
         map_data = self._redis.hgetall(
             "occupeye:surveys:{}:maps:{}".format(
                 self._survey_id,
@@ -100,6 +106,7 @@ class ImageBuilder():
 
         for sensor_id, sensor_data in the_map["sensors"].items():
             node = etree.SubElement(bubble_overlay, "g")
+            node.attrib["id"] = sensor_id
             node.attrib["transform"] = "translate({},{})".format(
                 sensor_data["x_pos"],
                 sensor_data["y_pos"]
@@ -115,6 +122,12 @@ class ImageBuilder():
                 # If the sensor is in a strange state just treat
                 # it as a free space.
                 occupied = False
+            except KeyError:
+                # Fix for API-4Y, i.e. UCL added a sensor called 'HOST653'
+                # which isn't actually a sensor. Hence the sensor status
+                # doesn't exist...
+                occupied = False
+                circle.attrib["opacity"] = "0"
 
             if occupied:
                 circle.attrib["fill"] = self._occupied_colour
