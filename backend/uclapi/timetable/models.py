@@ -251,7 +251,7 @@ class SitesB(models.Model):
 
 class Module(models.Model):
     setid = models.TextField(max_length=10)
-    moduleid = models.TextField(max_length=12)
+    moduleid = models.TextField(primary_key=True, max_length=12)
     owner = models.TextField(max_length=10)
     name = models.TextField(max_length=120)
     category = models.TextField(max_length=10, null=True)
@@ -758,6 +758,7 @@ class CrsavailmodulesB(models.Model):
 
     class Meta:
         _DATABASE = 'gencache'
+
 
 class Timetable(models.Model):
     slotid = models.BigIntegerField(primary_key=True)
