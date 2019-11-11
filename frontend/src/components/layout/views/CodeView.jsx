@@ -38,7 +38,7 @@ export default class CodeView extends React.Component {
       type,
       url,
       params,
-    } = this.state
+    } = this.props
     // Every button view should contain a link and text
     if (typeof type == `undefined`) { console.log(`EXCEPTION: CodeView.constructor: no type defined`) }
     else if (type == `request`) {
