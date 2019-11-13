@@ -8,7 +8,7 @@ chardet==3.0.4
 ciso8601==2.1.2
 cx-Oracle==7.2.3
 decorator==4.4.1
-deepdiff==4.0.8
+deepdiff==4.0.9
 Django==1.11.26
 django-cors-headers==3.1.1
 django-dotenv==1.4.2
