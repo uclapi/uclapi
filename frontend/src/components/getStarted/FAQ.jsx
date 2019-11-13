@@ -1,7 +1,6 @@
 import React from 'react';
 import QandA from './QandA.jsx';
 
-
 class FAQ extends React.Component {
   render() {
     return (
@@ -35,7 +34,7 @@ class FAQ extends React.Component {
 
           <QandA
             question={"Does this cost anything?"}
-            answer={["UCL API is and always will be completely free to use."]}
+            answer={[`UCL API is and will always be a completely free as the platform's purpose is to enable innovation to better the student experience. This cannot be done without amazing developers such as yourself using the API.`]}
           />
 
           <QandA

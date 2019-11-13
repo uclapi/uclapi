@@ -13,10 +13,10 @@ update_configs:
   - package_manager: "python"
     directory: "/backend/uclapi"
     update_schedule: "live"
-    automerged_updates:
-      - match:
-          dependency_type: "development" # requirements-dev.txt
-          update_type: "semver:minor"
-      - match:
-          dependency_type: "production" # requirements.txt
-          update_type: "semver:patch"
+#    automerged_updates:
+#      - match:
+#          dependency_type: "development" # requirements-dev.txt
+#          update_type: "semver:minor"
+#      - match:
+#          dependency_type: "production" # requirements.txt
+#          update_type: "semver:patch"

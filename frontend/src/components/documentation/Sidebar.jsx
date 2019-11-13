@@ -49,7 +49,8 @@ export default class Sidebar extends React.Component {
     return (
       <Drawer
         docked={true}
-        open={true}>
+        open={true}
+        >
         <div style={styles.logo}>
           <span className="sidebarLogo">
             <img src={apiLogo}/>

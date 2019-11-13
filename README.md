@@ -286,6 +286,10 @@ We're an amazing project, so obviously we have tests :sparkles:
 Make sure you have the requirements installed in your virtual environment (and you have activated it) , `cd` into `backend/uclapi` and then run :  
 `python manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner' --settings=uclapi.settings_mocked`
 
+## Linting
+
+We have a pre-commit hook set up that runs [eslint](https://eslint.org/) on all staged JS files, [stylelint](https://github.com/stylelint/stylelint) on all staged scss files, and [autopep8](https://github.com/hhatto/autopep8) & [flake8](http://flake8.pycqa.org/en/latest/) on all staged Python files. This automatically fixes style issues and stops the commit if there are any obvious problems (e.g. failure to define variable).
+
 ## Our Custom Django Management Commands
 What's that?! You want even more info? This section details any custom management commands we have created for django. You can view the full list of commands including the standard ones by running the command ```python manage.py --help``` and get more information on specific commands by running ```python manage.py command --help```. The most useful commands for development are listed below in addition to this however.
 
@@ -309,6 +313,47 @@ python manage.py feed_occupeye_cache
 python manage.py feed_occupeye_cache_mini
 ```
 **Note: As said previously these require valid credentials and for you to be on the UCL network to use**
+
+## Developing using docker
+
+### Installation of docker (Windows using WSL)
+
+Make sure to have an installation of Windows 10 Education (Free licence through UCL) 
+
+Download docker for windows
+
+### Cloning the repository
+
+Install uclapi into a common source folder on your computer using:
+
+```
+git clone https://github.com/uclapi/uclapi.git
+```
+
+### Building the frontend
+
+```
+cd frontend
+npm start
+```
+
+### Running docker
+
+copy the .env.example into the root/uclapi folder and rename to .env
+
+navigate to docker settings > shared drives > enable c
+
+run the following command inside WSL:
+
+```
+export DOCKER_HOST=tcp://localhost:2375" >> ~/.bashrc && source ~/.bashrc
+```
+
+Finally run the following command in a new terminal inside uclapi:
+
+```
+docker-compose up -d
+```			
 
 ## Documentation
 As well as the user-facing documentation we also now ship our own internal Documentation
