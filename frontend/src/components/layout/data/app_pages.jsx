@@ -47,7 +47,7 @@ const roombuddydescription = (
     Submit a pull request:`}
    />
    <ButtonView type={`alternate`} text={`VISIT GITHUB`} 
-     style={ { "margin" : `auto`, "display" : "flex" } } 
+     style={ { 'margin' : 'auto', 'display' : 'flex' } } 
      link={`https://github.com/uclapi/ucl-assistant-app`}
    />
    <TextView heading={`5`} text={`This app and its platform have been 
@@ -97,7 +97,7 @@ const uclassistantdescription = (
      the app? We welcome it:`}
    />
    <ButtonView type={`alternate`} isCentered text={`VISIT GITHUB`} 
-     style={ { "margin" : `auto`, "display" : "flex" } } 
+     style={ { 'margin' : 'auto', 'display' : 'flex' } } 
      link={`https://github.com/uclapi/ucl-assistant-app`}
    />
    <TextView heading={`5`} text={`This app and its platform have 
