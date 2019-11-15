@@ -39,6 +39,7 @@ class Marketplace extends React.Component {
     const appsToRender = []
     appsToRender.push(allApps[`uclroombuddy`])
     appsToRender.push(allApps[`uclassistant`])
+    appsToRender.push(allApps[`uclcssa`])
 
     this.state = {
       'featuredApps': featuredApps,
@@ -129,7 +130,6 @@ class AppPage extends React.Component {
 
   render() {
     const iconsize = `100px`
-    // const logosize = `150px`
 
     const screenshotwidth = `216px`
     const screenshotheight = `384px`
@@ -141,7 +141,7 @@ class AppPage extends React.Component {
         description,
         screenshots,
         detailedDescription,
-        androidLink,
+        links,
       },
     } = this.state
 
@@ -193,17 +193,22 @@ class AppPage extends React.Component {
             {detailedDescription}
           </Column>
         </Row>
-        <Row styling='splash-parallax'>
-          <Column width='2-3' horizontalAlignment='center'>
-            <CardView width={`1-2`} minWidth={`300px`} link={androidLink}>
-              <Row height='75px'>
-                <Column width='1-1' horizontalAlignment='center' verticalAlignment='center'>
-                  <TextView text='Download Link' heading={2} align={`center`} />
-                </Column>
-              </Row>
-            </CardView>
-          </Column>
-        </Row>
+
+        {links.length > 0 ? (
+          <Row styling='splash-parallax'>
+            <Column width='2-3' horizontalAlignment='center'>
+              {links.map( (x, key) => (
+                <ButtonView text={x.name} link={x.link} type={key%2==0 ? "default" : "alternate"} key={key} style={{ "marginLeft": `0` }}/>
+              ))}
+            </Column>
+          </Row>
+        ) : ( 
+          <Row styling='splash-parallax'>
+            <Column width='2-3' horizontalAlignment='center'>
+              <TextView text={`No downloads available`} heading={3} align={`center`} />
+            </Column>
+          </Row>
+        )}
 
         <Footer />
 
