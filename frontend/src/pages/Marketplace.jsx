@@ -159,7 +159,7 @@ class AppPage extends React.Component {
         <Row styling='secondary' height='70px' style={{ "padding": `10px 0` }}>
           <Column width='2-3' horizontalAlignment='center'>
             <Column width='fit-content' minWidth={iconsize} typeOfInline='grid' horizontalAlignment='left'>
-              <ButtonView type='alternate' text='back to marketplace' link='/marketplace' style={{ margin: `10px 0` }} />
+              <ButtonView type='alternate' text='back' link='/marketplace' style={{ "float" : "left", "margin": "10px 0" }} />
             </Column>
           </Column>
         </Row>
@@ -177,7 +177,7 @@ class AppPage extends React.Component {
             </Column>
           </Column>
         </Row>
-        <Row styling='secondary'>
+        <Row styling='secondary' style={ { "padding" : "0" } }>
           <Column width='2-3' horizontalAlignment='center'>
             {screenshots.map((img, i) => (
               <CardView width='1-3' minWidth={screenshotwidth} type='no-bg' key={name + ` screenshot number ` + i}>
@@ -188,8 +188,8 @@ class AppPage extends React.Component {
             ))}
           </Column>
         </Row>
-        <Row styling='secondary'>
-          <Column width='2-3' horizontalAlignment='center' textAlign='left'>
+        <Row styling='secondary' style={ { "padding" : "0 0 20px 0" } }>
+          <Column width='1-2' horizontalAlignment='center' textAlign='left'>
             {detailedDescription}
           </Column>
         </Row>
@@ -205,7 +205,7 @@ class AppPage extends React.Component {
         ) : ( 
           <Row styling='splash-parallax'>
             <Column width='2-3' horizontalAlignment='center'>
-              <TextView text={`No downloads available`} heading={3} align={`center`} />
+              <TextView text={`No downloads available`} heading={3} align={`center`} style={ { "margin" : "0" } }/>
             </Column>
           </Row>
         )}

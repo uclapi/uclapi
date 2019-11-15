@@ -25,32 +25,32 @@ const roombuddydescription = (
   <div className="roombuddy-full-description" 
     style={ { "display": `inline-block`} }
   >
-   <TextView heading={`3`} text={`Finding a place to get your work done 
+   <TextView heading={`5`} text={`Finding a place to get your work done 
     can be hard. Every place you've thought of is somehow already filled 
     up: the libraries, the study pods, the benches outside the Print Room 
     Café...`}
    />
-   <TextView heading={`3`} text={`Room Buddy makes use of UCL API to find
+   <TextView heading={`5`} text={`Room Buddy makes use of UCL API to find
     and direct you to open study spaces that aren't widely known. These 
     rooms are scarcely booked up for timetables and sit waiting for you to
      grace them with your glory.`}
    />
-   <TextView heading={`3`} text={`It's simple: install the app, sign in 
+   <TextView heading={`5`} text={`It's simple: install the app, sign in 
    with your UCL ID, and get going to the closest available space to
     your current location!`}
    />
-   <TextView heading={`3`} text={`UCL Room Buddy was built with the 
+   <TextView heading={`5`} text={`UCL Room Buddy was built with the 
     UCL API, which gives student developers programmatic access to UCL's
      data in order to improve the UCL experience for everyone.`}
    />
-   <TextView heading={`3`} text={`Want to contribute to room buddy? 
+   <TextView heading={`5`} text={`Want to contribute to room buddy? 
     Submit a pull request:`}
    />
    <ButtonView type={`alternate`} text={`VISIT GITHUB`} 
-     style={ { "margin" : `0 0 20px 0` } } 
+     style={ { "margin" : `auto`, "display" : "flex" } } 
      link={`https://github.com/uclapi/ucl-assistant-app`}
    />
-   <TextView heading={`3`} text={`This app and its platform have been 
+   <TextView heading={`5`} text={`This app and its platform have been 
     built by the UCL API Team, a group of students working with UCL's 
     Information Services Division (ISD) to provide students with a brand 
     new ecosystem that allows anyone within the UCL Community to build 
@@ -65,13 +65,13 @@ const uclassistantdescription = (
   <div className="uclassistant-full-description" 
     style={ {"display": `inline-block` } }
   >
-   <TextView heading={`3`} text={`✨✨A brand new and beautiful app 
+   <TextView heading={`5`} text={`✨✨A brand new and beautiful app 
     to manage your student life at UCL!✨✨`}
    />
-   <TextView heading={`3`} text={`✅ View your personal timetable and 
+   <TextView heading={`5`} text={`✅ View your personal timetable and 
     get instant directions to your lectures.`}
    />
-   <TextView heading={`3`} text={`✅ Check the availability of all 
+   <TextView heading={`5`} text={`✅ Check the availability of all 
     UCL libraries and study spaces, including in
      the new Student Centre. Want to know which floor or room has the 
      most seats free? You now have that
@@ -81,26 +81,26 @@ const uclassistantdescription = (
      half an hour on whichever library 
      floor you choose`}
    />
-   <TextView heading={`3`} text={`✅ Search for members of the UCL 
+   <TextView heading={`5`} text={`✅ Search for members of the UCL 
     community, including students and lecturers,
      and tap to email them. Nice and easy!`}
    />
-   <TextView heading={`3`} text={`✅ Find every centrally bookable room 
+   <TextView heading={`5`} text={`✅ Find every centrally bookable room 
     t UCL, see how big it is and whether it is 
      currently in use, and then tap to navigate right there.`}
    />
-   <TextView heading={`3`} text={`✅ Made with love 💖 by and for 
+   <TextView heading={`5`} text={`✅ Made with love 💖 by and for 
     students`}
    />
-   <TextView heading={`3`} text={`✅ Fully open source. Got feedback, 
+   <TextView heading={`5`} text={`✅ Fully open source. Got feedback, 
     suggestions or even some new code to improve 
      the app? We welcome it:`}
    />
    <ButtonView type={`alternate`} isCentered text={`VISIT GITHUB`} 
-     style={ { "margin" : `0 0 20px 0` } } 
+     style={ { "margin" : `auto`, "display" : "flex" } } 
      link={`https://github.com/uclapi/ucl-assistant-app`}
    />
-   <TextView heading={`3`} text={`This app and its platform have 
+   <TextView heading={`5`} text={`This app and its platform have 
     been built by the UCL API Team, a group of students
      working with UCL's Information Services Division (ISD) to 
      provide students with a brand new ecosystem that allows
@@ -118,7 +118,7 @@ const uclcssadescription = (
     <TextView heading={`2`} text={`Real-time library seat map`} 
       style={ { "textDecoration": `underline` } }
     />
-    <TextView heading={`3`} text={`This is a feature that you do not 
+    <TextView heading={`5`} text={`This is a feature that you do not 
       get on UCL Go. 
       You can click on specific floors of each library to view a 
       seating map. You no longer
@@ -130,7 +130,7 @@ const uclcssadescription = (
     <TextView heading={`2`} text={`Timetabling`} 
       style={ { "textDecoration": `underline` } }
     />
-    <TextView heading={`3`} text={`Just log in with UCL and you can 
+    <TextView heading={`5`} text={`Just log in with UCL and you can 
       view your personal timetable to 
       be able to view your personal timetable using WeChat. This 
       avoids the problems with trying to use UCL Go.`}
@@ -138,7 +138,7 @@ const uclcssadescription = (
     <TextView heading={`2`} text={`Questions and Answers`} 
       style={ { "textDecoration": `underline` } }
     />
-    <TextView heading={`3`} text={`There is a whole section dedicated 
+    <TextView heading={`5`} text={`There is a whole section dedicated 
       to answering questions from 
       what to do on the weekend in London all the way to what food to 
       eat and where good places
@@ -147,14 +147,14 @@ const uclcssadescription = (
     <TextView heading={`2`} text={`Memes`} 
       style={ { "textDecoration": `underline` } }
     />
-    <TextView heading={`3`} text={`An area dedicated to creating 
+    <TextView heading={`5`} text={`An area dedicated to creating 
       memes of teachers or classmates during 
       your day for others to enjoy`}
     />
     <TextView heading={`2`} text={`Name search`} 
       style={ { "textDecoration": `underline` } }
     />
-    <TextView heading={`3`} text={`You can use the name search feature 
+    <TextView heading={`5`} text={`You can use the name search feature 
       to remind yourself of people's names
     or for finding out the name and email of your lecturers. This 
     allows you to always be able to get into contact 
@@ -163,7 +163,7 @@ const uclcssadescription = (
     <TextView heading={`2`} text={`Job search information`} 
       style={ { "textDecoration": `underline` } }
     />
-    <TextView heading={`3`} text={`There is a whole section dedicated 
+    <TextView heading={`5`} text={`There is a whole section dedicated 
       to providing information about internships and 
       resume advice. It is updated with recruitment information and 
       timings for major companies on a regular basis. 
@@ -218,8 +218,16 @@ export const allApps = {
     G2uA`,
     "links": [ 
         {
-          "name": `web`, 
+          "name": `WeChat`, 
           "link": `https://mp.weixin.qq.com/s/ndkYgEFwlATvIIcHONG2uA`,
+        },
+        {
+          "name": `Website`, 
+          "link": `https://uclcssa.cn/`,
+        },
+        {
+          "name": `Demo`, 
+          "link": `https://uclcssa.cn/timetable/?id=demo`,
         },
     ],
     "screenshots": [ ucsscr1, ucsscr2, ucsscr3 ],
