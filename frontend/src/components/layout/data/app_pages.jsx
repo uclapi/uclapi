@@ -196,13 +196,11 @@ export const allApps = {
     "links": [ 
         {
           "name": `android`, 
-          "link": `https://play.google.com/store/apps/details?id=com.
-          uclapi.uclassistant&hl=en_GB`,
+          "link": `https://play.google.com/store/apps/details?id=com.uclapi.uclassistant&hl=en_GB`,
         },
         {
           "name": `apple`, 
-          "link": `https://play.google.com/store/apps/details?id=com.
-          uclapi.uclassistant&hl=en_GB`,
+          "link": `https://apps.apple.com/us/app/ucl-assistant/id1462767418`,
         },
     ],
     "screenshots": [ ucascr1, ucascr2, ucascr3 ],
