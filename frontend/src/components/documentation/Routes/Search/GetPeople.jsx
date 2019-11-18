@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-import Cell from './../../Cell.jsx'
-import Table from './../../Table.jsx'
-import Topic from './../../Topic.jsx'
+import Topic from './../../Topic.jsx';
+import Table from './../../Table.jsx';
+import Cell from './../../Cell.jsx';
 
 
-const codeExamples = {
+let codeExamples = {
   python: `import requests
 
 params = {
@@ -26,11 +26,11 @@ print(r.json())`,
 .then((json) => {
   console.log(json);
 })
-`,
+`
 }
 
 
-const response = `{
+let response = `{
   "ok": true,
   "people": [
     {
@@ -44,10 +44,10 @@ const response = `{
 }
 `
 
-const responseCodeExample = {
+let responseCodeExample = {
   python: response,
   javascript: response,
-  shell: response,
+  shell: response
 }
 
 
@@ -58,8 +58,7 @@ export default class GetEquiment extends React.Component {
         <div>
           <Topic
             activeLanguage={this.props.activeLanguage}
-            codeExamples={codeExamples}
-          >
+            codeExamples={codeExamples}>
             <h1 id="search/people">Get People</h1>
             <p>
               This endpoint returns matching people and information about them.
@@ -71,79 +70,65 @@ export default class GetEquiment extends React.Component {
             </p>
 
             <Table
-              name="Query Parameters"
-            >
+              name="Query Parameters">
               <Cell
                 name="token"
                 requirement="required"
                 example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
-                description="Authentication token."
-              />
+                description="Authentication token." />
               <Cell
                 name="query"
                 requirement="required"
                 example="Jane"
-                description="Name of the person you are searching for."
-              />
+                description="Name of the person you are searching for." />
             </Table>
           </Topic>
 
           <Topic
             activeLanguage={this.props.activeLanguage}
-            codeExamples={responseCodeExample}
-          >
+            codeExamples={responseCodeExample}>
             <h2>Response</h2>
             <p>
             The people field contains a list of people that match your query.
             </p>
             <Table
-              name="Response"
-            >
+              name="Response">
               <Cell
                 name="name"
                 extra="string"
                 example="Jane Doe"
-                description="The name of the person."
-              />
+                description="The name of the person."/>
               <Cell
                 name="status"
                 extra="string"
                 example="Staff"
-                description="Tells us whether the person is a student or member of staff."
-              />
+                description="Tells us whether the person is a student or member of staff."/>
               <Cell
                 name="department"
                 extra="string"
                 example="UCL Medical School"
-                description="The department the student studies or works under."
-              />
+                description="The department the student studies or works under."/>
               <Cell
                 name="email"
                 extra="string"
                 example="jane.doe.17@ucl.ac.uk"
-                description="The email of the person."
-              />
+                description="The email of the person."/>
             </Table>
           </Topic>
 
           <Topic
-            noExamples
-          >
+            noExamples={true}>
             <Table
-              name="Errors"
-            >
+              name="Errors">
               <Cell
                 name="No token provided"
-                description="Gets returned when you have not supplied a token in your request."
-              />
+                description="Gets returned when you have not supplied a token in your request." />
               <Cell
                 name="Token does not exist"
-                description="Gets returned when you supply an invalid token."
-              />
+                description="Gets returned when you supply an invalid token." />
               <Cell
                 name="No query provided"
-                description="Gets returned when you have not supplied a query in your request."
-              />
+                description="Gets returned when you have not supplied a query in your request." />
             </Table>
           </Topic>
         </div>

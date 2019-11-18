@@ -1,54 +1,53 @@
 // Imports
-import React from 'react'
-import posed from 'react-pose'
-
-// Images
-import menu from '../../images/navbar/menu.svg'
-import logo from './../../images/simpleAPILogoWhite.svg'
+import React from 'react';
+import logo from './../../images/simpleAPILogoWhite.svg';
+import posed from 'react-pose';
 // Components
-import Link from './Link.jsx'
+import Link from './Link.jsx';
+// Images
+import menu from '../../images/navbar/menu.svg';
 
 const Toast = posed.div({
-	hidden: { top: `-60px` },
-	shown: { top: 0 },
-})
+	hidden: { top: '-60px' },
+	shown: { top: 0 }
+});
 
-const links = [
+let links = [
 	// {
 	// 	name: "settings",
 	// 	link: "/oauth/myapps",
 	// 	src: "settings", 
 	// },
 	{
-		name: `about`,
-		link: `/about`,
-		src: `about`,
+		name: "about",
+		link: "/about",
+		src: "about",
 	},
 	{
-		name: `documentation`,
-		link: `/docs`,
-		src: `docs`,
+		name: "documentation",
+		link: "/docs",
+		src: "docs",
 	},
 	{
-		name: `dashboard`,
-		link: `/dashboard`,
-		src: `dashboard`,
+		name: "dashboard",
+		link: "/dashboard",
+		src: "dashboard",
 	},
 	{
-		name: `marketplace`,
-		link: `/marketplace`,
-		src: `market`,
+		name: "marketplace",
+		link: "/marketplace",
+		src: "market",
 	},
 ]
 const SlideDown = posed.div({
-	shown: { height: ((links.length*34) + 30) +`px` },
+	shown: { height: ((links.length*34) + 30) +"px" },
 	hidden: { height: 0 },
-})
-const maxScreen = 1030
+});
+const maxScreen = 1030;
 
 class NavBar extends React.Component {
 	constructor(props) {
-		super(props)
+		super(props);
 
 		this.state = {
 			isVisible: !this.props.isScroll,
@@ -56,16 +55,16 @@ class NavBar extends React.Component {
 			isMenuHidden: true,
 		}
 
-		this.updateNavBar = this.updateNavBar.bind(this)
-		this.updateDimensions = this.updateDimensions.bind(this)
-		this.toggleMenu = this.toggleMenu.bind(this)
-		this.navbarHeight = 60
+		this.updateNavBar = this.updateNavBar.bind(this);
+		this.updateDimensions = this.updateDimensions.bind(this);
+		this.toggleMenu = this.toggleMenu.bind(this);
+		this.navbarHeight = 60;
 	}
 	toggleMenu() {
-		console.log(`menu click`)
+		console.log("menu click")
 		this.setState({
 			isMenuHidden: !this.state.isMenuHidden,
-		})
+		});
 	}
 	updateDimensions() {
 		if (window.innerWidth < maxScreen) {
@@ -81,20 +80,20 @@ class NavBar extends React.Component {
 		}
 	}
 	componentWillMount() {
-		this.updateDimensions()
+		this.updateDimensions();
 		this.setState({
 			isMenuHidden: true,
-		})
+		});
 	}
 	componentDidMount() {
-		if (this.props.isScroll) { window.addEventListener(`scroll`, this.updateNavBar) }
-		window.addEventListener(`resize`, this.updateDimensions)
+		if (this.props.isScroll) { window.addEventListener('scroll', this.updateNavBar); }
+		window.addEventListener("resize", this.updateDimensions);
 	}
 	componentWillUnmount() {
-		if (this.props.isScroll) { window.removeEventListener(`scroll`, this.updateNavBar) }
+		if (this.props.isScroll) { window.removeEventListener('scroll', this.updateNavBar); }
 	}
 	updateNavBar() {
-		const scrollTop = window.scrollY
+		let scrollTop = window.scrollY;
 
 		if (scrollTop <= this.navbarHeight && this.state.isVisible) {
 			this.setState({
@@ -111,8 +110,8 @@ class NavBar extends React.Component {
 
 	render() {
 		return <div className="navbar-extras">
-			<Toast className="navbarconsistent centered" pose={this.state.isVisible ? `shown` : `hidden`}>
-				<a href={`/`}>
+			<Toast className="navbarconsistent centered" pose={this.state.isVisible ? 'shown' : 'hidden'}>
+				<a href={"/"}>
 					<img src={logo} />
 				</a>
 				<div className="logoTextWhite"><div>UCL API</div></div>
@@ -126,7 +125,7 @@ class NavBar extends React.Component {
 				</div>
 			</Toast>
 			{this.state.isSmall ? (
-				<SlideDown className="link-titles-menu" pose={this.state.isMenuHidden ? `hidden` : `shown`}>
+				<SlideDown className="link-titles-menu" pose={this.state.isMenuHidden ? 'hidden' : 'shown'}>
 					{links.map((s, key) => <Link key={key} name={s.name} src={s.src} link={s.link} />)}
 				</SlideDown>
 			) : null}
@@ -134,4 +133,4 @@ class NavBar extends React.Component {
 	}
 }
 
-export default NavBar
+export default NavBar;

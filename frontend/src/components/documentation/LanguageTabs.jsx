@@ -1,5 +1,5 @@
-import { Tab,Tabs } from 'material-ui/Tabs'
-import React from 'react'
+import React from 'react';
+import { Tabs, Tab } from 'material-ui/Tabs';
 
 
 /*
@@ -12,10 +12,10 @@ import React from 'react'
 export default class LanguageTabs extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
-      activeLanguage: `python`,
+      activeLanguage: "python"
     }
   }
 
@@ -25,7 +25,7 @@ export default class LanguageTabs extends React.Component {
 
   renderChildren = (props) => React.Children.map(props.children, (child, i) =>
     React.cloneElement(child, {
-      activeLanguage: this.state.activeLanguage,
+      activeLanguage: this.state.activeLanguage
     })
   )
 
@@ -40,22 +40,18 @@ export default class LanguageTabs extends React.Component {
             <div className="col">
               <Tabs
                 value={this.state.activeLanguage}
-                onChange={this.changeActiveLanguage}
-              >
+                onChange={this.changeActiveLanguage}>
                 <Tab
                   label="Python"
-                  value="python"
-                >
+                  value="python">
                 </Tab>
                 <Tab
                   label="JavaScript"
-                  value="javascript"
-                >
+                  value="javascript">
                 </Tab>
                 <Tab
                   label="Shell"
-                  value="shell"
-                >
+                  value="shell">
                 </Tab>
               </Tabs>
             </div>
@@ -66,7 +62,7 @@ export default class LanguageTabs extends React.Component {
           {this.renderChildren(this.props)}
         </div>
       </div>
-    )
+    );
   }
 
 }

@@ -12,8 +12,8 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props)
     window.initialData.apps.sort((a, b) => {
-      const dateA = dayjs(a.created)
-      const dateB = dayjs(b.created)
+      let dateA = dayjs(a.created)
+      let dateB = dayjs(b.created)
 
       if (dateA.isBefore(dateB)) {
         return -1

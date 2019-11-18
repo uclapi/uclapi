@@ -1,7 +1,6 @@
-import PropTypes from 'prop-types'
-import React from 'react'
-
-import AuthAppRow from './authapprow.jsx'
+import React from 'react';
+import PropTypes from 'prop-types';
+import AuthAppRow from './authapprow.jsx';
 
 class UserApps extends React.Component {
   render () {
@@ -25,18 +24,18 @@ class UserApps extends React.Component {
                 app_id={app.app.id}
                 app_client_id={app.app.client_id}
                 key={i}
-                     />
+              />;
           })}
         </div>
       </div>
-    </div>
+    </div>;
   }
 }
 
 UserApps.propTypes = {
   fullname: PropTypes.string,
   department: PropTypes.string,
-  authorised_apps: PropTypes.array,
-}
+  authorised_apps: PropTypes.array
+};
 
-export default UserApps
+export default UserApps;

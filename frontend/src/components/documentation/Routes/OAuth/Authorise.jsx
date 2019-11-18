@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-import Cell from './../../Cell.jsx'
-import Table from './../../Table.jsx'
-import Topic from './../../Topic.jsx'
+import Topic from './../../Topic.jsx';
+import Table from './../../Table.jsx';
+import Cell from './../../Cell.jsx';
 
 
-const codeExamples = {
+let codeExamples = {
   python: `import requests
 
 params = {
@@ -25,7 +25,7 @@ print(r.json())`,
 })
 .then((json) => {
   console.log(json);
-})`,
+})`
 }
 
 
@@ -36,34 +36,29 @@ export default class Authorise extends React.Component {
         <div>
           <Topic
             activeLanguage={this.props.activeLanguage}
-            codeExamples={codeExamples}
-          >
+            codeExamples={codeExamples}>
             <h1 id="oauth/authorise">Authorise</h1>
             <p>
               Endpoint: <code>https://uclapi.com/oauth/authorise</code>
             </p>
 
             <Table
-              name="Query Parameters"
-            >
+              name="Query Parameters">
               <Cell
                 name="client_id"
                 requirement="required"
                 example="123.456"
-                description="Client ID of the authenticating app."
-              />
+                description="Client ID of the authenticating app." />
               <Cell
                 name="state"
                 requirement="required"
                 example="1"
-                description="OAuth state."
-              />
+                description="OAuth state." />
             </Table>
           </Topic>
 
           <Topic
-            noExamples
-          >
+            noExamples={true}>
             <h2>Response</h2>
             <p>
               Redirection to authorise page.
@@ -71,27 +66,21 @@ export default class Authorise extends React.Component {
           </Topic>
 
           <Topic
-            noExamples
-          >
+            noExamples={true}>
             <Table
-              name="Errors"
-            >
+              name="Errors">
               <Cell
                 name="Incorrect parameters supplied."
-                description="Gets returned when you have not supplied a client_id and a state in your request."
-              />
+                description="Gets returned when you have not supplied a client_id and a state in your request." />
               <Cell
                 name="App does not exist for client id."
-                description="Gets returned when you supply an invalid client_id."
-              />
+                description="Gets returned when you supply an invalid client_id." />
               <Cell
                 name="No callback URL set for this app."
-                description="Gets returned when you have not set a callback URL for your app."
-              />
+                description="Gets returned when you have not set a callback URL for your app." />
               <Cell
                 name="UCL has sent incomplete headers"
-                description="Gets returned when UCL sends us incomplete headers. If the issues persist please contact the UCL API Team to rectify this."
-              />
+                description="Gets returned when UCL sends us incomplete headers. If the issues persist please contact the UCL API Team to rectify this." />
               </Table>
           </Topic>
         </div>

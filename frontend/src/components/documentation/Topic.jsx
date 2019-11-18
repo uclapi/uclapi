@@ -1,13 +1,13 @@
-import React from 'react'
-import { Light as SyntaxHighlighter } from 'react-syntax-highlighter'
-import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript'
-import py from 'react-syntax-highlighter/dist/esm/languages/hljs/python'
-import sh from 'react-syntax-highlighter/dist/esm/languages/hljs/shell'
-import { androidstudio } from 'react-syntax-highlighter/dist/esm/styles/hljs'
+import React from 'react';
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript';
+import py from 'react-syntax-highlighter/dist/esm/languages/hljs/python';
+import sh from 'react-syntax-highlighter/dist/esm/languages/hljs/shell';
+import { androidstudio } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
-SyntaxHighlighter.registerLanguage(`javascript`, js)
-SyntaxHighlighter.registerLanguage(`python`, py)
-SyntaxHighlighter.registerLanguage(`shell`, sh)
+SyntaxHighlighter.registerLanguage('javascript', js);
+SyntaxHighlighter.registerLanguage('python', py);
+SyntaxHighlighter.registerLanguage('shell', sh);
 
 /*
   This is the main component that contains content for the documentation.
@@ -26,10 +26,10 @@ SyntaxHighlighter.registerLanguage(`shell`, sh)
   link in the sidebar, it takes you to the Topic component
 */
 
-const customStyle = {
-  'background': `#272B2D`,
-  'borderRadius': `8px`,
-  'padding': `12px`,
+let customStyle = {
+  'background': "#272B2D",
+  'borderRadius': "8px",
+  'padding': "12px"
 }
 
 export default class Topic extends React.Component {
@@ -58,8 +58,7 @@ export default class Topic extends React.Component {
               <SyntaxHighlighter
                 language={this.props.activeLanguage}
                 style={androidstudio}
-                customStyle={customStyle}
-              >
+                customStyle={customStyle}>
                 {this.props.codeExamples[
                   this.props.activeLanguage
                 ]}
@@ -68,7 +67,7 @@ export default class Topic extends React.Component {
           }
         </div>
       </div>
-    )
+    );
   }
 
 }

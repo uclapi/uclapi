@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-import Cell from './../../Cell.jsx'
-import Table from './../../Table.jsx'
-import Topic from './../../Topic.jsx'
+import Topic from './../../Topic.jsx';
+import Table from './../../Table.jsx';
+import Cell from './../../Cell.jsx';
 
 
-const codeExamples = {
+let codeExamples = {
   python: `import requests
 
 params = {
@@ -25,18 +25,18 @@ print(r.json())`,
 })
 .then((json) => {
   console.log(json);
-})`,
+})`
 }
 
-const response = `{
+let response = `{
     "ok": true,
     "student_number": "123456789"
 }`
 
-const responseCodeExample = {
+let responseCodeExample = {
   python: response,
   javascript: response,
-  shell: response,
+  shell: response
 }
 
 
@@ -47,8 +47,7 @@ export default class StudentNumber extends React.Component {
         <div>
           <Topic
             activeLanguage={this.props.activeLanguage}
-            codeExamples={codeExamples}
-          >
+            codeExamples={codeExamples}>
             <h1 id="oauth/user/studentnumber">Student Number</h1>
             <p>
               Endpoint: <code>https://uclapi.com/oauth/user/studentnumber</code>
@@ -61,58 +60,47 @@ export default class StudentNumber extends React.Component {
             </p>
 
             <Table
-              name="Query Parameters"
-            >
+              name="Query Parameters">
               <Cell
                 name="token"
                 requirement="required"
                 example="uclapi-user-abd-def-ghi-jkl"
-                description="OAuth user token."
-              />
+                description="OAuth user token." />
               <Cell
                 name="client_secret"
                 requirement="required"
                 example="secret"
-                description="Client ID of the authenticating app."
-              />
+                description="Client ID of the authenticating app." />
             </Table>
           </Topic>
 
           <Topic
             activeLanguage={this.props.activeLanguage}
-            codeExamples={responseCodeExample}
-          >
+            codeExamples={responseCodeExample}>
             <h2>Response</h2>
             <Table
-              name="Response"
-            >
+              name="Response">
             <Cell
               name="student_number"
               extra="string"
               example="123456789"
-              description="The user's student number. This may be prefixed with a 0 so should be treated as a string, even though it is made up only of digits. The maximum possible length is 12 digits."
-            />
+              description="The user's student number. This may be prefixed with a 0 so should be treated as a string, even though it is made up only of digits. The maximum possible length is 12 digits." />
             </Table>
           </Topic>
 
           <Topic
-            noExamples
-          >
+            noExamples={true}>
             <Table
-              name="Errors"
-            >
+              name="Errors">
               <Cell
                 name="Token does not exist."
-                description="Gets returned when token does not exist."
-              />
+                description="Gets returned when token does not exist." />
               <Cell
                 name="Client secret incorrect."
-                description="Gets returned when the client secret was incorrect."
-              />
+                description="Gets returned when the client secret was incorrect." />
               <Cell
                 name="User is not a student."
-                description="The user is not a student, and therefore has no student number that can be returned."
-              />
+                description="The user is not a student, and therefore has no student number that can be returned." />
             </Table>
           </Topic>
         </div>

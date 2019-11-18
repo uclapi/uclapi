@@ -1,5 +1,5 @@
-import Collapse, { Panel } from 'rc-collapse'
-import React from 'react'
+import React from 'react';
+import Collapse, { Panel } from 'rc-collapse';
 
 export default class QandA extends React.Component {
 	render() {
@@ -9,6 +9,6 @@ export default class QandA extends React.Component {
 					<p>{this.props.answer}</p>
 				</Panel>
 			</Collapse>
-		)
+		);
 	}
 }

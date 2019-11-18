@@ -1,11 +1,9 @@
-// Legacy
-import 'Styles/navbar.scss'
-
-import PropTypes from 'prop-types'
-import React from 'react'
-
+import React from 'react';
+import PropTypes from 'prop-types';
 // Common Components
-import { NavBar } from 'Layout/Items.jsx'
+import { NavBar } from 'Layout/Items.jsx';
+// Legacy
+import 'Styles/navbar.scss';
 
 class Layout extends React.Component {
   render () {
@@ -18,12 +16,12 @@ class Layout extends React.Component {
         </div>
         <div className="pure-u-md-1-4"></div>
       </div>
-    </div>
+    </div>;
   }
 }
 
 Layout.propTypes = {
-  children: PropTypes.node,
-}
+  children: PropTypes.node
+};
 
-export default Layout
+export default Layout;

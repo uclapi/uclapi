@@ -1,19 +1,19 @@
-import Paper from 'material-ui/Paper'
-import React from 'react'
+import React from 'react';
+import Paper from 'material-ui/Paper';
 
 
 export default class API extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = { shadow: 1 }
   }
 
   onMouseOver = () => {
-    this.setState({ shadow: 3 })
+    this.setState({ shadow: 3 });
   }
 
   onMouseOut = () => {
-    this.setState({ shadow: 1 })
+    this.setState({ shadow: 1 });
   }
 
   render() {

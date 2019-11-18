@@ -1,10 +1,10 @@
-import React from 'react'
+import React from 'react';
 
-import Cell from './../../Cell.jsx'
-import Table from './../../Table.jsx'
-import Topic from './../../Topic.jsx'
+import Topic from './../../Topic.jsx';
+import Table from './../../Table.jsx';
+import Cell from './../../Cell.jsx';
 
-const codeExamples = {
+let codeExamples = {
     python: `import requests
 
 params = {
@@ -28,10 +28,10 @@ print(r.json())`,
 })
 .then((json) => {
   console.log(json);
-})`,
+})`
 }
 
-const response = `{
+let response = `{
     "surveys": [
         {
             "name": "UCL Cruciform Hub",
@@ -97,10 +97,10 @@ const response = `{
     "ok": true
 }`
 
-const responseCodeExample = {
+let responseCodeExample = {
     python: response,
     javascript: response,
-    shell: response,
+    shell: response
 }
 
 export default class WorkspacesGetSensorsSummary extends React.Component {
@@ -108,9 +108,8 @@ export default class WorkspacesGetSensorsSummary extends React.Component {
         return (
             <div>
                 <Topic
-                  activeLanguage={this.props.activeLanguage}
-                  codeExamples={codeExamples}
-                >
+                    activeLanguage={this.props.activeLanguage}
+                    codeExamples={codeExamples}>
                     <h1 id="workspaces/sensors/summary">Get Survey Sensors Summary</h1>
                     <p>
                         Endpoint: <code>https://uclapi.com/workspaces/sensors/summary</code>
@@ -123,33 +122,28 @@ export default class WorkspacesGetSensorsSummary extends React.Component {
                     </p>
 
                     <Table
-                      name="Query Parameters"
-                    >
+                        name="Query Parameters">
                         <Cell
-                          name="token"
-                          requirement="required"
-                          example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
-                          description="Authentication token."
-                        />
+                            name="token"
+                            requirement="required"
+                            example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
+                            description="Authentication token." />
                         <Cell
-                          name="survey_ids"
-                          requirement="optional"
-                          example="46,45"
-                          description="A comma delimited list of Survey IDs. If this parameter is not supplied, summary data for every survey is returned."
-                        />
+                            name="survey_ids"
+                            requirement="optional"
+                            example="46,45"
+                            description="A comma delimited list of Survey IDs. If this parameter is not supplied, summary data for every survey is returned." />
                         <Cell
-                          name="survey_filter"
-                          requirement="optional"
-                          example="student"
-                          description="Filter the surveys based on who they are designed for. Valid values of this parameter are `all` (no filtering), `student` (return only student surveys; this is the default) and `staff` (return only surveys representing work areas for UCL staff only). It is recommended that the default (student) is used in apps aimed at students, unless a specific reason to include a staff workspace is required."
-                        />
+                            name="survey_filter"
+                            requirement="optional"
+                            example="student"
+                            description="Filter the surveys based on who they are designed for. Valid values of this parameter are `all` (no filtering), `student` (return only student surveys; this is the default) and `staff` (return only surveys representing work areas for UCL staff only). It is recommended that the default (student) is used in apps aimed at students, unless a specific reason to include a staff workspace is required." />
                     </Table>
                 </Topic>
 
                 <Topic
-                  activeLanguage={this.props.activeLanguage}
-                  codeExamples={responseCodeExample}
-                >
+                    activeLanguage={this.props.activeLanguage}
+                    codeExamples={responseCodeExample}>
                     <h2>Response</h2>
                     <p>
                         This endpoint will return a list with every survey requested, and its associated maps. Within each map is a count of absent (e.g. free) and occupied seats. The endpoint also returns the total number of seats in each library that are absent or occupied.
@@ -158,12 +152,11 @@ export default class WorkspacesGetSensorsSummary extends React.Component {
                         If your application or integration is designed to inform students of the total number of free seats in a library please ensure you use the survey total figures. This is because many sensors have not yet been assigned to maps on our data provider's system which means that relying only on map counts will leave many seats unaccounted for. We are actively working with our data provider to rectify this, and we apologise for any inconvenience caused.
                     </p>
                     <Table
-                      name="Response"
-                    >
+                        name="Response">
                         <Cell
-                          name="surveys"
-                          extra="list"
-                          example={`
+                            name="surveys"
+                            extra="list"
+                            example={`
                                 [
                                     {
                                         "name": "UCL Cruciform Hub",
@@ -185,43 +178,37 @@ export default class WorkspacesGetSensorsSummary extends React.Component {
                                     ...
                                 ]
                             `}
-                          description="A list of survey objects, each of which contains a list of maps with associated sensor counts, as well as library sensor totals."
-                        />
+                            description="A list of survey objects, each of which contains a list of maps with associated sensor counts, as well as library sensor totals." />
 
                         <Cell
-                          name="surveys[n][name]"
-                          extra="string"
-                          example="UCL Cruciform Hub"
-                          description="The name of the survey (library)."
-                        />
+                            name="surveys[n][name]"
+                            extra="string"
+                            example="UCL Cruciform Hub"
+                            description="The name of the survey (library)." />
                         <Cell
-                          name="surveys[n][id]"
-                          extra="integer"
-                          example="72"
-                          description="The survey's ID."
-                        />
+                            name="surveys[n][id]"
+                            extra="integer"
+                            example="72"
+                            description="The survey's ID." />
                         <Cell
-                          name="surveys[n][sensors_absent]"
-                          extra="integer"
-                          example="219"
-                          description="Number of free seats in the whole library, including all rooms and floors."
-                        />
+                            name="surveys[n][sensors_absent]"
+                            extra="integer"
+                            example="219"
+                            description="Number of free seats in the whole library, including all rooms and floors." />
                         <Cell
-                          name="surveys[n][sensors_occupied]"
-                          extra="integer"
-                          example="104"
-                          description="Number of taken / occupied seats in the whole library, including all rooms and floors."
-                        />
+                            name="surveys[n][sensors_occupied]"
+                            extra="integer"
+                            example="104"
+                            description="Number of taken / occupied seats in the whole library, including all rooms and floors." />
                         <Cell
-                          name="surveys[n][sensors_other]"
-                          extra="integer"
-                          example="0"
-                          description="Number of library seats with an unknown status. This is usually zero."
-                        />
+                            name="surveys[n][sensors_other]"
+                            extra="integer"
+                            example="0"
+                            description="Number of library seats with an unknown status. This is usually zero." />
                         <Cell
-                          name="surveys[n][maps]"
-                          extra="list"
-                          example={`
+                            name="surveys[n][maps]"
+                            extra="list"
+                            example={`
                                 [
                                     {
                                         "name": "Open Area",
@@ -233,38 +220,32 @@ export default class WorkspacesGetSensorsSummary extends React.Component {
                                     ...
                                 ]
                             `}
-                          description="A list of objects representing maps (regions), each of which has a sensor summary."
-                        />
+                            description="A list of objects representing maps (regions), each of which has a sensor summary." />
                         <Cell
-                          name="surveys[n][maps][n][name]"
-                          extra="string"
-                          example="Open Area"
-                          description="Name of the library region (map)."
-                        />
+                            name="surveys[n][maps][n][name]"
+                            extra="string"
+                            example="Open Area"
+                            description="Name of the library region (map)." />
                         <Cell
-                          name="surveys[n][maps][n][id]"
-                          extra="integer"
-                          example="72"
-                          description="ID of the library region (map)."
-                        />
+                            name="surveys[n][maps][n][id]"
+                            extra="integer"
+                            example="72"
+                            description="ID of the library region (map)." />
                         <Cell
-                          name="surveys[n][maps][n][sensors_absent]"
-                          extra="integer"
-                          example="47"
-                          description="Number of free seats in that section of the library."
-                        />
+                            name="surveys[n][maps][n][sensors_absent]"
+                            extra="integer"
+                            example="47"
+                            description="Number of free seats in that section of the library." />
                         <Cell
-                          name="surveys[n][maps][n][sensors_occupied]"
-                          extra="integer"
-                          example="64"
-                          description="Number of taken / occupied seats in that section of the library."
-                        />
+                            name="surveys[n][maps][n][sensors_occupied]"
+                            extra="integer"
+                            example="64"
+                            description="Number of taken / occupied seats in that section of the library." />
                         <Cell
-                          name="surveys[n][maps][n][sensors_other]"
-                          extra="integer"
-                          example="0"
-                          description="Number of seats with an unknown status. This is usually zero."
-                        />
+                            name="surveys[n][maps][n][sensors_other]"
+                            extra="integer"
+                            example="0"
+                            description="Number of seats with an unknown status. This is usually zero." />
                     </Table>
                 </Topic>
             </div>

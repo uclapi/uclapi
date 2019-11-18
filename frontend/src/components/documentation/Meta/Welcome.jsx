@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 
-import Topic from './../Topic.jsx'
+import Topic from './../Topic.jsx';
 
 
 export default class Welcome extends React.Component {
@@ -8,8 +8,7 @@ export default class Welcome extends React.Component {
     render () {
       return (
         <Topic
-          noExamples
-        >
+          noExamples={true}>
           <h1 id="welcome">Welcome</h1>
           <p>Yay, you made it! 🎉</p>
 

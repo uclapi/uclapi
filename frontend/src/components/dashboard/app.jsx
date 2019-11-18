@@ -1,68 +1,67 @@
-import 'whatwg-fetch'
+import React from 'react';
+import 'whatwg-fetch';
+import PropTypes from 'prop-types';
+import Collapse, { Panel } from 'rc-collapse';
+import { StyleSheet, css } from 'aphrodite';
 
-import { css,StyleSheet } from 'aphrodite'
-import PropTypes from 'prop-types'
-import Collapse, { Panel } from 'rc-collapse'
-import React from 'react'
-
-import AppNameField from './app/AppNameField.jsx'
-import defaultHeaders from './app/defaultHeaders.js'
-import DeleteButton from './app/DeleteButton.jsx'
-import OAuth from './app/OAuth.jsx'
-import Webhook from './app/Webhook.jsx'
-import { CopyActionField } from './copyField.jsx'
-import RelativeDate from './relativeDate.jsx'
+import { CopyActionField } from './copyField.jsx';
+import RelativeDate from './relativeDate.jsx';
+import AppNameField from './app/AppNameField.jsx';
+import DeleteButton from './app/DeleteButton.jsx';
+import defaultHeaders from './app/defaultHeaders.js';
+import OAuth from './app/OAuth.jsx';
+import Webhook from './app/Webhook.jsx';
 
 const styles = StyleSheet.create({
   timestamps: {
-    margin: `10px 0`,
-  },
-})
+    margin: '10px 0',
+  }
+});
 
 class App extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      error: ``,
-    }
+      error: '',
+    };
   }
 
   setError = (msg) => {
     this.setState({
-      error: msg,
-    })
-    setTimeout(() => { this.setState({ error: `` }) }, 5000)
+      error: msg
+    });
+    setTimeout(() => { this.setState({ error: '' }); }, 5000);
   }
 
   regenToken = () => {
-    const that = this
-    fetch(`/dashboard/api/regen/`, {
-      method: `POST`,
-      credentials: `include`,
+    let that = this;
+    fetch('/dashboard/api/regen/', {
+      method: 'POST',
+      credentials: 'include',
       headers: defaultHeaders,
-      body: `app_id=` + this.props.appId,
+      body: 'app_id=' + this.props.appId
     }).then((res) => {
-      if (res.ok) { return res.json() }
-      throw new Error(`Unable to regen token.`)
+      if (res.ok) { return res.json(); }
+      throw new Error('Unable to regen token.');
     }).then((json) => {
       if (json.success) {
-        const values = {
+        let values = {
           token: json.app.token,
-          updated: json.app.date,
-        }
-        this.props.update(that.props.appId, values)
-        return
+          updated: json.app.date
+        };
+        this.props.update(that.props.appId, values);
+        return;
       }
-      throw new Error(json.message)
+      throw new Error(json.message);
     }).catch((err) => {
-      this.setError(err.message)
-    })
+      this.setError(err.message);
+    });
   }
 
   regenConfirm = (e) => {
-    e.preventDefault()
-    if (confirm(`Are you sure you want to regenerate your api token?`)) {
-      this.regenToken()
+    e.preventDefault();
+    if (confirm('Are you sure you want to regenerate your api token?')) {
+      this.regenToken();
     }
   }
 
@@ -79,7 +78,7 @@ class App extends React.Component {
             />
           </div>
           <div className="pure-u-1-2">
-            <div style={{ float: `right` }}>
+            <div style={{ float: 'right' }}>
               <DeleteButton
                 appId={this.props.appId}
                 remove={this.props.remove}
@@ -100,8 +99,8 @@ class App extends React.Component {
           </div>
         </div>
         <div className={css(styles.timestamps)}>
-          <RelativeDate date={this.props.created} label={`Created: `} />
-          <RelativeDate date={this.props.updated} label={`Last Updated: `} />
+          <RelativeDate date={this.props.created} label={'Created: '} />
+          <RelativeDate date={this.props.updated} label={'Last Updated: '} />
         </div>
         <Collapse>
           <Panel header="OAuth Settings" showArrow>
@@ -126,7 +125,7 @@ class App extends React.Component {
         </Collapse>
         <label className="error">{this.state.error}</label>
       </div>
-    </div>
+    </div>;
   }
 }
 
@@ -147,10 +146,10 @@ App.propTypes = {
     client_id: PropTypes.string,
     client_secret: PropTypes.string,
     callback_url: PropTypes.string,
-    scopes: PropTypes.arrayOf(PropTypes.object),
+    scopes: PropTypes.arrayOf(PropTypes.object)
   }),
   update: PropTypes.func,
   remove: PropTypes.func,
-}
+};
 
-export { App }
+export { App };

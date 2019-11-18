@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-import Cell from './../../Cell.jsx'
-import Table from './../../Table.jsx'
-import Topic from './../../Topic.jsx'
+import Topic from './../../Topic.jsx';
+import Table from './../../Table.jsx';
+import Cell from './../../Cell.jsx';
 
 
-const codeExamples = {
+let codeExamples = {
   python: `import requests
 
 params = {
@@ -27,10 +27,10 @@ print(r.json())`,
 })
 .then((json) => {
   console.log(json);
-})`,
+})`
 }
 
-const response = `{
+let response = `{
     "scope": "[]",
     "state": "1",
     "ok": true,
@@ -39,10 +39,10 @@ const response = `{
 }
 `
 
-const responseCodeExample = {
+let responseCodeExample = {
   python: response,
   javascript: response,
-  shell: response,
+  shell: response
 }
 
 
@@ -53,8 +53,7 @@ export default class Token extends React.Component {
       <div>
         <Topic
           activeLanguage={this.props.activeLanguage}
-          codeExamples={codeExamples}
-        >
+          codeExamples={codeExamples}>
           <h1 id="oauth/token">Token</h1>
           <p>
             Endpoint: <code>https://uclapi.com/oauth/token</code>
@@ -111,33 +110,28 @@ export default class Token extends React.Component {
           </p>
 
           <Table
-            name="Query Parameters"
-          >
+            name="Query Parameters">
             <Cell
               name="client_id"
               requirement="required"
               example="123.456"
-              description="Client ID of the authenticating app."
-            />
+              description="Client ID of the authenticating app." />
             <Cell
               name="code"
               requirement="required"
               example="mysecretcode"
-              description="Secret code obtained from the authorise endpoint."
-            />
+              description="Secret code obtained from the authorise endpoint." />
             <Cell
               name="client_secret"
               requirement="required"
               example="mysecret"
-              description="Client secret of the authenticating app."
-            />
+              description="Client secret of the authenticating app." />
           </Table>
         </Topic>
 
         <Topic
           activeLanguage={this.props.activeLanguage}
-          codeExamples={responseCodeExample}
-        >
+          codeExamples={responseCodeExample}>
           <h2>Response</h2>
           <p>
             Redirection to authorise page.
@@ -145,23 +139,18 @@ export default class Token extends React.Component {
         </Topic>
 
         <Topic
-          noExamples
-        >
+          noExamples={true}>
           <Table
-            name="Errors"
-          >
+            name="Errors">
             <Cell
               name="The client did not provide requisite data to get the token."
-              description="Gets returned when you have not supplied a client_id, code, client_secret in your request."
-            />
+              description="Gets returned when you have not supplied a client_id, code, client_secret in your request." />
             <Cell
               name="The code received was invalid, or has expired. Please try again."
-              description="As error message."
-            />
+              description="As error message." />
             <Cell
               name="Client secret incorrect."
-              description="Gets returned when the client secret was incorrect."
-            />
+              description="Gets returned when the client secret was incorrect." />
           </Table>
         </Topic>
       </div>

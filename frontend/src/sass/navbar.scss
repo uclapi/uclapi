@@ -39,7 +39,7 @@ $navbarHeight: 60px;
   @include boxShadow(1);
 
   img {
-    height: $navbarHeight - 15px;
+    height: $navbarHeight - 15px;;
     margin-left: 25px;
   }
   .logoTextWhite {

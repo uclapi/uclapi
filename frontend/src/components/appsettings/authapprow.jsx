@@ -1,22 +1,23 @@
-import Button from '@material-ui/core/Button'
-import axios from 'axios'
-import PropTypes from 'prop-types'
-import React from 'react'
+import React from 'react';
+import PropTypes from 'prop-types';
+import axios from 'axios';
+
+import Button from '@material-ui/core/Button';
 
 class AuthAppRow extends React.Component {
   constructor (props) {
-    super(props)
+    super(props);
     this.state = {
       app: props.app,
-      isVisible: true,
-    }
-    this.handleChange = this.handleChange.bind(this)
-    this.deauthoriseApp = this.deauthoriseApp.bind(this)
+      isVisible: true
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.deauthoriseApp = this.deauthoriseApp.bind(this);
   }
 
   render () {
-    this.button_text = `Revoke Permissions`
-    if(!this.state.isVisible) {this.button_text=`App Disabled`}
+    this.button_text = "Revoke Permissions"
+    if(!this.state.isVisible) {this.button_text="App Disabled"}
 
     return <div className="auth-app">
             <div className="app-information">
@@ -26,33 +27,32 @@ class AuthAppRow extends React.Component {
 
             <div className="app-permission-box">
               <Button disabled={!this.state.isVisible}
-                size="medium" 
-                color="primary"
-                onClick={this.handleChange}
-              >
+                      size="medium" 
+                      color="primary"
+                      onClick={this.handleChange}>
                 {this.button_text}
               </Button>
             </div>
-          </div>
+          </div>;
   }
 
   handleChange (event, checked) {
       // Add toast to confirm deauthorisation
-      if(confirm(`Are you sure you want to deauthorise this app?`)){
-        this.deauthoriseApp()
+      if(confirm('Are you sure you want to deauthorise this app?')){
+        this.deauthoriseApp();
       }
   }
 
   deauthoriseApp() {
       // Call function in back end to delete scope
-      axios.get(`/oauth/deauthorise`, {
+      axios.get('/oauth/deauthorise', {
         params: {
-          client_id: this.props.app_client_id,
+          client_id: this.props.app_client_id
         },
-        xsrfHeaderName: `X-CSRFToken`,
+        xsrfHeaderName: "X-CSRFToken",
       }).then(response => {
           // Log success in console
-          console.log(`Successfully de-authorised app: `)
+          console.log("Successfully de-authorised app: ")
           console.log(response)
 
           this.setState({
@@ -60,7 +60,7 @@ class AuthAppRow extends React.Component {
           })
       }).catch(error => {
           // Handle error
-          console.log(error)
+          console.log(error);
       })
   }
 
@@ -70,7 +70,7 @@ AuthAppRow.propTypes = {
   app_name: PropTypes.string,
   app_created: PropTypes.string,
   app_is_auth: PropTypes.bool,
-  app_id: PropTypes.string,
-}
+  app_id: PropTypes.string
+};
 
-export default AuthAppRow
+export default AuthAppRow;

@@ -1,10 +1,10 @@
-import React from 'react'
+import React from 'react';
 
-import signInButton from './../../../../images/signInWithUCLAPI.png'
-import Topic from './../../Topic.jsx'
+import Topic from './../../Topic.jsx';
+import signInButton from './../../../../images/signInWithUCLAPI.png';
 
 
-const codeExamples = {
+let codeExamples = {
   python: `<a href="https://uclapi.com/oauth/authorise?client_id=CLIENT_ID&state=STATE">
 <img src="https://s3.eu-west-2.amazonaws.com/uclapi-static/SignInWithUCLSmall.png">
 </a>`,
@@ -15,7 +15,7 @@ const codeExamples = {
 
   javascript: `<a href="https://uclapi.com/oauth/authorise?client_id=CLIENT_ID&state=STATE">
 <img src="https://s3.eu-west-2.amazonaws.com/uclapi-static/SignInWithUCLSmall.png">
-</a>`,
+</a>`
 }
 
 
@@ -25,8 +25,7 @@ export default class OAuthIntro extends React.Component {
       return (
         <Topic
           activeLanguage={this.props.activeLanguage}
-          codeExamples={codeExamples}
-        >
+          codeExamples={codeExamples}>
           <p id="oauth/meta">This is a quick guide to OAuth support in UCL API for developers. OAuth is a protocol that lets external apps request secure access to private UCL account data without getting your password. This can be done with a “Sign In With UCL” button on your website which avoids UCL users from needing to set up another account username and password. It also allows you as a developer to, for example, get a user’s personal timetable.</p>
           <p>Sounds intriguing? Demo of “Sign In With UCL” is located <a href="https://uclapi-oauth-demo.glitch.me/">here</a></p>
 
@@ -35,7 +34,7 @@ export default class OAuthIntro extends React.Component {
             If you want to add a “Sign In With UCL” button to your website, which looks like this:
           </p>
 
-          <img width={`100%`} src={signInButton}/>
+          <img width={"100%"} src={signInButton}/>
 
           <p>
             you can copy the following the following code: <br />

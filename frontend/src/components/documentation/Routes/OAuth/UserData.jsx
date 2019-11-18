@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-import Cell from './../../Cell.jsx'
-import Table from './../../Table.jsx'
-import Topic from './../../Topic.jsx'
+import Topic from './../../Topic.jsx';
+import Table from './../../Table.jsx';
+import Cell from './../../Cell.jsx';
 
 
-const codeExamples = {
+let codeExamples = {
   python: `import requests
 
 params = {
@@ -25,10 +25,10 @@ print(r.json())`,
 })
 .then((json) => {
   console.log(json);
-})`,
+})`
 }
 
-const response = `{
+let response = `{
     "department": "Dept of Department",
     "email": "xxxxxxx@ucl.ac.uk",
     "ok": true,
@@ -40,10 +40,10 @@ const response = `{
     "is_student": true
 }`
 
-const responseCodeExample = {
+let responseCodeExample = {
   python: response,
   javascript: response,
-  shell: response,
+  shell: response
 }
 
 
@@ -54,110 +54,91 @@ export default class UserData extends React.Component {
         <div>
           <Topic
             activeLanguage={this.props.activeLanguage}
-            codeExamples={codeExamples}
-          >
+            codeExamples={codeExamples}>
             <h1 id="oauth/user/data">User Data</h1>
             <p>
               Endpoint: <code>https://uclapi.com/oauth/user/data</code>
             </p>
 
             <Table
-              name="Query Parameters"
-            >
+              name="Query Parameters">
               <Cell
                 name="token"
                 requirement="required"
                 example="uclapi-user-abd-def-ghi-jkl"
-                description="OAuth user token."
-              />
+                description="OAuth user token." />
               <Cell
                 name="client_secret"
                 requirement="required"
                 example="secret"
-                description="Client ID of the authenticating app."
-              />
+                description="Client ID of the authenticating app." />
             </Table>
           </Topic>
 
           <Topic
             activeLanguage={this.props.activeLanguage}
-            codeExamples={responseCodeExample}
-          >
+            codeExamples={responseCodeExample}>
             <h2>Response</h2>
             <Table
-              name="Response"
-            >
+              name="Response">
             <Cell
               name="ok"
               extra="boolean"
               example="true"
-              description="Returns if the query was successful."
-            />
+              description="Returns if the query was successful." />
             <Cell
               name="email"
               extra="string"
               example="zcabmrk@ucl.ac.uk"
-              description="E-mail for the given user."
-            />
+              description="E-mail for the given user." />
             <Cell
               name="full_name"
               extra="string"
               example="Martin Mrkvicka"
-              description="Full name of the user. Can be an empty string."
-            />
+              description="Full name of the user. Can be an empty string." />
             <Cell
               name="department"
               extra="string"
               example="Dept Of Computer Science"
-              description="Department the user belongs to. Can be an empty string."
-            />
+              description="Department the user belongs to. Can be an empty string." />
             <Cell
               name="cn"
               extra="string"
               example="zcabmrk"
-              description="UCL username of the given user."
-            />
+              description="UCL username of the given user." />
             <Cell
               name="given_name"
               extra="string"
               example="Martin"
-              description="Given first name of the user. Can be an empty string."
-            />
+              description="Given first name of the user. Can be an empty string." />
             <Cell
               name="upi"
               extra="string"
               example="mmrkv12"
-              description="Unique Person Identifier."
-            />
+              description="Unique Person Identifier." />
             <Cell
               name="scope_number"
               extra="int"
               example="0"
-              description="Scopes the application has access to on behalf of the user."
-            />
+              description="Scopes the application has access to on behalf of the user." />
             <Cell
               name="is_student"
               extra="boolean"
               example="true"
-              description="Whether the user is a student in this academic year."
-            />
+              description="Whether the user is a student in this academic year." />
             </Table>
           </Topic>
 
           <Topic
-            noExamples
-          >
+            noExamples={true}>
             <Table
-              name="Errors"
-            >
+              name="Errors">
               <Cell
                 name="Token does not exist."
-                description="Gets returned when token does not exist."
-              />
+                description="Gets returned when token does not exist." />
               <Cell
                 name="Client secret incorrect."
-                description="Gets returned when the client secret was incorrect."
-              />
+                description="Gets returned when the client secret was incorrect." />
             </Table>
           </Topic>
         </div>
