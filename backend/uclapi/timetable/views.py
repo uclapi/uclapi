@@ -56,19 +56,15 @@ def get_modules_timetable_endpoint(request, *args, **kwargs):
     Returns a timetabe for a module or set of modules.
     """
     module_ids = request.GET.get("modules")
-    if module_ids is None:
-        return JsonResponse({
+    if module_ids is None or module_ids == '':
+        response = JsonResponse({
             "ok": False,
             "error": "No module IDs provided."
         }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
 
-    try:
-        modules = module_ids.split(',')
-    except ValueError:
-        return JsonResponse({
-            "ok": False,
-            "error": "Invalid module IDs provided."
-        }, custom_header_data=kwargs)
+    modules = module_ids.split(',')
 
     date_filter = request.GET.get("date_filter")
     custom_timetable = get_custom_timetable(modules, date_filter)
