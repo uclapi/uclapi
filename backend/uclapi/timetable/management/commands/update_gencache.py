@@ -287,7 +287,6 @@ class Command(BaseCommand):
         )
 
         cache_running_key = "cron:gencache:in_progress"
-        self._redis.delete(cache_running_key)
         running = self._redis.get(cache_running_key)
         if running:
             print("## A gencache update job is still in progress ##")
