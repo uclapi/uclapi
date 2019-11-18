@@ -14,9 +14,10 @@ import ucascr2 from 'Images/marketplace/uclassistant/screenshot_2.png'
 import ucascr3 from 'Images/marketplace/uclassistant/screenshot_3.png'
 // UCL Assistant
 import uclcssalogo from 'Images/marketplace/uclcssa/logo.jpg'
-import ucsscr1 from 'Images/marketplace/uclcssa/screenshot_1.jpg'
-import ucsscr2 from 'Images/marketplace/uclcssa/screenshot_2.jpg'
-import ucsscr3 from 'Images/marketplace/uclcssa/screenshot_3.jpg'
+import ucsscr1 from 'Images/marketplace/uclcssa/screenshot_1.png'
+import ucsscr2 from 'Images/marketplace/uclcssa/screenshot_2.png'
+import ucsscr3 from 'Images/marketplace/uclcssa/screenshot_3.png'
+import ucsscr4 from 'Images/marketplace/uclcssa/screenshot_4.png'
 // Common Components
 import { ButtonView, TextView } from 'Layout/Items.jsx'
 
@@ -115,6 +116,9 @@ const uclcssadescription = (
   <div className="uclassistant-full-description" 
     style={ {"display": `inline-block` } }
   >
+    <iframe width="420" height="315" style={ { "margin": `20px 0`, 'width' : '100%' } }
+      src="https://www.youtube.com/embed/0Q3WJDENFAM">
+    </iframe>
     <TextView heading={`2`} text={`Real-time library seat map`} 
       style={ { "textDecoration": `underline` } }
     />
@@ -228,7 +232,7 @@ export const allApps = {
           "link": `https://uclcssa.cn/timetable/?id=demo`,
         },
     ],
-    "screenshots": [ ucsscr1, ucsscr2, ucsscr3 ],
+    "screenshots": [ ucsscr1, ucsscr2, ucsscr3, ucsscr4],
   },
 }
 

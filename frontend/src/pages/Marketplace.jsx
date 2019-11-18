@@ -181,7 +181,7 @@ class AppPage extends React.Component {
         <Row styling='secondary' style={ { 'padding' : '0' } }>
           <Column width='2-3' horizontalAlignment='center'>
             {screenshots.map((img, i) => (
-              <CardView width='1-3' minWidth={screenshotwidth} type='no-bg' key={name + ' screenshot number ' + i}>
+              <CardView width={'1-'+screenshots.length} minWidth={screenshotwidth} type='no-bg' key={name + ' screenshot number ' + i}>
                 <ImageView src={img} width={screenshotwidth} height={screenshotheight}
                   description={name + ' screenshot number ' + i} centred
                 />
