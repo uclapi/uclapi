@@ -105,7 +105,7 @@ class HomePage extends React.Component {
                   />
 
                   <ButtonView text={`MARKETPLACE`} link={`/marketplace`} style={{ "marginLeft": `0` }} />
-                  <ButtonView text={`UCL ASSISTANT`} link={`https://play.google.com/store/apps/details?id=com.uclapi.uclassistant&hl=en_GB`} type='alternate' />
+                  <ButtonView text={`UCL ASSISTANT`} link={`/marketplace/uclassistant`} type='alternate' />
                 </Column>
               </Row>
             )
@@ -133,7 +133,7 @@ class HomePage extends React.Component {
                     />
 
                     <ButtonView text={`MARKETPLACE`} link={`/marketplace`} style={{ "marginLeft": `0` }} />
-                    <ButtonView text={`UCL ASSISTANT`} link={`https://play.google.com/store/apps/details?id=com.uclapi.uclassistant&hl=en_GB`} type='alternate' />
+                    <ButtonView text={`UCL ASSISTANT`} link={`/marketplace/uclassistant`} type='alternate' />
                   </Column>
                 </Column>
               </Row>

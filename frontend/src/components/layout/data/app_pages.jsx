@@ -221,7 +221,7 @@ export const allApps = {
     "links": [ 
         {
           "name": `WeChat`, 
-          "link": `https://mp.weixin.qq.com/s/ndkYgEFwlATvIIcHONG2uA`,
+          "link": `https://mp.weixin.qq.com/s/uij8Z05hB7aKJm0Ln0SI8g`,
         },
         {
           "name": `Website`, 
