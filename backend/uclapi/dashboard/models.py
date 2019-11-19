@@ -108,7 +108,7 @@ class APICall(models.Model):
 
 
 class Webhook(models.Model):
-    app = models.OneToOneField(App,on_delete=models.CASCADE)
+    app = models.OneToOneField(App, on_delete=models.CASCADE)
     url = models.URLField(max_length=1000, blank=True)
 
     siteid = models.CharField(max_length=40, blank=True)
