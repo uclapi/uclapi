@@ -39,6 +39,7 @@ class Marketplace extends React.Component {
     const appsToRender = []
     appsToRender.push(allApps[`uclroombuddy`])
     appsToRender.push(allApps[`uclassistant`])
+    appsToRender.push(allApps[`uclcssa`])
 
     this.state = {
       'featuredApps': featuredApps,
@@ -129,7 +130,6 @@ class AppPage extends React.Component {
 
   render() {
     const iconsize = `100px`
-    // const logosize = `150px`
 
     const screenshotwidth = `216px`
     const screenshotheight = `384px`
@@ -141,7 +141,7 @@ class AppPage extends React.Component {
         description,
         screenshots,
         detailedDescription,
-        androidLink,
+        links,
       },
     } = this.state
 
@@ -159,7 +159,8 @@ class AppPage extends React.Component {
         <Row styling='secondary' height='70px' style={{ "padding": `10px 0` }}>
           <Column width='2-3' horizontalAlignment='center'>
             <Column width='fit-content' minWidth={iconsize} typeOfInline='grid' horizontalAlignment='left'>
-              <ButtonView type='alternate' text='back to marketplace' link='/marketplace' style={{ margin: `10px 0` }} />
+              <ButtonView type='alternate' text='back' link='/marketplace' 
+                style={{ 'float' : 'left', 'margin': '10px 0' }} />
             </Column>
           </Column>
         </Row>
@@ -177,33 +178,40 @@ class AppPage extends React.Component {
             </Column>
           </Column>
         </Row>
-        <Row styling='secondary'>
+        <Row styling='secondary' style={ { 'padding' : '0' } }>
           <Column width='2-3' horizontalAlignment='center'>
             {screenshots.map((img, i) => (
-              <CardView width='1-3' minWidth={screenshotwidth} type='no-bg' key={name + ` screenshot number ` + i}>
+              <CardView width={'1-'+screenshots.length} minWidth={screenshotwidth} type='no-bg' key={name + ' screenshot number ' + i}>
                 <ImageView src={img} width={screenshotwidth} height={screenshotheight}
-                  description={name + ` screenshot number ` + i} centred
+                  description={name + ' screenshot number ' + i} centred
                 />
               </CardView>
             ))}
           </Column>
         </Row>
-        <Row styling='secondary'>
-          <Column width='2-3' horizontalAlignment='center' textAlign='left'>
+        <Row styling='secondary' style={ { 'padding' : '0 0 20px 0' } }>
+          <Column width='1-2' horizontalAlignment='center' textAlign='left'>
             {detailedDescription}
           </Column>
         </Row>
-        <Row styling='splash-parallax'>
-          <Column width='2-3' horizontalAlignment='center'>
-            <CardView width={`1-2`} minWidth={`300px`} link={androidLink}>
-              <Row height='75px'>
-                <Column width='1-1' horizontalAlignment='center' verticalAlignment='center'>
-                  <TextView text='Download Link' heading={2} align={`center`} />
-                </Column>
-              </Row>
-            </CardView>
-          </Column>
-        </Row>
+
+        {links.length > 0 ? (
+          <Row styling='splash-parallax'>
+            <Column width='2-3' horizontalAlignment='center'>
+              {links.map( (x, key) => (
+                <ButtonView text={x.name} link={x.link} 
+                  type={key%2==0 ? 'default' : 'alternate'} 
+                  key={key} style={{ "marginLeft": `0` }}/>
+              ))}
+            </Column>
+          </Row>
+        ) : ( 
+          <Row styling='splash-parallax'>
+            <Column width='2-3' horizontalAlignment='center'>
+              <TextView text='No downloads available' heading={3} align={`center`} style={ { "margin" : "0" } }/>
+            </Column>
+          </Row>
+        )}
 
         <Footer />
 
