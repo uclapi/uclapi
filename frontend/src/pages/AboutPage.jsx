@@ -56,7 +56,7 @@ class AboutPage extends React.Component {
         <Row height='600px' styling='team-parallax'>
           <Column width='2-3' horizontalAlignment='center' verticalAlignment='center'>
             <TextView text={`About Us`} heading={1} align={`center`} />
-            <TextView text={`UCL API is a student led project, founded by Wilhelm Klopp, that opens up the massive amount of` +
+            <TextView text={`UCL API is a student led project, founded by Wilhelm Klopp, that opens up the massive amount of ` +
               `data collected by UCL. This allows UCL alumni and staff to develop apps with UCL data.`}
               heading={2} align={`center`}
             />

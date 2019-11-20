@@ -1,7 +1,7 @@
+// Images
 import alex from 'Images/team/alex.jpg'
 import anirudh from 'Images/team/anirudh.jpeg'
 import anush from 'Images/team/anush.jpg'
-// Images
 import chris from 'Images/team/chris.jpeg'
 import faiz from 'Images/team/faiz.jpeg'
 import harry from 'Images/team/harry.jpg'
@@ -101,7 +101,7 @@ export const current = [
     "name": `Kimia`,
     "startYear": `2019`,
     "endYear": `present`,
-    "title": `People Stuff`,
+    "title": `People Person`,
     "email": `kimia.pirouzkia.17@ucl.ac.uk`,
     "github": `https://github.com/kimia84`,
     "image": kimia,
