@@ -122,57 +122,64 @@ const uclcssadescription = (
     <TextView heading={`2`} text={`Real-time library seat map`} 
       style={ { "textDecoration": `underline` } }
     />
-    <TextView heading={`5`} text={`This is a feature that you do not 
-      get on UCL Go. 
-      You can click on specific floors of each library to view a 
-      seating map. You no longer
-      have to worry about running into the library and discovering 
-      there is no space. The
-      seating map is updated every 2 minutes reducing the chance of 
+    <TextView heading={`5`} text={`
+      Using the real-time library mapping, you can view a 
+      seating map of specific floors in a library. You no longer
+      need to worry about running into the library and discovering 
+      there is no space. In addition the
+      seating map is updated every 2 minutes, reducing the chance of 
       false positives.`}
     />
     <TextView heading={`2`} text={`Timetabling`} 
       style={ { "textDecoration": `underline` } }
     />
-    <TextView heading={`5`} text={`Just log in with UCL and you can 
-      view your personal timetable to 
-      be able to view your personal timetable using WeChat. This 
-      avoids the problems with trying to use UCL Go.`}
+    <TextView heading={`5`} text={`You can 
+      view your personal timetable within WeChat. This is much easier then 
+      using UCL Go for your timetable.`}
     />
     <TextView heading={`2`} text={`Questions and Answers`} 
       style={ { "textDecoration": `underline` } }
     />
-    <TextView heading={`5`} text={`There is a whole section dedicated 
-      to answering questions from 
-      what to do on the weekend in London all the way to what food to 
-      eat and where good places
-      to rent are.`}
+    <TextView heading={`5`} text={`The question and answer section answers 
+      common questions such as:`}
+    />
+    <TextView heading={`5`} 
+      text={`What is there to do on the weekend in London?`}
+    />
+    <TextView heading={`5`} 
+      text={`Where are the good restraunts in London?`}
+    />
+    <TextView heading={`5`} 
+      text={`Wjat are the best locations in London to rent for students?`}
+    />
+    <TextView heading={`5`} 
+      text={`And much more!`}
     />
     <TextView heading={`2`} text={`Memes`} 
       style={ { "textDecoration": `underline` } }
     />
     <TextView heading={`5`} text={`An area dedicated to creating 
       memes of teachers or classmates during 
-      your day for others to enjoy`}
+      your day: for others to enjoy!`}
     />
     <TextView heading={`2`} text={`Name search`} 
       style={ { "textDecoration": `underline` } }
     />
-    <TextView heading={`5`} text={`You can use the name search feature 
-      to remind yourself of people's names
-    or for finding out the name and email of your lecturers. This 
-    allows you to always be able to get into contact 
-    with both people you meet as well as your lecturers.`}
+    <TextView heading={`5`} text={`The name search feature 
+     allows you to find the name and email of your lecturers or friends. This 
+    ensures you always have the ability to contact anybody at UCL.`}
     />
     <TextView heading={`2`} text={`Job search information`} 
       style={ { "textDecoration": `underline` } }
     />
-    <TextView heading={`5`} text={`There is a whole section dedicated 
+    <TextView heading={`5`} text={`The Job search information is a whole 
+      section dedicated 
       to providing information about internships and 
       resume advice. It is updated with recruitment information and 
-      timings for major companies on a regular basis. 
-      The internship opportunities come to you as opposed to you finding
-       the opportunities!`}
+      timings for major companies on a regular basis.`}
+    />
+    <TextView heading={`5`} 
+      text={`The internship opportunities come to you!`}
     />
   </div>
 )
