@@ -13,7 +13,8 @@ import ucascr1 from 'Images/marketplace/uclassistant/screenshot_1.png'
 import ucascr2 from 'Images/marketplace/uclassistant/screenshot_2.png'
 import ucascr3 from 'Images/marketplace/uclassistant/screenshot_3.png'
 // UCL Assistant
-import uclcssalogo from 'Images/marketplace/uclcssa/logo.png'
+import uclcssalogolight from 'Images/marketplace/uclcssa/logolight.png'
+import uclcssalogodark from 'Images/marketplace/uclcssa/logodark.png'
 import ucsscr1 from 'Images/marketplace/uclcssa/screenshot_1.png'
 import ucsscr2 from 'Images/marketplace/uclcssa/screenshot_2.png'
 import ucsscr3 from 'Images/marketplace/uclcssa/screenshot_3.png'
@@ -48,7 +49,8 @@ const roombuddydescription = (
     Submit a pull request:`}
    />
    <ButtonView type={`alternate`} text={`VISIT GITHUB`} 
-     style={ { 'margin' : 'auto', 'display' : 'flex' } } 
+     style={ { 'margin' : `auto`,
+'display' : `flex` } } 
      link={`https://github.com/uclapi/ucl-assistant-app`}
    />
    <TextView heading={`5`} text={`This app and its platform have been 
@@ -98,7 +100,8 @@ const uclassistantdescription = (
      the app? We welcome it:`}
    />
    <ButtonView type={`alternate`} isCentered text={`VISIT GITHUB`} 
-     style={ { 'margin' : 'auto', 'display' : 'flex' } } 
+     style={ { 'margin' : `auto`,
+'display' : `flex` } } 
      link={`https://github.com/uclapi/ucl-assistant-app`}
    />
    <TextView heading={`5`} text={`This app and its platform have 
@@ -116,8 +119,10 @@ const uclcssadescription = (
   <div className="uclassistant-full-description" 
     style={ {"display": `inline-block` } }
   >
-    <iframe width="420" height="315" style={ { "margin": `20px 0`, 'width' : '100%' } }
-      src="https://www.youtube.com/embed/0Q3WJDENFAM">
+    <iframe width="420" height="315" style={ { "margin": `20px 0`,
+'width' : `100%` } }
+      src="https://www.youtube.com/embed/0Q3WJDENFAM"
+    >
     </iframe>
     <TextView heading={`2`} text={`Real-time library seat map`} 
       style={ { "textDecoration": `underline` } }
@@ -190,8 +195,9 @@ export const allApps = {
 "id": `uclroombuddy`,
 "category": `roombookings`,
 "description": `Find the closest free room at UCL`,
-"logo": roombuddylogo,
-    "detailedDescription": roombuddydescription,
+"logolight": roombuddylogo,
+"logodark": roombuddylogo,
+"detailedDescription": roombuddydescription,
 "developerContact": `https://github.com/wilhelmklopp`,
     "links": [],
     "screenshots": [ rbscrn1, rbscrn2, rbscrn3 ],
@@ -201,7 +207,8 @@ export const allApps = {
 "id": `uclassistant`,
 "category": `productivity`,
 "description": `An app to manage your student life at UCL`,
-"logo": uclassistantlogo,
+"logolight": uclassistantlogo,
+"logodark": uclassistantlogo,
     "detailedDescription": uclassistantdescription, 
     "developerContact": `https://github.com/uclapi`,
     "links": [ 
@@ -221,7 +228,8 @@ export const allApps = {
 "id": `uclcssa`,
 "category": `productivity`,
 "description": `Six practical functions to help students`,
-"logo": uclcssalogo,
+"logolight": uclcssalogolight,
+"logodark": uclcssalogodark,
     "detailedDescription": uclcssadescription, 
     "developerContact": `https://mp.weixin.qq.com/s/ndkYgEFwlATvIIcHON
     G2uA`,

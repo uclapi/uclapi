@@ -71,7 +71,7 @@ class Marketplace extends React.Component {
                   style={{ 'padding': `20px 0 ` }}
                 >
                   <Column width='1-2' horizontalAlignment='center'>
-                    <ImageView src={app.logo} width={iconsize} height={iconsize} />
+                    <ImageView src={app.logolight} width={iconsize} height={iconsize} />
                     <TextView text={app.name} heading={2} align={`center`} color={`white`} />
                     <TextView text={app.description} heading={5} align={`center`} color={`white`} />
                   </Column>
@@ -91,7 +91,7 @@ class Marketplace extends React.Component {
                   style={{ 'padding': `20px 0 ` }}
                 >
                   <Column width='9-10' horizontalAlignment='center'>
-                    <ImageView src={app.logo} width={iconsize} height={iconsize} />
+                    <ImageView src={app.logolight} width={iconsize} height={iconsize} />
                     <TextView text={app.name} heading={2} align={`center`} color={`black`} />
                     <TextView text={app.description} heading={5} align={`center`} color={`black`} />
                   </Column>
@@ -127,7 +127,8 @@ class AppPage extends React.Component {
 
     const {
       app: {
-        logo,
+        logolight,
+        logodark,
         name,
         description,
         screenshots,
@@ -151,7 +152,9 @@ class AppPage extends React.Component {
           <Column width='2-3' horizontalAlignment='center'>
             <Column width='fit-content' minWidth={iconsize} typeOfInline='grid' horizontalAlignment='left'>
               <ButtonView type='alternate' text='back' link='/marketplace' 
-                style={{ 'float' : 'left', 'margin': '10px 0' }} />
+                style={{ 'float' : `left`,
+'margin': `10px 0` }}
+              />
             </Column>
           </Column>
         </Row>
@@ -159,7 +162,7 @@ class AppPage extends React.Component {
         <Row styling='secondary' height='100px' noPadding>
           <Column width='2-3' horizontalAlignment='center' verticalAlignment='center'>
             <Column width='fit-content' minWidth={iconsize} typeOfInline='grid' horizontalAlignment='left'>
-              <ImageView src={logo} width={iconsize} height={iconsize}
+              <ImageView src={logodark} width={iconsize} height={iconsize}
                 description={name + `logo`} centred style={{ 'margin': `0 auto 0 0` }}
               />
             </Column>
@@ -169,18 +172,18 @@ class AppPage extends React.Component {
             </Column>
           </Column>
         </Row>
-        <Row styling='secondary' style={ { 'padding' : '0' } }>
+        <Row styling='secondary' style={ { 'padding' : `0` } }>
           <Column width='2-3' horizontalAlignment='center'>
             {screenshots.map((img, i) => (
-              <CardView width={'1-'+screenshots.length} minWidth={screenshotwidth} type='no-bg' key={name + ' screenshot number ' + i}>
+              <CardView width={`1-`+screenshots.length} minWidth={screenshotwidth} type='no-bg' key={name + ` screenshot number ` + i}>
                 <ImageView src={img} width={screenshotwidth} height={screenshotheight}
-                  description={name + ' screenshot number ' + i} centred
+                  description={name + ` screenshot number ` + i} centred
                 />
               </CardView>
             ))}
           </Column>
         </Row>
-        <Row styling='secondary' style={ { 'padding' : '0 0 20px 0' } }>
+        <Row styling='secondary' style={ { 'padding' : `0 0 20px 0` } }>
           <Column width='1-2' horizontalAlignment='center' textAlign='left'>
             {detailedDescription}
           </Column>
@@ -191,15 +194,16 @@ class AppPage extends React.Component {
             <Column width='2-3' horizontalAlignment='center'>
               {links.map( (x, key) => (
                 <ButtonView text={x.name} link={x.link} 
-                  type={key%2==0 ? 'default' : 'alternate'} 
-                  key={key} style={{ "marginLeft": `0` }}/>
+                  type={key%2==0 ? `default` : `alternate`} 
+                  key={key} style={{ "marginLeft": `0` }}
+                />
               ))}
             </Column>
           </Row>
         ) : ( 
           <Row styling='splash-parallax'>
             <Column width='2-3' horizontalAlignment='center'>
-              <TextView text='No downloads available' heading={3} align={`center`} style={ { "margin" : "0" } }/>
+              <TextView text='No downloads available' heading={3} align={`center`} style={ { "margin" : `0` } }/>
             </Column>
           </Row>
         )}
