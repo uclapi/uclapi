@@ -12,12 +12,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
-// Images
-// Backgrounds
-// import balloons from 'Images/home-page/balloons.jpg'
-// import logo from 'Images/home-page/logo.svg'
-// import arrow from 'Images/marketplace/arrow-left.svg'
-// import market from 'Images/marketplace/market.svg'
 // Grab titles and descriptions of app
 import { allApps } from 'Layout/data/app_pages.jsx'
 // Common Components
@@ -92,9 +86,6 @@ class Marketplace extends React.Component {
             <TextView text={`All Apps`} heading={2} align={`left`} />
             <TextView text={`Every app made using the API`} heading={5} align={`left`} />
             {appsToRender.map((app, i) => {
-              // let margin = `0`
-              // if (i % 2 == 0) { margin = `0 2% 0 0` }
-
               return (
                 <CardView key={`all-apps-` + i} width={`1-2`} type={`alternate`} link={`/marketplace/` + app.id}
                   style={{ 'padding': `20px 0 ` }}

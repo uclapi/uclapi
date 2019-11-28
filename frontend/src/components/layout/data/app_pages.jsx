@@ -13,7 +13,7 @@ import ucascr1 from 'Images/marketplace/uclassistant/screenshot_1.png'
 import ucascr2 from 'Images/marketplace/uclassistant/screenshot_2.png'
 import ucascr3 from 'Images/marketplace/uclassistant/screenshot_3.png'
 // UCL Assistant
-import uclcssalogo from 'Images/marketplace/uclcssa/logo.jpg'
+import uclcssalogo from 'Images/marketplace/uclcssa/logo.png'
 import ucsscr1 from 'Images/marketplace/uclcssa/screenshot_1.png'
 import ucsscr2 from 'Images/marketplace/uclcssa/screenshot_2.png'
 import ucsscr3 from 'Images/marketplace/uclcssa/screenshot_3.png'
