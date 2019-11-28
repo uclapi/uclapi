@@ -63,6 +63,13 @@
         "ignoreRefs": true
       }
     ],
+    "react/jsx-max-props-per-line": [
+      "warn",
+      {
+        "maximum": 1,
+        "when": "multiline"
+      }
+    ],
     "import/no-extraneous-dependencies": [
       "error",
       {
