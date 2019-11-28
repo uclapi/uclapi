@@ -127,7 +127,6 @@ class AppPage extends React.Component {
 
     const {
       app: {
-        logolight,
         logodark,
         name,
         description,
