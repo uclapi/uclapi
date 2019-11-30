@@ -76,7 +76,7 @@ export const FAQ = [
         <a className={linkclass} href="https://github.com/uclapi/uclapi">
           a public Github repository
         </a>
-        &nbsp;for anybody to clone and inspect. Find an bug? Feel free to open an
+        &nbsp;for anybody to clone and inspect. Find an bug? Feel free to open an&nbsp;
         <a className={linkclass} href="https://github.com/uclapi/uclapi/issues">
           Issue
         </a>
