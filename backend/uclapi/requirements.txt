@@ -1,9 +1,9 @@
 autopep8==1.4.4
 amqp==2.5.2
-botocore==1.13.23
-boto3==1.10.23
+botocore==1.13.28
+boto3==1.10.28
 celery==4.3.0
-certifi==2019.9.11
+certifi==2019.11.28
 chardet==3.0.4
 Django==2.1.1.
 ciso8601==2.1.2
@@ -12,7 +12,7 @@ decorator==4.4.1
 deepdiff==4.0.9
 django-dotenv==1.4.2
 django-mock-queries==2.1.3
-django-storages==1.7.2
+django-storages==1.8
 djangorestframework==3.10.3
 django-postgrespool2==1.0.0
 docutils==0.15.2
@@ -21,7 +21,7 @@ gevent==1.4.0
 freezegun==0.3.12
 flake8==3.7.9
 greenlet==0.4.15
-gunicorn==20.0.0
+gunicorn==20.0.4
 hiredis==1.0.1
 idna==2.8
 jinjasql==0.1.7
@@ -29,11 +29,11 @@ jmespath==0.9.4
 jsonpickle==1.2
 keen==0.5.1
 kombu==4.6.3
-lxml==4.4.1
+lxml==4.4.2
 Markupsafe==1.1.1
 mock==3.0.5
 model-mommy==2.0.0
-pbr==5.4.3
+pbr==5.4.4
 pycryptodome==3.9.4
 psycopg2-binary==2.8.4
 python-dateutil==2.8.1
@@ -46,7 +46,7 @@ requests-futures==1.0.0
 setproctitle==1.1.10
 six==1.13.0
 tldextract==2.2.2
-tqdm==4.38.0
+tqdm==4.39.0
 urllib3==1.25.7
 validators==0.14.0
 vine==1.3.0
