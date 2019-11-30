@@ -1,7 +1,7 @@
 autopep8==1.4.4
 amqp==2.5.2
-botocore==1.13.23
-boto3==1.10.23
+botocore==1.13.28
+boto3==1.10.28
 celery==4.3.0
 certifi==2019.9.11
 chardet==3.0.4
@@ -30,7 +30,7 @@ jmespath==0.9.4
 jsonpickle==1.2
 keen==0.5.1
 kombu==4.6.3
-lxml==4.4.1
+lxml==4.4.2
 Markupsafe==1.1.1
 mock==3.0.5
 model-mommy==2.0.0
