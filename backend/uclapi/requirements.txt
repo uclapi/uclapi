@@ -13,7 +13,7 @@ Django==1.11.26
 django-cors-headers==3.2.0
 django-dotenv==1.4.2
 django-mock-queries==2.1.3
-django-storages==1.7.2
+django-storages==1.8
 djangorestframework==3.10.3
 django-postgrespool2==1.0.0
 docutils==0.15.2
@@ -34,7 +34,7 @@ lxml==4.4.2
 Markupsafe==1.1.1
 mock==3.0.5
 model-mommy==2.0.0
-pbr==5.4.3
+pbr==5.4.4
 pycryptodome==3.9.4
 psycopg2-binary==2.8.4
 python-dateutil==2.8.1
