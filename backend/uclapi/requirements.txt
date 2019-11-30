@@ -1,6 +1,6 @@
 autopep8==1.4.4
 amqp==2.5.2
-botocore==1.13.23
+botocore==1.13.28
 boto3==1.10.28
 celery==4.3.0
 certifi==2019.11.28
@@ -22,7 +22,7 @@ gevent==1.4.0
 freezegun==0.3.12
 flake8==3.7.9
 greenlet==0.4.15
-gunicorn==20.0.0
+gunicorn==20.0.4
 hiredis==1.0.1
 idna==2.8
 jinjasql==0.1.7
