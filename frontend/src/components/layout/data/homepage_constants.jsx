@@ -49,7 +49,7 @@ export const FAQ = [
           simple to parse and interpret in most modern programming languages.
         </p>
         <p>
-          It is student-built platform, backed and supported by UCL&apos;s 
+          It is student-built platform, backed and supported by UCL&apos;s&nbsp;
           <a className={linkclass} href="https://www.ucl.ac.uk/isd/">
             Information Services Division (ISD)
           </a>
@@ -72,19 +72,19 @@ export const FAQ = [
     'question': `How do I get involved?`,
     'answer': (
       <p>
-        UCL API is open source. Our source code is available on 
+        UCL API is open source. Our source code is available on&nbsp;
         <a className={linkclass} href="https://github.com/uclapi/uclapi">
           a public Github repository
         </a>
-         for anybody to clone and inspect. Find an bug? Feel free to open an
+        &nbsp;for anybody to clone and inspect. Find an bug? Feel free to open an
         <a className={linkclass} href="https://github.com/uclapi/uclapi/issues">
           Issue
         </a>
-         or even a 
+        &nbsp;or even a&nbsp;
         <a className={linkclass} href="https://github.com/uclapi/uclapi/pulls">
           Pull Request
         </a>
-         with a proposed fix! We also have annual hiring windows to recruit more
+        &nbsp;with a proposed fix! We also have annual hiring windows to recruit more
         students as others graduate, so keep an
         eye on our social media accounts.
       </p>
