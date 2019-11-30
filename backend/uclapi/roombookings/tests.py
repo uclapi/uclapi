@@ -25,7 +25,7 @@ from .helpers import (
     TOKEN_EXPIRY_TIME
 )
 
-from .models import Room
+from .models import RoomA
 from timetable.models import Lock
 
 from .views import get_bookings, get_rooms
@@ -41,45 +41,45 @@ class FakeModelClass:
 
 class EquipmentSerializationTestCase(SimpleTestCase):
 
-        def test_serialize_equipment(self):
-            equipment_list = [
-                FakeModelClass(
-                    setid=settings.ROOMBOOKINGS_SETID,
-                    roomid="016",
-                    units=1,
-                    description="Chairs with Tables",
-                    siteid="267",
-                    type="FF"
-                ),
-                FakeModelClass(
-                    setid=settings.ROOMBOOKINGS_SETID,
-                    roomid="105",
-                    units=1,
-                    description="Software - Earth Sciences - self learning",
-                    siteid="002",
-                    type="FF"
-                )
-            ]
-            none_qs = Room.objects.none()
-            equipment_qs = list(chain(none_qs, equipment_list))
-            serialised_equipment = _serialize_equipment(equipment_qs)
-            self.assertEqual(
-                serialised_equipment, [
-                    {
-                        "type": "FF",
-                        "description": "Chairs with Tables",
-                        "units": 1
-                    },
-                    {
-                        "type": "FF",
-                        "description": (
-                            "Software - Earth Sciences"
-                            " - self learning"
-                        ),
-                        "units": 1
-                    }
-                ]
+    def test_serialize_equipment(self):
+        equipment_list = [
+            FakeModelClass(
+                setid=settings.ROOMBOOKINGS_SETID,
+                roomid="016",
+                units=1,
+                description="Chairs with Tables",
+                siteid="267",
+                type="FF"
+            ),
+            FakeModelClass(
+                setid=settings.ROOMBOOKINGS_SETID,
+                roomid="105",
+                units=1,
+                description="Software - Earth Sciences - self learning",
+                siteid="002",
+                type="FF"
             )
+        ]
+        none_qs = RoomA.objects.none()
+        equipment_qs = list(chain(none_qs, equipment_list))
+        serialised_equipment = _serialize_equipment(equipment_qs)
+        self.assertEqual(
+            serialised_equipment, [
+                {
+                    "type": "FF",
+                    "description": "Chairs with Tables",
+                    "units": 1
+                },
+                {
+                    "type": "FF",
+                    "description": (
+                        "Software - Earth Sciences"
+                        " - self learning"
+                    ),
+                    "units": 1
+                }
+            ]
+        )
 
 
 class ParseDateTimeTestCase(SimpleTestCase):
