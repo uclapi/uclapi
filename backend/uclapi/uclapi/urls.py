@@ -18,6 +18,9 @@ from django.contrib import admin
 from dashboard.views import documentation, home, about
 from marketplace.views import marketplace
 
+
+app_name = "uclapi"
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^dashboard/', include('dashboard.urls')),

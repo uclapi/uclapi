@@ -39,7 +39,11 @@ class App(models.Model):
         primary_key=True,
         default=generate_app_id
     )
-    user = models.ForeignKey(User, related_name='user')
+    user = models.ForeignKey(
+        User,
+        related_name='user',
+        on_delete=models.CASCADE
+    )
     name = models.CharField(max_length=1000)
     api_token = models.CharField(
         max_length=1000,
@@ -72,8 +76,9 @@ class App(models.Model):
 
     scope = models.ForeignKey(
         OAuthScope,
-        on_delete=models.CASCADE,
-        default=create_scope)
+        default=create_scope,
+        on_delete=models.CASCADE
+    )
 
     def regenerate_token(self):
         new_token = generate_api_token()
@@ -86,8 +91,16 @@ class App(models.Model):
 
 class APICall(models.Model):
     ts = models.DateTimeField(auto_now_add=True)
-    app = models.ForeignKey(App, related_name='api_call')
-    user = models.ForeignKey(User, related_name='api_call')
+    app = models.ForeignKey(
+        App,
+        on_delete=models.CASCADE,
+        related_name='api_call'
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='api_call'
+    )
     raw_request = models.TextField(max_length=10000000)
 
     class Meta:
@@ -95,7 +108,7 @@ class APICall(models.Model):
 
 
 class Webhook(models.Model):
-    app = models.OneToOneField(App)
+    app = models.OneToOneField(App, on_delete=models.CASCADE)
     url = models.URLField(max_length=1000, blank=True)
 
     siteid = models.CharField(max_length=40, blank=True)
@@ -117,7 +130,10 @@ class Webhook(models.Model):
 
 
 class WebhookTriggerHistory(models.Model):
-    webhook = models.ForeignKey(Webhook)
+    webhook = models.ForeignKey(
+        Webhook,
+        on_delete=models.CASCADE
+    )
     payload = models.CharField(max_length=10000000)
 
     timestamp = models.DateTimeField(auto_now_add=True, editable=False)

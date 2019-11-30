@@ -5,11 +5,12 @@ dist: trusty
 sudo: required
 cache: pip
 services:
-  - postgresql
   - redis-server
 install:
   - (sed '/cx.*/d' ./backend/uclapi/requirements.txt | sed -e 's/^\-e //') | xargs -n 1 pip3 install
   - pip3 install codecov
+addons:
+  postgresql: "9.6"
 before_script:
   # Install Oracle Instant Client
   - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
