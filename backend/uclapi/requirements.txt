@@ -30,11 +30,11 @@ jmespath==0.9.4
 jsonpickle==1.2
 keen==0.5.1
 kombu==4.6.3
-lxml==4.4.1
+lxml==4.4.2
 Markupsafe==1.1.1
 mock==3.0.5
 model-mommy==2.0.0
-pbr==5.4.3
+pbr==5.4.4
 pycryptodome==3.9.4
 psycopg2-binary==2.8.4
 python-dateutil==2.8.1
