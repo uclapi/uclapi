@@ -5,7 +5,7 @@ boto3==1.10.28
 celery==4.3.0
 certifi==2019.11.28
 chardet==3.0.4
-Django==2.1.11
+Django==2.2.8
 ciso8601==2.1.2
 cx-Oracle==7.2.3
 decorator==4.4.1
