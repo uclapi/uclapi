@@ -179,7 +179,7 @@ class HomePage extends React.Component {
           <Column width='2-3' horizontalAlignment='center' maxWidth='1000px' minWidth='300px'>
             <TextView text={`Our Goals`} heading={1} align={`center`} />
 
-            <CardView width='1-3' minWidth='280px' type='no-bg'>
+            <CardView width='1-3' minWidth='280px' type='no-bg' snapAlign>
               <TextView text={`Make Simple Interfaces`} heading={2} align={`center`} />
               <TextView text={`The endpoints are streamlined to enable any developer to easily pick up and use the api. We hope that developers of all ability
                             find our endpoints and website easy to navigate. We do not want to overcomplicate the process of developing
@@ -187,7 +187,7 @@ class HomePage extends React.Component {
               />
               <ImageView src={star} width={iconsize} height={iconsize} description={`an icon of a love heart`} centred />
             </CardView>
-            <CardView width='1-3' minWidth='280px' type='no-bg'>
+            <CardView width='1-3' minWidth='280px' type='no-bg' snapAlign>
               <TextView text={`Put Documentation First`} heading={2} align={`center`} />
               <TextView text={`As developers we feel the pain of bad documentation: this is why we are driven by good documentation. We want you
                              to spend less time worrying about how to use our api and more time thinking about how to revolutionise the student experience.
@@ -195,7 +195,7 @@ class HomePage extends React.Component {
               />
               <ImageView src={docs} width={iconsize} height={iconsize} description={`an icon of a clipboard`} centred />
             </CardView>
-            <CardView width='1-3' minWidth='280px' type='no-bg'>
+            <CardView width='1-3' minWidth='280px' type='no-bg' snapAlign>
               <TextView text={`Enable Developers`} heading={2} align={`center`} />
               <TextView text={`We want the api to be so comprehensive that any idea, no matter how big, can be created in order to improve students lives. We are always
                              open to suggestions for new endpoints and functionality so we can enable a greater range of applications to be developed. We
@@ -211,7 +211,7 @@ class HomePage extends React.Component {
             <TextView text={`Get Started using our APIs`} heading={1} align={`center`} />
 
             {endpoints.map(x => (
-              <CardView width={'1-2'} minWidth={'280px'} link={x.link}>
+              <CardView width={'1-2'} minWidth={'280px'} link={x.link} snapAlign>
                 <Row height = '100px' style={ { padding : '20px 0' } } >
                   <Column width='2-3' horizontalAlignment='center' verticalAlignment='center'>
                     <TextView text={x.name} heading={2} align={`center`} />
@@ -228,7 +228,7 @@ class HomePage extends React.Component {
           <Column width='9-10' horizontalAlignment='center'>
             <TextView text={`Check out our blog`} heading={1} align={`center`} />
             {articles.map(x => (
-              <CardView width='1-3' minWidth='200px' type='default' link={x.url} key={x.link}>
+              <CardView width='1-3' minWidth='280px' type='default' link={x.url} key={x.link} snapAlign>
                 <Column width='1-1'>
                   <Row height='200px' src={x.image_url} style={{ "backgroundSize": `Cover` }} >
                     <Column width='2-3' horizontalAlignment='center' verticalAlignment='center'>
