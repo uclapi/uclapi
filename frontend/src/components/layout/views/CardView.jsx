@@ -16,6 +16,8 @@ this.props.fakeLink - same behaviour as a link
 
 this.props.minWidth - e.g 300px a minimum width (default is unset)
 this.props.noShadow - disables box shadow
+
+this.props.snapAlign - snaps the cards to be in a vertical row when they get too small to display in a horizontal row 
 **/
 
 export default class CardView extends React.Component {
@@ -31,9 +33,12 @@ export default class CardView extends React.Component {
     this.getStyle = this.getStyle.bind(this)
     this.setStyleKeyValuePair = this.setStyleKeyValuePair.bind(this)
     this.setTheme = this.setTheme.bind(this)
+    this.setMargin = this.setMargin.bind(this)
 
     this.class = `uclapi-card`
     this.style = []
+
+    this.cardRef = React.createRef()
 
     if (this.props.style) { this.style = this.props.style }
 
@@ -53,19 +58,84 @@ export default class CardView extends React.Component {
     // RENDER METHOD
     if (doesLinkRoute) {
       return (
-        <a href={this.props.link}>
-          <div className={this.state.class} style={this.state.style}>
-            {this.props.children}
-          </div>
-        </a>
+        <>
+          <div className={`invisible-marker`}
+            style={{
+              "position": `fixed`,
+              "visibility": `hidden`,
+              "width": `inherit`,
+            }}
+            ref={this.cardRef}
+          ></div>
+          <a href={this.props.link}>
+            <div className={this.state.class} style={this.state.style}>
+              {this.props.children}
+            </div>
+          </a>
+        </>
       )
     } else {
       return (
-        <div className={this.state.class} style={this.state.style}>
-          {this.props.children}
-        </div>
+        <>
+          <div className={`invisible-marker`}
+            style={{
+              "position": `fixed`,
+              "visibility": `hidden`,
+              "width": `inherit`,
+            }}
+            ref={this.cardRef}
+          ></div>
+          <div className={this.state.class} style={this.state.style}>
+            {this.props.children}
+          </div>
+        </>
       )
     }
+  }
+
+  componentDidMount() {
+    if (this.props.snapAlign) {
+      if (this.DEBUGGING) { console.log(`CardView.componentDidMount`) }
+      window.addEventListener(`resize`, this.setMargin)
+      // SET MARGIN IN CASE TOO SMALL
+      this.setMargin()
+    }
+  }
+  componentWillUnmount() {
+    if (this.props.snapAlign) {
+      if (this.DEBUGGING) { console.log(`CardView.componentWillUnmount`) }
+      window.removeEventListener(`resize`, this.setMargin)
+    }
+  }
+
+  setMargin() {
+    let minWidth = this.getMinWidth()
+    if (minWidth == `unset`) { return }
+
+    minWidth = minWidth.substring(0, minWidth.length - 2)
+    const fraction = this.props.width.split(`-`)
+    const minTotalWidth = minWidth * fraction[1] / fraction[0]
+
+    const adaption = 100 - (4 * fraction[1])
+
+    const currentWidth = this.cardRef.current.clientWidth * adaption / 100
+
+    const shouldResize = currentWidth <= minTotalWidth
+
+    this.style = []
+    if (this.props.style) { this.style = { ...this.props.style } }
+    this.setTheme()
+
+    if (shouldResize) {
+      this.setStyleKeyValuePair(`marginLeft`, `auto`)
+      this.setStyleKeyValuePair(`marginRight`, `auto`)
+      this.setStyleKeyValuePair(`display`, `block`)
+      this.setStyleKeyValuePair(`float`, `unset`)
+    }
+
+    this.setState({
+      style: this.style,
+    })
   }
 
   setTheme() {

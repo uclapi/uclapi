@@ -132,7 +132,10 @@ class Marketplace extends React.Component {
                   width={`1-2`}
                   type={`alternate`}
                   link={`/marketplace/` + app.id}
-                  style={{ 'padding': `20px 0 ` }}
+                  style={{ padding: `20px 0 `,
+float : `left` }}
+                  minWidth={`300px`}
+                  snapAlign
                 >
                   <Column width='9-10' horizontalAlignment='center'>
                     <ImageView

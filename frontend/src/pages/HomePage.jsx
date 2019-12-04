@@ -91,17 +91,21 @@ class HomePage extends React.Component {
             return (
               <Row styling="secondary" >
                 <Column width="2-3" textAlign="center" minWidth="250px" horizontalAlignment="center">
-                  <TextView text="UCL MARKET" heading={1} align="center" />
+                  <TextView text="UCL MARKETPLACE" heading={1} align="center" />
 
                   <TextView text={`The UCL Marketplace contains all of the applications written
                         using UCL API for some of their functionality. We are constantly looking for 
                         applications to add to the marketplace and promote so we would love to hear
-                        about your creations so we can add them!`} heading={5} align={`center`}
+                        about your creations so we can add them!`}
+                    heading={5}
+                    align={`center`}
                   />
 
                   <TextView text={`One of these applications is UCL Assistant! An app created
                         by the UCL API team to provide students with a reliable way to check their 
-                        timetable, find empty rooms and locate study spaces.`} heading={5} align={`center`}
+                        timetable, find empty rooms and locate study spaces.`}
+                    heading={5}
+                    align={`center`}
                   />
 
                   <ButtonView text={`MARKETPLACE`} link={`/marketplace`} style={{ "marginLeft": `0` }} />
@@ -124,12 +128,16 @@ class HomePage extends React.Component {
                     <TextView text={`The UCL Marketplace contains all of the applications written
                       using UCL API for some of their functionality. We are constantly looking for 
                       applications to add to the marketplace and promote so we would love to hear
-                      about your creations so we can add them!`} heading={5} align={`left`}
+                      about your creations so we can add them!`}
+                      heading={5}
+                      align={`left`}
                     />
 
                     <TextView text={`One of these applications is UCL Assistant! An app created
                       by the UCL API team to provide students with a reliable way to check their 
-                      timetable, find empty rooms and locate study spaces.`} heading={5} align={`left`}
+                      timetable, find empty rooms and locate study spaces.`}
+                      heading={5}
+                      align={`left`}
                     />
 
                     <ButtonView text={`MARKETPLACE`} link={`/marketplace`} style={{ "marginLeft": `0` }} />
@@ -176,30 +184,36 @@ class HomePage extends React.Component {
         </Row>
 
         <Row styling='secondary'>
-          <Column width='2-3' horizontalAlignment='center' maxWidth='1000px' minWidth='300px'>
+          <Column width='1-1' horizontalAlignment='center' maxWidth='1000px' minWidth='300px'>
             <TextView text={`Our Goals`} heading={1} align={`center`} />
 
-            <CardView width='1-3' minWidth='280px' type='no-bg'>
+            <CardView width='1-3' minWidth='280px' type='no-bg' snapAlign>
               <TextView text={`Make Simple Interfaces`} heading={2} align={`center`} />
               <TextView text={`The endpoints are streamlined to enable any developer to easily pick up and use the api. We hope that developers of all ability
                             find our endpoints and website easy to navigate. We do not want to overcomplicate the process of developing
-                            awesome apps, we want to be the easiest part of your development process!`} align={`justify`} heading={5}
+                            awesome apps, we want to be the easiest part of your development process!`}
+                align={`justify`}
+                heading={5}
               />
               <ImageView src={star} width={iconsize} height={iconsize} description={`an icon of a love heart`} centred />
             </CardView>
-            <CardView width='1-3' minWidth='280px' type='no-bg'>
+            <CardView width='1-3' minWidth='280px' type='no-bg' snapAlign>
               <TextView text={`Put Documentation First`} heading={2} align={`center`} />
               <TextView text={`As developers we feel the pain of bad documentation: this is why we are driven by good documentation. We want you
                              to spend less time worrying about how to use our api and more time thinking about how to revolutionise the student experience.
-                             With good documentation we allow you to focus on building helpful applications.`} align={`justify`} heading={5}
+                             With good documentation we allow you to focus on building helpful applications.`}
+                align={`justify`}
+                heading={5}
               />
               <ImageView src={docs} width={iconsize} height={iconsize} description={`an icon of a clipboard`} centred />
             </CardView>
-            <CardView width='1-3' minWidth='280px' type='no-bg'>
+            <CardView width='1-3' minWidth='280px' type='no-bg' snapAlign>
               <TextView text={`Enable Developers`} heading={2} align={`center`} />
               <TextView text={`We want the api to be so comprehensive that any idea, no matter how big, can be created in order to improve students lives. We are always
                              open to suggestions for new endpoints and functionality so we can enable a greater range of applications to be developed. We
-                             cannot wait to see what you will develop!`} align={`justify`} heading={5}
+                             cannot wait to see what you will develop!`}
+                align={`justify`}
+                heading={5}
               />
               <ImageView src={heart} width={iconsize} height={iconsize} description={`an icon of a star`} centred />
             </CardView>
@@ -210,9 +224,9 @@ class HomePage extends React.Component {
           <Column width='2-3' horizontalAlignment='center' maxWidth='1000px' minWidth='300px'>
             <TextView text={`Get Started using our APIs`} heading={1} align={`center`} />
 
-            {endpoints.map(x => (
-              <CardView width={'1-2'} minWidth={'280px'} link={x.link}>
-                <Row height = '100px' style={ { padding : '20px 0' } } >
+            {endpoints.map((x, key) => (
+              <CardView width={`1-2`} minWidth={`280px`} link={x.link} key={key} snapAlign>
+                <Row height='100px' style={{ padding: `20px 0` }} >
                   <Column width='2-3' horizontalAlignment='center' verticalAlignment='center'>
                     <TextView text={x.name} heading={2} align={`center`} />
                     <TextView text={x.description} heading={5} align={`center`} noMargin />
@@ -228,7 +242,7 @@ class HomePage extends React.Component {
           <Column width='9-10' horizontalAlignment='center'>
             <TextView text={`Check out our blog`} heading={1} align={`center`} />
             {articles.map(x => (
-              <CardView width='1-3' minWidth='200px' type='default' link={x.url} key={x.link}>
+              <CardView width='1-3' minWidth='280px' type='default' link={x.url} key={x.link} snapAlign>
                 <Column width='1-1'>
                   <Row height='200px' src={x.image_url} style={{ "backgroundSize": `Cover` }} >
                     <Column width='2-3' horizontalAlignment='center' verticalAlignment='center'>
