@@ -126,6 +126,7 @@ export default class CardView extends React.Component {
       this.setStyleKeyValuePair(`marginLeft`, `auto`)
       this.setStyleKeyValuePair(`marginRight`, `auto`)
       this.setStyleKeyValuePair(`display`, `block`)
+      this.setStyleKeyValuePair(`float`, `unset`)
     }
 
     this.setState({

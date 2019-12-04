@@ -135,6 +135,7 @@ class Marketplace extends React.Component {
                   style={{ padding: `20px 0 `,
 float : `left` }}
                   minWidth={`300px`}
+                  snapAlign
                 >
                   <Column width='9-10' horizontalAlignment='center'>
                     <ImageView
