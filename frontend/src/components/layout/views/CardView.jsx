@@ -59,10 +59,12 @@ export default class CardView extends React.Component {
     if (doesLinkRoute) {
       return (
         <>
-          <div className={`invisible-marker`} 
-            style={ {"position" : `fixed`,
-"visibility" : `hidden`,
-"width" : `inherit`}}  
+          <div className={`invisible-marker`}
+            style={{
+              "position": `fixed`,
+              "visibility": `hidden`,
+              "width": `inherit`,
+            }}
             ref={this.cardRef}
           ></div>
           <a href={this.props.link}>
@@ -75,10 +77,12 @@ export default class CardView extends React.Component {
     } else {
       return (
         <>
-          <div className={`invisible-marker`} 
-            style={ {"position" : `fixed`,
-"visibility" : `hidden`,
-"width" : `inherit`}}  
+          <div className={`invisible-marker`}
+            style={{
+              "position": `fixed`,
+              "visibility": `hidden`,
+              "width": `inherit`,
+            }}
             ref={this.cardRef}
           ></div>
           <div className={this.state.class} style={this.state.style}>
@@ -90,39 +94,39 @@ export default class CardView extends React.Component {
   }
 
   componentDidMount() {
-    if(this.props.snapAlign) {
-      if(this.DEBUGGING) {console.log(`CardView.componentDidMount`)}
+    if (this.props.snapAlign) {
+      if (this.DEBUGGING) { console.log(`CardView.componentDidMount`) }
       window.addEventListener(`resize`, this.setMargin)
       // SET MARGIN IN CASE TOO SMALL
       this.setMargin()
     }
   }
   componentWillUnmount() {
-    if(this.props.snapAlign) {
-      if(this.DEBUGGING) {console.log(`CardView.componentWillUnmount`)}
+    if (this.props.snapAlign) {
+      if (this.DEBUGGING) { console.log(`CardView.componentWillUnmount`) }
       window.removeEventListener(`resize`, this.setMargin)
     }
   }
 
   setMargin() {
     let minWidth = this.getMinWidth()
-    if(minWidth==`unset`) { return }
+    if (minWidth == `unset`) { return }
 
     minWidth = minWidth.substring(0, minWidth.length - 2)
     const fraction = this.props.width.split(`-`)
     const minTotalWidth = minWidth * fraction[1] / fraction[0]
 
-    const adaption = 100 - ( 4 * fraction[1] )
+    const adaption = 100 - (4 * fraction[1])
 
     const currentWidth = this.cardRef.current.clientWidth * adaption / 100
 
     const shouldResize = currentWidth <= minTotalWidth
 
     this.style = []
-    if (this.props.style) { this.style = {...this.props.style} }
+    if (this.props.style) { this.style = { ...this.props.style } }
     this.setTheme()
 
-    if(shouldResize) {
+    if (shouldResize) {
       this.setStyleKeyValuePair(`marginLeft`, `auto`)
       this.setStyleKeyValuePair(`marginRight`, `auto`)
       this.setStyleKeyValuePair(`display`, `block`)

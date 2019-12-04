@@ -91,7 +91,7 @@ class HomePage extends React.Component {
             return (
               <Row styling="secondary" >
                 <Column width="2-3" textAlign="center" minWidth="250px" horizontalAlignment="center">
-                  <TextView text="UCL MARKET" heading={1} align="center" />
+                  <TextView text="UCL MARKETPLACE" heading={1} align="center" />
 
                   <TextView text={`The UCL Marketplace contains all of the applications written
                         using UCL API for some of their functionality. We are constantly looking for 
@@ -184,7 +184,7 @@ class HomePage extends React.Component {
         </Row>
 
         <Row styling='secondary'>
-          <Column width='2-3' horizontalAlignment='center' maxWidth='1000px' minWidth='300px'>
+          <Column width='1-1' horizontalAlignment='center' maxWidth='1000px' minWidth='300px'>
             <TextView text={`Our Goals`} heading={1} align={`center`} />
 
             <CardView width='1-3' minWidth='280px' type='no-bg' snapAlign>
@@ -226,7 +226,7 @@ class HomePage extends React.Component {
 
             {endpoints.map((x, key) => (
               <CardView width={`1-2`} minWidth={`280px`} link={x.link} key={key} snapAlign>
-                <Row height = '100px' style={ { padding : `20px 0` } } >
+                <Row height='100px' style={{ padding: `20px 0` }} >
                   <Column width='2-3' horizontalAlignment='center' verticalAlignment='center'>
                     <TextView text={x.name} heading={2} align={`center`} />
                     <TextView text={x.description} heading={5} align={`center`} noMargin />
