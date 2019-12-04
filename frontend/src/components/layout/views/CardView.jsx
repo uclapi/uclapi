@@ -38,7 +38,7 @@ export default class CardView extends React.Component {
     this.class = `uclapi-card`
     this.style = []
 
-    this.cardRef = React.createRef();
+    this.cardRef = React.createRef()
 
     if (this.props.style) { this.style = this.props.style }
 
@@ -58,34 +58,40 @@ export default class CardView extends React.Component {
     // RENDER METHOD
     if (doesLinkRoute) {
       return (
-        <React.Fragment>
-          <div className={"invisible-marker"} 
-            style={ {"position" : "fixed", "visibility" : "hidden", "width" : "inherit"}}  
-            ref={this.cardRef}></div>
+        <>
+          <div className={`invisible-marker`} 
+            style={ {"position" : `fixed`,
+"visibility" : `hidden`,
+"width" : `inherit`}}  
+            ref={this.cardRef}
+          ></div>
           <a href={this.props.link}>
             <div className={this.state.class} style={this.state.style}>
               {this.props.children}
             </div>
           </a>
-        </React.Fragment>
+        </>
       )
     } else {
       return (
-        <React.Fragment>
-          <div className={"invisible-marker"} 
-            style={ {"position" : "fixed", "visibility" : "hidden", "width" : "inherit"}}  
-            ref={this.cardRef}></div>
+        <>
+          <div className={`invisible-marker`} 
+            style={ {"position" : `fixed`,
+"visibility" : `hidden`,
+"width" : `inherit`}}  
+            ref={this.cardRef}
+          ></div>
           <div className={this.state.class} style={this.state.style}>
             {this.props.children}
           </div>
-        </React.Fragment>
+        </>
       )
     }
   }
 
   componentDidMount() {
     if(this.props.snapAlign) {
-      if(this.DEBUGGING) {console.log("CardView.componentDidMount")}
+      if(this.DEBUGGING) {console.log(`CardView.componentDidMount`)}
       window.addEventListener(`resize`, this.setMargin)
       // SET MARGIN IN CASE TOO SMALL
       this.setMargin()
@@ -93,14 +99,14 @@ export default class CardView extends React.Component {
   }
   componentWillUnmount() {
     if(this.props.snapAlign) {
-      if(this.DEBUGGING) {console.log("CardView.componentWillUnmount")}
+      if(this.DEBUGGING) {console.log(`CardView.componentWillUnmount`)}
       window.removeEventListener(`resize`, this.setMargin)
     }
   }
 
   setMargin() {
-    var minWidth = this.getMinWidth()
-    if(minWidth==`unset`) { return; }
+    let minWidth = this.getMinWidth()
+    if(minWidth==`unset`) { return }
 
     minWidth = minWidth.substring(0, minWidth.length - 2)
     const fraction = this.props.width.split(`-`)
@@ -111,9 +117,6 @@ export default class CardView extends React.Component {
     const currentWidth = this.cardRef.current.clientWidth * adaption / 100
 
     const shouldResize = currentWidth <= minTotalWidth
-
-    if(this.DEBUGGING) { console.log(shouldResize + " currentTotalWidth: " + currentWidth + " minWidth: " + minWidth 
-      + " fraction: " + (fraction[0] / fraction[1]) + " minTotalWidth: " + minTotalWidth) }
 
     this.style = []
     if (this.props.style) { this.style = {...this.props.style} }
@@ -126,7 +129,7 @@ export default class CardView extends React.Component {
     }
 
     this.setState({
-      style: this.style
+      style: this.style,
     })
   }
 
