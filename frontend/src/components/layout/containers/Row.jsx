@@ -26,7 +26,7 @@ export default class Row extends React.Component {
     this.DEFAULT_COLOR = `transparent`
 
     this.class = `row`
-    this.style = []
+    this.style = {}
 
     const { style } = this.props
 

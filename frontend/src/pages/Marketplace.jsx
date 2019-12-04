@@ -260,94 +260,110 @@ class AppPage extends React.Component {
           </Column>
         </Row>
 
-        <Row styling='secondary' height='70px' style={{ "padding": `10px 0` }}>
-          <Column width='2-3' horizontalAlignment='center'>
-            <Column
-              width='fit-content'
-              minWidth={iconsize}
-              typeOfInline='grid'
-              horizontalAlignment='left'
-            >
-              <ButtonView type='alternate'
-                text='back'
-                link='/marketplace'
-                style={{
-                  'float': `left`,
-                  'margin': `10px 0`,
-                }}
-              />
-            </Column>
-          </Column>
-        </Row>
-
-        {sizing == `mobile` ? (
-          <Row styling='secondary' height='100px' noPadding>
-            <Column
-              width='2-3'
-              horizontalAlignment='center'
-              verticalAlignment='center'
-            >
-              <Column
-                width='1-1'
-                minWidth={iconsize}
-                typeOfInline='grid'
-                horizontalAlignment='left'
-              >
-                <ImageView
-                  src={logodark}
-                  width={iconsize}
-                  height={iconsize}
-                  description={name + `logo`}
-                  centred
-                  style={{ 'margin': `0 auto 0 0` }}
-                />
+        {sizing==`mobile` ? (
+          <>
+            <Row styling='secondary' height='40px' style={{ padding: `0` }}>
+              <Column width='2-3' horizontalAlignment='center'>
+                <Column
+                  width='fit-content'
+                  minWidth={iconsize}
+                  typeOfInline='grid'
+                  horizontalAlignment='left'
+                >
+                  <ButtonView type='alternate'
+                    text='back'
+                    link='/marketplace'
+                    style={{
+                      'float': `left`,
+                      'margin': `10px 0`,
+                    }}
+                  />
+                </Column>
               </Column>
-              <Column
-                width='1-1'
-                maxWidth={`50px`}
-                minWidth={`50px`}
-                horizontalAlignment='right'
-                textAlign='left'
-                style={{ "paddingLeft": `20px` }}
-              >
-                <TextView text={name} heading={2} />
-              </Column>
-            </Column>
-          </Row>
-        ) : ( 
-          <Row styling='secondary' height='100px' noPadding>
-            <Column
-              width='2-3'
-              horizontalAlignment='center'
-              verticalAlignment='center'
+            </Row>
+            <Row styling='secondary'
+              height={`100px`}
+              noPadding
+              style={ {padding : `30px 0`} }
             >
               <Column
-                width='fit-content'
-                minWidth={iconsize}
-                typeOfInline='grid'
-                horizontalAlignment='left'
+                width='2-3'
+                horizontalAlignment='center'
+                verticalAlignment='center'
               >
-                <ImageView
-                  src={logodark}
-                  width={iconsize}
-                  height={iconsize}
-                  description={name + `logo`}
-                  centred
-                  style={{ 'margin': `0 auto 0 0` }}
-                />
+                <CardView
+                  type='default'
+                  width={`9-10`}
+                  style={ { margin : `0 20px` }}
+                  noPadding
+                >
+                  <ImageView
+                    src={logodark}
+                    width={iconsize}
+                    height={iconsize}
+                    description={name + `logo`}
+                    centred
+                  />
+                  <TextView text={name} heading={2} />
+                </CardView>
               </Column>
+            </Row>
+          </>
+        ) : (
+          <> 
+            <Row styling='secondary' height='70px' style={{ "padding": `10px 0` }}>
+              <Column width='2-3' horizontalAlignment='center'>
+                <Column
+                  width='fit-content'
+                  minWidth={iconsize}
+                  typeOfInline='grid'
+                  horizontalAlignment='left'
+                >
+                  <ButtonView type='alternate'
+                    text='back'
+                    link='/marketplace'
+                    style={{
+                      'float': `left`,
+                      'margin': `10px 0`,
+                    }}
+                  />
+                </Column>
+              </Column>
+            </Row>
+            <Row styling='secondary' height='100px' noPadding>
               <Column
-                width='fit-content'
-                minWidth={iconsize}
-                horizontalAlignment='left'
-                textAlign='left'
-                style={{ "paddingLeft": `20px` }}
+                width='2-3'
+                horizontalAlignment='center'
+                verticalAlignment='center'
               >
-                <TextView text={name} heading={2} />
-                <TextView text={description} heading={5} />
+                <Column
+                  width='fit-content'
+                  minWidth={iconsize}
+                  typeOfInline='grid'
+                  horizontalAlignment='left'
+                >
+                  <ImageView
+                    src={logodark}
+                    width={iconsize}
+                    height={iconsize}
+                    description={name + `logo`}
+                    centred
+                    style={{ 'margin': `0 auto 0 0` }}
+                  />
+                </Column>
+                <Column
+                  width='fit-content'
+                  minWidth={iconsize}
+                  horizontalAlignment='left'
+                  textAlign='left'
+                  style={{ "paddingLeft": `20px` }}
+                >
+                  <TextView text={name} heading={2} />
+                  <TextView text={description} heading={5} />
+                </Column>
               </Column>
-            </Column>
-          </Row>
+            </Row>
+          </>
         )}
 
         <Row styling='secondary' style={{ 'padding': `0` }}>

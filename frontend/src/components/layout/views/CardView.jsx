@@ -16,6 +16,7 @@ this.props.fakeLink - same behaviour as a link
 
 this.props.minWidth - e.g 300px a minimum width (default is unset)
 this.props.noShadow - disables box shadow
+this.props.noPadding - disables the padding 
 
 this.props.snapAlign - snaps the cards to be in a vertical row when they get too small to display in a horizontal row 
 **/
@@ -166,7 +167,10 @@ export default class CardView extends React.Component {
     if (this.props.width == `fit-content`) { return `fit-content` }
 
     const fraction = this.props.width.split(`-`)
-    const adaptation = 100 - (4 * fraction[1])
+    let adaptation = 100 - (4 * fraction[1])
+
+    if(this.props.noPadding) { adaptation = 100 }
+
     const percentage = fraction[0] / fraction[1] * adaptation
     return percentage + `%`
   }
