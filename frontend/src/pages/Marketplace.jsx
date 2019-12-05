@@ -375,6 +375,7 @@ class AppPage extends React.Component {
                 width={`1-` + screenshots.length}
                 type='no-bg'
                 key={name + ` screenshot number ` + i}
+                minWidth={screenshotwidth}
               >
                 <ImageView src={img}
                   width={screenshotwidth}
