@@ -262,110 +262,91 @@ class AppPage extends React.Component {
           </Column>
         </Row>
 
+        <Row styling='secondary'
+          height={sizing==`mobile` ? `50px` : `70px`} 
+          style={{ padding: sizing==`mobile` ? `0` :  `10px 0`}}
+        >
+          <Column width='2-3' horizontalAlignment='center'>
+            <Column
+              width='fit-content'
+              minWidth={iconsize}
+              typeOfInline='grid'
+              horizontalAlignment='left'
+            >
+              <ButtonView type='alternate'
+                text='back'
+                link='/marketplace'
+                style={{
+                  'float': `left`,
+                  'margin': `10px 0`,
+                }}
+              />
+            </Column>
+          </Column>
+        </Row>
+
         {sizing==`mobile` ? (
-          <>
-            <Row styling='secondary' height='50px' style={{ padding: `0` }}>
-              <Column width='2-3' horizontalAlignment='center'>
-                <Column
-                  width='fit-content'
-                  minWidth={iconsize}
-                  typeOfInline='grid'
-                  horizontalAlignment='left'
-                >
-                  <ButtonView type='alternate'
-                    text='back'
-                    link='/marketplace'
-                    style={{
-                      'float': `left`,
-                      'margin': `10px 0`,
-                    }}
-                  />
-                </Column>
-              </Column>
-            </Row>
-            <Row styling='secondary'
-              height={`100px`}
-              noPadding
-              style={ {padding : `30px 0`} }
+          <Row styling='secondary'
+            height={`100px`}
+            noPadding
+            style={ {padding : `30px 0`} }
+          >
+            <Column
+              width='2-3'
+              horizontalAlignment='center'
+              verticalAlignment='center'
+            >
+              <CardView
+                type='default'
+                width={`9-10`}
+                style={ { margin : `0 20px` }}
+                noPadding
+              >
+                <ImageView
+                  src={logodark}
+                  width={iconsize}
+                  height={iconsize}
+                  description={name + `logo`}
+                  centred
+                />
+                <TextView text={name} heading={2} />
+              </CardView>
+            </Column>
+          </Row>
+        ) : (
+          <Row styling='secondary' height='100px' noPadding>
+            <Column
+              width='2-3'
+              horizontalAlignment='center'
+              verticalAlignment='center'
             >
               <Column
-                width='2-3'
-                horizontalAlignment='center'
-                verticalAlignment='center'
+                width='fit-content'
+                minWidth={iconsize}
+                typeOfInline='grid'
+                horizontalAlignment='left'
               >
-                <CardView
-                  type='default'
-                  width={`9-10`}
-                  style={ { margin : `0 20px` }}
-                  noPadding
-                >
-                  <ImageView
-                    src={logodark}
-                    width={iconsize}
-                    height={iconsize}
-                    description={name + `logo`}
-                    centred
-                  />
-                  <TextView text={name} heading={2} />
-                </CardView>
+                <ImageView
+                  src={logodark}
+                  width={iconsize}
+                  height={iconsize}
+                  description={name + `logo`}
+                  centred
+                  style={{ 'margin': `0 auto 0 0` }}
+                />
               </Column>
-            </Row>
-          </>
-        ) : (
-          <> 
-            <Row styling='secondary' height='70px' style={{ padding : `10px 0` }}>
-              <Column width='2-3' horizontalAlignment='center'>
-                <Column
-                  width='fit-content'
-                  minWidth={iconsize}
-                  typeOfInline='grid'
-                  horizontalAlignment='left'
-                >
-                  <ButtonView type='alternate'
-                    text='back'
-                    link='/marketplace'
-                    style={{
-                      'float': `left`,
-                      'margin': `10px 0`,
-                    }}
-                  />
-                </Column>
-              </Column>
-            </Row>
-            <Row styling='secondary' height='100px' noPadding>
               <Column
-                width='2-3'
-                horizontalAlignment='center'
-                verticalAlignment='center'
+                width='fit-content'
+                minWidth={iconsize}
+                horizontalAlignment='left'
+                textAlign='left'
+                style={{ "paddingLeft": `20px` }}
               >
-                <Column
-                  width='fit-content'
-                  minWidth={iconsize}
-                  typeOfInline='grid'
-                  horizontalAlignment='left'
-                >
-                  <ImageView
-                    src={logodark}
-                    width={iconsize}
-                    height={iconsize}
-                    description={name + `logo`}
-                    centred
-                    style={{ 'margin': `0 auto 0 0` }}
-                  />
-                </Column>
-                <Column
-                  width='fit-content'
-                  minWidth={iconsize}
-                  horizontalAlignment='left'
-                  textAlign='left'
-                  style={{ "paddingLeft": `20px` }}
-                >
-                  <TextView text={name} heading={2} />
-                  <TextView text={description} heading={5} />
-                </Column>
+                <TextView text={name} heading={2} />
+                <TextView text={description} heading={5} />
               </Column>
-            </Row>
-          </>
+            </Column>
+          </Row>
         )}
 
         <Row styling='secondary' style={{ 'padding': `0` }}>
