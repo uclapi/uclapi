@@ -247,13 +247,15 @@ class HomePage extends React.Component {
                 <Column width='1-1'>
                   <Row height='200px'
                     style={{ backgroundSize : `Cover`,
-overflow : `hidden` }}
+                            overflow : `hidden` }}
                     noPadding
                   >
                     <Column width='1-1' horizontalAlignment='center' verticalAlignment='center'>
                        <ImageView src={x.image_url==`url_not_found` ? placeholder : x.image_url}
-                         style={{ width : `auto`,
-                                   height : `-webkit-fill-available` }}
+                         style={{ display: `block`,
+                                  width: `100%`,
+                                  height: `200px`,
+                                  objectFit: `cover` }}
                          description={x.title + ` background`}
                          centred
                        >
