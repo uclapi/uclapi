@@ -3,8 +3,6 @@
 
 import React from 'react'
 
-import placeholder from 'Images/home-page/splash_screen.png'
-
 /**
 REQUIRED ATTRIBUTES:
 this.props.styling ( styling types 'warning red' - red, 'splash-parallex' - primary color background, 'secondary' - dark grey, 'team-parallax' - hackathon scroll bg )
@@ -77,11 +75,8 @@ export default class Row extends React.Component {
     if (styling) { this.class += ` ` + styling }
 
     if (src) {
-      if (src == `url_not_found`) {
-        this.setStyleKeyValuePair(`backgroundImage`, `url(${placeholder})`)
-      } else {
-        this.setStyleKeyValuePair(`backgroundImage`, `url(${src})`)
-      }
+      this.setStyleKeyValuePair(`backgroundImage`, `url(${src})`)
+      
       this.setStyleKeyValuePair(`backgroundPosition`, `50%`)
       this.setStyleKeyValuePair(`backgroundRepeat`, `no-repeat`)
     }

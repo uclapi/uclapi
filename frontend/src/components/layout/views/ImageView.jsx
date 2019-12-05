@@ -24,13 +24,13 @@ export default class ImageView extends React.Component {
 
     // Bind functions
     this.setTheme = this.setTheme.bind(this)
+    this.updateStyle = this.updateStyle.bind(this)
 
     const {
       src,
       description,
       width,
       height,
-      style,
     } = this.props
 
     // Every image view should contain a source, description, width and height
@@ -38,29 +38,31 @@ export default class ImageView extends React.Component {
     if (typeof description == `undefined`) { console.log(`EXCEPTION: ImageView.constructor: no description defined`) }
     if (typeof width == `undefined`) { console.log(`EXCEPTION: ImageView.constructor: no width defined`) }
     if (typeof height == `undefined`) { console.log(`EXCEPTION: ImageView.constructor: no height defined`) }
-
-    this.class = `image-view`
-    this.style = []
-    // If custom styling then include
-    if (style) { this.style = style }
-    // Set up button tags
-    this.setTheme()
-
-    // Save class and stylings to the state
-    this.state = {
-      class: this.class,
-      style: this.style,
-    }
   }
 
   render() {
-    const { class: className, style } = this.state
+    this.updateStyle()
+
+    const className = this.className
+    const style = this.style
+
     const { src, description, width, height } = this.props
+
     return (
-      <div className={className} style={style}>
-        <img src={src} alt={description} width={width} height={height}></img>
+      <div className={className}>
+        <img src={src} alt={description} width={width} height={height} style={style}></img>
       </div>
     )
+  }
+
+  updateStyle() {
+    this.class = `image-view`
+    this.style = {}
+    // If custom styling then include
+    const { style } = this.props
+    if (style) { this.style = { ...style } }
+    // Set up button tags
+    this.setTheme()
   }
 
   setTheme() {

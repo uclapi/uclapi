@@ -258,6 +258,14 @@ a:hover { color: $color-grey-light; }
   overflow: hidden;
 }
 
+.uclapi-card img {
+    -webkit-transition: .2s all;
+}
+
+.uclapi-card:hover img {
+    -webkit-filter: brightness(50%);
+}
+
 .uclapi-card-default {
   background-color: $color-grey-dark;
 }
