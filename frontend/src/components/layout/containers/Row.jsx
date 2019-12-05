@@ -23,24 +23,31 @@ export default class Row extends React.Component {
     this.DEBUGGING = false
     this.DEFAULT_COLOR = `transparent`
 
+    this.updateStyling = this.updateStyling.bind(this)
+  }
+
+  updateStyling() {
     this.class = `row`
-    this.style = []
+    this.style = {}
 
     const { style } = this.props
 
-    if (style) { this.style = style }
+    if (style) { 
+      this.style = { ...style } 
+      if(this.DEBUGGING) {console.log(style) }
+    }
 
     this.setTheme()
-
-    this.state = {
-      class: this.class,
-      style: this.style,
-    }
   }
 
   render() {
-    const { class: className, style } = this.state
+    this.updateStyling()
+
+    const className = this.class
+    const style = this.style
+
     const { children } = this.props
+
     return (
       <div className={className} style={style}>
         {children}
