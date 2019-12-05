@@ -256,17 +256,17 @@ a:hover { color: $color-grey-light; }
   margin: 2%;
   min-height: fit-content;
   overflow: hidden;
-}
 
-.uclapi-card img {
+  img {
     -webkit-filter: brightness(75%);
     -webkit-transition: .5s linear;
+  }
 }
 
 .uclapi-card:hover img {
-    -webkit-transform: scale(1.15);
-    transform: scale(1.15);
-    -webkit-filter: grayscale(50%) blur(1px);
+  -webkit-transform: scale(1.15);
+  transform: scale(1.15);
+  -webkit-filter: grayscale(50%) blur(1px);
 }
 
 .uclapi-card-default {
