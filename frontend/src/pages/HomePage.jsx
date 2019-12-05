@@ -258,9 +258,15 @@ class HomePage extends React.Component {
                                   objectFit: `cover` }}
                          description={x.title + ` background`}
                          centred
-                       >
-                        <TextView text={x.title} align={`center`} heading={3} color={`white`} />
-                      </ImageView>
+                       />
+                        <TextView text={x.title}
+                          align={`center`}
+                          heading={3}
+                          color={`white`}
+                          style={ { width : `100%`,
+position : `absolute`,
+top : `85px`} }
+                        />
                     </Column>
                   </Row>
                   <Row color='transparent'>
