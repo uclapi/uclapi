@@ -133,7 +133,9 @@ class Marketplace extends React.Component {
                   type={`alternate`}
                   link={`/marketplace/` + app.id}
                   style={{ padding: `20px 0 `,
-float : `left` }}
+                        float : `left`,
+                        marginTop: `20px`,
+                        marginBottom: `20px`}}
                   minWidth={`225px`}
                   snapAlign
                 >
@@ -262,7 +264,7 @@ class AppPage extends React.Component {
 
         {sizing==`mobile` ? (
           <>
-            <Row styling='secondary' height='40px' style={{ padding: `0` }}>
+            <Row styling='secondary' height='50px' style={{ padding: `0` }}>
               <Column width='2-3' horizontalAlignment='center'>
                 <Column
                   width='fit-content'
@@ -311,7 +313,7 @@ class AppPage extends React.Component {
           </>
         ) : (
           <> 
-            <Row styling='secondary' height='70px' style={{ "padding": `10px 0` }}>
+            <Row styling='secondary' height='70px' style={{ padding : `10px 0` }}>
               <Column width='2-3' horizontalAlignment='center'>
                 <Column
                   width='fit-content'

@@ -27,7 +27,7 @@ export default class CardView extends React.Component {
     super(props)
 
     this.DEFAULT_WIDTH = 0
-    this.DEBUGGING = true
+    this.DEBUGGING = false
 
     this.getWidth = this.getWidth.bind(this)
     this.getMinWidth = this.getMinWidth.bind(this)
@@ -35,23 +35,21 @@ export default class CardView extends React.Component {
     this.setStyleKeyValuePair = this.setStyleKeyValuePair.bind(this)
     this.setTheme = this.setTheme.bind(this)
     this.setMargin = this.setMargin.bind(this)
-
-    this.class = `uclapi-card`
-    this.style = []
-
+    this.updateStyle = this.updateStyle.bind(this)
+    
     this.cardRef = React.createRef()
 
-    if (this.props.style) { this.style = this.props.style }
-
-    this.setTheme()
-
     this.state = {
-      style: this.style,
-      class: this.class,
+      containerWidth : -1,
     }
   }
 
   render() {
+    this.updateStyle()
+
+    const className = this.class
+    const style = this.style
+
     if (this.DEBUGGING) { console.log(`DEBUG: CardView rendered with the following styles: ` + this.state.type + ` and class: ` + this.state.class) }
 
     const doesLinkRoute = (typeof this.props.link != `undefined`) && (typeof this.props.fakeLink == `undefined`)
@@ -69,7 +67,7 @@ export default class CardView extends React.Component {
             ref={this.cardRef}
           ></div>
           <a href={this.props.link}>
-            <div className={this.state.class} style={this.state.style}>
+            <div className={className} style={style}>
               {this.props.children}
             </div>
           </a>
@@ -86,11 +84,39 @@ export default class CardView extends React.Component {
             }}
             ref={this.cardRef}
           ></div>
-          <div className={this.state.class} style={this.state.style}>
+          <div className={className} style={style}>
             {this.props.children}
           </div>
         </>
       )
+    }
+  }
+
+  updateStyle() {
+    let minWidth = this.getMinWidth()
+    let shouldResize = false
+
+    if (minWidth != `unset` && this.state.containerWidth != -1) { 
+      minWidth = minWidth.substring(0, minWidth.length - 2)
+      const fraction = this.props.width.split(`-`)
+      const minTotalWidth = minWidth * fraction[1] / fraction[0]
+
+      shouldResize = this.state.containerWidth <= minTotalWidth
+    }
+
+    this.class = `uclapi-card`
+    this.style = {}
+
+    const { style } = this.props
+    if (style) { this.style = {...style} }
+
+    this.setTheme()
+
+    if (shouldResize) {
+      this.setStyleKeyValuePair(`marginLeft`, `auto`)
+      this.setStyleKeyValuePair(`marginRight`, `auto`)
+      this.setStyleKeyValuePair(`display`, `block`)
+      this.setStyleKeyValuePair(`float`, `unset`)
     }
   }
 
@@ -110,33 +136,12 @@ export default class CardView extends React.Component {
   }
 
   setMargin() {
-    let minWidth = this.getMinWidth()
-    if (minWidth == `unset`) { return }
-
-    minWidth = minWidth.substring(0, minWidth.length - 2)
     const fraction = this.props.width.split(`-`)
-    const minTotalWidth = minWidth * fraction[1] / fraction[0]
-
     const adaption = 100 - (4 * fraction[1])
 
     const currentWidth = this.cardRef.current.clientWidth * adaption / 100
 
-    const shouldResize = currentWidth <= minTotalWidth
-
-    this.style = []
-    if (this.props.style) { this.style = { ...this.props.style } }
-    this.setTheme()
-
-    if (shouldResize) {
-      this.setStyleKeyValuePair(`marginLeft`, `auto`)
-      this.setStyleKeyValuePair(`marginRight`, `auto`)
-      this.setStyleKeyValuePair(`display`, `block`)
-      this.setStyleKeyValuePair(`float`, `unset`)
-    }
-
-    this.setState({
-      style: this.style,
-    })
+    this.setState({containerWidth : currentWidth})
   }
 
   setTheme() {
