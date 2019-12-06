@@ -242,7 +242,7 @@ class HomePage extends React.Component {
           <Column width='9-10' horizontalAlignment='center'>
             <TextView text={`Check out our blog`} heading={1} align={`center`} />
             {articles.map(x => (
-              <CardView width='1-3' minWidth='280px' type='default' link={x.url} key={x.link} snapAlign>
+              <CardView width='1-3' minWidth='280px'  link={x.url} key={x.link} snapAlign>
                 <Column width='1-1'>
                   <Row height='200px' src={x.image_url} style={{ "backgroundSize": `Cover` }} >
                     <Column width='2-3' horizontalAlignment='center' verticalAlignment='center'>

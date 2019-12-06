@@ -133,8 +133,10 @@ class Marketplace extends React.Component {
                   type={`alternate`}
                   link={`/marketplace/` + app.id}
                   style={{ padding: `20px 0 `,
-float : `left` }}
-                  minWidth={`300px`}
+                        float : `left`,
+                        marginTop: `20px`,
+                        marginBottom: `20px`}}
+                  minWidth={`225px`}
                   snapAlign
                 >
                   <Column width='9-10' horizontalAlignment='center'>
@@ -177,16 +179,50 @@ class AppPage extends React.Component {
     const app = allApps[appId]
     this.state = {
       'app': app,
+      sizing: `default`,
     }
   }
 
+  updateDimensions = () => {
+    if (typeof (window) === `undefined`) {
+      return null
+    }
+    const w = window,
+      d = document,
+      documentElement = d.documentElement,
+      body = d.getElementsByTagName(`body`)[0],
+      width = w.innerWidth || documentElement.clientWidth || body.clientWidth
+    // height = w.innerHeight || documentElement.clientHeight || body.clientHeight
+
+    const mobileCutOff = 700
+    const tabletCutOff = 1130
+
+    const { sizing } = this.state
+
+    if (width > tabletCutOff) {
+      if (sizing != `default`) { this.setState({ sizing: `default` }) }
+    } else if (width > mobileCutOff) {
+      if (sizing != `tablet`) { this.setState({ sizing: `tablet` }) }
+    } else {
+      if (sizing != `mobile`) { this.setState({ sizing: `mobile` }) }
+    }
+
+    console.log(sizing)
+  }
+
+  UNSAFE_componentWillMount() {
+    setTimeout(this.updateDimensions, 50)
+  }
+  componentDidMount() {
+    window.addEventListener(`resize`, this.updateDimensions)
+  }
+  componentWillUnmount() {
+    window.removeEventListener(`resize`, this.updateDimensions)
+  }
+
   render() {
-    const iconsize = `100px`
-
-    const screenshotwidth = `216px`
-    const screenshotheight = `384px`
-
     const {
+      sizing,
       app: {
         logodark,
         name,
@@ -196,6 +232,12 @@ class AppPage extends React.Component {
         links,
       },
     } = this.state
+
+    const contentWidth = sizing==`mobile` ? `9-10` : `2-3`
+    const iconsize = sizing==`mobile` ? `50px` : `100px`
+
+    const screenshotwidth = sizing==`mobile` ? `54px` : `216px`
+    const screenshotheight = sizing==`mobile` ? `86px` : `384px`
 
     return (
       <>
@@ -220,7 +262,10 @@ class AppPage extends React.Component {
           </Column>
         </Row>
 
-        <Row styling='secondary' height='70px' style={{ "padding": `10px 0` }}>
+        <Row styling='secondary'
+          height={sizing==`mobile` ? `50px` : `70px`} 
+          style={{ padding: sizing==`mobile` ? `0` :  `10px 0`}}
+        >
           <Column width='2-3' horizontalAlignment='center'>
             <Column
               width='fit-content'
@@ -240,47 +285,78 @@ class AppPage extends React.Component {
           </Column>
         </Row>
 
-        <Row styling='secondary' height='100px' noPadding>
-          <Column
-            width='2-3'
-            horizontalAlignment='center'
-            verticalAlignment='center'
+        {sizing==`mobile` ? (
+          <Row styling='secondary'
+            height={`100px`}
+            noPadding
+            style={ {padding : `30px 0`} }
           >
             <Column
-              width='fit-content'
-              minWidth={iconsize}
-              typeOfInline='grid'
-              horizontalAlignment='left'
+              width='2-3'
+              horizontalAlignment='center'
+              verticalAlignment='center'
             >
-              <ImageView
-                src={logodark}
-                width={iconsize}
-                height={iconsize}
-                description={name + `logo`}
-                centred
-                style={{ 'margin': `0 auto 0 0` }}
-              />
+              <CardView
+                type='default'
+                width={`9-10`}
+                style={ { margin : `0 20px` }}
+                noPadding
+              >
+                <ImageView
+                  src={logodark}
+                  width={iconsize}
+                  height={iconsize}
+                  description={name + `logo`}
+                  centred
+                />
+                <TextView text={name} heading={2} />
+              </CardView>
             </Column>
+          </Row>
+        ) : (
+          <Row styling='secondary' height='100px' noPadding>
             <Column
-              width='fit-content'
-              minWidth={iconsize}
-              horizontalAlignment='left'
-              textAlign='left'
-              style={{ "paddingLeft": `20px` }}
+              width='2-3'
+              horizontalAlignment='center'
+              verticalAlignment='center'
             >
-              <TextView text={name} heading={2} />
-              <TextView text={description} heading={5} />
+              <Column
+                width='fit-content'
+                minWidth={iconsize}
+                typeOfInline='grid'
+                horizontalAlignment='left'
+              >
+                <ImageView
+                  src={logodark}
+                  width={iconsize}
+                  height={iconsize}
+                  description={name + `logo`}
+                  centred
+                  style={{ 'margin': `0 auto 0 0` }}
+                />
+              </Column>
+              <Column
+                width='fit-content'
+                minWidth={iconsize}
+                horizontalAlignment='left'
+                textAlign='left'
+                style={{ "paddingLeft": `20px` }}
+              >
+                <TextView text={name} heading={2} />
+                <TextView text={description} heading={5} />
+              </Column>
             </Column>
-          </Column>
-        </Row>
+          </Row>
+        )}
+
         <Row styling='secondary' style={{ 'padding': `0` }}>
-          <Column width='2-3' horizontalAlignment='center'>
+          <Column width={contentWidth} horizontalAlignment='center'>
             {screenshots.map((img, i) => (
               <CardView
                 width={`1-` + screenshots.length}
-                minWidth={screenshotwidth}
                 type='no-bg'
                 key={name + ` screenshot number ` + i}
+                minWidth={screenshotwidth}
               >
                 <ImageView src={img}
                   width={screenshotwidth}
@@ -293,7 +369,7 @@ class AppPage extends React.Component {
           </Column>
         </Row>
         <Row styling='secondary' style={{ 'padding': `0 0 20px 0` }}>
-          <Column width='1-2' horizontalAlignment='center' textAlign='left'>
+          <Column width={contentWidth} horizontalAlignment='center' textAlign='left'>
             {detailedDescription}
           </Column>
         </Row>
