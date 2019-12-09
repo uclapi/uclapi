@@ -1,6 +1,6 @@
 autopep8==1.4.4
 amqp==2.5.2
-botocore==1.13.34
+botocore==1.13.35
 boto3==1.10.34
 celery==4.3.0
 certifi==2019.11.28
