@@ -6,6 +6,7 @@ import Subheader from 'material-ui/Subheader';
 import MenuItem from 'material-ui/MenuItem';
 import {spacing, typography, zIndex} from 'material-ui/styles';
 import apiLogo from './../../images/simpleAPILogoWhite.svg';
+import { withStyles } from '@material-ui/core/styles';
 
 /*
   Got this entire thing from
@@ -38,7 +39,6 @@ const styles = {
   },
 };
 
-
 export default class Sidebar extends React.Component {
 
   constructor(props) {
@@ -48,15 +48,9 @@ export default class Sidebar extends React.Component {
   render() {
     return (
       <Drawer
-        docked={true}
         open={true}
+        containerStyle={{ top: 61 }}
         >
-        <div style={styles.logo}>
-          <span className="sidebarLogo">
-            <img src={apiLogo}/>
-            UCL API
-          </span>
-        </div>
         <SelectableList
           value={location.pathname}
         >
