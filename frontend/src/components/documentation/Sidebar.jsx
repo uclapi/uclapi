@@ -70,6 +70,7 @@ export default class Sidebar extends React.Component {
           open={this.state.isOpen}
           containerStyle={{ top: 61 }}
           onClose={this.toggleOpen}
+          onOpen={this.toggleOpen}
         >
           <SelectableList
             value={location.pathname}
