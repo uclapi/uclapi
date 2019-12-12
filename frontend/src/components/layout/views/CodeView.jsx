@@ -44,6 +44,8 @@ export default class CodeView extends React.Component {
     else if (type == `request`) {
       if (typeof url == `undefined`) { console.log(`EXCEPTION: CodeView.constructor: request but no url defined`) }
       if (typeof params == `undefined`) { console.log(`EXCEPTION: CodeView.constructor: request but no params defined`) }
+    } else if (type == `raw-examples`) {
+      if (typeof this.props.languages == `undefined`) { console.log(`EXCEPTION: CodeView.constructor: raw examples but no examples defined`) }
     } else {
       console.log(`EXCEPTION: CodeView.constructor: Type of code view is not recognized`)
     }
@@ -107,6 +109,23 @@ export default class CodeView extends React.Component {
     if (type == `request`) { languages = RequestGenerator.getRequest(url, params, true) }
     // type is 'real-response' - Use the passed response
     if (type == `response`) { languages = this.getResponse(response) }
+    // type is raw-examples - Use the passed examples
+    if (type == `raw-examples`) { 
+      languages = [
+        {
+          "name": "python",
+          "code": this.props.languages['python']
+        },
+        {
+          "name": "javascript",
+          "code": this.props.languages['javascript']
+        },
+        {
+          "name": "shell",
+          "code": this.props.languages['shell']
+        },
+      ]
+    }
 
     return languages
   }

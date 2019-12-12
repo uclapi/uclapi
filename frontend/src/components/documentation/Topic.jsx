@@ -5,6 +5,8 @@ import py from 'react-syntax-highlighter/dist/esm/languages/hljs/python';
 import sh from 'react-syntax-highlighter/dist/esm/languages/hljs/shell';
 import { androidstudio } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
+import { CodeView } from 'Layout/Items.jsx'
+
 SyntaxHighlighter.registerLanguage('javascript', js);
 SyntaxHighlighter.registerLanguage('python', py);
 SyntaxHighlighter.registerLanguage('shell', sh);
@@ -35,6 +37,19 @@ let customStyle = {
 export default class Topic extends React.Component {
 
   render() {
+
+    var codeType = `no-examples`
+    var codeExamples = []
+
+    if (typeof this.props.noExamples == `undefined`) {
+      codeExamples = this.props.codeExamples
+      codeType = `raw-examples`
+
+      if(this.props.codeExamples.python == this.props.codeExamples.javascript) {
+        codeType = `response`
+      }
+    }
+
     return (
       <div className="row">
         <div className="col text">
@@ -51,20 +66,12 @@ export default class Topic extends React.Component {
             I guess it depends on how we generate the sidebar
           */}
           {this.props.children}
-        </div>
-        <div className="col code">
-          {
-            (!this.props.noExamples) ? (
-              <SyntaxHighlighter
-                language={this.props.activeLanguage}
-                style={androidstudio}
-                customStyle={customStyle}>
-                {this.props.codeExamples[
-                  this.props.activeLanguage
-                ]}
-              </SyntaxHighlighter>
-            ) : <div></div>
-          }
+          {codeType==`raw-examples` && (
+            <CodeView languages={this.props.codeExamples} type={codeType} />
+          )}
+          {codeType==`response` && (
+            <CodeView response={this.props.codeExamples.python} type={codeType} />
+          )}
         </div>
       </div>
     );

@@ -37,28 +37,10 @@ export default class LanguageTabs extends React.Component {
             <div className="col">
 
             </div>
-            <div className="col">
-              <Tabs
-                value={this.state.activeLanguage}
-                onChange={this.changeActiveLanguage}>
-                <Tab
-                  label="Python"
-                  value="python">
-                </Tab>
-                <Tab
-                  label="JavaScript"
-                  value="javascript">
-                </Tab>
-                <Tab
-                  label="Shell"
-                  value="shell">
-                </Tab>
-              </Tabs>
-            </div>
           </div>
         </div>
 
-        <div className="main">
+        <div className="main" style={{padding : `50px`}}>
           {this.renderChildren(this.props)}
         </div>
       </div>
