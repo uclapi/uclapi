@@ -1,15 +1,15 @@
-import React from 'react';
-import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
-import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript';
-import py from 'react-syntax-highlighter/dist/esm/languages/hljs/python';
-import sh from 'react-syntax-highlighter/dist/esm/languages/hljs/shell';
-import { androidstudio } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import React from 'react'
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter'
+import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript'
+import py from 'react-syntax-highlighter/dist/esm/languages/hljs/python'
+import sh from 'react-syntax-highlighter/dist/esm/languages/hljs/shell'
+import { androidstudio } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 
 import { CodeView } from 'Layout/Items.jsx'
 
-SyntaxHighlighter.registerLanguage('javascript', js);
-SyntaxHighlighter.registerLanguage('python', py);
-SyntaxHighlighter.registerLanguage('shell', sh);
+SyntaxHighlighter.registerLanguage(`javascript`, js)
+SyntaxHighlighter.registerLanguage(`python`, py)
+SyntaxHighlighter.registerLanguage(`shell`, sh)
 
 /*
   This is the main component that contains content for the documentation.
@@ -28,18 +28,18 @@ SyntaxHighlighter.registerLanguage('shell', sh);
   link in the sidebar, it takes you to the Topic component
 */
 
-let customStyle = {
-  'background': "#272B2D",
-  'borderRadius': "8px",
-  'padding': "12px"
+const customStyle = {
+  'background': `#272B2D`,
+  'borderRadius': `8px`,
+  'padding': `12px`,
 }
 
 export default class Topic extends React.Component {
 
   render() {
 
-    var codeType = `no-examples`
-    var codeExamples = []
+    let codeType = `no-examples`
+    let codeExamples = []
 
     if (typeof this.props.noExamples == `undefined`) {
       codeExamples = this.props.codeExamples
@@ -74,7 +74,7 @@ export default class Topic extends React.Component {
           )}
         </div>
       </div>
-    );
+    )
   }
 
 }

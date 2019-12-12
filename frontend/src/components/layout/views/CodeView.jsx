@@ -113,16 +113,16 @@ export default class CodeView extends React.Component {
     if (type == `raw-examples`) { 
       languages = [
         {
-          "name": "python",
-          "code": this.props.languages['python']
+          "name": `python`,
+          "code": this.props.languages[`python`],
         },
         {
-          "name": "javascript",
-          "code": this.props.languages['javascript']
+          "name": `javascript`,
+          "code": this.props.languages[`javascript`],
         },
         {
-          "name": "shell",
-          "code": this.props.languages['shell']
+          "name": `shell`,
+          "code": this.props.languages[`shell`],
         },
       ]
     }
