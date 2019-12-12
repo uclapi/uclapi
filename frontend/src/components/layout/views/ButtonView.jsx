@@ -12,6 +12,7 @@ OPTIONAL ATTRIBUTES:
 this.props.style (An array of styles to add to the component)
 this.props.type (changes the styling of the button: Can take default (grey), alternate (white))
 this.props.centred (if added will center the button inside its parent)
+this.props.onClick (Called in place of a link)
 **/
 
 export default class ButtonView extends React.Component {
@@ -47,13 +48,22 @@ export default class ButtonView extends React.Component {
   }
 
   render() {
-    return (
-      <a href={this.props.link}>
-        <div className={this.state.class} style={this.state.style}>
-          {this.props.text}
+    if(this.props.link) {
+      return (
+        <a href={this.props.link}>
+          <div className={this.state.class} style={this.state.style}>
+            {this.props.text}
+          </div>
+        </a>
+      )
+    } else {
+      return (
+        <div className={this.state.class} style={this.state.style} onClick={this.props.onClick}>
+            {this.props.text}
         </div>
-      </a>
-    )
+        
+      )
+    }
   }
 
   setStyleKeyValuePair(key, value) {

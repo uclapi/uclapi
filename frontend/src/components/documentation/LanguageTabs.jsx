@@ -32,14 +32,6 @@ export default class LanguageTabs extends React.Component {
   render() {
     return (
       <div>
-        <div className="tab">
-          <div className="row">
-            <div className="col">
-
-            </div>
-          </div>
-        </div>
-
         <div className="main" style={{padding : `50px`}}>
           {this.renderChildren(this.props)}
         </div>
