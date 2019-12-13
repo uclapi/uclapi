@@ -1,7 +1,6 @@
 // UCL API navbar
 import 'Styles/navbar.scss'
 
-import PropTypes from 'prop-types'
 import React from 'react'
 
 import { NavBar } from 'Layout/Items.jsx'
@@ -44,21 +43,11 @@ import Sidebar from './Sidebar.jsx'
 
 export default class DocumentationComponent extends React.Component {
 
-    static propTypes = {
-      sizing: PropTypes.number,
-    }
-
-    constructor(props) {
-        super(props)
-    }
-
     render () {
-        const { sizing } = this.props
-
         return (
             <div>
               <NavBar isScroll={false} />
-              <Sidebar sizing={sizing}/>
+              <Sidebar/>
               <LanguageTabs>
                 <Welcome key={`Welcome`}/>
                 <VersionInformation key={`VersionInformation`}/>

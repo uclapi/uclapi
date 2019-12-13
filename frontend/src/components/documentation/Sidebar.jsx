@@ -3,7 +3,6 @@ import Divider from 'material-ui/Divider'
 import Drawer from 'material-ui/Drawer'
 import {List, ListItem, makeSelectable} from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
-import PropTypes from 'prop-types'
 import React from 'react'
 
 import { ButtonView } from 'Layout/Items.jsx'
@@ -239,10 +238,6 @@ const menuContents = (
 
 export default class Sidebar extends React.Component {
 
-  static propTypes = {
-    sizing: PropTypes.number,
-  }
-
   constructor(props) {
     super(props)
 
@@ -260,38 +255,36 @@ export default class Sidebar extends React.Component {
   }
 
   render() {
-    const { sizing } = this.props
 
     return (
       <>
-        {sizing===`default` ? (
+        <div className={`default`}>
           <Drawer
             open
             containerStyle={{ top: 61 }}
           >  
             {menuContents}
           </Drawer>  
-        ) : ( 
-          <>
-            <ButtonView text={`≡`}
-              onClick={this.toggleOpen} 
-              style={{ left : `2px`,
+        </div>
+        <div className={`mobile tablet`}> 
+          <ButtonView text={`≡`}
+            onClick={this.toggleOpen} 
+            style={{ left : `2px`,
 padding : `15px 20px`,
 top: `62px`,
 position : `fixed`,
 borderRadius : `50px`,
 cursor : `pointer` }}
-            />
-            
-            <SwipeableDrawer
-              open={this.state.isOpen}
-              onClose={this.toggleOpen}
-              onOpen={this.toggleOpen}
-            >
-              {menuContents}
-            </SwipeableDrawer>
-          </>
-        )}
+          />
+          
+          <SwipeableDrawer
+            open={this.state.isOpen}
+            onClose={this.toggleOpen}
+            onOpen={this.toggleOpen}
+          >
+            {menuContents}
+          </SwipeableDrawer>
+        </div>
       </>
     )
   }
