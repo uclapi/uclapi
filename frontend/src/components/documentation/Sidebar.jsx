@@ -1,13 +1,10 @@
-import { withStyles } from '@material-ui/core/styles'
-import Divider from 'material-ui/Divider'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import Divider from 'material-ui/Divider'
+import Drawer from 'material-ui/Drawer'
 import {List, ListItem, makeSelectable} from 'material-ui/List'
-import MenuItem from 'material-ui/MenuItem'
-import {spacing, typography, zIndex} from 'material-ui/styles'
 import Subheader from 'material-ui/Subheader'
+import PropTypes from 'prop-types'
 import React from 'react'
-
-import apiLogo from './../../images/simpleAPILogoWhite.svg'
 
 import { ButtonView } from 'Layout/Items.jsx'
 
@@ -25,24 +22,226 @@ import { ButtonView } from 'Layout/Items.jsx'
 
 const SelectableList = makeSelectable(List)
 
-const styles = {
-  logo: {
-    cursor: `pointer`,
-    fontSize: 24,
-    color: typography.textFullWhite,
-    lineHeight: `${spacing.desktopKeylineIncrement}px`,
-    fontWeight: typography.fontWeightLight,
-    backgroundColor: `#434343`,
-    paddingLeft: spacing.desktopGutter,
-    marginBottom: 8,
-  },
-  version: {
-    paddingLeft: spacing.desktopGutterLess,
-    fontSize: 16,
-  },
-}
+const menuContents = (
+  <>
+    <SelectableList
+      value={location.pathname}
+    >
+      <ListItem
+        href="#welcome"
+        primaryText="Meta"
+        primaryTogglesNestedList
+        nestedItems={[
+          <ListItem primaryText="Welcome" key="Welcome" href="#welcome" />,
+          <ListItem primaryText="Get Your API Key" key="Get Your API Key" href="#get-api-key" />,
+          <ListItem primaryText="API Rate Limits" key="API Rate Limits" href="#api-rate-limits" />,
+          <ListItem primaryText="API Data Freshness" key="API Data Freshness" href="#api-expiry-times" />,
+          <ListItem primaryText="Version Information" key="Version Information" href="#version-information" />,
+        ]}
+      />
+
+      <ListItem
+        href="#oauth"
+        primaryText="OAuth"
+        primaryTogglesNestedList
+        nestedItems={[
+          <ListItem
+            primaryText="Meta"
+            key="Meta"
+            href="#oauth/meta"
+          />,
+          <ListItem
+            primaryText="Authorise"
+            key="Authorise"
+            href="#oauth/authorise"
+          />,
+          <ListItem
+            primaryText="Token"
+            key="Token"
+            href="#oauth/token"
+          />,
+          <ListItem
+            primaryText="User Data"
+            key="User Data"
+            href="#oauth/user/data"
+          />,
+          <ListItem
+            primaryText="Student Number"
+            key="Student Number"
+            href="#oauth/user/studentnumber"
+          />,
+        ]}
+      />
+
+      <ListItem
+        href="#roombookings"
+        primaryText="Room Bookings"
+        primaryTogglesNestedList
+        nestedItems={[
+          <ListItem
+            primaryText="Get Rooms"
+            key="Get Rooms"
+            href="#roombookings/rooms"
+          />,
+          <ListItem
+            primaryText="Get Bookings"
+            key="Get Bookings"
+            href="#roombookings/bookings"
+          />,
+          <ListItem
+            primaryText="Get Equipment"
+            key="Get Equipment"
+            href="#roombookings/equipment"
+          />,
+          <ListItem
+            primaryText="Get Free Rooms"
+            key="Get Free Rooms"
+            href="#roombookings/freerooms"
+          />,
+          <ListItem
+            primaryText="Webhooks"
+            key="Webhooks"
+            href="#roombookings/webhooks"
+          />,
+        ]}
+      />
+
+      <ListItem
+        href="#search"
+        primaryText="Search"
+        key="Search"
+        primaryTogglesNestedList
+        nestedItems={[
+          <ListItem
+            primaryText="Get People"
+            key="Get People"
+            href="#search/people"
+          />,
+        ]}
+      />
+
+      <ListItem
+        href="#timetable"
+        primaryText="Timetable"
+        key="Timetable"
+        primaryTogglesNestedList
+        nestedItems={[
+          <ListItem
+            primaryText="Get Personal Timetable"
+            key="Get Personal Timetable"
+            href="#timetable/personal"
+          />,
+          <ListItem
+            primaryText="Get Timetable By Modules"
+            key="Get Timetable By Modules"
+            href="#timetable/bymodule"
+          />,
+          <ListItem
+            primaryText="Get List of Departments"
+            key="Get List of Departments"
+            href="#timetable/data/departments"
+          />,
+          <ListItem
+            primaryText="Get List of Department Modules"
+            key="Get List of Department Modules"
+            href="#timetable/data/modules"
+          />,
+          <ListItem
+            primaryText="Get List of Department Courses"
+            key="Get List of Department Courses"
+            href="#timetable/data/courses"
+          />,
+          <ListItem
+            primaryText="Get List of Course Modules"
+            key="Get List of Course Modules"
+            href="#timetable/data/courses/modules"
+          />,
+        ]}
+      />
+
+      <ListItem
+        href="#resources"
+        primaryText="Resources"
+        key="Resources"
+        primaryTogglesNestedList
+        nestedItems={[
+          <ListItem
+            primaryText="Get Desktop availability"
+            key="Get Desktop availability"
+            href="#resources/desktops"
+          />,
+        ]}
+      />
+
+      <ListItem
+        href="#workspaces"
+        primaryText="Workspaces"
+        key="Workspaces"
+        primaryTogglesNestedList
+        nestedItems={[
+          <ListItem
+            primaryText="Get Surveys"
+            key="Get Surveys"
+            href="#workspaces/surveys"
+          />,
+          <ListItem
+            primaryText="Get Sensors"
+            key="Get Sensors"
+            href="#workspaces/sensors"
+          />,
+          <ListItem
+            primaryText="Get Average Sensor Data"
+            key="Get Average Sensor Data"
+            href="#workspaces/sensors/averages/time"
+          />,
+          <ListItem
+            primaryText="Get Last Sensor Update"
+            key="Get Last Sensor Update"
+            href="#workspaces/sensors/lastupdated"
+          />,
+          <ListItem
+            primaryText="Get Sensors Summary"
+            key="Get Sensors Summary"
+            href="#workspaces/sensors/summary"
+          />,
+          <ListItem
+            primaryText="Get Map Image"
+            key="Get Map Image"
+            href="#workspaces/images/map"
+          />,
+          <ListItem
+            primaryText="Get Live Map Image"
+            key="Get Live Map Image"
+            href="#workspaces/images/map/live"
+          />,
+        ]}
+      />
+
+      <ListItem
+        primaryText="Get Involved"
+        key="Get Involved"
+        href="#getInvolved"
+      />
+    </SelectableList>
+
+    <Divider />
+
+    <SelectableList
+      value=""
+    >
+      <Subheader>Links</Subheader>
+      <ListItem primaryText="GitHub" key="GitHub" href="https://github.com/uclapi" />
+      <ListItem primaryText="facebook" key="Facebook" href="https://facebook.com/uclapi" />
+      <ListItem primaryText="Twitter" key="Twitter" href="https://twitter.com/uclapi" />
+    </SelectableList>
+  </>
+)
 
 export default class Sidebar extends React.Component {
+
+  static propTypes = {
+    sizing: PropTypes.number,
+  }
 
   constructor(props) {
     super(props)
@@ -61,198 +260,38 @@ export default class Sidebar extends React.Component {
   }
 
   render() {
+    const { sizing } = this.props
+
     return (
       <>
-        <ButtonView text={`≡`} onClick={this.toggleOpen} 
-          style={{ left : `2px`, padding : `15px 20px`, top: `62px`, position : `fixed`, borderRadius : `50px`, cursor : `pointer` }} />
-        
-        <SwipeableDrawer
-          open={this.state.isOpen}
-          containerStyle={{ top: 61 }}
-          onClose={this.toggleOpen}
-          onOpen={this.toggleOpen}
-        >
-          <SelectableList
-            value={location.pathname}
-          >
-            <ListItem
-              href="#welcome"
-              primaryText="Meta"
-              primaryTogglesNestedList
-              nestedItems={[
-                <ListItem primaryText="Welcome" href="#welcome" />,
-                <ListItem primaryText="Get Your API Key" href="#get-api-key" />,
-                <ListItem primaryText="API Rate Limits" href="#api-rate-limits" />,
-                <ListItem primaryText="API Data Freshness" href="#api-expiry-times" />,
-                <ListItem primaryText="Version Information" href="#version-information" />,
-              ]}
+        {sizing===`default` ? (
+          <Drawer
+            open
+            containerStyle={{ top: 61 }}
+          >  
+            {menuContents}
+          </Drawer>  
+        ) : ( 
+          <>
+            <ButtonView text={`≡`}
+              onClick={this.toggleOpen} 
+              style={{ left : `2px`,
+padding : `15px 20px`,
+top: `62px`,
+position : `fixed`,
+borderRadius : `50px`,
+cursor : `pointer` }}
             />
-
-            <ListItem
-              href="#oauth"
-              primaryText="OAuth"
-              primaryTogglesNestedList
-              nestedItems={[
-                <ListItem
-                  primaryText="Meta"
-                  href="#oauth/meta"
-                />,
-                <ListItem
-                  primaryText="Authorise"
-                  href="#oauth/authorise"
-                />,
-                <ListItem
-                  primaryText="Token"
-                  href="#oauth/token"
-                />,
-                <ListItem
-                  primaryText="User Data"
-                  href="#oauth/user/data"
-                />,
-                <ListItem
-                  primaryText="Student Number"
-                  href="#oauth/user/studentnumber"
-                />,
-              ]}
-            />
-
-            <ListItem
-              href="#roombookings"
-              primaryText="Room Bookings"
-              primaryTogglesNestedList
-              nestedItems={[
-                <ListItem
-                  primaryText="Get Rooms"
-                  href="#roombookings/rooms"
-                />,
-                <ListItem
-                  primaryText="Get Bookings"
-                  href="#roombookings/bookings"
-                />,
-                <ListItem
-                  primaryText="Get Equipment"
-                  href="#roombookings/equipment"
-                />,
-                <ListItem
-                  primaryText="Get Free Rooms"
-                  href="#roombookings/freerooms"
-                />,
-                <ListItem
-                  primaryText="Webhooks"
-                  href="#roombookings/webhooks"
-                />,
-              ]}
-            />
-
-            <ListItem
-              href="#search"
-              primaryText="Search"
-              primaryTogglesNestedList
-              nestedItems={[
-                <ListItem
-                  primaryText="Get People"
-                  href="#search/people"
-                />,
-              ]}
-            />
-
-            <ListItem
-              href="#timetable"
-              primaryText="Timetable"
-              primaryTogglesNestedList
-              nestedItems={[
-                <ListItem
-                  primaryText="Get Personal Timetable"
-                  href="#timetable/personal"
-                />,
-                <ListItem
-                  primaryText="Get Timetable By Modules"
-                  href="#timetable/bymodule"
-                />,
-                <ListItem
-                  primaryText="Get List of Departments"
-                  href="#timetable/data/departments"
-                />,
-                <ListItem
-                  primaryText="Get List of Department Modules"
-                  href="#timetable/data/modules"
-                />,
-                <ListItem
-                  primaryText="Get List of Department Courses"
-                  href="#timetable/data/courses"
-                />,
-                <ListItem
-                  primaryText="Get List of Course Modules"
-                  href="#timetable/data/courses/modules"
-                />,
-              ]}
-            />
-
-            <ListItem
-              href="#resources"
-              primaryText="Resources"
-              primaryTogglesNestedList
-              nestedItems={[
-                <ListItem
-                  primaryText="Get Desktop availability"
-                  href="#resources/desktops"
-                />,
-              ]}
-            />
-
-            <ListItem
-              href="#workspaces"
-              primaryText="Workspaces"
-              primaryTogglesNestedList
-              nestedItems={[
-                <ListItem
-                  primaryText="Get Surveys"
-                  href="#workspaces/surveys"
-                />,
-                <ListItem
-                  primaryText="Get Sensors"
-                  href="#workspaces/sensors"
-                />,
-                <ListItem
-                  primaryText="Get Average Sensor Data"
-                  href="#workspaces/sensors/averages/time"
-                />,
-                <ListItem
-                  primaryText="Get Last Sensor Update"
-                  href="#workspaces/sensors/lastupdated"
-                />,
-                <ListItem
-                  primaryText="Get Sensors Summary"
-                  href="#workspaces/sensors/summary"
-                />,
-                <ListItem
-                  primaryText="Get Map Image"
-                  href="#workspaces/images/map"
-                />,
-                <ListItem
-                  primaryText="Get Live Map Image"
-                  href="#workspaces/images/map/live"
-                />,
-              ]}
-            />
-
-            <ListItem
-              primaryText="Get Involved"
-              href="#getInvolved"
-            />
-          </SelectableList>
-
-          <Divider />
-
-          <SelectableList
-            value=""
-          >
-            <Subheader>Links</Subheader>
-            <ListItem primaryText="GitHub" href="https://github.com/uclapi" />
-            <ListItem primaryText="Facebook" href="https://facebook.com/uclapi" />
-            <ListItem primaryText="Twitter" href="https://twitter.com/uclapi" />
-          </SelectableList>
-        </SwipeableDrawer>
+            
+            <SwipeableDrawer
+              open={this.state.isOpen}
+              onClose={this.toggleOpen}
+              onOpen={this.toggleOpen}
+            >
+              {menuContents}
+            </SwipeableDrawer>
+          </>
+        )}
       </>
     )
   }
