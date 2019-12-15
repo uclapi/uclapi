@@ -13,6 +13,7 @@ $navbarHeight: 60px;
     transition-property: all;
     transition-timing-function: linear;
     transition-duration: 0.3s;
+    z-index: 1301;
 
     .link-to-page {
       width: 100%;
@@ -95,7 +96,7 @@ $navbarHeight: 60px;
     transition-timing-function: linear;
 }
 .link-titles {
-  right: 20px;
+  right: 40px;
   position: absolute;
   height: 60px;
 }

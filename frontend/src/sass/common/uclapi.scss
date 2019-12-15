@@ -24,6 +24,7 @@
   - Auto complete forms
   - Code View
   - Social Media Button Stylings
+  - Sizings
 
 **/
 
@@ -36,7 +37,6 @@ $break-small: 780px;
 html, button, input, select, textarea {
   font-family: 'Source Sans Pro','Roboto', sans-serif;
 }
-
 
 /** Color Scheme **/
 
@@ -485,7 +485,7 @@ pre {
   }
 }
 
-// Social Media Icons
+/** Social Media Icons **/
 
 .uclapi-card-facebook,
 .uclapi-card-github,
@@ -520,4 +520,30 @@ pre {
 }
 .uclapi-card-github:hover {
   background-color: lighten($color-black, 20%);
+}
+
+/** Sizing **/
+
+.mobile,
+.tablet,
+.default {
+  display: none;
+}
+
+@media screen and (min-width: 1130px) {
+  .default {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 1130px) and (min-width: 700px) {
+  .tablet {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .mobile {
+    display: block;
+  }
 }

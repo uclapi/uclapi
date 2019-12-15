@@ -1,5 +1,36 @@
 @import './helpers';
 
+/** Color Scheme **/
+
+$primary-color: #296da7;
+$primary-highlight-color: #3498db;
+
+$secondary-color: #313537;
+
+$accent-color: #8D6E63;
+$highlight-color: #B18453;
+
+$color-black: #000000;
+$color-grey-dark: #313537;
+$color-grey-mid: #75797b;
+$color-grey-light: #bbbbbb;
+$color-grey-light2: #cccccc;
+$color-white: #ffffff;
+
+$color-red: #ff0000;
+
+$color-green-market: #03b77b;
+
+$color-black-transparent-0: rgba(0, 0, 0, 0);
+$color-black-transparent-02: rgba(0, 0, 0, 0.2);
+$color-black-transparent-04: rgba(0, 0, 0, 0.4);
+$color-black-transparent-045: rgba(0, 0, 0, 0.45);
+
+$color-white-transparent-0: rgba(255, 255, 255, 0);
+$color-white-transparent-0455: rgba(255, 255, 255, 0.455);
+
+$color-facebook: #3b5998;
+$color-twitter: #38a1f3;
 
 body {
   margin: 0px;
@@ -28,6 +59,10 @@ h2 {
 p {
   font-size: 16px;
   line-height: 26px;
+}
+
+.col {
+  max-width: 100%;
 }
 
 .warning {
@@ -64,7 +99,12 @@ p {
 
 .main {
   margin-top: 48px;
-  margin-left: 256px;
+}
+
+@media screen and (min-width: 1130px) {
+  .main {
+    margin-left: 256px;
+  }
 }
 
 code {
@@ -147,4 +187,114 @@ code {
   }
 
   vertical-align: middle;
+}
+
+/** Code View styling **/
+
+pre {
+  margin: 0;
+}
+
+.react-tabs {
+  margin-top: 30px;
+
+  ul {
+    padding-left: 0;
+  }
+}
+
+.react-tabs__tab-panel {
+  display: flex;
+  width: 100%;
+
+  .inner-tab {
+    width: 100%;
+  }
+}
+
+.react-tabs__tab-list {
+
+  width: 100%;
+
+  li {
+    cursor: pointer;
+    color: $color-white;
+    list-style-type: none;
+    margin: 0;
+    float: left;
+    display: inline-block;
+    padding: 10px 2%;
+    margin-right: 5px;
+    width: 96%;
+    text-align: left;
+    transition-duration: 200ms;
+    transition-timing-function: linear;
+    transition-property: background-color;
+  }
+}
+
+.unselected-tab {
+  background-color: $primary-highlight-color;
+}
+
+.selected-tab {
+  background-color: $primary-color;
+}
+
+.react-tabs__tab-list li:hover {
+  background-color: $primary-color;
+}
+@media screen and (max-width: 700px) {
+  .react-tabs__tab-list li {
+    text-align: left;
+  }
+  input {
+    width: 96%;
+    padding: 20px 2%;
+  }
+  .arrow {
+    display: none;
+  }
+}
+
+/** Buttons **/
+
+.uclapi-button {
+  border-radius: 2px;
+  box-shadow: 0 4px 8px 0 $color-black-transparent-02;
+  display: inline-block;
+  margin: 10px;
+  padding: 10px 20px;
+  text-decoration: none;
+  width: fit-content;
+}
+
+.default-button { background-color: $color-grey-dark; color: $color-white; }
+
+.default-button:hover { background-color: $color-grey-mid;  }
+
+/** Sizing **/
+
+.mobile,
+.tablet,
+.default {
+  display: none;
+}
+
+@media screen and (min-width: 1130px) {
+  .default {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 1130px) and (min-width: 700px) {
+  .tablet {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .mobile {
+    display: block;
+  }
 }
