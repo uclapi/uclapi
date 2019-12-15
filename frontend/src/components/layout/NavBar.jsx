@@ -120,7 +120,7 @@ class NavBar extends React.Component {
 					{!this.state.isSmall ? (
 						links.map((s, key) => <Link key={key} name={s.name} src={s.src} link={s.link} />)
 					) : (
-							<div className="menu-icon"><img src={menu} onClick={this.toggleMenu} /></div>
+							<div className="menu-icon" style={ { cursor : `pointer` } }><img src={menu} onClick={this.toggleMenu} /></div>
 						)}
 				</div>
 			</Toast>

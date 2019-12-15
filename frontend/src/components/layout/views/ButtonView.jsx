@@ -48,11 +48,15 @@ export default class ButtonView extends React.Component {
   }
 
   render() {
+
+    const { children } = this.props
+
     if(this.props.link) {
       return (
         <a href={this.props.link}>
           <div className={this.state.class} style={this.state.style}>
             {this.props.text}
+            {children}
           </div>
         </a>
       )
@@ -60,6 +64,7 @@ export default class ButtonView extends React.Component {
       return (
         <div className={this.state.class} style={this.state.style} onClick={this.props.onClick}>
             {this.props.text}
+            {children}
         </div>
         
       )

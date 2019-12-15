@@ -4,8 +4,8 @@ import Drawer from 'material-ui/Drawer'
 import {List, ListItem, makeSelectable} from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
 import React from 'react'
-
-import { ButtonView } from 'Layout/Items.jsx'
+import { ButtonView, ImageView } from 'Layout/Items.jsx'
+import list from 'Images/navbar/list.svg'
 
 /*
   Got this entire thing from
@@ -267,15 +267,18 @@ export default class Sidebar extends React.Component {
           </Drawer>  
         </div>
         <div className={`mobile tablet`}> 
-          <ButtonView text={`≡`}
+          <ButtonView text={``}
+            type={`alternate`}
             onClick={this.toggleOpen} 
-            style={{ left : `2px`,
-padding : `15px 20px`,
+            style={{ marginLeft : `5px`,
+padding : `16px 20px`,
 top: `62px`,
 position : `fixed`,
 borderRadius : `50px`,
 cursor : `pointer` }}
-          />
+          >
+            <ImageView src={list} width={`20px`} height={`20px`} description={`table of contents`} centred />
+          </ButtonView>
           
           <SwipeableDrawer
             open={this.state.isOpen}
