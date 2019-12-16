@@ -7,7 +7,7 @@ $navbarHeight: 60px;
     z-index: 2;
     position: fixed;
     overflow: hidden;
-    width: 100%;
+    width: 100vw;
     background-color: #313537;
     top: 60px;
     transition-property: all;
@@ -25,7 +25,7 @@ $navbarHeight: 60px;
   position: fixed;
   border-bottom: 1px solid rgba(0, 0, 0, 0.14);
   height: $navbarHeight;
-  width: 100%;
+  width: 100vw;
   top: 0;
 
   background-color: #313537;
@@ -40,7 +40,7 @@ $navbarHeight: 60px;
   @include boxShadow(1);
 
   img {
-    height: $navbarHeight - 20px;;
+    height: $navbarHeight - 20px;
     margin-left: 25px;
   }
   .logoTextWhite {
@@ -96,7 +96,7 @@ $navbarHeight: 60px;
     transition-timing-function: linear;
 }
 .link-titles {
-  right: 40px;
+  right: 15px;
   position: absolute;
   height: 60px;
 }

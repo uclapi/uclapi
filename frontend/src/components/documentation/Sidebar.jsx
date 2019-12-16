@@ -286,7 +286,8 @@ borderRadius : `50px`,
 cursor : `pointer`,
 backgroundColor: `white` }}
           >
-            <ImageView src={list} width={`30px`} height={`30px`} description={`table of contents`} centred />
+            <ImageView src={list} width={`30px`} height={`30px`} description={`table of contents`} centred 
+              style={ { marginLeft: `3px`, margintTop: `5px` } }/>
           </ButtonView>
         </div>
       </>
