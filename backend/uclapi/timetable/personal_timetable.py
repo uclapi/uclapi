@@ -40,7 +40,7 @@ def get_personal_timetable_rows(upi):
 def get_personal_timetable(upi):
     full_timetable = {}
     for row in get_personal_timetable_rows(upi):
-        instance = ModuleInstance(row['instcode'])
+        instance = ModuleInstance(row['instcode']) if row['instcode'] else None
         lat, lng = get_location_coordinates(
             row['siteid'],
             row['roomid']
@@ -51,8 +51,6 @@ def get_personal_timetable(upi):
             lecturer_email = "{}@ucl.ac.uk".format(
                 row['lecturereppn']
             )
-        session_type_str = SESSION_TYPE_MAP[row['sessiontypeid']] \
-            if row['sessiontypeid'] in SESSION_TYPE_MAP else "Unknown"
 
         booking_data = {
             "start_time": row['starttime'],
@@ -88,12 +86,11 @@ def get_personal_timetable(upi):
             },
             "session_title": row['title'],
             "session_type": row['sessiontypeid'],
-            "session_type_str": session_type_str,
             "session_type_str": row['sessiontypestr'],
             "contact": row['condisplayname'],
             "instance": {
-                "delivery": instance.delivery.get_delivery(),
-                "periods": instance.periods.get_periods(),
+                "delivery": instance.delivery.get_delivery() if instance else None,
+                "periods": instance.periods.get_periods() if instance else None,
                 "instance_code": row['instcode']
             },
             "session_group": row['modgrpcode']

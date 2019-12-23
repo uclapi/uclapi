@@ -19,7 +19,7 @@ RETURNS TABLE (
     lecturerdeptname    TEXT,                   -- 14
     lecturereppn        TEXT,                   -- 15
     title               VARCHAR,                -- 16
-    sessiontypeid       TEXT,                   -- 17
+    sessiontypeid       TEXT,                -- 17
     sessiontypestr      VARCHAR,                -- 18
     condisplayname      TEXT,                   -- 19
     modgrpcode          TEXT,                   -- 20
@@ -176,6 +176,7 @@ AS
                     AND studentid = student_id
                 )
             )
+            --- This part gets course aligned events (not module-aligned)
             OR
             (
                 tt.courseid = st_course_id
@@ -244,8 +245,9 @@ SELECT rb.startdatetime     as startdatetime,
            WHERE de.deptid = lecturer.owner
        )                    as lecturerdeptname,
        lecturer.linkcode    as lecturereppn,
-       rb.title             as title, 
-       tt.moduletype        as sessiontypeid,
+       rb.title             as title,
+       tt.moduletype as sessiontypeid,
+--       CASE WHEN tt.moduletype IS NOT NULL THEN tt.moduletype ELSE THEN classifications.classid END as sessiontypeid,
        classifications.name as sessiontypestr,
 --     rb.condisplayname    as condisplayname,
        string_agg(DISTINCT rb.condisplayname, ' / ') as condisplayname,
@@ -269,7 +271,13 @@ SELECT rb.startdatetime     as startdatetime,
 FROM timetable_timetable{{ bucket_id | sqlsafe }} tt
 INNER JOIN tt_tmp_events_slot_id tes
     ON tt.slotid = tes.slotid
-    AND tt.slotid = tes.slotid
+    AND tt.setid = tes.setid
+-- This provides a mapping between a session type and its human readable string.
+-- e.g. LAB -> Labaratory Session; T -> Tutorial; L -> Lecture;
+LEFT OUTER JOIN timetable_classifications{{ bucket_id | sqlsafe }} classifications
+    ON tt.moduletype = classifications.classid
+    AND tt.setid = classifications.setid
+    AND (classifications.type = 'MOD_TYPE')
 LEFT OUTER JOIN roombookings_booking{{ bucket_id | sqlsafe }} rb
     ON tt.slotid = rb.slotid
     AND tt.setid  = rb.setid
@@ -291,19 +299,12 @@ LEFT OUTER JOIN roombookings_room{{ bucket_id | sqlsafe }} rooms
     ON rooms.roomid = tt.roomid
     AND rooms.siteid = tt.siteid
     AND rooms.setid  = tes.setid
--- This provides a mapping between a session type and its human readable string.
--- e.g. LAB -> Labaratory Session; T -> Tutorial; L -> Lecture;
-LEFT OUTER JOIN timetable_classifications{{ bucket_id | sqlsafe }} classifications
-    ON tt.moduletype = classifications.classid
-    AND tt.setid = classifications.setid
-    AND classifications.type = 'MOD_TYPE'
 WHERE (
         (tt.weekday IS NOT NULL)
     AND (tt.weekday > 0)
     AND (tt.starttime IS NOT NULL)
     AND (tt.duration IS NOT NULL)
-    AND (tt.instid = ci.instid)
-    AND (ci.instid :: TEXT = tes.instid :: TEXT)
+    AND (tt.classif IS NOT NULL)
 )
 GROUP BY rb.startdatetime,
             rb.finishdatetime,
