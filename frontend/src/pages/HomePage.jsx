@@ -42,7 +42,7 @@ class HomePage extends React.Component {
   }
 
   render() {
-    const iconsize = `100px`
+    const iconsize = `200px`
     const { host, articles, loggedIn } = this.state
 
     let startLabel = `START BUILDING`
