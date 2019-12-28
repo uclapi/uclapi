@@ -142,22 +142,24 @@ class HomePage extends React.Component {
                     noPadding
                   >
                     <Column width='1-1' horizontalAlignment='center' verticalAlignment='center'>
-                       <ImageView src={x.image_url==`url_not_found` ? placeholder : x.image_url}
-                         style={{ display: `block`,
-                                  width: `100%`,
-                                  height: `200px`,
-                                  objectFit: `cover` }}
-                         description={x.title + ` background`}
-                         centred
-                       />
-                        <TextView text={x.title}
-                          align={`center`}
-                          heading={3}
-                          color={`white`}
-                          style={ { width : `100%`,
+                      <div className="animate-image">
+                         <ImageView src={x.image_url==`url_not_found` ? placeholder : x.image_url}
+                           style={{ display: `block`,
+                                    width: `100%`,
+                                    height: `200px`,
+                                    objectFit: `cover` }}
+                           description={x.title + ` background`}
+                           centred
+                         />
+                      </div>
+                      <TextView text={x.title}
+                        align={`center`}
+                        heading={3}
+                        color={`white`}
+                        style={ { width : `100%`,
 position : `absolute`,
 top : `85px`} }
-                        />
+                      />
                     </Column>
                   </Row>
                   <Row color='transparent'>

@@ -257,13 +257,13 @@ a:hover { color: $color-grey-light; }
   min-height: fit-content;
   overflow: hidden;
 
-  img {
+  .animate-image {
     filter: brightness(75%);
     transition: .5s linear;
   }
 }
 
-.uclapi-card:hover img {
+.uclapi-card:hover .animate-image {
   transform: scale(1.15);
   filter: grayscale(50%) blur(1px);
 }
