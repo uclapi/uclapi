@@ -256,6 +256,16 @@ a:hover { color: $color-grey-light; }
   margin: 2%;
   min-height: fit-content;
   overflow: hidden;
+
+  img {
+    filter: brightness(75%);
+    transition: .5s linear;
+  }
+}
+
+.uclapi-card:hover img {
+  transform: scale(1.15);
+  filter: grayscale(50%) blur(1px);
 }
 
 .uclapi-card-default {
