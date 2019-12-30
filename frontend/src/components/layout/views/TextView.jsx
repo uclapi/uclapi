@@ -50,16 +50,20 @@ export default class TextView extends React.Component {
   }
 
   render() {
+
+    const removeDuplicatedStyles = {...this.state.style}
+    removeDuplicatedStyles[`top`] = `0`
+
     return (
       <this.state.heading style={this.state.style}>
         {this.state.link ? (
           <a className='default-transition color-transition' href={this.props.link}>
-            <div style={this.state.style}>
+            <div style={removeDuplicatedStyles}>
               {this.props.text}
             </div>
           </a>
         ) : (
-            <div style={this.state.style}>
+            <div style={removeDuplicatedStyles}>
               {this.props.text}
             </div>
           )}
