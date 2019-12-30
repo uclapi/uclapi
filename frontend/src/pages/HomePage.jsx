@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom'
 // Images
 import docs from 'Images/home-page/docs.svg'
 import heart from 'Images/home-page/heart.svg'
+import placeholder from 'Images/home-page/splash_screen.png'
 import star from 'Images/home-page/star.svg'
 import uclassistantmarket from 'Images/home-page/uclassistantmarket.png'
 import { endpoints, FAQ } from 'Layout/data/homepage_constants.jsx'
@@ -42,7 +43,7 @@ class HomePage extends React.Component {
   }
 
   render() {
-    const iconsize = `150px`
+    const iconsize = `200px`
     const { host, articles, loggedIn } = this.state
 
     let startLabel = `START BUILDING`
@@ -131,13 +132,34 @@ class HomePage extends React.Component {
 
         <Row styling='splash-parallax'>
           <Column width='9-10' horizontalAlignment='center'>
-            <TextView text={`Check out our blog`} heading={1} align={`center`} />
+            <TextView text={`Check out our blog`} styling='transparent' heading={1} align={`center`} />
             {articles.map(x => (
               <CardView width='1-3' minWidth='280px'  link={x.url} key={x.link} snapAlign>
                 <Column width='1-1'>
-                  <Row height='200px' src={x.image_url} style={{ "backgroundSize": `Cover` }} >
-                    <Column width='2-3' horizontalAlignment='center' verticalAlignment='center'>
-                      <TextView text={x.title} align={`center`} heading={3} color={`white`} />
+                  <Row height='200px'
+                    style={{ backgroundSize : `Cover`,
+                            overflow : `hidden` }}
+                    noPadding
+                  >
+                    <Column width='1-1' horizontalAlignment='center' verticalAlignment='center'>
+                      <div className="animate-image">
+                         <ImageView src={x.image_url==`url_not_found` ? placeholder : x.image_url}
+                           style={{ display: `block`,
+                                    width: `100%`,
+                                    height: `200px`,
+                                    objectFit: `cover` }}
+                           description={x.title + ` background`}
+                           centred
+                         />
+                      </div>
+                      <TextView text={x.title}
+                        align={`center`}
+                        heading={3}
+                        color={`white`}
+                        style={ { width : `100%`,
+position : `absolute`,
+top : `85px`} }
+                      />
                     </Column>
                   </Row>
                   <Row color='transparent'>
