@@ -4,10 +4,9 @@ $navbarHeight: 60px;
 
 .navbar-extras {
   .link-titles-menu {
-    z-index: 2;
     position: fixed;
     overflow: hidden;
-    width: 100%;
+    width: 100vw;
     background-color: #313537;
     top: 60px;
     transition-property: all;
@@ -40,7 +39,7 @@ $navbarHeight: 60px;
   @include boxShadow(1);
 
   img {
-    height: $navbarHeight - 15px;;
+    height: $navbarHeight - 15px;
     margin-left: 25px;
   }
   .logoTextWhite {
@@ -116,7 +115,7 @@ $navbarHeight: 60px;
     transition-timing-function: linear;
 }
 .link-titles {
-  right: 30px;
+  right: 20px;
   position: absolute;
   height: 60px;
 }
