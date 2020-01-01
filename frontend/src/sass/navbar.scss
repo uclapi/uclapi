@@ -7,10 +7,11 @@ $navbarHeight: 60px;
     position: fixed;
     overflow: hidden;
     width: 100vw;
-    background-color: #313537;
+    background-color: #fff;
+    box-shadow: 0 0 10px #555;
     top: 60px;
     transition-property: all;
-    transition-timing-function: linear;
+    transition-timing-function: ease-out;
     transition-duration: 0.3s;
     z-index: 1301;
 
@@ -54,8 +55,7 @@ $navbarHeight: 60px;
 
     border-radius: 25px;
 
-    padding: 0 5px;
-    margin-top: 5px;
+    padding: 5px;
 
     cursor: pointer;
     background-color: none;
@@ -97,22 +97,25 @@ $navbarHeight: 60px;
 }
 .link-to-page h1 {
     border: solid;
-    border-color: #FFF;
+    border-color: #000;
     border-width: 0 0 0 1px;
     padding: 0 20px;
     margin: 0;
     font-size: 1em;
     font-weight: normal;
+    transition-timing-function: linear;
+    transition-duration: 0.2s;
+    transition-property: border-width;
+    color: #000;
 }
 .link-to-page a {
     display: inline-block;
     float: left;
     text-decoration: none;
-    color: #FFFFFF;
-    transition-property: color;
-    transition-duration: 0.2s;
     padding-left: 15px;
-    transition-timing-function: linear;
+}
+.link-to-page h1:hover {
+  border-width: 0 0 0 5px;
 }
 .link-titles {
   right: 20px;
