@@ -97,7 +97,7 @@ $navbarHeight: 60px;
 }
 .link-to-page h1 {
     border: solid;
-    border-color: #000;
+    border-color: #fff;
     border-width: 0 0 0 1px;
     padding: 0 20px;
     margin: 0;
@@ -106,7 +106,7 @@ $navbarHeight: 60px;
     transition-timing-function: linear;
     transition-duration: 0.2s;
     transition-property: border-width;
-    color: #000;
+    color: #fff;
 }
 .link-to-page a {
     display: inline-block;

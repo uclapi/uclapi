@@ -60,7 +60,12 @@ class Link extends React.Component {
 						<img src={require(`../../images/navbar/` + this.props.src + `.svg`)} />
 					</Bounce>
 					<a href={this.props.link}>
-						<h1>{this.props.name}</h1>
+                        {this.props.isSmall ? (
+                            <h1 style={{ borderColor : '#000', color : '#000'}} >{this.props.name}</h1>
+                        ) : (
+                            <h1>{this.props.name}</h1>
+                        )
+                        }
 					</a>
 				</div>
 	}

@@ -126,7 +126,7 @@ class NavBar extends React.Component {
 			</Toast>
 			{this.state.isSmall ? (
 				<SlideDown className="link-titles-menu" pose={this.state.isMenuHidden ? 'hidden' : 'shown'}>
-					{links.map((s, key) => <Link key={key} name={s.name} src={s.src} link={s.link} />)}
+					{links.map((s, key) => <Link key={key} name={s.name} src={s.src} link={s.link} isSmall/>)}
 				</SlideDown>
 			) : null}
 		</div>
