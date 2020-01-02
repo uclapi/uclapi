@@ -40,7 +40,7 @@ let links = [
 	},
 ]
 const SlideDown = posed.div({
-	shown: { height: ((links.length*34) + 30) +"px" },
+	shown: { height: "152px"},
 	hidden: { height: 0 },
 });
 const maxScreen = 1030;

@@ -7,7 +7,7 @@ $navbarHeight: 60px;
     position: fixed;
     overflow: hidden;
     width: 100vw;
-    background-color: #fff;
+    background-color: #313537;
     box-shadow: 0 0 10px #555;
     top: 60px;
     transition-property: all;
@@ -21,7 +21,7 @@ $navbarHeight: 60px;
   }
 }
 .navbarconsistent {
-  z-index: 1299;
+  z-index: 1302;
   position: fixed;
   border-bottom: 1px solid rgba(0, 0, 0, 0.14);
   height: $navbarHeight;
@@ -70,7 +70,7 @@ $navbarHeight: 60px;
       margin-top: 5px;
     }
   }
-  .menu-icon:hover {
+  .menu-icon:active {
     background-color: #ffffff22;
   }
 }
@@ -82,12 +82,13 @@ $navbarHeight: 60px;
     transition-property: margin-right;
     transition-timing-function: linear;
     transition-duration: 0.15s;
+    margin-right: 16px;
 }
 .link-to-page { 
     display: inline-block;
     float: right;
     height: 16px;
-    margin: 20px 25px 0 25px;
+    padding: 20px 25px 0 25px;
 
     img {
       width: 16px;
@@ -113,7 +114,6 @@ $navbarHeight: 60px;
     display: inline-block;
     float: left;
     text-decoration: none;
-    padding-left: 15px;
 }
 .link-to-page h1:hover {
   border-width: 0 0 0 5px;
