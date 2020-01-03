@@ -55,14 +55,27 @@ class Link extends React.Component {
 	render() {
 		const { animation } = this.state
 
-		return <div className="link-to-page" onMouseEnter={this.onMouseEnterHandler} onMouseLeave={this.onMouseLeaveHandler} >
-					<Bounce className="bounce-image" pose={animation}>
+        if(this.props.isSmall) {
+            return (
+                <a href={this.props.link}>
+                    <div className="link-to-page" style={{ borderBottom: 'solid #ffffff29 2px', padding: '10px 0 10px 0'}} onMouseEnter={this.onMouseEnterHandler} 
+                    onMouseLeave={this.onMouseLeaveHandler} >
+                        <h1 style={{ border: 'none'}} >{this.props.name}</h1>
+                    </div>
+                </a>
+            );
+        } else {
+    		return (
+                <div className="link-to-page" onMouseEnter={this.onMouseEnterHandler} onMouseLeave={this.onMouseLeaveHandler} >
+                    <Bounce className="bounce-image" pose={animation}>
 						<img src={require(`../../images/navbar/` + this.props.src + `.svg`)} />
 					</Bounce>
 					<a href={this.props.link}>
-						<h1>{this.props.name}</h1>
+                        <h1>{this.props.name}</h1>
 					</a>
 				</div>
+            );
+        }
 	}
 }
 

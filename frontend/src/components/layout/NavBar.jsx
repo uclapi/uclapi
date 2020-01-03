@@ -7,11 +7,6 @@ import Link from './Link.jsx';
 // Images
 import menu from '../../images/navbar/menu.svg';
 
-const Toast = posed.div({
-	hidden: { top: '-60px' },
-	shown: { top: 0 }
-});
-
 let links = [
 	// {
 	// 	name: "settings",
@@ -39,15 +34,25 @@ let links = [
 		src: "market",
 	},
 ]
+
+const maxScreen = 1030
+const menuSize = 152
+const navbarHeight = 60
+
+const Toast = posed.div({
+	hidden: { top: "-" + navbarHeight + "px" },
+	shown: { top: 0 }
+});
 const SlideDown = posed.div({
-	shown: { height: ((links.length*34) + 30) +"px" },
+	shown: { height: menuSize + "px"},
 	hidden: { height: 0 },
 });
-const maxScreen = 1030;
 
 class NavBar extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.DEBUGGING = true
 
 		this.state = {
 			isVisible: !this.props.isScroll,
@@ -58,13 +63,37 @@ class NavBar extends React.Component {
 		this.updateNavBar = this.updateNavBar.bind(this);
 		this.updateDimensions = this.updateDimensions.bind(this);
 		this.toggleMenu = this.toggleMenu.bind(this);
-		this.navbarHeight = 60;
+		this.forceClose = this.forceClose.bind(this);
+		this.handleClick = this.handleClick.bind(this);
 	}
 	toggleMenu() {
-		console.log("menu click")
+		if(this.DEBUGGING) { console.log("Menu button clicked...") }
+
 		this.setState({
 			isMenuHidden: !this.state.isMenuHidden,
 		});
+	}
+	handleClick(event) {
+		if(this.DEBUGGING) {
+			console.log("Click event...")
+			console.log(event)
+		}
+
+		if(event.clientY > menuSize + navbarHeight) {
+			if(this.DEBUGGING) { console.log("Attempting to close menu...") }
+			this.forceClose()
+		}
+	}
+	forceClose() {
+		const { isMenuHidden } = this.state
+
+		if(!isMenuHidden) {
+			if(this.DEBUGGING) { console.log("Closing menu...") }
+
+			this.setState({
+				isMenuHidden: true,
+			});
+		}
 	}
 	updateDimensions() {
 		if (window.innerWidth < maxScreen) {
@@ -86,21 +115,23 @@ class NavBar extends React.Component {
 		});
 	}
 	componentDidMount() {
-		if (this.props.isScroll) { window.addEventListener('scroll', this.updateNavBar); }
-		window.addEventListener("resize", this.updateDimensions);
+		if (this.props.isScroll) { window.addEventListener('scroll', this.updateNavBar) }
+		window.addEventListener("resize", this.updateDimensions)
+		window.addEventListener("click", this.handleClick)
 	}
 	componentWillUnmount() {
-		if (this.props.isScroll) { window.removeEventListener('scroll', this.updateNavBar); }
+		if (this.props.isScroll) { window.removeEventListener('scroll', this.updateNavBar) }
+		window.removeEventListener("click", this.handleClick);
 	}
 	updateNavBar() {
 		let scrollTop = window.scrollY;
 
-		if (scrollTop <= this.navbarHeight && this.state.isVisible) {
+		if (scrollTop <= navbarHeight && this.state.isVisible) {
 			this.setState({
 				isVisible: false,
 				isMenuHidden: true,
 			})
-		} else if (scrollTop >= this.navbarHeight && !this.state.isVisible) {
+		} else if (scrollTop >= navbarHeight && !this.state.isVisible) {
 			this.setState({
 				isVisible: true,
 				isMenuHidden: true,
@@ -126,7 +157,7 @@ class NavBar extends React.Component {
 			</Toast>
 			{this.state.isSmall ? (
 				<SlideDown className="link-titles-menu" pose={this.state.isMenuHidden ? 'hidden' : 'shown'}>
-					{links.map((s, key) => <Link key={key} name={s.name} src={s.src} link={s.link} />)}
+					{links.map((s, key) => <Link key={key} name={s.name} src={s.src} link={s.link} isSmall/>)}
 				</SlideDown>
 			) : null}
 		</div>
