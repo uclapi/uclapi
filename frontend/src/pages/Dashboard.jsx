@@ -1,19 +1,22 @@
-import 'Styles/dashboard.scss'
+import 'Styles/common/uclapi.scss'
 
 import dayjs from 'dayjs'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+// Components
+import { ButtonView, CardView, Column, Demo, 
+  Footer, ImageView, NavBar, Row, TextView } from 'Layout/Items.jsx'
+
 import AppList from '../components/dashboard/appList.jsx'
 import Layout from '../components/dashboard/layout.jsx'
-import Profile from '../components/dashboard/profile.jsx'
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props)
     window.initialData.apps.sort((a, b) => {
-      let dateA = dayjs(a.created)
-      let dateB = dayjs(b.created)
+      const dateA = dayjs(a.created)
+      const dateB = dayjs(b.created)
 
       if (dateA.isBefore(dateB)) {
         return -1
@@ -26,12 +29,22 @@ class Dashboard extends React.Component {
     this.state = { data: window.initialData }
   }
   render() {
-    return <div>
-      <Layout>
-        <Profile name={this.state.data.name} cn={this.state.data.cn} />
-        <AppList apps={this.state.data.apps} />
-      </Layout>
-    </div>
+    const { data: { name, cn, apps } } = this.state 
+
+    return (
+      <>
+        <NavBar isScroll={false} />
+
+        <Row height='fit-content' styling='splash-parallax' style={{ minHeight : `100%`}}>
+          <Column width='2-3' horizontalAlignment='center' style={{ marginTop: `50px` }}>
+            <TextView text={`Welcome, ` + name} heading={1} align={`left`} />
+            <TextView text={`Your username is: ` + cn} heading={2} align={`left`} />
+
+            <AppList apps={apps} />
+          </Column>
+        </Row>
+      </>
+    )
   }
 }
 

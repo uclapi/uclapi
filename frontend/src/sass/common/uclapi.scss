@@ -38,6 +38,11 @@ html, button, input, select, textarea {
   font-family: 'Source Sans Pro','Roboto', sans-serif;
 }
 
+.app, html, body {
+  height: 100%;
+  width: 100%;
+}
+
 /** Color Scheme **/
 
 $primary-color: #296da7;
