@@ -56,20 +56,13 @@ const styles = {
     color: `white`,
     fontWeight: `300`,
   },
-  refreshButton: {
+  button: {
     height: `40px`,
     maxWidth: `40px`,
     minWidth: `40px`,
-    float: `left`,
-    margin: `5px 0 0 0`,
-  },
-  firstButton: {
-    height: `40px`,
-    maxWidth: `40px`,
-    minWidth: `40px`,
-    float: `left`,
+    float: `right`,
     margin: `5px`,
-    marginLeft: `20px`,
+    marginLeft: `5px`,
   },
   buttonIcon: {
     marginTop: `8px`,
@@ -83,42 +76,39 @@ const styles = {
     height: `50px`,
     float: `left`,
     paddingRight: `10px`,
+    width: `100%`,
   }
 }
 
 const logosize = `20px`
-const clipboardIcon = (
-  <CardView width='1-3' type='emphasis' style={styles.firstButton} fakeLink>
-    <ImageView src={clipboardImage}
+
+const Icon = (image, description) => (
+  <CardView width='1-3' type='emphasis' style={styles.button} fakeLink>
+    <ImageView src={image}
       width={logosize}
       height={logosize}
-      description={`copy token to clipboard`} 
+      description={description} 
       style={styles.buttonIcon}
       isCentered
     />
   </CardView>
 )
-const refreshIcon = (
-  <CardView width='1-1' type='emphasis' style={styles.refreshButton} fakeLink>
-    <ImageView src={refreshImage}
-      width={logosize}
-      height={logosize}
-      description={`refresh token`} 
-      style={styles.buttonIcon}
-      isCentered
-    />
-  </CardView>
-)
-const saveIcon = (
-  <CardView width='1-1' type='emphasis' style={styles.firstButton} fakeLink>
-    <ImageView src={saveImage}
-      width={logosize}
-      height={logosize}
-      description={`save details for future`} 
-      style={styles.buttonIcon}
-      isCentered
-    />
-  </CardView>
+
+const clipboardIcon = Icon(clipboardImage, `copy token to clipboard`)
+const refreshIcon = Icon(refreshImage, `refresh token`)
+const saveIcon = Icon(saveImage, `save details for future`)
+
+const Field = (title, content, icons) => (
+  <>
+    <TextView text={title} heading={5} align={`left`} style={styles.tokenText} />
+                          
+    <div className="field" style={styles.field}>
+      <input type="text" className="token-input" readOnly value={content} style={styles.copyableField}/>
+      {icons.includes("copy") ? clipboardIcon : null}
+      {icons.includes("refresh") ? refreshIcon : null}
+      {icons.includes("save") ? saveIcon : null}
+    </div>
+  </>
 )
 
 class Dashboard extends React.Component {
@@ -196,13 +186,7 @@ class Dashboard extends React.Component {
                     </Row>
                     <Row styling='transparent' noPadding>
                       <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
-                        <TextView text={`API Token:`} heading={5} align={`left`} style={styles.tokenText} />
-                        
-                        <div className="field" style={styles.field}>
-                          <input type="text" className="token-input" readOnly value={app.token} style={styles.copyableField}/>
-                          {clipboardIcon}
-                          {refreshIcon}
-                        </div>
+                        { Field("API Token: ", app.token, ["copy", "refresh"] ) }
                       </CardView>
                     </Row>
                     <Row styling='transparent' noPadding>
@@ -218,29 +202,9 @@ class Dashboard extends React.Component {
                                     style={styles.oauthTitles}
                                   />
 
-                                  <div className="field-holder" style={styles.fieldHolder}>
-                                    <TextView text={`Client ID:`} heading={5} align={`left`} style={styles.tokenText} />
-                                    <input type="text" className="token-input" readOnly value={app.oauth.client_id} style={styles.copyableField}/>
-                                    {clipboardIcon}
-                                  </div>
-
-                                  <div className="field-holder" style={styles.fieldHolder}>
-                                    <TextView text={`Client Secret:`} heading={5} align={`left`} style={styles.tokenText} />
-                                    <input type="text" className="token-input" readOnly value={app.oauth.client_secret} style={styles.copyableField}/>
-                                    {clipboardIcon}
-                                  </div>
-
-                                  <div className="field-holder" style={styles.fieldHolder}>
-                                    <TextView text={`Callback URL:`} heading={5} align={`left`} style={styles.tokenText} />
-                                    <input type="text" className="token-input" readOnly value={app.oauth.callback_url} style={styles.copyableField}/>
-                                    {saveIcon}
-                                  </div>
-
-                                  <TextView text={`OAuth Scopes: `}
-                                    heading={3}
-                                    align={`left`} 
-                                    style={styles.oauthTitles}
-                                  />
+                                  { Field("Client ID: ", app.oauth.client_id, ["copy"] ) }
+                                  { Field("Client Secret: ", app.oauth.client_secret, ["copy"] ) }
+                                  { Field("Callback URL: ", app.oauth.callback_url, ["save"] ) }
                                 </CardView>
                               </Row>
                             </Panel>
