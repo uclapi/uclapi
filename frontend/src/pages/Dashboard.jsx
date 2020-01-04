@@ -1,11 +1,20 @@
+// Styling
 import 'Styles/common/uclapi.scss'
+// Legacy
+import 'Styles/navbar.scss'
 
+// Dependencies
 import dayjs from 'dayjs'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+// Images
+import clipboardImage from 'Images/dashboard/clipboard.svg'
+import refreshImage from 'Images/dashboard/refresh.svg'
+import deleteImage from 'Images/dashboard/trash.svg'
+
 // Components
-import { CardView, Column,
+import { CardView, Column, ImageView,
   Footer, NavBar, Row, TextView } from 'Layout/Items.jsx'
 
 const styles = {
@@ -40,6 +49,24 @@ const styles = {
     color: `white`,
     fontWeight: `300`,
   },
+  refreshButton: {
+    height: "40px",
+    maxWidth: "40px",
+    minWidth: "40px",
+    float: "left",
+    margin: "5px",
+  },
+  clipboardButton: {
+    height: "40px",
+    maxWidth: "40px",
+    minWidth: "40px",
+    float: "left",
+    margin: "5px",
+    marginLeft: "20px"
+  },
+  buttonIcon: {
+    marginTop: "8px",
+  }
 }
 
 class Dashboard extends React.Component {
@@ -69,6 +96,8 @@ class Dashboard extends React.Component {
   }
   render() {
     const { data: { name, cn, apps } } = this.state 
+
+    const logosize = "20px"
 
     return (
       <>
@@ -119,6 +148,15 @@ class Dashboard extends React.Component {
                       <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
                         <TextView text={`API Token:`} heading={3} align={`left`} style={styles.tokenText} />
                         <input type="text" className="token-input" readOnly value={app.token} style={styles.tokenCopyField}/>
+                        
+                        <CardView width='1-3' type='emphasis' style={styles.clipboardButton} fakeLink>
+                          <ImageView src={clipboardImage} width={logosize} height={logosize} description={'copy token to clipboard'} 
+                            style={styles.buttonIcon} isCentered />
+                        </CardView>
+                        <CardView width='1-1' type='emphasis' style={styles.refreshButton} fakeLink>
+                          <ImageView src={refreshImage} width={logosize} height={logosize} description={'refresh token'} 
+                            style={styles.buttonIcon} isCentered />
+                        </CardView>
                       </CardView>
                     </Row>
                   </CardView>
