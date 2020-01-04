@@ -7,20 +7,27 @@ import 'Styles/navbar.scss'
 import dayjs from 'dayjs'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import Collapse, { Panel } from 'rc-collapse'
 
 // Images
 import clipboardImage from 'Images/dashboard/clipboard.svg'
 import refreshImage from 'Images/dashboard/refresh.svg'
 import deleteImage from 'Images/dashboard/trash.svg'
-
+import saveImage from 'Images/dashboard/save.svg'
 // Components
-import { CardView, Column, ImageView,
-  Footer, NavBar, Row, TextView } from 'Layout/Items.jsx'
+import { CardView, Column,   Footer, ImageView,
+NavBar, Row, TextView } from 'Layout/Items.jsx'
 
 const styles = {
   baseText: {
     color: `white`,
     fontWeight: `300`,
+  },
+  oauthTitles: {
+    color: `white`,
+    fontWeight: `300`,
+    padding: `10px 0`,
+    textDecoration: `underline`,
   },
   lightText: {
     color: `#ddd`,
@@ -37,7 +44,7 @@ const styles = {
   tokenHolder: {
     borderRadius: `0`,
   },
-  tokenCopyField: {
+  copyableField: {
     marginTop: `0`,
     width: `50%`,
     padding: `15px`,
@@ -50,24 +57,63 @@ const styles = {
     fontWeight: `300`,
   },
   refreshButton: {
-    height: "40px",
-    maxWidth: "40px",
-    minWidth: "40px",
-    float: "left",
-    margin: "5px",
+    height: `40px`,
+    maxWidth: `40px`,
+    minWidth: `40px`,
+    float: `left`,
+    margin: `5px`,
   },
-  clipboardButton: {
-    height: "40px",
-    maxWidth: "40px",
-    minWidth: "40px",
-    float: "left",
-    margin: "5px",
-    marginLeft: "20px"
+  firstButton: {
+    height: `40px`,
+    maxWidth: `40px`,
+    minWidth: `40px`,
+    float: `left`,
+    margin: `5px`,
+    marginLeft: `20px`,
   },
   buttonIcon: {
-    marginTop: "8px",
-  }
+    marginTop: `8px`,
+  },
+  fieldHolder: {
+    height: "50px",
+    paddingBottom: "20px",
+  },
 }
+
+const logosize = `20px`
+const clipboardIcon = (
+  <CardView width='1-3' type='emphasis' style={styles.firstButton} fakeLink>
+    <ImageView src={clipboardImage}
+      width={logosize}
+      height={logosize}
+      description={`copy token to clipboard`} 
+      style={styles.buttonIcon}
+      isCentered
+    />
+  </CardView>
+)
+const refreshIcon = (
+  <CardView width='1-1' type='emphasis' style={styles.refreshButton} fakeLink>
+    <ImageView src={refreshImage}
+      width={logosize}
+      height={logosize}
+      description={`refresh token`} 
+      style={styles.buttonIcon}
+      isCentered
+    />
+  </CardView>
+)
+const saveIcon = (
+  <CardView width='1-1' type='emphasis' style={styles.firstButton} fakeLink>
+    <ImageView src={saveImage}
+      width={logosize}
+      height={logosize}
+      description={`save details for future`} 
+      style={styles.buttonIcon}
+      isCentered
+    />
+  </CardView>
+)
 
 class Dashboard extends React.Component {
 
@@ -96,8 +142,6 @@ class Dashboard extends React.Component {
   }
   render() {
     const { data: { name, cn, apps } } = this.state 
-
-    const logosize = "20px"
 
     return (
       <>
@@ -147,16 +191,56 @@ class Dashboard extends React.Component {
                     <Row styling='transparent' noPadding>
                       <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
                         <TextView text={`API Token:`} heading={3} align={`left`} style={styles.tokenText} />
-                        <input type="text" className="token-input" readOnly value={app.token} style={styles.tokenCopyField}/>
+                        <input type="text" className="token-input" readOnly value={app.token} style={styles.copyableField}/>
                         
-                        <CardView width='1-3' type='emphasis' style={styles.clipboardButton} fakeLink>
-                          <ImageView src={clipboardImage} width={logosize} height={logosize} description={'copy token to clipboard'} 
-                            style={styles.buttonIcon} isCentered />
-                        </CardView>
-                        <CardView width='1-1' type='emphasis' style={styles.refreshButton} fakeLink>
-                          <ImageView src={refreshImage} width={logosize} height={logosize} description={'refresh token'} 
-                            style={styles.buttonIcon} isCentered />
-                        </CardView>
+                        {clipboardIcon}
+                        {refreshIcon}
+                      </CardView>
+                    </Row>
+                    <Row styling='transparent' noPadding>
+                      <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
+                        <div className="settings-collapse">
+                          <Collapse>
+                            <Panel header={"- OAuth Settings"} showArrow>
+                              <Row styling='transparent' noPadding>
+                                <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
+                                  <TextView text={"OAuth Credentials: "}
+                                    heading={3}
+                                    align={`left`} 
+                                    style={styles.oauthTitles}
+                                  />
+
+                                  <div className="field-holder" style={styles.fieldHolder}>
+                                    <TextView text={`Client ID:`} heading={3} align={`left`} style={styles.tokenText} />
+                                    <input type="text" className="token-input" readOnly value={app.oauth.client_id} style={styles.copyableField}/>
+                                    {clipboardIcon}
+                                  </div>
+
+                                  <div className="field-holder" style={styles.fieldHolder}>
+                                    <TextView text={`Client Secret:`} heading={3} align={`left`} style={styles.tokenText} />
+                                    <input type="text" className="token-input" readOnly value={app.oauth.client_secret} style={styles.copyableField}/>
+                                    {clipboardIcon}
+                                  </div>
+
+                                  <div className="field-holder" style={styles.fieldHolder}>
+                                    <TextView text={`Callback URL:`} heading={3} align={`left`} style={styles.tokenText} />
+                                    <input type="text" className="token-input" readOnly value={app.oauth.callback_url} style={styles.copyableField}/>
+                                    {saveIcon}
+                                  </div>
+
+                                  <TextView text={"OAuth Scopes: "}
+                                    heading={3}
+                                    align={`left`} 
+                                    style={styles.oauthTitles}
+                                  />
+                                </CardView>
+                              </Row>
+                            </Panel>
+                            <Panel header={"- Webhook Settings"} showArrow>
+                              <TextView text={"settings here"} heading={`p`} />
+                            </Panel>
+                          </Collapse>
+                        </div>
                       </CardView>
                     </Row>
                   </CardView>

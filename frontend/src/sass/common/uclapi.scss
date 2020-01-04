@@ -405,6 +405,29 @@ a:hover { color: $color-grey-light; }
 .rc-collapse-item:last-child > .rc-collapse-content {
   border-radius: 0 0 3px 3px;
 }
+
+.settings-collapse {
+  .rc-collapse {
+    box-shadow: unset;
+    font-size: unset;
+
+    .rc-collapse-content {
+      .rc-collapse-content-box {
+        border-top: unset;
+      }
+    }
+
+    .rc-collapse-item {
+      .rc-collapse-header {
+        text-align: left;  
+        padding: 10px 0;
+        font-weight: 300;
+        border-bottom: 1px solid $color-white-transparent-0455;
+      }
+    }
+  }
+}
+
 /** Input Forms **/
 
 input {
