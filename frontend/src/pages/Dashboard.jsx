@@ -5,15 +5,15 @@ import 'Styles/navbar.scss'
 
 // Dependencies
 import dayjs from 'dayjs'
+import Collapse, { Panel } from 'rc-collapse'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Collapse, { Panel } from 'rc-collapse'
 
 // Images
 import clipboardImage from 'Images/dashboard/clipboard.svg'
 import refreshImage from 'Images/dashboard/refresh.svg'
-import deleteImage from 'Images/dashboard/trash.svg'
 import saveImage from 'Images/dashboard/save.svg'
+import deleteImage from 'Images/dashboard/trash.svg'
 // Components
 import { CardView, Column,   Footer, ImageView,
 NavBar, Row, TextView } from 'Layout/Items.jsx'
@@ -61,7 +61,7 @@ const styles = {
     maxWidth: `40px`,
     minWidth: `40px`,
     float: `left`,
-    margin: `5px`,
+    margin: `5px 0 0 0`,
   },
   firstButton: {
     height: `40px`,
@@ -75,9 +75,15 @@ const styles = {
     marginTop: `8px`,
   },
   fieldHolder: {
-    height: "50px",
-    paddingBottom: "20px",
+    height: `50px`,
+    paddingBottom: `20px`,
   },
+  field: {
+    backgroundColor: `#3498db`,
+    height: `50px`,
+    float: `left`,
+    paddingRight: `10px`,
+  }
 }
 
 const logosize = `20px`
@@ -170,7 +176,7 @@ class Dashboard extends React.Component {
                     <Row styling='transparent' noPadding>
                       <CardView width='1-2' minWidth="100px" type="no-bg" snapAlign>
                         <TextView text={app.name}
-                          heading={3}
+                          heading={2}
                           align={`left`} 
                           style={styles.baseText}
                         />
@@ -190,45 +196,47 @@ class Dashboard extends React.Component {
                     </Row>
                     <Row styling='transparent' noPadding>
                       <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
-                        <TextView text={`API Token:`} heading={3} align={`left`} style={styles.tokenText} />
-                        <input type="text" className="token-input" readOnly value={app.token} style={styles.copyableField}/>
+                        <TextView text={`API Token:`} heading={5} align={`left`} style={styles.tokenText} />
                         
-                        {clipboardIcon}
-                        {refreshIcon}
+                        <div className="field" style={styles.field}>
+                          <input type="text" className="token-input" readOnly value={app.token} style={styles.copyableField}/>
+                          {clipboardIcon}
+                          {refreshIcon}
+                        </div>
                       </CardView>
                     </Row>
                     <Row styling='transparent' noPadding>
                       <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
                         <div className="settings-collapse">
                           <Collapse>
-                            <Panel header={"- OAuth Settings"} showArrow>
+                            <Panel header={`> OAuth Settings`} showArrow>
                               <Row styling='transparent' noPadding>
                                 <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
-                                  <TextView text={"OAuth Credentials: "}
+                                  <TextView text={`OAuth Credentials: `}
                                     heading={3}
                                     align={`left`} 
                                     style={styles.oauthTitles}
                                   />
 
                                   <div className="field-holder" style={styles.fieldHolder}>
-                                    <TextView text={`Client ID:`} heading={3} align={`left`} style={styles.tokenText} />
+                                    <TextView text={`Client ID:`} heading={5} align={`left`} style={styles.tokenText} />
                                     <input type="text" className="token-input" readOnly value={app.oauth.client_id} style={styles.copyableField}/>
                                     {clipboardIcon}
                                   </div>
 
                                   <div className="field-holder" style={styles.fieldHolder}>
-                                    <TextView text={`Client Secret:`} heading={3} align={`left`} style={styles.tokenText} />
+                                    <TextView text={`Client Secret:`} heading={5} align={`left`} style={styles.tokenText} />
                                     <input type="text" className="token-input" readOnly value={app.oauth.client_secret} style={styles.copyableField}/>
                                     {clipboardIcon}
                                   </div>
 
                                   <div className="field-holder" style={styles.fieldHolder}>
-                                    <TextView text={`Callback URL:`} heading={3} align={`left`} style={styles.tokenText} />
+                                    <TextView text={`Callback URL:`} heading={5} align={`left`} style={styles.tokenText} />
                                     <input type="text" className="token-input" readOnly value={app.oauth.callback_url} style={styles.copyableField}/>
                                     {saveIcon}
                                   </div>
 
-                                  <TextView text={"OAuth Scopes: "}
+                                  <TextView text={`OAuth Scopes: `}
                                     heading={3}
                                     align={`left`} 
                                     style={styles.oauthTitles}
@@ -236,8 +244,8 @@ class Dashboard extends React.Component {
                                 </CardView>
                               </Row>
                             </Panel>
-                            <Panel header={"- Webhook Settings"} showArrow>
-                              <TextView text={"settings here"} heading={`p`} />
+                            <Panel header={`> Webhook Settings`} showArrow>
+                              <TextView text={`settings here`} heading={`p`} />
                             </Panel>
                           </Collapse>
                         </div>
