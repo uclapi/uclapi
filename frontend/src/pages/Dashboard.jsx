@@ -77,7 +77,13 @@ const styles = {
     float: `left`,
     paddingRight: `10px`,
     width: `100%`,
-  }
+  },
+  checkBox: {
+    marginTop: `15px`,
+    float: `left`,
+    width: `50px`,
+    padding: `15px`,
+  },
 }
 
 const logosize = `20px`
@@ -92,6 +98,16 @@ const Icon = (image, description) => (
       isCentered
     />
   </CardView>
+)
+
+const CheckBoxView = (text) => (
+  <>                      
+    <div className="field" style={styles.field}>
+      <input type="checkbox" className="token-input" style={styles.checkBox}/>
+      <TextView text={text} heading={5} align={`left`} style={styles.tokenText} /> 
+      {saveIcon}
+    </div>
+  </>
 )
 
 const clipboardIcon = Icon(clipboardImage, `copy token to clipboard`)
@@ -161,6 +177,8 @@ class Dashboard extends React.Component {
                 const updated = this.timeSince(new Date(app.updated))
                 const created = this.timeSince(new Date(app.updated))
 
+                console.log(app.webhook)
+
                 return (
                   <CardView width='1-1' minWidth='280px' type='default' key={index} noPadding>
                     <Row styling='transparent' noPadding>
@@ -201,15 +219,33 @@ class Dashboard extends React.Component {
                                     align={`left`} 
                                     style={styles.oauthTitles}
                                   />
-
                                   { Field("Client ID: ", app.oauth.client_id, ["copy"] ) }
                                   { Field("Client Secret: ", app.oauth.client_secret, ["copy"] ) }
                                   { Field("Callback URL: ", app.oauth.callback_url, ["save"] ) }
                                 </CardView>
                               </Row>
+                              <Row styling='transparent' noPadding>
+                                <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
+                                  <TextView text={`OAuth Scopes: `}
+                                    heading={3}
+                                    align={`left`} 
+                                    style={styles.oauthTitles}
+                                  />
+                                  { CheckBoxView("Personal Timetable") }
+                                  { CheckBoxView("Student Number") }
+                                </CardView>
+                              </Row>
                             </Panel>
                             <Panel header={`> Webhook Settings`} showArrow>
-                              <TextView text={`settings here`} heading={`p`} />
+                              <Row styling='transparent' noPadding>
+                                <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
+                                  { Field("Verification Secret:", app.webhook.verification_secret, ["save", "refresh"] ) }
+                                  { Field("Webhook URL:", app.webhook.url, ["save"] ) }
+                                  { Field("'siteid' (optional):", app.webhook.siteid, ["save"] ) }
+                                  { Field("'roomid' (optional):", app.webhook.roomid, ["save"] ) }
+                                  { Field("Contact (optional):", app.webhook.contact, ["save"] ) }
+                                </CardView>
+                              </Row>
                             </Panel>
                           </Collapse>
                         </div>
