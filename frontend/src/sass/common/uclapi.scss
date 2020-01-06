@@ -412,6 +412,8 @@ a:hover { color: $color-grey-light; }
     font-size: unset;
 
     .rc-collapse-content {
+      padding: 0;
+
       .rc-collapse-content-box {
         border-top: unset;
       }

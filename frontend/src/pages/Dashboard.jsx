@@ -23,6 +23,11 @@ const styles = {
     color: `white`,
     fontWeight: `300`,
   },
+  titleText: {
+    color: `white`,
+    fontWeight: `300`,
+    marginBottom: `0`,
+  },
   oauthTitles: {
     color: `white`,
     fontWeight: `300`,
@@ -46,15 +51,22 @@ const styles = {
   },
   copyableField: {
     marginTop: `0`,
-    width: `50%`,
+    width: `80%`,
     padding: `15px`,
     textAlign: `left`,
+  },
+  copyableFieldMobile: {
+    marginTop: `0`,
+    width: `auto`,
+    padding: `15px`,
+    textAlign: `left`,
+    maxWidth: `50%`,
   },
   tokenText: {
     float: `left`,
     margin: `6px 10px 0 0`,
     color: `white`,
-    fontWeight: `300`,
+    fontWeight: `30 y5r 64taeyrwgT\EQaW FR0`,
   },
   button: {
     height: `40px`,
@@ -117,7 +129,12 @@ const Field = (title, content, icons) => (
     <TextView text={title} heading={5} align={`left`} style={styles.tokenText} />
                           
     <div className="field" style={styles.field}>
-      <input type="text" className="token-input" readOnly value={content} style={styles.copyableField}/>
+      <div className="tablet default">
+        <input type="text" className="token-input" readOnly value={content} style={styles.copyableField}/>
+      </div>
+      <div className="mobile">
+        <input type="text" className="token-input" readOnly value={content} style={styles.copyableFieldMobile}/>
+      </div>
       {icons.includes(`copy`) ? clipboardIcon : null}
       {icons.includes(`refresh`) ? refreshIcon : null}
       {icons.includes(`save`) ? saveIcon : null}
@@ -125,6 +142,40 @@ const Field = (title, content, icons) => (
   </>
 )
 
+const Dates = (created, updated, alignment) => (
+  <>
+    <TextView text={`Created: ` + created + ` ago`}
+      heading={5}
+      align={alignment} 
+      style={styles.dates}
+    />
+    <TextView text={`Updated: ` + updated + ` ago`}
+      heading={5}
+      align={alignment}
+      style={styles.dates}
+    />
+  </>
+)
+
+const Title = (size, title, created, updated) => (
+  <Row styling='transparent' noPadding>
+    <CardView width={size==="mobile" ? '1-1' : '1-2'} minWidth="140px" type="no-bg" snapAlign>
+      <TextView text={title}
+        heading={2}
+        align={size==="mobile" ? `center` : `left`} 
+        style={styles.titleText}
+      />
+    </CardView>
+    <CardView width={size==="mobile" ? '1-1' : '1-2'} minWidth="140px" type="no-bg" snapAlign>
+      {size==="mobile" ? (
+        Dates(created, updated, "center")
+      ) : (
+        Dates(created, updated, "right")
+      )}
+    </CardView>
+  </Row>
+)
+  
 class Dashboard extends React.Component {
 
   constructor(props) {
@@ -176,28 +227,10 @@ class Dashboard extends React.Component {
                 const created = this.timeSince(new Date(app.updated))
 
                 return (
-                  <CardView width='1-1' minWidth='280px' type='default' key={index} noPadding>
-                    <Row styling='transparent' noPadding>
-                      <CardView width='1-2' minWidth="100px" type="no-bg" snapAlign>
-                        <TextView text={app.name}
-                          heading={2}
-                          align={`left`} 
-                          style={styles.baseText}
-                        />
-                      </CardView>
-                      <CardView width='1-2' minWidth="100px" type="no-bg" snapAlign>
-                        <TextView text={`Created: ` + created + ` ago`}
-                          heading={5}
-                          align={`right`} 
-                          style={styles.dates}
-                        />
-                        <TextView text={`Updated: ` + updated + ` ago`}
-                          heading={5}
-                          align={`right`}
-                          style={styles.dates}
-                        />
-                      </CardView>
-                    </Row>
+                  <CardView width='1-1' type='default' key={index} noPadding>
+                    <div className="default tablet"> { Title("not-mobile", app.name, created, updated) }</div>
+                    <div className="mobile"> { Title("mobile", app.name, created, updated) } </div>
+                    
                     <Row styling='transparent' noPadding>
                       <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
                         { Field(`API Token: `, app.token, [`copy`, `refresh`] ) }
