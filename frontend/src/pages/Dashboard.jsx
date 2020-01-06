@@ -15,7 +15,7 @@ import refreshImage from 'Images/dashboard/refresh.svg'
 import saveImage from 'Images/dashboard/save.svg'
 import deleteImage from 'Images/dashboard/trash.svg'
 // Components
-import { CardView, Column,   Footer, ImageView,
+import { CardView, CheckBox,Column,   Footer, ImageView,
 NavBar, Row, TextView } from 'Layout/Items.jsx'
 
 const styles = {
@@ -79,10 +79,8 @@ const styles = {
     width: `100%`,
   },
   checkBox: {
-    marginTop: `15px`,
+    margin: `10px`,
     float: `left`,
-    width: `50px`,
-    padding: `15px`,
   },
 }
 
@@ -100,10 +98,10 @@ const Icon = (image, description) => (
   </CardView>
 )
 
-const CheckBoxView = (text) => (
+const CheckBoxView = (text, value) => (
   <>                      
     <div className="field" style={styles.field}>
-      <input type="checkbox" className="token-input" style={styles.checkBox}/>
+      <CheckBox onClick={ (value) => {console.log(`check box clicked: ` + value)} } isChecked={value} style={styles.checkBox}/>
       <TextView text={text} heading={5} align={`left`} style={styles.tokenText} /> 
       {saveIcon}
     </div>
@@ -120,9 +118,9 @@ const Field = (title, content, icons) => (
                           
     <div className="field" style={styles.field}>
       <input type="text" className="token-input" readOnly value={content} style={styles.copyableField}/>
-      {icons.includes("copy") ? clipboardIcon : null}
-      {icons.includes("refresh") ? refreshIcon : null}
-      {icons.includes("save") ? saveIcon : null}
+      {icons.includes(`copy`) ? clipboardIcon : null}
+      {icons.includes(`refresh`) ? refreshIcon : null}
+      {icons.includes(`save`) ? saveIcon : null}
     </div>
   </>
 )
@@ -177,8 +175,6 @@ class Dashboard extends React.Component {
                 const updated = this.timeSince(new Date(app.updated))
                 const created = this.timeSince(new Date(app.updated))
 
-                console.log(app.webhook)
-
                 return (
                   <CardView width='1-1' minWidth='280px' type='default' key={index} noPadding>
                     <Row styling='transparent' noPadding>
@@ -204,7 +200,7 @@ class Dashboard extends React.Component {
                     </Row>
                     <Row styling='transparent' noPadding>
                       <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
-                        { Field("API Token: ", app.token, ["copy", "refresh"] ) }
+                        { Field(`API Token: `, app.token, [`copy`, `refresh`] ) }
                       </CardView>
                     </Row>
                     <Row styling='transparent' noPadding>
@@ -219,9 +215,9 @@ class Dashboard extends React.Component {
                                     align={`left`} 
                                     style={styles.oauthTitles}
                                   />
-                                  { Field("Client ID: ", app.oauth.client_id, ["copy"] ) }
-                                  { Field("Client Secret: ", app.oauth.client_secret, ["copy"] ) }
-                                  { Field("Callback URL: ", app.oauth.callback_url, ["save"] ) }
+                                  { Field(`Client ID: `, app.oauth.client_id, [`copy`] ) }
+                                  { Field(`Client Secret: `, app.oauth.client_secret, [`copy`] ) }
+                                  { Field(`Callback URL: `, app.oauth.callback_url, [`save`] ) }
                                 </CardView>
                               </Row>
                               <Row styling='transparent' noPadding>
@@ -231,19 +227,19 @@ class Dashboard extends React.Component {
                                     align={`left`} 
                                     style={styles.oauthTitles}
                                   />
-                                  { CheckBoxView("Personal Timetable") }
-                                  { CheckBoxView("Student Number") }
+                                  { CheckBoxView(`Personal Timetable`, false) }
+                                  { CheckBoxView(`Student Number`, false) }
                                 </CardView>
                               </Row>
                             </Panel>
                             <Panel header={`> Webhook Settings`} showArrow>
                               <Row styling='transparent' noPadding>
                                 <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
-                                  { Field("Verification Secret:", app.webhook.verification_secret, ["save", "refresh"] ) }
-                                  { Field("Webhook URL:", app.webhook.url, ["save"] ) }
-                                  { Field("'siteid' (optional):", app.webhook.siteid, ["save"] ) }
-                                  { Field("'roomid' (optional):", app.webhook.roomid, ["save"] ) }
-                                  { Field("Contact (optional):", app.webhook.contact, ["save"] ) }
+                                  { Field(`Verification Secret:`, app.webhook.verification_secret, [`save`, `refresh`] ) }
+                                  { Field(`Webhook URL:`, app.webhook.url, [`save`] ) }
+                                  { Field(`'siteid' (optional):`, app.webhook.siteid, [`save`] ) }
+                                  { Field(`'roomid' (optional):`, app.webhook.roomid, [`save`] ) }
+                                  { Field(`Contact (optional):`, app.webhook.contact, [`save`] ) }
                                 </CardView>
                               </Row>
                             </Panel>

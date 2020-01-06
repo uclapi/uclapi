@@ -449,6 +449,32 @@ input::placeholder {
 input:focus{
   outline: none;
 }
+
+input[type="checkbox"] {
+  display: none;
+}
+input[type="checkbox"] + span {
+  display: inline-block;
+  position: relative;
+  top: -1px;
+  width: 12px;
+  height: 12px;
+  margin: -1px 0px 0 0;
+  vertical-align: middle;
+  background: white left top no-repeat;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition-property: all;
+  transition-duration: 200ms;
+}
+input[type="checkbox"]:checked + span {
+  background:  lighten($primary-highlight-color, 10%) left top no-repeat;
+}
+
+input[type="checkbox"] + span {
+  margin-right: 4px;
+}
+
 /** For Autocomplete forms **/
 
 ul {
