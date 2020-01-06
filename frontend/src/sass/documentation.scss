@@ -32,6 +32,11 @@ $color-white-transparent-0455: rgba(255, 255, 255, 0.455);
 $color-facebook: #3b5998;
 $color-twitter: #38a1f3;
 
+body, html{
+    margin:0;
+    padding:0;
+}
+
 body {
   margin: 0px;
   font-family: 'Source Sans Pro', sans-serif;
