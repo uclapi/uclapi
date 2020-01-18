@@ -132,7 +132,7 @@ export default class GetEquiment extends React.Component {
               name="department"
               extra="string"
               example="UCL Medical School"
-              description="The department the student studies or works under."
+              description="The department the member of staff works under."
             />
             <Cell
               name="email"
