@@ -42,6 +42,7 @@ module.exports = {
     alias: {
       'Images': path.resolve(__dirname, `./src/images`),
       'Layout': path.resolve(__dirname, `./src/components/layout`),
+      'Dashboard': path.resolve(__dirname, `./src/components/dashboard`),
       'Styles': path.resolve(__dirname, `./src/sass`),
     },
   },

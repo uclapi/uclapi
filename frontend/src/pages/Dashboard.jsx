@@ -5,142 +5,25 @@ import 'Styles/navbar.scss'
 
 // Dependencies
 import dayjs from 'dayjs'
-import Collapse, { Panel } from 'rc-collapse'
+import Cookies from 'js-cookie';
+
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-// Images
-import clipboardImage from 'Images/dashboard/clipboard.svg'
-import refreshImage from 'Images/dashboard/refresh.svg'
-import saveImage from 'Images/dashboard/save.svg'
-import deleteImage from 'Images/dashboard/trash.svg'
+import Collapse, { Panel } from 'rc-collapse'
+
 // Components
 import { CardView, CheckBox,Column,   Footer, ImageView,
 NavBar, Row, TextView } from 'Layout/Items.jsx'
 
-const styles = {
-  baseText: {
-    color: `white`,
-    fontWeight: `300`,
-  },
-  titleText: {
-    color: `white`,
-    fontWeight: `300`,
-    marginBottom: `0`,
-  },
-  oauthTitles: {
-    color: `white`,
-    fontWeight: `300`,
-    padding: `10px 0`,
-    textDecoration: `underline`,
-  },
-  lightText: {
-    color: `#ddd`,
-    fontWeight: `100`,
-  },
-  dates: {
-    color: `#ddd`,
-    fontWeight: `100`,
-    margin: `0`,
-  },
-  appHolder: {
-    marginTop: `80px`,
-  },
-  tokenHolder: {
-    borderRadius: `0`,
-  },
-  copyableField: {
-    marginTop: `0`,
-    width: `80%`,
-    padding: `15px`,
-    textAlign: `left`,
-  },
-  copyableFieldMobile: {
-    marginTop: `0`,
-    width: `auto`,
-    padding: `15px`,
-    textAlign: `left`,
-    maxWidth: `50%`,
-  },
-  tokenText: {
-    float: `left`,
-    margin: `6px 10px 0 0`,
-    color: `white`,
-    fontWeight: `30 y5r 64taeyrwgT\EQaW FR0`,
-  },
-  button: {
-    height: `40px`,
-    maxWidth: `40px`,
-    minWidth: `40px`,
-    float: `right`,
-    margin: `5px`,
-    marginLeft: `5px`,
-  },
-  buttonIcon: {
-    marginTop: `8px`,
-  },
-  fieldHolder: {
-    height: `50px`,
-    paddingBottom: `20px`,
-  },
-  field: {
-    backgroundColor: `#3498db`,
-    height: `50px`,
-    float: `left`,
-    paddingRight: `10px`,
-    width: `100%`,
-  },
-  checkBox: {
-    margin: `10px`,
-    float: `left`,
-  },
+import { styles } from 'Layout/data/dashboard_styles.jsx'
+import { Icon, CheckBoxView, Field,
+  clipboardIcon, refreshIcon, editIcon, saveIcon } from 'Dashboard/DashboardUI.jsx'
+
+const defaultHeaders = {
+  'Content-Type': 'application/x-www-form-urlencoded',
+  'X-CSRFToken': Cookies.get('csrftoken')
 }
-
-const logosize = `20px`
-
-const Icon = (image, description) => (
-  <CardView width='1-3' type='emphasis' style={styles.button} fakeLink>
-    <ImageView src={image}
-      width={logosize}
-      height={logosize}
-      description={description} 
-      style={styles.buttonIcon}
-      isCentered
-    />
-  </CardView>
-)
-
-const CheckBoxView = (text, value) => (
-  <>                      
-    <div className="field" style={styles.field}>
-      <CheckBox onClick={ (value) => {console.log(`check box clicked: ` + value)} } isChecked={value} style={styles.checkBox}/>
-      <TextView text={text} heading={5} align={`left`} style={styles.tokenText} /> 
-      {saveIcon}
-    </div>
-  </>
-)
-
-const clipboardIcon = Icon(clipboardImage, `copy token to clipboard`)
-const refreshIcon = Icon(refreshImage, `refresh token`)
-const saveIcon = Icon(saveImage, `save details for future`)
-
-const Field = (title, content, icons) => (
-  <>
-    <TextView text={title} heading={5} align={`left`} style={styles.tokenText} />
-                          
-    <div className="field" style={styles.field}>
-      <div className="tablet default">
-        <input type="text" className="token-input" readOnly value={content} style={styles.copyableField}/>
-      </div>
-      <div className="mobile">
-        <input type="text" className="token-input" readOnly value={content} style={styles.copyableFieldMobile}/>
-      </div>
-      {icons.includes(`copy`) ? clipboardIcon : null}
-      {icons.includes(`refresh`) ? refreshIcon : null}
-      {icons.includes(`save`) ? saveIcon : null}
-    </div>
-  </>
-)
 
 const Dates = (created, updated, alignment) => (
   <>
@@ -157,14 +40,28 @@ const Dates = (created, updated, alignment) => (
   </>
 )
 
-const Title = (size, title, created, updated) => (
+const Title = (size, title, created, updated, isEditing, actions) => {
+  return (
   <Row styling='transparent' noPadding>
-    <CardView width={size==="mobile" ? '1-1' : '1-2'} minWidth="140px" type="no-bg" snapAlign>
-      <TextView text={title}
-        heading={2}
-        align={size==="mobile" ? `center` : `left`} 
-        style={styles.titleText}
-      />
+    <CardView width={size==="mobile" ? '1-1' : '1-2'} minWidth="140px" type="no-bg" style={styles.squareCard} snapAlign>
+      { !isEditing ? (
+          <>
+            <TextView text={title}
+              heading={2}
+              align={size==="mobile" ? `center` : `left`} 
+              style={styles.titleText}
+            />
+            {editIcon(actions.toggleEditTitle)} 
+          </>
+        ) : (
+          <>
+            { Field(`Title: `, title, {
+              save: {action: actions.test},
+              cancel: {action: actions.toggleEditTitle}
+            }, {isSmall: true} ) }
+          </>
+        )
+      }
     </CardView>
     <CardView width={size==="mobile" ? '1-1' : '1-2'} minWidth="140px" type="no-bg" snapAlign>
       {size==="mobile" ? (
@@ -174,7 +71,8 @@ const Title = (size, title, created, updated) => (
       )}
     </CardView>
   </Row>
-)
+  )
+}
   
 class Dashboard extends React.Component {
 
@@ -184,6 +82,10 @@ class Dashboard extends React.Component {
     this.DEBUGGING = true
 
     this.timeSince = this.timeSince.bind(this)
+    this.toggleEditTitle = this.toggleEditTitle.bind(this)
+    this.testEvent = this.testEvent.bind(this)
+    this.copyToClipBoard = this.copyToClipBoard.bind(this)
+    this.regenToken = this.regenToken.bind(this)
 
     // Sort the apps by last updated property
     window.initialData.apps.sort((a, b) => {
@@ -199,10 +101,21 @@ class Dashboard extends React.Component {
       }
     })
 
-    this.state = { data: window.initialData }
+    this.state = { 
+      data: window.initialData,
+      editName: false,
+    }
   }
+
   render() {
-    const { data: { name, cn, apps } } = this.state 
+    const { data: { name, cn, apps }, editName} = this.state 
+
+    const actions = {
+      toggleEditTitle: this.toggleEditTitle,
+      test: this.testEvent,
+      copyToClipBoard: this.copyToClipBoard,
+      regenToken: this.regenToken,
+    }
 
     return (
       <>
@@ -228,12 +141,15 @@ class Dashboard extends React.Component {
 
                 return (
                   <CardView width='1-1' type='default' key={index} noPadding>
-                    <div className="default tablet"> { Title("not-mobile", app.name, created, updated) }</div>
-                    <div className="mobile"> { Title("mobile", app.name, created, updated) } </div>
+                    <div className="default tablet"> { Title("not-mobile", app.name, created, updated, editName, actions)}</div>
+                    <div className="mobile"> { Title("mobile", app.name, created, updated, editName, actions) } </div>
                     
                     <Row styling='transparent' noPadding>
                       <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
-                        { Field(`API Token: `, app.token, [`copy`, `refresh`] ) }
+                        { Field(`API Token: `, app.token, {
+                          copy: {action: actions.copyToClipBoard},
+                          refresh: {action: () => { actions.regenToken(index) } }
+                        }, {} ) }
                       </CardView>
                     </Row>
                     <Row styling='transparent' noPadding>
@@ -248,9 +164,15 @@ class Dashboard extends React.Component {
                                     align={`left`} 
                                     style={styles.oauthTitles}
                                   />
-                                  { Field(`Client ID: `, app.oauth.client_id, [`copy`] ) }
-                                  { Field(`Client Secret: `, app.oauth.client_secret, [`copy`] ) }
-                                  { Field(`Callback URL: `, app.oauth.callback_url, [`save`] ) }
+                                  { Field(`Client ID: `, app.oauth.client_id, {
+                                    copy: {action: actions.copyToClipBoard}
+                                  }, {} ) }
+                                  { Field(`Client Secret: `, app.oauth.client_secret, {
+                                    copy: {action: actions.copyToClipBoard}
+                                  }, {} ) }
+                                  { Field(`Callback URL: `, app.oauth.callback_url, {
+                                    copy: {action: actions.copyToClipBoard}
+                                  }, {} ) }
                                 </CardView>
                               </Row>
                               <Row styling='transparent' noPadding>
@@ -268,11 +190,22 @@ class Dashboard extends React.Component {
                             <Panel header={`> Webhook Settings`} showArrow>
                               <Row styling='transparent' noPadding>
                                 <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
-                                  { Field(`Verification Secret:`, app.webhook.verification_secret, [`save`, `refresh`] ) }
-                                  { Field(`Webhook URL:`, app.webhook.url, [`save`] ) }
-                                  { Field(`'siteid' (optional):`, app.webhook.siteid, [`save`] ) }
-                                  { Field(`'roomid' (optional):`, app.webhook.roomid, [`save`] ) }
-                                  { Field(`Contact (optional):`, app.webhook.contact, [`save`] ) }
+                                  { Field(`Verification Secret:`, app.webhook.verification_secret, {
+                                    save: {action: actions.test},
+                                    refresh: {action: actions.test}
+                                  }, {} ) }
+                                  { Field(`Webhook URL:`, app.webhook.url, {
+                                    save: {action: actions.test}
+                                  }, {} ) }
+                                  { Field(`'siteid' (optional):`, app.webhook.siteid, {
+                                    save: {action: actions.test}
+                                  }, {} ) }
+                                  { Field(`'roomid' (optional):`, app.webhook.roomid, {
+                                    save: {action: actions.test}
+                                  }, {} ) }
+                                  { Field(`Contact (optional):`, app.webhook.contact, {
+                                    save: {action: actions.test}
+                                  }, {} ) }
                                 </CardView>
                               </Row>
                             </Panel>
@@ -291,6 +224,74 @@ class Dashboard extends React.Component {
         <Footer />
       </>
     )
+  }
+
+  toggleEditTitle() {
+    const { editName } = this.state
+
+    this.setState({editName: !editName})
+  }
+
+  testEvent() {
+    console.log("Click has been tested")
+  }
+
+  copyToClipBoard(e, reference){
+    e.preventDefault()
+
+    if(this.DEBUGGING) { console.log("Copy to clipboard") }
+    if(this.DEBUGGING) { console.log(reference) }
+    if(this.DEBUGGING) { console.log(e) }
+
+    reference.current.select()
+    
+    try {
+      document.execCommand('copy')
+    }catch (err) {
+      alert('please press Ctrl/Cmd+C to copy');
+    }
+  }
+
+  regenToken = (index) => {
+
+    const { data: { apps } } = this.state 
+
+    // Query the backend endpoint to fetch a new token
+    // Also updates server side for persistence
+    fetch('/dashboard/api/regen/', {
+      method: 'POST',
+      credentials: 'include',
+      headers: defaultHeaders,
+      body: 'app_id=' + apps[index].appId
+    }).then((res) => {
+      
+      // Check whether respose has ok'ed on the backend
+      if (res.ok) { return res.json(); }
+      throw new Error('Unable to regen token.');
+    }).then((json) => {
+      
+      // Assuming all is okay then access the json
+      if (json.success) {
+        // The important details from the response
+        let values = {
+          token: json.app.token,
+          updated: json.app.date
+        };
+        // Update the state of the app (visual)
+        const { data: updatedData } = this.state 
+        updatedData[index].token = values.token
+
+        this.setState({
+          data: updatedData
+        })
+        return;
+      }
+
+      throw new Error(json.message);
+    }).catch((err) => {
+      console.error("Token not refreshed")
+      console.error(err.message)
+    });
   }
 
   timeSince(date) {
