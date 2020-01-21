@@ -5,24 +5,22 @@ import 'Styles/navbar.scss'
 
 // Dependencies
 import dayjs from 'dayjs'
-import Cookies from 'js-cookie';
-
+import Cookies from 'js-cookie'
+import Collapse, { Panel } from 'rc-collapse'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import update from 'immutability-helper';
 
-import Collapse, { Panel } from 'rc-collapse'
-
+import { CheckBoxView,   clipboardIcon, editIcon, Field,
+Icon, refreshIcon, saveIcon } from 'Dashboard/DashboardUI.jsx'
+import { styles } from 'Layout/data/dashboard_styles.jsx'
 // Components
 import { CardView, CheckBox,Column,   Footer, ImageView,
 NavBar, Row, TextView } from 'Layout/Items.jsx'
 
-import { styles } from 'Layout/data/dashboard_styles.jsx'
-import { Icon, CheckBoxView, Field,
-  clipboardIcon, refreshIcon, editIcon, saveIcon } from 'Dashboard/DashboardUI.jsx'
-
 const defaultHeaders = {
-  'Content-Type': 'application/x-www-form-urlencoded',
-  'X-CSRFToken': Cookies.get('csrftoken')
+  'Content-Type': `application/x-www-form-urlencoded`,
+  'X-CSRFToken': Cookies.get(`csrftoken`),
 }
 
 const Dates = (created, updated, alignment) => (
@@ -43,12 +41,12 @@ const Dates = (created, updated, alignment) => (
 const Title = (size, title, created, updated, isEditing, actions) => {
   return (
   <Row styling='transparent' noPadding>
-    <CardView width={size==="mobile" ? '1-1' : '1-2'} minWidth="140px" type="no-bg" style={styles.squareCard} snapAlign>
+    <CardView width={size===`mobile` ? `1-1` : `1-2`} minWidth="140px" type="no-bg" style={styles.squareCard} snapAlign>
       { !isEditing ? (
           <>
             <TextView text={title}
               heading={2}
-              align={size==="mobile" ? `center` : `left`} 
+              align={size===`mobile` ? `center` : `left`} 
               style={styles.titleText}
             />
             {editIcon(actions.toggleEditTitle)} 
@@ -57,17 +55,17 @@ const Title = (size, title, created, updated, isEditing, actions) => {
           <>
             { Field(`Title: `, title, {
               save: {action: actions.test},
-              cancel: {action: actions.toggleEditTitle}
+              cancel: {action: actions.toggleEditTitle},
             }, {isSmall: true} ) }
           </>
         )
       }
     </CardView>
-    <CardView width={size==="mobile" ? '1-1' : '1-2'} minWidth="140px" type="no-bg" snapAlign>
-      {size==="mobile" ? (
-        Dates(created, updated, "center")
+    <CardView width={size===`mobile` ? `1-1` : `1-2`} minWidth="140px" type="no-bg" snapAlign>
+      {size===`mobile` ? (
+        Dates(created, updated, `center`)
       ) : (
-        Dates(created, updated, "right")
+        Dates(created, updated, `right`)
       )}
     </CardView>
   </Row>
@@ -86,6 +84,8 @@ class Dashboard extends React.Component {
     this.testEvent = this.testEvent.bind(this)
     this.copyToClipBoard = this.copyToClipBoard.bind(this)
     this.regenToken = this.regenToken.bind(this)
+    this.regenVerificationSecret = this.regenVerificationSecret.bind(this)
+    this.queryDashboardAPI = this.queryDashboardAPI.bind(this)
 
     // Sort the apps by last updated property
     window.initialData.apps.sort((a, b) => {
@@ -115,6 +115,7 @@ class Dashboard extends React.Component {
       test: this.testEvent,
       copyToClipBoard: this.copyToClipBoard,
       regenToken: this.regenToken,
+      regenVerificationSecret: this.regenVerificationSecret,
     }
 
     return (
@@ -141,14 +142,14 @@ class Dashboard extends React.Component {
 
                 return (
                   <CardView width='1-1' type='default' key={index} noPadding>
-                    <div className="default tablet"> { Title("not-mobile", app.name, created, updated, editName, actions)}</div>
-                    <div className="mobile"> { Title("mobile", app.name, created, updated, editName, actions) } </div>
+                    <div className="default tablet"> { Title(`not-mobile`, app.name, created, updated, editName, actions)}</div>
+                    <div className="mobile"> { Title(`mobile`, app.name, created, updated, editName, actions) } </div>
                     
                     <Row styling='transparent' noPadding>
                       <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
                         { Field(`API Token: `, app.token, {
                           copy: {action: actions.copyToClipBoard},
-                          refresh: {action: () => { actions.regenToken(index) } }
+                          refresh: {action: () => { actions.regenToken(index) } },
                         }, {} ) }
                       </CardView>
                     </Row>
@@ -165,13 +166,13 @@ class Dashboard extends React.Component {
                                     style={styles.oauthTitles}
                                   />
                                   { Field(`Client ID: `, app.oauth.client_id, {
-                                    copy: {action: actions.copyToClipBoard}
+                                    copy: {action: actions.copyToClipBoard},
                                   }, {} ) }
                                   { Field(`Client Secret: `, app.oauth.client_secret, {
-                                    copy: {action: actions.copyToClipBoard}
+                                    copy: {action: actions.copyToClipBoard},
                                   }, {} ) }
                                   { Field(`Callback URL: `, app.oauth.callback_url, {
-                                    copy: {action: actions.copyToClipBoard}
+                                    copy: {action: actions.copyToClipBoard},
                                   }, {} ) }
                                 </CardView>
                               </Row>
@@ -192,19 +193,19 @@ class Dashboard extends React.Component {
                                 <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
                                   { Field(`Verification Secret:`, app.webhook.verification_secret, {
                                     save: {action: actions.test},
-                                    refresh: {action: actions.test}
+                                    refresh: {action: () => { actions.regenVerificationSecret(index) } },
                                   }, {} ) }
                                   { Field(`Webhook URL:`, app.webhook.url, {
-                                    save: {action: actions.test}
+                                    save: {action: actions.test},
                                   }, {} ) }
                                   { Field(`'siteid' (optional):`, app.webhook.siteid, {
-                                    save: {action: actions.test}
+                                    save: {action: actions.test},
                                   }, {} ) }
                                   { Field(`'roomid' (optional):`, app.webhook.roomid, {
-                                    save: {action: actions.test}
+                                    save: {action: actions.test},
                                   }, {} ) }
                                   { Field(`Contact (optional):`, app.webhook.contact, {
-                                    save: {action: actions.test}
+                                    save: {action: actions.test},
                                   }, {} ) }
                                 </CardView>
                               </Row>
@@ -233,64 +234,66 @@ class Dashboard extends React.Component {
   }
 
   testEvent() {
-    console.log("Click has been tested")
+    console.log(`Click has been tested`)
   }
 
   copyToClipBoard(e, reference){
     e.preventDefault()
 
-    if(this.DEBUGGING) { console.log("Copy to clipboard") }
+    if(this.DEBUGGING) { console.log(`Copy to clipboard`) }
     if(this.DEBUGGING) { console.log(reference) }
     if(this.DEBUGGING) { console.log(e) }
 
     reference.current.select()
     
     try {
-      document.execCommand('copy')
+      document.execCommand(`copy`)
     }catch (err) {
-      alert('please press Ctrl/Cmd+C to copy');
+      alert(`please press Ctrl/Cmd+C to copy`)
     }
   }
 
-  regenToken = (index) => {
-
+  regenToken(index) {
     const { data: { apps } } = this.state 
 
-    // Query the backend endpoint to fetch a new token
-    // Also updates server side for persistence
-    fetch('/dashboard/api/regen/', {
+    this.queryDashboardAPI(`/dashboard/api/regen/`, `app_id=` + apps[index].id, (json) => {
+      const values = {
+        token: json.app.token,
+        updated: json.app.date,
+      }
+
+      var updatedData = {...this.state.data}
+      updatedData.apps[index].token = values.token
+
+      this.setState({ data: updatedData })
+    });
+  }
+
+  regenVerificationSecret(index) {
+    const { data: { apps } } = this.state 
+
+    this.queryDashboardAPI('dashboard/api/webhook/refreshsecret/', `app_id=` + apps[index].id, (json) => {
+      const secret = json.new_secret
+
+      var updatedData = {...this.state.data}
+      updatedData.apps[index].webhook.verification_secret = secret
+
+      this.setState({ data: updatedData })
+    });
+  }
+
+  queryDashboardAPI(url, querystring, callback) {
+    fetch(url, {
       method: 'POST',
       credentials: 'include',
       headers: defaultHeaders,
-      body: 'app_id=' + apps[index].appId
-    }).then((res) => {
-      
-      // Check whether respose has ok'ed on the backend
-      if (res.ok) { return res.json(); }
-      throw new Error('Unable to regen token.');
-    }).then((json) => {
-      
-      // Assuming all is okay then access the json
-      if (json.success) {
-        // The important details from the response
-        let values = {
-          token: json.app.token,
-          updated: json.app.date
-        };
-        // Update the state of the app (visual)
-        const { data: updatedData } = this.state 
-        updatedData[index].token = values.token
-
-        this.setState({
-          data: updatedData
-        })
-        return;
-      }
-
-      throw new Error(json.message);
-    }).catch((err) => {
-      console.error("Token not refreshed")
-      console.error(err.message)
+      body: querystring
+    }).then((res)=>{
+      return res.json()
+    }).then(callback)
+    .catch((err)=>{
+      console.log("Failed to save details to: " + url)
+      console.err(err);
     });
   }
 

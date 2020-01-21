@@ -12,7 +12,7 @@ const BundleTracker = require(`webpack-bundle-tracker`)
 
 const os = require(`os`)
 
-let entryPointsPathPrefix = `./src/pages`
+const entryPointsPathPrefix = `./src/pages`
 
 const publicPath = process.env.AWS_S3_STATICS === `True`
   ? `https://${process.env.AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${process.env.AWS_S3_BUCKET_PATH}`
