@@ -80,11 +80,20 @@ class Dashboard extends React.Component {
     this.DEBUGGING = true
 
     this.timeSince = this.timeSince.bind(this)
+    
     this.toggleEditTitle = this.toggleEditTitle.bind(this)
-    this.testEvent = this.testEvent.bind(this)
     this.copyToClipBoard = this.copyToClipBoard.bind(this)
+    
+    this.testEvent = this.testEvent.bind(this)
+
     this.regenToken = this.regenToken.bind(this)
     this.regenVerificationSecret = this.regenVerificationSecret.bind(this)
+
+    this.saveWebhookURL = this.saveWebhookURL.bind(this)
+    this.saveWebhookContact = this.saveWebhookContact.bind(this)
+    this.saveWebhookSiteID = this.saveWebhookSiteID.bind(this)
+    this.saveWebhookRoomID = this.saveWebhookRoomID.bind(this)
+
     this.queryDashboardAPI = this.queryDashboardAPI.bind(this)
 
     // Sort the apps by last updated property
@@ -116,6 +125,12 @@ class Dashboard extends React.Component {
       copyToClipBoard: this.copyToClipBoard,
       regenToken: this.regenToken,
       regenVerificationSecret: this.regenVerificationSecret,
+      webhook: {
+        saveURL: this.saveWebhookURL,
+        saveContact: this.saveWebhookContact,
+        saveSiteID: this.saveWebhookSiteID,
+        saveRoomID: this.saveWebhookRoomID
+      }
     }
 
     return (
@@ -192,20 +207,20 @@ class Dashboard extends React.Component {
                               <Row styling='transparent' noPadding>
                                 <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
                                   { Field(`Verification Secret:`, app.webhook.verification_secret, {
-                                    save: {action: actions.test},
+                                    copy: {action: actions.copyToClipBoard},
                                     refresh: {action: () => { actions.regenVerificationSecret(index) } },
                                   }, {} ) }
                                   { Field(`Webhook URL:`, app.webhook.url, {
-                                    save: {action: actions.test},
+                                    save: {action: (reference, shouldPersist) => { actions.webhook.saveURL(index, reference.current.value, shouldPersist) } },
                                   }, {} ) }
                                   { Field(`'siteid' (optional):`, app.webhook.siteid, {
-                                    save: {action: actions.test},
+                                    save: {action: (reference, shouldPersist) => { actions.webhook.saveSiteID(index, reference.current.value, shouldPersist) } },
                                   }, {} ) }
                                   { Field(`'roomid' (optional):`, app.webhook.roomid, {
-                                    save: {action: actions.test},
+                                    save: {action: (reference, shouldPersist) => { actions.webhook.saveRoomID(index, reference.current.value, shouldPersist) } },
                                   }, {} ) }
                                   { Field(`Contact (optional):`, app.webhook.contact, {
-                                    save: {action: actions.test},
+                                    save: {action: (reference, shouldPersist) => { actions.webhook.saveContact(index, reference.current.value, shouldPersist) } },
                                   }, {} ) }
                                 </CardView>
                               </Row>
@@ -280,6 +295,47 @@ class Dashboard extends React.Component {
 
       this.setState({ data: updatedData })
     });
+  }
+
+  saveWebhookURL(index, value, shouldPersist) {
+    if(shouldPersist) {
+      // Code to handle making request
+    }
+
+    var updatedData = {...this.state.data}
+    updatedData.apps[index].webhook.url = value
+
+    this.setState({ data: updatedData })
+  }
+  saveWebhookContact(index, value, shouldPersist) {
+    if(shouldPersist) {
+      // Code to handle making request
+    }
+
+    var updatedData = {...this.state.data}
+    updatedData.apps[index].webhook.contact = value
+
+    this.setState({ data: updatedData })
+  }
+  saveWebhookSiteID(index, value, shouldPersist) {
+    if(shouldPersist) {
+      // Code to handle making request
+    }
+
+    var updatedData = {...this.state.data}
+    updatedData.apps[index].webhook.siteid = value
+
+    this.setState({ data: updatedData })
+  }
+  saveWebhookRoomID(index, value, shouldPersist) {
+    if(shouldPersist) {
+      // Code to handle making request
+    }
+
+    var updatedData = {...this.state.data}
+    updatedData.apps[index].webhook.roomid = value
+
+    this.setState({ data: updatedData })
   }
 
   queryDashboardAPI(url, querystring, callback) {
