@@ -11,12 +11,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import update from 'immutability-helper';
 
-import { CheckBoxView,   clipboardIcon, editIcon, Field,
+import { CheckBoxView, clipboardIcon, editIcon, Field,
 Icon, refreshIcon, saveIcon } from 'Dashboard/DashboardUI.jsx'
 import { styles } from 'Layout/data/dashboard_styles.jsx'
 // Components
-import { CardView, CheckBox,Column,   Footer, ImageView,
-NavBar, Row, TextView } from 'Layout/Items.jsx'
+import { CardView, CheckBox, Column, Footer, ImageView,
+NavBar, Row, TextView, ButtonView } from 'Layout/Items.jsx'
 
 const defaultHeaders = {
   'Content-Type': `application/x-www-form-urlencoded`,
@@ -38,7 +38,7 @@ const Dates = (created, updated, alignment) => (
   </>
 )
 
-const Title = (size, title, created, updated, isEditing, actions) => {
+const Title = (size, title, created, updated, isEditing, toggleEditTitle, saveEditTitle, cancelEditTitle) => {
   return (
   <Row styling='transparent' noPadding>
     <CardView width={size===`mobile` ? `1-1` : `1-2`} minWidth="140px" type="no-bg" style={styles.squareCard} snapAlign>
@@ -49,13 +49,13 @@ const Title = (size, title, created, updated, isEditing, actions) => {
               align={size===`mobile` ? `center` : `left`} 
               style={styles.titleText}
             />
-            {editIcon(actions.toggleEditTitle)} 
+            {editIcon(toggleEditTitle)} 
           </>
         ) : (
           <>
             { Field(`Title: `, title, {
-              save: {action: actions.test},
-              cancel: {action: actions.toggleEditTitle},
+              save: {action: saveEditTitle},
+              cancel: {action: cancelEditTitle},
             }, {isSmall: true} ) }
           </>
         )
@@ -82,6 +82,9 @@ class Dashboard extends React.Component {
     this.timeSince = this.timeSince.bind(this)
     
     this.toggleEditTitle = this.toggleEditTitle.bind(this)
+    this.saveEditTitle = this.saveEditTitle.bind(this)
+    this.cancelEditTitle = this.cancelEditTitle.bind(this)
+
     this.copyToClipBoard = this.copyToClipBoard.bind(this)
     
     this.testEvent = this.testEvent.bind(this)
@@ -95,6 +98,7 @@ class Dashboard extends React.Component {
     this.saveWebhookRoomID = this.saveWebhookRoomID.bind(this)
 
     this.queryDashboardAPI = this.queryDashboardAPI.bind(this)
+    this.updateWebhookSettings = this.updateWebhookSettings.bind(this)
 
     // Sort the apps by last updated property
     window.initialData.apps.sort((a, b) => {
@@ -110,14 +114,28 @@ class Dashboard extends React.Component {
       }
     })
 
+    var savedData = []
+    window.initialData.apps.map( (app) => {
+      savedData.push(
+        {
+          name: app.name,
+          url: app.webhook.url,
+          contact: app.webhook.contact,
+          siteid: app.webhook.siteid,
+          roomid: app.webhook.roomid,
+        }
+      )
+    })
+
     this.state = { 
+      savedData: savedData,
       data: window.initialData,
       editName: false,
     }
   }
 
   render() {
-    const { data: { name, cn, apps }, editName} = this.state 
+    const { data: { name, cn, apps }, editName, savedData} = this.state 
 
     const actions = {
       toggleEditTitle: this.toggleEditTitle,
@@ -130,7 +148,9 @@ class Dashboard extends React.Component {
         saveContact: this.saveWebhookContact,
         saveSiteID: this.saveWebhookSiteID,
         saveRoomID: this.saveWebhookRoomID
-      }
+      },
+      saveEditTitle: this.saveEditTitle,
+      cancelEditTitle: this.cancelEditTitle,
     }
 
     return (
@@ -157,8 +177,12 @@ class Dashboard extends React.Component {
 
                 return (
                   <CardView width='1-1' type='default' key={index} noPadding>
-                    <div className="default tablet"> { Title(`not-mobile`, app.name, created, updated, editName, actions)}</div>
-                    <div className="mobile"> { Title(`mobile`, app.name, created, updated, editName, actions) } </div>
+                    <div className="default tablet"> { Title(`not-mobile`, app.name, created, updated, editName, 
+                      actions.toggleEditTitle, (reference, shouldPersist) => { actions.saveEditTitle(index, reference.current.value, shouldPersist) },
+                      () => { actions.cancelEditTitle(index) } )}</div>
+                    <div className="mobile"> { Title(`mobile`, app.name, created, updated, editName,
+                      actions.toggleEditTitle, (reference, shouldPersist) => { actions.saveEditTitle(index, reference.current.value, shouldPersist) },
+                      () => { actions.cancelEditTitle(index) } )}</div>
                     
                     <Row styling='transparent' noPadding>
                       <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
@@ -210,18 +234,18 @@ class Dashboard extends React.Component {
                                     copy: {action: actions.copyToClipBoard},
                                     refresh: {action: () => { actions.regenVerificationSecret(index) } },
                                   }, {} ) }
-                                  { Field(`Webhook URL:`, app.webhook.url, {
+                                  { Field(`Webhook URL:`, "https://" + app.webhook.url, {
                                     save: {action: (reference, shouldPersist) => { actions.webhook.saveURL(index, reference.current.value, shouldPersist) } },
-                                  }, {} ) }
+                                  }, {isNotSaved: app.webhook.url != savedData[index].url} ) }
                                   { Field(`'siteid' (optional):`, app.webhook.siteid, {
                                     save: {action: (reference, shouldPersist) => { actions.webhook.saveSiteID(index, reference.current.value, shouldPersist) } },
-                                  }, {} ) }
+                                  }, {isNotSaved: app.webhook.siteid != savedData[index].siteid} ) }
                                   { Field(`'roomid' (optional):`, app.webhook.roomid, {
                                     save: {action: (reference, shouldPersist) => { actions.webhook.saveRoomID(index, reference.current.value, shouldPersist) } },
-                                  }, {} ) }
+                                  }, {isNotSaved: app.webhook.roomid != savedData[index].roomid} ) }
                                   { Field(`Contact (optional):`, app.webhook.contact, {
                                     save: {action: (reference, shouldPersist) => { actions.webhook.saveContact(index, reference.current.value, shouldPersist) } },
-                                  }, {} ) }
+                                  }, {isNotSaved: app.webhook.contact != savedData[index].contact} ) }
                                 </CardView>
                               </Row>
                             </Panel>
@@ -242,9 +266,34 @@ class Dashboard extends React.Component {
     )
   }
 
+  cancelEditTitle(index) {
+    var updatedData = {...this.state.data}
+    updatedData.apps[index].name = this.state.savedData[index].name
+
+    this.setState({ data: updatedData })
+    this.toggleEditTitle()
+  }
+
+  saveEditTitle(index, value, shouldPersist) {
+    var updatedData = {...this.state.data}
+    updatedData.apps[index].name = value
+
+    if(shouldPersist) {
+      var updatedSavedData = this.state.savedData
+      updatedSavedData[index].name = value
+
+      this.setState({ 
+        data: updatedData,
+        savedData: updatedSavedData
+      })
+      this.toggleEditTitle()
+    } else {
+      this.setState({ data: updatedData })
+    }
+  }
+
   toggleEditTitle() {
     const { editName } = this.state
-
     this.setState({editName: !editName})
   }
 
@@ -298,44 +347,87 @@ class Dashboard extends React.Component {
   }
 
   saveWebhookURL(index, value, shouldPersist) {
-    if(shouldPersist) {
-      // Code to handle making request
-    }
+    value = value.substring(8)
 
     var updatedData = {...this.state.data}
     updatedData.apps[index].webhook.url = value
 
-    this.setState({ data: updatedData })
-  }
-  saveWebhookContact(index, value, shouldPersist) {
-    if(shouldPersist) {
-      // Code to handle making request
+    var persistedData = this.state.savedData
+
+    if(shouldPersist) { 
+      this.updateWebhookSettings({url: value}, index) 
+      persistedData[index].url = value
     }
 
+    this.setState({ data: updatedData, savedData: persistedData })
+  }
+  saveWebhookContact(index, value, shouldPersist) {
     var updatedData = {...this.state.data}
     updatedData.apps[index].webhook.contact = value
 
-    this.setState({ data: updatedData })
-  }
-  saveWebhookSiteID(index, value, shouldPersist) {
-    if(shouldPersist) {
-      // Code to handle making request
+    var persistedData = this.state.savedData
+
+    if(shouldPersist) { 
+      this.updateWebhookSettings({contact: value}, index) 
+      persistedData[index].contact = value
     }
 
+    this.setState({ data: updatedData, savedData: persistedData })
+  }
+  saveWebhookSiteID(index, value, shouldPersist) {
     var updatedData = {...this.state.data}
     updatedData.apps[index].webhook.siteid = value
 
-    this.setState({ data: updatedData })
-  }
-  saveWebhookRoomID(index, value, shouldPersist) {
-    if(shouldPersist) {
-      // Code to handle making request
+    var persistedData = this.state.savedData
+
+    if(shouldPersist) { 
+      this.updateWebhookSettings({siteid: value}, index)
+      persistedData[index].siteid = value
     }
 
+    this.setState({ data: updatedData, savedData: persistedData })
+  }
+  saveWebhookRoomID(index, value, shouldPersist) {
     var updatedData = {...this.state.data}
     updatedData.apps[index].webhook.roomid = value
 
-    this.setState({ data: updatedData })
+    var persistedData = this.state.savedData
+
+    if(shouldPersist) { 
+      this.updateWebhookSettings({roomid: value}, index)
+      persistedData[index].roomid = value
+    }
+
+    this.setState({ data: updatedData, savedData: persistedData })
+  }
+
+  updateWebhookSettings(settings, index) {
+    const { data: { apps }} = this.state
+
+    var siteid = ""
+    var roomid = ""
+    var contact = ""
+    var url = ""
+
+    const app = this.state.savedData[index]
+
+    if(app.siteid) { siteid = app.siteid }
+    if(app.roomid) { roomid = app.roomid }
+    if(app.contact) { contact = app.contact }
+    if(app.url) { url = app.url }
+
+    if(settings.siteid) { siteid = settings.siteid }
+    if(settings.roomid) { roomid = settings.roomid }
+    if(settings.contact) { contact = settings.contact }
+    if(settings.url) { url = "https://" + settings.url }
+
+    const parameters = `url=` + url + `&siteid=` + siteid + `&roomid=` + roomid 
+      + `&contact=` + contact + `&app_id=` + apps[index].id
+
+    this.queryDashboardAPI('dashboard/api/webhook/edit/', parameters, (json) => {
+        console.log("For parameters: " + parameters)
+        console.log(json)
+    });
   }
 
   queryDashboardAPI(url, querystring, callback) {
