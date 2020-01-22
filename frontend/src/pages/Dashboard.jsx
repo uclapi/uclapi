@@ -9,14 +9,11 @@ import Cookies from 'js-cookie'
 import Collapse, { Panel } from 'rc-collapse'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import update from 'immutability-helper';
 
-import { CheckBoxView, clipboardIcon, editIcon, Field,
-Icon, refreshIcon, saveIcon } from 'Dashboard/DashboardUI.jsx'
+import { CheckBoxView, editIcon, Field } from 'Dashboard/DashboardUI.jsx'
 import { styles } from 'Layout/data/dashboard_styles.jsx'
 // Components
-import { CardView, CheckBox, Column, Footer, ImageView,
-NavBar, Row, TextView, ButtonView } from 'Layout/Items.jsx'
+import { CardView, Column, Footer, NavBar, Row, TextView } from 'Layout/Items.jsx'
 
 const defaultHeaders = {
   'Content-Type': `application/x-www-form-urlencoded`,
@@ -87,8 +84,6 @@ class Dashboard extends React.Component {
 
     this.copyToClipBoard = this.copyToClipBoard.bind(this)
     
-    this.testEvent = this.testEvent.bind(this)
-
     this.regenToken = this.regenToken.bind(this)
     this.regenVerificationSecret = this.regenVerificationSecret.bind(this)
 
@@ -99,6 +94,8 @@ class Dashboard extends React.Component {
 
     this.queryDashboardAPI = this.queryDashboardAPI.bind(this)
     this.updateWebhookSettings = this.updateWebhookSettings.bind(this)
+
+    this.setScope = this.setScope.bind(this)
 
     // Sort the apps by last updated property
     window.initialData.apps.sort((a, b) => {
@@ -114,7 +111,7 @@ class Dashboard extends React.Component {
       }
     })
 
-    var savedData = []
+    const savedData = []
     window.initialData.apps.map( (app) => {
       savedData.push(
         {
@@ -139,7 +136,6 @@ class Dashboard extends React.Component {
 
     const actions = {
       toggleEditTitle: this.toggleEditTitle,
-      test: this.testEvent,
       copyToClipBoard: this.copyToClipBoard,
       regenToken: this.regenToken,
       regenVerificationSecret: this.regenVerificationSecret,
@@ -147,10 +143,11 @@ class Dashboard extends React.Component {
         saveURL: this.saveWebhookURL,
         saveContact: this.saveWebhookContact,
         saveSiteID: this.saveWebhookSiteID,
-        saveRoomID: this.saveWebhookRoomID
+        saveRoomID: this.saveWebhookRoomID,
       },
       saveEditTitle: this.saveEditTitle,
       cancelEditTitle: this.cancelEditTitle,
+      setScope: this.setScope,
     }
 
     return (
@@ -174,6 +171,9 @@ class Dashboard extends React.Component {
               {apps.map( (app, index) => {
                 const updated = this.timeSince(new Date(app.updated))
                 const created = this.timeSince(new Date(app.updated))
+
+                const isPersonalTimetable = apps[index].oauth.scopes[0].enabled
+                const isStudentNumber = apps[index].oauth.scopes[1].enabled
 
                 return (
                   <CardView width='1-1' type='default' key={index} noPadding>
@@ -222,8 +222,8 @@ class Dashboard extends React.Component {
                                     align={`left`} 
                                     style={styles.oauthTitles}
                                   />
-                                  { CheckBoxView(`Personal Timetable`, false) }
-                                  { CheckBoxView(`Student Number`, false) }
+                                  { CheckBoxView(`Personal Timetable`, isPersonalTimetable, (value) => { actions.setScope(index, 0, value) } ) }
+                                  { CheckBoxView(`Student Number`, isStudentNumber, (value) => { actions.setScope(index, 1, value) }) }
                                 </CardView>
                               </Row>
                             </Panel>
@@ -234,7 +234,7 @@ class Dashboard extends React.Component {
                                     copy: {action: actions.copyToClipBoard},
                                     refresh: {action: () => { actions.regenVerificationSecret(index) } },
                                   }, {} ) }
-                                  { Field(`Webhook URL:`, "https://" + app.webhook.url, {
+                                  { Field(`Webhook URL:`, `https://` + app.webhook.url, {
                                     save: {action: (reference, shouldPersist) => { actions.webhook.saveURL(index, reference.current.value, shouldPersist) } },
                                   }, {isNotSaved: app.webhook.url != savedData[index].url} ) }
                                   { Field(`'siteid' (optional):`, app.webhook.siteid, {
@@ -267,7 +267,7 @@ class Dashboard extends React.Component {
   }
 
   cancelEditTitle(index) {
-    var updatedData = {...this.state.data}
+    const updatedData = {...this.state.data}
     updatedData.apps[index].name = this.state.savedData[index].name
 
     this.setState({ data: updatedData })
@@ -275,16 +275,23 @@ class Dashboard extends React.Component {
   }
 
   saveEditTitle(index, value, shouldPersist) {
-    var updatedData = {...this.state.data}
+    const updatedData = {...this.state.data}
     updatedData.apps[index].name = value
 
     if(shouldPersist) {
-      var updatedSavedData = this.state.savedData
+      const updatedSavedData = this.state.savedData
       updatedSavedData[index].name = value
 
+      // Send request
+      const { data: { apps } } = this.state
+      
+      this.queryDashboardAPI(`/dashboard/api/rename/`, `new_name=` + value + `&app_id=` + apps[index].id, (json) => {
+        if(this.DEBUGGING) { console.log(json) }
+      })
+      
       this.setState({ 
         data: updatedData,
-        savedData: updatedSavedData
+        savedData: updatedSavedData,
       })
       this.toggleEditTitle()
     } else {
@@ -297,8 +304,33 @@ class Dashboard extends React.Component {
     this.setState({editName: !editName})
   }
 
-  testEvent() {
-    console.log(`Click has been tested`)
+  setScope(index, scope, value) {
+    const { data: { apps } } = this.state
+
+    const scopesData = [
+      {
+        name: `timetable`,
+        checked: apps[index].oauth.scopes[0].enabled,
+      },
+      {
+        name: `student_number`,
+        checked: apps[index].oauth.scopes[1].enabled,
+      },
+    ]
+
+    scopesData[scope].checked = value
+
+    const json = JSON.stringify(scopesData)
+
+    this.queryDashboardAPI(`/dashboard/api/updatescopes/`, `app_id=` + apps[index].id + 
+      `&scopes=` + encodeURIComponent(json), (json) => {
+        console.log(json)
+    })
+
+    const updatedData = {...this.state.data}
+    updatedData.apps[index].oauth.scopes[scope].enabled = value
+
+    this.setState({ data: updatedData })
   }
 
   copyToClipBoard(e, reference){
@@ -326,88 +358,108 @@ class Dashboard extends React.Component {
         updated: json.app.date,
       }
 
-      var updatedData = {...this.state.data}
+      const updatedData = {...this.state.data}
       updatedData.apps[index].token = values.token
 
       this.setState({ data: updatedData })
-    });
+    })
   }
 
   regenVerificationSecret(index) {
     const { data: { apps } } = this.state 
 
-    this.queryDashboardAPI('dashboard/api/webhook/refreshsecret/', `app_id=` + apps[index].id, (json) => {
+    this.queryDashboardAPI(`dashboard/api/webhook/refreshsecret/`, `app_id=` + apps[index].id, (json) => {
       const secret = json.new_secret
 
-      var updatedData = {...this.state.data}
+      const updatedData = {...this.state.data}
       updatedData.apps[index].webhook.verification_secret = secret
 
       this.setState({ data: updatedData })
-    });
+    })
   }
 
   saveWebhookURL(index, value, shouldPersist) {
     value = value.substring(8)
 
-    var updatedData = {...this.state.data}
+    const updatedData = {...this.state.data}
     updatedData.apps[index].webhook.url = value
 
-    var persistedData = this.state.savedData
+    const persistedData = this.state.savedData
 
     if(shouldPersist) { 
       this.updateWebhookSettings({url: value}, index) 
       persistedData[index].url = value
     }
 
-    this.setState({ data: updatedData, savedData: persistedData })
+    this.setState(
+      { 
+        data: updatedData,
+        savedData: persistedData, 
+      }
+    )
   }
   saveWebhookContact(index, value, shouldPersist) {
-    var updatedData = {...this.state.data}
+    const updatedData = {...this.state.data}
     updatedData.apps[index].webhook.contact = value
 
-    var persistedData = this.state.savedData
+    const persistedData = this.state.savedData
 
     if(shouldPersist) { 
       this.updateWebhookSettings({contact: value}, index) 
       persistedData[index].contact = value
     }
 
-    this.setState({ data: updatedData, savedData: persistedData })
+    this.setState(
+      { 
+        data: updatedData,
+        savedData: persistedData, 
+      }
+    )
   }
   saveWebhookSiteID(index, value, shouldPersist) {
-    var updatedData = {...this.state.data}
+    const updatedData = {...this.state.data}
     updatedData.apps[index].webhook.siteid = value
 
-    var persistedData = this.state.savedData
+    const persistedData = this.state.savedData
 
     if(shouldPersist) { 
       this.updateWebhookSettings({siteid: value}, index)
       persistedData[index].siteid = value
     }
 
-    this.setState({ data: updatedData, savedData: persistedData })
+    this.setState(
+      { 
+        data: updatedData,
+        savedData: persistedData, 
+      }
+    )
   }
   saveWebhookRoomID(index, value, shouldPersist) {
-    var updatedData = {...this.state.data}
+    const updatedData = {...this.state.data}
     updatedData.apps[index].webhook.roomid = value
 
-    var persistedData = this.state.savedData
+    const persistedData = this.state.savedData
 
     if(shouldPersist) { 
       this.updateWebhookSettings({roomid: value}, index)
       persistedData[index].roomid = value
     }
 
-    this.setState({ data: updatedData, savedData: persistedData })
+    this.setState(
+      { 
+        data: updatedData,
+        savedData: persistedData, 
+      }
+    )
   }
 
   updateWebhookSettings(settings, index) {
     const { data: { apps }} = this.state
 
-    var siteid = ""
-    var roomid = ""
-    var contact = ""
-    var url = ""
+    let siteid = ``
+    let roomid = ``
+    let contact = ``
+    let url = ``
 
     const app = this.state.savedData[index]
 
@@ -419,30 +471,30 @@ class Dashboard extends React.Component {
     if(settings.siteid) { siteid = settings.siteid }
     if(settings.roomid) { roomid = settings.roomid }
     if(settings.contact) { contact = settings.contact }
-    if(settings.url) { url = "https://" + settings.url }
+    if(settings.url) { url = `https://` + settings.url }
 
     const parameters = `url=` + url + `&siteid=` + siteid + `&roomid=` + roomid 
       + `&contact=` + contact + `&app_id=` + apps[index].id
 
-    this.queryDashboardAPI('dashboard/api/webhook/edit/', parameters, (json) => {
-        console.log("For parameters: " + parameters)
+    this.queryDashboardAPI(`dashboard/api/webhook/edit/`, parameters, (json) => {
+        console.log(`For parameters: ` + parameters)
         console.log(json)
-    });
+    })
   }
 
   queryDashboardAPI(url, querystring, callback) {
     fetch(url, {
-      method: 'POST',
-      credentials: 'include',
+      method: `POST`,
+      credentials: `include`,
       headers: defaultHeaders,
-      body: querystring
+      body: querystring,
     }).then((res)=>{
       return res.json()
     }).then(callback)
     .catch((err)=>{
-      console.log("Failed to save details to: " + url)
-      console.err(err);
-    });
+      console.log(`Failed to save details to: ` + url)
+      console.err(err)
+    })
   }
 
   timeSince(date) {

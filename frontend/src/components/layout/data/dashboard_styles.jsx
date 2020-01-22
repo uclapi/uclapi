@@ -72,7 +72,7 @@ export const styles = {
     float: `left`,
     paddingRight: `10px`,
     width: `100%`,
-    transition: `background-color 0.2s`
+    transition: `background-color 0.2s`,
   },
   checkBox: {
     margin: `10px`,
@@ -80,7 +80,7 @@ export const styles = {
   },
   squareCard: {
     borderRadius: 0,
-  }
+  },
 }
 
 export default {
