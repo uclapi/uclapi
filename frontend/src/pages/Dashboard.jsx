@@ -9,6 +9,7 @@ import Cookies from 'js-cookie'
 import Collapse, { Panel } from 'rc-collapse'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import Modal from 'react-modal'
 
 import { CheckBoxView, editIcon, Field } from 'Dashboard/DashboardUI.jsx'
 import { styles } from 'Layout/data/dashboard_styles.jsx'
@@ -95,6 +96,8 @@ class Dashboard extends React.Component {
     this.queryDashboardAPI = this.queryDashboardAPI.bind(this)
     this.updateWebhookSettings = this.updateWebhookSettings.bind(this)
 
+    this.saveOAuthCallback = this.saveOAuthCallback.bind(this)
+
     this.setScope = this.setScope.bind(this)
 
     // Sort the apps by last updated property
@@ -120,6 +123,8 @@ class Dashboard extends React.Component {
           contact: app.webhook.contact,
           siteid: app.webhook.siteid,
           roomid: app.webhook.roomid,
+          callback_url: app.oauth.callback_url,
+          editName: false,
         }
       )
     })
@@ -127,7 +132,6 @@ class Dashboard extends React.Component {
     this.state = { 
       savedData: savedData,
       data: window.initialData,
-      editName: false,
     }
   }
 
@@ -148,6 +152,7 @@ class Dashboard extends React.Component {
       saveEditTitle: this.saveEditTitle,
       cancelEditTitle: this.cancelEditTitle,
       setScope: this.setScope,
+      saveOAuthCallback: this.saveOAuthCallback,
     }
 
     return (
@@ -170,18 +175,18 @@ class Dashboard extends React.Component {
             <div className="app-holder" style={styles.appHolder}>
               {apps.map( (app, index) => {
                 const updated = this.timeSince(new Date(app.updated))
-                const created = this.timeSince(new Date(app.updated))
+                const created = this.timeSince(new Date(app.created))
 
                 const isPersonalTimetable = apps[index].oauth.scopes[0].enabled
                 const isStudentNumber = apps[index].oauth.scopes[1].enabled
 
                 return (
                   <CardView width='1-1' type='default' key={index} noPadding>
-                    <div className="default tablet"> { Title(`not-mobile`, app.name, created, updated, editName, 
-                      actions.toggleEditTitle, (reference, shouldPersist) => { actions.saveEditTitle(index, reference.current.value, shouldPersist) },
+                    <div className="default tablet"> { Title(`not-mobile`, app.name, created, updated, savedData[index].editName, 
+                      () => { actions.toggleEditTitle(index) }, (reference, shouldPersist) => { actions.saveEditTitle(index, reference.current.value, shouldPersist) },
                       () => { actions.cancelEditTitle(index) } )}</div>
                     <div className="mobile"> { Title(`mobile`, app.name, created, updated, editName,
-                      actions.toggleEditTitle, (reference, shouldPersist) => { actions.saveEditTitle(index, reference.current.value, shouldPersist) },
+                      () => { actions.toggleEditTitle(index) }, (reference, shouldPersist) => { actions.saveEditTitle(index, reference.current.value, shouldPersist) },
                       () => { actions.cancelEditTitle(index) } )}</div>
                     
                     <Row styling='transparent' noPadding>
@@ -210,9 +215,9 @@ class Dashboard extends React.Component {
                                   { Field(`Client Secret: `, app.oauth.client_secret, {
                                     copy: {action: actions.copyToClipBoard},
                                   }, {} ) }
-                                  { Field(`Callback URL: `, app.oauth.callback_url, {
-                                    copy: {action: actions.copyToClipBoard},
-                                  }, {} ) }
+                                  { Field(`Callback URL: `, app.oauth.callback_url == `` ? `https://` : app.oauth.callback_url, {
+                                    save: {action: (reference, shouldPersist) => { actions.saveOAuthCallback(index, reference.current.value, shouldPersist) } },
+                                  }, {isNotSaved: app.oauth.callback_url != savedData[index].callback_url} ) }
                                 </CardView>
                               </Row>
                               <Row styling='transparent' noPadding>
@@ -234,7 +239,7 @@ class Dashboard extends React.Component {
                                     copy: {action: actions.copyToClipBoard},
                                     refresh: {action: () => { actions.regenVerificationSecret(index) } },
                                   }, {} ) }
-                                  { Field(`Webhook URL:`, `https://` + app.webhook.url, {
+                                  { Field(`Webhook URL:`, app.webhook.url==`` ? `https://` : app.webhook.url, {
                                     save: {action: (reference, shouldPersist) => { actions.webhook.saveURL(index, reference.current.value, shouldPersist) } },
                                   }, {isNotSaved: app.webhook.url != savedData[index].url} ) }
                                   { Field(`'siteid' (optional):`, app.webhook.siteid, {
@@ -271,14 +276,14 @@ class Dashboard extends React.Component {
     updatedData.apps[index].name = this.state.savedData[index].name
 
     this.setState({ data: updatedData })
-    this.toggleEditTitle()
+    this.toggleEditTitle(index)
   }
 
   saveEditTitle(index, value, shouldPersist) {
     const updatedData = {...this.state.data}
     updatedData.apps[index].name = value
 
-    if(shouldPersist) {
+    if(shouldPersist  && this.state.savedData[index].editName==true) {
       const updatedSavedData = this.state.savedData
       updatedSavedData[index].name = value
 
@@ -293,15 +298,44 @@ class Dashboard extends React.Component {
         data: updatedData,
         savedData: updatedSavedData,
       })
-      this.toggleEditTitle()
+      this.toggleEditTitle(index)
     } else {
       this.setState({ data: updatedData })
     }
   }
 
-  toggleEditTitle() {
-    const { editName } = this.state
-    this.setState({editName: !editName})
+  toggleEditTitle(index) {
+    if(this.DEBUGGING) { console.log("edit title: " + index) }
+
+    const updatedSavedData = this.state.savedData
+    updatedSavedData[index].editName = !updatedSavedData[index].editName
+    
+    this.setState({savedData: updatedSavedData})
+  }
+
+  saveOAuthCallback(index, value, shouldPersist) {
+    if(value.startsWith("https://") || value.startsWith("http://") || value=="") {
+      const updatedData = {...this.state.data}
+      updatedData.apps[index].oauth.callback_url = value
+
+      const persistedData = this.state.savedData
+
+      if(shouldPersist) { 
+        const { data: { apps }} = this.state
+
+        this.queryDashboardAPI(`/dashboard/api/setcallbackurl/`, `app_id=` + apps[index].id + `&callback_url=` + value, (json) => {
+          console.log(json)
+        })
+        persistedData[index].callback_url = value
+      }
+
+      this.setState(
+        { 
+          data: updatedData,
+          savedData: persistedData, 
+        }
+      )
+    }
   }
 
   setScope(index, scope, value) {
@@ -379,24 +413,24 @@ class Dashboard extends React.Component {
   }
 
   saveWebhookURL(index, value, shouldPersist) {
-    value = value.substring(8)
+    if(value.startsWith("https://") || value.startsWith("http://") || value=="") {
+      const updatedData = {...this.state.data}
+      updatedData.apps[index].webhook.url = value
 
-    const updatedData = {...this.state.data}
-    updatedData.apps[index].webhook.url = value
+      const persistedData = this.state.savedData
 
-    const persistedData = this.state.savedData
-
-    if(shouldPersist) { 
-      this.updateWebhookSettings({url: value}, index) 
-      persistedData[index].url = value
-    }
-
-    this.setState(
-      { 
-        data: updatedData,
-        savedData: persistedData, 
+      if(shouldPersist) { 
+        this.updateWebhookSettings({url: value}, index) 
+        persistedData[index].url = value
       }
-    )
+
+      this.setState(
+        { 
+          data: updatedData,
+          savedData: persistedData, 
+        }
+      )
+    }
   }
   saveWebhookContact(index, value, shouldPersist) {
     const updatedData = {...this.state.data}
@@ -493,7 +527,7 @@ class Dashboard extends React.Component {
     }).then(callback)
     .catch((err)=>{
       console.log(`Failed to save details to: ` + url)
-      console.err(err)
+      console.log(err)
     })
   }
 
