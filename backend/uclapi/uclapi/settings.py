@@ -313,3 +313,5 @@ else:
             'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
         }
     }
+
+TEAMS_BACKEND_WEBHOOK = os.environ.get("TEAMS_BACKEND_WEBHOOK", None)
