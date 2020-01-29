@@ -248,8 +248,6 @@ pushd uclapi/backend/uclapi
 ./manage.py migrate --database gencache
 ./manage.py create_lock
 ./manage.py update_gencache
-./manage.py create_timetable_lock
-./manage.py update_timetable_gencache
 ./manage.py feed_occupeye_cache
 deactivate
 popd
