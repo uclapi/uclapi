@@ -2,7 +2,7 @@ autopep8==1.5
 amqp==2.5.2
 boto3==1.11.9
 botocore==1.14.9
-celery==4.3.0
+celery==4.4.0
 certifi==2019.11.28
 chardet==3.0.4
 Django==2.2.9
