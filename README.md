@@ -21,6 +21,8 @@ We only support development under Linux. macOS is unofficially supported, and we
 Note that since the Creators Update (which includes 16.04.2; if you have not upgraded from Ubuntu 14 then there are tutorials online to do this) we have experienced zero issues building and running under Bash on Ubuntu on Windows.
 
 ### Install Dependencies
+We provide this simple command to install most of the dependencies using the apt package manager (standard on ubuntu, debian etc...). If not using this package manager you will have to find the package names for your distro yourself. The base depenencies are postgres, python3, virtual environments for python, nodejs, npm, redis and some kernel modules for async and regular expressions. The rest are for making the installiion easier such as git, curl, wget and sed. These allow you to follow this readme much easier.
+
 ```
 sudo apt-get -y install git curl libpq-dev libpq5 libpython3-dev \
     python3 python3-pip python3-virtualenv python-virtualenv \
