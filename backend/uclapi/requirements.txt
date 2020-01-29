@@ -1,4 +1,4 @@
-autopep8==1.4.4
+autopep8==1.5
 amqp==2.5.2
 boto3==1.11.9
 botocore==1.14.9
