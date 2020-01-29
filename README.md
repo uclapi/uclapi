@@ -7,7 +7,7 @@ UCL API started as a **student-built** platform for **student developers** to im
 Create a ridiculously simple, documentation first, and comprehensive API around UCL's digital services and establish an ecosystem of third party UCL apps and services that use the API.
 
 ### Interested in using it?
-Find out more at our [website](https://uclapi.com)
+Find out more at our [website](https://uclapi.com)!
 
 ### Interested in helping build it?
 Read on more to find out how to setup and build the API. From here you can start writing your own changes and submitting them. See our [Contribution Guide](CONTRIBUTING.md) to learn more about how you can contribute.
