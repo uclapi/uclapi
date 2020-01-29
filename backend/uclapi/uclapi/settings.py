@@ -35,6 +35,8 @@ ALLOWED_HOSTS = ["localhost"]
 if os.environ.get("UCLAPI_DOMAIN"):
     ALLOWED_HOSTS.append(os.environ.get("UCLAPI_DOMAIN"))
 
+UCLAPI_DOMAIN_CURRENT = os.environ.get("UCLAPI_DOMAIN")
+
 # If we are running under the AWS Elastic Load Balancer then enable internal
 # requests so that the ELB and Health Checks work
 if strtobool(os.environ.get("UCLAPI_RUNNING_ON_AWS_ELB")):
