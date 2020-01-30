@@ -316,4 +316,4 @@ else:
         }
     }
 
-TEAMS_BACKEND_WEBHOOK = os.environ.get("TEAMS_BACKEND_WEBHOOK", None)
+TEAMS_BACKEND_WEBHOOK = os.environ.get("TEAMS_BACKEND_WEBHOOK", "")

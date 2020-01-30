@@ -346,13 +346,15 @@ class Command(BaseCommand):
             call_command('trigger_webhooks')
         except Exception as gencache_error:
             try:
-                teams = pymsteams.connectorcard(settings.TEAMS_BACKEND_WEBHOOK)
-                teams.text("Gencache failed on " +
-                           settings.UCLAPI_DOMAIN_CURRENT +
-                           " with error: "+repr(gencache_error))
-                teams.send()
+                if "localhost" not in settings.UCLAPI_DOMAIN_CURRENT:
+                    teams = pymsteams.connectorcard(
+                        settings.TEAMS_BACKEND_WEBHOOK)
+                    teams.text(f"Gencache failed on "
+                               f"{settings.UCLAPI_DOMAIN_CURRENT}"
+                               f" with error: {repr(gencache_error)}")
+                    teams.send()
             except Exception as teams_error:
-                print("Failed to send message to Microsoft Teams. " +
-                      "Reason: "+repr(teams_error))
+                print(f"Failed to send message to Microsoft Teams. "
+                      f"Reason: {repr(teams_error)}")
             self._redis.delete(cache_running_key)
             raise
