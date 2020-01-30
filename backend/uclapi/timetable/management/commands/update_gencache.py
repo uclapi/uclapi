@@ -1,3 +1,4 @@
+import pymsteams
 from timetable.models import \
     Cminstances, CminstancesA, CminstancesB, \
     Crsavailmodules, CrsavailmodulesA, CrsavailmodulesB, \
@@ -38,7 +39,6 @@ from django.db import connections
 from tqdm import tqdm
 from django import db
 
-import pymsteams
 
 # Nasty hack to ensure we can initialise models in worker processes
 # Courtesy of: https://stackoverflow.com/a/39996838
@@ -288,7 +288,6 @@ class Command(BaseCommand):
             )
 
             cache_running_key = "cron:gencache:in_progress"
-
             running = self._redis.get(cache_running_key)
             if running:
                 print("## A gencache update job is still in progress ##")
@@ -306,7 +305,7 @@ class Command(BaseCommand):
             lock = Lock.objects.all()[0]
             destination_table_index = 2 if lock.a else 1
 
-            with Pool(processes=4) as pool:
+            with Pool(processes=2) as pool:
                 # Build up a list of argument tuples for child process calls
                 pool_args = []
                 for i in range(0, len(tables)):
@@ -353,6 +352,7 @@ class Command(BaseCommand):
                            " with error: "+repr(gencache_error))
                 teams.send()
             except Exception as teams_error:
-                print("Failed to send error message to Microsoft Teams. " +
+                print("Failed to send message to Microsoft Teams. " +
                       "Reason: "+repr(teams_error))
+            self._redis.delete(cache_running_key)
             raise
