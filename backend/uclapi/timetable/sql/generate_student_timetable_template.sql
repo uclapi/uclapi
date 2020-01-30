@@ -278,8 +278,8 @@ INNER JOIN tt_tmp_events_slot_id tes
 -- e.g. TO1 -> Teaching; (tt.moduletype IS NULL)
 LEFT OUTER JOIN timetable_classifications{{ bucket_id | sqlsafe }} classifications
     ON tt.setid = classifications.setid
-    AND tt.moduletype = classifications.classid
-    AND 'MOD_TYPE' = classifications.type
+	AND classifications.classid = CASE WHEN tt.moduletype IS NOT NULL THEN tt.moduletype ELSE tt.classif END
+	AND classifications.type = CASE WHEN tt.moduletype IS NOT NULL THEN 'MOD_TYPE' ELSE 'TT_SLOT' END
 LEFT OUTER JOIN roombookings_booking{{ bucket_id | sqlsafe }} rb
     ON tt.slotid = rb.slotid
     AND tt.setid  = rb.setid
@@ -306,6 +306,7 @@ WHERE (
     AND (tt.weekday > 0)
     AND (tt.starttime IS NOT NULL)
     AND (tt.duration IS NOT NULL)
+	AND ((tt.moduletype IS NOT NULL AND tt.instid <> 0) OR (tt.moduletype IS NULL AND tt.instid = 0))
 )
 GROUP BY rb.startdatetime,
             rb.finishdatetime,
@@ -324,6 +325,7 @@ GROUP BY rb.startdatetime,
             lecturer.linkcode,
             rb.title, 
             classifications.classid,
+            classifications.name,
             tes.modgrpcode,
             tes.instcode,
             CASE WHEN tt.siteid IS NOT NULL THEN tt.siteid ELSE rb.siteid::TEXT END,
@@ -339,8 +341,7 @@ GROUP BY rb.startdatetime,
             sites.address4,
             rb.starttime,
             rb.finishtime,
-            rb.descrip,
-            classifications.name
+            rb.descrip
 ORDER BY startdatetime,
             moduleid,
             title,
