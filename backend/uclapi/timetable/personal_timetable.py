@@ -86,7 +86,7 @@ def get_personal_timetable(upi):
             },
             "session_title": row['title'],
             "session_type": row['sessiontypeid'],
-            "session_type_str": row['sessiontypestr'],
+            "session_type_str": row['sessiontypestr'] if row['sessiontypestr'] else "Unknown",
             "contact": row['condisplayname'],
             "instance": {
                 "delivery": instance.delivery.get_delivery() if instance else None,

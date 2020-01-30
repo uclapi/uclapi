@@ -278,8 +278,8 @@ INNER JOIN tt_tmp_events_slot_id tes
 -- e.g. TO1 -> Teaching; (tt.moduletype IS NULL)
 LEFT OUTER JOIN timetable_classifications{{ bucket_id | sqlsafe }} classifications
     ON tt.setid = classifications.setid
-    AND classifications.classid = CASE WHEN tt.moduletype IS NOT NULL THEN tt.moduletype ELSE tt.classif END
-    AND classifications.type = CASE WHEN tt.moduletype IS NOT NULL THEN 'MOD_TYPE' ELSE 'TT_SLOT' END
+    AND tt.moduletype = classifications.classid
+    AND 'MOD_TYPE' = classifications.type
 LEFT OUTER JOIN roombookings_booking{{ bucket_id | sqlsafe }} rb
     ON tt.slotid = rb.slotid
     AND tt.setid  = rb.setid
