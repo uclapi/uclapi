@@ -7,7 +7,7 @@ import refreshImage from 'Images/dashboard/refresh.svg'
 import saveImage from 'Images/dashboard/save.svg'
 import deleteImage from 'Images/dashboard/trash.svg'
 import { styles } from 'Layout/data/dashboard_styles.jsx'
-import { CardView, CheckBox, ImageView, TextView } from 'Layout/Items.jsx'
+import { CardView, CheckBox, ImageView, TextView, ButtonView, Row} from 'Layout/Items.jsx'
 
 const logosize = `20px`
 
@@ -99,6 +99,73 @@ backgroundColor : (meta.isNotSaved ? unsavedColor : savedColor) }}
   )
 }
 
+
+
+/**
+This has the multipurpose of being both for the confirm button and
+also for the add new app button:
+
+REQUIRED:
+
+this.props.text => Description of what to do
+this.props.value => Value needing to be entered
+this.props.success => Function to be called on a successful click
+this.props.fail => Function to be called on an unsuccessful click
+**/
+export class OverlayBox extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.saveField = this.saveField.bind(this)
+
+    this.DEBUGGING = true
+
+    this.state = {
+      canSubmit: false,
+      value: "", 
+    }
+  }
+
+  saveField(value) {
+    if(this.DEBUGGING) { console.log(value) }
+
+    const { value: check } = this.props
+    var canSubmit = false
+
+    if(value) {
+      if(value == check) {
+        canSubmit = true
+      }
+    } else if(value != ""){
+      canSubmit = true
+    }
+
+    this.setState({
+      value: value,
+      canSubmit: canSubmit, 
+    })
+  }
+
+  render() {
+    const { text, success, fail } = this.props
+
+    return (
+      <div className='overlay-wrapper' style={{ textAlign: `center` }}>
+        <CardView width='1-1' type='default' noPadding>
+          <Row styling='transparent' noPadding>
+            { Field(text, this.state.value, {
+              save: {action: (reference, shouldPersist) => { this.saveField(reference.current.value) } }
+              }, {})
+            }
+            <ButtonView text={`Submit`} onClick={this.success} fakeLink />
+            <ButtonView text={`Cancel`} type={`alternate`} onClick={this.fail} fakeLink />
+          </Row>
+        </CardView>
+      </div>
+    )
+  }
+}
+
 export default {
   Icon,
   CheckBoxView,
@@ -107,4 +174,5 @@ export default {
   refreshIcon,
   editIcon,
   saveIcon,
+  OverlayBox
 }

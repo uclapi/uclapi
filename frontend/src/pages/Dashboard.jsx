@@ -11,10 +11,10 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Modal from 'react-modal'
 
-import { CheckBoxView, editIcon, Field } from 'Dashboard/DashboardUI.jsx'
+import { CheckBoxView, editIcon, Field, OverlayBox } from 'Dashboard/DashboardUI.jsx'
 import { styles } from 'Layout/data/dashboard_styles.jsx'
 // Components
-import { CardView, Column, Footer, NavBar, Row, TextView } from 'Layout/Items.jsx'
+import { CardView, Column, Footer, NavBar, Row, TextView, ButtonView } from 'Layout/Items.jsx'
 
 const defaultHeaders = {
   'Content-Type': `application/x-www-form-urlencoded`,
@@ -100,6 +100,8 @@ class Dashboard extends React.Component {
 
     this.setScope = this.setScope.bind(this)
 
+    this.addNewProject = this.addNewProject.bind(this)
+
     // Sort the apps by last updated property
     window.initialData.apps.sort((a, b) => {
       const dateA = dayjs(a.created)
@@ -132,6 +134,7 @@ class Dashboard extends React.Component {
     this.state = { 
       savedData: savedData,
       data: window.initialData,
+      view: `default`,
     }
   }
 
@@ -153,11 +156,27 @@ class Dashboard extends React.Component {
       cancelEditTitle: this.cancelEditTitle,
       setScope: this.setScope,
       saveOAuthCallback: this.saveOAuthCallback,
+      addNewProject: this.addNewProject,
     }
 
     return (
       <>
         <NavBar isScroll={false} />
+
+        <Modal 
+          isOpen={this.state.view == `add-project`}
+          contentLabel="Create app form"
+          onRequestClose={ () => this.setState({view: `default`}) }
+          className="Modal"
+          overlayClassName="Overlay"
+          style={styles.modal}
+        >
+          <OverlayBox
+            text="Enter the name of your new project"
+            success={actions.addNewProject}
+            fail={() => { this.setState({view: `default`}) } }
+          />
+        </Modal>
 
         <Row height='fit-content' styling='splash-parallax' style={{ minHeight : `100%`}}>
           <Column width='2-3' horizontalAlignment='center' style={{ marginTop: `80px` }}>
@@ -263,12 +282,20 @@ class Dashboard extends React.Component {
               }
               )}
             </div>
+            <ButtonView text={`Add new project`} type={`default`} style={{ marginTop: `50px` }} 
+              onClick={ () => { this.setState({ view: `add-project` }) } } fakeLink/>
           </Column>
         </Row>
 
         <Footer />
       </>
     )
+  }
+
+  addNewProject(name) {
+    // Code to add a new project
+
+    this.setState({ view: `default` })
   }
 
   cancelEditTitle(index) {

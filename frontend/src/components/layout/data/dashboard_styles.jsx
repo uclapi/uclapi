@@ -81,6 +81,18 @@ export const styles = {
   squareCard: {
     borderRadius: 0,
   },
+  modal: {
+    content : {
+      top: '25%',
+      left: '25%',
+      right: 'auto',
+      bottom: 'auto',
+      padding: 0,
+      height: `fit-content`,
+      background: `none`,
+      border: `none`,
+    }
+  }
 }
 
 export default {

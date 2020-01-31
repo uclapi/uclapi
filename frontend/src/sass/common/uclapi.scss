@@ -25,6 +25,7 @@
   - Code View
   - Social Media Button Stylings
   - Sizings
+  - Overlays
 
 **/
 
@@ -613,4 +614,12 @@ pre {
   .mobile {
     display: block;
   }
+}
+
+/** Overlays **/
+
+.Modal {
+  left: 20vw;
+  right: 20vw;
+  padding: 0;
 }
