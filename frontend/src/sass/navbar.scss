@@ -4,15 +4,16 @@ $navbarHeight: 60px;
 
 .navbar-extras {
   .link-titles-menu {
-    z-index: 2;
     position: fixed;
     overflow: hidden;
-    width: 100%;
+    width: 100vw;
     background-color: #313537;
+    box-shadow: 0 0 10px #555;
     top: 60px;
     transition-property: all;
-    transition-timing-function: linear;
-    transition-duration: 0.7s;
+    transition-timing-function: ease-out;
+    transition-duration: 0.3s;
+    z-index: 1301;
 
     .link-to-page {
       width: 100%;
@@ -20,16 +21,14 @@ $navbarHeight: 60px;
   }
 }
 .navbarconsistent {
-  z-index: 2;
+  z-index: 1302;
   position: fixed;
   border-bottom: 1px solid rgba(0, 0, 0, 0.14);
   height: $navbarHeight;
-  width: 100%;
+  width: 100vw;
   top: 0;
 
-  background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("./../images/logoCover2.png");
-  background-position: 50% 0%;
-  background-size: cover;
+  background-color: #313537;
 
   display: flex;
   align-items: center;
@@ -41,7 +40,7 @@ $navbarHeight: 60px;
   @include boxShadow(1);
 
   img {
-    height: $navbarHeight - 15px;;
+    height: $navbarHeight - 15px;
     margin-left: 25px;
   }
   .logoTextWhite {
@@ -51,9 +50,27 @@ $navbarHeight: 60px;
     font-size: 2em;
   }
   .menu-icon {
+    width: 50px;
+    height: 50px;
+
+    border-radius: 25px;
+
+    padding: 5px;
+
+    background-color: none;
+
+    transition-property: background-color;
+    transition-duration: 0.2s;
+    transition-timing-function: linear;
+
     img {
-      margin-top: 7px;
+      height: 40px;
+      margin-left: 5px;
+      margin-top: 5px;
     }
+  }
+  .menu-icon:active {
+    background-color: #ffffff22;
   }
 }
 .bounce-image {
@@ -61,15 +78,16 @@ $navbarHeight: 60px;
     display: inline-block;
     width: 16px;
     height: 16px;
-    transition-property: margin-top;
+    transition-property: margin-right;
     transition-timing-function: linear;
-    transition-duration: 0.2s;
+    transition-duration: 0.15s;
+    margin-right: 16px;
 }
 .link-to-page { 
     display: inline-block;
     float: right;
     height: 16px;
-    margin: 20px 25px 0 25px;
+    padding: 20px 25px 0 25px;
 
     img {
       width: 16px;
@@ -79,26 +97,28 @@ $navbarHeight: 60px;
 }
 .link-to-page h1 {
     border: solid;
-    border-color: #FFF;
-    border-width: 0;
-    border-left-width: 1px;
-    padding-left: 20px;
+    border-color: #fff;
+    border-width: 0 0 0 1px;
+    padding: 0 20px;
     margin: 0;
     font-size: 1em;
     font-weight: normal;
+    transition-timing-function: linear;
+    transition-duration: 0.2s;
+    transition-property: border-width;
+    color: #fff;
+    text-shadow: unset;
 }
 .link-to-page a {
     display: inline-block;
     float: left;
     text-decoration: none;
-    color: #FFFFFF;
-    transition-property: color;
-    transition-duration: 0.2s;
-    padding-left: 15px;
-    transition-timing-function: linear;
+}
+.link-to-page h1:hover {
+  border-width: 0 0 0 5px;
 }
 .link-titles {
-  right: 20px;
+  right: 2px;
   position: absolute;
   height: 60px;
 }

@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import NavbarConsistent from './navbarconsistent.jsx';
+
+// Components
+import {NavBar} from 'Layout/Items.jsx';
 
 class Hub extends React.Component {
   render () {
     return <div className="hub">
-      <NavbarConsistent isScroll={false} />
+      <NavBar isScroll={false}/>
       {this.props.children}
     </div>;
   }

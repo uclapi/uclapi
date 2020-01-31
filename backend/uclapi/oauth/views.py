@@ -16,7 +16,6 @@ from django.views.decorators.csrf import (
 )
 
 from dashboard.models import App, User
-from dashboard.tasks import keen_add_event_task as keen_add_event
 
 from .app_helpers import (
     generate_random_verification_code,
@@ -25,7 +24,7 @@ from .app_helpers import (
 from .models import OAuthToken
 from .scoping import Scopes
 
-from uclapi.settings import REDIS_UCLAPI_HOST
+from uclapi.settings import REDIS_UCLAPI_HOST, SHIB_TEST_USER
 from common.decorators import uclapi_protected_endpoint, get_var
 from common.helpers import PrettyJsonResponse
 
@@ -131,37 +130,44 @@ def shibcallback(request):
     # string sent via Shibboleth
     app = App.objects.get(client_id=client_id)
 
-    eppn = request.META['HTTP_EPPN']
-    cn = request.META['HTTP_CN']
-    department = request.META['HTTP_DEPARTMENT']
-    given_name = request.META['HTTP_GIVENNAME']
-    display_name = request.META['HTTP_DISPLAYNAME']
-    employee_id = request.META['HTTP_EMPLOYEEID']
+    # Sometimes UCL doesn't give us the expected headers.
+    # If a critical header is missing we error out.
+    # If non-critical headers are missing we simply put a placeholder string.
+    try:
+        # This is used to find the correct user
+        eppn = request.META['HTTP_EPPN']
+        # We don't really use cn but because it's unique in the DB we can't
+        # really put a place holder value.
+        cn = request.META['HTTP_CN']
+        # (aka UPI), also unique in the DB
+        employee_id = request.META['HTTP_EMPLOYEEID']
+    except KeyError:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": ("UCL has sent incomplete headers. If the issues persist"
+                      "please contact the UCL API Team to rectify this.")
+        })
+        response.status_code = 400
+        return response
 
-    # We check whether the user is a member of any UCL Intranet Groups.
-    # This is a quick litmus test to determine whether they should be able to
-    # use an OAuth application.
-    # We deny access to alumni, which does not have this Shibboleth attribute.
-    # Test accounts also do not have this attribute, but we can check the
-    # department attribute for the Shibtests department.
-    # This lets App Store reviewers log in to apps that use the UCL API.
-    if 'HTTP_UCLINTRANETGROUPS' in request.META:
-        groups = request.META['HTTP_UCLINTRANETGROUPS']
-    else:
-        if department == "Shibtests":
-            groups = "shibtests"
-        else:
-            response = HttpResponse(
-                (
-                    "Error 403 - denied. <br>"
-                    "Unfortunately, alumni are not permitted to use UCL Apps."
-                )
-            )
-            response.status_code = 403
-            return response
+    # TODO: Ask UCL what on earth are they doing by missing out headers, and
+    # remind them we need to to be informed of these types of changes.
+    # TODO: log to sentry that fields were missing...
+    department = request.META.get('HTTP_DEPARTMENT', '')
+    given_name = request.META.get('HTTP_GIVENNAME', '')
+    display_name = request.META.get('HTTP_DISPLAYNAME', '')
+    groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
+
+    # TODO: Find a way to block access to alumni (do we need this?) without
+    # blocking access to new students too.
+    if not groups and (department == "Shibtests" or eppn == SHIB_TEST_USER):
+        groups = "shibtests"
 
     # If a user has never used the API before then we need to sign them up
     try:
+        # TODO: Handle MultipleObjectsReturned exception.
+        # email field isn't unique at database level (on our side).
+        # Alternatively, switch to employee_id (which is unique).
         user = User.objects.get(email=eppn)
     except User.DoesNotExist:
         # create a new user
@@ -176,26 +182,19 @@ def shibcallback(request):
         )
 
         user.save()
-        keen_add_event.delay("signup", {
-            "id": user.id,
-            "email": eppn,
-            "name": display_name
-        })
     else:
-        # User exists already, so update the values
+        # User exists already, so update the values if new ones are non-empty.
         user = User.objects.get(email=eppn)
-        user.full_name = display_name
-        user.given_name = given_name
-        user.department = department
-        user.raw_intranet_groups = groups
         user.employee_id = employee_id
+        if display_name:
+            user.full_name = display_name
+        if given_name:
+            user.given_name = given_name
+        if department:
+            user.department = department
+        if groups:
+            user.raw_intranet_groups = groups
         user.save()
-
-        keen_add_event.delay("User data updated", {
-            "id": user.id,
-            "email": eppn,
-            "name": display_name
-        })
 
     # Log the user into the system using their User ID
     request.session["user_id"] = user.id
@@ -590,16 +589,40 @@ def get_student_number(request, *args, **kwargs):
 def myapps_shibboleth_callback(request):
     # should auth user login or signup
     # then redirect to my apps homepage
-    eppn = request.META['HTTP_EPPN']
-    groups = request.META['HTTP_UCLINTRANETGROUPS']
-    cn = request.META['HTTP_CN']
-    department = request.META['HTTP_DEPARTMENT']
-    given_name = request.META['HTTP_GIVENNAME']
-    display_name = request.META['HTTP_DISPLAYNAME']
-    employee_id = request.META['HTTP_EMPLOYEEID']
+
+    # Sometimes UCL doesn't give us the expected headers.
+    # If a critical header is missing we error out.
+    # If non-critical headers are missing we simply put a placeholder string.
+    try:
+        # This is used to find the correct user
+        eppn = request.META['HTTP_EPPN']
+        # We don't really use cn but because it's unique in the DB we can't
+        # really put a place holder value.
+        cn = request.META['HTTP_CN']
+        # (aka UPI), also unique in the DB
+        employee_id = request.META['HTTP_EMPLOYEEID']
+    except KeyError:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": ("UCL has sent incomplete headers. If the issues persist"
+                      "please contact the UCL API Team to rectify this.")
+        })
+        response.status_code = 400
+        return response
+
+    # TODO: Ask UCL what on earth are they doing by missing out headers, and
+    # remind them we need to to be informed of these types of changes.
+    # TODO: log to sentry that fields were missing...
+    department = request.META.get('HTTP_DEPARTMENT', '')
+    given_name = request.META.get('HTTP_GIVENNAME', '')
+    display_name = request.META.get('HTTP_DISPLAYNAME', '')
+    groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
 
     try:
         user = User.objects.get(email=eppn)
+        # TODO: Handle MultipleObjectsReturned exception.
+        # email field isn't unique at database level (on our side).
+        # Alternatively, switch to employee_id (which is unique).
     except User.DoesNotExist:
         # create a new user
         new_user = User(
@@ -615,26 +638,19 @@ def myapps_shibboleth_callback(request):
         new_user.save()
 
         request.session["user_id"] = new_user.id
-        keen_add_event.delay("signup", {
-            "id": new_user.id,
-            "email": eppn,
-            "name": display_name
-        })
     else:
-        # user exists already, update values
+        # User exists already, so update the values if new ones are non-empty.
         request.session["user_id"] = user.id
-        user.full_name = display_name
-        user.given_name = given_name
-        user.department = department
-        user.raw_intranet_groups = groups
         user.employee_id = employee_id
+        if display_name:
+            user.full_name = display_name
+        if given_name:
+            user.given_name = given_name
+        if department:
+            user.department = department
+        if groups:
+            user.raw_intranet_groups = groups
         user.save()
-
-        keen_add_event.delay("User data updated", {
-            "id": user.id,
-            "email": eppn,
-            "name": display_name
-        })
 
     return redirect("/oauth/myapps")
 
@@ -689,7 +705,7 @@ def my_apps(request):
     }
 
     initial_data = json.dumps(initial_data_dict, cls=DjangoJSONEncoder)
-    return render(request, 'appsettings.html', {
+    return render(request, 'settings.html', {
         'initial_data': initial_data
     })
 

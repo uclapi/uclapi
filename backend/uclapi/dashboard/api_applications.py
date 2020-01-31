@@ -1,6 +1,5 @@
 import json
 
-from dashboard.tasks import keen_add_event_task as keen_add_event
 from oauth.scoping import Scopes
 from common.helpers import PrettyJsonResponse
 
@@ -38,12 +37,6 @@ def create_app(request):
 
     new_app = App(name=name, user=user)
     new_app.save()
-
-    keen_add_event.delay("App created", {
-        "appid": new_app.id,
-        "name": new_app.name,
-        "userid": user.id
-    })
 
     s = Scopes()
 
@@ -105,12 +98,6 @@ def rename_app(request):
         app.name = new_name
         app.save()
 
-        keen_add_event.delay("App renamed", {
-            "appid": app.id,
-            "new_name": app.name,
-            "userid": user.id
-        })
-
         return PrettyJsonResponse({
             "success": True,
             "message": "App sucessfully renamed.",
@@ -152,11 +139,6 @@ def regenerate_app_token(request):
         app = apps[0]
         app.regenerate_token()
         new_api_token = app.api_token
-
-        keen_add_event.delay("App token regenerated", {
-            "appid": app.id,
-            "userid": user.id
-        })
 
         return PrettyJsonResponse({
             "success": True,
@@ -210,11 +192,6 @@ def delete_app(request):
         webhook.enabled = False
         webhook.save()
         app.save()
-
-        keen_add_event.delay("App deleted", {
-            "appid": app_id,
-            "userid": user.id
-        })
 
         return PrettyJsonResponse({
             "success": True,
@@ -291,12 +268,6 @@ def set_callback_url(request):
     app = apps[0]
     app.callback_url = new_callback_url
     app.save()
-
-    keen_add_event.delay("App callback URL changed", {
-        "appid": app_id,
-        "userid": user.id,
-        "newcallbackurl": new_callback_url
-    })
 
     return PrettyJsonResponse({
         "success": True,
@@ -384,12 +355,6 @@ def update_scopes(request):
             })
             response.status_code = 400
             return response
-
-        keen_add_event.delay("App scopes changed", {
-            "appid": app_id,
-            "userid": user.id,
-            "scopes": scopes
-        })
 
         return PrettyJsonResponse({
             "success": True,

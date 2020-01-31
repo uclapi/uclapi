@@ -1,6 +1,5 @@
 from common.helpers import PrettyJsonResponse
 from .models import App, User
-from dashboard.tasks import keen_add_event_task as keen_add_event
 import requests
 from .app_helpers import generate_secret, is_url_unsafe
 
@@ -118,15 +117,6 @@ def edit_webhook(request):
     webhook.contact = contact
     webhook.enabled = True
     webhook.save()
-
-    keen_add_event.delay("Webhook edited", {
-        "appid": app.id,
-        "userid": user_id,
-        "url": url,
-        "siteid": siteid,
-        "roomid": roomid,
-        "contact": contact,
-    })
 
     return PrettyJsonResponse({
         "ok": True,

@@ -5,25 +5,23 @@ import PropTypes from 'prop-types';
 import defaultHeaders from './defaultHeaders.js';
 
 class OAuthScopesForm extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.state = {
       scopes: this.props.scopes,
       scopesSaved: false
     };
-    this.handleScopeChange = this.handleScopeChange.bind(this);
-    this.submitScopes = this.submitScopes.bind(this);
   }
 
-  handleScopeChange(e){
+  handleScopeChange = (e) => {
     e.persist();
-    this.setState((state)=>{
-      return update(state, {scopes:{[e.target.name]:{enabled: {$set: e.target.checked}}}});
+    this.setState((state) => {
+      return update(state, { scopes: { [e.target.name]: { enabled: { $set: e.target.checked } } } });
     });
   }
 
-  submitScopes(e){
+  submitScopes = (e) => {
     e.preventDefault();
 
     var scopesData = [];
@@ -42,32 +40,32 @@ class OAuthScopesForm extends React.Component {
       credentials: 'include',
       headers: defaultHeaders,
       body: 'app_id=' + this.props.appId + '&scopes=' + encodeURIComponent(json)
-    }).then((res)=>{
+    }).then((res) => {
       if (res.ok) { return res.json(); }
       throw new Error('Unable to save scopes.');
-    }).then((json)=> {
+    }).then((json) => {
       if (!json.success) { throw new Error(json.message); }
       this.setState({ scopesSaved: true });
-      setTimeout(()=>{this.setState({scopesSaved: false});}, 5000);
-    }).catch((err)=>{
+      setTimeout(() => { this.setState({ scopesSaved: false }); }, 5000);
+    }).catch((err) => {
       this.props.setError(err.message);
     });
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <form onSubmit={this.submitScopes} className="pure-for">
-        {this.state.scopes.map((scope, index)=>{
+        {this.state.scopes.map((scope, index) => {
           return <div key={index}>
-              <input
-                type="checkbox"
-                onChange={this.handleScopeChange}
-                defaultChecked={scope.enabled}
-                name={index}
-                className="scope-checkbox"
-              />
-              {scope.description}
-            </div>;
+            <input
+              type="checkbox"
+              onChange={this.handleScopeChange}
+              defaultChecked={scope.enabled}
+              name={index}
+              className="scope-checkbox"
+            />
+            {scope.description}
+          </div>;
         })}
         <button
           type="submit"
@@ -76,7 +74,7 @@ class OAuthScopesForm extends React.Component {
           style={{ 'border': '1px solid #ccc', 'borderRadius': '0px' }}
         >
           <i className="fa fa-save" aria-hidden="true"></i>
-          <span>{this.state.scopesSaved?'Saved!':'Click to save changes to the requested permissions.'}</span>
+          <span>{this.state.scopesSaved ? 'Saved!' : 'Click to save changes to the requested permissions.'}</span>
         </button>
       </form>
 

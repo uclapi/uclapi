@@ -20,7 +20,7 @@ NOT_PUBLIC = 4
 
 def get_articles():
     r = redis.Redis(host=REDIS_UCLAPI_HOST)
-    if not r.exists("Blog:item:1:url"):
+    if not r.exists("Blog:item:1:updated"):
         if DEBUG:
             call_command('update_medium')
         else:
@@ -29,14 +29,38 @@ def get_articles():
     articles = []
     for i in range(0, MEDIUM_ARTICLE_QUANTITY):
         articles.append({})
-        redis_key_url = "Blog:item:{}:url".format(i)
+
         redis_key_title = "Blog:item:{}:title".format(i)
-        pipe.get(redis_key_url)
+        redis_key_url = "Blog:item:{}:url".format(i)
+        redis_key_tags = "Blog:item:{}:tags".format(i)
+        redis_key_creator = "Blog:item:{}:creator".format(i)
+        redis_key_published = "Blog:item:{}:published".format(i)
+        redis_key_updated = "Blog:item:{}:updated".format(i)
+        redis_key_content = "Blog:item:{}:content".format(i)
+        redis_key_image_url = "Blog:item:{}:image_url".format(i)
+
         pipe.get(redis_key_title)
+        pipe.get(redis_key_url)
+        pipe.get(redis_key_tags)
+        pipe.get(redis_key_creator)
+        pipe.get(redis_key_published)
+        pipe.get(redis_key_updated)
+        pipe.get(redis_key_content)
+        pipe.get(redis_key_image_url)
+
     redis_response = pipe.execute()
     for i in range(0, MEDIUM_ARTICLE_QUANTITY):
-        articles[i]['url'] = redis_response[i*2].decode("utf-8")
-        articles[i]['title'] = redis_response[i*2+1].decode("utf-8")
+        start_index = i*8
+        type = "utf-8"
+
+        articles[i]['title'] = redis_response[start_index].decode(type)
+        articles[i]['url'] = redis_response[start_index+1].decode(type)
+        articles[i]['tags'] = redis_response[start_index+2].decode(type)
+        articles[i]['creator'] = redis_response[start_index+3].decode(type)
+        articles[i]['published'] = redis_response[start_index+4].decode(type)
+        articles[i]['updated'] = redis_response[start_index+5].decode(type)
+        articles[i]['content'] = redis_response[start_index+6].decode(type)
+        articles[i]['image_url'] = redis_response[start_index+7].decode(type)
     return articles
 
 

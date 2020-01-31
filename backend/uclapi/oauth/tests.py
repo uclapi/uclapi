@@ -550,6 +550,86 @@ class ViewsTestCase(TestCase):
             "Test New Name"
         )
 
+        # Now lets test for when UCL doesn't give us department the department,
+        # givenname and displayname.
+        response = self.client.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': signed_data
+            },
+            HTTP_EPPN='testxxx@ucl.ac.uk',
+            HTTP_CN='testxxx',
+            # NOTE: missing HTTP_DEPARTMENT, HTTP_GIVENNAME, HTTP_DISPLAYNAME
+            HTTP_EMPLOYEEID='xxxtest01',
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # Reload the test user from DB
+        test_user_ = User.objects.get(id=test_user_.id)
+
+        # If a non-critical HTTP header is not passed, we don't want to
+        # overwrite the previous value with an empty string.
+        self.assertEqual(
+            test_user_.department,
+            "Dept of Tests"
+        )
+        self.assertEqual(
+            test_user_.given_name,
+            "Test New Name"
+        )
+        self.assertEqual(
+            test_user_.full_name,
+            "Test User"
+        )
+
+        # Now let's test when critical fields are missing
+        response = self.client.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': signed_data
+            },
+            # NOTE: missing critical field eppn
+            HTTP_CN='testxxx',
+            HTTP_EMPLOYEEID='xxxtest01',
+            HTTP_DEPARTMENT='Dept of Tests',
+            HTTP_GIVENNAME='Test New Name',
+            HTTP_DISPLAYNAME='Test User',
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response = self.client.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': signed_data
+            },
+            HTTP_EPPN='testxxx@ucl.ac.uk',
+            # NOTE: missing critical field cn
+            HTTP_DEPARTMENT='Dept of Tests',
+            HTTP_GIVENNAME='Test New Name',
+            HTTP_DISPLAYNAME='Test User',
+            HTTP_EMPLOYEEID='xxxtest01',
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response = self.client.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': signed_data
+            },
+            HTTP_EPPN='testxxx@ucl.ac.uk',
+            HTTP_CN='testxxx',
+            # NOTE: missing critical field employee_id (aka UPI)
+            HTTP_DEPARTMENT='Dept of Tests',
+            HTTP_GIVENNAME='Test New Name',
+            HTTP_DISPLAYNAME='Test User',
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+        )
+        self.assertEqual(response.status_code, 400)
+
+
     def test_valid_shibcallback_test_account(self):
         dev_user_ = User.objects.create(
             email="testdev@ucl.ac.uk",
@@ -623,41 +703,6 @@ class ViewsTestCase(TestCase):
             test_user_.raw_intranet_groups,
             "shibtests"
         )
-
-    def test_invalid_or_alumni_account(self):
-        dev_user_ = User.objects.create(
-            email="testdev@ucl.ac.uk",
-            cn="test",
-            given_name="Test Dev",
-            employee_id='testdev01'
-        )
-        app_ = App.objects.create(
-            user=dev_user_,
-            name="An App",
-            callback_url="www.somecallbackurl.com/callback"
-        )
-
-        signer = signing.TimestampSigner()
-        # Generate a random state for testing
-        state = ''.join(
-            random.choices(string.ascii_letters + string.digits, k=32)
-        )
-        data = app_.client_id + state
-        signed_data = signer.sign(data)
-
-        response = self.client.get(
-            '/oauth/shibcallback',
-            {
-                'appdata': signed_data
-            },
-            HTTP_EPPN='testxxx@ucl.ac.uk',
-            HTTP_CN='testxxx',
-            HTTP_DEPARTMENT='Dept of Alumni',
-            HTTP_GIVENNAME='Test',
-            HTTP_DISPLAYNAME='Test User',
-            HTTP_EMPLOYEEID='xxxtest01',
-        )
-        self.assertEqual(response.status_code, 403)
 
 
 class AppHelpersTestCase(TestCase):

@@ -25,9 +25,44 @@ class Command(BaseCommand):
         print("Setting Blog keys")
         for i in range(0, settings.MEDIUM_ARTICLE_QUANTITY):
             article = next(medium_article_iterator)
-            redis_key_url = "Blog:item:{}:url".format(i)
             redis_key_title = "Blog:item:{}:title".format(i)
-            pipe.set(redis_key_url, article[1].text)
-            pipe.set(redis_key_title, article[0].text)
+            redis_key_url = "Blog:item:{}:url".format(i)
+            redis_key_tags = "Blog:item:{}:tags".format(i)
+            redis_key_creator = "Blog:item:{}:creator".format(i)
+            redis_key_published = "Blog:item:{}:published".format(i)
+            redis_key_updated = "Blog:item:{}:updated".format(i)
+            redis_key_content = "Blog:item:{}:content".format(i)
+            redis_key_image_url = "Blog:item:{}:image_url".format(i)
+
+            title = article[0].text
+            url = article[1].text
+            # short_link = article[2].text
+            tags = article[3].text
+            index = 4
+            while article[index].tag == "category":
+                tags += ", " + article[index].text
+                index += 1
+
+            creator = article[index].text
+            published = article[index + 1].text
+            updated = article[index + 2].text
+
+            content = article[index + 3].text
+            link = 'url_not_found'
+
+            if content.startswith("<figure><img"):
+                link = content[25:]
+                split = link.split('" />')
+                link = split[0]
+
+            pipe.set(redis_key_title, title)
+            pipe.set(redis_key_url, url)
+            pipe.set(redis_key_tags, tags)
+            pipe.set(redis_key_creator, creator)
+            pipe.set(redis_key_published, published)
+            pipe.set(redis_key_updated, updated)
+            pipe.set(redis_key_content, content)
+            pipe.set(redis_key_image_url, link)
+
         pipe.execute()
         print("Frontend updated to have latest medium blogs")
