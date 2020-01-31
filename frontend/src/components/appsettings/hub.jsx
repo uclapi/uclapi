@@ -6,10 +6,10 @@ import {NavBar} from 'Layout/Items.jsx';
 
 class Hub extends React.Component {
   render () {
-    return <div className="hub">
+    return <>
       <NavBar isScroll={false}/>
       {this.props.children}
-    </div>;
+    </>;
   }
 }
 

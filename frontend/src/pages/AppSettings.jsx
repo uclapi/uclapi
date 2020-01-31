@@ -33,6 +33,7 @@ const muiTheme = getMuiTheme({
 })
 
 import 'Styles/hub.scss'
+import 'Styles/common/uclapi.scss'
 import 'Styles/navbar.scss'
 
 class AppSettings extends React.Component {

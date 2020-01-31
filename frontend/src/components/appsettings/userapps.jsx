@@ -1,34 +1,42 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AuthAppRow from './authapprow.jsx';
+// Components
+import { ButtonView, CardView, Column, Demo, Footer, ImageView, NavBar, Row, TextView } from 'Layout/Items.jsx'
 
 class UserApps extends React.Component {
   render () {
-    return <div className="settings-holder">
-      <div className="settings-form">
+    const { authorised_apps } = this.props
 
-        <div className="settings-title"><h2>Account</h2></div>
-        <div className="card-settings">
-          <div className="profile-card">
-            <h3>{this.props.fullname}</h3>
-            <h3>{this.props.department}</h3>
-          </div>
-        </div>
+    return <Row height='fit-content' styling='splash-parallax' style={{ minHeight : `100vh`}}>
+          <Column width='2-3' horizontalAlignment='center' style={{ marginTop: `50px` }} >
+            <TextView text={`Account`} heading={2} align={`center`} />
+            <CardView width='1-1' type='default'>
+              <div className="profile-card">
+                <TextView text={this.props.fullname} heading={3} align={`center`} />
+                <TextView text={this.props.department} heading={3} align={`center`} />
+              </div>
+            </CardView>
 
-        <div className="settings-title"><h2>Permissions</h2></div>
-        <div className="card-settings">
-          {this.props.authorised_apps.map((app, i) => {
-              return <AuthAppRow app_name={app.app.name}
-                app_created={app.app.creator.name}
-                app_is_auth={app.active}
-                app_id={app.app.id}
-                app_client_id={app.app.client_id}
-                key={i}
-              />;
-          })}
-        </div>
-      </div>
-    </div>;
+            <TextView text={`Permissions`} heading={2} align={`center`} />
+            <CardView width='1-1' type='default'>
+              {authorised_apps.length===0 ? (
+                  <TextView text={"No authorised apps"} heading={3} align={`center`} />
+                ) : (
+                  authorised_apps.map((app, i) => 
+                    <AuthAppRow app_name={app.app.name}
+                      app_created={app.app.creator.name}
+                      app_is_auth={app.active}
+                      app_id={app.app.id}
+                      app_client_id={app.app.client_id}
+                      key={i}
+                    />
+                  )
+                )
+              }
+            </CardView>
+          </Column>
+        </Row>;
   }
 }
 
