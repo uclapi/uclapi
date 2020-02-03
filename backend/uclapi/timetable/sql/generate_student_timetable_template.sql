@@ -278,8 +278,8 @@ INNER JOIN tt_tmp_events_slot_id tes
 -- e.g. TO1 -> Teaching; (tt.moduletype IS NULL)
 LEFT OUTER JOIN timetable_classifications{{ bucket_id | sqlsafe }} classifications
     ON tt.setid = classifications.setid
-	AND classifications.classid = CASE WHEN tt.moduletype IS NOT NULL THEN tt.moduletype ELSE tt.classif END
-	AND classifications.type = CASE WHEN tt.moduletype IS NOT NULL THEN 'MOD_TYPE' ELSE 'TT_SLOT' END
+	AND classifications.classid = tt.moduletype
+	AND classifications.type = 'MOD_TYPE'
 LEFT OUTER JOIN roombookings_booking{{ bucket_id | sqlsafe }} rb
     ON tt.slotid = rb.slotid
     AND tt.setid  = rb.setid
@@ -291,7 +291,7 @@ LEFT JOIN timetable_module{{ bucket_id | sqlsafe }} m
 	-- Comparision with instid is necessary as a module may have different names between instances.
 	-- e.g. STAT0007-A6U-T2 -> Stochastic Processes; 19/20
 	-- e.g. STAT0007-A5U-T2 -> Introduction to Applied Probability; 19/20
-	AND m.instid = t.instid 
+	AND m.instid = tt.instid
     AND m.setid    = tes.setid
 LEFT OUTER JOIN timetable_depts{{ bucket_id | sqlsafe }} depts
     ON depts.deptid = tt.deptid
@@ -311,8 +311,6 @@ WHERE (
     AND (tt.weekday > 0)
     AND (tt.starttime IS NOT NULL)
     AND (tt.duration IS NOT NULL)
-    -- 0/-1 seem to be the designated "NULL" values for instid in 2019/20...
-	AND ((tt.moduletype IS NOT NULL AND tt.instid > 0) OR (tt.moduletype IS NULL AND tt.instid <= 0))
 )
 GROUP BY rb.startdatetime,
             rb.finishdatetime,
