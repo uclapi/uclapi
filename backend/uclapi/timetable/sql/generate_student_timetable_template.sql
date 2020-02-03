@@ -288,6 +288,10 @@ LEFT OUTER JOIN timetable_cminstances{{ bucket_id | sqlsafe }} ci
     AND tt.setid  = ci.setid 
 LEFT JOIN timetable_module{{ bucket_id | sqlsafe }} m
     ON m.moduleid = tes.moduleid
+	-- Comparision with instid is necessary as a module may have different names between instances.
+	-- e.g. STAT0007-A6U-T2 -> Stochastic Processes; 19/20
+	-- e.g. STAT0007-A5U-T2 -> Introduction to Applied Probability; 19/20
+	AND m.instid = t.instid 
     AND m.setid    = tes.setid
 LEFT OUTER JOIN timetable_depts{{ bucket_id | sqlsafe }} depts
     ON depts.deptid = tt.deptid
@@ -298,6 +302,7 @@ LEFT OUTER JOIN timetable_sites{{ bucket_id | sqlsafe }} sites
 	ON sites.siteid = CASE WHEN tt.siteid IS NOT NULL THEN tt.siteid ELSE rb.siteid::TEXT END
     AND sites.setid  = tes.setid
 LEFT OUTER JOIN roombookings_room{{ bucket_id | sqlsafe }} rooms
+    -- Sometimes the timetable doesn't contain the location, in that case, hopefully the booking will.
     ON rooms.roomid = CASE WHEN tt.roomid IS NOT NULL THEN tt.roomid ELSE rb.roomid::TEXT END
     AND rooms.siteid = CASE WHEN tt.siteid IS NOT NULL THEN tt.siteid ELSE rb.siteid::TEXT END
     AND rooms.setid  = tes.setid
@@ -306,7 +311,8 @@ WHERE (
     AND (tt.weekday > 0)
     AND (tt.starttime IS NOT NULL)
     AND (tt.duration IS NOT NULL)
-	AND ((tt.moduletype IS NOT NULL AND tt.instid <> 0) OR (tt.moduletype IS NULL AND tt.instid = 0))
+    -- 0/-1 seem to be the designated "NULL" values for instid in 2019/20...
+	AND ((tt.moduletype IS NOT NULL AND tt.instid > 0) OR (tt.moduletype IS NULL AND tt.instid <= 0))
 )
 GROUP BY rb.startdatetime,
             rb.finishdatetime,
