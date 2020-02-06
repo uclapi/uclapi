@@ -8,11 +8,11 @@ import Link from './Link.jsx';
 import menu from '../../images/navbar/menu.svg';
 
 let links = [
-	// {
-	// 	name: "settings",
-	// 	link: "/oauth/myapps",
-	// 	src: "settings", 
-	// },
+	{
+	 	name: "settings",
+	 	link: "/oauth/myapps",
+	 	src: "settings", 
+	},
 	{
 		name: "about",
 		link: "/about",
