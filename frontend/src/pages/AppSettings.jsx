@@ -10,9 +10,10 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import Hub from '../components/appsettings/hub.jsx'
-import LogInLayout from '../components/appsettings/loginlayout.jsx'
-import UserApps from '../components/appsettings/userapps.jsx'
+import { Footer,NavBar } from 'Layout/Items.jsx'
+
+import LogInLayout from '../components/appsettings/LogInLayout.jsx'
+import SettingsLayout from '../components/appsettings/SettingsLayout.jsx'
 
 const muiTheme = getMuiTheme({
   fontFamily: `Roboto, sans-serif`,
@@ -32,7 +33,6 @@ const muiTheme = getMuiTheme({
   },
 })
 
-import 'Styles/hub.scss'
 import 'Styles/common/uclapi.scss'
 import 'Styles/navbar.scss'
 
@@ -51,19 +51,19 @@ class AppSettings extends React.Component {
     } } = this.state
     if (status !== `ONLINE`) {
       return <MuiThemeProvider muiTheme={muiTheme}>
-        <Hub>
+        <NavBar isScroll={false}/>
           <LogInLayout url={url} />
-        </Hub>
+        <Footer />
       </MuiThemeProvider>
     } else {
       return <MuiThemeProvider muiTheme={muiTheme}>
-        <Hub>
-          <UserApps
-            fullname={fullname}
-            department={department}
-            authorised_apps={apps}
-          />
-        </Hub>
+      <NavBar isScroll={false}/>
+        <SettingsLayout
+          fullname={fullname}
+          department={department}
+          authorised_apps={apps}
+        />
+      <Footer />
       </MuiThemeProvider>
     }
   }
