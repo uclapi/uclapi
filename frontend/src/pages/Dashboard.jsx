@@ -11,7 +11,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Modal from 'react-modal'
 
-import { CheckBoxView, editIcon, Field, OverlayBox } from 'Dashboard/DashboardUI.jsx'
+import { CheckBoxView, editIcon, cancelIcon, Field, OverlayBox } from 'Dashboard/DashboardUI.jsx'
 import { styles } from 'Layout/data/dashboard_styles.jsx'
 // Components
 import { CardView, Column, Footer, NavBar, Row, TextView, ButtonView } from 'Layout/Items.jsx'
@@ -36,7 +36,7 @@ const Dates = (created, updated, alignment) => (
   </>
 )
 
-const Title = (size, title, created, updated, isEditing, toggleEditTitle, saveEditTitle, cancelEditTitle) => {
+const Title = (size, title, created, updated, isEditing, toggleEditTitle, saveEditTitle, cancelEditTitle, deleteApp) => {
   return (
   <Row styling='transparent' noPadding>
     <CardView width={size===`mobile` ? `1-1` : `1-2`} minWidth="140px" type="no-bg" style={styles.squareCard} snapAlign>
@@ -48,6 +48,7 @@ const Title = (size, title, created, updated, isEditing, toggleEditTitle, saveEd
               style={styles.titleText}
             />
             {editIcon(toggleEditTitle)} 
+            {cancelIcon(deleteApp, true)} 
           </>
         ) : (
           <>
@@ -59,7 +60,7 @@ const Title = (size, title, created, updated, isEditing, toggleEditTitle, saveEd
         )
       }
     </CardView>
-    <CardView width={size===`mobile` ? `1-1` : `1-2`} minWidth="140px" type="no-bg" snapAlign>
+    <CardView width={size===`mobile` ? `1-1` : `1-2`} minWidth="140px" type="no-bg" snapAlign style={styles.rowItem}>
       {size===`mobile` ? (
         Dates(created, updated, `center`)
       ) : (
@@ -101,6 +102,7 @@ class Dashboard extends React.Component {
     this.setScope = this.setScope.bind(this)
 
     this.addNewProject = this.addNewProject.bind(this)
+    this.deleteProject = this.deleteProject.bind(this)
 
     // Sort the apps by last updated property
     window.initialData.apps.sort((a, b) => {
@@ -135,11 +137,12 @@ class Dashboard extends React.Component {
       savedData: savedData,
       data: window.initialData,
       view: `default`,
+      toDelete: -1,
     }
   }
 
   render() {
-    const { data: { name, cn, apps }, editName, savedData} = this.state 
+    const { data: { name, cn, apps }, editName, savedData, view, toDelete} = this.state 
 
     const actions = {
       toggleEditTitle: this.toggleEditTitle,
@@ -157,6 +160,7 @@ class Dashboard extends React.Component {
       setScope: this.setScope,
       saveOAuthCallback: this.saveOAuthCallback,
       addNewProject: this.addNewProject,
+      deleteProject: this.deleteProject,
     }
 
     return (
@@ -164,7 +168,7 @@ class Dashboard extends React.Component {
         <NavBar isScroll={false} />
 
         <Modal 
-          isOpen={this.state.view == `add-project`}
+          isOpen={view == `add-project`}
           contentLabel="Create app form"
           onRequestClose={ () => this.setState({view: `default`}) }
           className="Modal"
@@ -173,9 +177,27 @@ class Dashboard extends React.Component {
         >
           <OverlayBox
             text="Enter the name of your new project"
-            success={actions.addNewProject}
+            success={(value) => { actions.addNewProject(value) } }
             fail={() => { this.setState({view: `default`}) } }
           />
+        </Modal>
+
+        <Modal 
+          isOpen={view == `delete-project`}
+          contentLabel="Delete app form"
+          onRequestClose={ () => this.setState({view: `default`}) }
+          className="Modal"
+          overlayClassName="Overlay"
+          style={styles.modal}
+        >
+          {toDelete !== -1 ? (
+            <OverlayBox
+              text={"Enter the name of your project to confirm deletion (" + apps[toDelete].name  + ")"}
+              success={(value) => { actions.deleteProject(toDelete) } }
+              fail={() => { this.setState({view: `default`}) } }
+              value={ apps[toDelete].name }
+            />
+          ) : null }
         </Modal>
 
         <Row height='fit-content' styling='splash-parallax' style={{ minHeight : `100%`}}>
@@ -200,13 +222,15 @@ class Dashboard extends React.Component {
                 const isStudentNumber = apps[index].oauth.scopes[1].enabled
 
                 return (
-                  <CardView width='1-1' type='default' key={index} noPadding>
+                  <CardView width='1-1' type='default' key={index} noPadding style={{ margin: `25px 0` }} >
                     <div className="default tablet"> { Title(`not-mobile`, app.name, created, updated, savedData[index].editName, 
                       () => { actions.toggleEditTitle(index) }, (reference, shouldPersist) => { actions.saveEditTitle(index, reference.current.value, shouldPersist) },
-                      () => { actions.cancelEditTitle(index) } )}</div>
-                    <div className="mobile"> { Title(`mobile`, app.name, created, updated, editName,
+                      () => { actions.cancelEditTitle(index) },
+                      () => { this.setState({ view: `delete-project`, toDelete: index }) } )}</div>
+                    <div className="mobile"> { Title(`mobile`, app.name, created, updated, savedData[index].editName,
                       () => { actions.toggleEditTitle(index) }, (reference, shouldPersist) => { actions.saveEditTitle(index, reference.current.value, shouldPersist) },
-                      () => { actions.cancelEditTitle(index) } )}</div>
+                      () => { actions.cancelEditTitle(index) },
+                      () => { this.setState({ view: `delete-project`, toDelete: index }) } )}</div>
                     
                     <Row styling='transparent' noPadding>
                       <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
@@ -282,7 +306,8 @@ class Dashboard extends React.Component {
               }
               )}
             </div>
-            <ButtonView text={`Add new project`} type={`default`} style={{ marginTop: `50px` }} 
+            <ButtonView text={`Add new project`} type={`default`} 
+              style={{ marginTop: `25px`, cursor: `pointer` }} 
               onClick={ () => { this.setState({ view: `add-project` }) } } fakeLink/>
           </Column>
         </Row>
@@ -293,9 +318,58 @@ class Dashboard extends React.Component {
   }
 
   addNewProject(name) {
-    // Code to add a new project
+    this.queryDashboardAPI(`/dashboard/api/create/`, `name=` + name, (json) => {
+      // For debugging
+      if(this.DEBUGGING) { console.log(json) }
 
-    this.setState({ view: `default` })
+      // Add the new app to the state so it gets rendered
+      let newApp = json.app
+      newApp['name'] = name
+
+      const { data: { apps }, savedData } = this.state
+      apps.push(newApp)
+
+      // Update the saved data aswell
+      savedData.push(
+        {
+          name: newApp.name,
+          url: newApp.webhook.url,
+          contact: newApp.webhook.contact,
+          siteid: newApp.webhook.siteid,
+          roomid: newApp.webhook.roomid,
+          callback_url: newApp.oauth.callback_url,
+          editName: false,
+        }
+      )
+
+      // Go to new state visually
+      this.setState({
+        savedData: savedData,
+        view: `default`, 
+        data: {...this.state.data, apps: apps}
+      })
+    })
+  }
+
+  deleteProject(index) {
+    const { data: { apps }, savedData } = this.state 
+
+    this.queryDashboardAPI(`/dashboard/api/delete/`, `app_id=` + apps[index].id, (json) => {
+      // For debugging
+      if(this.DEBUGGING) { console.log(json) }
+
+      // Remove the deleted app
+      apps.splice(index, 1)
+      savedData.splice(index, 1)
+
+      // Go to new state visually
+      this.setState({  
+        toDelete: -1,
+        savedData: savedData,
+        view: `default`, 
+        data: {...this.state.data, apps: apps}
+      })
+    })
   }
 
   cancelEditTitle(index) {

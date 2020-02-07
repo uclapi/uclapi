@@ -7,7 +7,8 @@ import refreshImage from 'Images/dashboard/refresh.svg'
 import saveImage from 'Images/dashboard/save.svg'
 import deleteImage from 'Images/dashboard/trash.svg'
 import { styles } from 'Layout/data/dashboard_styles.jsx'
-import { CardView, CheckBox, ImageView, TextView, ButtonView, Row} from 'Layout/Items.jsx'
+import { CardView, CheckBox, ImageView, TextView, 
+  ButtonView, Row, Column} from 'Layout/Items.jsx'
 
 const logosize = `20px`
 
@@ -34,7 +35,8 @@ export const refreshIcon = (onClick) => Icon(refreshImage, `refresh token`, onCl
 export const editIcon = (onClick) => Icon(editImage, `edit title of app`, onClick, {...styles.button,
 float : `left`})
 export const saveIcon = (onClick) => Icon(saveImage, `save details for future`, onClick)
-export const cancelIcon = (onClick) => Icon(deleteImage, `cancel action`, onClick)
+export const cancelIcon = (onClick, isInTitle) => Icon(deleteImage, `cancel action`, onClick, {...styles.button,
+float : isInTitle ? `left` : `unset` })
 
 /**
 This is used for the scopes and needs to be passed the specifc update event that it is
@@ -42,7 +44,7 @@ meant to update
 **/
 export const CheckBoxView = (text, value, onClick) => (
   <>                      
-    <div className="field" style={styles.field}>
+    <div className="field" style={{...styles.field, marginTop: `12px`}}>
       <CheckBox onClick={onClick} isChecked={value} style={styles.checkBox}/>
       <TextView text={text} heading={5} align={`left`} style={styles.tokenText} /> 
       {saveIcon}
@@ -89,7 +91,7 @@ backgroundColor : (meta.isNotSaved ? unsavedColor : savedColor) }}
           style={styles.copyableFieldMobile}
         />
       </div>
-      {`cancel` in icons ? cancelIcon(icons.cancel.action) : null}
+      {`cancel` in icons ? cancelIcon(icons.cancel.action, false) : null}
       {`copy` in icons ? clipboardIcon((e) => { icons.copy.action(e, fieldRefA); icons.copy.action(e, fieldRefB) }) : null}
       {`refresh` in icons ? refreshIcon(icons.refresh.action) : null}
       {`save` in icons ? saveIcon(() => { icons.save.action(fieldRefA, true); icons.save.action(fieldRefB, true) }) : null}
@@ -117,6 +119,7 @@ export class OverlayBox extends React.Component {
     super(props)
 
     this.saveField = this.saveField.bind(this)
+    this.success = this.success.bind(this)
 
     this.DEBUGGING = true
 
@@ -132,7 +135,7 @@ export class OverlayBox extends React.Component {
     const { value: check } = this.props
     var canSubmit = false
 
-    if(value) {
+    if(typeof check !== `undefined`) {
       if(value == check) {
         canSubmit = true
       }
@@ -140,10 +143,23 @@ export class OverlayBox extends React.Component {
       canSubmit = true
     }
 
+    if(this.DEBUGGING) { console.log("canSubmit: " + canSubmit + " value: " + value + " against: " + check) }
+
     this.setState({
       value: value,
       canSubmit: canSubmit, 
     })
+  }
+
+  success() {
+    const { value, canSubmit } = this.state
+    const { success } = this.props
+
+    if(canSubmit) {
+      success(value)
+    } else {
+      alert("Sorry please enter the correct value and try again")
+    }
   }
 
   render() {
@@ -152,13 +168,15 @@ export class OverlayBox extends React.Component {
     return (
       <div className='overlay-wrapper' style={{ textAlign: `center` }}>
         <CardView width='1-1' type='default' noPadding>
-          <Row styling='transparent' noPadding>
-            { Field(text, this.state.value, {
-              save: {action: (reference, shouldPersist) => { this.saveField(reference.current.value) } }
-              }, {})
-            }
-            <ButtonView text={`Submit`} onClick={this.success} fakeLink />
-            <ButtonView text={`Cancel`} type={`alternate`} onClick={this.fail} fakeLink />
+          <Row styling='transparent'>
+            <Column width="8-10" horizontalAlignment="center">
+              { Field(text, this.state.value, {
+                save: {action: (reference, shouldPersist) => { this.saveField(reference.current.value) } }
+                }, {})
+              }
+              <ButtonView text={`Submit`} onClick={this.success} fakeLink style={{ cursor: `pointer` }} />
+              <ButtonView text={`Cancel`} type={`alternate`} onClick={fail} fakeLink style={{ cursor: `pointer` }} />
+            </Column>
           </Row>
         </CardView>
       </div>

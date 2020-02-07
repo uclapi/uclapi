@@ -12,7 +12,8 @@ export const styles = {
   oauthTitles: {
     color: `white`,
     fontWeight: `300`,
-    padding: `10px 0`,
+    padding: `0 0`,
+    marginBottom: `0`,
     textDecoration: `underline`,
   },
   lightText: {
@@ -25,10 +26,12 @@ export const styles = {
     margin: `0`,
   },
   appHolder: {
-    marginTop: `80px`,
+    marginTop: `55px`,
   },
   tokenHolder: {
     borderRadius: `0`,
+    marginTop: `5px`,
+    marginBottom: `5px`,
   },
   copyableField: {
     marginTop: `0`,
@@ -80,6 +83,12 @@ export const styles = {
   },
   squareCard: {
     borderRadius: 0,
+    marginTop: `5px`,
+    marginBottom: `5px`,
+  },
+  rowItem: {
+    marginTop: `5px`,
+    marginBottom: `5px`,
   },
   modal: {
     content : {
