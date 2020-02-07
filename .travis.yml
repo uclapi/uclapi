@@ -39,6 +39,6 @@ jobs:
       after_success:
         - codecov
     - stage: deploy
-      if: branch = master AND type = push
+      if: branch = master AND (NOT type IN (pull_request))
       script:
         - echo "Yay"
