@@ -1,8 +1,9 @@
+language: python
+
 branches:
   only:
   - master
 
-language: python
 python:
   - "3.6"
 dist: trusty
