@@ -1,49 +1,52 @@
 language: python
-
 branches:
   only:
   - master
-
 python:
-  - "3.6"
+- '3.6'
 dist: trusty
 sudo: required
 cache: pip
 services:
-  - redis-server
+- redis-server
 install:
-  - (sed '/cx.*/d' ./backend/uclapi/requirements.txt | sed -e 's/^\-e //') | xargs -n 1 pip3 install
-  - pip3 install codecov
+- "(sed '/cx.*/d' ./backend/uclapi/requirements.txt | sed -e 's/^\\-e //') | xargs
+  -n 1 pip3 install"
+- pip3 install codecov
 addons:
-  postgresql: "9.6"
-  
+  postgresql: '9.6'
 jobs:
   include:
-    - stage: test
-      before_script:
-        # Install Oracle Instant Client
-        - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
-        - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
-        - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
-        - sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip
-        - sudo unzip instantclient-sdk-linux.x64-12.2.0.1.0.zip
-        - cd instantclient_12_2
-        - sudo ln -s libclntsh.so.12.1 libclntsh.so
-        - sudo ln -s libocci.so.12.1 libocci.so
-        - export ORACLE_HOME=$(pwd)
-        - export DYLD_LIBRARY_PATH=DYLD_LIBRARY_PATH:$ORACLE_HOME
-        - export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME
-        # Install cx_Oracle (which depends on Oracle IC)
-        - cd ./../backend/uclapi
-        - pip3 install $(cat requirements.txt | grep "cx-Oracle")
-        - cp webpack-stats.sample.json ./static/webpack-stats.json
-      script:
-        - python ./manage.py migrate
-        # codecov.io
-        - coverage run --source='.' --omit='*migrations*' manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner' --settings=uclapi.settings_mocked
-      after_success:
-        - codecov
-    - stage: deploy
-      if: branch = master AND (NOT type IN (pull_request))
-      script:
-        - echo "Yay"
+  - stage: test
+    before_script:
+    - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
+    - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
+    - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
+    - sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip
+    - sudo unzip instantclient-sdk-linux.x64-12.2.0.1.0.zip
+    - cd instantclient_12_2
+    - sudo ln -s libclntsh.so.12.1 libclntsh.so
+    - sudo ln -s libocci.so.12.1 libocci.so
+    - export ORACLE_HOME=$(pwd)
+    - export DYLD_LIBRARY_PATH=DYLD_LIBRARY_PATH:$ORACLE_HOME
+    - export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME
+    - cd ./../backend/uclapi
+    - pip3 install $(cat requirements.txt | grep "cx-Oracle")
+    - cp webpack-stats.sample.json ./static/webpack-stats.json
+    script:
+    - python ./manage.py migrate
+    - coverage run --source='.' --omit='*migrations*' manage.py test --testrunner
+      'uclapi.custom_test_runner.NoDbTestRunner' --settings=uclapi.settings_mocked
+    after_success:
+    - codecov
+  - stage: deploy
+    if: branch = master AND (NOT type IN (pull_request))
+    script:
+    - echo "Yay"
+before_install:
+- openssl aes-256-cbc -K $encrypted_7e23b3ba1922_key -iv $encrypted_7e23b3ba1922_iv
+  -in uclapi-staging-2-docker.pem.enc -out ~\/config/UCL-API-Staging/SSH-Key/uclapi-staging-2-docker.pem
+  -d
+- openssl aes-256-cbc -K $encrypted_7e23b3ba1922_key -iv $encrypted_7e23b3ba1922_iv
+  -in uclapi-staging-1.pem.enc -out ~\/config/UCL-API-Staging/SSH-Key/uclapi-staging-1.pem
+  -d
