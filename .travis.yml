@@ -4,7 +4,7 @@ branches:
   - master
 python:
 - '3.6'
-dist: trusty
+dist: bionic
 sudo: required
 cache: pip
 services:
@@ -13,6 +13,7 @@ install:
 - "(sed '/cx.*/d' ./backend/uclapi/requirements.txt | sed -e 's/^\\-e //') | xargs
   -n 1 pip3 install"
 - pip3 install codecov
+- sudo apt-get update
 addons:
   postgresql: '9.6'
 jobs:
