@@ -17,73 +17,63 @@ addons:
   postgresql: '9.6'
 jobs:
   include:
-    - stage: test
-      before_script:
-        # Install Oracle Instant Client
-        - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5 npm
-        - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
-        - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
-        - sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip
-        - sudo unzip instantclient-sdk-linux.x64-12.2.0.1.0.zip
-        - cd instantclient_12_2
-        - sudo ln -s libclntsh.so.12.1 libclntsh.so
-        - sudo ln -s libocci.so.12.1 libocci.so
-        - export ORACLE_HOME=$(pwd)
-        - export DYLD_LIBRARY_PATH=DYLD_LIBRARY_PATH:$ORACLE_HOME
-        - export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME
-        # Install cx_Oracle (which depends on Oracle IC)
-        - cd ./../backend/uclapi
-        - pip3 install $(cat requirements.txt | grep "cx-Oracle")
-        - cp webpack-stats.sample.json ./static/webpack-stats.json
-      script:
-        - python ./manage.py migrate
-        # codecov.io
-        - coverage run --source='.' --omit='*migrations*' manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner' --settings=uclapi.settings_mocked
-      after_success:
-        - codecov
-    - stage: deploy
-      if: branch = master # AND (NOT type IN (pull_request))
-      env:
-        - AWS_S3_STATICS=True
-        - AWS_S3_STATICS_CREDENTIALS_ENABLED=False
-        - AWS_S3_BUCKET_NAME=uclapi-static
-        - AWS_S3_BUCKET_PATH=static/
-        - AWS_S3_REGION=eu-west-2
-      before_script:
-        # Install Oracle Instant Client
-        - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
-        - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
-        - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
-        - sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip
-        - sudo unzip instantclient-sdk-linux.x64-12.2.0.1.0.zip
-        - cd instantclient_12_2
-        - sudo ln -s libclntsh.so.12.1 libclntsh.so
-        - sudo ln -s libocci.so.12.1 libocci.so
-        - export ORACLE_HOME=$(pwd)
-        - export DYLD_LIBRARY_PATH=DYLD_LIBRARY_PATH:$ORACLE_HOME
-        - export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME
-        # Install cx_Oracle (which depends on Oracle IC)
-        - cd ./../backend/uclapi
-        - pip3 install $(cat requirements.txt | grep "cx-Oracle")
-        - cp webpack-stats.sample.json ./static/webpack-stats.json
-        - cd ../../frontend/
-        - sudo npm install
-        - npm run build
-      script:
-        - cd ../backend/uclapi
-        - ./manage.py collectstatic
-        - eval "$(ssh-agent -s)"
-        - cd ../..
-        - chmod 600 ~/uclapi-staging-1.pem
-        - echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-        - ssh-add ~/uclapi-staging-1.pem
-        - ssh $STAGING_BASTION pwd
-        # - ssh $STAGING_BASTION -t "cd ~; ./deploy.sh;"
-        # - ssh -J $STAGING_BASTION $STAGING_CRON -t "cd ~; ./deploy.sh;"
+  - stage: test
+    before_script:
+    - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5 npm
+    - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
+    - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
+    - sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip
+    - sudo unzip instantclient-sdk-linux.x64-12.2.0.1.0.zip
+    - cd instantclient_12_2
+    - sudo ln -s libclntsh.so.12.1 libclntsh.so
+    - sudo ln -s libocci.so.12.1 libocci.so
+    - export ORACLE_HOME=$(pwd)
+    - export DYLD_LIBRARY_PATH=DYLD_LIBRARY_PATH:$ORACLE_HOME
+    - export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME
+    - cd ./../backend/uclapi
+    - pip3 install $(cat requirements.txt | grep "cx-Oracle")
+    - cp webpack-stats.sample.json ./static/webpack-stats.json
+    script:
+    - python ./manage.py migrate
+    - coverage run --source='.' --omit='*migrations*' manage.py test --testrunner
+      'uclapi.custom_test_runner.NoDbTestRunner' --settings=uclapi.settings_mocked
+    after_success:
+    - codecov
+  - stage: deploy
+    if: branch = master
+    env:
+    - AWS_S3_STATICS=True
+    - AWS_S3_STATICS_CREDENTIALS_ENABLED=False
+    - AWS_S3_BUCKET_NAME=uclapi-static
+    - AWS_S3_BUCKET_PATH=static/
+    - AWS_S3_REGION=eu-west-2
+    before_script:
+    - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
+    - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
+    - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
+    - sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip
+    - sudo unzip instantclient-sdk-linux.x64-12.2.0.1.0.zip
+    - cd instantclient_12_2
+    - sudo ln -s libclntsh.so.12.1 libclntsh.so
+    - sudo ln -s libocci.so.12.1 libocci.so
+    - export ORACLE_HOME=$(pwd)
+    - export DYLD_LIBRARY_PATH=DYLD_LIBRARY_PATH:$ORACLE_HOME
+    - export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME
+    - cd ./../backend/uclapi
+    - pip3 install $(cat requirements.txt | grep "cx-Oracle")
+    - cp webpack-stats.sample.json ./static/webpack-stats.json
+    - cd ../../frontend/
+    - sudo npm install
+    - npm run build
+    script:
+    - cd ../backend/uclapi
+    - "./manage.py collectstatic"
+    - eval "$(ssh-agent -s)"
+    - cd ../..
+    - chmod 600 ./uclapi-staging-1.pem
+    - echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+    - ssh-add ./uclapi-staging-1.pem
+    - ssh $STAGING_BASTION pwd
 before_install:
-- openssl aes-256-cbc -K $encrypted_7e23b3ba1922_key -iv $encrypted_7e23b3ba1922_iv
-  -in uclapi-staging-2-docker.pem.enc -out ~/uclapi-staging-2-docker.pem
-  -d
-- openssl aes-256-cbc -K $encrypted_7e23b3ba1922_key -iv $encrypted_7e23b3ba1922_iv
-  -in uclapi-staging-1.pem.enc -out ~/uclapi-staging-1.pem
-  -d
+  - openssl aes-256-cbc -K $encrypted_7e23b3ba1922_key -iv $encrypted_7e23b3ba1922_iv -in keys.tar.enc -out keys.tar -d
+  - tar xvf secrets.tar
