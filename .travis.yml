@@ -74,16 +74,16 @@ jobs:
         - ./manage.py collectstatic
         - eval "$(ssh-agent -s)"
         - cd ../..
-        - chmod 600 ./uclapi-staging-1.pem
+        - chmod 600 ~/uclapi-staging-1.pem
         - echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-        - ssh-add ./uclapi-staging-2-docker.pem
+        - ssh-add ~/uclapi-staging-1.pem
         - ssh $STAGING_BASTION pwd
         # - ssh $STAGING_BASTION -t "cd ~; ./deploy.sh;"
         # - ssh -J $STAGING_BASTION $STAGING_CRON -t "cd ~; ./deploy.sh;"
 before_install:
 - openssl aes-256-cbc -K $encrypted_7e23b3ba1922_key -iv $encrypted_7e23b3ba1922_iv
-  -in uclapi-staging-2-docker.pem.enc -out ~\/config/UCL-API-Staging/SSH-Key/uclapi-staging-2-docker.pem
+  -in uclapi-staging-2-docker.pem.enc -out ~/uclapi-staging-2-docker.pem
   -d
 - openssl aes-256-cbc -K $encrypted_7e23b3ba1922_key -iv $encrypted_7e23b3ba1922_iv
-  -in uclapi-staging-1.pem.enc -out ~\/config/UCL-API-Staging/SSH-Key/uclapi-staging-1.pem
+  -in uclapi-staging-1.pem.enc -out ~/uclapi-staging-1.pem
   -d
