@@ -119,7 +119,11 @@ class SettingsLayout extends React.Component {
                           {app.active && !isDeleted[i] ? (
                             <>
                               <div className="default tablet">
-                                <CardView width='1-2' type="transparent" noShadow>
+                                <CardView
+                                  width='1-2'
+                                  type="transparent"
+                                  noShadow
+                                >
                                   <TextView text={app.app.name.toUpperCase()}
                                     heading={2}
                                     align={`left`}
@@ -131,10 +135,16 @@ class SettingsLayout extends React.Component {
                                     style={styles.noPadding}
                                   />
                                 </CardView>
-                                <CardView width='1-2' type="transparent" noShadow>
+                                <CardView
+                                  width='1-2'
+                                  type="transparent"
+                                  noShadow
+                                >
                                   <ButtonView
                                     type="alternate"
-                                    onClick={this.handleChange(app.app.client_id, i)}
+                                    onClick={
+                                      this.handleChange(app.app.client_id, i)
+                                    }
                                     text={`Revoke Permissions`}
                                     style={{
                                       float: `right`,
@@ -144,7 +154,11 @@ class SettingsLayout extends React.Component {
                                 </CardView>
                               </div>
                               <div className="mobile">
-                                <CardView width='1-1' type="transparent" noShadow>
+                                <CardView
+                                  width='1-1'
+                                  type="transparent"
+                                  noShadow
+                                >
                                   <TextView text={app.app.name.toUpperCase()}
                                     heading={2}
                                     align={`center`}
@@ -156,10 +170,16 @@ class SettingsLayout extends React.Component {
                                     style={styles.noPadding}
                                   />
                                 </CardView>
-                                <CardView width='1-1' type="transparent" noShadow>
+                                <CardView
+                                  width='1-1'
+                                  type="transparent"
+                                  noShadow
+                                >
                                   <ButtonView
                                     type="alternate"
-                                    onClick={this.handleChange(app.app.client_id, i)}
+                                    onClick={
+                                      this.handleChange(app.app.client_id, i)
+                                    }
                                     text={`Revoke Permissions`}
                                     style={{ cursor: `pointer` }}
                                   />
@@ -184,8 +204,8 @@ class SettingsLayout extends React.Component {
 
     // Add toast to confirm deauthorisation
     const deauthoriseConfirmation = `Are you sure you want to deauthorise `
-      + authorised_apps[index].app.name + `? WARNING: You will `
-      + `need to re-authenticate with the app independently from this page`
+      + authorised_apps[index].app.name + `? It will probably stop working and `
+      + `you'll need to re-authenticate with it again if you want to use it`
     if (confirm(deauthoriseConfirmation)) {
       this.deauthoriseApp(client_id, index)
     }
