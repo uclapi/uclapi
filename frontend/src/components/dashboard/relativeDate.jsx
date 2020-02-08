@@ -36,10 +36,10 @@ class RelativeDate extends React.Component {
     const { date, label } = this.props
     return (
       <div title={
-        dayjs().utc(date).local().format(`dddd, D MMMM YYYY, h:mm:ss a`)
+        dayjs.utc(date).local().format(`dddd, D MMMM YYYY, h:mm:ss a`)
       }
       >
-        {label} {dayjs().utc(date).local().fromNowOrNow()}
+        {label} {dayjs.utc(date).local().fromNowOrNow()}
       </div>
     )
   }
