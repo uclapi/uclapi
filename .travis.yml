@@ -19,7 +19,7 @@ jobs:
   include:
   - stage: test
     before_script:
-    - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5 npm
+    - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
     - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
     - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
     - sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip
@@ -48,7 +48,7 @@ jobs:
     - AWS_S3_BUCKET_PATH=static/
     - AWS_S3_REGION=eu-west-2
     before_script:
-    - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
+    - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5 npm
     - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
     - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
     - sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip
@@ -61,6 +61,7 @@ jobs:
     - export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME
     - cd ./../backend/uclapi
     - pip3 install $(cat requirements.txt | grep "cx-Oracle")
+    - pip3 install awscli
     - cp webpack-stats.sample.json ./static/webpack-stats.json
     - cd ../../frontend/
     - sudo npm install
