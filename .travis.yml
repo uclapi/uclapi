@@ -76,4 +76,4 @@ jobs:
     - ssh $STAGING_BASTION pwd
 before_install:
   - openssl aes-256-cbc -K $encrypted_7e23b3ba1922_key -iv $encrypted_7e23b3ba1922_iv -in keys.tar.enc -out keys.tar -d
-  - tar xvf secrets.tar
+  - tar xvf keys.tar
