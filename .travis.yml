@@ -4,8 +4,6 @@ branches:
   - master
 python:
 - '3.6'
-node_js:
-  - 10.16.0
 dist: bionic
 sudo: required
 cache: pip
@@ -67,6 +65,7 @@ jobs:
     - pip3 install awscli
     - cp webpack-stats.sample.json ./static/webpack-stats.json
     - cd ../../frontend/
+    - nvm use node
     - sudo npm config set strict-ssl false
     - sudo npm install
     - npm run build
