@@ -4,6 +4,8 @@ branches:
   - master
 python:
 - '3.6'
+node_js:
+  - 10.16.0
 dist: bionic
 sudo: required
 cache: pip
