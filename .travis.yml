@@ -64,7 +64,7 @@ jobs:
     - pip3 install awscli
     - cp webpack-stats.sample.json ./static/webpack-stats.json
     - cd ../../frontend/
-    - sudo npm config set strict-ssl fals
+    - sudo npm config set strict-ssl false
     - sudo npm install
     - npm run build
     script:
