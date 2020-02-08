@@ -7,15 +7,16 @@ class LogInLayout extends React.Component {
     url: PropTypes.string,
   }
 
-  render () {
+  render() {
+    const { url } = this.props
     return <div className="log-in-layout">
-        <div className="container">
-          <h1>Sign in to manage app settings</h1>
-          <a href={this.props.url}>
-            <RaisedButton label="Log in" primary />
-          </a>
-        </div>
+      <div className="container">
+        <h1>Sign in to manage app settings</h1>
+        <a href={url}>
+          <RaisedButton label="Log in" primary />
+        </a>
       </div>
+    </div>
   }
 }
 
