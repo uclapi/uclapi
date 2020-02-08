@@ -65,10 +65,10 @@ jobs:
     - pip3 install awscli
     - cp webpack-stats.sample.json ./static/webpack-stats.json
     - cd ../../frontend/
-    - nvm use node
+    - sudo nvm use node
     - sudo npm config set strict-ssl false
     - sudo npm install
-    - npm run build
+    - sudo npm run build
     script:
     - cd ../backend/uclapi
     - "./manage.py collectstatic"
