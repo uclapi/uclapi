@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'user/data$', views.userdata),
     url(r'user/studentnumber$', views.get_student_number),
     url(r'deauthorise$', views.deauthorise_app),
+    url(r'logout$', views.logout),
 ]

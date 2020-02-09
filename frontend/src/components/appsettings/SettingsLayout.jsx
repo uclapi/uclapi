@@ -61,20 +61,41 @@ class SettingsLayout extends React.Component {
           />
 
           <CardView width='1-1' type='default' noPadding>
-            <Row height='fit-content' noPadding style={{ padding: `20px` }}>
+            <Row noPadding>
               <Column width='1-1' horizontalAlignment='center' >
-                <TextView
-                  text={fullname}
-                  heading={2}
-                  align={`left`}
-                  style={styles.noPadding}
-                />
-                <TextView
-                  text={department}
-                  heading={4}
-                  align={`left`}
-                  style={styles.noPadding}
-                />
+                <CardView
+                  width='1-2'
+                  type="transparent"
+                  noShadow
+                >
+                  <TextView
+                    text={fullname}
+                    heading={2}
+                    align={`left`}
+                    style={styles.noPadding}
+                  />
+                  <TextView
+                    text={department}
+                    heading={4}
+                    align={`left`}
+                    style={styles.noPadding}
+                  />
+                </CardView>
+                <CardView
+                  width='1-2'
+                  type="transparent"
+                  noShadow
+                >
+                  <ButtonView
+                    type="alternate"
+                    link={`\logout`}
+                    text={`Logout`}
+                    style={{
+                      float: `right`,
+                      cursor: `pointer`,
+                    }}
+                  />
+                </CardView>
               </Column>
             </Row>
           </CardView>
@@ -208,6 +229,14 @@ class SettingsLayout extends React.Component {
       + `you'll need to re-authenticate with it again if you want to use it`
     if (confirm(deauthoriseConfirmation)) {
       this.deauthoriseApp(client_id, index)
+    }
+  }
+
+  logout = () => {
+    if (confirm("Are you sure you want to logout")) {
+      let path = `/logout`;
+      let history = useHistory();
+      history.push(path);
     }
   }
 

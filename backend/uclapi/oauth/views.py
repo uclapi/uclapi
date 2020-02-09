@@ -759,3 +759,10 @@ def deauthorise_app(request):
     })
     response.status_code = 200
     return response
+
+
+@ensure_csrf_cookie
+def logout(request):
+    response = redirect('/')
+    response.delete_cookie('user_id')
+    return response
