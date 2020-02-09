@@ -54,17 +54,6 @@ export const styles = {
     color: `white`,
     fontWeight: `300`,
   },
-  button: {
-    height: `40px`,
-    maxWidth: `40px`,
-    minWidth: `40px`,
-    float: `right`,
-    margin: `5px`,
-    marginLeft: `5px`,
-  },
-  buttonIcon: {
-    marginTop: `8px`,
-  },
   fieldHolder: {
     height: `50px`,
     paddingBottom: `20px`,

@@ -11,10 +11,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Modal from 'react-modal'
 
-import { CheckBoxView, editIcon, cancelIcon, Field, OverlayBox } from 'Dashboard/DashboardUI.jsx'
+import { CheckBoxView, Field, OverlayBox } from 'Dashboard/DashboardUI.jsx'
 import { styles } from 'Layout/data/dashboard_styles.jsx'
+
 // Components
 import { CardView, Column, Footer, NavBar, Row, TextView, ButtonView } from 'Layout/Items.jsx'
+import { editIcon, cancelIcon } from 'Layout/Icons.jsx'
 
 const defaultHeaders = {
   'Content-Type': `application/x-www-form-urlencoded`,
@@ -47,8 +49,8 @@ const Title = (size, title, created, updated, isEditing, toggleEditTitle, saveEd
               align={size===`mobile` ? `center` : `left`} 
               style={styles.titleText}
             />
-            {editIcon(toggleEditTitle)} 
-            {cancelIcon(deleteApp, true)} 
+            {editIcon(toggleEditTitle, {float: `left`})} 
+            {cancelIcon(deleteApp, {float: `left`})} 
           </>
         ) : (
           <>

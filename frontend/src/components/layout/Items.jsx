@@ -13,8 +13,10 @@ import CodeView from './views/CodeView.jsx'
 import ImageView from './views/ImageView.jsx'
 // Views
 import TextView from './views/TextView.jsx'
+import Field from './views/Field.jsx'
 
 export {
+    Field,
     Row,
     Column,
     TextView, 
