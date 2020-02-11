@@ -174,7 +174,10 @@ export default class CardView extends React.Component {
     const fraction = this.props.width.split(`-`)
     let adaptation = 100 - (4 * fraction[1])
 
-    if(this.props.noPadding) { adaptation = 100 }
+    if(this.props.noPadding) { 
+      adaptation = 100 
+      this.setStyleKeyValuePair(`margin`, `0`)
+    }
 
     const percentage = fraction[0] / fraction[1] * adaptation
     return percentage + `%`

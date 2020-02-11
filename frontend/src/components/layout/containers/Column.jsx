@@ -102,7 +102,8 @@ export default class Column extends React.Component {
         break
 
       case `center`:
-        this.setStyleKeyValuePair(`margin`, `auto`)
+        this.setStyleKeyValuePair(`marginLeft`, `auto`)
+        this.setStyleKeyValuePair(`marginRight`, `auto`)
         break
 
       case `right`:

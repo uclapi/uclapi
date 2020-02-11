@@ -33,7 +33,7 @@ export default class TextView extends React.Component {
     // Set type of button
     this.style = []
     // If custom styling then include
-    if (this.props.style) { this.style = this.props.style }
+    if (this.props.style) { this.style = {...this.props.style} }
     // Set up button tags
     this.setTheme()
 

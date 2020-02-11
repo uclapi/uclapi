@@ -665,7 +665,7 @@ def my_apps(request):
         url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
         param = urllib.parse.urljoin(
             request.build_absolute_uri(request.path),
-            "/shibcallback"
+            "/oauth/myapps/shibcallback"
         )
         param = quote(param)
         url = url + param
@@ -758,4 +758,11 @@ def deauthorise_app(request):
         "message": "App successfully deauthorised."
     })
     response.status_code = 200
+    return response
+
+
+@ensure_csrf_cookie
+def logout(request):
+    response = redirect('/')
+    response.delete_cookie('user_id')
     return response
