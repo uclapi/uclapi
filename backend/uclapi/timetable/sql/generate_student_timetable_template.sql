@@ -252,8 +252,8 @@ SELECT rb.startdatetime     as startdatetime,
        string_agg(DISTINCT rb.condisplayname, ' / ') as condisplayname,
        tes.modgrpcode       as modgrpcode,
        tes.instcode         as instcode,
-       CASE WHEN tt.siteid IS NOT NULL THEN tt.siteid ELSE rb.siteid::TEXT END as siteid,
-       CASE WHEN tt.roomid IS NOT NULL THEN tt.roomid ELSE rb.roomid::TEXT END as roomid,
+       COALESCE(tt.siteid, rb.siteid) as siteid,
+       COALESCE(tt.roomid, rb.roomid) as roomid,
        sites.sitename       as sitename,
        rooms.roomname       as roomname,
        rooms.capacity       as roomcapacity,
@@ -271,15 +271,15 @@ FROM timetable_timetable{{ bucket_id | sqlsafe }} tt
 INNER JOIN tt_tmp_events_slot_id tes
     ON tt.slotid = tes.slotid
     AND tt.setid = tes.setid
--- The classifications table provides a mapping between a session type and its human readable string.
--- Note that the session type is either tt.moduletype, or tt.classif if tt.moduletype is NULL.
--- AFAICT tt.moduletype is only NULL if the event is not aligned to a specfic module.
--- e.g. LAB -> Labaratory Session; T -> Tutorial; L -> Lecture; (tt.moduletype IS NOT NULL)
--- e.g. TO1 -> Teaching; (tt.moduletype IS NULL)
+    -- The classifications table provides a mapping between a session type and its human readable string.
+    -- Note that the session type is either tt.moduletype, or tt.classif if tt.moduletype is NULL.
+    -- AFAICT tt.moduletype is only NULL if the event is not aligned to a specfic module.
+    -- e.g. LAB -> Labaratory Session; T -> Tutorial; L -> Lecture; (tt.moduletype IS NOT NULL)
+    -- e.g. TO1 -> Teaching; (tt.moduletype IS NULL)
 LEFT OUTER JOIN timetable_classifications{{ bucket_id | sqlsafe }} classifications
     ON tt.setid = classifications.setid
-	AND classifications.classid = tt.moduletype
-	AND classifications.type = 'MOD_TYPE'
+    AND classifications.classid = COALESCE(tt.moduletype, tt.classif)
+    AND classifications.type = CASE WHEN tt.moduletype IS NULL THEN 'TT_SLOT' ELSE 'MOD_TYPE' END
 LEFT OUTER JOIN roombookings_booking{{ bucket_id | sqlsafe }} rb
     ON tt.slotid = rb.slotid
     AND tt.setid  = rb.setid
@@ -288,10 +288,10 @@ LEFT OUTER JOIN timetable_cminstances{{ bucket_id | sqlsafe }} ci
     AND tt.setid  = ci.setid 
 LEFT JOIN timetable_module{{ bucket_id | sqlsafe }} m
     ON m.moduleid = tes.moduleid
-	-- Comparision with instid is necessary as a module may have different names between instances.
-	-- e.g. STAT0007-A6U-T2 -> Stochastic Processes; 19/20
-	-- e.g. STAT0007-A5U-T2 -> Introduction to Applied Probability; 19/20
-	AND m.instid = tt.instid
+    -- Comparision with instid is necessary as a module may have different names between instances.
+    -- e.g. STAT0007-A6U-T2 -> Stochastic Processes; 19/20
+    -- e.g. STAT0007-A5U-T2 -> Introduction to Applied Probability; 19/20
+    AND m.instid = tt.instid
     AND m.setid    = tes.setid
 LEFT OUTER JOIN timetable_depts{{ bucket_id | sqlsafe }} depts
     ON depts.deptid = tt.deptid
@@ -299,12 +299,12 @@ LEFT OUTER JOIN timetable_lecturer{{ bucket_id | sqlsafe }} lecturer
     ON lecturer.lecturerid = tt.lecturerid
     AND lecturer.setid      = tes.setid
 LEFT OUTER JOIN timetable_sites{{ bucket_id | sqlsafe }} sites
-	ON sites.siteid = CASE WHEN tt.siteid IS NOT NULL THEN tt.siteid ELSE rb.siteid::TEXT END
+    ON sites.siteid = COALESCE(tt.siteid, rb.siteid)
     AND sites.setid  = tes.setid
 LEFT OUTER JOIN roombookings_room{{ bucket_id | sqlsafe }} rooms
     -- Sometimes the timetable doesn't contain the location, in that case, hopefully the booking will.
-    ON rooms.roomid = CASE WHEN tt.roomid IS NOT NULL THEN tt.roomid ELSE rb.roomid::TEXT END
-    AND rooms.siteid = CASE WHEN tt.siteid IS NOT NULL THEN tt.siteid ELSE rb.siteid::TEXT END
+    ON rooms.roomid = COALESCE(tt.roomid, rb.roomid)
+    AND rooms.siteid = COALESCE(tt.siteid, rb.siteid)
     AND rooms.setid  = tes.setid
 WHERE (
         (tt.weekday IS NOT NULL)
@@ -332,8 +332,8 @@ GROUP BY rb.startdatetime,
             classifications.name,
             tes.modgrpcode,
             tes.instcode,
-            CASE WHEN tt.siteid IS NOT NULL THEN tt.siteid ELSE rb.siteid::TEXT END,
-            CASE WHEN tt.roomid IS NOT NULL THEN tt.roomid ELSE rb.roomid::TEXT END,
+            COALESCE(tt.siteid, rb.siteid::TEXT),
+            COALESCE(tt.roomid, rb.roomid::TEXT),
             sites.sitename,
             rooms.roomname,
             rooms.capacity,
