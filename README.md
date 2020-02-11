@@ -7,7 +7,7 @@ UCL API started as a **student-built** platform for **student developers** to im
 Create a ridiculously simple, documentation first, and comprehensive API around UCL's digital services and establish an ecosystem of third party UCL apps and services that use the API.
 
 ### Interested in using it?
-Find out more at our [website](https://uclapi.com)
+Find out more at our [website](https://uclapi.com)!
 
 ### Interested in helping build it?
 Read on more to find out how to setup and build the API. From here you can start writing your own changes and submitting them. See our [Contribution Guide](CONTRIBUTING.md) to learn more about how you can contribute.
@@ -21,6 +21,8 @@ We only support development under Linux. macOS is unofficially supported, and we
 Note that since the Creators Update (which includes 16.04.2; if you have not upgraded from Ubuntu 14 then there are tutorials online to do this) we have experienced zero issues building and running under Bash on Ubuntu on Windows.
 
 ### Install Dependencies
+We provide this simple command to install most of the dependencies using the apt package manager (standard on ubuntu, debian etc...). If not using this package manager you will have to find the package names for your distro yourself. The base depenencies are postgres, python3, virtual environments for python, nodejs, npm, redis and some kernel modules for async and regular expressions. The rest are for making the installiion easier such as git, curl, wget and sed. These allow you to follow this readme much easier.
+
 ```
 sudo apt-get -y install git curl libpq-dev libpq5 libpython3-dev \
     python3 python3-pip python3-virtualenv python-virtualenv \
@@ -36,6 +38,7 @@ sudo service redis-server start
 
 ### Set up Oracle (Linux)
 ```bash
+#! /bin/bash
 # Oracle Version
 ORACLE_VERSION=12_2
 ORACLE_SO_VERSION=12.1
@@ -51,8 +54,8 @@ rm -rf /opt/oracle/instantclient_$ORACLE_VERSION
 wget -O instantclient.zip "$ORACLE_INSTANTCLIENT_BASIC_URL"
 wget -O instantclientsdk.zip "$ORACLE_INSTANTCLIENT_SDK_URL"
 
-sudo unzip -d/opt/oracle temp/instantclient.zip
-sudo unzip -d/opt/oracle temp/instantclientsdk.zip
+sudo unzip -d/opt/oracle instantclient.zip
+sudo unzip -d/opt/oracle instantclientsdk.zip
 
 export ORACLE_HOME=/opt/oracle/instantclient_$ORACLE_VERSION
 
@@ -186,6 +189,8 @@ popd
 ### Install PostgreSQL
 Setting this up will vary based on your operating system. It is perfectly possible to just use the Windows version of Postgres and run it under Windows whilst running the rest of the code under Linux. If you are working on Linux or macOS directly then you should install PostgreSQL and then reset the `postgres` account password to one you know and can save in the .env later.
 
+An example guide for this for ubuntu is found [Here](https://tecadmin.net/install-postgresql-server-on-ubuntu/)
+
 #### Create the required tables
 
 Now we have PostgreSQL installed we can create some empty databases so we can complete the migrations later. There are two required, uclapi_default, and uclapi_gencache if you are using the environment variables below. These can be created by accessing the postgreSQL command prompt with the command ```psql``` and then running ```create database uclapi_default;``` and then ```create database uclapi_gencache;```
@@ -245,8 +250,6 @@ pushd uclapi/backend/uclapi
 ./manage.py migrate --database gencache
 ./manage.py create_lock
 ./manage.py update_gencache
-./manage.py create_timetable_lock
-./manage.py update_timetable_gencache
 ./manage.py feed_occupeye_cache
 deactivate
 popd

@@ -1,7 +1,7 @@
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import Divider from 'material-ui/Divider'
 import Drawer from 'material-ui/Drawer'
-import {List, ListItem, makeSelectable} from 'material-ui/List'
+import { List, ListItem, makeSelectable } from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
 import React from 'react'
 
@@ -35,7 +35,6 @@ const menuContents = (
           <ListItem primaryText="Get Your API Key" key="Get Your API Key" href="#get-api-key" />,
           <ListItem primaryText="API Rate Limits" key="API Rate Limits" href="#api-rate-limits" />,
           <ListItem primaryText="API Data Freshness" key="API Data Freshness" href="#api-expiry-times" />,
-          <ListItem primaryText="Version Information" key="Version Information" href="#version-information" />,
         ]}
       />
 
@@ -250,7 +249,7 @@ export default class Sidebar extends React.Component {
 
   toggleOpen() {
     this.setState({
-      isOpen : !this.state.isOpen,
+      isOpen: !this.state.isOpen,
     })
   }
 
@@ -262,21 +261,23 @@ export default class Sidebar extends React.Component {
           <Drawer
             open
             containerStyle={{ top: 61 }}
-          >  
+          >
             {menuContents}
-          </Drawer>  
+          </Drawer>
         </div>
-        <div className={`mobile tablet`}> 
+        <div className={`mobile tablet`}>
           <ButtonView text={`≡`}
-            onClick={this.toggleOpen} 
-            style={{ left : `2px`,
-padding : `15px 20px`,
-top: `62px`,
-position : `fixed`,
-borderRadius : `50px`,
-cursor : `pointer` }}
+            onClick={this.toggleOpen}
+            style={{
+              left: `2px`,
+              padding: `15px 20px`,
+              top: `62px`,
+              position: `fixed`,
+              borderRadius: `50px`,
+              cursor: `pointer`,
+            }}
           />
-          
+
           <SwipeableDrawer
             open={this.state.isOpen}
             onClose={this.toggleOpen}
