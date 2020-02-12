@@ -11,11 +11,11 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Modal from 'react-modal'
 
-import { CheckBoxView, Field, OverlayBox } from 'Dashboard/DashboardUI.jsx'
+import { CheckBoxView, OverlayBox } from 'Dashboard/DashboardUI.jsx'
 import { styles } from 'Layout/data/dashboard_styles.jsx'
 
 // Components
-import { CardView, Column, Footer, NavBar, Row, TextView, ButtonView } from 'Layout/Items.jsx'
+import { CardView, Column, Footer, NavBar, Row, TextView, ButtonView, Field} from 'Layout/Items.jsx'
 import { editIcon, cancelIcon } from 'Layout/Icons.jsx'
 
 const defaultHeaders = {

@@ -62,14 +62,21 @@ export default class Field extends React.component {
 		super(props)
 
 		const { content } = this.props
+		this.save = this.save.bind(this)
+
+		const fieldRefA = React.createRef()
+		const fieldRefB = React.createRef()
 
 		this.state = {
-			persistedValue: content
+			persistedValue: content,
+			fieldRefA: fieldRefA,
+			fieldRefB: fieldRefB,
 		}
 	}
 
 	save(shouldPersist) {
 		const newValue = fieldRefA
+		const { icons } = this.props
 
 		// Call the save button action passed in via the props
 		icons.save.action(fieldRefA, shouldPersist)
@@ -78,11 +85,8 @@ export default class Field extends React.component {
 
 	render() {
 		const { readonly, icons, meta, title, content } = this.props
-		const { isSaved } = this.state
-
-		const fieldRefA = React.createRef()
-		const fieldRefB = React.createRef()
-
+		const { isSaved, fieldRefA, fieldRefB } = this.state
+		
 		const unsavedColor = `#db4534`
 		const savedColor = `#3498DB`
 
