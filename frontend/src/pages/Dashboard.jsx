@@ -54,10 +54,13 @@ const Title = (size, title, created, updated, isEditing, toggleEditTitle, saveEd
           </>
         ) : (
           <>
-            { Field(`Title: `, title, {
-              save: {action: saveEditTitle},
-              cancel: {action: cancelEditTitle},
-            }, {isSmall: true} ) }
+            <Field
+              title="title: "
+              content={title}
+              onSave={saveEditTitle}
+              onCancel={cancelEditTitle}
+              isSmall={true}
+            />
           </>
         )
       }
@@ -86,8 +89,6 @@ class Dashboard extends React.Component {
     this.saveEditTitle = this.saveEditTitle.bind(this)
     this.cancelEditTitle = this.cancelEditTitle.bind(this)
 
-    this.copyToClipBoard = this.copyToClipBoard.bind(this)
-    
     this.regenToken = this.regenToken.bind(this)
     this.regenVerificationSecret = this.regenVerificationSecret.bind(this)
 
@@ -148,7 +149,6 @@ class Dashboard extends React.Component {
 
     const actions = {
       toggleEditTitle: this.toggleEditTitle,
-      copyToClipBoard: this.copyToClipBoard,
       regenToken: this.regenToken,
       regenVerificationSecret: this.regenVerificationSecret,
       webhook: {
@@ -236,10 +236,12 @@ class Dashboard extends React.Component {
                     
                     <Row styling='transparent' noPadding>
                       <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
-                        { Field(`API Token: `, app.token, {
-                          copy: {action: actions.copyToClipBoard},
-                          refresh: {action: () => { actions.regenToken(index) } },
-                        }, {} ) }
+                        <Field
+                          title="API Token: "
+                          content={app.token}
+                          canCopy
+                          onRefresh={ () => { actions.regenToken(index) } }
+                        />
                       </CardView>
                     </Row>
                     <Row styling='transparent' noPadding>
@@ -254,15 +256,22 @@ class Dashboard extends React.Component {
                                     align={`left`} 
                                     style={styles.oauthTitles}
                                   />
-                                  { Field(`Client ID: `, app.oauth.client_id, {
-                                    copy: {action: actions.copyToClipBoard},
-                                  }, {} ) }
-                                  { Field(`Client Secret: `, app.oauth.client_secret, {
-                                    copy: {action: actions.copyToClipBoard},
-                                  }, {} ) }
-                                  { Field(`Callback URL: `, app.oauth.callback_url == `` ? `https://` : app.oauth.callback_url, {
-                                    save: {action: (reference, shouldPersist) => { actions.saveOAuthCallback(index, reference.current.value, shouldPersist) } },
-                                  }, {isNotSaved: app.oauth.callback_url != savedData[index].callback_url} ) }
+                                  <Field
+                                    title="Client ID: "
+                                    content={app.oauth.client_id}
+                                    canCopy
+                                  />
+                                  <Field
+                                    title="Client Secret: "
+                                    content={app.oauth.client_secret}
+                                    canCopy
+                                  />
+                                  <Field
+                                    title="Callback Url: "
+                                    content={app.oauth.callback_url == '' ? 'https://' : app.oauth.callback_url}
+                                    canCopy
+                                    onSave={(reference, shouldPersist) => { actions.saveOAuthCallback(index, reference.current.value, shouldPersist) }}
+                                  />
                                 </CardView>
                               </Row>
                               <Row styling='transparent' noPadding>
@@ -280,22 +289,32 @@ class Dashboard extends React.Component {
                             <Panel header={`> Webhook Settings`} showArrow>
                               <Row styling='transparent' noPadding>
                                 <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
-                                  { Field(`Verification Secret:`, app.webhook.verification_secret, {
-                                    copy: {action: actions.copyToClipBoard},
-                                    refresh: {action: () => { actions.regenVerificationSecret(index) } },
-                                  }, {} ) }
-                                  { Field(`Webhook URL:`, app.webhook.url==`` ? `https://` : app.webhook.url, {
-                                    save: {action: (reference, shouldPersist) => { actions.webhook.saveURL(index, reference.current.value, shouldPersist) } },
-                                  }, {isNotSaved: app.webhook.url != savedData[index].url} ) }
-                                  { Field(`'siteid' (optional):`, app.webhook.siteid, {
-                                    save: {action: (reference, shouldPersist) => { actions.webhook.saveSiteID(index, reference.current.value, shouldPersist) } },
-                                  }, {isNotSaved: app.webhook.siteid != savedData[index].siteid} ) }
-                                  { Field(`'roomid' (optional):`, app.webhook.roomid, {
-                                    save: {action: (reference, shouldPersist) => { actions.webhook.saveRoomID(index, reference.current.value, shouldPersist) } },
-                                  }, {isNotSaved: app.webhook.roomid != savedData[index].roomid} ) }
-                                  { Field(`Contact (optional):`, app.webhook.contact, {
-                                    save: {action: (reference, shouldPersist) => { actions.webhook.saveContact(index, reference.current.value, shouldPersist) } },
-                                  }, {isNotSaved: app.webhook.contact != savedData[index].contact} ) }
+                                  <Field
+                                    title="Verification Secret: "
+                                    content={app.webhook.verification_secret}
+                                    canCopy
+                                    onRefresh={() => { actions.regenVerificationSecret(index) }}
+                                  />
+                                  <Field
+                                    title="Webhook URL: "
+                                    content={app.webhook.url=='' ? 'https://' : app.webhook.url}
+                                    onSave={(reference, shouldPersist) => { actions.webhook.saveURL(index, reference.current.value, shouldPersist) } }
+                                  />
+                                  <Field
+                                    title="'siteid' (optional):"
+                                    content={app.webhook.siteid}
+                                    onSave={(reference, shouldPersist) => { actions.webhook.saveSiteID(index, reference.current.value, shouldPersist) }}
+                                  />
+                                  <Field
+                                    title="'roomid' (optional):"
+                                    content={app.webhook.roomid}
+                                    onSave={(reference, shouldPersist) => { actions.webhook.saveRoomID(index, reference.current.value, shouldPersist) }}
+                                  />
+                                  <Field
+                                    title="Contact (optional):"
+                                    content={app.webhook.contact}
+                                    onSave={(reference, shouldPersist) => { actions.webhook.saveContact(index, reference.current.value, shouldPersist) }}
+                                  />
                                 </CardView>
                               </Row>
                             </Panel>
@@ -468,22 +487,6 @@ class Dashboard extends React.Component {
     updatedData.apps[index].oauth.scopes[scope].enabled = value
 
     this.setState({ data: updatedData })
-  }
-
-  copyToClipBoard(e, reference){
-    e.preventDefault()
-
-    if(this.DEBUGGING) { console.log(`Copy to clipboard`) }
-    if(this.DEBUGGING) { console.log(reference) }
-    if(this.DEBUGGING) { console.log(e) }
-
-    reference.current.select()
-    
-    try {
-      document.execCommand(`copy`)
-    }catch (err) {
-      alert(`please press Ctrl/Cmd+C to copy`)
-    }
   }
 
   regenToken(index) {

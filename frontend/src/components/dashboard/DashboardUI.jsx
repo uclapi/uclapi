@@ -3,7 +3,7 @@ import React from 'react'
 import { styles } from 'Layout/data/dashboard_styles.jsx'
 
 import { CardView, CheckBox, ImageView, TextView, 
-  ButtonView, Row, Column} from 'Layout/Items.jsx'
+  ButtonView, Row, Column, Field} from 'Layout/Items.jsx'
 
 import { clipboardIcon, refreshIcon, editIcon, 
   saveIcon, cancelIcon } from 'Layout/Icons.jsx'
@@ -106,6 +106,5 @@ export class OverlayBox extends React.Component {
 
 export default {
   CheckBoxView,
-  Field,
   OverlayBox
 }

@@ -12,7 +12,7 @@ import saveImage from 'Images/dashboard/save.svg'
 import deleteImage from 'Images/dashboard/trash.svg'
 
 /** COPY **/
-export const clipboardIcon = (onClick, style) => <Icon image={clipboardImage} description="copy token to clipboard" onClick={onClick} style={style} />
+export const copyIcon = (onClick, style) => <Icon image={clipboardImage} description="copy token to clipboard" onClick={onClick} style={style} />
 
 /** REFRESH **/
 export const refreshIcon = (onClick, style) => <Icon image={refreshImage} description="refresh token" onClick={onClick} style={style} />
