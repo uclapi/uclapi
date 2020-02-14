@@ -39,8 +39,6 @@ export default class Icon extends React.Component {
   render() {
     const { image, description, onClick, style } = this.props
 
-    if(typeof onClick === `undefined`) { onClick = null; }
-
     return (
       <div className='icon-wrapper' onClick={onClick}>
         <CardView width='1-3' type='emphasis' style={{...styles.button, ...style}} fakeLink>

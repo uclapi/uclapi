@@ -38,32 +38,16 @@ const Dates = (created, updated, alignment) => (
   </>
 )
 
-const Title = (size, title, created, updated, isEditing, toggleEditTitle, saveEditTitle, cancelEditTitle, deleteApp) => {
+const Title = (size, title, created, updated, isEditing, saveEditTitle, deleteApp) => {
   return (
   <Row styling='transparent' noPadding>
     <CardView width={size===`mobile` ? `1-1` : `1-2`} minWidth="140px" type="no-bg" style={styles.squareCard} snapAlign>
-      { !isEditing ? (
-          <>
-            <TextView text={title}
-              heading={2}
-              align={size===`mobile` ? `center` : `left`} 
-              style={styles.titleText}
-            />
-            {editIcon(toggleEditTitle, {float: `left`})} 
-            {cancelIcon(deleteApp, {float: `left`})} 
-          </>
-        ) : (
-          <>
-            <Field
-              title="title: "
-              content={title}
-              onSave={saveEditTitle}
-              onCancel={cancelEditTitle}
-              isSmall={true}
-            />
-          </>
-        )
-      }
+      <Field
+        title="title: "
+        content={title}
+        onSave={saveEditTitle}
+        isSmall={true}
+      />
     </CardView>
     <CardView width={size===`mobile` ? `1-1` : `1-2`} minWidth="140px" type="no-bg" snapAlign style={styles.rowItem}>
       {size===`mobile` ? (
@@ -85,9 +69,7 @@ class Dashboard extends React.Component {
 
     this.timeSince = this.timeSince.bind(this)
     
-    this.toggleEditTitle = this.toggleEditTitle.bind(this)
     this.saveEditTitle = this.saveEditTitle.bind(this)
-    this.cancelEditTitle = this.cancelEditTitle.bind(this)
 
     this.regenToken = this.regenToken.bind(this)
     this.regenVerificationSecret = this.regenVerificationSecret.bind(this)
@@ -121,23 +103,7 @@ class Dashboard extends React.Component {
       }
     })
 
-    const savedData = []
-    window.initialData.apps.map( (app) => {
-      savedData.push(
-        {
-          name: app.name,
-          url: app.webhook.url,
-          contact: app.webhook.contact,
-          siteid: app.webhook.siteid,
-          roomid: app.webhook.roomid,
-          callback_url: app.oauth.callback_url,
-          editName: false,
-        }
-      )
-    })
-
     this.state = { 
-      savedData: savedData,
       data: window.initialData,
       view: `default`,
       toDelete: -1,
@@ -145,7 +111,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { data: { name, cn, apps }, editName, savedData, view, toDelete} = this.state 
+    const { data: { name, cn, apps }, view, toDelete} = this.state 
 
     const actions = {
       toggleEditTitle: this.toggleEditTitle,
@@ -164,6 +130,8 @@ class Dashboard extends React.Component {
       addNewProject: this.addNewProject,
       deleteProject: this.deleteProject,
     }
+
+    if(this.DEBUGGING) { console.log("re-rendered dashboard") }
 
     return (
       <>
@@ -225,13 +193,11 @@ class Dashboard extends React.Component {
 
                 return (
                   <CardView width='1-1' type='default' key={index} noPadding style={{ margin: `25px 0` }} >
-                    <div className="default tablet"> { Title(`not-mobile`, app.name, created, updated, savedData[index].editName, 
-                      () => { actions.toggleEditTitle(index) }, (reference, shouldPersist) => { actions.saveEditTitle(index, reference.current.value, shouldPersist) },
-                      () => { actions.cancelEditTitle(index) },
+                    <div className="default tablet"> { Title(`not-mobile`, app.name, created, updated, app.editName, 
+                      (value) => { actions.saveEditTitle(index, value) },
                       () => { this.setState({ view: `delete-project`, toDelete: index }) } )}</div>
-                    <div className="mobile"> { Title(`mobile`, app.name, created, updated, savedData[index].editName,
-                      () => { actions.toggleEditTitle(index) }, (reference, shouldPersist) => { actions.saveEditTitle(index, reference.current.value, shouldPersist) },
-                      () => { actions.cancelEditTitle(index) },
+                    <div className="mobile"> { Title(`mobile`, app.name, created, updated, app.editName, 
+                      (value) => { actions.saveEditTitle(index, value) },
                       () => { this.setState({ view: `delete-project`, toDelete: index }) } )}</div>
                     
                     <Row styling='transparent' noPadding>
@@ -270,7 +236,7 @@ class Dashboard extends React.Component {
                                     title="Callback Url: "
                                     content={app.oauth.callback_url == '' ? 'https://' : app.oauth.callback_url}
                                     canCopy
-                                    onSave={(reference, shouldPersist) => { actions.saveOAuthCallback(index, reference.current.value, shouldPersist) }}
+                                    onSave={(value) => { actions.saveOAuthCallback(index, value) }}
                                   />
                                 </CardView>
                               </Row>
@@ -298,22 +264,22 @@ class Dashboard extends React.Component {
                                   <Field
                                     title="Webhook URL: "
                                     content={app.webhook.url=='' ? 'https://' : app.webhook.url}
-                                    onSave={(reference, shouldPersist) => { actions.webhook.saveURL(index, reference.current.value, shouldPersist) } }
+                                    onSave={(value) => { actions.webhook.saveURL(index, value) } }
                                   />
                                   <Field
                                     title="'siteid' (optional):"
                                     content={app.webhook.siteid}
-                                    onSave={(reference, shouldPersist) => { actions.webhook.saveSiteID(index, reference.current.value, shouldPersist) }}
+                                    onSave={(value) => { actions.webhook.saveSiteID(index, value) }}
                                   />
                                   <Field
                                     title="'roomid' (optional):"
                                     content={app.webhook.roomid}
-                                    onSave={(reference, shouldPersist) => { actions.webhook.saveRoomID(index, reference.current.value, shouldPersist) }}
+                                    onSave={(value) => { actions.webhook.saveRoomID(index, value) }}
                                   />
                                   <Field
                                     title="Contact (optional):"
                                     content={app.webhook.contact}
-                                    onSave={(reference, shouldPersist) => { actions.webhook.saveContact(index, reference.current.value, shouldPersist) }}
+                                    onSave={(value) => { actions.webhook.saveContact(index, value) }}
                                   />
                                 </CardView>
                               </Row>
@@ -347,25 +313,11 @@ class Dashboard extends React.Component {
       let newApp = json.app
       newApp['name'] = name
 
-      const { data: { apps }, savedData } = this.state
+      const { data: { apps } } = this.state
       apps.push(newApp)
-
-      // Update the saved data aswell
-      savedData.push(
-        {
-          name: newApp.name,
-          url: newApp.webhook.url,
-          contact: newApp.webhook.contact,
-          siteid: newApp.webhook.siteid,
-          roomid: newApp.webhook.roomid,
-          callback_url: newApp.oauth.callback_url,
-          editName: false,
-        }
-      )
 
       // Go to new state visually
       this.setState({
-        savedData: savedData,
         view: `default`, 
         data: {...this.state.data, apps: apps}
       })
@@ -373,7 +325,7 @@ class Dashboard extends React.Component {
   }
 
   deleteProject(index) {
-    const { data: { apps }, savedData } = this.state 
+    const { data: { apps } } = this.state
 
     this.queryDashboardAPI(`/dashboard/api/delete/`, `app_id=` + apps[index].id, (json) => {
       // For debugging
@@ -381,82 +333,42 @@ class Dashboard extends React.Component {
 
       // Remove the deleted app
       apps.splice(index, 1)
-      savedData.splice(index, 1)
 
       // Go to new state visually
       this.setState({  
         toDelete: -1,
-        savedData: savedData,
         view: `default`, 
         data: {...this.state.data, apps: apps}
       })
     })
   }
 
-  cancelEditTitle(index) {
-    const updatedData = {...this.state.data}
-    updatedData.apps[index].name = this.state.savedData[index].name
-
-    this.setState({ data: updatedData })
-    this.toggleEditTitle(index)
-  }
-
-  saveEditTitle(index, value, shouldPersist) {
+  saveEditTitle(index, value) {
     const updatedData = {...this.state.data}
     updatedData.apps[index].name = value
 
-    if(shouldPersist  && this.state.savedData[index].editName==true) {
-      const updatedSavedData = this.state.savedData
-      updatedSavedData[index].name = value
-
-      // Send request
-      const { data: { apps } } = this.state
-      
-      this.queryDashboardAPI(`/dashboard/api/rename/`, `new_name=` + value + `&app_id=` + apps[index].id, (json) => {
-        if(this.DEBUGGING) { console.log(json) }
-      })
-      
-      this.setState({ 
-        data: updatedData,
-        savedData: updatedSavedData,
-      })
-      this.toggleEditTitle(index)
-    } else {
-      this.setState({ data: updatedData })
-    }
-  }
-
-  toggleEditTitle(index) {
-    if(this.DEBUGGING) { console.log("edit title: " + index) }
-
-    const updatedSavedData = this.state.savedData
-    updatedSavedData[index].editName = !updatedSavedData[index].editName
+    // Send request
+    const { data: { apps } } = this.state
     
-    this.setState({savedData: updatedSavedData})
+    this.queryDashboardAPI(`/dashboard/api/rename/`, `new_name=` + value + `&app_id=` + apps[index].id, (json) => {
+      if(this.DEBUGGING) { console.log(json) }
+    })
+    
+    this.setState({ 
+      data: updatedData,
+    })
   }
 
-  saveOAuthCallback(index, value, shouldPersist) {
+  saveOAuthCallback(index, value) {
     if(value.startsWith("https://") || value.startsWith("http://") || value=="") {
       const updatedData = {...this.state.data}
       updatedData.apps[index].oauth.callback_url = value
 
-      const persistedData = this.state.savedData
+      this.queryDashboardAPI(`/dashboard/api/setcallbackurl/`, `app_id=` + updatedData.apps[index].id + `&callback_url=` + value, (json) => {
+        console.log(json)
+      })
 
-      if(shouldPersist) { 
-        const { data: { apps }} = this.state
-
-        this.queryDashboardAPI(`/dashboard/api/setcallbackurl/`, `app_id=` + apps[index].id + `&callback_url=` + value, (json) => {
-          console.log(json)
-        })
-        persistedData[index].callback_url = value
-      }
-
-      this.setState(
-        { 
-          data: updatedData,
-          savedData: persistedData, 
-        }
-      )
+      this.setState({ data: updatedData })
     }
   }
 
@@ -490,18 +402,17 @@ class Dashboard extends React.Component {
   }
 
   regenToken(index) {
-    const { data: { apps } } = this.state 
+    const { data } = this.state 
 
-    this.queryDashboardAPI(`/dashboard/api/regen/`, `app_id=` + apps[index].id, (json) => {
+    this.queryDashboardAPI(`/dashboard/api/regen/`, `app_id=` + data.apps[index].id, (json) => {
       const values = {
         token: json.app.token,
         updated: json.app.date,
       }
 
-      const updatedData = {...this.state.data}
-      updatedData.apps[index].token = values.token
+      data.apps[index].token = values.token
 
-      this.setState({ data: updatedData })
+      this.setState({ data: data })
     })
   }
 
@@ -518,18 +429,16 @@ class Dashboard extends React.Component {
     })
   }
 
-  saveWebhookURL(index, value, shouldPersist) {
+  saveWebhookURL(index, value) {
     if(value.startsWith("https://") || value.startsWith("http://") || value=="") {
       const updatedData = {...this.state.data}
       updatedData.apps[index].webhook.url = value
 
       const persistedData = this.state.savedData
 
-      if(shouldPersist) { 
-        this.updateWebhookSettings({url: value}, index) 
-        persistedData[index].url = value
-      }
-
+      this.updateWebhookSettings({url: value}, index) 
+      persistedData[index].url = value
+    
       this.setState(
         { 
           data: updatedData,
@@ -538,16 +447,14 @@ class Dashboard extends React.Component {
       )
     }
   }
-  saveWebhookContact(index, value, shouldPersist) {
+  saveWebhookContact(index, value) {
     const updatedData = {...this.state.data}
     updatedData.apps[index].webhook.contact = value
 
     const persistedData = this.state.savedData
 
-    if(shouldPersist) { 
-      this.updateWebhookSettings({contact: value}, index) 
-      persistedData[index].contact = value
-    }
+    this.updateWebhookSettings({contact: value}, index) 
+    persistedData[index].contact = value
 
     this.setState(
       { 
@@ -556,7 +463,7 @@ class Dashboard extends React.Component {
       }
     )
   }
-  saveWebhookSiteID(index, value, shouldPersist) {
+  saveWebhookSiteID(index, value) {
     const updatedData = {...this.state.data}
     updatedData.apps[index].webhook.siteid = value
 
@@ -574,16 +481,14 @@ class Dashboard extends React.Component {
       }
     )
   }
-  saveWebhookRoomID(index, value, shouldPersist) {
+  saveWebhookRoomID(index, value) {
     const updatedData = {...this.state.data}
     updatedData.apps[index].webhook.roomid = value
 
     const persistedData = this.state.savedData
 
-    if(shouldPersist) { 
-      this.updateWebhookSettings({roomid: value}, index)
-      persistedData[index].roomid = value
-    }
+    this.updateWebhookSettings({roomid: value}, index)
+    persistedData[index].roomid = value
 
     this.setState(
       { 

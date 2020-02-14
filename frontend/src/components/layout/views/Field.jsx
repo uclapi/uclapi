@@ -15,15 +15,13 @@ PROPS:
 title => text to be shown above the field
 content => the initial content of the field
 
-onSave => Takes callback that stores new value to memory
-onCancel 
-onRefresh
-onEdit
+onSave => Makes field editable and will be the function called when user clicks save
+onRefresh => Will add a refresh button allowing any extra functionality
 
 canCopy => If true will add button to copy value to clipboard
+
 readonly => Boolean flag of whether user can alter content
 isSmall => A boolean flag of whether to render the field in a mobile friendly way
-
 
 **/
 
@@ -79,25 +77,46 @@ export default class Field extends React.Component {
 			fieldRefA: fieldRefA,
 			fieldRefB: fieldRefB,
 			isSaved: true,
+			isEditing: false,
 		}
+	}
+
+	componentDidUpdate(prevProps) {
+		const { content, onSave } = this.props
+		// If this is an uneditable field then the value needs to 
+		// be updated when the parent changes the content
+		if(!this.doesExist(onSave) && content !== prevProps.content) { this.setState({value: content}) }
 	}
 
 	save = (shouldPersist) => {
 		const { onSave } = this.props
 		const { fieldRefA, fieldRefB } = this.state
 
-		const newValue = fieldRefA.current.value
+		const newValueA = fieldRefA.current.value
+		const newValueB = fieldRefB.current.value
+
+		var newValue = newValueA
+		const { value } = this.state
+		if(newValueA == value) { newValue = newValueB }
+
+		console.log(newValueA)
+		console.log(newValueB)
+		if(this.DEBUGGING) { console.log("new value: " + newValue) }
 		
 		// Call the save button action passed in via the props
 		if(shouldPersist) {
 			onSave(newValue)
-			onSave(newValue)
+			this.setState({ isEditing: false })
 		}
 
 		this.setState({
 			value: newValue,
 			isSaved: shouldPersist,
 		})
+	}
+
+	edit = () => {
+		this.setState({ isEditing: true })
 	}
 
 	doesExist = (variable) => {
@@ -115,22 +134,27 @@ export default class Field extends React.Component {
 
 	    try {
 	      document.execCommand(`copy`)
-	    }catch (err) {
+	    } catch (err) {
 	      alert(`Error: please press Ctrl/Cmd+C to copy`)
 	    }
-	  }
+	}
 
 	render() {
 		const { readonly, onSave, onEdit, onRefresh, onCancel,
 		 title, content, isSmall, canCopy } = this.props
-		const { isSaved, fieldRefA, fieldRefB, value} = this.state
+		const { isSaved, fieldRefA, fieldRefB, value, 
+			isEditing} = this.state
 		
 		const unsavedColor = `#db4534`
-		const savedColor = `#3498DB`
+		const savedColor = `#2ecc71`
+		const defaultColor = `#3498DB`
+
+		var color = defaultColor
+		if(isEditing) { color = isSaved ? savedColor : unsavedColor }
 
 		const fieldStyle = {
 			...styles.field,
-			backgroundColor : (isSaved ? savedColor : unsavedColor) 
+			backgroundColor : color
 		}
 
 		return (
@@ -142,8 +166,8 @@ export default class Field extends React.Component {
 			    <input ref={fieldRefA}
 			      type="text"
 			      className="token-input"
-			      readOnly={!this.doesExist(onSave)} 
-			      onChange={this.doesExist(onSave) ? () => { this.save(false) } : null } 
+			      readOnly={!isEditing} 
+			      onChange={isEditing ? () => { this.save(false) } : null } 
 			      value={value}
 			      style={styles.copyableField}
 			    />
@@ -152,17 +176,20 @@ export default class Field extends React.Component {
 			    <input ref={fieldRefB}
 			      type="text"
 			      className="token-input"
-			      readOnly={!this.doesExist(onSave)} 
-			      onChange={this.doesExist(onSave) ? () => { this.save(false) } : null } 
+			      readOnly={!isEditing} 
+			      onChange={isEditing ? () => { this.save(false) } : null } 
 			      value={value}
 			      style={styles.copyableFieldMobile}
 			    />
 			  </div>
 			  {canCopy ? copyIcon(this.copy) : null}
-			  {this.doesExist(onSave) ? saveIcon( () => { this.save(true) } ) : null}
+
+			  {this.doesExist(onSave) && isEditing ? saveIcon( () => { this.save(true) } ) : null}
+			  {this.doesExist(onSave) && !isEditing ? editIcon(this.edit) : null}
+
 			  {this.doesExist(onEdit) ? editIcon() : null}
 			  {this.doesExist(onCancel) ? cancelIcon() : null}
-			  {this.doesExist(onRefresh) ? refreshIcon() : null}
+			  {this.doesExist(onRefresh) ? refreshIcon(onRefresh) : null}
 			</div>
 		</>
 		)
