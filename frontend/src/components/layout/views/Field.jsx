@@ -115,8 +115,15 @@ export default class Field extends React.Component {
 		})
 	}
 
-	edit = () => {
-		this.setState({ isEditing: true })
+	edit = () => { this.setState({ isEditing: true }) }
+	cancel = () => { 
+		const { content } = this.props
+
+		this.setState({ 
+			isEditing: false, 
+			value: content, 
+			isSaved: true,
+		}) 
 	}
 
 	doesExist = (variable) => {
@@ -140,7 +147,7 @@ export default class Field extends React.Component {
 	}
 
 	render() {
-		const { readonly, onSave, onEdit, onRefresh, onCancel,
+		const { readonly, onSave, onRefresh,
 		 title, content, isSmall, canCopy } = this.props
 		const { isSaved, fieldRefA, fieldRefB, value, 
 			isEditing} = this.state
@@ -183,12 +190,9 @@ export default class Field extends React.Component {
 			    />
 			  </div>
 			  {canCopy ? copyIcon(this.copy) : null}
-
 			  {this.doesExist(onSave) && isEditing ? saveIcon( () => { this.save(true) } ) : null}
+			  {this.doesExist(onSave) && isEditing ? cancelIcon(this.cancel) : null}
 			  {this.doesExist(onSave) && !isEditing ? editIcon(this.edit) : null}
-
-			  {this.doesExist(onEdit) ? editIcon() : null}
-			  {this.doesExist(onCancel) ? cancelIcon() : null}
 			  {this.doesExist(onRefresh) ? refreshIcon(onRefresh) : null}
 			</div>
 		</>

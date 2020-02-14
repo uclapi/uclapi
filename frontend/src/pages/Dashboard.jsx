@@ -74,13 +74,7 @@ class Dashboard extends React.Component {
     this.regenToken = this.regenToken.bind(this)
     this.regenVerificationSecret = this.regenVerificationSecret.bind(this)
 
-    this.saveWebhookURL = this.saveWebhookURL.bind(this)
-    this.saveWebhookContact = this.saveWebhookContact.bind(this)
-    this.saveWebhookSiteID = this.saveWebhookSiteID.bind(this)
-    this.saveWebhookRoomID = this.saveWebhookRoomID.bind(this)
-
     this.queryDashboardAPI = this.queryDashboardAPI.bind(this)
-    this.updateWebhookSettings = this.updateWebhookSettings.bind(this)
 
     this.saveOAuthCallback = this.saveOAuthCallback.bind(this)
 
@@ -429,102 +423,32 @@ class Dashboard extends React.Component {
     })
   }
 
-  saveWebhookURL(index, value) {
+  saveWebhookURL = (index, value) => {
     if(value.startsWith("https://") || value.startsWith("http://") || value=="") {
-      const updatedData = {...this.state.data}
-      updatedData.apps[index].webhook.url = value
-
-      const persistedData = this.state.savedData
-
       this.updateWebhookSettings({url: value}, index) 
-      persistedData[index].url = value
-    
-      this.setState(
-        { 
-          data: updatedData,
-          savedData: persistedData, 
-        }
-      )
     }
   }
-  saveWebhookContact(index, value) {
-    const updatedData = {...this.state.data}
-    updatedData.apps[index].webhook.contact = value
+  
+  saveWebhookContact = (index, value) => { this.updateWebhookSettings({contact: value}, index) }
+  saveWebhookSiteID = (index, value) => { this.updateWebhookSettings({siteid: value}, index) }
+  saveWebhookRoomID = (index, value) => { this.updateWebhookSettings({roomid: value}, index) }
 
-    const persistedData = this.state.savedData
+  updateWebhookSettings = (newValues, index) => {
+    const { data } = this.state
 
-    this.updateWebhookSettings({contact: value}, index) 
-    persistedData[index].contact = value
+    const app = data.apps[index]
+    var values = {...app.webhook, ...newValues}
 
-    this.setState(
-      { 
-        data: updatedData,
-        savedData: persistedData, 
-      }
-    )
-  }
-  saveWebhookSiteID(index, value) {
-    const updatedData = {...this.state.data}
-    updatedData.apps[index].webhook.siteid = value
-
-    const persistedData = this.state.savedData
-
-    if(shouldPersist) { 
-      this.updateWebhookSettings({siteid: value}, index)
-      persistedData[index].siteid = value
-    }
-
-    this.setState(
-      { 
-        data: updatedData,
-        savedData: persistedData, 
-      }
-    )
-  }
-  saveWebhookRoomID(index, value) {
-    const updatedData = {...this.state.data}
-    updatedData.apps[index].webhook.roomid = value
-
-    const persistedData = this.state.savedData
-
-    this.updateWebhookSettings({roomid: value}, index)
-    persistedData[index].roomid = value
-
-    this.setState(
-      { 
-        data: updatedData,
-        savedData: persistedData, 
-      }
-    )
-  }
-
-  updateWebhookSettings(settings, index) {
-    const { data: { apps }} = this.state
-
-    let siteid = ``
-    let roomid = ``
-    let contact = ``
-    let url = ``
-
-    const app = this.state.savedData[index]
-
-    if(app.siteid) { siteid = app.siteid }
-    if(app.roomid) { roomid = app.roomid }
-    if(app.contact) { contact = app.contact }
-    if(app.url) { url = app.url }
-
-    if(settings.siteid) { siteid = settings.siteid }
-    if(settings.roomid) { roomid = settings.roomid }
-    if(settings.contact) { contact = settings.contact }
-    if(settings.url) { url = `https://` + settings.url }
-
-    const parameters = `url=` + url + `&siteid=` + siteid + `&roomid=` + roomid 
-      + `&contact=` + contact + `&app_id=` + apps[index].id
+    const parameters = `url=` + values.url + `&siteid=` + values.siteid + `&roomid=` + values.roomid 
+      + `&contact=` + values.contact + `&app_id=` + data.apps[index].id
 
     this.queryDashboardAPI(`dashboard/api/webhook/edit/`, parameters, (json) => {
         console.log(`For parameters: ` + parameters)
         console.log(json)
     })
+
+    data.apps[index].webhook = values
+    this.setState({ data: data })
   }
 
   queryDashboardAPI(url, querystring, callback) {
