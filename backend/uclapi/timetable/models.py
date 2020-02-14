@@ -661,17 +661,43 @@ class CrscompmodulesB(models.Model):
 
 
 class Classifications(models.Model):
-    setid = models.TextField(max_length=10)
-    classid = models.TextField(max_length=10)
-    type = models.TextField(max_length=15)
-    name = models.TextField(primary_key=True, max_length=55)
-    description = models.TextField(max_length=120)
-    linkcode = models.TextField(max_length=20)
+    setid = models.CharField(max_length=10, null=True)
+    classid = models.CharField(max_length=10, null=True)
+    type = models.CharField(max_length=15, null=True)
+    name = models.CharField(primary_key=True, max_length=55)
+    description = models.CharField(max_length=120, null=True)
+    linkcode = models.CharField(max_length=20, null=True)
 
     class Meta:
         managed = False
         db_table = '"CMIS_OWNER"."CLASSIFICATIONS"'
         _DATABASE = 'roombookings'
+
+
+class ClassificationsA(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.CharField(max_length=10, null=True)
+    classid = models.CharField(max_length=10, null=True)
+    type = models.CharField(max_length=15, null=True)
+    name = models.CharField(max_length=55, null=True)
+    description = models.CharField(max_length=120, null=True)
+    linkcode = models.CharField(max_length=20, null=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class ClassificationsB(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.CharField(max_length=10, null=True)
+    classid = models.CharField(max_length=10, null=True)
+    type = models.CharField(max_length=15, null=True)
+    name = models.CharField(max_length=55, null=True)
+    description = models.CharField(max_length=120, null=True)
+    linkcode = models.CharField(max_length=20, null=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
 
 
 class Weekmapnumeric(models.Model):
