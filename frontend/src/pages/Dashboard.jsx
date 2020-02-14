@@ -22,43 +22,6 @@ const defaultHeaders = {
   'Content-Type': `application/x-www-form-urlencoded`,
   'X-CSRFToken': Cookies.get(`csrftoken`),
 }
-
-const Dates = (created, updated, alignment) => (
-  <>
-    <TextView text={`Created: ` + created + ` ago`}
-      heading={5}
-      align={alignment} 
-      style={styles.dates}
-    />
-    <TextView text={`Updated: ` + updated + ` ago`}
-      heading={5}
-      align={alignment}
-      style={styles.dates}
-    />
-  </>
-)
-
-const Title = (size, title, created, updated, isEditing, saveEditTitle, deleteApp) => {
-  return (
-  <Row styling='transparent' noPadding>
-    <CardView width={size===`mobile` ? `1-1` : `1-2`} minWidth="140px" type="no-bg" style={styles.squareCard} snapAlign>
-      <Field
-        title="title: "
-        content={title}
-        onSave={saveEditTitle}
-        isSmall={true}
-      />
-    </CardView>
-    <CardView width={size===`mobile` ? `1-1` : `1-2`} minWidth="140px" type="no-bg" snapAlign style={styles.rowItem}>
-      {size===`mobile` ? (
-        Dates(created, updated, `center`)
-      ) : (
-        Dates(created, updated, `right`)
-      )}
-    </CardView>
-  </Row>
-  )
-}
   
 class Dashboard extends React.Component {
 
@@ -66,22 +29,6 @@ class Dashboard extends React.Component {
     super(props)
 
     this.DEBUGGING = true
-
-    this.timeSince = this.timeSince.bind(this)
-    
-    this.saveEditTitle = this.saveEditTitle.bind(this)
-
-    this.regenToken = this.regenToken.bind(this)
-    this.regenVerificationSecret = this.regenVerificationSecret.bind(this)
-
-    this.queryDashboardAPI = this.queryDashboardAPI.bind(this)
-
-    this.saveOAuthCallback = this.saveOAuthCallback.bind(this)
-
-    this.setScope = this.setScope.bind(this)
-
-    this.addNewProject = this.addNewProject.bind(this)
-    this.deleteProject = this.deleteProject.bind(this)
 
     // Sort the apps by last updated property
     window.initialData.apps.sort((a, b) => {
@@ -123,6 +70,7 @@ class Dashboard extends React.Component {
       saveOAuthCallback: this.saveOAuthCallback,
       addNewProject: this.addNewProject,
       deleteProject: this.deleteProject,
+      deleteConfirm: this.deleteConfirm
     }
 
     if(this.DEBUGGING) { console.log("re-rendered dashboard") }
@@ -187,12 +135,28 @@ class Dashboard extends React.Component {
 
                 return (
                   <CardView width='1-1' type='default' key={index} noPadding style={{ margin: `25px 0` }} >
-                    <div className="default tablet"> { Title(`not-mobile`, app.name, created, updated, app.editName, 
-                      (value) => { actions.saveEditTitle(index, value) },
-                      () => { this.setState({ view: `delete-project`, toDelete: index }) } )}</div>
-                    <div className="mobile"> { Title(`mobile`, app.name, created, updated, app.editName, 
-                      (value) => { actions.saveEditTitle(index, value) },
-                      () => { this.setState({ view: `delete-project`, toDelete: index }) } )}</div>
+                    <Row styling='transparent' noPadding>
+                      <CardView width="1-1" minWidth="140px" type="no-bg" style={styles.squareCard} snapAlign>
+                        <Field
+                          title="title: "
+                          content={app.name}
+                          onSave={(value) => { actions.saveEditTitle(index, value) }}
+                          isSmall={true}
+                        />
+                      </CardView>
+                      <CardView width="1-1" minWidth="140px" type="no-bg" snapAlign style={styles.rowItem}>
+                        <TextView text={`Created: ` + created + ` ago`}
+                          heading={5}
+                          align="center" 
+                          style={styles.dates}
+                        />
+                        <TextView text={`Updated: ` + updated + ` ago`}
+                          heading={5}
+                          align="center"
+                          style={styles.dates}
+                        />
+                      </CardView>
+                    </Row>
                     
                     <Row styling='transparent' noPadding>
                       <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
@@ -298,7 +262,7 @@ class Dashboard extends React.Component {
     )
   }
 
-  addNewProject(name) {
+  addNewProject = (name) => {
     this.queryDashboardAPI(`/dashboard/api/create/`, `name=` + name, (json) => {
       // For debugging
       if(this.DEBUGGING) { console.log(json) }
@@ -307,119 +271,106 @@ class Dashboard extends React.Component {
       let newApp = json.app
       newApp['name'] = name
 
-      const { data: { apps } } = this.state
-      apps.push(newApp)
+      const { data } = this.state
+      data.apps.push(newApp)
 
       // Go to new state visually
       this.setState({
         view: `default`, 
-        data: {...this.state.data, apps: apps}
+        data: data
       })
     })
   }
 
-  deleteProject(index) {
-    const { data: { apps } } = this.state
+  deleteConfirm = (index) => {
+    this.setState({ 
+      view: `delete-project`, 
+      toDelete: index,
+    })
+  }
 
-    this.queryDashboardAPI(`/dashboard/api/delete/`, `app_id=` + apps[index].id, (json) => {
+  deleteProject = (index) => {
+    const { data } = this.state
+
+    this.queryDashboardAPI(`/dashboard/api/delete/`, `app_id=` + data.apps[index].id, (json) => {
       // For debugging
       if(this.DEBUGGING) { console.log(json) }
 
       // Remove the deleted app
-      apps.splice(index, 1)
+      data.apps.splice(index, 1)
 
-      // Go to new state visually
+      // Go to default state visually
       this.setState({  
         toDelete: -1,
         view: `default`, 
-        data: {...this.state.data, apps: apps}
+        data: data
       })
     })
   }
 
-  saveEditTitle(index, value) {
-    const updatedData = {...this.state.data}
-    updatedData.apps[index].name = value
-
-    // Send request
-    const { data: { apps } } = this.state
+  saveEditTitle = (index, value) => {
+    const { data } = this.state
     
-    this.queryDashboardAPI(`/dashboard/api/rename/`, `new_name=` + value + `&app_id=` + apps[index].id, (json) => {
+    this.queryDashboardAPI(`/dashboard/api/rename/`, `new_name=` + value + `&app_id=` + data.apps[index].id, (json) => {
       if(this.DEBUGGING) { console.log(json) }
     })
     
-    this.setState({ 
-      data: updatedData,
-    })
+    data.apps[index].name = value
+    this.setState({ data: data })
   }
 
-  saveOAuthCallback(index, value) {
+  saveOAuthCallback = (index, value) => {
     if(value.startsWith("https://") || value.startsWith("http://") || value=="") {
-      const updatedData = {...this.state.data}
-      updatedData.apps[index].oauth.callback_url = value
+      const { data } = this.state
+      data.apps[index].oauth.callback_url = value
 
       this.queryDashboardAPI(`/dashboard/api/setcallbackurl/`, `app_id=` + updatedData.apps[index].id + `&callback_url=` + value, (json) => {
         console.log(json)
       })
 
-      this.setState({ data: updatedData })
+      this.setState({ data: data })
     }
   }
 
-  setScope(index, scope, value) {
-    const { data: { apps } } = this.state
+  setScope = (index, scope, value) => {
+    const { data } = this.state
 
-    const scopesData = [
-      {
-        name: `timetable`,
-        checked: apps[index].oauth.scopes[0].enabled,
-      },
-      {
-        name: `student_number`,
-        checked: apps[index].oauth.scopes[1].enabled,
-      },
-    ]
+    // Update data
+    data.apps[index].oauth.scopes[scope].enabled = value
 
-    scopesData[scope].checked = value
+    // Convert scopes into form for backend
+    const scopes = data.apps[index].oauth.scopes
+    const scopesData = scopes.map( scope => 
+      ({
+        name: scope.name, 
+        checked: scope.enabled
+      }))
 
     const json = JSON.stringify(scopesData)
 
-    this.queryDashboardAPI(`/dashboard/api/updatescopes/`, `app_id=` + apps[index].id + 
+    this.queryDashboardAPI(`/dashboard/api/updatescopes/`, `app_id=` + data.apps[index].id + 
       `&scopes=` + encodeURIComponent(json), (json) => {
         console.log(json)
     })
 
-    const updatedData = {...this.state.data}
-    updatedData.apps[index].oauth.scopes[scope].enabled = value
-
-    this.setState({ data: updatedData })
+    this.setState({ data: data })
   }
 
-  regenToken(index) {
+  regenToken = (index) => {
     const { data } = this.state 
 
     this.queryDashboardAPI(`/dashboard/api/regen/`, `app_id=` + data.apps[index].id, (json) => {
-      const values = {
-        token: json.app.token,
-        updated: json.app.date,
-      }
-
-      data.apps[index].token = values.token
-
+      data.apps[index].token = json.app.token 
       this.setState({ data: data })
     })
   }
 
-  regenVerificationSecret(index) {
-    const { data: { apps } } = this.state 
+  regenVerificationSecret = (index) => {
+    const { data } = this.state 
 
-    this.queryDashboardAPI(`dashboard/api/webhook/refreshsecret/`, `app_id=` + apps[index].id, (json) => {
-      const secret = json.new_secret
-
-      const updatedData = {...this.state.data}
-      updatedData.apps[index].webhook.verification_secret = secret
-
-      this.setState({ data: updatedData })
+    this.queryDashboardAPI(`dashboard/api/webhook/refreshsecret/`, `app_id=` + data.apps[index].id, (json) => {
+      data.apps[index].webhook.verification_secret = json.new_secret
+      this.setState({ data: data })
     })
   }
 
@@ -428,7 +379,7 @@ class Dashboard extends React.Component {
       this.updateWebhookSettings({url: value}, index) 
     }
   }
-  
+
   saveWebhookContact = (index, value) => { this.updateWebhookSettings({contact: value}, index) }
   saveWebhookSiteID = (index, value) => { this.updateWebhookSettings({siteid: value}, index) }
   saveWebhookRoomID = (index, value) => { this.updateWebhookSettings({roomid: value}, index) }
@@ -451,7 +402,7 @@ class Dashboard extends React.Component {
     this.setState({ data: data })
   }
 
-  queryDashboardAPI(url, querystring, callback) {
+  queryDashboardAPI = (url, querystring, callback) => {
     fetch(url, {
       method: `POST`,
       credentials: `include`,
@@ -466,7 +417,7 @@ class Dashboard extends React.Component {
     })
   }
 
-  timeSince(date) {
+  timeSince = (date) => {
     const seconds = Math.floor((new Date() - date) / 1000)
 
     let interval = Math.floor(seconds / 31536000)
