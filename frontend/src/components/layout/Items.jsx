@@ -11,7 +11,7 @@ import CardView from './views/CardView.jsx'
 import CheckBox from './views/CheckBox.jsx'
 import CodeView from './views/CodeView.jsx'
 import ImageView from './views/ImageView.jsx'
-// Views
+import ConfirmBox from './views/ConfirmBox.jsx'
 import TextView from './views/TextView.jsx'
 import Field from './views/Field.jsx'
 
@@ -29,4 +29,5 @@ export {
     Footer, 
     AutoCompleteView,
     CheckBox,
+    ConfirmBox
 }

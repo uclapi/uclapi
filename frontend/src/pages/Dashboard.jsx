@@ -11,11 +11,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Modal from 'react-modal'
 
-import { CheckBoxView, OverlayBox } from 'Dashboard/DashboardUI.jsx'
+import { CheckBoxView } from 'Dashboard/DashboardUI.jsx'
 import { styles } from 'Layout/data/dashboard_styles.jsx'
 
 // Components
-import { CardView, Column, Footer, NavBar, Row, TextView, ButtonView, Field} from 'Layout/Items.jsx'
+import { CardView, Column, Footer, NavBar, Row, TextView, 
+  ButtonView, Field, ConfirmBox} from 'Layout/Items.jsx'
 import { editIcon, cancelIcon } from 'Layout/Icons.jsx'
 
 const defaultHeaders = {
@@ -87,7 +88,7 @@ class Dashboard extends React.Component {
           overlayClassName="Overlay"
           style={styles.modal}
         >
-          <OverlayBox
+          <ConfirmBox
             text="Enter the name of your new project"
             success={(value) => { actions.addNewProject(value) } }
             fail={() => { this.setState({view: `default`}) } }
@@ -103,11 +104,12 @@ class Dashboard extends React.Component {
           style={styles.modal}
         >
           {toDelete !== -1 ? (
-            <OverlayBox
+            <ConfirmBox
               text={"Enter the name of your project to confirm deletion (" + apps[toDelete].name  + ")"}
               success={(value) => { actions.deleteProject(toDelete) } }
               fail={() => { this.setState({view: `default`}) } }
               value={ apps[toDelete].name }
+              shouldCheckValue
             />
           ) : null }
         </Modal>
@@ -147,12 +149,12 @@ class Dashboard extends React.Component {
                       <CardView width="1-1" minWidth="140px" type="no-bg" snapAlign style={styles.rowItem}>
                         <TextView text={`Created: ` + created + ` ago`}
                           heading={5}
-                          align="center" 
+                          align="left" 
                           style={styles.dates}
                         />
                         <TextView text={`Updated: ` + updated + ` ago`}
                           heading={5}
-                          align="center"
+                          align="left"
                           style={styles.dates}
                         />
                       </CardView>

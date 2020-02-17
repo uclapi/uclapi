@@ -14,14 +14,11 @@ PROPS:
 
 title => text to be shown above the field
 content => the initial content of the field
+canCopy => If true will add button to copy value to clipboard
+isSmall => A boolean flag of whether to render the field in a mobile friendly way
 
 onSave => Makes field editable and will be the function called when user clicks save
 onRefresh => Will add a refresh button allowing any extra functionality
-
-canCopy => If true will add button to copy value to clipboard
-
-readonly => Boolean flag of whether user can alter content
-isSmall => A boolean flag of whether to render the field in a mobile friendly way
 
 **/
 
@@ -147,7 +144,7 @@ export default class Field extends React.Component {
 	}
 
 	render() {
-		const { readonly, onSave, onRefresh,
+		const { onSave, onRefresh,
 		 title, content, isSmall, canCopy } = this.props
 		const { isSaved, fieldRefA, fieldRefB, value, 
 			isEditing} = this.state
