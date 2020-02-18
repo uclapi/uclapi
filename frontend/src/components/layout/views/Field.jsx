@@ -20,6 +20,8 @@ isSmall => A boolean flag of whether to render the field in a mobile friendly wa
 onSave => Makes field editable and will be the function called when user clicks save
 onRefresh => Will add a refresh button allowing any extra functionality
 
+style
+
 **/
 
 const styles = {
@@ -82,7 +84,9 @@ export default class Field extends React.Component {
 		const { content, onSave } = this.props
 		// If this is an uneditable field then the value needs to 
 		// be updated when the parent changes the content
-		if(!this.doesExist(onSave) && content !== prevProps.content) { this.setState({value: content}) }
+		if(content !== prevProps.content) { 
+			this.setState({value: content}) 
+		}
 	}
 
 	save = (shouldPersist) => {
@@ -144,7 +148,7 @@ export default class Field extends React.Component {
 	}
 
 	render() {
-		const { onSave, onRefresh,
+		const { onSave, onRefresh, style,
 		 title, content, isSmall, canCopy } = this.props
 		const { isSaved, fieldRefA, fieldRefB, value, 
 			isEditing} = this.state
@@ -158,6 +162,7 @@ export default class Field extends React.Component {
 
 		const fieldStyle = {
 			...styles.field,
+			...style,
 			backgroundColor : color
 		}
 

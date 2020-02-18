@@ -60,7 +60,7 @@ export default class CardView extends React.Component {
         <>
           <div className={`invisible-marker`}
             style={{
-              "position": `fixed`,
+              "position": `absolute`,
               "visibility": `hidden`,
               "width": `inherit`,
             }}
@@ -78,7 +78,7 @@ export default class CardView extends React.Component {
         <>
           <div className={`invisible-marker`}
             style={{
-              "position": `fixed`,
+              "position": `absolute`,
               "visibility": `hidden`,
               "width": `inherit`,
             }}
@@ -176,7 +176,6 @@ export default class CardView extends React.Component {
 
     if(this.props.noPadding) { 
       adaptation = 100 
-      this.setStyleKeyValuePair(`margin`, `0`)
       this.setStyleKeyValuePair("marginLeft", "0")
       this.setStyleKeyValuePair("marginRight", "0")
     }

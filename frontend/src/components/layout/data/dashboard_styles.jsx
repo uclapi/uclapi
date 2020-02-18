@@ -26,7 +26,6 @@ export const styles = {
     margin: `0`,
   },
   appHolder: {
-    marginTop: `55px`,
   },
   tokenHolder: {
     borderRadius: `0`,
@@ -76,8 +75,7 @@ export const styles = {
     marginBottom: `5px`,
   },
   rowItem: {
-    marginTop: `5px`,
-    marginBottom: `5px`,
+    marginTop: `0px`,
   },
   modal: {
     content : {
