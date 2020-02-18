@@ -31,7 +31,7 @@ jsonpickle==1.2
 kombu==4.6.3
 lxml==4.5.0
 Markupsafe==1.1.1
-mock==3.0.5
+mock==4.0.1
 model-mommy==2.0.0
 pbr==5.4.4
 pycryptodome==3.9.6
