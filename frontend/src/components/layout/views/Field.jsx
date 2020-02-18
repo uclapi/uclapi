@@ -100,8 +100,6 @@ export default class Field extends React.Component {
 		const { value } = this.state
 		if(newValueA == value) { newValue = newValueB }
 
-		console.log(newValueA)
-		console.log(newValueB)
 		if(this.DEBUGGING) { console.log("new value: " + newValue) }
 		
 		// Call the save button action passed in via the props
@@ -131,14 +129,16 @@ export default class Field extends React.Component {
 		return typeof variable !== 'undefined'
 	}
 
-	copy = () => {
+	copy = (isReferenceA) => {
 		const { fieldRefA, fieldRefB } = this.state
-		const value = fieldRefA.current.value
 
 	    if(this.DEBUGGING) { console.log(`Copy to clipboard`) }
-	    if(this.DEBUGGING) { console.log(value) }
 	    
-	    fieldRefA.current.select()
+	    if(isReferenceA) {
+	    	fieldRefA.current.select()
+	    } else {
+	    	fieldRefB.current.select()
+    	}
 
 	    try {
 	      document.execCommand(`copy`)
@@ -180,6 +180,7 @@ export default class Field extends React.Component {
 			      value={value}
 			      style={styles.copyableField}
 			    />
+			    {canCopy ? copyIcon(() => { this.copy(true) }) : null}
 			  </div>
 			  <div className={isSmall ? `tablet mobile default` : `mobile`}>
 			    <input ref={fieldRefB}
@@ -190,8 +191,9 @@ export default class Field extends React.Component {
 			      value={value}
 			      style={styles.copyableFieldMobile}
 			    />
+			    {canCopy ? copyIcon(() => { this.copy(false) }) : null}
 			  </div>
-			  {canCopy ? copyIcon(this.copy) : null}
+			  
 			  {this.doesExist(onSave) && isEditing ? saveIcon( () => { this.save(true) } ) : null}
 			  {this.doesExist(onSave) && isEditing ? cancelIcon(this.cancel) : null}
 			  {this.doesExist(onSave) && !isEditing ? editIcon(this.edit) : null}
