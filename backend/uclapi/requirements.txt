@@ -34,7 +34,7 @@ Markupsafe==1.1.1
 mock==3.0.5
 model-mommy==2.0.0
 pbr==5.4.4
-pycryptodome==3.9.4
+pycryptodome==3.9.6
 psycopg2-binary==2.8.4
 python-dateutil==2.8.1
 pymsteams==0.1.12
