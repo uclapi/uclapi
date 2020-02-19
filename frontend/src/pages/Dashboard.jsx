@@ -241,13 +241,15 @@ class Dashboard extends React.Component {
   }
 
   setScope = (index, scope, value) => {
-    const { data } = this.state
+    if(this.DEBUGGING) { console.log("Change app, " + index + " scope, " + scope + " to " + value) }
+
+    var newData = {...this.state.data}
 
     // Update data
-    data.apps[index].oauth.scopes[scope].enabled = value
+    newData.apps[index].oauth.scopes[scope].enabled = value
 
     // Convert scopes into form for backend
-    const scopes = data.apps[index].oauth.scopes
+    const scopes = newData.apps[index].oauth.scopes
     const scopesData = scopes.map( scope => 
       ({
         name: scope.name, 
@@ -256,12 +258,12 @@ class Dashboard extends React.Component {
 
     const json = JSON.stringify(scopesData)
 
-    this.queryDashboardAPI(`/dashboard/api/updatescopes/`, `app_id=` + data.apps[index].id + 
+    this.queryDashboardAPI(`/dashboard/api/updatescopes/`, `app_id=` + newData.apps[index].id + 
       `&scopes=` + encodeURIComponent(json), (json) => {
         console.log(json)
     })
 
-    this.setState({ data: data })
+    this.setState({ data: newData })
   }
 
   regenToken = (index) => {

@@ -26,10 +26,6 @@ export default class CheckBox extends React.Component {
 
     // To enable verbose output
     this.DEBUGGING = false
-
-    // Bind functions
-    this.setStyleKeyValuePair = this.setStyleKeyValuePair.bind(this)
-    this.toggleCheck = this.toggleCheck.bind(this)
     
     // Every CheckBox needs an on click event and also an initial state
     if (typeof this.props.onClick == `undefined`) { console.log(`EXCEPTION: CheckBox.constructor: no click function defined`) }
@@ -54,13 +50,13 @@ export default class CheckBox extends React.Component {
   render() {
 
     const { text } = this.props
-    const { style } = this.state
+    const { style, isChecked } = this.state
 
     return (
     <div className="field" style={{...styles.field, marginTop: `12px`}}>
       <span onClick={this.toggleCheck} style={style}>
-        <input type="checkbox" checked={this.state.isChecked} />
-        <span style={{ fontSize : `8px` }}>{this.state.isChecked ? `✘` : null}</span>
+        <input disabled type="checkbox" checked={isChecked} />
+        <span style={{ fontSize : `8px` }}>{isChecked ? `✘` : null}</span>
       </span>
 
       <TextView text={text} heading={5} align={`left`} style={styles.tokenText} /> 
@@ -69,12 +65,15 @@ export default class CheckBox extends React.Component {
     )
   }
 
-  toggleCheck() {
-    this.props.onClick(!this.state.isChecked)
-    this.setState({isChecked: !this.state.isChecked})
+  toggleCheck = () => {
+    const { isChecked } = this.state
+    const { onClick } = this.props
+
+    onClick(!isChecked)
+    this.setState({isChecked: !isChecked})
   }
 
-  setStyleKeyValuePair(key, value) {
+  setStyleKeyValuePair = (key, value) => {
     this.style[key] = value
     if (this.DEBUGGING) { console.log(`DEBUG: ` + key + ` updated to: ` + value) }
   }
