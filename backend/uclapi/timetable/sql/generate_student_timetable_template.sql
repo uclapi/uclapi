@@ -19,24 +19,25 @@ RETURNS TABLE (
     lecturerdeptname    TEXT,                   -- 14
     lecturereppn        TEXT,                   -- 15
     title               VARCHAR,                -- 16
-    sessiontypeid       TEXT,                   -- 17
-    condisplayname      TEXT,                   -- 18
-    modgrpcode          TEXT,                   -- 19
-    instcode            TEXT,                   -- 20
-    siteid              TEXT,                   -- 21
-    roomid              TEXT,                   -- 22
-    sitename            TEXT,                   -- 23
-    roomname            VARCHAR,                -- 24
-    roomcapacity        DOUBLE PRECISION,       -- 25
-    roomtype            VARCHAR,                -- 26
-    roomclassification  VARCHAR,                -- 27
-    siteaddr1           TEXT,                   -- 28
-    siteaddr2           TEXT,                   -- 29
-    siteaddr3           TEXT,                   -- 30
-    siteaddr4           TEXT,                   -- 31
-    starttime           VARCHAR,                -- 32
-    finishtime          VARCHAR,                -- 33
-    descrip             VARCHAR                 -- 34
+    sessiontypeid       VARCHAR,                -- 17
+    sessiontypestr      VARCHAR,                -- 18
+    condisplayname      TEXT,                   -- 19
+    modgrpcode          TEXT,                   -- 20
+    instcode            TEXT,                   -- 21
+    siteid              TEXT,                   -- 22
+    roomid              TEXT,                   -- 23
+    sitename            TEXT,                   -- 24
+    roomname            VARCHAR,                -- 25
+    roomcapacity        DOUBLE PRECISION,       -- 26
+    roomtype            VARCHAR,                -- 27
+    roomclassification  VARCHAR,                -- 28
+    siteaddr1           TEXT,                   -- 29
+    siteaddr2           TEXT,                   -- 30
+    siteaddr3           TEXT,                   -- 31
+    siteaddr4           TEXT,                   -- 32
+    starttime           VARCHAR,                -- 33
+    finishtime          VARCHAR,                -- 34
+    descrip             VARCHAR                 -- 35
 )
 LANGUAGE plpgsql
 AS $$
@@ -175,6 +176,7 @@ AS
                     AND studentid = student_id
                 )
             )
+            --- This part gets course aligned events (not module-aligned)
             OR
             (
                 tt.courseid = st_course_id
@@ -243,14 +245,15 @@ SELECT rb.startdatetime     as startdatetime,
            WHERE de.deptid = lecturer.owner
        )                    as lecturerdeptname,
        lecturer.linkcode    as lecturereppn,
-       rb.title             as title, 
-       tt.moduletype        as sessiontypeid,
+       rb.title             as title,
+       classifications.classid as sessiontypeid,
+       classifications.name as sessiontypestr,
 --     rb.condisplayname    as condisplayname,
        string_agg(DISTINCT rb.condisplayname, ' / ') as condisplayname,
        tes.modgrpcode       as modgrpcode,
        tes.instcode         as instcode,
-       tt.siteid            as siteid,
-       tt.roomid            as roomid,
+       COALESCE(tt.siteid, rb.siteid) as siteid,
+       COALESCE(tt.roomid, rb.roomid) as roomid,
        sites.sitename       as sitename,
        rooms.roomname       as roomname,
        rooms.capacity       as roomcapacity,
@@ -267,7 +270,16 @@ SELECT rb.startdatetime     as startdatetime,
 FROM timetable_timetable{{ bucket_id | sqlsafe }} tt
 INNER JOIN tt_tmp_events_slot_id tes
     ON tt.slotid = tes.slotid
-    AND tt.slotid = tes.slotid
+    AND tt.setid = tes.setid
+    -- The classifications table provides a mapping between a session type and its human readable string.
+    -- Note that the session type is either tt.moduletype, or tt.classif if tt.moduletype is NULL.
+    -- AFAICT tt.moduletype is only NULL if the event is not aligned to a specfic module.
+    -- e.g. LAB -> Labaratory Session; T -> Tutorial; L -> Lecture; (tt.moduletype IS NOT NULL)
+    -- e.g. TO1 -> Teaching; (tt.moduletype IS NULL)
+LEFT OUTER JOIN timetable_classifications{{ bucket_id | sqlsafe }} classifications
+    ON tt.setid = classifications.setid
+    AND classifications.classid = COALESCE(tt.moduletype, tt.classif)
+    AND classifications.type = CASE WHEN tt.moduletype IS NULL THEN 'TT_SLOT' ELSE 'MOD_TYPE' END
 LEFT OUTER JOIN roombookings_booking{{ bucket_id | sqlsafe }} rb
     ON tt.slotid = rb.slotid
     AND tt.setid  = rb.setid
@@ -276,6 +288,10 @@ LEFT OUTER JOIN timetable_cminstances{{ bucket_id | sqlsafe }} ci
     AND tt.setid  = ci.setid 
 LEFT JOIN timetable_module{{ bucket_id | sqlsafe }} m
     ON m.moduleid = tes.moduleid
+    -- Comparision with instid is necessary as a module may have different names between instances.
+    -- e.g. STAT0007-A6U-T2 -> Stochastic Processes; 19/20
+    -- e.g. STAT0007-A5U-T2 -> Introduction to Applied Probability; 19/20
+    AND m.instid = tt.instid
     AND m.setid    = tes.setid
 LEFT OUTER JOIN timetable_depts{{ bucket_id | sqlsafe }} depts
     ON depts.deptid = tt.deptid
@@ -283,19 +299,18 @@ LEFT OUTER JOIN timetable_lecturer{{ bucket_id | sqlsafe }} lecturer
     ON lecturer.lecturerid = tt.lecturerid
     AND lecturer.setid      = tes.setid
 LEFT OUTER JOIN timetable_sites{{ bucket_id | sqlsafe }} sites
-    ON sites.siteid = tt.siteid
+    ON sites.siteid = COALESCE(tt.siteid, rb.siteid)
     AND sites.setid  = tes.setid
 LEFT OUTER JOIN roombookings_room{{ bucket_id | sqlsafe }} rooms
-    ON rooms.roomid = tt.roomid
-    AND rooms.siteid = tt.siteid
+    -- Sometimes the timetable doesn't contain the location, in that case, hopefully the booking will.
+    ON rooms.roomid = COALESCE(tt.roomid, rb.roomid)
+    AND rooms.siteid = COALESCE(tt.siteid, rb.siteid)
     AND rooms.setid  = tes.setid
 WHERE (
         (tt.weekday IS NOT NULL)
     AND (tt.weekday > 0)
     AND (tt.starttime IS NOT NULL)
     AND (tt.duration IS NOT NULL)
-    AND (tt.instid = ci.instid)
-    AND (ci.instid :: TEXT = tes.instid :: TEXT)
 )
 GROUP BY rb.startdatetime,
             rb.finishdatetime,
@@ -313,11 +328,12 @@ GROUP BY rb.startdatetime,
             lecturerdeptname,
             lecturer.linkcode,
             rb.title, 
-            tt.moduletype,
+            classifications.classid,
+            classifications.name,
             tes.modgrpcode,
             tes.instcode,
-            tt.siteid,
-            tt.roomid,
+            COALESCE(tt.siteid, rb.siteid::TEXT),
+            COALESCE(tt.roomid, rb.roomid::TEXT),
             sites.sitename,
             rooms.roomname,
             rooms.capacity,
