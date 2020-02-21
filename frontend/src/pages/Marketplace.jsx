@@ -12,6 +12,10 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
+// External carousel dependency
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+
 // Grab titles and descriptions of app
 import { allApps } from 'Layout/data/app_pages.jsx'
 // Common Components
@@ -238,6 +242,7 @@ class AppPage extends React.Component {
 
     const screenshotwidth = sizing==`mobile` ? `54px` : `216px`
     const screenshotheight = sizing==`mobile` ? `86px` : `384px`
+    const holderWidth = sizing==`mobile` ? `162px` : `648px`
 
     return (
       <>
@@ -382,23 +387,28 @@ class AppPage extends React.Component {
               </Row>
             )}
             <CardView width="1-1" style={{ padding : `20px 0` }}>
-              <Column width={contentWidth} horizontalAlignment='center'>
-                {screenshots.map((img, i) => (
-                  <CardView
-                    width={`1-` + screenshots.length}
-                    type='no-bg'
-                    key={name + ` screenshot number ` + i}
-                    minWidth={screenshotwidth}
-                  >
-                    <ImageView src={img}
-                      width={screenshotwidth}
-                      height={screenshotheight}
-                      description={name + ` screenshot number ` + i}
-                      centred
-                    />
-                  </CardView>
-                ))}
-              </Column>
+              <div className="screenshot-holder" style={{ width: holderWidth, margin: `auto` }}>
+                <div className="holder" style={{ width: (screenshotwidth), float: `left`, display: `inline-block`, filter: `brightness(0.4)` }} >
+                  <img src={screenshots[0]} width={screenshotwidth} height={screenshotheight}/>
+                </div>
+                <div className="holder" style={{ width: (screenshotwidth), float: `left`, display: `inline-block` }} >
+                   <Carousel 
+                      showArrows 
+                      width={screenshotwidth + "px"}
+                      showThumbs={false}
+                   >
+                    {screenshots.map((img, i) => (
+                      <div>
+                        <img src={img} width={screenshotwidth} height={screenshotheight}/>
+                        <p className="legend">{name + ` screenshot number ` + i}</p>
+                      </div>
+                    ))}
+                  </Carousel>
+                </div>
+                <div className="holder" style={{ width: (screenshotwidth), float: `left`, display: `inline-block`, filter: `brightness(0.4)` }} >
+                  <img src={screenshots[0]} width={screenshotwidth} height={screenshotheight}/>
+                </div>
+              </div>
               <Column width={contentWidth} horizontalAlignment='center' textAlign='left'>
                 {detailedDescription}
               </Column>
