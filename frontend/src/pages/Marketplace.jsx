@@ -243,25 +243,6 @@ class AppPage extends React.Component {
       <>
         <NavBar isScroll={false} />
 
-        <Row
-          height='300px'
-          style={{ margin: `60px 0 0 0` }}
-          styling='splash-parallax'
-        >
-          <Column
-            width='2-3'
-            horizontalAlignment='center'
-            verticalAlignment='center'
-          >
-            <TextView text={`UCL Marketplace`} heading={1} align={`center`} />
-            <TextView
-              text={`Apps that use UCL API`}
-              heading={2}
-              align={`center`}
-            />
-          </Column>
-        </Row>
-
         <Row styling='secondary'
           height={sizing==`mobile` ? `50px` : `70px`} 
           style={{ padding: sizing==`mobile` ? `0` :  `10px 0`}}
@@ -286,35 +267,64 @@ class AppPage extends React.Component {
         </Row>
 
         {sizing==`mobile` ? (
-          <Row styling='secondary'
-            height={`100px`}
-            noPadding
-            style={ {padding : `30px 0`} }
-          >
-            <Column
-              width='2-3'
-              horizontalAlignment='center'
-              verticalAlignment='center'
+          <>
+            <Row styling='secondary'
+              height={`115px`}
+              noPadding
+              style={ {padding : `40px 0 10px 0`} }
             >
-              <CardView
-                type='default'
-                width={`9-10`}
-                style={ { margin : `0 20px` }}
-                noPadding
+              <Column
+                width='2-3'
+                horizontalAlignment='center'
+                verticalAlignment='center'
               >
-                <ImageView
-                  src={logodark}
-                  width={iconsize}
-                  height={iconsize}
-                  description={name + `logo`}
-                  centred
-                />
-                <TextView text={name} heading={2} />
-              </CardView>
-            </Column>
-          </Row>
+                <CardView
+                  type='default'
+                  width={`9-10`}
+                  style={ { marginTop: `30px` }}
+                  noPadding
+                >
+                  <ImageView
+                    src={logodark}
+                    width={iconsize}
+                    height={iconsize}
+                    description={name + `logo`}
+                    centred
+                  />
+                  <TextView text={name} heading={2} />
+                </CardView>
+              </Column>
+            </Row>
+            <Row styling='secondary'
+              height={`100px`}
+              noPadding
+              style={ {padding : `0 0 30px 0`} }
+            >
+              <Column
+                width='2-3'
+                horizontalAlignment='center'
+                verticalAlignment='center'
+              >
+                {links.map((x, key) => (
+                  <Row height="50px" noPadding>
+                    <Column
+                      width='2-3'
+                      horizontalAlignment='center'
+                    >
+                      <ButtonView text={x.name}
+                        link={x.link}
+                        type={`alternate`}
+                        key={key}
+                        style={{ margin: `0`, width: `100px`}}
+                      />
+                    </Column>
+                  </Row>
+                ))}
+              </Column>
+            </Row>
+          </>
         ) : (
-          <Row styling='secondary' height='100px' noPadding>
+          <Row styling='secondary' height='140px' noPadding>
             <Column
               width='2-3'
               horizontalAlignment='center'
@@ -345,6 +355,24 @@ class AppPage extends React.Component {
                 <TextView text={name} heading={2} />
                 <TextView text={description} heading={5} />
               </Column>
+              <Column
+                width='fit-content'
+                minWidth='200px'
+                horizontalAlignment='left'
+                textAlign='left'
+                style={{ "paddingLeft": `20px` }}
+              >
+                {links.map((x, key) => (
+                  <Row height="50px" noPadding>
+                    <ButtonView text={x.name}
+                      link={x.link}
+                      type={`alternate`}
+                      key={key}
+                      style={{ margin: `0`, width: `100px`}}
+                    />
+                  </Row>
+                ))}
+              </Column>
             </Column>
           </Row>
         )}
@@ -373,33 +401,6 @@ class AppPage extends React.Component {
             {detailedDescription}
           </Column>
         </Row>
-
-        {links.length > 0 ? (
-          <Row styling='splash-parallax'>
-            <Column width='2-3' horizontalAlignment='center'>
-              {links.map((x, key) => (
-                <ButtonView text={x.name}
-                  link={x.link}
-                  type={key % 2 == 0 ? `default` : `alternate`}
-                  key={key}
-                  style={{ "marginLeft": `0` }}
-                />
-              ))}
-            </Column>
-          </Row>
-        ) : (
-            <Row styling='splash-parallax'>
-              <Column width='2-3' horizontalAlignment='center'>
-                <TextView
-                  text='No downloads available'
-                  heading={3}
-                  align={`center`}
-                  style={{ "margin": `0` }}
-                />
-              </Column>
-            </Row>
-          )}
-
         <Footer />
 
       </>

@@ -176,7 +176,8 @@ export default class CardView extends React.Component {
 
     if(this.props.noPadding) { 
       adaptation = 100 
-      this.setStyleKeyValuePair(`margin`, `0`)
+      this.setStyleKeyValuePair(`marginLeft`, `0`)
+      this.setStyleKeyValuePair(`marginRight`, `0`)
     }
 
     const percentage = fraction[0] / fraction[1] * adaptation
