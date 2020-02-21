@@ -6,8 +6,6 @@ import React from 'react'
 // Components
 import { TextView } from 'Layout/Items.jsx'
 
-// Styles
-import { styles } from 'Layout/data/dashboard_styles.jsx'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -18,6 +16,23 @@ this.props.text (text to display alongside the checkbox)
 OPTIONAL ATTRIBUTES:
 this.props.style
 **/
+
+const styles = {
+  tokenText: {
+    float: `left`,
+    margin: `6px 10px 0 0`,
+    color: `white`,
+    fontWeight: `300`,
+  },
+  field: {
+    backgroundColor: `#3498db`,
+    height: `50px`,
+    float: `left`,
+    paddingRight: `10px`,
+    width: `100%`,
+    transition: `background-color 0.2s`,
+  }
+}
 
 export default class CheckBox extends React.Component {
 
