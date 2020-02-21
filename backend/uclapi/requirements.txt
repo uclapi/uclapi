@@ -24,7 +24,7 @@ flake8==3.7.9
 greenlet==0.4.15
 gunicorn==20.0.4
 hiredis==1.0.1
-idna==2.8
+idna==2.9
 jinjasql==0.1.7
 jmespath==0.9.4
 jsonpickle==1.2
