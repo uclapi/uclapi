@@ -242,165 +242,170 @@ class AppPage extends React.Component {
     return (
       <>
         <NavBar isScroll={false} />
-
-        <Row styling='secondary'
-          height={sizing==`mobile` ? `50px` : `70px`} 
-          style={{ padding: sizing==`mobile` ? `0` :  `10px 0`}}
-        >
-          <Column width='2-3' horizontalAlignment='center'>
-            <Column
-              width='fit-content'
-              minWidth={iconsize}
-              typeOfInline='grid'
-              horizontalAlignment='left'
+        
+        <Row styling='splash-parallax'>
+          <Column
+            width='2-3'
+            horizontalAlignment='center'
+          >
+            <Row styling='transparent'
+              height={sizing==`mobile` ? `50px` : `35px`} 
+              style={{ padding: sizing==`mobile` ? `0` :  `20px 0`}}
             >
-              <ButtonView type='alternate'
-                text='back'
-                link='/marketplace'
-                style={{
-                  'float': `left`,
-                  'margin': `10px 0`,
-                }}
-              />
-            </Column>
-          </Column>
-        </Row>
-
-        {sizing==`mobile` ? (
-          <>
-            <Row styling='secondary'
-              height={`115px`}
-              noPadding
-              style={ {padding : `40px 0 10px 0`} }
-            >
-              <Column
-                width='2-3'
-                horizontalAlignment='center'
-                verticalAlignment='center'
-              >
-                <CardView
-                  type='default'
-                  width={`9-10`}
-                  style={ { marginTop: `30px` }}
-                  noPadding
+              <Column width='2-3' horizontalAlignment='center'>
+                <Column
+                  width='fit-content'
+                  minWidth={iconsize}
+                  typeOfInline='grid'
+                  horizontalAlignment='left'
                 >
-                  <ImageView
-                    src={logodark}
-                    width={iconsize}
-                    height={iconsize}
-                    description={name + `logo`}
-                    centred
+                  <ButtonView type='alternate'
+                    text='back'
+                    link='/marketplace'
+                    style={{
+                      'float': `left`,
+                      'margin': `10px 0`,
+                    }}
                   />
-                  <TextView text={name} heading={2} />
-                </CardView>
+                </Column>
               </Column>
             </Row>
-            <Row styling='secondary'
-              height={`100px`}
-              noPadding
-              style={ {padding : `0 0 30px 0`} }
-            >
-              <Column
-                width='2-3'
-                horizontalAlignment='center'
-                verticalAlignment='center'
-              >
-                {links.map((x, key) => (
-                  <Row height="50px" noPadding>
-                    <Column
-                      width='2-3'
-                      horizontalAlignment='center'
-                    >
-                      <ButtonView text={x.name}
-                        link={x.link}
-                        type={`alternate`}
-                        key={key}
-                        style={{ margin: `0`, width: `100px`}}
-                      />
-                    </Column>
-                  </Row>
-                ))}
-              </Column>
-            </Row>
-          </>
-        ) : (
-          <Row styling='secondary' height='140px' noPadding>
-            <Column
-              width='2-3'
-              horizontalAlignment='center'
-              verticalAlignment='center'
-            >
-              <Column
-                width='fit-content'
-                minWidth={iconsize}
-                typeOfInline='grid'
-                horizontalAlignment='left'
-              >
-                <ImageView
-                  src={logodark}
-                  width={iconsize}
-                  height={iconsize}
-                  description={name + `logo`}
-                  centred
-                  style={{ 'margin': `0 auto 0 0` }}
-                />
-              </Column>
-              <Column
-                width='fit-content'
-                minWidth={iconsize}
-                horizontalAlignment='left'
-                textAlign='left'
-                style={{ "paddingLeft": `20px` }}
-              >
-                <TextView text={name} heading={2} />
-                <TextView text={description} heading={5} />
-              </Column>
-              <Column
-                width='fit-content'
-                minWidth='200px'
-                horizontalAlignment='left'
-                textAlign='left'
-                style={{ "paddingLeft": `20px` }}
-              >
-                {links.map((x, key) => (
-                  <Row height="50px" noPadding>
-                    <ButtonView text={x.name}
-                      link={x.link}
-                      type={`alternate`}
-                      key={key}
-                      style={{ margin: `0`, width: `100px`}}
-                    />
-                  </Row>
-                ))}
-              </Column>
-            </Column>
-          </Row>
-        )}
 
-        <Row styling='secondary' style={{ 'padding': `0` }}>
-          <Column width={contentWidth} horizontalAlignment='center'>
-            {screenshots.map((img, i) => (
-              <CardView
-                width={`1-` + screenshots.length}
-                type='no-bg'
-                key={name + ` screenshot number ` + i}
-                minWidth={screenshotwidth}
-              >
-                <ImageView src={img}
-                  width={screenshotwidth}
-                  height={screenshotheight}
-                  description={name + ` screenshot number ` + i}
-                  centred
-                />
-              </CardView>
-            ))}
+            {sizing==`mobile` ? (
+              <>
+                <Row styling='secondary'
+                  height={`115px`}
+                  noPadding
+                  style={ {padding : `40px 0 10px 0`} }
+                >
+                  <Column
+                    width='2-3'
+                    horizontalAlignment='center'
+                    verticalAlignment='center'
+                  >
+                    <CardView
+                      type='default'
+                      width={`9-10`}
+                      style={ { marginTop: `30px` }}
+                      noPadding
+                    >
+                      <ImageView
+                        src={logodark}
+                        width={iconsize}
+                        height={iconsize}
+                        description={name + `logo`}
+                        centred
+                      />
+                      <TextView text={name} heading={2} />
+                    </CardView>
+                  </Column>
+                </Row>
+                <Row styling='secondary'
+                  height={`100px`}
+                  noPadding
+                  style={ {padding : `0 0 30px 0`} }
+                >
+                  <Column
+                    width='1-1'
+                    horizontalAlignment='center'
+                    verticalAlignment='center'
+                  >
+                    {links.map((x, key) => (
+                      <Row height="50px" noPadding>
+                        <Column
+                          width='2-3'
+                          horizontalAlignment='center'
+                        >
+                          <ButtonView text={x.name}
+                            link={x.link}
+                            type={`alternate`}
+                            key={key}
+                            style={{ margin: `0`, width: `100px`}}
+                          />
+                        </Column>
+                      </Row>
+                    ))}
+                  </Column>
+                </Row>
+              </>
+            ) : (
+              <Row styling='transparent' height='140px' noPadding>
+                <Column
+                  width='2-3'
+                  horizontalAlignment='center'
+                  verticalAlignment='center'
+                >
+                  <Column
+                    width='fit-content'
+                    minWidth={iconsize}
+                    typeOfInline='grid'
+                    horizontalAlignment='left'
+                  >
+                    <ImageView
+                      src={logodark}
+                      width={iconsize}
+                      height={iconsize}
+                      description={name + `logo`}
+                      centred
+                      style={{ 'margin': `0 auto 0 0` }}
+                    />
+                  </Column>
+                  <Column
+                    width='fit-content'
+                    minWidth={iconsize}
+                    horizontalAlignment='left'
+                    textAlign='left'
+                    style={{ "paddingLeft": `20px` }}
+                  >
+                    <TextView text={name} heading={2} />
+                    <TextView text={description} heading={5} />
+                  </Column>
+                  <Column
+                    width='fit-content'
+                    minWidth='200px'
+                    horizontalAlignment='left'
+                    textAlign='left'
+                    style={{ "paddingLeft": `20px` }}
+                  >
+                    {links.map((x, key) => (
+                      <Row height="50px" noPadding>
+                        <ButtonView text={x.name}
+                          link={x.link}
+                          type={`alternate`}
+                          key={key}
+                          style={{ margin: `0`, width: `100px`}}
+                        />
+                      </Row>
+                    ))}
+                  </Column>
+                </Column>
+              </Row>
+            )}
+            <CardView width="1-1" style={{ padding : `20px 0` }}>
+              <Column width={contentWidth} horizontalAlignment='center'>
+                {screenshots.map((img, i) => (
+                  <CardView
+                    width={`1-` + screenshots.length}
+                    type='no-bg'
+                    key={name + ` screenshot number ` + i}
+                    minWidth={screenshotwidth}
+                  >
+                    <ImageView src={img}
+                      width={screenshotwidth}
+                      height={screenshotheight}
+                      description={name + ` screenshot number ` + i}
+                      centred
+                    />
+                  </CardView>
+                ))}
+              </Column>
+              <Column width={contentWidth} horizontalAlignment='center' textAlign='left'>
+                {detailedDescription}
+              </Column>
+            </CardView>
           </Column>
         </Row>
-        <Row styling='secondary' style={{ 'padding': `0 0 20px 0` }}>
-          <Column width={contentWidth} horizontalAlignment='center' textAlign='left'>
-            {detailedDescription}
-          </Column>
-        </Row>
+
         <Footer />
 
       </>
