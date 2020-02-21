@@ -94,7 +94,7 @@
     "file-loader": "^4.2.0",
     "glob": "^7.1.6",
     "husky": "^4.0.6",
-    "lint-staged": "^9.4.3",
+    "lint-staged": "^10.0.7",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.13.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
