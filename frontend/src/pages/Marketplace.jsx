@@ -240,8 +240,8 @@ class AppPage extends React.Component {
     const contentWidth = sizing==`mobile` ? `9-10` : `2-3`
     const iconsize = sizing==`mobile` ? `50px` : `100px`
 
-    const screenshotwidth = sizing==`mobile` ? `54px` : `216px`
-    const screenshotheight = sizing==`mobile` ? `86px` : `384px`
+    const screenshotwidth = sizing==`mobile` ? `162px` : `216px`
+    const screenshotheight = sizing==`mobile` ? `258px` : `384px`
     const holderWidth = sizing==`mobile` ? `162px` : `648px`
 
     return (
@@ -395,13 +395,14 @@ class AppPage extends React.Component {
             )}
             <CardView width="1-1" style={{ padding : `20px 0` }}>
               <div className="screenshot-holder" style={{ width: holderWidth, margin: `auto` }}>
-                <div className="holder" style={{ width: (screenshotwidth), float: `left`, display: `inline-block`, filter: `brightness(0.4)` }} >
+                <div className="holder" 
+                  style={{ width: (screenshotwidth), float: `left`, 
+                  display: sizing==`mobile` ? `none` : `inline-block`, filter: `brightness(0.4)` }} >
                   <img src={screenshots[0]} width={screenshotwidth} height={screenshotheight}/>
                 </div>
-                <div className="holder" style={{ width: (screenshotwidth), float: `left`, display: `inline-block` }} >
+                <div className="holder" style={{ width: sizing==`mobile` ? holderWidth : screenshotwidth, float: `left`, display: `inline-block` }} >
                    <Carousel 
                       showArrows 
-                      width={screenshotwidth + "px"}
                       showThumbs={false}
                    >
                     {screenshots.map((img, i) => (
@@ -412,7 +413,9 @@ class AppPage extends React.Component {
                     ))}
                   </Carousel>
                 </div>
-                <div className="holder" style={{ width: (screenshotwidth), float: `left`, display: `inline-block`, filter: `brightness(0.4)` }} >
+                <div className="holder" 
+                  style={{ width: (screenshotwidth), float: `left`, 
+                  display: sizing==`mobile` ? `none` : `inline-block`, filter: `brightness(0.4)` }} >
                   <img src={screenshots[0]} width={screenshotwidth} height={screenshotheight}/>
                 </div>
               </div>
