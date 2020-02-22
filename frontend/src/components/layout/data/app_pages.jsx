@@ -154,7 +154,7 @@ const uclcssadescription = (
     />
     <TextView heading={`5`}
       text={`
-      Youu can view a live map showing which seats are available on
+      You can view a live map showing which seats are available on
       each floor in the library. You no longer need walk around the
       library hunting for a vacant seat.`}
     />
@@ -275,10 +275,6 @@ export const allApps = {
       {
         "name": `Website`,
         "link": `https://uclcssa.cn/`,
-      },
-      {
-        "name": `Demo`,
-        "link": `https://uclcssa.cn/timetable/?id=demo`,
       },
     ],
     "screenshots": [ucsscr1, ucsscr2, ucsscr3, ucsscr4],

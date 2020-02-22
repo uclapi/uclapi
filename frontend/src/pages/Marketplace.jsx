@@ -253,16 +253,11 @@ class AppPage extends React.Component {
             width='2-3'
             horizontalAlignment='center'
           >
-            <Row styling='transparent'
-              height={sizing==`mobile` ? `50px` : `35px`} 
-              style={{ padding: sizing==`mobile` ? `0` :  `20px 0`}}
-            >
-              <Column width='2-3' horizontalAlignment='center'>
-                <Column
-                  width='fit-content'
-                  minWidth={iconsize}
-                  typeOfInline='grid'
-                  horizontalAlignment='left'
+            {sizing==`mobile` ? (
+              <>
+                <Row styling='transparent'
+                  height='35px' 
+                  style={{ padding: `20px 0 5px 0`}}
                 >
                   <ButtonView type='alternate'
                     text='back'
@@ -272,40 +267,29 @@ class AppPage extends React.Component {
                       'margin': `10px 0`,
                     }}
                   />
-                </Column>
-              </Column>
-            </Row>
-
-            {sizing==`mobile` ? (
-              <>
-                <Row styling='secondary'
+                </Row>
+                <Row styling='transparent'
                   height={`115px`}
                   noPadding
-                  style={ {padding : `40px 0 10px 0`} }
+                  style={ {padding : `30px 0px 10px`, marginBottom: `20px`} }
                 >
-                  <Column
-                    width='2-3'
-                    horizontalAlignment='center'
-                    verticalAlignment='center'
+                  <CardView
+                    type='default'
+                    width={`1-1`}
+                    style={{ padding: `10px 0` }}
+                    noPadding
                   >
-                    <CardView
-                      type='default'
-                      width={`9-10`}
-                      style={ { marginTop: `30px` }}
-                      noPadding
-                    >
-                      <ImageView
-                        src={logodark}
-                        width={iconsize}
-                        height={iconsize}
-                        description={name + `logo`}
-                        centred
-                      />
-                      <TextView text={name} heading={2} />
-                    </CardView>
-                  </Column>
+                    <ImageView
+                      src={logodark}
+                      width={iconsize}
+                      height={iconsize}
+                      description={name + `logo`}
+                      centred
+                    />
+                    <TextView text={name} heading={2} />
+                  </CardView>
                 </Row>
-                <Row styling='secondary'
+                <Row styling='transparent'
                   height={`100px`}
                   noPadding
                   style={ {padding : `0 0 30px 0`} }
@@ -334,57 +318,80 @@ class AppPage extends React.Component {
                 </Row>
               </>
             ) : (
-              <Row styling='transparent' height='140px' noPadding>
-                <Column
-                  width='2-3'
-                  horizontalAlignment='center'
-                  verticalAlignment='center'
-                >
-                  <Column
-                    width='fit-content'
-                    minWidth={iconsize}
-                    typeOfInline='grid'
-                    horizontalAlignment='left'
+              <>
+                <Row styling='transparent'
+                    height='70px' 
+                    style={{ padding: `20px 0 0 0`}}
                   >
-                    <ImageView
-                      src={logodark}
-                      width={iconsize}
-                      height={iconsize}
-                      description={name + `logo`}
-                      centred
-                      style={{ 'margin': `0 auto 0 0` }}
-                    />
+                  <Column width='2-3' horizontalAlignment='center'>
+                    <Column
+                      width='fit-content'
+                      minWidth={iconsize}
+                      typeOfInline='grid'
+                      horizontalAlignment='left'
+                    >
+                      <ButtonView type='alternate'
+                        text='back'
+                        link='/marketplace'
+                        style={{
+                          'float': `left`,
+                          'margin': `10px 0`,
+                        }}
+                      />
+                    </Column>
                   </Column>
+                </Row>
+                <Row styling='transparent' height='140px' noPadding>
                   <Column
-                    width='fit-content'
-                    minWidth={iconsize}
-                    horizontalAlignment='left'
-                    textAlign='left'
-                    style={{ "paddingLeft": `20px` }}
+                    width='2-3'
+                    horizontalAlignment='center'
+                    verticalAlignment='center'
                   >
-                    <TextView text={name} heading={2} />
-                    <TextView text={description} heading={5} />
+                    <Column
+                      width='fit-content'
+                      minWidth={iconsize}
+                      typeOfInline='grid'
+                      horizontalAlignment='left'
+                    >
+                      <ImageView
+                        src={logodark}
+                        width={iconsize}
+                        height={iconsize}
+                        description={name + `logo`}
+                        centred
+                        style={{ 'margin': `0 auto 0 0` }}
+                      />
+                    </Column>
+                    <Column
+                      width='fit-content'
+                      minWidth={iconsize}
+                      horizontalAlignment='left'
+                      textAlign='left'
+                      style={{ "paddingLeft": `20px` }}
+                    >
+                      <TextView text={name} heading={2} />
+                      <TextView text={description} heading={5} />
+                    </Column>
+                    <Column
+                      width='fit-content'
+                      horizontalAlignment='left'
+                      textAlign='left'
+                      style={{ "paddingLeft": `20px` }}
+                    >
+                      {links.map((x, key) => (
+                        <Row height="50px" noPadding>
+                          <ButtonView text={x.name}
+                            link={x.link}
+                            type={`alternate`}
+                            key={key}
+                            style={{ margin: `0`, width: `100px`}}
+                          />
+                        </Row>
+                      ))}
+                    </Column>
                   </Column>
-                  <Column
-                    width='fit-content'
-                    minWidth='200px'
-                    horizontalAlignment='left'
-                    textAlign='left'
-                    style={{ "paddingLeft": `20px` }}
-                  >
-                    {links.map((x, key) => (
-                      <Row height="50px" noPadding>
-                        <ButtonView text={x.name}
-                          link={x.link}
-                          type={`alternate`}
-                          key={key}
-                          style={{ margin: `0`, width: `100px`}}
-                        />
-                      </Row>
-                    ))}
-                  </Column>
-                </Column>
-              </Row>
+                </Row>
+              </>
             )}
             <CardView width="1-1" style={{ padding : `20px 0` }}>
               <div className="screenshot-holder" style={{ width: holderWidth, margin: `auto` }}>
