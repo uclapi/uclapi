@@ -323,7 +323,7 @@ class AppPage extends React.Component {
                     height='70px' 
                     style={{ padding: `20px 0 0 0`}}
                   >
-                  <Column width='2-3' horizontalAlignment='center'>
+                  <Column width='1-1' horizontalAlignment='center'>
                     <Column
                       width='fit-content'
                       minWidth={iconsize}
@@ -343,7 +343,7 @@ class AppPage extends React.Component {
                 </Row>
                 <Row styling='transparent' height='140px' noPadding>
                   <Column
-                    width='2-3'
+                    width='1-1'
                     horizontalAlignment='center'
                     verticalAlignment='center'
                   >
@@ -363,8 +363,7 @@ class AppPage extends React.Component {
                       />
                     </Column>
                     <Column
-                      width='fit-content'
-                      minWidth={iconsize}
+                      width='150px'
                       horizontalAlignment='left'
                       textAlign='left'
                       style={{ "paddingLeft": `20px` }}
@@ -384,7 +383,7 @@ class AppPage extends React.Component {
                             link={x.link}
                             type={`alternate`}
                             key={key}
-                            style={{ margin: `0`, width: `100px`}}
+                            style={{ margin: `0`, width: `75px`}}
                           />
                         </Row>
                       ))}
@@ -393,7 +392,7 @@ class AppPage extends React.Component {
                 </Row>
               </>
             )}
-            <CardView width="1-1" style={{ padding : `20px 0` }}>
+            <CardView width="1-1" noPadding style={{ padding : `20px 0` }}>
               <div className="screenshot-holder" style={{ width: holderWidth, margin: `auto` }}>
                 <div className="holder" 
                   style={{ width: (screenshotwidth), float: `left`, 
