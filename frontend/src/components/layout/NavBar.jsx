@@ -154,7 +154,11 @@ class NavBar extends React.Component {
         <a href={`/`}>
           <img src={logo} />
         </a>
-        <div className="logoTextWhite"><div>UCL API</div></div>
+        <a href={`/`} style={{ textDecoration: `none` }} >
+          <div className="logoTextWhite">
+            UCL API
+          </div>
+        </a>
 
         <div className="link-titles">
           {!isSmall ? (
