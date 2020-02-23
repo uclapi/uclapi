@@ -397,17 +397,17 @@ class AppPage extends React.Component {
                 <div className="holder" 
                   style={{ width: (screenshotwidth), float: `left`, 
                   display: sizing==`mobile` ? `none` : `inline-block`, filter: `brightness(0.4)` }} >
-                  <img src={screenshots[0]} width={screenshotwidth} height={screenshotheight}/>
+                  <img src={screenshots[0].img} width={screenshotwidth} height={screenshotheight}/>
                 </div>
                 <div className="holder" style={{ width: sizing==`mobile` ? holderWidth : screenshotwidth, float: `left`, display: `inline-block` }} >
                    <Carousel 
                       showArrows 
                       showThumbs={false}
                    >
-                    {screenshots.map((img, i) => (
+                    {screenshots.map((screenshot, i) => (
                       <div>
-                        <img src={img} width={screenshotwidth} height={screenshotheight}/>
-                        <p className="legend">{name + ` screenshot number ` + i}</p>
+                        <img src={screenshot.img} width={screenshotwidth} height={screenshotheight}/>
+                        <p className="legend">{screenshot.name}</p>
                       </div>
                     ))}
                   </Carousel>
@@ -415,7 +415,7 @@ class AppPage extends React.Component {
                 <div className="holder" 
                   style={{ width: (screenshotwidth), float: `left`, 
                   display: sizing==`mobile` ? `none` : `inline-block`, filter: `brightness(0.4)` }} >
-                  <img src={screenshots[0]} width={screenshotwidth} height={screenshotheight}/>
+                  <img src={screenshots[0].img} width={screenshotwidth} height={screenshotheight}/>
                 </div>
               </div>
               <Column width={contentWidth} horizontalAlignment='center' textAlign='left'>
