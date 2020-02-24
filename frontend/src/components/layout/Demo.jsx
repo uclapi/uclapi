@@ -1,15 +1,21 @@
 import 'whatwg-fetch'
 
 import {
-  grey100,
-  pinkA200,
-  white,
-} from 'material-ui/styles/colors'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+  grey,
+  pink,
+} from '@material-ui/core/colors'
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import React from 'react'
 
-const muiTheme = getMuiTheme({
+const {
+  100: grey100,
+} = grey
+const {
+  A200: pinkA200,
+} = pink
+const white = `#ffffff`
+
+const muiTheme = createMuiTheme({
   fontFamily: `Roboto, sans-serif`,
   palette: {
     primary1Color: `#434343`,
@@ -23,13 +29,19 @@ const muiTheme = getMuiTheme({
 
 // Required components
 import rooms from 'Layout/data/room_names.jsx'
-import { AutoCompleteView, CodeView, Column, Row, TextView } from 'Layout/Items.jsx'
+import {
+  AutoCompleteView, CodeView, Column, Row, TextView,
+} from 'Layout/Items.jsx'
 
 export default class Demo extends React.Component {
   constructor(props) {
     super(props)
 
-    const rootURL = location.protocol + `//` + location.hostname + (location.port ? `:` + location.port : ``)
+    const rootURL = (
+      location.protocol
+      + `//` + location.hostname
+      + (location.port ? `:` + location.port : ``)
+    )
     const now = new Date()
 
     this.DEBUGGING = false
@@ -52,7 +64,7 @@ export default class Demo extends React.Component {
       response,
     } = this.state
     return (
-      <MuiThemeProvider muiTheme={muiTheme}>
+      <MuiThemeProvider theme={muiTheme}>
         <Row styling={`secondary`} height={`fit-content`} isPaddedBottom>
           <Column width='2-3' horizontalAlignment='center'>
             <TextView text={`Try out the API`} heading={1} align={`center`} />
@@ -62,7 +74,11 @@ export default class Demo extends React.Component {
           <Row height='20px' noPadding />
 
           <Column width='2-3' horizontalAlignment='center'>
-            <CodeView url={`${rootURL}/roombookings/bookings`} params={params} type={`request`} />
+            <CodeView
+              url={`${rootURL}/roombookings/bookings`}
+              params={params}
+              type={`request`}
+            />
           </Column>
 
           {response ? (
@@ -79,7 +95,9 @@ export default class Demo extends React.Component {
     const now = new Date()
     const { rootURL } = this.state
 
-    if (this.DEBUGGING) { console.log(`DEBUG: Looking for room bookings in the room: ` + roomName) }
+    if (this.DEBUGGING) {
+      console.log(`DEBUG: Looking for room bookings in the room: ` + roomName)
+    }
 
     this.setState({
       params: {

@@ -1,4 +1,3 @@
-import { Tab,Tabs } from 'material-ui/Tabs'
 import React from 'react'
 
 
@@ -23,7 +22,7 @@ export default class LanguageTabs extends React.Component {
     this.setState({ activeLanguage: language })
   }
 
-  renderChildren = (props) => React.Children.map(props.children, (child, i) =>
+  renderChildren = (props) => React.Children.map(props.children, (child, ) =>
     React.cloneElement(child, {
       activeLanguage: this.state.activeLanguage,
     })
@@ -32,7 +31,7 @@ export default class LanguageTabs extends React.Component {
   render() {
     return (
       <div>
-        <div className="main" style={{padding : `50px`}}>
+        <div className="main" style={{ padding: `50px` }}>
           {this.renderChildren(this.props)}
         </div>
       </div>

@@ -1,8 +1,11 @@
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
-import Divider from 'material-ui/Divider'
-import Drawer from 'material-ui/Drawer'
-import { List, ListItem, makeSelectable } from 'material-ui/List'
-import Subheader from 'material-ui/Subheader'
+import {
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListSubheader,
+  SwipeableDrawer,
+} from '@material-ui/core'
 import React from 'react'
 
 import { ButtonView } from 'Layout/Items.jsx'
@@ -19,11 +22,9 @@ import { ButtonView } from 'Layout/Items.jsx'
   the href in the Topic component
 */
 
-const SelectableList = makeSelectable(List)
-
 const menuContents = (
   <>
-    <SelectableList
+    <List
       value={location.pathname}
     >
       <ListItem
@@ -220,18 +221,30 @@ const menuContents = (
         key="Get Involved"
         href="#getInvolved"
       />
-    </SelectableList>
+    </List>
 
     <Divider />
 
-    <SelectableList
+    <List
       value=""
     >
-      <Subheader>Links</Subheader>
-      <ListItem primaryText="GitHub" key="GitHub" href="https://github.com/uclapi" />
-      <ListItem primaryText="facebook" key="Facebook" href="https://facebook.com/uclapi" />
-      <ListItem primaryText="Twitter" key="Twitter" href="https://twitter.com/uclapi" />
-    </SelectableList>
+      <ListSubheader>Links</ListSubheader>
+      <ListItem
+        primaryText="GitHub"
+        key="GitHub"
+        href="https://github.com/uclapi"
+      />
+      <ListItem
+        primaryText="facebook"
+        key="Facebook"
+        href="https://facebook.com/uclapi"
+      />
+      <ListItem
+        primaryText="Twitter"
+        key="Twitter"
+        href="https://twitter.com/uclapi"
+      />
+    </List>
   </>
 )
 
@@ -240,14 +253,12 @@ export default class Sidebar extends React.Component {
   constructor(props) {
     super(props)
 
-    this.toggleOpen = this.toggleOpen.bind(this)
-
     this.state = {
       isOpen: false,
     }
   }
 
-  toggleOpen() {
+  toggleOpen = () => {
     this.setState({
       isOpen: !this.state.isOpen,
     })
