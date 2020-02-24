@@ -45,7 +45,7 @@ jobs:
     env:
     - AWS_S3_STATICS=True
     - AWS_S3_STATICS_CREDENTIALS_ENABLED=False
-    - AWS_S3_BUCKET_NAME=uclapi-static
+    - AWS_S3_BUCKET_NAME=uclapi-static-staging
     - AWS_S3_BUCKET_PATH=static/
     - AWS_S3_REGION=eu-west-2
     before_script:
