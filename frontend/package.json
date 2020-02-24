@@ -26,17 +26,14 @@
   },
   "lint-staged": {
     "*.{js,jsx,json}": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ],
     "*.{scss}": [
-      "stylelint --fix",
-      "git add"
+      "stylelint --fix"
     ],
     "../**/*.py": [
       "autopep8 --in-place --global-config ../backend/uclapi/.flake8.ini",
-      "flake8",
-      "git add"
+      "flake8"
     ]
   },
   "browserify": {
