@@ -12,8 +12,7 @@ import Modal from 'react-modal'
 
 // Styles
 import { styles } from 'Layout/data/dashboard_styles.jsx'
-import { CardView, Column, Footer, NavBar, Row, TextView, 
-  ButtonView, Field, ConfirmBox, CheckBox } from 'Layout/Items.jsx'
+import { ButtonView, CardView, Column, ConfirmBox, Footer, NavBar, Row, TextView } from 'Layout/Items.jsx'
 
 // UI App Component
 import App from '../components/dashboard/App.jsx'
@@ -22,13 +21,13 @@ const defaultHeaders = {
   'Content-Type': `application/x-www-form-urlencoded`,
   'X-CSRFToken': Cookies.get(`csrftoken`),
 }
-  
+
 class Dashboard extends React.Component {
 
   constructor(props) {
     super(props)
 
-    this.DEBUGGING = true
+    this.DEBUGGING = false
 
     // Sort the apps by last updated property
     window.initialData.apps.sort((a, b) => {
@@ -44,7 +43,7 @@ class Dashboard extends React.Component {
       }
     })
 
-    this.state = { 
+    this.state = {
       data: window.initialData,
       view: `default`,
       toDelete: -1,
@@ -52,7 +51,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { data: { name, cn, apps }, view, toDelete} = this.state 
+    const { data: { name, cn, apps }, view, toDelete } = this.state
 
     const actions = {
       toggleEditTitle: this.toggleEditTitle,
@@ -70,73 +69,71 @@ class Dashboard extends React.Component {
       saveOAuthCallback: this.saveOAuthCallback,
       addNewProject: this.addNewProject,
       deleteProject: this.deleteProject,
-      deleteConfirm: this.deleteConfirm
+      deleteConfirm: this.deleteConfirm,
     }
-
-    if(this.DEBUGGING) { console.log("re-rendered dashboard") }
-    console.log(apps)
 
     return (
       <>
         <NavBar isScroll={false} />
 
-        <Modal 
+        <Modal
           isOpen={view == `add-project`}
           contentLabel="Create app form"
-          onRequestClose={ () => this.setState({view: `default`}) }
+          onRequestClose={() => this.setState({ view: `default` })}
           className="Modal"
           overlayClassName="Overlay"
           style={styles.modal}
         >
           <ConfirmBox
             text="Enter the name of your new project"
-            success={(value) => { actions.addNewProject(value) } }
-            fail={() => { this.setState({view: `default`}) } }
+            success={(value) => { actions.addNewProject(value) }}
+            fail={() => { this.setState({ view: `default` }) }}
           />
         </Modal>
 
-        <Modal 
+        <Modal
           isOpen={view == `delete-project`}
           contentLabel="Delete app form"
-          onRequestClose={ () => this.setState({view: `default`}) }
+          onRequestClose={() => this.setState({ view: `default` })}
           className="Modal"
           overlayClassName="Overlay"
           style={styles.modal}
         >
           {toDelete !== -1 ? (
             <ConfirmBox
-              text={"Enter the name of your project to confirm deletion (" + apps[toDelete].name  + ")"}
-              success={(value) => { actions.deleteProject(toDelete) } }
-              fail={() => { this.setState({view: `default`}) } }
-              value={ apps[toDelete].name }
+              text={`Enter the name of your project to confirm deletion (` + apps[toDelete].name + `)`}
+              success={(value) => { actions.deleteProject(toDelete) }}
+              fail={() => { this.setState({ view: `default` }) }}
+              value={apps[toDelete].name}
               shouldCheckValue
             />
-          ) : null }
+          ) : null}
         </Modal>
 
-        <Row height='fit-content' styling='splash-parallax' style={{ minHeight : `100%`}}>
+        <Row height='fit-content' styling='splash-parallax' style={{ minHeight: `100%` }}>
           <Column width='2-3' horizontalAlignment='center' style={{ marginTop: `80px` }}>
             <TextView text={`Welcome, ` + name}
               heading={1}
-              align={`left`} 
+              align={`left`}
               style={styles.baseText}
             />
             <TextView text={`Your username is: ` + cn}
               heading={2}
-              align={`left`} 
+              align={`left`}
               style={styles.lightText}
             />
 
             <div className="app-holder" style={styles.appHolder}>
-              {apps.map( (app, index) => (
+              {apps.map((app, index) => (
                 <App
+                  key={app.name}
                   app={app}
                   index={index}
                   actions={actions}
                 />
               ))}
               {apps.length === 0 ? (
-                 <CardView width='1-1' type='default' noPadding>
+                <CardView width='1-1' type='default' noPadding>
                   <Row noPadding>
                     <Column width='1-1'
                       horizontalAlignment='center'
@@ -146,7 +143,10 @@ class Dashboard extends React.Component {
                       }}
                     >
                       <TextView
-                        text={"You haven't created any apps yet, click below to get started!"}
+                        text={
+                          `You haven't created any apps yet, ` +
+                          `click below to get started!`
+                        }
                         heading={2}
                         align={`center`}
                         style={styles.noPadding}
@@ -156,9 +156,12 @@ class Dashboard extends React.Component {
                 </CardView>
               ) : null}
             </div>
-            <ButtonView text={`Add new project`} type={`default`} 
-              style={{ cursor: `pointer` }} 
-              onClick={ () => { this.setState({ view: `add-project` }) } } fakeLink/>
+            <ButtonView text={`Add new project`}
+              type={`default`}
+              style={{ cursor: `pointer` }}
+              onClick={() => { this.setState({ view: `add-project` }) }}
+              fakeLink
+            />
           </Column>
         </Row>
 
@@ -170,26 +173,27 @@ class Dashboard extends React.Component {
   addNewProject = (name) => {
     this.queryDashboardAPI(`/dashboard/api/create/`, `name=` + name, (json) => {
       // For debugging
-      if(this.DEBUGGING) { console.log(json) }
+      if (this.DEBUGGING) { console.log(json) }
 
       // Add the new app to the state so it gets rendered
-      let newApp = json.app
-      newApp['name'] = name
+      const newApp = json.app
+      newApp[`name`] = name
 
-      var newData = {...this.state.data}
+      const { data } = this.state
+      const newData = { ...data }
       newData.apps.push(newApp)
 
       // Go to new state visually
       this.setState({
-        view: `default`, 
-        data: newData
+        view: `default`,
+        data: newData,
       })
     })
   }
 
   deleteConfirm = (index) => {
-    this.setState({ 
-      view: `delete-project`, 
+    this.setState({
+      view: `delete-project`,
       toDelete: index,
     })
   }
@@ -197,38 +201,40 @@ class Dashboard extends React.Component {
   deleteProject = (index) => {
     const { data } = this.state
 
-    this.queryDashboardAPI(`/dashboard/api/delete/`, `app_id=` + data.apps[index].id, (json) => {
-      // For debugging
-      if(this.DEBUGGING) { console.log(json) }
+    this.queryDashboardAPI(
+      `/dashboard/api/delete/`,
+      `app_id=` + data.apps[index].id,
+      (json) => {
+        // For debugging
+        if (this.DEBUGGING) { console.log(json) }
 
-      // Remove the deleted app
-      console.log("deleting index: " + index)
-      var newData = {...this.state.data}
-      newData.apps.splice(index, 1)
-      console.log(newData.apps)
+        // Remove the deleted app
+        console.log(`deleting index: ` + index)
+        const newData = { ...this.state.data }
+        newData.apps.splice(index, 1)
 
-      // Go to default state visually
-      this.setState({  
-        toDelete: -1,
-        view: `default`, 
-        data: newData
+        // Go to default state visually
+        this.setState({
+          toDelete: -1,
+          view: `default`,
+          data: newData,
+        })
       })
-    })
   }
 
   saveEditTitle = (index, value) => {
     const { data } = this.state
-    
+
     this.queryDashboardAPI(`/dashboard/api/rename/`, `new_name=` + value + `&app_id=` + data.apps[index].id, (json) => {
-      if(this.DEBUGGING) { console.log(json) }
+      if (this.DEBUGGING) { console.log(json) }
     })
-    
+
     data.apps[index].name = value
     this.setState({ data: data })
   }
 
   saveOAuthCallback = (index, value) => {
-    if(value.startsWith("https://") || value.startsWith("http://") || value=="") {
+    if (value.startsWith(`https://`) || value.startsWith(`http://`) || value == ``) {
       const { data } = this.state
       data.apps[index].oauth.callback_url = value
 
@@ -241,42 +247,42 @@ class Dashboard extends React.Component {
   }
 
   setScope = (index, scope, value) => {
-    if(this.DEBUGGING) { console.log("Change app, " + index + " scope, " + scope + " to " + value) }
+    if (this.DEBUGGING) { console.log(`Change app, ` + index + ` scope, ` + scope + ` to ` + value) }
 
-    var newData = {...this.state.data}
+    const newData = { ...this.state.data }
 
     // Update data
     newData.apps[index].oauth.scopes[scope].enabled = value
 
     // Convert scopes into form for backend
     const scopes = newData.apps[index].oauth.scopes
-    const scopesData = scopes.map( scope => 
+    const scopesData = scopes.map(scope =>
       ({
-        name: scope.name, 
-        checked: scope.enabled
+        name: scope.name,
+        checked: scope.enabled,
       }))
 
     const json = JSON.stringify(scopesData)
 
-    this.queryDashboardAPI(`/dashboard/api/updatescopes/`, `app_id=` + newData.apps[index].id + 
+    this.queryDashboardAPI(`/dashboard/api/updatescopes/`, `app_id=` + newData.apps[index].id +
       `&scopes=` + encodeURIComponent(json), (json) => {
         console.log(json)
-    })
+      })
 
     this.setState({ data: newData })
   }
 
   regenToken = (index) => {
-    const { data } = this.state 
+    const { data } = this.state
 
     this.queryDashboardAPI(`/dashboard/api/regen/`, `app_id=` + data.apps[index].id, (json) => {
-      data.apps[index].token = json.app.token 
+      data.apps[index].token = json.app.token
       this.setState({ data: data })
     })
   }
 
   regenVerificationSecret = (index) => {
-    const { data } = this.state 
+    const { data } = this.state
 
     this.queryDashboardAPI(`dashboard/api/webhook/refreshsecret/`, `app_id=` + data.apps[index].id, (json) => {
       data.apps[index].webhook.verification_secret = json.new_secret
@@ -285,27 +291,30 @@ class Dashboard extends React.Component {
   }
 
   saveWebhookURL = (index, value) => {
-    if(value.startsWith("https://") || value.startsWith("http://") || value=="") {
-      this.updateWebhookSettings({url: value}, index) 
+    if (value.startsWith(`https://`) || value.startsWith(`http://`) || value == ``) {
+      this.updateWebhookSettings({ url: value }, index)
     }
   }
 
-  saveWebhookContact = (index, value) => { this.updateWebhookSettings({contact: value}, index) }
-  saveWebhookSiteID = (index, value) => { this.updateWebhookSettings({siteid: value}, index) }
-  saveWebhookRoomID = (index, value) => { this.updateWebhookSettings({roomid: value}, index) }
+  saveWebhookContact = (index, value) => { this.updateWebhookSettings({ contact: value }, index) }
+  saveWebhookSiteID = (index, value) => { this.updateWebhookSettings({ siteid: value }, index) }
+  saveWebhookRoomID = (index, value) => { this.updateWebhookSettings({ roomid: value }, index) }
 
   updateWebhookSettings = (newValues, index) => {
     const { data } = this.state
 
     const app = data.apps[index]
-    var values = {...app.webhook, ...newValues}
+    const values = {
+      ...app.webhook,
+      ...newValues,
+    }
 
-    const parameters = `url=` + values.url + `&siteid=` + values.siteid + `&roomid=` + values.roomid 
+    const parameters = `url=` + values.url + `&siteid=` + values.siteid + `&roomid=` + values.roomid
       + `&contact=` + values.contact + `&app_id=` + data.apps[index].id
 
     this.queryDashboardAPI(`dashboard/api/webhook/edit/`, parameters, (json) => {
-        console.log(`For parameters: ` + parameters)
-        console.log(json)
+      console.log(`For parameters: ` + parameters)
+      console.log(json)
     })
 
     data.apps[index].webhook = values
@@ -318,13 +327,13 @@ class Dashboard extends React.Component {
       credentials: `include`,
       headers: defaultHeaders,
       body: querystring,
-    }).then((res)=>{
+    }).then((res) => {
       return res.json()
     }).then(callback)
-    .catch((err)=>{
-      console.log(`Failed to save details to: ` + url)
-      console.log(err)
-    })
+      .catch((err) => {
+        console.log(`Failed to save details to: ` + url)
+        console.log(err)
+      })
   }
 }
 

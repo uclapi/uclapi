@@ -29,30 +29,40 @@ export default class CardView extends React.Component {
     this.DEFAULT_WIDTH = 0
     this.DEBUGGING = false
 
-    this.getWidth = this.getWidth.bind(this)
-    this.getMinWidth = this.getMinWidth.bind(this)
-    this.getStyle = this.getStyle.bind(this)
-    this.setStyleKeyValuePair = this.setStyleKeyValuePair.bind(this)
-    this.setTheme = this.setTheme.bind(this)
-    this.setMargin = this.setMargin.bind(this)
-    this.updateStyle = this.updateStyle.bind(this)
-    
     this.cardRef = React.createRef()
 
     this.state = {
-      containerWidth : -1,
+      containerWidth: -1,
     }
   }
 
   render() {
     this.updateStyle()
 
-    const className = this.class
-    const style = this.style
+    const { class: className, style } = this
+    const {
+      type,
+      stateClass,
+    } = this.state
+    const {
+      link,
+      fakeLink,
+      children,
+    } = this.props
 
-    if (this.DEBUGGING) { console.log(`DEBUG: CardView rendered with the following styles: ` + this.state.type + ` and class: ` + this.state.class) }
+    if (this.DEBUGGING) {
+      console.log(
+        `DEBUG: CardView rendered with the following styles: `
+        + type
+        + ` and class: `
+        + stateClass
+      )
+    }
 
-    const doesLinkRoute = (typeof this.props.link != `undefined`) && (typeof this.props.fakeLink == `undefined`)
+    const doesLinkRoute = (
+      (typeof link != `undefined`) &&
+      (typeof fakeLink == `undefined`)
+    )
 
     // RENDER METHOD
     if (doesLinkRoute) {
@@ -66,9 +76,9 @@ export default class CardView extends React.Component {
             }}
             ref={this.cardRef}
           ></div>
-          <a href={this.props.link}>
+          <a href={link}>
             <div className={className} style={style}>
-              {this.props.children}
+              {children}
             </div>
           </a>
         </>
@@ -85,30 +95,33 @@ export default class CardView extends React.Component {
             ref={this.cardRef}
           ></div>
           <div className={className} style={style}>
-            {this.props.children}
+            {children}
           </div>
         </>
       )
     }
   }
 
-  updateStyle() {
+  updateStyle = () => {
     let minWidth = this.getMinWidth()
     let shouldResize = false
 
-    if (minWidth != `unset` && this.state.containerWidth != -1) { 
+    const { containerWidth } = this.state
+    const { width } = this.props
+
+    if (minWidth != `unset` && containerWidth != -1) {
       minWidth = minWidth.substring(0, minWidth.length - 2)
-      const fraction = this.props.width.split(`-`)
+      const fraction = width.split(`-`)
       const minTotalWidth = minWidth * fraction[1] / fraction[0]
 
-      shouldResize = this.state.containerWidth <= minTotalWidth
+      shouldResize = containerWidth <= minTotalWidth
     }
 
     this.class = `uclapi-card`
     this.style = {}
 
     const { style } = this.props
-    if (style) { this.style = {...style} }
+    if (style) { this.style = { ...style } }
 
     this.setTheme()
 
@@ -121,7 +134,8 @@ export default class CardView extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.snapAlign) {
+    const { snapAlign } = this.props
+    if (snapAlign) {
       if (this.DEBUGGING) { console.log(`CardView.componentDidMount`) }
       window.addEventListener(`resize`, this.setMargin)
       // SET MARGIN IN CASE TOO SMALL
@@ -129,22 +143,24 @@ export default class CardView extends React.Component {
     }
   }
   componentWillUnmount() {
-    if (this.props.snapAlign) {
+    const { snapAlign } = this.props
+    if (snapAlign) {
       if (this.DEBUGGING) { console.log(`CardView.componentWillUnmount`) }
       window.removeEventListener(`resize`, this.setMargin)
     }
   }
 
-  setMargin() {
-    const fraction = this.props.width.split(`-`)
+  setMargin = () => {
+    const { width } = this.props
+    const fraction = width.split(`-`)
     const adaption = 100 - (4 * fraction[1])
 
     const currentWidth = this.cardRef.current.clientWidth * adaption / 100
 
-    this.setState({containerWidth : currentWidth})
+    this.setState({ containerWidth: currentWidth })
   }
 
-  setTheme() {
+  setTheme = () => {
     // REQUIRED ATTRIBUTES
     // STYLE
     this.class += ` uclapi-card-` + this.getStyle()
@@ -153,53 +169,69 @@ export default class CardView extends React.Component {
     // MIN WIDTH
     this.setStyleKeyValuePair(`minWidth`, this.getMinWidth())
 
+    const { link, fakeLink, noShadow } = this.props
+
     // OPTIONAL ATTRIBUTES
     // LINK
-    if (this.props.link || this.props.fakeLink) { this.class += ` default-transition background-color-transition clickable uclapi-card-clicked-` + this.getStyle() }
+    if (link || fakeLink) {
+      this.class += ` default-transition background-color-transition`
+        + `clickable uclapi-card-clicked-`
+        + this.getStyle()
+    }
     // ADD SHADOW AS DEFAULT
-    if (typeof this.props.noShadow === `undefined` && this.getStyle() != `no-bg`) { this.class += ` uclapi-card-shadow` }
+    if (typeof noShadow === `undefined` && this.getStyle() != `no-bg`) {
+      this.class += ` uclapi-card-shadow`
+    }
   }
 
-  setStyleKeyValuePair(key, value) {
-    if (this.DEBUGGING) { console.log(`DEBUG: ` + key + ` updated to ` + value) }
+  setStyleKeyValuePair = (key, value) => {
+    if (this.DEBUGGING) {
+      console.log(`DEBUG: ` + key + ` updated to ` + value)
+    }
     this.style[key] = value
-    if (this.DEBUGGING) { console.log(`DEBUG: style updated to: ` + this.style) }
+    if (this.DEBUGGING) {
+      console.log(`DEBUG: style updated to: ` + this.style)
+    }
   }
 
-  getWidth() {
-    if (typeof this.props.width == `undefined`) { console.exception(`EXCEPTION: no width set for card view so setting card view width to ` + this.DEFAULT_WIDTH); return this.DEFAULT_WIDTH }
+  getWidth = () => {
+    const { width, noPadding } = this.props
+    if (typeof width == `undefined`) {
+      console.exception(
+        `EXCEPTION: no width set for card view so setting card view width to `
+        + this.DEFAULT_WIDTH
+      )
+      return this.DEFAULT_WIDTH
+    }
 
-    if (this.props.width == `fit-content`) { return `fit-content` }
+    if (width == `fit-content`) { return `fit-content` }
 
-    const fraction = this.props.width.split(`-`)
+    const fraction = width.split(`-`)
     let adaptation = 100 - (4 * fraction[1])
 
-    if(this.props.noPadding) { 
-      adaptation = 100 
-      this.setStyleKeyValuePair("marginLeft", "0")
-      this.setStyleKeyValuePair("marginRight", "0")
+    if (noPadding) {
+      adaptation = 100
+      this.setStyleKeyValuePair(`marginLeft`, `0`)
+      this.setStyleKeyValuePair(`marginRight`, `0`)
     }
 
     const percentage = fraction[0] / fraction[1] * adaptation
     return percentage + `%`
   }
 
-  getMinWidth() {
-    let minWidth = `unset`
-    if (this.props.minWidth) { minWidth = this.props.minWidth }
-    return minWidth
+  getMinWidth = () => {
+    const { minWidth } = this.props
+    return minWidth ? minWidth : `unset`
   }
 
-  getMaxWidth() {
-    let maxWidth = `unset`
-    if (this.props.maxWidth) { maxWidth = this.props.maxWidth }
-    return maxWidth
+  getMaxWidth = () => {
+    const { maxWidth } = this.props
+    return maxWidth ? maxWidth : `unset`
   }
 
-  getStyle() {
-    let style = `default`
-    if (this.props.type) { style = this.props.type }
-    return style
+  getStyle = () => {
+    const { type } = this.props
+    return type ? type : `default`
   }
 
 }
