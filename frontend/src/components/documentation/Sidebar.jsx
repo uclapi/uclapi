@@ -1,14 +1,19 @@
 import {
+  Collapse,
   Divider,
   Drawer,
   List,
   ListItem,
+  ListItemText,
   ListSubheader,
   SwipeableDrawer,
 } from '@material-ui/core'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 
 import { ButtonView } from 'Layout/Items.jsx'
+
+import ChevronDown from '../../images/documentation/chevron-down.svg'
+import ChevronUp from '../../images/documentation/chevron-up.svg'
 
 /*
   Got this entire thing from
@@ -22,24 +27,75 @@ import { ButtonView } from 'Layout/Items.jsx'
   the href in the Topic component
 */
 
+const Section = ({ sectionTitle, children }) => {
+  const [isOpen, setOpen] = useState(false)
+  const onClick = useCallback(
+    () => setOpen(!isOpen),
+    [isOpen]
+  )
+  return (
+    <>
+      <ListItem
+        button
+        onClick={onClick}
+      >
+        <ListItemText primary={sectionTitle} />
+        {isOpen ? <img src={ChevronUp} /> : <img src={ChevronDown} />}
+      </ListItem>
+      <Collapse
+        in={isOpen}
+        timeout="auto"
+        unmountOnExit
+      >
+        <List
+          component="div"
+        >
+          {children}
+        </List>
+      </Collapse>
+    </>
+  )
+}
+
 const menuContents = (
   <>
-    <List
-      value={location.pathname}
-    >
-      <ListItem
-        href="#welcome"
-        primaryText="Meta"
-        primaryTogglesNestedList
-        nestedItems={[
-          <ListItem primaryText="Welcome" key="Welcome" href="#welcome" />,
-          <ListItem primaryText="Get Your API Key" key="Get Your API Key" href="#get-api-key" />,
-          <ListItem primaryText="API Rate Limits" key="API Rate Limits" href="#api-rate-limits" />,
-          <ListItem primaryText="API Data Freshness" key="API Data Freshness" href="#api-expiry-times" />,
-        ]}
-      />
+    <List component="div">
+      <Section sectionTitle="Meta">
+        <ListItem button>
+          <ListItemText
+            inset
+            primary="Welcome"
+            key="Welcome"
+            href="#welcome"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            inset
+            primary="Get Your API Key"
+            key="Get Your API Key"
+            href="#get-api-key"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            inset
+            primary="API Rate Limits"
+            key="API Rate Limits"
+            href="#api-rate-limits"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            inset
+            primary="API Data Freshness"
+            key="API Data Freshness"
+            href="#api-expiry-times"
+          />
+        </ListItem>
+      </Section>
 
-      <ListItem
+      {/* <ListItem
         href="#oauth"
         primaryText="OAuth"
         primaryTogglesNestedList
@@ -243,7 +299,7 @@ const menuContents = (
         primaryText="Twitter"
         key="Twitter"
         href="https://twitter.com/uclapi"
-      />
+      /> */}
     </List>
   </>
 )
@@ -259,21 +315,27 @@ export default class Sidebar extends React.Component {
   }
 
   toggleOpen = () => {
+    const { isOpen } = this.state
     this.setState({
-      isOpen: !this.state.isOpen,
+      isOpen: !isOpen,
     })
   }
 
   render() {
-
+    const { isOpen } = this.state
     return (
       <>
         <div className={`default`}>
           <Drawer
-            open
-            containerStyle={{ top: 61 }}
+            variant="permanent"
           >
-            {menuContents}
+            <div style={{
+              marginTop: `61px`,
+              width: `256px`,
+            }}
+            >
+              {menuContents}
+            </div>
           </Drawer>
         </div>
         <div className={`mobile tablet`}>
@@ -290,7 +352,7 @@ export default class Sidebar extends React.Component {
           />
 
           <SwipeableDrawer
-            open={this.state.isOpen}
+            open={isOpen}
             onClose={this.toggleOpen}
             onOpen={this.toggleOpen}
           >
