@@ -252,7 +252,7 @@ class AppPage extends React.Component {
         
         <Row styling='splash-parallax'>
           <Column
-            width='2-3'
+            width={isMobile ? '9-10' : '2-3'}
             horizontalAlignment='center'
           >
             {isMobile ? (
