@@ -355,7 +355,7 @@ export DOCKER_HOST=tcp://localhost:2375" >> ~/.bashrc && source ~/.bashrc
 Finally run the following command in a new terminal inside uclapi:
 
 ```
-docker-compose up -d
+docker-compose up -d 
 ```			
 
 ## Documentation
