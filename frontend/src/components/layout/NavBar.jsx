@@ -58,7 +58,7 @@ class NavBar extends React.Component {
   constructor(props) {
     super(props)
 
-    this.DEBUGGING = true
+    this.DEBUGGING = false
 
     const { isScroll } = this.props
 

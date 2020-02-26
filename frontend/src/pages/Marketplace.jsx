@@ -237,12 +237,14 @@ class AppPage extends React.Component {
       },
     } = this.state
 
-    const contentWidth = sizing==`mobile` ? `9-10` : `2-3`
-    const iconsize = sizing==`mobile` ? `50px` : `100px`
+    const isMobile = sizing==`mobile`
 
-    const screenshotwidth = sizing==`mobile` ? `162px` : `216px`
-    const screenshotheight = sizing==`mobile` ? `258px` : `384px`
-    const holderWidth = sizing==`mobile` ? `162px` : `648px`
+    const contentWidth = isMobile ? `9-10` : `2-3`
+    const iconsize = isMobile ? `50px` : `100px`
+
+    const screenshotwidth = isMobile ? `162px` : `216px`
+    const screenshotheight = isMobile ? `258px` : `384px`
+    const holderWidth = isMobile ? `162px` : `648px`
 
     return (
       <>
@@ -253,7 +255,7 @@ class AppPage extends React.Component {
             width='2-3'
             horizontalAlignment='center'
           >
-            {sizing==`mobile` ? (
+            {isMobile ? (
               <>
                 <Row styling='transparent'
                   height='35px' 
@@ -394,29 +396,24 @@ class AppPage extends React.Component {
             )}
             <CardView width="1-1" noPadding style={{ padding : `20px 0` }}>
               <div className="screenshot-holder" style={{ width: holderWidth, margin: `auto` }}>
-                <div className="holder" 
-                  style={{ width: (screenshotwidth), float: `left`, 
-                  display: sizing==`mobile` ? `none` : `inline-block`, filter: `brightness(0.4)` }} >
-                  <img src={screenshots[0].img} width={screenshotwidth} height={screenshotheight}/>
-                </div>
-                <div className="holder" style={{ width: sizing==`mobile` ? holderWidth : screenshotwidth, float: `left`, display: `inline-block` }} >
-                   <Carousel 
-                      showArrows 
-                      showThumbs={false}
-                   >
-                    {screenshots.map((screenshot, i) => (
+                <Carousel 
+                  showArrows 
+                  showThumbs={false}
+                  centerMode={!isMobile}
+                  centerSlidePercentage={isMobile ? 100 : 33.33}
+                  showArrows={isMobile || screenshots.length>3}
+                  showIndicators={isMobile || screenshots.length>3}
+                  showStatus={isMobile || screenshots.length>3}
+                  onChange={ (params) => { console.log(params) } }
+                  infiniteLoop={true}
+               >
+                  {screenshots.map((screenshot, i) => (
                       <div>
                         <img src={screenshot.img} width={screenshotwidth} height={screenshotheight}/>
                         <p className="legend">{screenshot.name}</p>
                       </div>
-                    ))}
-                  </Carousel>
-                </div>
-                <div className="holder" 
-                  style={{ width: (screenshotwidth), float: `left`, 
-                  display: sizing==`mobile` ? `none` : `inline-block`, filter: `brightness(0.4)` }} >
-                  <img src={screenshots[0].img} width={screenshotwidth} height={screenshotheight}/>
-                </div>
+                  ))}
+                </Carousel>
               </div>
               <Column width={contentWidth} horizontalAlignment='center' textAlign='left'>
                 {detailedDescription}
