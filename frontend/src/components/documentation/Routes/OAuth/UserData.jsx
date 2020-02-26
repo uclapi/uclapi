@@ -168,3 +168,4 @@ UserData.defaultProps = {
   activeLanguage: `python`,
 }
 
+export default UserData

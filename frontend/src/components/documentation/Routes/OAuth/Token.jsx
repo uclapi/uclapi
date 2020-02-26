@@ -66,13 +66,15 @@ const Token = ({ activeLanguage }) => (
       <p>There are two different kinds of tokens you can work with:
             </p>
 
-      <p>1.    Generic Tokens:
-            These are tokens that are used to request non-personal data. These tokens are used between applications and the API to request any sort of data that the app may need that is not tied to a specific student. For example, <a href="https://uclapi.com/docs#roombookings">UCL API’s Room booking service</a> uses tokens to return information about rooms, when they are booked and which UCL rooms are free.
-            </p>
+      <p>
+        1.    Generic Tokens:
+        These are tokens that are used to request non-personal data. These tokens are used between applications and the API to request any sort of data that the app may need that is not tied to a specific student. For example, <a href="https://uclapi.com/docs#roombookings">UCL API’s Room booking service</a> uses tokens to return information about rooms, when they are booked and which UCL rooms are free.
+      </p>
 
       <p>2.    OAuth Tokens:
       This type of token is used when an app requires personal data from users.
-      One of the most common uses of this type of token is when you sign in via UCL on an app. The app will then use a token to request a user’s personal data such as:
+      One of the most common uses of this type of token is when you sign in via UCL on an app.&nbsp;
+      The app will then use a token to request a user’s personal data such as:
             </p>
       <ul><li>Department</li>
         <li> Email </li>
@@ -132,7 +134,7 @@ const Token = ({ activeLanguage }) => (
     </Topic>
 
     <Topic
-      activeLanguage={this.props.activeLanguage}
+      activeLanguage={activeLanguage}
       codeExamples={responseCodeExample}
     >
       <h2>Response</h2>
@@ -149,10 +151,16 @@ const Token = ({ activeLanguage }) => (
       >
         <Cell
           name="The client did not provide requisite data to get the token."
-          description="Gets returned when you have not supplied a client_id, code, client_secret in your request."
+          description={
+            `Gets returned when you have not supplied a client_id,`
+            + ` code, client_secret in your request.`
+          }
         />
         <Cell
-          name="The code received was invalid, or has expired. Please try again."
+          name={
+            `The code received was invalid, or has expired.`
+            + `Please try again.`
+          }
           description="As error message."
         />
         <Cell
@@ -173,3 +181,4 @@ Token.defaultProps = {
   activeLanguage: `python`,
 }
 
+export default Token
