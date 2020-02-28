@@ -56,11 +56,7 @@ export default class Column extends React.Component {
 
     style = this.setTheme(style)
 
-    console.log("column style", style)
-
-    this.setState({
-      style: {...style}
-    }, () => console.log("Updated state: ", this.state))
+    this.setState({ style: {...style} });
   }
 
   componentDidUpdate(prevProps) {

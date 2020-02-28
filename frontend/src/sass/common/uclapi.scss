@@ -280,6 +280,13 @@ a:hover { color: $color-grey-light; }
   padding: 0;
 }
 
+.uclapi-card-full-screen {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  float: unset;
+}
+
 .uclapi-card-alternate {
   background-color: $color-white;
 }
@@ -294,6 +301,12 @@ a:hover { color: $color-grey-light; }
 
 .uclapi-card-shadow {
   box-shadow: 0 4px 8px 0 $color-black-transparent-02;
+}
+
+.invisible-marker {
+  visibility: hidden;
+  width: inherit;
+  position: fixed;
 }
 
 .clickable {
