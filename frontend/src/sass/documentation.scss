@@ -103,12 +103,18 @@ p {
 }
 
 .main {
-  margin-top: 48px;
-}
+  margin-top: 60px;
+  padding: 2rem;
+  box-sizing: border-box;
+  overflow-x: hidden;
 
-@media screen and (min-width: 1130px) {
-  .main {
+  @media screen and (min-width: 1130px) {
     margin-left: 256px;
+  }
+
+  h1 {
+    padding-top: 80px;
+    margin-top: -80px;
   }
 }
 
