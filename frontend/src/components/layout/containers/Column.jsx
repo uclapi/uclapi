@@ -23,12 +23,6 @@ export default class Column extends React.Component {
     this.DEBUGGING = true
     this.HORIZONTAL_PADDING = 2 + 2
 
-    this.getColumnWidth = this.getColumnWidth.bind(this)
-    this.setColumnWidthAndPadding = this.setColumnWidthAndPadding.bind(this)
-    this.setHorizontalAlignment = this.setHorizontalAlignment.bind(this)
-    this.setVerticalAlignment = this.setVerticalAlignment.bind(this)
-    this.setTheme = this.setTheme.bind(this)
-
     if (typeof this.props.width == `undefined`) { console.log(`EXCEPTION: Column.constructor: no width defined`) }
 
     this.state = {
@@ -39,11 +33,11 @@ export default class Column extends React.Component {
 
   render() {
     const { verticalAlignment, style } = this.state
-    const { children } = this.props
+    const { children, className = `` } = this.props
 
     return (
       <div className={verticalAlignment} >
-        <div className="column" style={style} >
+        <div className={`column ${className}`} style={style} >
           {children}
         </div>
       </div>
@@ -52,11 +46,11 @@ export default class Column extends React.Component {
 
   refresh = () => {
     const { style: propsStyle } = this.props
-    let style = {...propsStyle}
+    let style = { ...propsStyle }
 
     style = this.setTheme(style)
 
-    this.setState({ style: {...style} });
+    this.setState({ style: { ...style } })
   }
 
   componentDidUpdate(prevProps) {
@@ -71,7 +65,7 @@ export default class Column extends React.Component {
     this.refresh()
   }
 
-  setTheme(style) {
+  setTheme = (style) => {
     // REQUIRED ATTRIBUTES
     // Set the width and padding of the column
     style = this.setColumnWidthAndPadding(style)
@@ -82,20 +76,28 @@ export default class Column extends React.Component {
     // Handles vertical alignment
     if (this.props.verticalAlignment) { style = this.setVerticalAlignment(style) }
     // Handles the text alignment
-    if (this.props.textAlign) { style = {...style, textAlign: this.props.textAlign} }
+    if (this.props.textAlign) {
+      style = {
+        ...style,
+        textAlign: this.props.textAlign,
+      }
+    }
 
     return style
   }
 
-  setVerticalAlignment(style) {
+  setVerticalAlignment = (style) => {
     switch (this.props.verticalAlignment) {
       case `top`:
         // Stub needs implementing
         break
 
       case `center`:
-        this.setState({ verticalAlignment: `vertical-align center-y`})
-        style = {...style, height: `100%`}
+        this.setState({ verticalAlignment: `vertical-align center-y` })
+        style = {
+          ...style,
+          height: `100%`,
+        }
         break
 
       case `bottom`:
@@ -107,24 +109,34 @@ export default class Column extends React.Component {
     return style
   }
 
-  setHorizontalAlignment(style) {
+  setHorizontalAlignment = (style) => {
     switch (this.props.horizontalAlignment) {
       case `left`:
-        style={...style, float: `left`}
+        style = {
+          ...style,
+          float: `left`,
+        }
         break
 
       case `center`:
-        style={...style, marginLeft: `auto`, marginRight: `auto`}
+        style = {
+          ...style,
+          marginLeft: `auto`,
+          marginRight: `auto`,
+        }
         break
 
       case `right`:
-        style={...style, float: `right`}
+        style = {
+          ...style,
+          float: `right`,
+        }
         break
     }
     return style
   }
 
-  getColumnWidth() {
+  getColumnWidth = () => {
     const { width } = this.props
     if (typeof width == `undefined`) { console.log(`EXCEPTION: no width set for column so setting column width to 0`); return 0 }
 
@@ -140,11 +152,24 @@ export default class Column extends React.Component {
     return percentage + `%`
   }
 
-  setColumnWidthAndPadding(style) {
-    style = {...style, width: this.getColumnWidth()}
+  setColumnWidthAndPadding = (style) => {
+    style = {
+      ...style,
+      width: this.getColumnWidth(),
+    }
 
-    if (this.props.maxWidth) { style = {...style, maxWidth: this.props.maxWidth} }
-    if (this.props.minWidth) { style = {...style, minWidth: this.props.minWidth} }
+    if (this.props.maxWidth) {
+      style = {
+        ...style,
+        maxWidth: this.props.maxWidth,
+      }
+    }
+    if (this.props.minWidth) {
+      style = {
+        ...style,
+        minWidth: this.props.minWidth,
+      }
+    }
 
     return style
   }

@@ -50,6 +50,7 @@
     "dayjs": "^1.8.19",
     "glamor": "^2.20.40",
     "immutability-helper": "^3.0.1",
+    "include-media": "^1.4.9",
     "js-cookie": "^2.2.1",
     "material-ui": "^0.20.2",
     "prop-types": "^15.7.2",
