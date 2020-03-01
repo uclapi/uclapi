@@ -5,7 +5,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListSubheader,
   SwipeableDrawer,
 } from '@material-ui/core'
 import propTypes from 'prop-types'
@@ -307,37 +306,31 @@ const menuContents = (
         </ListItem>
       </Section>
 
+      <Divider />
 
-
-      {/* 
-      <ListItem
-        primaryText="Get Involved"
-        key="Get Involved"
-        href="#getInvolved"
-      />
-    </List>
-
-    <Divider />
-
-    <List
-      value=""
-    >
-      <ListSubheader>Links</ListSubheader>
-      <ListItem
-        primaryText="GitHub"
-        key="GitHub"
-        href="https://github.com/uclapi"
-      />
-      <ListItem
-        primaryText="facebook"
-        key="Facebook"
-        href="https://facebook.com/uclapi"
-      />
-      <ListItem
-        primaryText="Twitter"
-        key="Twitter"
-        href="https://twitter.com/uclapi"
-      /> */}
+      <Section sectionTitle="Get Involved">
+        <ListItem button>
+          <ListItemText
+            primary="GitHub"
+            key="GitHub"
+            href="https://github.com/uclapi"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            primary="Facebook"
+            key="Facebook"
+            href="https://facebook.com/uclapi"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            primary="Twitter"
+            key="Twitter"
+            href="https://twitter.com/uclapi"
+          />
+        </ListItem>
+      </Section>
     </List>
   </>
 )
