@@ -73,7 +73,7 @@ class NavBar extends React.Component {
 
     const { isMenuHidden } = this.state
     this.setState({
-      isMenuHidden,
+      isMenuHidden: !isMenuHidden,
     })
   }
   handleClick = (event) => {
