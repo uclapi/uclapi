@@ -1,17 +1,25 @@
-import React from 'react';
+import propTypes from 'prop-types'
+import React from 'react'
 
-import Topic from './Topic.jsx';
+import Topic from './Topic.jsx'
 
 
-export default class SectionHeader extends React.Component {
+const SectionHeader = ({ link, title }) => (
+  <Topic
+    noExamples
+  >
+    <h1 id={link} className="sectionHeader">{title}</h1>
+  </Topic>
+)
 
-    render () {
-      return (
-        <Topic
-          noExamples={true}>
-          <h1 id={this.props.link} className="sectionHeader">{this.props.title}</h1>
-        </Topic>
-      )
-    }
-
+SectionHeader.propTypes = {
+  link: propTypes.string,
+  title: propTypes.string,
 }
+
+SectionHeader.defaultProps = {
+  link: ``,
+  title: ``,
+}
+
+export default SectionHeader
