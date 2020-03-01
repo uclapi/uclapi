@@ -8,6 +8,7 @@ import {
   ListSubheader,
   SwipeableDrawer,
 } from '@material-ui/core'
+import propTypes from 'prop-types'
 import React, { useCallback, useState } from 'react'
 
 import { ButtonView } from 'Layout/Items.jsx'
@@ -57,13 +58,22 @@ const Section = ({ sectionTitle, children }) => {
   )
 }
 
+Section.propTypes = {
+  sectionTitle: propTypes.string,
+  children: propTypes.node,
+}
+
+Section.defaultProps = {
+  sectionTitle: ``,
+  children: null,
+}
+
 const menuContents = (
   <>
     <List component="div">
       <Section sectionTitle="Meta">
         <ListItem button>
           <ListItemText
-            inset
             primary="Welcome"
             key="Welcome"
             href="#welcome"
@@ -71,7 +81,6 @@ const menuContents = (
         </ListItem>
         <ListItem button>
           <ListItemText
-            inset
             primary="Get Your API Key"
             key="Get Your API Key"
             href="#get-api-key"
@@ -79,7 +88,6 @@ const menuContents = (
         </ListItem>
         <ListItem button>
           <ListItemText
-            inset
             primary="API Rate Limits"
             key="API Rate Limits"
             href="#api-rate-limits"
@@ -87,191 +95,221 @@ const menuContents = (
         </ListItem>
         <ListItem button>
           <ListItemText
-            inset
             primary="API Data Freshness"
             key="API Data Freshness"
             href="#api-expiry-times"
           />
         </ListItem>
       </Section>
-
-      {/* <ListItem
-        href="#oauth"
-        primaryText="OAuth"
-        primaryTogglesNestedList
-        nestedItems={[
-          <ListItem
-            primaryText="Meta"
+      <Section sectionTitle="OAuth">
+        <ListItem button>
+          <ListItemText
+            primary="Meta"
             key="Meta"
             href="#oauth/meta"
-          />,
-          <ListItem
-            primaryText="Authorise"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            primary="Authorise"
             key="Authorise"
             href="#oauth/authorise"
-          />,
-          <ListItem
-            primaryText="Token"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            primary="Token"
             key="Token"
             href="#oauth/token"
-          />,
-          <ListItem
-            primaryText="User Data"
+          />
+        </ListItem>
+
+        <ListItem button>
+          <ListItemText
+            primary="User Data"
             key="User Data"
             href="#oauth/user/data"
-          />,
-          <ListItem
-            primaryText="Student Number"
+          />
+        </ListItem>
+
+        <ListItem button>
+          <ListItemText
+            primary="Student Number"
             key="Student Number"
             href="#oauth/user/studentnumber"
-          />,
-        ]}
-      />
+          />
+        </ListItem>
+      </Section>
 
-      <ListItem
-        href="#roombookings"
-        primaryText="Room Bookings"
-        primaryTogglesNestedList
-        nestedItems={[
-          <ListItem
-            primaryText="Get Rooms"
+      <Section sectionTitle="Room Bookings">
+        <ListItem button>
+          <ListItemText
+            primary="Get Rooms"
             key="Get Rooms"
             href="#roombookings/rooms"
-          />,
-          <ListItem
-            primaryText="Get Bookings"
+          />
+        </ListItem>
+
+        <ListItem button>
+          <ListItemText
+            primary="Get Bookings"
             key="Get Bookings"
             href="#roombookings/bookings"
-          />,
-          <ListItem
-            primaryText="Get Equipment"
+          />
+        </ListItem>
+
+        <ListItem button>
+          <ListItemText
+            primary="Get Equipment"
             key="Get Equipment"
             href="#roombookings/equipment"
-          />,
-          <ListItem
-            primaryText="Get Free Rooms"
+          />
+        </ListItem>
+
+        <ListItem button>
+          <ListItemText
+            primary="Get Free Rooms"
             key="Get Free Rooms"
             href="#roombookings/freerooms"
-          />,
-          <ListItem
-            primaryText="Webhooks"
+          />
+        </ListItem>
+
+        <ListItem button>
+          <ListItemText
+            primary="Webhooks"
             key="Webhooks"
             href="#roombookings/webhooks"
-          />,
-        ]}
-      />
+          />
+        </ListItem>
+      </Section>
 
-      <ListItem
-        href="#search"
-        primaryText="Search"
-        key="Search"
-        primaryTogglesNestedList
-        nestedItems={[
-          <ListItem
-            primaryText="Get People"
+      <Section sectionTitle="Search">
+        <ListItem button>
+          <ListItemText
+            primary="Get People"
             key="Get People"
             href="#search/people"
-          />,
-        ]}
-      />
+          />
+        </ListItem>
+      </Section>
 
-      <ListItem
-        href="#timetable"
-        primaryText="Timetable"
-        key="Timetable"
-        primaryTogglesNestedList
-        nestedItems={[
-          <ListItem
-            primaryText="Get Personal Timetable"
+      <Section sectionTitle="Timetable">
+        <ListItem button>
+          <ListItemText
+            primary="Get Personal Timetable"
             key="Get Personal Timetable"
             href="#timetable/personal"
-          />,
-          <ListItem
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
             primaryText="Get Timetable By Modules"
             key="Get Timetable By Modules"
             href="#timetable/bymodule"
-          />,
-          <ListItem
-            primaryText="Get List of Departments"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            primary="Get List of Departments"
             key="Get List of Departments"
             href="#timetable/data/departments"
-          />,
-          <ListItem
-            primaryText="Get List of Department Modules"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            primary="Get List of Department Modules"
             key="Get List of Department Modules"
             href="#timetable/data/modules"
-          />,
-          <ListItem
-            primaryText="Get List of Department Courses"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            primary="Get List of Department Modules"
+            key="Get List of Department Modules"
+            href="#timetable/data/modules"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            primary="Get List of Department Courses"
             key="Get List of Department Courses"
             href="#timetable/data/courses"
-          />,
-          <ListItem
-            primaryText="Get List of Course Modules"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            primary="Get List of Course Modules"
             key="Get List of Course Modules"
             href="#timetable/data/courses/modules"
-          />,
-        ]}
-      />
+          />
+        </ListItem>
+      </Section>
 
-      <ListItem
-        href="#resources"
-        primaryText="Resources"
-        key="Resources"
-        primaryTogglesNestedList
-        nestedItems={[
-          <ListItem
+      <Section sectionTitle="Resources">
+        <ListItem button>
+          <ListItemText
             primaryText="Get Desktop availability"
             key="Get Desktop availability"
             href="#resources/desktops"
-          />,
-        ]}
-      />
+          />
+        </ListItem>
+      </Section>
 
-      <ListItem
-        href="#workspaces"
-        primaryText="Workspaces"
-        key="Workspaces"
-        primaryTogglesNestedList
-        nestedItems={[
-          <ListItem
-            primaryText="Get Surveys"
+      <Section sectionTitle="Workspaces">
+        <ListItem button>
+          <ListItemText
+            primary="Get Surveys"
             key="Get Surveys"
             href="#workspaces/surveys"
-          />,
-          <ListItem
-            primaryText="Get Sensors"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            primary="Get Sensors"
             key="Get Sensors"
             href="#workspaces/sensors"
-          />,
-          <ListItem
-            primaryText="Get Average Sensor Data"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            primary="Get Average Sensor Data"
             key="Get Average Sensor Data"
             href="#workspaces/sensors/averages/time"
-          />,
-          <ListItem
-            primaryText="Get Last Sensor Update"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            primary="Get Last Sensor Update"
             key="Get Last Sensor Update"
             href="#workspaces/sensors/lastupdated"
-          />,
-          <ListItem
-            primaryText="Get Sensors Summary"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            primary="Get Sensors Summary"
             key="Get Sensors Summary"
             href="#workspaces/sensors/summary"
-          />,
-          <ListItem
-            primaryText="Get Map Image"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            primary="Get Map Image"
             key="Get Map Image"
             href="#workspaces/images/map"
-          />,
-          <ListItem
-            primaryText="Get Live Map Image"
+          />
+        </ListItem>
+        <ListItem button>
+          <ListItemText
+            primary="Get Live Map Image"
             key="Get Live Map Image"
             href="#workspaces/images/map/live"
-          />,
-        ]}
-      />
+          />
+        </ListItem>
+      </Section>
 
+
+
+      {/* 
       <ListItem
         primaryText="Get Involved"
         key="Get Involved"
