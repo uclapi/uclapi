@@ -21,8 +21,7 @@ export const styles = {
     fontWeight: `100`,
   },
   dates: {
-    color: `#ddd`,
-    fontWeight: `100`,
+    color: `#000`,
     margin: `0`,
   },
   appHolder: {

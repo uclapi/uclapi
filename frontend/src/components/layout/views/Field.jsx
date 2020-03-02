@@ -31,12 +31,14 @@ const styles = {
 		padding: `15px`,
 		textAlign: `left`,
 		backgroundColor: `transparent`,
+		color: `black`,
 	},
 	copyableFieldMobile: {
 		marginTop: `0`,
 		width: `auto`,
 		padding: `15px`,
 		textAlign: `left`,
+		color: `black`,
 		maxWidth: `30%`,
 		backgroundColor: `transparent`,
 	},
@@ -44,7 +46,6 @@ const styles = {
 		float: `left`,
 		margin: `6px 10px 0 0`,
 		color: `white`,
-		fontWeight: `300`,
 	},
 	fieldHolder: {
 		height: `50px`,
@@ -114,7 +115,20 @@ export default class Field extends React.Component {
 		})
 	}
 
-	edit = () => { this.setState({ isEditing: true }) }
+	toggleEditing = () => { 
+		const { onSave } = this.props
+		const { isEditing, fieldRefB, fieldRefA } = this.state 
+
+		if(this.doesExist(onSave)) {
+			if(isEditing) {
+				this.cancel()
+			} else {
+				this.setState({ isEditing: !isEditing }) 
+				fieldRefB.current.focus()
+				fieldRefA.current.focus()
+			}
+		}
+	}
 	cancel = () => { 
 		const { content } = this.props
 
@@ -153,11 +167,13 @@ export default class Field extends React.Component {
 		const { isSaved, fieldRefA, fieldRefB, value, 
 			isEditing} = this.state
 		
+		//3498DB
 		const unsavedColor = `#db4534`
 		const savedColor = `#2ecc71`
-		const defaultColor = `#3498DB`
+		const defaultColor = `#eeeeee`
+		const disabledColor = `#888888`
 
-		var color = defaultColor
+		var color = this.doesExist(onSave) ? defaultColor : disabledColor
 		if(isEditing) { color = isSaved ? savedColor : unsavedColor }
 
 		const fieldStyle = {
@@ -168,9 +184,9 @@ export default class Field extends React.Component {
 
 		return (
 		<>
-			<TextView text={title} heading={5} align={`left`} style={styles.tokenText} />
+			<TextView text={title} color="black" heading={6} align={`left`} style={styles.tokenText} />
 			                      
-			<div className="field" style={fieldStyle} >
+			<div className="field" style={fieldStyle} onClick={this.toggleEditing}>
 			  <div className={isSmall ? `none` : `tablet default`}>
 			    <input ref={fieldRefA}
 			      type="text"
@@ -196,7 +212,7 @@ export default class Field extends React.Component {
 			  
 			  {this.doesExist(onSave) && isEditing ? saveIcon( () => { this.save(true) } ) : null}
 			  {this.doesExist(onSave) && isEditing ? cancelIcon(this.cancel) : null}
-			  {this.doesExist(onSave) && !isEditing ? editIcon(this.edit) : null}
+			  {this.doesExist(onSave) && !isEditing ? editIcon(this.toggleEditing) : null}
 			  {this.doesExist(onRefresh) ? refreshIcon(onRefresh) : null}
 			</div>
 		</>

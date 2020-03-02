@@ -60,8 +60,13 @@ export default class App extends React.Component {
 
 		if(this.DEBUGGING) { console.log("re-rendering app, name: " + app.name) }
 
+		const trashColor = "red"
+
 		return (
-		  <CardView width='1-1' type='default' key={index} noPadding style={{ margin: `25px 0` }} >
+		<Collapse>
+        <Panel header={app.name} showArrow>
+        <Row styling='transparent' noPadding>
+		  
 		    <Row styling='transparent' noPadding>
 		      <CardView width="1-2" minWidth="200px" type="no-bg" style={styles.squareCard} snapAlign>
 		        <Field
@@ -75,12 +80,12 @@ export default class App extends React.Component {
 	          	<div className="default tablet">
 		          	{cancelIcon(
 			          () => { actions.deleteConfirm(index) },
-			          { float: `right` }
+			          { float: `right`, marginTop: `40px`, backgroundColor: trashColor }
 			        )}
-			        <div className="app-times" style={{ float: `right`, margin: `8px 0` }}>
-				        <TextView text={`Created: ` + created + ` ago`} heading={5}
+			        <div className="app-times" style={{ float: `right`, marginTop: `40px` }}>
+				        <TextView text={`Created: ` + created + ` ago`} heading={6}
 				          align="right" style={styles.dates} />
-				        <TextView text={`Updated: ` + updated + ` ago`} heading={5}
+				        <TextView text={`Updated: ` + updated + ` ago`} heading={6}
 				          align="right" style={styles.dates} />
 		          	</div>
 	          	</div>
@@ -113,7 +118,7 @@ export default class App extends React.Component {
 		      <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
 		        <div className="settings-collapse">
 		          <Collapse>
-		            <Panel header={`> OAuth Settings`} showArrow>
+		            <Panel header={`OAuth Settings`} showArrow>
 		              <Row styling='transparent' noPadding>
 		                <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
 		                  <TextView text={`OAuth Credentials: `}
@@ -157,7 +162,7 @@ export default class App extends React.Component {
 		                </CardView>
 		              </Row>
 		            </Panel>
-		            <Panel header={`> Webhook Settings`} showArrow>
+		            <Panel header={`Webhook Settings`} showArrow>
 		              <Row styling='transparent' noPadding>
 		                <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
 		                  <Field
@@ -193,7 +198,11 @@ export default class App extends React.Component {
 		        </div>
 		      </CardView>
 		    </Row>
-		</CardView>
+		
+
+        </Row>
+        </Panel>
+        </Collapse>
 		)
 	}
 

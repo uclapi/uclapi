@@ -21,7 +21,8 @@ const styles = {
     minWidth: `40px`,
     float: `right`,
     margin: `5px`,
-    marginLeft: `5px`
+    marginLeft: `5px`,
+    cursor: `pointer`,
   },
   buttonIcon: {
     marginTop: `8px`,

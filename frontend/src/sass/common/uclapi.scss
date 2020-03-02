@@ -623,3 +623,37 @@ pre {
   right: 20vw;
   padding: 0;
 }
+
+/** Specific dashboard stylings **/
+
+.app-holder {
+  .rc-collapse {
+    background-color: $color-white;
+    
+    .rc-collapse-header,
+    .settings-collapse .rc-collapse .rc-collapse-item .rc-collapse-header {
+      color: black;
+      border: none;
+      font-family: 'Source Sans Pro', 'Roboto', sans-serif;
+      font-size: 0.7em;
+    }
+
+    .settings-collapse .rc-collapse .rc-collapse-item .rc-collapse-header {
+      padding: 0;
+    }
+
+    .rc-collapse-content {
+      padding: 0;
+    }
+
+    .rc-collapse-content > .rc-collapse-content-box {
+      margin-bottom: 0;
+    }
+
+    > .rc-collapse-item > .rc-collapse-header .arrow {
+      width: 20px;
+      height: 20px;
+      display: none;
+    }
+  }
+}
