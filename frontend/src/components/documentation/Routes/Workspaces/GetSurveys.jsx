@@ -13,10 +13,10 @@ params = {
 r = requests.get("https://uclapi.com/workspaces/surveys", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/workspaces/surveys \\
+    shell: `curl -G https://uclapi.com/workspaces/surveys \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb`,
 
-  javascript: `fetch("https://uclapi.com/workspaces/surveys?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
+    javascript: `fetch("https://uclapi.com/workspaces/surveys?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
 .then((response) => {
   return response.json()
 })
@@ -29,28 +29,41 @@ let response = `{
     "ok": true,
     "surveys": [
         {
-            "active": true,
+            "id": 46,
+            "name": "UCL Institute of Education Library",
+            "active": 1,
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "staff_survey": 0,
+            "location": {
+                "coordinates": {
+                    "lat": "51.522897",
+                    "lng": "-0.127864"
+                },
+                "address": [
+                    "Newsam Library and Archives",
+                    "20 Bedford Way",
+                    "London",
+                    "WC1H  0AL"
+                ]
+            },
             "maps": [
                 {
-                    "image_id": 79,
-                    "name": "Level 3",
-                    "id": 73
-                },
-                {
-                    "image_id": 80,
+                    "id": 114,
                     "name": "Level 4",
-                    "id": 74
+                    "image_id": 123
                 },
                 {
-                    "image_id": 81,
+                    "id": 115,
+                    "name": "Level 3",
+                    "image_id": 126
+                },
+                {
+                    "id": 116,
                     "name": "Level 5",
-                    "id": 75
+                    "image_id": 127
                 }
-            ],
-            "end_time": "17:00",
-            "start_time": "09:00",
-            "name": "UCL Institute of Education Library",
-            "id": 46
+            ]
         },
         ...
     ]
@@ -98,8 +111,21 @@ export default class WorkspacesGetSurveys extends React.Component {
                     <p>
                         The surveys key contains a list of dictionaries, each of which corresponds to a library survey with seating sensors attached. Each survey has a number of maps, corresponding to the regions within the library, such as a different floor or wing.
                     </p>
+                    <p>
+                        Note that the <code>location[address]</code> field will not always contain a precise address, and may simply contain the address to the UCL campus (i.e. Gower Street, London), which may not be helpful. If it is present, the <code>location[coordinates]</code> will generally be more precise.
+                    </p>
                     <Table
                         name="Response">
+                        <Cell
+                            name="id"
+                            extra="integer"
+                            example="46"
+                            description="The library survey's ID. This is used later to identify individual libraries." />
+                        <Cell
+                            name="name"
+                            extra="string"
+                            example="UCL Institute of Education Library"
+                            description="The human-readable name of the library." />
                         <Cell
                             name="active"
                             extra="boolean"
@@ -121,15 +147,35 @@ export default class WorkspacesGetSurveys extends React.Component {
                             example="false"
                             description="Whether the survey represents a staff workspace (`true`) or a student work or study space (`false`). This is useful in apps where you set the `survey_filter` parameter to `all` and wish to do filtering of student and staff workspaces in your app or API as opposed to leaving the filtering to UCL API. By default, as `survey_filter` is set to `student` unless you specify otherwise, all workspaces will have this parameter set to `false`." />
                         <Cell
-                            name="name"
-                            extra="string"
-                            example="UCL Institute of Education Library"
-                            description="The human-readable name of the library." />
+                            name="location"
+                            extra="object"
+                            example='{"coordinates": {"lat": "51.522897","lng": "-0.127864"},"address": ["Newsam Library and Archives","20 Bedford Way","London","WC1H  0AL"]'
+                            description="Object containing survey location information including co-ordinates and the address." />
                         <Cell
-                            name="id"
-                            extra="integer"
-                            example="46"
-                            description="The library survey's ID. This is used later to identify individual libraries." />
+                            name='location[coordinates]'
+                            extra="object"
+                            example='{"lat": "51.522897","lng": "-0.127864"}'
+                            description="Object containing a latitude and longitude." />
+                        <Cell
+                            name='location[coordinates][lat]'
+                            extra="string"
+                            example='"51.522897"'
+                            description="Latitude of the survey location." />
+                        <Cell
+                            name='location[coordinates][lng]'
+                            extra="string"
+                            example='"-0.127864"'
+                            description="Longitude of the survey location." />
+                        <Cell
+                            name='location[address]'
+                            extra="list"
+                            example='["Newsam Library and Archives","20 Bedford Way","London","WC1H  0AL"]'
+                            description="List containing address lines for the survey location." />
+                        <Cell
+                            name='location[address][n]'
+                            extra="string"
+                            example='"20 Bedford Way"'
+                            description="One line of an address for a survey location." />
                         <Cell
                             name="maps"
                             extra="list"

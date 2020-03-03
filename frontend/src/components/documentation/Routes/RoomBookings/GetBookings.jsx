@@ -96,7 +96,7 @@ export default class GetBookings extends React.Component {
                 example="2011-03-06T03:36:45+00:00"
                 description="Start datetime of the booking. Returns bookings with a start_datetime after the one supplied. Follows the ISO 8601 formatting standard." />
               <Cell
-                name="end_date"
+                name="end_datetime"
                 requirement="optional"
                 example="2011-03-06T03:36:45+00:00"
                 description="End datetime of the booking. Returns bookings with an end_datetime before the one supplied. Follows the ISO 8601 formatting standard." />

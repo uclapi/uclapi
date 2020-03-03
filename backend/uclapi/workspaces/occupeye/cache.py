@@ -118,7 +118,12 @@ class OccupeyeCache():
             staff_survey = str(
                 int(survey["SurveyID"]) in self._const.STAFF_SURVEY_IDS
             )
-
+            if survey["Name"] in self._const.SURVEY_LOCATIONS:
+                location_data = self._const.SURVEY_LOCATIONS[survey["Name"]]
+            else:
+                location_data = {
+                 "lat": "", "long": "", "address": ["", "", "", ""]
+                }
             pipeline.hmset(
                 survey_key,
                 {
@@ -127,7 +132,13 @@ class OccupeyeCache():
                     "name": survey["Name"],
                     "start_time": survey["StartTime"],
                     "end_time": survey["EndTime"],
-                    "staff_survey": staff_survey
+                    "staff_survey": staff_survey,
+                    "lat": location_data["lat"],
+                    "long": location_data["long"],
+                    "address1": location_data["address"][0],
+                    "address2": location_data["address"][1],
+                    "address3": location_data["address"][2],
+                    "address4": location_data["address"][3]
                 }
             )
             pipeline.lpush(
@@ -266,7 +277,12 @@ class OccupeyeCache():
             ),
             self.bearer_token
         )
-        if not isinstance(all_sensors_data, dict):
+        if not isinstance(all_sensors_data, list):
+            print(
+                "[-] Survey {} has bad sensor data, ignoring...".format(
+                    survey_id
+                )
+            )
             return
         pipeline = self._redis.pipeline()
         for sensor_data in all_sensors_data:
@@ -750,7 +766,7 @@ class OccupeyeCache():
             self._redis.llen(survey_sensors_list_key)
         ))
         api_survey_sensors_id_set = set(
-            [str(survey_sensor["HardwareID"]) for survey_sensor in all_sensors_data]
+            [str(survey_sensor["HardwareID"]) for survey_sensor in all_sensors_data]  # noqa
         )
         sensors_to_delete = (
             redis_survey_sensors_set - api_survey_sensors_id_set

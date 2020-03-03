@@ -6,12 +6,7 @@ $secondary-color: #f4f4f4;
 $accent-color: #8D6E63;
 $highlight-color: #B18453;
 
-body {
-  margin: 0px;
-  font-family: 'Source Sans Pro', sans-serif;
-  background: $primary-color;
-  color: #ffffff;
-}
+$break-small: 600px;
 
 h1 {
   font-size: 42px;
@@ -34,36 +29,6 @@ h3 {
   font-weight: 400;
 }
 
-$navbarHeight: 60px;
-
-.navbarconsistent {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
-  height: $navbarHeight;
-  width: 100%;
-  position: relative;
-  top: 0;
-
-  background: linear-gradient(rgba(67, 67, 67, 0.4), rgba(67, 67, 67, 0.4)), url("./../images/logoCover2.png");
-  background-position: 50% 0%;
-  background-size: cover;
-
-  display: flex;
-  align-items: center;
-
-  @include boxShadow(1);
-
-  img{
-    height: $navbarHeight - 15px;;
-    margin-left: 25px;
-  }
-  .logoTextWhite {
-	color: #FFF;
-	display: inline;
-    margin: 10px;
-    font-size: 2em;
-  }
-}
-
 .log-in-layout {
   padding-top: 20%;
   background: $primary-color;
@@ -78,7 +43,7 @@ $navbarHeight: 60px;
 }
 
 .settings-holder { 
-  padding-top: 20px;
+  margin-top: 100px;
   background: $primary-color;
   text-align: center;
 }
@@ -157,4 +122,14 @@ $navbarHeight: 60px;
 	    margin: 0;
     	padding: 0 0 2px 0;
 	}
+}
+
+/* For mobile screens */
+@media screen and (max-width: $break-small) {
+  .settings-form {
+    width: 80%;
+  }
+  .card-settings {
+    padding: 5px;
+  }
 }

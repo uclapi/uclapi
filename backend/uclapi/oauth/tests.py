@@ -1,8 +1,10 @@
 import json
-import unittest.mock
 import os
+import random
+import string
+import unittest.mock
 
-from django.test import TestCase
+from django.test import Client, TestCase
 from rest_framework.test import APIRequestFactory
 from django.core import signing
 
@@ -14,7 +16,7 @@ from dashboard.models import App, User
 from .app_helpers import generate_random_verification_code
 from .models import OAuthScope, OAuthToken
 from .scoping import Scopes
-from .views import authorise, shibcallback
+from .views import authorise, shibcallback, deauthorise_app
 
 
 @uclapi_protected_endpoint(personal_data=True, required_scopes=["timetable"])
@@ -355,6 +357,7 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
 class ViewsTestCase(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
+        self.client = Client()
 
     def test_no_parameters(self):
         request = self.factory.get(
@@ -472,9 +475,343 @@ class ViewsTestCase(TestCase):
              "Team to rectify this.")
         )
 
+    def test_valid_shibcallback_real_account(self):
+        dev_user_ = User.objects.create(
+            email="testdev@ucl.ac.uk",
+            cn="test",
+            given_name="Test Dev",
+            employee_id='testdev01'
+        )
+        app_ = App.objects.create(
+            user=dev_user_,
+            name="An App",
+            callback_url="www.somecallbackurl.com/callback"
+        )
+        test_user_ = User.objects.create(
+            email="testxxx@ucl.ac.uk",
+            cn="testxxx",
+            given_name="Test User",
+            employee_id='xxxtest01'
+        )
+
+        signer = signing.TimestampSigner()
+        # Generate a random state for testing
+        state = ''.join(
+            random.choices(string.ascii_letters + string.digits, k=32)
+        )
+        data = app_.client_id + state
+        signed_data = signer.sign(data)
+
+        response = self.client.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': signed_data
+            },
+            HTTP_EPPN='testxxx@ucl.ac.uk',
+            HTTP_CN='testxxx',
+            HTTP_DEPARTMENT='Dept of Tests',
+            HTTP_GIVENNAME='Test New Name',
+            HTTP_DISPLAYNAME='Test User',
+            HTTP_EMPLOYEEID='xxxtest01',
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.client.session['user_id'], test_user_.id)
+
+        initial_data = json.loads(response.context['initial_data'])
+        self.assertEqual(
+            initial_data['app_name'],
+            app_.name
+        )
+        self.assertEqual(
+            initial_data['client_id'],
+            app_.client_id
+        )
+        self.assertEqual(
+            initial_data['state'],
+            state
+        )
+        self.assertDictEqual(
+            initial_data['user'],
+            {
+                "full_name": "Test User",
+                "cn": "testxxx",
+                "email": "testxxx@ucl.ac.uk",
+                "department": "Dept of Tests",
+                "upi": "xxxtest01"
+            }
+        )
+
+        # Reload the test user from DB
+        test_user_ = User.objects.get(id=test_user_.id)
+
+        self.assertEqual(
+            test_user_.given_name,
+            "Test New Name"
+        )
+
+        # Now lets test for when UCL doesn't give us department the department,
+        # givenname and displayname.
+        response = self.client.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': signed_data
+            },
+            HTTP_EPPN='testxxx@ucl.ac.uk',
+            HTTP_CN='testxxx',
+            # NOTE: missing HTTP_DEPARTMENT, HTTP_GIVENNAME, HTTP_DISPLAYNAME
+            HTTP_EMPLOYEEID='xxxtest01',
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # Reload the test user from DB
+        test_user_ = User.objects.get(id=test_user_.id)
+
+        # If a non-critical HTTP header is not passed, we don't want to
+        # overwrite the previous value with an empty string.
+        self.assertEqual(
+            test_user_.department,
+            "Dept of Tests"
+        )
+        self.assertEqual(
+            test_user_.given_name,
+            "Test New Name"
+        )
+        self.assertEqual(
+            test_user_.full_name,
+            "Test User"
+        )
+
+        # Now let's test when critical fields are missing
+        response = self.client.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': signed_data
+            },
+            # NOTE: missing critical field eppn
+            HTTP_CN='testxxx',
+            HTTP_EMPLOYEEID='xxxtest01',
+            HTTP_DEPARTMENT='Dept of Tests',
+            HTTP_GIVENNAME='Test New Name',
+            HTTP_DISPLAYNAME='Test User',
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response = self.client.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': signed_data
+            },
+            HTTP_EPPN='testxxx@ucl.ac.uk',
+            # NOTE: missing critical field cn
+            HTTP_DEPARTMENT='Dept of Tests',
+            HTTP_GIVENNAME='Test New Name',
+            HTTP_DISPLAYNAME='Test User',
+            HTTP_EMPLOYEEID='xxxtest01',
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response = self.client.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': signed_data
+            },
+            HTTP_EPPN='testxxx@ucl.ac.uk',
+            HTTP_CN='testxxx',
+            # NOTE: missing critical field employee_id (aka UPI)
+            HTTP_DEPARTMENT='Dept of Tests',
+            HTTP_GIVENNAME='Test New Name',
+            HTTP_DISPLAYNAME='Test User',
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+        )
+        self.assertEqual(response.status_code, 400)
+
+
+    def test_valid_shibcallback_test_account(self):
+        dev_user_ = User.objects.create(
+            email="testdev@ucl.ac.uk",
+            cn="test",
+            given_name="Test Dev",
+            employee_id='testdev01'
+        )
+        app_ = App.objects.create(
+            user=dev_user_,
+            name="An App",
+            callback_url="www.somecallbackurl.com/callback"
+        )
+        test_user_ = User.objects.create(
+            email="testxxx@ucl.ac.uk",
+            cn="testxxx",
+            given_name="Test User",
+            employee_id='xxxtest01'
+        )
+
+        signer = signing.TimestampSigner()
+        # Generate a random state for testing
+        state = ''.join(
+            random.choices(string.ascii_letters + string.digits, k=32)
+        )
+        data = app_.client_id + state
+        signed_data = signer.sign(data)
+
+        response = self.client.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': signed_data
+            },
+            HTTP_EPPN='testxxx@ucl.ac.uk',
+            HTTP_CN='testxxx',
+            HTTP_DEPARTMENT='Shibtests',
+            HTTP_GIVENNAME='Test',
+            HTTP_DISPLAYNAME='Test User',
+            HTTP_EMPLOYEEID='xxxtest01',
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.client.session['user_id'], test_user_.id)
+
+        initial_data = json.loads(response.context['initial_data'])
+        self.assertEqual(
+            initial_data['app_name'],
+            app_.name
+        )
+        self.assertEqual(
+            initial_data['client_id'],
+            app_.client_id
+        )
+        self.assertEqual(
+            initial_data['state'],
+            state
+        )
+        self.assertDictEqual(
+            initial_data['user'],
+            {
+                "full_name": "Test User",
+                "cn": "testxxx",
+                "email": "testxxx@ucl.ac.uk",
+                "department": "Shibtests",
+                "upi": "xxxtest01"
+            }
+        )
+
+        # Reload the test user from DB
+        test_user_ = User.objects.get(id=test_user_.id)
+
+        self.assertEqual(
+            test_user_.raw_intranet_groups,
+            "shibtests"
+        )
+
 
 class AppHelpersTestCase(TestCase):
     def test_generate_random_verification_code(self):
         code = generate_random_verification_code()
         self.assertEqual(code[:6], "verify")
         self.assertEqual(len(code), 86)
+
+
+class DeleteAToken(TestCase):
+    def setUp(self):
+        mock_status_code = unittest.mock.Mock()
+        mock_status_code.status_code = 200
+
+        self.factory = APIRequestFactory()
+
+    def test_deauthorise_app(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+        oauth_scope = OAuthScope.objects.create(
+            scope_number=2
+        )
+        oauth_token = OAuthToken.objects.create(
+            app=app_,
+            user=user_,
+            scope=oauth_scope
+        )
+        token_id = oauth_token.token
+        request = self.factory.get(
+            '/oauth/testcase',
+            {
+                'client_secret': app_.client_secret,
+                'client_id': app_.client_id
+            }
+        )
+        request.session = {'user_id': user_.id}
+
+        token_id = oauth_token.token
+        deauthorise_app(request)
+        with self.assertRaises(OAuthToken.DoesNotExist):
+            oauth_token = OAuthToken.objects.get(token=token_id)
+
+    def test_deauthorise_user_does_not_exist(self):
+        request = self.factory.get(
+            '/oauth/testcase',
+            {
+                'client_secret': 'abcdefg',
+                'client_id': '1234.1234'
+            }
+        )
+        request.session = {'user_id': 999999999}
+        with self.assertRaises(User.DoesNotExist):
+            deauthorise_app(request)
+
+    def test_deauthorise_no_client_id(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        request = self.factory.get(
+            '/oauth/testcase',
+            {
+                'client_secret': 'abcdefg',
+                'token': 'uclapi-123456'
+            }
+        )
+        request.session = {'user_id': user_.id}
+
+        response = deauthorise_app(request)
+        self.assertEqual(response.status_code, 400)
+
+        content = json.loads(response.content.decode())
+        self.assertFalse(content["ok"])
+        self.assertEqual(
+            content["error"],
+            "A Client ID must be provided to deauthorise an app."
+        )
+
+    def test_deauthorise_no_token_for_app_and_user(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+        request = self.factory.get(
+            '/oauth/testcase',
+            {
+                'client_secret': app_.client_secret,
+                'client_id': app_.client_id
+            }
+        )
+
+        request.session = {'user_id': user_.id}
+
+        response = deauthorise_app(request)
+        self.assertEqual(response.status_code, 400)
+
+        content = json.loads(response.content.decode())
+        self.assertFalse(content["ok"])
+        self.assertEqual(
+            content["error"],
+            (
+                "The app with the Client ID provided does not have a "
+                "token for this user, so no action was taken."
+            )
+        )

@@ -36,6 +36,8 @@ ALLOWED_HOSTS = ["localhost"]
 if os.environ.get("UCLAPI_DOMAIN"):
     ALLOWED_HOSTS.append(os.environ.get("UCLAPI_DOMAIN"))
 
+UCLAPI_DOMAIN_CURRENT = os.environ.get("UCLAPI_DOMAIN")
+
 # If we are running under the AWS Elastic Load Balancer then enable internal
 # requests so that the ELB and Health Checks work
 if strtobool(os.environ.get("UCLAPI_RUNNING_ON_AWS_ELB")):
@@ -109,7 +111,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'uclapi.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -204,13 +205,15 @@ with open(fair_use_policy_path, 'r', encoding='utf-8') as fp:
 
 REDIS_UCLAPI_HOST = os.environ["REDIS_UCLAPI_HOST"]
 
+SHIB_TEST_USER = os.environ["SHIB_TEST_USER"]
+
 # Celery Settings
 CELERY_BROKER_URL = 'redis://' + REDIS_UCLAPI_HOST
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-ROOMBOOKINGS_SETID = 'LIVE-18-19'
+ROOMBOOKINGS_SETID = 'LIVE-19-20'
 
 # This dictates how many Medium articles we scrape
 MEDIUM_ARTICLE_QUANTITY = 3
@@ -313,3 +316,5 @@ else:
             'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
         }
     }
+
+TEAMS_BACKEND_WEBHOOK = os.environ.get("TEAMS_BACKEND_WEBHOOK", "")

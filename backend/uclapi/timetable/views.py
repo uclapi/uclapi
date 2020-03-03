@@ -29,6 +29,9 @@ _SETID = settings.ROOMBOOKINGS_SETID
     last_modified_redis_key='gencache'
 )
 def get_personal_timetable_endpoint(request, *args, **kwargs):
+    """
+    Returns a personal timetable of a user. Requires OAuth permissions.
+    """
     token = kwargs['token']
     user = token.user
     try:
@@ -49,20 +52,19 @@ def get_personal_timetable_endpoint(request, *args, **kwargs):
     last_modified_redis_key='gencache'
 )
 def get_modules_timetable_endpoint(request, *args, **kwargs):
+    """
+    Returns a timetabe for a module or set of modules.
+    """
     module_ids = request.GET.get("modules")
-    if module_ids is None:
-        return JsonResponse({
+    if module_ids is None or module_ids == '':
+        response = JsonResponse({
             "ok": False,
             "error": "No module IDs provided."
         }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
 
-    try:
-        modules = module_ids.split(',')
-    except ValueError:
-        return JsonResponse({
-            "ok": False,
-            "error": "Invalid module IDs provided."
-        }, custom_header_data=kwargs)
+    modules = module_ids.split(',')
 
     date_filter = request.GET.get("date_filter")
     custom_timetable = get_custom_timetable(modules, date_filter)

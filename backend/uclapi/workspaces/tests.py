@@ -91,7 +91,13 @@ class OccupEyeApiTestCase(TestCase):
                 "name": "test survey 1",
                 "start_time": "10:00",
                 "end_time": "12:00",
-                "staff_survey": str(True)
+                "staff_survey": str(True),
+                "lat": "3.14159",
+                "long": "-0.500100",
+                "address1": "some building",
+                "address2": "some street",
+                "address3": "some city",
+                "address4": "postcode please"
             }
         )
         pipeline.hmset(
@@ -102,7 +108,13 @@ class OccupEyeApiTestCase(TestCase):
                 "name": "test survey 2",
                 "start_time": "09:00",
                 "end_time": "17:00",
-                "staff_survey": str(False)
+                "staff_survey": str(False),
+                "lat": "2.14159",
+                "long": "-1.500100",
+                "address1": "some building2",
+                "address2": "some street2",
+                "address3": "some city2",
+                "address4": "postcode please2"
             }
         )
         pipeline.expire("occupeye:surveys", 20)
@@ -116,6 +128,10 @@ class OccupEyeApiTestCase(TestCase):
         self.assertEqual(
             len(surveys),
             2
+        )
+        self.assertEqual(
+            len(surveys[0]),
+            8
         )
 
         self.assertEqual(
@@ -138,6 +154,30 @@ class OccupEyeApiTestCase(TestCase):
         self.assertTrue(
             strtobool(str(surveys[0]["staff_survey"]))
         )
+        self.assertEqual(
+            surveys[0]["location"]["coordinates"]["lat"],
+            "3.14159"
+        )
+        self.assertEqual(
+            surveys[0]["location"]["coordinates"]["lng"],
+            "-0.500100"
+        )
+        self.assertEqual(
+            surveys[0]["location"]["address"][0],
+            "some building"
+        )
+        self.assertEqual(
+            surveys[0]["location"]["address"][1],
+            "some street"
+        )
+        self.assertEqual(
+            surveys[0]["location"]["address"][2],
+            "some city"
+        )
+        self.assertEqual(
+            surveys[0]["location"]["address"][3],
+            "postcode please"
+        )
 
         self.assertEqual(
             surveys[1]["id"],
@@ -158,4 +198,28 @@ class OccupEyeApiTestCase(TestCase):
         )
         self.assertFalse(
             strtobool(str(surveys[1]["staff_survey"]))
+        )
+        self.assertEqual(
+            surveys[1]["location"]["coordinates"]["lat"],
+            "2.14159"
+        )
+        self.assertEqual(
+            surveys[1]["location"]["coordinates"]["lng"],
+            "-1.500100"
+        )
+        self.assertEqual(
+            surveys[1]["location"]["address"][0],
+            "some building2"
+        )
+        self.assertEqual(
+            surveys[1]["location"]["address"][1],
+            "some street2"
+        )
+        self.assertEqual(
+            surveys[1]["location"]["address"][2],
+            "some city2"
+        )
+        self.assertEqual(
+            surveys[1]["location"]["address"][3],
+            "postcode please2"
         )

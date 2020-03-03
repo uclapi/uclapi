@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Collapse, { Panel } from 'rc-collapse';
 import { StyleSheet, css } from 'aphrodite';
 
-import {CopyActionField} from './copyField.jsx';
+import { CopyActionField } from './copyField.jsx';
 import RelativeDate from './relativeDate.jsx';
 import AppNameField from './app/AppNameField.jsx';
 import DeleteButton from './app/DeleteButton.jsx';
@@ -19,35 +19,32 @@ const styles = StyleSheet.create({
 });
 
 class App extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       error: '',
     };
-    this.regenToken = this.regenToken.bind(this);
-    this.regenConfirm = this.regenConfirm.bind(this);
-    this.setError = this.setError.bind(this);
   }
 
-  setError(msg){
+  setError = (msg) => {
     this.setState({
       error: msg
     });
-    setTimeout(()=>{this.setState({error:''});}, 5000);
+    setTimeout(() => { this.setState({ error: '' }); }, 5000);
   }
 
-  regenToken(){
+  regenToken = () => {
     let that = this;
     fetch('/dashboard/api/regen/', {
       method: 'POST',
       credentials: 'include',
       headers: defaultHeaders,
       body: 'app_id=' + this.props.appId
-    }).then((res)=>{
-      if(res.ok){ return res.json(); }
+    }).then((res) => {
+      if (res.ok) { return res.json(); }
       throw new Error('Unable to regen token.');
-    }).then((json)=>{
-      if(json.success){
+    }).then((json) => {
+      if (json.success) {
         let values = {
           token: json.app.token,
           updated: json.app.date
@@ -56,19 +53,19 @@ class App extends React.Component {
         return;
       }
       throw new Error(json.message);
-    }).catch((err)=>{
+    }).catch((err) => {
       this.setError(err.message);
     });
   }
 
-  regenConfirm(e){
+  regenConfirm = (e) => {
     e.preventDefault();
-    if(confirm('Are you sure you want to regenerate your api token?')){
+    if (confirm('Are you sure you want to regenerate your api token?')) {
       this.regenToken();
     }
   }
 
-  render () {
+  render() {
     return <div className="app pure-u-1 pure-u-xl-1-2">
       <div className="card">
         <div className="pure-g">
@@ -81,7 +78,7 @@ class App extends React.Component {
             />
           </div>
           <div className="pure-u-1-2">
-            <div style={{float: 'right'}}>
+            <div style={{ float: 'right' }}>
               <DeleteButton
                 appId={this.props.appId}
                 remove={this.props.remove}
@@ -127,7 +124,7 @@ class App extends React.Component {
           </Panel>
         </Collapse>
         <label className="error">{this.state.error}</label>
-        </div>
+      </div>
     </div>;
   }
 }
@@ -155,4 +152,4 @@ App.propTypes = {
   remove: PropTypes.func,
 };
 
-export {App};
+export { App };

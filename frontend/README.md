@@ -26,11 +26,6 @@ $ npm install
 ```
 
 ## Build
-Build:
-``` Bash
-$ npm run build
-```
-
 Build and watch:
 ``` Bash
 $ npm start
@@ -38,7 +33,16 @@ $ npm start
 
 Build for production:
 ``` Bash
-$ npm run production
+$ npm run build
+```
+
+## Webpack analysis
+
+Running `npm run profile` will generate a `stats.json` file which can be analysed with [webpack-bundle-analyzer](https://github.com/webpack-contrib/webpack-bundle-analyzer) to identify areas for possible optimisation
+
+Generate and view stats.json:
+``` Bash
+$ npm run profile
 ```
 
 ## View
@@ -47,7 +51,8 @@ To see the dashboard you must start the django server and fake shibboleth app (s
 ## Things to note
 
 ## Webpack
-Running `npm-start` will start webpack in auto-rebuild mode where it will watch for changes and rebuild if necessary.
+Running `npm start` will start webpack in auto-rebuild mode where it will watch for changes and rebuild if necessary.
+
 Running `npm run profile` will generate a `stats.json` file which can be analysed with something like [webpack-bundle-analyzer](https://github.com/webpack-contrib/webpack-bundle-analyzer) to identify areas for possible optimisation
 
 ### Django templates

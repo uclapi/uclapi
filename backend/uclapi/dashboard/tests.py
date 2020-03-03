@@ -23,9 +23,33 @@ from dashboard.api_applications import (
 class MediumArticleScraperTestCase(TestCase):
     def test_articles_retrieved(self):
         medium_article_iterator = [
-            {'title': 'a', 'url': 'b'},
-            {'title': 'c', 'url': 'd'},
-            {'title': 'e', 'url': 'f'}
+            {'title': 'a',
+                'url': 'b',
+                'tags': 'c',
+                'creator': 'd',
+                'published': 'e',
+                'updated': 'e',
+                'content': 'f',
+                'image_url': 'g',
+             },
+            {'title': 'h',
+                'url': 'i',
+                'tags': 'j',
+                'creator': 'k',
+                'published': 'l',
+                'updated': 'm',
+                'content': 'n',
+                'image_url': 'o',
+             },
+            {'title': 'p',
+                'url': 'q',
+                'tags': 'r',
+                'creator': 's',
+                'published': 't',
+                'updated': 'u',
+                'content': 'v',
+                'image_url': 'w',
+             },
         ]
         self._redis = redis.Redis(
             host=settings.REDIS_UCLAPI_HOST,
@@ -35,17 +59,41 @@ class MediumArticleScraperTestCase(TestCase):
         pipe = self._redis.pipeline()
         for i in range(0, len(medium_article_iterator)):
             article = medium_article_iterator[i]
-            redis_key_url = "Blog:item:{}:url".format(i)
             redis_key_title = "Blog:item:{}:title".format(i)
-            pipe.set(redis_key_url, article['url'])
+            redis_key_url = "Blog:item:{}:url".format(i)
+            redis_key_tags = "Blog:item:{}:tags".format(i)
+            redis_key_creator = "Blog:item:{}:creator".format(i)
+            redis_key_published = "Blog:item:{}:published".format(i)
+            redis_key_updated = "Blog:item:{}:updated".format(i)
+            redis_key_content = "Blog:item:{}:content".format(i)
+            redis_key_image_url = "Blog:item:{}:image_url".format(i)
             pipe.set(redis_key_title, article['title'])
+            pipe.set(redis_key_url, article['url'])
+            pipe.set(redis_key_tags, article['tags'])
+            pipe.set(redis_key_creator, article['creator'])
+            pipe.set(redis_key_published, article['published'])
+            pipe.set(redis_key_updated, article['updated'])
+            pipe.set(redis_key_content, article['content'])
+            pipe.set(redis_key_image_url, article['image_url'])
         pipe.execute()
         articles = get_articles()
         for i in range(0, len(medium_article_iterator)):
-            redis_key_url = "Blog:item:{}:url".format(i)
             redis_key_title = "Blog:item:{}:title".format(i)
+            redis_key_url = "Blog:item:{}:url".format(i)
+            redis_key_tags = "Blog:item:{}:tags".format(i)
+            redis_key_creator = "Blog:item:{}:creator".format(i)
+            redis_key_published = "Blog:item:{}:published".format(i)
+            redis_key_updated = "Blog:item:{}:updated".format(i)
+            redis_key_content = "Blog:item:{}:content".format(i)
+            redis_key_image_url = "Blog:item:{}:image_url".format(i)
             pipe.delete(redis_key_url)
             pipe.delete(redis_key_title)
+            pipe.delete(redis_key_tags)
+            pipe.delete(redis_key_creator)
+            pipe.delete(redis_key_published)
+            pipe.delete(redis_key_updated)
+            pipe.delete(redis_key_content)
+            pipe.delete(redis_key_image_url)
         pipe.execute()
         self.assertEqual(articles, medium_article_iterator)
 
@@ -336,29 +384,6 @@ class WebHookRequestViewTests(TestCase):
             "Make sure to follow the documentation: "
             "https://uclapi.com/docs#webhook/challenge-event"
         )
-
-    @patch("dashboard.webhook_views.verify_ownership", lambda *args: True)
-    @patch("dashboard.webhook_views.is_url_unsafe", lambda *args: False)
-    @patch("keen.add_event", lambda *args: None)
-    def test_edit_webhook_POST_user_owns_app_changing_url_verification_ok(
-        self
-    ):
-
-        request = self.factory.post(
-            '/',
-            {
-                'app_id': self.app1.id, 'siteid': 2, 'roomid': 2,
-                'contact': 2, 'url': "http://new"
-            }
-        )
-        request.session = {'user_id': self.user1.id}
-        response = edit_webhook(request)
-
-        content = json.loads(response.content.decode())
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(content["ok"])
-        self.assertEqual(content["message"], "Webhook sucessfully changed.")
 
 
 class VerifyOwnershipTestCase(TestCase):

@@ -22,7 +22,9 @@ from roombookings.models import \
     Room, RoomA, RoomB, \
     Booking, BookingA, BookingB
 from common.helpers import LOCAL_TIMEZONE
+
 from common.cachet import create_incident, delete_incident
+
 import gc
 
 import django
@@ -344,6 +346,7 @@ class Command(BaseCommand):
             # Cache has been run now, so we can delete the key to allow it
             # to be run again in the future.
             self._redis.delete(cache_running_key)
+
             if settings.UCLAPI_DOMAIN_CURRENT == "staging.ninja":
                 delete_incident("Gencache-Staging")
 
@@ -360,6 +363,7 @@ class Command(BaseCommand):
             except Exception as teams_error:
                 print(f"Failed to send message to Microsoft Teams. "
                       f"Reason: {repr(teams_error)}")
+
             if settings.UCLAPI_DOMAIN_CURRENT == "staging.ninja":
                 create_incident(gencache_error, "Gencache-Staging")
 

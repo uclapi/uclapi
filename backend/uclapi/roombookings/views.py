@@ -29,13 +29,23 @@ def get_rooms(request, *args, **kwargs):
     request_params['roomclass'] = request.GET.get('classification')
     request_params['capacity__gte'] = request.GET.get('capacity')
     request_params['automated'] = request.GET.get('automated')
+    try:
+        if request_params['capacity__gte']:
+            int(request_params['capacity__gte'])
+    except ValueError:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": "capacity should be an int"
+        }, custom_header_data=kwargs)
+        response.status_code = 400
+        return response
 
     # Get available rooms:
     # - Filtered by this academic year only
     # - Anything centrally bookable
     # - All ICH rooms (Site IDs 238 and 240)
     lock = Lock.objects.all()[0]
-    curr = RoomA if not lock.a else RoomB
+    curr = RoomA if lock.a else RoomB
 
     # No filters provided, return all rooms serialised
     if reduce(lambda x, y: x or y, request_params.values()):
@@ -131,7 +141,7 @@ def get_bookings(request, *args, **kwargs):
     bookings = _get_paginated_bookings(page_token)
 
     lock = Lock.objects.all()[0]
-    curr = BookingA if not lock.a else BookingB
+    curr = BookingA if lock.a else BookingB
 
     bookings["count"] = curr.objects.filter(
         Q(bookabletype='CB') | Q(siteid='238') | Q(siteid='240'),
@@ -224,7 +234,7 @@ def get_free_rooms(request, *args, **kwargs):
     bookings = _get_paginated_bookings(page_token)["bookings"]
 
     lock = Lock.objects.all()[0]
-    curr = RoomA if not lock.a else RoomB
+    curr = RoomA if lock.a else RoomB
 
     # Get available rooms:
     # - Filtered by this academic year only

@@ -1,13 +1,13 @@
 # UCL API [![Build Status](https://travis-ci.org/uclapi/uclapi.svg?branch=master)](https://travis-ci.org/uclapi/uclapi) [![codecov](https://codecov.io/gh/uclapi/uclapi/branch/master/graph/badge.svg)](https://codecov.io/gh/uclapi/uclapi)
 
 ## What is the UCL API?
-UCL API is a **student-built** platform for **student developers** to improve the **student experience** of everyone at UCL.
+UCL API started as a **student-built** platform for **student developers** to improve the **student experience** of everyone at UCL. We now also have our own end-user facing applications in addition to this, such as UCL Assistant, our rival app to UCL GO.
 
 ### Our Goal
 Create a ridiculously simple, documentation first, and comprehensive API around UCL's digital services and establish an ecosystem of third party UCL apps and services that use the API.
 
 ### Interested in using it?
-Find out more at our [website](https://uclapi.com)
+Find out more at our [website](https://uclapi.com)!
 
 ### Interested in helping build it?
 Read on more to find out how to setup and build the API. From here you can start writing your own changes and submitting them. See our [Contribution Guide](CONTRIBUTING.md) to learn more about how you can contribute.
@@ -21,6 +21,8 @@ We only support development under Linux. macOS is unofficially supported, and we
 Note that since the Creators Update (which includes 16.04.2; if you have not upgraded from Ubuntu 14 then there are tutorials online to do this) we have experienced zero issues building and running under Bash on Ubuntu on Windows.
 
 ### Install Dependencies
+We provide this simple command to install most of the dependencies using the apt package manager (standard on ubuntu, debian etc...). If not using this package manager you will have to find the package names for your distro yourself. The base depenencies are postgres, python3, virtual environments for python, nodejs, npm, redis and some kernel modules for async and regular expressions. The rest are for making the installiion easier such as git, curl, wget and sed. These allow you to follow this readme much easier.
+
 ```
 sudo apt-get -y install git curl libpq-dev libpq5 libpython3-dev \
     python3 python3-pip python3-virtualenv python-virtualenv \
@@ -36,6 +38,7 @@ sudo service redis-server start
 
 ### Set up Oracle (Linux)
 ```bash
+#! /bin/bash
 # Oracle Version
 ORACLE_VERSION=12_2
 ORACLE_SO_VERSION=12.1
@@ -51,8 +54,8 @@ rm -rf /opt/oracle/instantclient_$ORACLE_VERSION
 wget -O instantclient.zip "$ORACLE_INSTANTCLIENT_BASIC_URL"
 wget -O instantclientsdk.zip "$ORACLE_INSTANTCLIENT_SDK_URL"
 
-sudo unzip -d/opt/oracle temp/instantclient.zip
-sudo unzip -d/opt/oracle temp/instantclientsdk.zip
+sudo unzip -d/opt/oracle instantclient.zip
+sudo unzip -d/opt/oracle instantclientsdk.zip
 
 export ORACLE_HOME=/opt/oracle/instantclient_$ORACLE_VERSION
 
@@ -131,14 +134,14 @@ git clone https://github.com/uclapi/fakeshibboleth
 Virtual environments allow us to easily switch between Python versions and the pip packages we have installed. They are entered with the following commands:
 
 ```
-Linux: . venv/bin/activate 
+Linux: . venv/bin/activate
 Windows: \venv\Scripts\activate
 ```
 
 You can tell you're in one by the first letters of a terminal/cmd prompt. The line should start with the name of your virtual environment for example:
 
 ```
-(venv)Your-Computer:your_project UserName$ 
+(venv)Your-Computer:your_project UserName$
 ```
 
 Once activated anything we execute will run with this environment's version of python and the versions of any packages installed within it. This must be done whenever using our project and so before running *manage.py* or other python files remember to activate the virtual environment.
@@ -186,9 +189,11 @@ popd
 ### Install PostgreSQL
 Setting this up will vary based on your operating system. It is perfectly possible to just use the Windows version of Postgres and run it under Windows whilst running the rest of the code under Linux. If you are working on Linux or macOS directly then you should install PostgreSQL and then reset the `postgres` account password to one you know and can save in the .env later.
 
+An example guide for this for ubuntu is found [Here](https://tecadmin.net/install-postgresql-server-on-ubuntu/)
+
 #### Create the required tables
 
-Now we have PostgreSQL installed we can create some empty databases so we can complete the migrations later. There are two required, uclapi_default, and uclapi_gencache if you are using the environment variables below. These can be created by accessing the postgreSQL command prompt with the command ```psql``` and then running ```create database uclapi_default;``` and then ```create database uclapi_gencache;``` 
+Now we have PostgreSQL installed we can create some empty databases so we can complete the migrations later. There are two required, uclapi_default, and uclapi_gencache if you are using the environment variables below. These can be created by accessing the postgreSQL command prompt with the command ```psql``` and then running ```create database uclapi_default;``` and then ```create database uclapi_gencache;```
 
 ### Configure the environment variables in .env
 Firstly, `cp uclapi/backend/uclapi/.env.example uclapi/backend/uclapi/.env`.
@@ -245,8 +250,6 @@ pushd uclapi/backend/uclapi
 ./manage.py migrate --database gencache
 ./manage.py create_lock
 ./manage.py update_gencache
-./manage.py create_timetable_lock
-./manage.py update_timetable_gencache
 ./manage.py feed_occupeye_cache
 deactivate
 popd
@@ -286,6 +289,10 @@ We're an amazing project, so obviously we have tests :sparkles:
 Make sure you have the requirements installed in your virtual environment (and you have activated it) , `cd` into `backend/uclapi` and then run :  
 `python manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner' --settings=uclapi.settings_mocked`
 
+## Linting
+
+We have a pre-commit hook set up that runs [eslint](https://eslint.org/) on all staged JS files, [stylelint](https://github.com/stylelint/stylelint) on all staged scss files, and [autopep8](https://github.com/hhatto/autopep8) & [flake8](http://flake8.pycqa.org/en/latest/) on all staged Python files. This automatically fixes style issues and stops the commit if there are any obvious problems (e.g. failure to define variable).
+
 ## Our Custom Django Management Commands
 What's that?! You want even more info? This section details any custom management commands we have created for django. You can view the full list of commands including the standard ones by running the command ```python manage.py --help``` and get more information on specific commands by running ```python manage.py command --help```. The most useful commands for development are listed below in addition to this however.
 
@@ -309,3 +316,51 @@ python manage.py feed_occupeye_cache
 python manage.py feed_occupeye_cache_mini
 ```
 **Note: As said previously these require valid credentials and for you to be on the UCL network to use**
+
+## Developing using docker
+
+### Installation of docker (Windows using WSL)
+
+Make sure to have an installation of Windows 10 Education (Free licence through UCL) 
+
+Download docker for windows
+
+### Cloning the repository
+
+Install uclapi into a common source folder on your computer using:
+
+```
+git clone https://github.com/uclapi/uclapi.git
+```
+
+### Building the frontend
+
+```
+cd frontend
+npm start
+```
+
+### Running docker
+
+copy the .env.example into the root/uclapi folder and rename to .env
+
+navigate to docker settings > shared drives > enable c
+
+run the following command inside WSL:
+
+```
+export DOCKER_HOST=tcp://localhost:2375" >> ~/.bashrc && source ~/.bashrc
+```
+
+Finally run the following command in a new terminal inside uclapi:
+
+```
+docker-compose up -d 
+```			
+
+## Documentation
+As well as the user-facing documentation we also now ship our own internal Documentation
+which aims to help developers contribute to our code. To make it simply run ```make html```
+while in the backend directory. You can then navigate to the build directory and open up
+index.html in your favourite browser to view the documentation. It can also be built in pdf, latex
+and a few other formats.

@@ -1,11 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Navbar from './navbar.jsx';
+// Common Components
+import { NavBar } from 'Layout/Items.jsx';
+// Legacy
+import 'Styles/navbar.scss';
 
 class Layout extends React.Component {
   render () {
     return <div className="layout">
-      <Navbar />
+      <NavBar isScroll={false} />
       <div className="content pure-g">
         <div className="pure-u-md-1-4"></div>
         <div className="pure-u-1 pure-u-md-1-2">

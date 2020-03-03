@@ -44,8 +44,8 @@ class Students(models.Model):
     setid = models.TextField(max_length=10)
     studentid = models.TextField(primary_key=True, max_length=12)
     name = models.TextField(max_length=120)
-    linkcode = models.TextField(max_length=20)
-    courseid = models.TextField(max_length=12)
+    linkcode = models.TextField(max_length=20, null=True)
+    courseid = models.TextField(max_length=12, null=True)
     courseyear = models.BigIntegerField(null=True, blank=True)
     classgroupid = models.TextField(max_length=10, null=True)
     deptid = models.TextField(max_length=10)
@@ -95,8 +95,8 @@ class StudentsA(models.Model):
     setid = models.TextField(max_length=10)
     studentid = models.TextField(max_length=12)
     name = models.TextField(max_length=120)
-    linkcode = models.TextField(max_length=20)
-    courseid = models.TextField(max_length=12)
+    linkcode = models.TextField(max_length=20, null=True)
+    courseid = models.TextField(max_length=12, null=True)
     courseyear = models.BigIntegerField(null=True, blank=True)
     classgroupid = models.TextField(max_length=10, null=True)
     deptid = models.TextField(max_length=10)
@@ -144,8 +144,8 @@ class StudentsB(models.Model):
     setid = models.TextField(max_length=10)
     studentid = models.TextField(max_length=12)
     name = models.TextField(max_length=120)
-    linkcode = models.TextField(max_length=20)
-    courseid = models.TextField(max_length=12)
+    linkcode = models.TextField(max_length=20, null=True)
+    courseid = models.TextField(max_length=12, null=True)
     courseyear = models.BigIntegerField(null=True, blank=True)
     classgroupid = models.TextField(max_length=10, null=True)
     deptid = models.TextField(max_length=10)
@@ -256,7 +256,7 @@ class Module(models.Model):
     name = models.TextField(max_length=120)
     category = models.TextField(max_length=10, null=True)
     classif = models.TextField(max_length=10)
-    linkcode = models.TextField(primary_key=True, max_length=20)
+    linkcode = models.TextField(max_length=20)
     csize = models.BigIntegerField(null=True, blank=True)
     minsize = models.BigIntegerField(null=True, blank=True)
     maxsize = models.BigIntegerField(null=True, blank=True)
@@ -272,6 +272,7 @@ class Module(models.Model):
         managed = False
         db_table = '"CMIS_OWNER"."MODULE"'
         _DATABASE = 'roombookings'
+        unique_together = (("linkcode", "moduleid"),)
 
 
 class ModuleA(models.Model):
@@ -660,17 +661,43 @@ class CrscompmodulesB(models.Model):
 
 
 class Classifications(models.Model):
-    setid = models.TextField(max_length=10)
-    classid = models.TextField(max_length=10)
-    type = models.TextField(max_length=15)
-    name = models.TextField(primary_key=True, max_length=55)
-    description = models.TextField(max_length=120)
-    linkcode = models.TextField(max_length=20)
+    setid = models.CharField(max_length=10, null=True)
+    classid = models.CharField(max_length=10, null=True)
+    type = models.CharField(max_length=15, null=True)
+    name = models.CharField(primary_key=True, max_length=55)
+    description = models.CharField(max_length=120, null=True)
+    linkcode = models.CharField(max_length=20, null=True)
 
     class Meta:
         managed = False
         db_table = '"CMIS_OWNER"."CLASSIFICATIONS"'
         _DATABASE = 'roombookings'
+
+
+class ClassificationsA(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.CharField(max_length=10, null=True)
+    classid = models.CharField(max_length=10, null=True)
+    type = models.CharField(max_length=15, null=True)
+    name = models.CharField(max_length=55, null=True)
+    description = models.CharField(max_length=120, null=True)
+    linkcode = models.CharField(max_length=20, null=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
+
+
+class ClassificationsB(models.Model):
+    id = models.AutoField(primary_key=True)
+    setid = models.CharField(max_length=10, null=True)
+    classid = models.CharField(max_length=10, null=True)
+    type = models.CharField(max_length=15, null=True)
+    name = models.CharField(max_length=55, null=True)
+    description = models.CharField(max_length=120, null=True)
+    linkcode = models.CharField(max_length=20, null=True)
+
+    class Meta:
+        _DATABASE = 'gencache'
 
 
 class Weekmapnumeric(models.Model):
@@ -757,6 +784,7 @@ class CrsavailmodulesB(models.Model):
 
     class Meta:
         _DATABASE = 'gencache'
+
 
 class Timetable(models.Model):
     slotid = models.BigIntegerField(primary_key=True)
@@ -1291,10 +1319,10 @@ class CminstancesB(models.Model):
 
 
 class Modulegroups(models.Model):
-    setid = models.TextField(max_length=10, primary_key=True)
-    moduleid = models.TextField(max_length=12, primary_key=True)
+    setid = models.TextField(max_length=10)
+    moduleid = models.TextField(max_length=12)
     owner = models.TextField(max_length=10)
-    grpcode = models.TextField(max_length=10, primary_key=True)
+    grpcode = models.TextField(max_length=10)
     name = models.TextField(max_length=30, null=True, blank=True)
     csize = models.IntegerField(null=True, blank=True)
     minsize = models.IntegerField(null=True, blank=True)
@@ -1312,6 +1340,7 @@ class Modulegroups(models.Model):
         managed = False
         db_table = '"CMIS_OWNER"."MODULEGROUPS"'
         _DATABASE = 'roombookings'
+        unique_together = (("setid", "moduleid", "grpcode"),)
 
 
 class ModulegroupsA(models.Model):
