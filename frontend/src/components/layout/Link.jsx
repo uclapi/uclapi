@@ -68,7 +68,7 @@ class Link extends React.Component {
     		return (
                 <div className="link-to-page" onMouseEnter={this.onMouseEnterHandler} onMouseLeave={this.onMouseLeaveHandler} >
                     <Bounce className="bounce-image" pose={animation}>
-						<img src={require(`../../images/navbar/` + this.props.src + `.svg`)} />
+						<img src={this.props.src} />
 					</Bounce>
 					<a href={this.props.link}>
                         <h1>{this.props.name}</h1>

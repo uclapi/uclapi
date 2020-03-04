@@ -6,6 +6,12 @@ import posed from 'react-pose'
 // Images
 import menu from '../../images/navbar/menu.svg'
 import logo from './../../images/simpleAPILogoWhite.svg'
+
+import settings from '../../images/navbar/settings.svg'
+import about from '../../images/navbar/about.svg'
+import docs from '../../images/navbar/docs.svg'
+import dashboard from '../../images/navbar/dashboard.svg'
+import market from '../../images/navbar/market.svg' 
 // Components
 import Link from './Link.jsx'
 
@@ -13,27 +19,27 @@ const links = [
   {
     name: `settings`,
     link: `/oauth/myapps`,
-    src: `settings`,
+    src: settings,
   },
   {
     name: `about`,
     link: `/about`,
-    src: `about`,
+    src: about,
   },
   {
     name: `documentation`,
     link: `/docs`,
-    src: `docs`,
+    src: docs,
   },
   {
     name: `dashboard`,
     link: `/dashboard`,
-    src: `dashboard`,
+    src: dashboard,
   },
   {
     name: `marketplace`,
     link: `/marketplace`,
-    src: `market`,
+    src: market,
   },
 ]
 
