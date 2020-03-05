@@ -29,46 +29,30 @@ export default class CardView extends React.Component {
     this.DEFAULT_WIDTH = 0
     this.DEBUGGING = false
 
-    this.getWidth = this.getWidth.bind(this)
-    this.getMinWidth = this.getMinWidth.bind(this)
-    this.getStyle = this.getStyle.bind(this)
-    this.setStyleKeyValuePair = this.setStyleKeyValuePair.bind(this)
-    this.setTheme = this.setTheme.bind(this)
-    this.setMargin = this.setMargin.bind(this)
-    this.updateStyle = this.updateStyle.bind(this)
-    
     this.cardRef = React.createRef()
 
     this.state = {
-      containerWidth : -1,
+      containerWidth: -1,
+      className: ``,
+      style: {},
     }
   }
 
   render() {
-    this.updateStyle()
+    const { className, style } = this.state
+    const { children, link, fakeLink, type } = this.props
 
-    const className = this.class
-    const style = this.style
+    if (this.DEBUGGING) { console.log(`DEBUG: CardView rendered with the following styles: ` + type + ` and class: ` + className) }
 
-    if (this.DEBUGGING) { console.log(`DEBUG: CardView rendered with the following styles: ` + this.state.type + ` and class: ` + this.state.class) }
-
-    const doesLinkRoute = (typeof this.props.link != `undefined`) && (typeof this.props.fakeLink == `undefined`)
+    const doesLinkRoute = (typeof link != `undefined`) && (typeof fakeLink == `undefined`)
 
     // RENDER METHOD
     if (doesLinkRoute) {
       return (
         <>
-          <div className={`invisible-marker`}
-            style={{
-              "position": `fixed`,
-              "visibility": `hidden`,
-              "width": `inherit`,
-            }}
-            ref={this.cardRef}
-          ></div>
-          <a href={this.props.link}>
-            <div className={className} style={style}>
-              {this.props.children}
+          <a className={className} href={link} style={style}>
+            <div className={className}>
+              {children}
             </div>
           </a>
         </>
@@ -76,129 +60,111 @@ export default class CardView extends React.Component {
     } else {
       return (
         <>
-          <div className={`invisible-marker`}
-            style={{
-              "position": `fixed`,
-              "visibility": `hidden`,
-              "width": `inherit`,
-            }}
-            ref={this.cardRef}
-          ></div>
           <div className={className} style={style}>
-            {this.props.children}
+            {children}
           </div>
         </>
       )
     }
   }
 
-  updateStyle() {
-    let minWidth = this.getMinWidth()
-    let shouldResize = false
+  refresh = () => {
+    const { style: propsStyle, link, fakeLink, noShadow, type, noPadding } = this.props
+    const styling = typeof type === `undefined` ? `default` : type
 
-    if (minWidth != `unset` && this.state.containerWidth != -1) { 
-      minWidth = minWidth.substring(0, minWidth.length - 2)
-      const fraction = this.props.width.split(`-`)
-      const minTotalWidth = minWidth * fraction[1] / fraction[0]
-
-      shouldResize = this.state.containerWidth <= minTotalWidth
+    let className = `uclapi-card uclapi-card-` + styling
+    let style = {
+      ...propsStyle,
+      width: this.getWidth(),
     }
-
-    this.class = `uclapi-card`
-    this.style = {}
-
-    const { style } = this.props
-    if (style) { this.style = {...style} }
-
-    this.setTheme()
-
-    if (shouldResize) {
-      this.setStyleKeyValuePair(`marginLeft`, `auto`)
-      this.setStyleKeyValuePair(`marginRight`, `auto`)
-      this.setStyleKeyValuePair(`display`, `block`)
-      this.setStyleKeyValuePair(`float`, `unset`)
-    }
-  }
-
-  componentDidMount() {
-    if (this.props.snapAlign) {
-      if (this.DEBUGGING) { console.log(`CardView.componentDidMount`) }
-      window.addEventListener(`resize`, this.setMargin)
-      // SET MARGIN IN CASE TOO SMALL
-      this.setMargin()
-    }
-  }
-  componentWillUnmount() {
-    if (this.props.snapAlign) {
-      if (this.DEBUGGING) { console.log(`CardView.componentWillUnmount`) }
-      window.removeEventListener(`resize`, this.setMargin)
-    }
-  }
-
-  setMargin() {
-    const fraction = this.props.width.split(`-`)
-    const adaption = 100 - (4 * fraction[1])
-
-    const currentWidth = this.cardRef.current.clientWidth * adaption / 100
-
-    this.setState({containerWidth : currentWidth})
-  }
-
-  setTheme() {
-    // REQUIRED ATTRIBUTES
-    // STYLE
-    this.class += ` uclapi-card-` + this.getStyle()
-    // WIDTH
-    this.setStyleKeyValuePair(`width`, this.getWidth())
-    // MIN WIDTH
-    this.setStyleKeyValuePair(`minWidth`, this.getMinWidth())
 
     // OPTIONAL ATTRIBUTES
+    // MIN WIDTH
+    // if (minWidth) {
+    //   style = {
+    //     ...style,
+    //     minWidth,
+    //   }
+    // }
+    // SNAP ALIGN
+    // if (this.shouldResize()) {
+    //   className += ` uclapi-card-full-width`
+    // }
     // LINK
-    if (this.props.link || this.props.fakeLink) { this.class += ` default-transition background-color-transition clickable uclapi-card-clicked-` + this.getStyle() }
-    // ADD SHADOW AS DEFAULT
-    if (typeof this.props.noShadow === `undefined` && this.getStyle() != `no-bg`) { this.class += ` uclapi-card-shadow` }
-  }
-
-  setStyleKeyValuePair(key, value) {
-    if (this.DEBUGGING) { console.log(`DEBUG: ` + key + ` updated to ` + value) }
-    this.style[key] = value
-    if (this.DEBUGGING) { console.log(`DEBUG: style updated to: ` + this.style) }
-  }
-
-  getWidth() {
-    if (typeof this.props.width == `undefined`) { console.exception(`EXCEPTION: no width set for card view so setting card view width to ` + this.DEFAULT_WIDTH); return this.DEFAULT_WIDTH }
-
-    if (this.props.width == `fit-content`) { return `fit-content` }
-
-    const fraction = this.props.width.split(`-`)
-    let adaptation = 100 - (4 * fraction[1])
-
-    if(this.props.noPadding) { 
-      adaptation = 100 
-      this.setStyleKeyValuePair(`margin`, `0`)
+    if (link || fakeLink) {
+      className += ` default-transition background-color-transition clickable uclapi-card-clicked-` + styling
     }
+    // ADD SHADOW AS DEFAULT
+    if (typeof noShadow === `undefined` && styling != `no-bg`) {
+      className += ` uclapi-card-shadow`
+    }
+    // NO PADDING
+    if (noPadding) {
+      style = {
+        ...style,
+        marginLeft: 0,
+        marginRight: 0,
+      }
+    }
+
+    // Set the stylings and class
+    this.setState({
+      className: className,
+      style: style,
+    })
+  }
+
+  getWidth = () => {
+    const { width, noPadding } = this.props
+
+    if (typeof width == `undefined`) { console.exception(`EXCEPTION: no width set for card view so setting card view width to ` + this.DEFAULT_WIDTH); return this.DEFAULT_WIDTH }
+
+    if (width == `fit-content`) { return `fit-content` }
+
+    const fraction = width.split(`-`)
+    const adaptation = noPadding ? 100 : 100 - (4 * fraction[1])
 
     const percentage = fraction[0] / fraction[1] * adaptation
     return percentage + `%`
   }
 
-  getMinWidth() {
-    let minWidth = `unset`
-    if (this.props.minWidth) { minWidth = this.props.minWidth }
-    return minWidth
-  }
+  // shouldResize = () => {
+  //   const { minWidth, width } = this.props
+  //   const { containerWidth } = this.state
 
-  getMaxWidth() {
-    let maxWidth = `unset`
-    if (this.props.maxWidth) { maxWidth = this.props.maxWidth }
-    return maxWidth
-  }
+  //   const fractionOfTotalWidth = width.split(`-`)[0] / width.split(`-`)[1]
+  //   const totalMinWidth = minWidth * (1 / fractionOfTotalWidth)
 
-  getStyle() {
-    let style = `default`
-    if (this.props.type) { style = this.props.type }
-    return style
-  }
+  //   return containerWidth <= totalMinWidth
+  // }
 
+  componentDidMount() {
+    // if (this.props.snapAlign) {
+    //   if (this.DEBUGGING) { console.log(`CardView.componentDidMount`) }
+    //   this.cardRef.current.addEventListener(`resize`, this.setMargin)
+    //   // SET MARGIN IN CASE TOO SMALL
+    //   this.setMargin()
+    // } else {
+    this.refresh()
+    // }
+  }
+  // componentWillUnmount() {
+  //   if (this.props.snapAlign) {
+  //     if (this.DEBUGGING) { console.log(`CardView.componentWillUnmount`) }
+  //     this.cardRef.current.removeEventListener(`resize`, this.setMargin)
+  //   }
+  // }
+
+  // setMargin = () => {
+  //   const fraction = this.props.width.split(`-`)
+  //   const adaption = 100 - (4 * fraction[1])
+
+  //   const currentWidth = this.cardRef.current.clientWidth * adaption / 100
+
+  //   console.log(`Checking margin + width: ` + this.cardRef.current.clientWidth + ` width array: ` + fraction
+  //     + ` width: ` + currentWidth)
+
+  //   this.setState({ containerWidth: currentWidth })
+  //   this.refresh()
+  // }
 }

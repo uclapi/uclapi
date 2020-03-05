@@ -58,7 +58,8 @@ class AboutPage extends React.Component {
             <TextView text={`About Us`} heading={1} align={`center`} />
             <TextView text={`UCL API is a student led project, founded by Wilhelm Klopp, that opens up the massive amount of ` +
               `data collected by UCL. This allows UCL alumni and staff to develop apps with UCL data.`}
-              heading={2} align={`center`}
+              heading={2}
+              align={`center`}
             />
           </Column>
         </Row>
@@ -67,7 +68,11 @@ class AboutPage extends React.Component {
           <Column width='9-10' horizontalAlignment='center'>
             <TextView text={`Current Team`} heading={1} align={`center`} />
           </Column>
-          <Column width='1-1' horizontalAlignment='center'>
+          <Column
+            width='1-1'
+            horizontalAlignment='center'
+            className="column-horizontal"
+          >
             {current.map(x => member(x))}
           </Column>
         </Row>
@@ -76,7 +81,11 @@ class AboutPage extends React.Component {
           <Column width='9-10' horizontalAlignment='center'>
             <TextView text={`Alumni`} heading={1} align={`center`} />
           </Column>
-          <Column width='1-1' horizontalAlignment='center'>
+          <Column
+            width='1-1'
+            horizontalAlignment='center'
+            className="column-horizontal"
+          >
             {previous.map(x => member(x))}
           </Column>
         </Row>

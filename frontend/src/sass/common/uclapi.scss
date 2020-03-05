@@ -16,7 +16,7 @@
   - Alignments
   - Containers
   - Buttons
-  - Transitions
+  - Transitions 
   - Cards
   - Code Segments
   - RC-Collapse
@@ -31,8 +31,10 @@
 /** Setup **/
 
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
+@import '~include-media/dist/_include-media.scss';
 
 $break-small: 780px;
+$breakpoints: (phone: 768px, tablet: 992px, desktop: 1200px);
 
 html, button, input, select, textarea {
   font-family: 'Source Sans Pro','Roboto', sans-serif;
@@ -226,14 +228,14 @@ a:hover { color: $color-grey-light; }
 .default-button { background-color: $color-grey-dark; color: $color-white; }
 
 .default-button:hover,
-.uclapi-card-clicked-default:hover { background-color: $color-grey-mid;  }
+div.uclapi-card-clicked-default:hover { background-color: $color-grey-mid;  }
 
 .alternate-button,
 .image-button { background-color: $color-white; color: $color-black; }
 
 .alternate-button:hover,
 .image-button:hover,
-.uclapi-card-clicked-alternate:hover { background-color: $color-grey-light2;  }
+div.uclapi-card-clicked-alternate:hover { background-color: $color-grey-light2;  }
 
 .emphasis-button, { background-color: lighten($primary-highlight-color, 10%); color: black; }
 .emphasis-button:hover { background-color: lighten($primary-highlight-color, 20%);  }
@@ -249,11 +251,11 @@ a:hover { color: $color-grey-light; }
 
 /** Cards **/
 
-.uclapi-card {
+div.uclapi-card {
   border-radius: 10px;
   display: inline-block;
   height: auto;
-  margin: 2%;
+  padding: 2%;
   min-height: fit-content;
   overflow: hidden;
 
@@ -261,18 +263,56 @@ a:hover { color: $color-grey-light; }
     filter: brightness(75%);
     transition: .5s linear;
   }
+
+  &:hover .animate-image {
+    transform: scale(1.15);
+    filter: grayscale(50%) blur(1px);
+  }
 }
 
-.uclapi-card:hover .animate-image {
-  transform: scale(1.15);
-  filter: grayscale(50%) blur(1px);
+a.uclapi-card {
+  padding: 2%;
+
+  div.uclapi-card {
+    padding: unset;
+  }
+
+  >div.uclapi-card {
+    width: 100%;
+  }
+
+  @include media("<=phone") {
+    width: 100% !important;
+  }
 }
 
-.uclapi-card-default {
+.column.column-horizontal {
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  justify-content: center;
+  column-gap: 2rem;
+  row-gap: 2rem;
+  flex-wrap: wrap;
+
+  @include media("<=phone") {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    flex-direction: column;
+  }
+
+  div.uclapi-card {
+    @include media("<=phone") {
+      width: 100% !important;
+    }
+  }
+}
+
+div.uclapi-card-default {
   background-color: $color-grey-dark;
 }
 
-.uclapi-card-wrap-around {
+div.uclapi-card-wrap-around {
   background-color: $color-black-transparent-0;
   display: flex;
   float: left;
@@ -280,20 +320,33 @@ a:hover { color: $color-grey-light; }
   padding: 0;
 }
 
-.uclapi-card-alternate {
+div.uclapi-card-full-screen {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  float: unset;
+}
+
+div.uclapi-card-alternate {
   background-color: $color-white;
 }
 
-.uclapi-card-emphasis {
+div.uclapi-card-emphasis {
   background-color: $primary-color;
+
+  &:hover {
+    background-color: $primary-highlight-color;
+  }
 }
 
-.uclapi-card-emphasis:hover {
-  background-color: $primary-highlight-color;
-}
-
-.uclapi-card-shadow {
+div.uclapi-card-shadow {
   box-shadow: 0 4px 8px 0 $color-black-transparent-02;
+}
+
+.invisible-marker {
+  visibility: hidden;
+  width: inherit;
+  position: fixed;
 }
 
 .clickable {
@@ -497,40 +550,49 @@ pre {
 
 /** Social Media Icons **/
 
-.uclapi-card-facebook,
-.uclapi-card-github,
-.uclapi-card-twitter {
-  border-radius: 25px;
+.social-media-holder {
+  width: 210px;
+  margin: 0 auto;
+}
 
-  margin-top: 10px;
-
-  padding: 10px 0;
+div.uclapi-card-facebook,
+div.uclapi-card-github,
+div.uclapi-card-twitter {
+  border-radius: 40px;
+  padding: 20px;
+  margin: 0 5px;
+  float: left;
 
   transition-duration: 0.5s;
   transition-property: background-color;
   transition-timing-function: ease-out;
 }
 
-.uclapi-card-facebook {
+div.uclapi-card-facebook {
   background-color: $color-facebook;
-}
-.uclapi-card-facebook:hover {
-  background-color: lighten($color-facebook, 15%);
+
+  &:hover {
+    background-color: lighten($color-facebook, 15%);
+  }
 }
 
-.uclapi-card-twitter {
+div.uclapi-card-twitter {
   background-color: $color-twitter;
-}
-.uclapi-card-twitter:hover {
-  background-color: lighten($color-twitter, 15%);
+
+  &:hover {
+    background-color: lighten($color-twitter, 15%);
+  }
 }
 
-.uclapi-card-github {
+div.uclapi-card-github {
   background-color: $color-black;
+
+  &:hover {
+    background-color: lighten($color-black, 20%);
+  }
 }
-.uclapi-card-github:hover {
-  background-color: lighten($color-black, 20%);
-}
+
+/** Carousels **/
 
 /** Sizing **/
 

@@ -6,10 +6,13 @@
 import 'Styles/common/uclapi.scss'
 // Legacy
 import 'Styles/navbar.scss'
+import "react-responsive-carousel/lib/styles/carousel.min.css"
 
 // Standard React imports
 import React from 'react'
 import ReactDOM from 'react-dom'
+// External carousel dependency
+import { Carousel } from "react-responsive-carousel"
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 // Grab titles and descriptions of app
@@ -83,6 +86,12 @@ class Marketplace extends React.Component {
               heading={5}
               align={`left`}
             />
+          </Column>
+          <Column
+            width='2-3'
+            horizontalAlignment='center'
+            className="column-horizontal"
+          >
             {featuredApps.map((app, i) => {
               return (
                 <CardView
@@ -90,13 +99,14 @@ class Marketplace extends React.Component {
                   width={`1-1`}
                   type={`emphasis`}
                   link={`/marketplace/` + app.id}
-                  style={{ 'padding': `20px 0 ` }}
+                  noPadding
                 >
                   <Column width='1-2' horizontalAlignment='center'>
                     <ImageView
                       src={app.logolight}
                       width={iconsize}
                       height={iconsize}
+                      style={{ 'margin': `20px 0` }}
                     />
                     <TextView
                       text={app.name}
@@ -125,6 +135,12 @@ class Marketplace extends React.Component {
               heading={5}
               align={`left`}
             />
+          </Column>
+          <Column
+            width='2-3'
+            horizontalAlignment='center'
+            className="column-horizontal"
+          >
             {appsToRender.map((app, i) => {
               return (
                 <CardView
@@ -132,10 +148,9 @@ class Marketplace extends React.Component {
                   width={`1-2`}
                   type={`alternate`}
                   link={`/marketplace/` + app.id}
-                  style={{ padding: `20px 0 `,
-                        float : `left`,
-                        marginTop: `20px`,
-                        marginBottom: `20px`}}
+                  style={{
+                    float: `left`,
+                  }}
                   minWidth={`225px`}
                   snapAlign
                 >
@@ -144,6 +159,7 @@ class Marketplace extends React.Component {
                       src={app.logolight}
                       width={iconsize}
                       height={iconsize}
+                      style={{ 'margin': `20px 0` }}
                     />
                     <TextView
                       text={app.name}
@@ -194,7 +210,7 @@ class AppPage extends React.Component {
       width = w.innerWidth || documentElement.clientWidth || body.clientWidth
     // height = w.innerHeight || documentElement.clientHeight || body.clientHeight
 
-    const mobileCutOff = 700
+    const mobileCutOff = 992
     const tabletCutOff = 1130
 
     const { sizing } = this.state
@@ -233,172 +249,210 @@ class AppPage extends React.Component {
       },
     } = this.state
 
-    const contentWidth = sizing==`mobile` ? `9-10` : `2-3`
-    const iconsize = sizing==`mobile` ? `50px` : `100px`
+    const isMobile = sizing == `mobile`
 
-    const screenshotwidth = sizing==`mobile` ? `54px` : `216px`
-    const screenshotheight = sizing==`mobile` ? `86px` : `384px`
+    const contentWidth = isMobile ? `9-10` : `2-3`
+    const iconsize = isMobile ? `50px` : `100px`
+
+    const screenshotwidth = isMobile ? `162px` : `216px`
+    const screenshotheight = isMobile ? `258px` : `384px`
+    const holderWidth = isMobile ? `162px` : `648px`
 
     return (
       <>
         <NavBar isScroll={false} />
 
-        <Row
-          height='300px'
-          style={{ margin: `60px 0 0 0` }}
-          styling='splash-parallax'
-        >
+        <Row styling='splash-parallax'>
           <Column
-            width='2-3'
+            width={isMobile ? `9-10` : `2-3`}
             horizontalAlignment='center'
-            verticalAlignment='center'
           >
-            <TextView text={`UCL Marketplace`} heading={1} align={`center`} />
-            <TextView
-              text={`Apps that use UCL API`}
-              heading={2}
-              align={`center`}
-            />
-          </Column>
-        </Row>
-
-        <Row styling='secondary'
-          height={sizing==`mobile` ? `50px` : `70px`} 
-          style={{ padding: sizing==`mobile` ? `0` :  `10px 0`}}
-        >
-          <Column width='2-3' horizontalAlignment='center'>
-            <Column
-              width='fit-content'
-              minWidth={iconsize}
-              typeOfInline='grid'
-              horizontalAlignment='left'
-            >
-              <ButtonView type='alternate'
-                text='back'
-                link='/marketplace'
+            {isMobile ? (
+              <>
+                <Row styling='transparent'
+                  height='35px'
+                  style={{ padding: `20px 0 5px 0` }}
+                >
+                  <ButtonView type='alternate'
+                    text='back'
+                    link='/marketplace'
+                    style={{
+                      'float': `left`,
+                      'margin': `10px 0`,
+                    }}
+                  />
+                </Row>
+                <Row styling='transparent'
+                  height={`115px`}
+                  noPadding
+                  style={{
+                    padding: `30px 0px 10px`,
+                    marginBottom: `20px`,
+                  }}
+                >
+                  <CardView
+                    type='default'
+                    width={`1-1`}
+                    style={{ padding: `10px 0` }}
+                    noPadding
+                  >
+                    <ImageView
+                      src={logodark}
+                      width={iconsize}
+                      height={iconsize}
+                      description={name + `logo`}
+                      centred
+                    />
+                    <TextView text={name} heading={2} />
+                  </CardView>
+                </Row>
+                <Row styling='transparent'
+                  height={`100px`}
+                  noPadding
+                  style={{ padding: `0 0 30px 0` }}
+                >
+                  <Column
+                    width='1-1'
+                    horizontalAlignment='center'
+                    verticalAlignment='center'
+                  >
+                    {links.map((x, key) => (
+                      <Row height="50px" noPadding key={key}>
+                        <Column
+                          width='2-3'
+                          horizontalAlignment='center'
+                        >
+                          <ButtonView text={x.name}
+                            link={x.link}
+                            type={`alternate`}
+                            key={key}
+                            style={{
+                              margin: `0`,
+                              width: `100px`,
+                            }}
+                          />
+                        </Column>
+                      </Row>
+                    ))}
+                  </Column>
+                </Row>
+              </>
+            ) : (
+                <>
+                  <Row styling='transparent'
+                    height='70px'
+                    style={{ padding: `20px 0 0 0` }}
+                  >
+                    <Column width='1-1' horizontalAlignment='center'>
+                      <Column
+                        width='fit-content'
+                        minWidth={iconsize}
+                        typeOfInline='grid'
+                        horizontalAlignment='left'
+                      >
+                        <ButtonView type='alternate'
+                          text='back'
+                          link='/marketplace'
+                          style={{
+                            'float': `left`,
+                            'margin': `10px 0`,
+                          }}
+                        />
+                      </Column>
+                    </Column>
+                  </Row>
+                  <Row styling='transparent' height='140px' noPadding>
+                    <Column
+                      width='1-1'
+                      horizontalAlignment='center'
+                      verticalAlignment='center'
+                    >
+                      <Column
+                        width='fit-content'
+                        minWidth={iconsize}
+                        typeOfInline='grid'
+                        horizontalAlignment='left'
+                      >
+                        <ImageView
+                          src={logodark}
+                          width={iconsize}
+                          height={iconsize}
+                          description={name + `logo`}
+                          centred
+                          style={{ 'margin': `0 auto 0 0` }}
+                        />
+                      </Column>
+                      <Column
+                        width='150px'
+                        horizontalAlignment='left'
+                        textAlign='left'
+                        style={{ "paddingLeft": `20px` }}
+                      >
+                        <TextView text={name} heading={2} />
+                        <TextView text={description} heading={5} />
+                      </Column>
+                      <Column
+                        width='fit-content'
+                        horizontalAlignment='left'
+                        textAlign='left'
+                        style={{ "paddingLeft": `20px` }}
+                      >
+                        {links.map((x, key) => (
+                          <Row height="50px" noPadding key={x.name}>
+                            <ButtonView text={x.name}
+                              link={x.link}
+                              type={`alternate`}
+                              key={key}
+                              style={{
+                                margin: `0`,
+                                width: `75px`,
+                              }}
+                            />
+                          </Row>
+                        ))}
+                      </Column>
+                    </Column>
+                  </Row>
+                </>
+              )}
+            <CardView width="1-1" noPadding style={{ padding: `20px 0` }}>
+              <div className="screenshot-holder"
                 style={{
-                  'float': `left`,
-                  'margin': `10px 0`,
+                  width: holderWidth,
+                  margin: `auto`,
                 }}
-              />
-            </Column>
-          </Column>
-        </Row>
-
-        {sizing==`mobile` ? (
-          <Row styling='secondary'
-            height={`100px`}
-            noPadding
-            style={ {padding : `30px 0`} }
-          >
-            <Column
-              width='2-3'
-              horizontalAlignment='center'
-              verticalAlignment='center'
-            >
-              <CardView
-                type='default'
-                width={`9-10`}
-                style={ { margin : `0 20px` }}
-                noPadding
               >
-                <ImageView
-                  src={logodark}
-                  width={iconsize}
-                  height={iconsize}
-                  description={name + `logo`}
-                  centred
-                />
-                <TextView text={name} heading={2} />
-              </CardView>
-            </Column>
-          </Row>
-        ) : (
-          <Row styling='secondary' height='100px' noPadding>
-            <Column
-              width='2-3'
-              horizontalAlignment='center'
-              verticalAlignment='center'
-            >
+                <Carousel
+                  showThumbs={false}
+                  centerMode={!isMobile}
+                  centerSlidePercentage={isMobile ? 100 : 33.33}
+                  showArrows={isMobile || screenshots.length > 3}
+                  showIndicators={isMobile || screenshots.length > 3}
+                  showStatus={isMobile || screenshots.length > 3}
+                  infiniteLoop
+                >
+                  {screenshots.map((screenshot) => (
+                    <div key={screenshot.img}>
+                      <img
+                        src={screenshot.img}
+                        width={screenshotwidth}
+                        height={screenshotheight}
+                      />
+                      <p className="legend">{screenshot.name}</p>
+                    </div>
+                  ))}
+                </Carousel>
+              </div>
               <Column
-                width='fit-content'
-                minWidth={iconsize}
-                typeOfInline='grid'
-                horizontalAlignment='left'
-              >
-                <ImageView
-                  src={logodark}
-                  width={iconsize}
-                  height={iconsize}
-                  description={name + `logo`}
-                  centred
-                  style={{ 'margin': `0 auto 0 0` }}
-                />
-              </Column>
-              <Column
-                width='fit-content'
-                minWidth={iconsize}
-                horizontalAlignment='left'
+                width={contentWidth}
+                horizontalAlignment='center'
                 textAlign='left'
-                style={{ "paddingLeft": `20px` }}
               >
-                <TextView text={name} heading={2} />
-                <TextView text={description} heading={5} />
+                {detailedDescription}
               </Column>
-            </Column>
-          </Row>
-        )}
-
-        <Row styling='secondary' style={{ 'padding': `0` }}>
-          <Column width={contentWidth} horizontalAlignment='center'>
-            {screenshots.map((img, i) => (
-              <CardView
-                width={`1-` + screenshots.length}
-                type='no-bg'
-                key={name + ` screenshot number ` + i}
-                minWidth={screenshotwidth}
-              >
-                <ImageView src={img}
-                  width={screenshotwidth}
-                  height={screenshotheight}
-                  description={name + ` screenshot number ` + i}
-                  centred
-                />
-              </CardView>
-            ))}
+            </CardView>
           </Column>
         </Row>
-        <Row styling='secondary' style={{ 'padding': `0 0 20px 0` }}>
-          <Column width={contentWidth} horizontalAlignment='center' textAlign='left'>
-            {detailedDescription}
-          </Column>
-        </Row>
-
-        {links.length > 0 ? (
-          <Row styling='splash-parallax'>
-            <Column width='2-3' horizontalAlignment='center'>
-              {links.map((x, key) => (
-                <ButtonView text={x.name}
-                  link={x.link}
-                  type={key % 2 == 0 ? `default` : `alternate`}
-                  key={key}
-                  style={{ "marginLeft": `0` }}
-                />
-              ))}
-            </Column>
-          </Row>
-        ) : (
-            <Row styling='splash-parallax'>
-              <Column width='2-3' horizontalAlignment='center'>
-                <TextView
-                  text='No downloads available'
-                  heading={3}
-                  align={`center`}
-                  style={{ "margin": `0` }}
-                />
-              </Column>
-            </Row>
-          )}
 
         <Footer />
 

@@ -78,7 +78,14 @@ class HomePage extends React.Component {
         <Row styling='secondary'>
           <Column width='1-1' horizontalAlignment='center' maxWidth='1000px' minWidth='300px'>
             <TextView text={`Our Goals`} heading={1} align={`center`} />
-
+          </Column>
+          <Column
+            width='1-1'
+            horizontalAlignment='center'
+            maxWidth='1000px'
+            minWidth='300px'
+            className="column-horizontal"
+          >
             <CardView width='1-3' minWidth='280px' type='no-bg' snapAlign>
               <TextView text={`Make Simple Interfaces`} heading={2} align={`center`} />
               <TextView text={`The endpoints are streamlined to enable any developer to easily pick up and use the api. We hope that developers of all ability
@@ -113,9 +120,19 @@ class HomePage extends React.Component {
         </Row>
 
         <Row styling='splash-parallax'>
-          <Column width='2-3' horizontalAlignment='center' maxWidth='1000px' minWidth='300px'>
+          <Column width='2-3'
+            horizontalAlignment='center'
+            maxWidth='1000px'
+            minWidth='300px'
+          >
             <TextView text={`Get Started using our APIs`} heading={1} align={`center`} />
-
+          </Column>
+          <Column width='2-3'
+            horizontalAlignment='center'
+            maxWidth='1000px'
+            minWidth='300px'
+            className="column-horizontal"
+          >
             {endpoints.map((x, key) => (
               <CardView width={`1-2`} minWidth={`280px`} link={x.link} key={key} snapAlign>
                 <Row height='100px' style={{ padding: `20px 0` }} >
@@ -133,32 +150,40 @@ class HomePage extends React.Component {
         <Row styling='splash-parallax'>
           <Column width='9-10' horizontalAlignment='center'>
             <TextView text={`Check out our blog`} styling='transparent' heading={1} align={`center`} />
+          </Column>
+          <Column width='9-10' horizontalAlignment='center' className="column-horizontal">
             {articles.map(x => (
-              <CardView width='1-3' minWidth='280px'  link={x.url} key={x.link} snapAlign>
+              <CardView width='1-3' minWidth='280px' link={x.url} key={x.link} snapAlign>
                 <Column width='1-1'>
                   <Row height='200px'
-                    style={{ backgroundSize : `Cover`,
-                            overflow : `hidden` }}
+                    style={{
+                      backgroundSize: `Cover`,
+                      overflow: `hidden`,
+                    }}
                     noPadding
                   >
                     <Column width='1-1' horizontalAlignment='center' verticalAlignment='center'>
                       <div className="animate-image">
-                         <ImageView src={x.image_url==`url_not_found` ? placeholder : x.image_url}
-                           style={{ display: `block`,
-                                    width: `100%`,
-                                    height: `200px`,
-                                    objectFit: `cover` }}
-                           description={x.title + ` background`}
-                           centred
-                         />
+                        <ImageView src={x.image_url == `url_not_found` ? placeholder : x.image_url}
+                          style={{
+                            display: `block`,
+                            width: `100%`,
+                            height: `200px`,
+                            objectFit: `cover`,
+                          }}
+                          description={x.title + ` background`}
+                          centred
+                        />
                       </div>
                       <TextView text={x.title}
                         align={`center`}
                         heading={3}
                         color={`white`}
-                        style={ { width : `100%`,
-position : `absolute`,
-top : `85px`} }
+                        style={{
+                          width: `100%`,
+                          position: `absolute`,
+                          top: `85px`,
+                        }}
                       />
                     </Column>
                   </Row>
@@ -207,7 +232,7 @@ top : `85px`} }
               </Column>
 
               <Column width="1-2" minWidth="200px" textAlign="left" horizontalAlignment="right" verticalAlignment="center">
-                <TextView text="UCL MARKET" heading={1} align="left" />
+                <TextView text="UCL MARKETPLACE" heading={1} align="left" />
 
                 <TextView text={`The UCL Marketplace contains all of the applications written
                   using UCL API for some of their functionality. We are constantly looking for 
