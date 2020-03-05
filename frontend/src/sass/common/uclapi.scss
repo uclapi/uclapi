@@ -255,6 +255,7 @@ div.uclapi-card {
   border-radius: 10px;
   display: inline-block;
   height: auto;
+  padding: 2%;
   min-height: fit-content;
   overflow: hidden;
 
@@ -270,6 +271,12 @@ div.uclapi-card {
 }
 
 a.uclapi-card {
+  padding: 2%;
+
+  div.uclapi-card {
+    padding: unset;
+  }
+
   >div.uclapi-card {
     width: 100%;
   }
@@ -543,14 +550,18 @@ pre {
 
 /** Social Media Icons **/
 
+.social-media-holder {
+  width: 210px;
+  margin: 0 auto;
+}
+
 div.uclapi-card-facebook,
 div.uclapi-card-github,
 div.uclapi-card-twitter {
-  border-radius: 25px;
-
-  margin-top: 10px;
-
-  padding: 10px 0;
+  border-radius: 40px;
+  padding: 20px;
+  margin: 0 5px;
+  float: left;
 
   transition-duration: 0.5s;
   transition-property: background-color;
