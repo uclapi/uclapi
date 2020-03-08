@@ -169,26 +169,26 @@ a:hover { color: $color-grey-light; }
   height: 100%;
 }
 
-.column {
+.row {
   text-align: center;
   overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.column {
+  text-align: center;
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
   justify-content: center;
-  padding: 0 2%;
+  padding: 2%;
   flex-wrap: wrap;
 
   @include media("<=phone") {
     padding-left: 2rem;
     padding-right: 2rem;
     flex-direction: column;
-  }
-
-  div.uclapi-card {
-    @include media("<=phone") {
-      width: 100% !important;
-    }
   }
 }
 
@@ -218,7 +218,7 @@ a:hover { color: $color-grey-light; }
 
 /** Containers **/
 
-.row {
+.container {
   height: auto;
   min-height: 100%;
   position: relative;
@@ -246,14 +246,14 @@ a:hover { color: $color-grey-light; }
 .default-button { background-color: $color-grey-dark; color: $color-white; }
 
 .default-button:hover,
-div.uclapi-card-clicked-default:hover { background-color: $color-grey-mid;  }
+.uclapi-card-clicked-default:hover { background-color: $color-grey-mid;  }
 
 .alternate-button,
 .image-button { background-color: $color-white; color: $color-black; }
 
 .alternate-button:hover,
 .image-button:hover,
-div.uclapi-card-clicked-alternate:hover { background-color: $color-grey-light2;  }
+.uclapi-card-clicked-alternate:hover { background-color: $color-grey-light2;  }
 
 .emphasis-button, { background-color: lighten($primary-highlight-color, 10%); color: black; }
 .emphasis-button:hover { background-color: lighten($primary-highlight-color, 20%);  }
@@ -269,13 +269,13 @@ div.uclapi-card-clicked-alternate:hover { background-color: $color-grey-light2; 
 
 /** Cards **/
 
-div.uclapi-card {
+.uclapi-card {
   border-radius: 10px;
   display: inline-block;
   height: auto;
-  padding: 2%;
   min-height: fit-content;
   overflow: hidden;
+  width: 100%;
 
   .animate-image {
     filter: brightness(75%);
@@ -288,27 +288,11 @@ div.uclapi-card {
   }
 }
 
-a.uclapi-card {
-  padding: 2%;
-
-  div.uclapi-card {
-    padding: unset;
-  }
-
-  >div.uclapi-card {
-    width: 100%;
-  }
-
-  @include media("<=phone") {
-    width: 100% !important;
-  }
-}
-
-div.uclapi-card-default {
+.uclapi-card-default {
   background-color: $color-grey-dark;
 }
 
-div.uclapi-card-wrap-around {
+.uclapi-card-wrap-around {
   background-color: $color-black-transparent-0;
   display: flex;
   float: left;
@@ -316,18 +300,18 @@ div.uclapi-card-wrap-around {
   padding: 0;
 }
 
-div.uclapi-card-full-screen {
+.uclapi-card-full-screen {
   margin-left: auto;
   margin-right: auto;
   display: block;
   float: unset;
 }
 
-div.uclapi-card-alternate {
+.uclapi-card-alternate {
   background-color: $color-white;
 }
 
-div.uclapi-card-emphasis {
+.uclapi-card-emphasis {
   background-color: $primary-color;
 
   &:hover {
@@ -335,7 +319,7 @@ div.uclapi-card-emphasis {
   }
 }
 
-div.uclapi-card-shadow {
+.uclapi-card-shadow {
   box-shadow: 0 4px 8px 0 $color-black-transparent-02;
 }
 

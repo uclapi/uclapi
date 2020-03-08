@@ -12,6 +12,7 @@ this.props.horizontalAlignment (left / center / right)
 this.props.verticalALignment (top / center / bottom) => Row Height must be set otherwise weird behaviour
 this.props.textAlign (like the normal inline tag)
 this.props.style (array of extra stylings)
+this.props.alignItems (which way to orientate items => default is row; Takes value of row or column)
 
 **/
 export default class Row extends React.Component {
@@ -37,7 +38,7 @@ export default class Row extends React.Component {
 
     return (
       <div className={verticalAlignment} >
-        <div className={`column ${className}`} style={style} >
+        <div className={`row`} style={style} >
           {children}
         </div>
       </div>
@@ -66,20 +67,29 @@ export default class Row extends React.Component {
   }
 
   setTheme = (style) => {
+    const { horizontalAlignment, verticalAlignment, textAlign, alignItems } = this.props
+
     // REQUIRED ATTRIBUTES
     // Set the width and padding of the column
     style = this.setColumnWidthAndPadding(style)
 
     // OPTIONAL ATTRIBUTES
-    // Handles horizontal alignment
-    if (this.props.horizontalAlignment) { style = this.setHorizontalAlignment(style) }
-    // Handles vertical alignment
-    if (this.props.verticalAlignment) { style = this.setVerticalAlignment(style) }
-    // Handles the text alignment
-    if (this.props.textAlign) {
+    // Aligns the items in the specified direction
+    if(alignItems) { 
       style = {
         ...style,
-        textAlign: this.props.textAlign,
+        flexDirection: alignItems,
+      }
+    }
+    // Handles horizontal alignment
+    if (horizontalAlignment) { style = this.setHorizontalAlignment(style) }
+    // Handles vertical alignment
+    if (verticalAlignment) { style = this.setVerticalAlignment(style) }
+    // Handles the text alignment
+    if (textAlign) {
+      style = {
+        ...style,
+        textAlign: textAlign,
       }
     }
 

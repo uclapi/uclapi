@@ -67,18 +67,22 @@ class HomePage extends React.Component {
         )}
 
         <Container height='600px' styling='splash-parallax'>
-          <Row width='2-3' horizontalAlignment='center' verticalAlignment='center'>
+          <Row width='2-3' 
+            horizontalAlignment='center' 
+            verticalAlignment='center'
+            alignItems='column'
+          >
             <TextView text={`UCL API`} heading={1} align={`center`} />
             <TextView text={`UCL API is a student-built platform for student developers to improve the student experience of everyone at UCL.`} heading={2} align={`center`} />
-            <ButtonView text={startLabel} link={`/dashboard`} />
-            <ButtonView text={`DOCS`} link={`/docs`} type={`alternate`} />
+            
+            <Column width="1-1" style={{padding: `0`}}>
+              <ButtonView text={startLabel} link={`/dashboard`} />
+              <ButtonView text={`DOCS`} link={`/docs`} type={`alternate`} />
+            </Column>
           </Row>
         </Container>
 
-        <Container styling='secondary'>
-          <Row width='1-1' horizontalAlignment='center' maxWidth='1000px' minWidth='300px'>
-            <TextView text={`Our Goals`} heading={1} align={`center`} />
-          </Row>
+        <Container styling='secondary' heading="Our Goals">
           <Row
             width='1-1'
             horizontalAlignment='center'
@@ -119,14 +123,7 @@ class HomePage extends React.Component {
           </Row>
         </Container>
 
-        <Container styling='splash-parallax'>
-          <Row width='2-3'
-            horizontalAlignment='center'
-            maxWidth='1000px'
-            minWidth='300px'
-          >
-            <TextView text={`Get Started using our APIs`} heading={1} align={`center`} />
-          </Row>
+        <Container styling='splash-parallax' heading="Get Started using our APIs">
           <Row width='2-3'
             horizontalAlignment='center'
             maxWidth='1000px'
@@ -136,7 +133,11 @@ class HomePage extends React.Component {
             {endpoints.map((x, key) => (
               <CardView width={`1-2`} minWidth={`280px`} link={x.link} key={key} snapAlign>
                 <Container height='100px' style={{ padding: `20px 0` }} >
-                  <Row width='2-3' horizontalAlignment='center' verticalAlignment='center'>
+                  <Row width='2-3' 
+                    horizontalAlignment='center' 
+                    verticalAlignment='center'
+                    alignItems='column'
+                  >
                     <TextView text={x.name} heading={2} align={`center`} />
                     <TextView text={x.description} heading={5} align={`center`} noMargin />
                   </Row>
@@ -147,10 +148,7 @@ class HomePage extends React.Component {
 
         <Demo />
 
-        <Container styling='splash-parallax'>
-          <Row width='9-10' horizontalAlignment='center'>
-            <TextView text={`Check out our blog`} styling='transparent' heading={1} align={`center`} />
-          </Row>
+        <Container styling='splash-parallax' heading="Check out our blog">
           <Row width='9-10' horizontalAlignment='center' className="Row-horizontal">
             {articles.map(x => (
               <CardView width='1-3' minWidth='280px' link={x.url} key={x.link} snapAlign>
@@ -162,7 +160,10 @@ class HomePage extends React.Component {
                     }}
                     noPadding
                   >
-                    <Row width='1-1' horizontalAlignment='center' verticalAlignment='center'>
+                    <Row width='1-1' 
+                      horizontalAlignment='center' 
+                      verticalAlignment='center'
+                    >
                       <div className="animate-image">
                         <ImageView src={x.image_url == `url_not_found` ? placeholder : x.image_url}
                           style={{
@@ -188,7 +189,11 @@ class HomePage extends React.Component {
                     </Row>
                   </Container>
                   <Container color='transparent'>
-                    <Row width='1-1' horizontalAlignment='center' verticalAlignment='center'>
+                    <Row width='1-1' 
+                      horizontalAlignment='center' 
+                      verticalAlignment='center'
+                      alignItems='column'
+                    >
                       <TextView text={x.creator} align={`center`} heading={6} color={`white`} />
                       <TextView text={x.published.substring(0, 16)} align={`center`} heading={6} color={`white`} />
                     </Row>
@@ -256,9 +261,15 @@ class HomePage extends React.Component {
           </Container>
         </div>
 
-        <Container styling='splash-parallax'>
-          <Row width='2-3' horizontalAlignment='center'>
-            <TextView text={`Frequently Asked Questions`} heading={1} align={`center`} />
+        <Container 
+          styling='splash-parallax' 
+          heading='Frequently asked questions'
+        >
+          <Row 
+            width='2-3' 
+            horizontalAlignment='center'
+            alignItems='column'
+          >
             {FAQ.map(x => (
               questionandanswer(x.question, x.answer)
             ))}

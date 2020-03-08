@@ -53,9 +53,13 @@ export default class Demo extends React.Component {
     } = this.state
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <Container styling={`secondary`} height={`fit-content`} isPaddedBottom>
+        <Container 
+          styling={`secondary`} 
+          height={`fit-content`} 
+          isPaddedBottom
+          heading="Try out the API"
+        >
           <Row width='2-3' horizontalAlignment='center'>
-            <TextView text={`Try out the API`} heading={1} align={`center`} />
             <AutoCompleteView suggestions={rooms} onSubmit={this.makeRequest} />
           </Row>
 

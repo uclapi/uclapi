@@ -1,7 +1,11 @@
 /* eslint-disable react/prop-types */
 // remove this ^ when ready to add prop-types
 
+// React
 import React from 'react'
+
+// Row for heading
+import { Row, TextView } from 'Layout/Items.jsx'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -27,7 +31,7 @@ export default class Container extends React.Component {
   }
 
   updateStyling() {
-    this.class = `row`
+    this.class = `container`
     this.style = {}
 
     const { style } = this.props
@@ -46,10 +50,16 @@ export default class Container extends React.Component {
     const className = this.class
     const style = this.style
 
-    const { children } = this.props
+    const { children, heading } = this.props
 
     return (
       <div className={className} style={style}>
+        {heading ? (
+          <Row width='1-1' horizontalAlignment='center' maxWidth='1000px' minWidth='300px'>
+            <TextView text={heading} heading={1} align={`center`} style={{ margin: `5px auto` }} />
+          </Row>
+        ) : null }
+
         {children}
       </div>
     )
