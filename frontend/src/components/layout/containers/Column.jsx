@@ -8,9 +8,6 @@ REQUIRED ATTRIBUTES:
 this.props.width (1-3 => 1/3 width of a row)
 
 OPTIONAL ATTRIBUTES:
-this.props.horizontalAlignment (left / center / right)
-this.props.verticalALignment (top / center / bottom) => Row Height must be set otherwise weird behaviour
-this.props.textAlign (like the normal inline tag)
 this.props.style (array of extra stylings)
 
 **/
@@ -36,10 +33,8 @@ export default class Column extends React.Component {
     const { children, className = `` } = this.props
 
     return (
-      <div className={verticalAlignment} >
-        <div className={`column ${className}`} style={style} >
-          {children}
-        </div>
+      <div className={`column`} style={style} >
+        {children}
       </div>
     )
   }
@@ -70,69 +65,6 @@ export default class Column extends React.Component {
     // Set the width and padding of the column
     style = this.setColumnWidthAndPadding(style)
 
-    // OPTIONAL ATTRIBUTES
-    // Handles horizontal alignment
-    if (this.props.horizontalAlignment) { style = this.setHorizontalAlignment(style) }
-    // Handles vertical alignment
-    if (this.props.verticalAlignment) { style = this.setVerticalAlignment(style) }
-    // Handles the text alignment
-    if (this.props.textAlign) {
-      style = {
-        ...style,
-        textAlign: this.props.textAlign,
-      }
-    }
-
-    return style
-  }
-
-  setVerticalAlignment = (style) => {
-    switch (this.props.verticalAlignment) {
-      case `top`:
-        // Stub needs implementing
-        break
-
-      case `center`:
-        this.setState({ verticalAlignment: `vertical-align center-y` })
-        style = {
-          ...style,
-          height: `100%`,
-        }
-        break
-
-      case `bottom`:
-        this.setState({
-          verticalAlignment: `vertical-align bottom-y`,
-        })
-        break
-    }
-    return style
-  }
-
-  setHorizontalAlignment = (style) => {
-    switch (this.props.horizontalAlignment) {
-      case `left`:
-        style = {
-          ...style,
-          float: `left`,
-        }
-        break
-
-      case `center`:
-        style = {
-          ...style,
-          marginLeft: `auto`,
-          marginRight: `auto`,
-        }
-        break
-
-      case `right`:
-        style = {
-          ...style,
-          float: `right`,
-        }
-        break
-    }
     return style
   }
 

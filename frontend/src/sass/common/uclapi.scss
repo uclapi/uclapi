@@ -170,8 +170,26 @@ a:hover { color: $color-grey-light; }
 }
 
 .column {
-    text-align: center;
-    overflow: hidden;
+  text-align: center;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  justify-content: center;
+  padding: 0 2%;
+  flex-wrap: wrap;
+
+  @include media("<=phone") {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    flex-direction: column;
+  }
+
+  div.uclapi-card {
+    @include media("<=phone") {
+      width: 100% !important;
+    }
+  }
 }
 
 .center-x {
@@ -283,28 +301,6 @@ a.uclapi-card {
 
   @include media("<=phone") {
     width: 100% !important;
-  }
-}
-
-.column.column-horizontal {
-  display: flex;
-  flex-direction: row;
-  box-sizing: border-box;
-  justify-content: center;
-  column-gap: 2rem;
-  row-gap: 2rem;
-  flex-wrap: wrap;
-
-  @include media("<=phone") {
-    padding-left: 2rem;
-    padding-right: 2rem;
-    flex-direction: column;
-  }
-
-  div.uclapi-card {
-    @include media("<=phone") {
-      width: 100% !important;
-    }
   }
 }
 
