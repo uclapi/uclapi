@@ -19,7 +19,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { allApps } from 'Layout/data/app_pages.jsx'
 // Common Components
 import {
-  ButtonView, CardView, Column, Footer, ImageView, NavBar, Row, TextView,
+  ButtonView, CardView, Column, Footer, ImageView, NavBar, Container, TextView,
 } from 'Layout/Items.jsx'
 
 class Marketplace extends React.Component {
@@ -59,7 +59,7 @@ class Marketplace extends React.Component {
 
         <NavBar isScroll={false} />
 
-        <Row
+        <Container
           height='300px'
           style={{ margin: `60px 0 0 0` }}
           styling='splash-parallax'
@@ -76,9 +76,9 @@ class Marketplace extends React.Component {
               align={`center`}
             />
           </Column>
-        </Row>
+        </Container>
 
-        <Row styling='secondary'>
+        <Container styling='secondary'>
           <Column width='2-3' horizontalAlignment='center'>
             <TextView text={`Featured App`} heading={2} align={`left`} />
             <TextView
@@ -125,9 +125,9 @@ class Marketplace extends React.Component {
               )
             })}
           </Column>
-        </Row>
+        </Container>
 
-        <Row styling='splash-parallax'>
+        <Container styling='splash-parallax'>
           <Column width='2-3' horizontalAlignment='center'>
             <TextView text={`All Apps`} heading={2} align={`left`} />
             <TextView
@@ -178,7 +178,7 @@ class Marketplace extends React.Component {
               )
             })}
           </Column>
-        </Row>
+        </Container>
 
         <Footer />
 
@@ -262,14 +262,14 @@ class AppPage extends React.Component {
       <>
         <NavBar isScroll={false} />
 
-        <Row styling='splash-parallax'>
+        <Container styling='splash-parallax'>
           <Column
             width={isMobile ? `9-10` : `2-3`}
             horizontalAlignment='center'
           >
             {isMobile ? (
               <>
-                <Row styling='transparent'
+                <Container styling='transparent'
                   height='35px'
                   style={{ padding: `20px 0 5px 0` }}
                 >
@@ -281,8 +281,8 @@ class AppPage extends React.Component {
                       'margin': `10px 0`,
                     }}
                   />
-                </Row>
-                <Row styling='transparent'
+                </Container>
+                <Container styling='transparent'
                   height={`115px`}
                   noPadding
                   style={{
@@ -305,8 +305,8 @@ class AppPage extends React.Component {
                     />
                     <TextView text={name} heading={2} />
                   </CardView>
-                </Row>
-                <Row styling='transparent'
+                </Container>
+                <Container styling='transparent'
                   height={`100px`}
                   noPadding
                   style={{ padding: `0 0 30px 0` }}
@@ -317,7 +317,7 @@ class AppPage extends React.Component {
                     verticalAlignment='center'
                   >
                     {links.map((x, key) => (
-                      <Row height="50px" noPadding key={key}>
+                      <Container height="50px" noPadding key={key}>
                         <Column
                           width='2-3'
                           horizontalAlignment='center'
@@ -332,14 +332,14 @@ class AppPage extends React.Component {
                             }}
                           />
                         </Column>
-                      </Row>
+                      </Container>
                     ))}
                   </Column>
-                </Row>
+                </Container>
               </>
             ) : (
                 <>
-                  <Row styling='transparent'
+                  <Container styling='transparent'
                     height='70px'
                     style={{ padding: `20px 0 0 0` }}
                   >
@@ -360,8 +360,8 @@ class AppPage extends React.Component {
                         />
                       </Column>
                     </Column>
-                  </Row>
-                  <Row styling='transparent' height='140px' noPadding>
+                  </Container>
+                  <Container styling='transparent' height='140px' noPadding>
                     <Column
                       width='1-1'
                       horizontalAlignment='center'
@@ -398,7 +398,7 @@ class AppPage extends React.Component {
                         style={{ "paddingLeft": `20px` }}
                       >
                         {links.map((x, key) => (
-                          <Row height="50px" noPadding key={x.name}>
+                          <Container height="50px" noPadding key={x.name}>
                             <ButtonView text={x.name}
                               link={x.link}
                               type={`alternate`}
@@ -408,11 +408,11 @@ class AppPage extends React.Component {
                                 width: `75px`,
                               }}
                             />
-                          </Row>
+                          </Container>
                         ))}
                       </Column>
                     </Column>
-                  </Row>
+                  </Container>
                 </>
               )}
             <CardView width="1-1" noPadding style={{ padding: `20px 0` }}>
@@ -452,7 +452,7 @@ class AppPage extends React.Component {
               </Column>
             </CardView>
           </Column>
-        </Row>
+        </Container>
 
         <Footer />
 
@@ -479,8 +479,8 @@ class Main extends React.Component {
 }
 
 ReactDOM.render(
-  <BrowserRouter>
+  <BContainerserRouter>
     <Main />
-  </BrowserRouter>,
+  </BContainerserRouter>,
   document.querySelector(`#root`)
 )

@@ -11,21 +11,21 @@ import ReactDOM from 'react-dom'
 // Team descriptions
 import { current, previous } from 'Layout/data/team_members.jsx'
 // Common Components
-import { CardView, Column, Footer, NavBar, Row, TextView } from 'Layout/Items.jsx'
+import { CardView, Column, Footer, NavBar, Container, TextView } from 'Layout/Items.jsx'
 
 const member = ({ github, name, image, title }) => (
   <CardView width='1-6' minWidth='120px' type='emphasis' link={github}>
-    <Row height='300px' style={{ padding: `20px 0` }}>
+    <Container height='300px' style={{ padding: `20px 0` }}>
       <Column width='1-1' horizontalAlignment='center'>
         <TextView text={name} heading={2} align={`center`} color={`white`} />
-        <Row height='100px' src={image} style={{ backgroundSize: `Cover` }}></Row>
-        <Row height='30px' style={{ padding: `20px 0` }}>
+        <Container height='100px' src={image} style={{ backgroundSize: `Cover` }}></Container>
+        <Container height='30px' style={{ padding: `20px 0` }}>
           <Column width='1-1' horizontalAlignment='center' verticalAlignment='center'>
             <TextView text={title} heading={6} align={`center`} color={`white`} />
           </Column>
-        </Row>
+        </Container>
       </Column>
-    </Row>
+    </Container>
   </CardView>
 )
 
@@ -53,7 +53,7 @@ class AboutPage extends React.Component {
       <>
         <NavBar isScroll={false} />
 
-        <Row height='600px' styling='team-parallax'>
+        <Container height='600px' styling='team-parallax'>
           <Column width='2-3' horizontalAlignment='center' verticalAlignment='center'>
             <TextView text={`About Us`} heading={1} align={`center`} />
             <TextView text={`UCL API is a student led project, founded by Wilhelm Klopp, that opens up the massive amount of ` +
@@ -62,9 +62,9 @@ class AboutPage extends React.Component {
               align={`center`}
             />
           </Column>
-        </Row>
+        </Container>
 
-        <Row styling='secondary'>
+        <Container styling='secondary'>
           <Column width='9-10' horizontalAlignment='center'>
             <TextView text={`Current Team`} heading={1} align={`center`} />
           </Column>
@@ -75,9 +75,9 @@ class AboutPage extends React.Component {
           >
             {current.map(x => member(x))}
           </Column>
-        </Row>
+        </Container>
 
-        <Row styling='team-parallax'>
+        <Container styling='team-parallax'>
           <Column width='9-10' horizontalAlignment='center'>
             <TextView text={`Alumni`} heading={1} align={`center`} />
           </Column>
@@ -88,7 +88,7 @@ class AboutPage extends React.Component {
           >
             {previous.map(x => member(x))}
           </Column>
-        </Row>
+        </Container>
 
         <Footer />
 
