@@ -224,7 +224,7 @@ class HomePage extends React.Component {
                 align={`center`}
               />
 
-              <ButtonView text={`MARKETPLACE`} link={`/marketplace`} style={{ "marginLeft": `0` }} />
+              <ButtonView text={`MARKETPLACE`} link={`/marketplace`} style={{ "marginLeft": `0` }} type='alternate' />
               <ButtonView text={`UCL ASSISTANT`} link={`/marketplace/uclassistant`} type='alternate' />
             </Row>
           </Container>
@@ -254,7 +254,7 @@ class HomePage extends React.Component {
                   align={`left`}
                 />
 
-                <ButtonView text={`MARKETPLACE`} link={`/marketplace`} style={{ "marginLeft": `0` }} />
+                <ButtonView text={`MARKETPLACE`} link={`/marketplace`} style={{ "marginLeft": `0` }} type='alternate' />
                 <ButtonView text={`UCL ASSISTANT`} link={`/marketplace/uclassistant`} type='alternate' />
               </Row>
             </Row>

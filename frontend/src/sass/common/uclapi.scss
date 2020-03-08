@@ -470,12 +470,17 @@ li {
 
 /** Code View styling **/
 
+.react-autosuggest__container {
+  width: 100%;
+}
+
 pre {
   margin: 0;
 }
 
 .react-tabs {
   margin-top: 30px;
+  width: 100%;
 }
 
 .react-tabs__tab-panel {
@@ -487,20 +492,27 @@ pre {
   }
 }
 
-.react-tabs__tab-list li {
-  cursor: pointer;
-  color: $color-white;
-  list-style-type: none;
-  margin: 0;
-  float: left;
-  display: inline-block;
-  padding: 10px 50px;
-  margin-right: 5px;
-  width: 100%;
-  text-align: left;
-  transition-duration: 200ms;
-  transition-timing-function: linear;
-  transition-property: background-color;
+.react-tabs__tab-list {
+
+  ul {
+    overflow: hidden;
+  }
+
+  li {
+    cursor: pointer;
+    color: $color-white;
+    list-style-type: none;
+    margin: 0;
+    float: left;
+    display: inline-block;
+    padding: 10px 50px;
+    margin-right: 5px;
+    width: 100%;
+    text-align: left;
+    transition-duration: 200ms;
+    transition-timing-function: linear;
+    transition-property: background-color;
+  }
 }
 
 .unselected-tab {

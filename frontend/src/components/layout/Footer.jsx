@@ -18,7 +18,12 @@ export default class Footer extends React.Component {
     const logosize = `20px`
 
     return (
-      <Container styling='secondary' style={{ padding: `20px 0` }}>
+      <Container 
+        styling='secondary' 
+        height="80px"
+        noPadding
+        style={{ paddingTop: `20px` }}
+      >
         <div className="social-media-holder">
           <a href="https://github.com/uclapi">
             <div className="uclapi-card-github" style={{ width: logosize, height: logosize}} >
