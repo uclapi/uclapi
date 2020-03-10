@@ -18,9 +18,10 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 // Grab titles and descriptions of app
 import { allApps } from 'Layout/data/app_pages.jsx'
 // Common Components
-import {
-  ButtonView, CardView, Column, Footer, ImageView, NavBar, Container, TextView,
-} from 'Layout/Items.jsx'
+import { ButtonView, CardView, Column, Footer, ImageView, 
+  NavBar, Container, TextView, Row } from 'Layout/Items.jsx'
+// Import page that displays a singular app
+import { AppPage } from './AppPage.jsx'
 
 class Marketplace extends React.Component {
 
@@ -64,10 +65,11 @@ class Marketplace extends React.Component {
           style={{ margin: `60px 0 0 0` }}
           styling='splash-parallax'
         >
-          <Column
+          <Row
             width='2-3'
             horizontalAlignment='center'
             verticalAlignment='center'
+            alignItems='column'
           >
             <TextView text={`UCL Marketplace`} heading={1} align={`center`} />
             <TextView
@@ -75,22 +77,25 @@ class Marketplace extends React.Component {
               heading={2}
               align={`center`}
             />
-          </Column>
+          </Row>
         </Container>
 
         <Container styling='secondary'>
-          <Column width='2-3' horizontalAlignment='center'>
+          <Row 
+            width='2-3' 
+            horizontalAlignment='center'
+            alignItems='column'
+          >
             <TextView text={`Featured App`} heading={2} align={`left`} />
             <TextView
               text={`Our favourite usage of the API`}
               heading={5}
               align={`left`}
             />
-          </Column>
-          <Column
+          </Row>
+          <Row
             width='2-3'
             horizontalAlignment='center'
-            className="column-horizontal"
           >
             {featuredApps.map((app, i) => {
               return (
@@ -101,12 +106,17 @@ class Marketplace extends React.Component {
                   link={`/marketplace/` + app.id}
                   noPadding
                 >
-                  <Column width='1-2' horizontalAlignment='center'>
+                  <Row 
+                    width='1-2' 
+                    horizontalAlignment='center'
+                    alignItems='column'
+                  >
                     <ImageView
                       src={app.logolight}
                       width={iconsize}
                       height={iconsize}
                       style={{ 'margin': `20px 0` }}
+                      centred
                     />
                     <TextView
                       text={app.name}
@@ -120,26 +130,29 @@ class Marketplace extends React.Component {
                       align={`center`}
                       color={`white`}
                     />
-                  </Column>
+                  </Row>
                 </CardView>
               )
             })}
-          </Column>
+          </Row>
         </Container>
 
         <Container styling='splash-parallax'>
-          <Column width='2-3' horizontalAlignment='center'>
+          <Row 
+            width='2-3' 
+            horizontalAlignment='center'
+            alignItems='column'
+          >
             <TextView text={`All Apps`} heading={2} align={`left`} />
             <TextView
               text={`Every app made using the API`}
               heading={5}
               align={`left`}
             />
-          </Column>
-          <Column
+          </Row>
+          <Row
             width='2-3'
             horizontalAlignment='center'
-            className="column-horizontal"
           >
             {appsToRender.map((app, i) => {
               return (
@@ -154,12 +167,17 @@ class Marketplace extends React.Component {
                   minWidth={`225px`}
                   snapAlign
                 >
-                  <Column width='9-10' horizontalAlignment='center'>
+                  <Row 
+                    width='9-10' 
+                    horizontalAlignment='center'
+                    alignItems='column'
+                  >
                     <ImageView
                       src={app.logolight}
                       width={iconsize}
                       height={iconsize}
                       style={{ 'margin': `20px 0` }}
+                      centred
                     />
                     <TextView
                       text={app.name}
@@ -173,11 +191,11 @@ class Marketplace extends React.Component {
                       align={`center`}
                       color={`black`}
                     />
-                  </Column>
+                  </Row>
                 </CardView>
               )
             })}
-          </Column>
+          </Row>
         </Container>
 
         <Footer />
@@ -185,281 +203,6 @@ class Marketplace extends React.Component {
       </>
     )
   }
-}
-
-class AppPage extends React.Component {
-  constructor(props) {
-    super(props)
-    const { appId } = this.props
-    // Grab the app that this page is dealing with
-    const app = allApps[appId]
-    this.state = {
-      'app': app,
-      sizing: `default`,
-    }
-  }
-
-  updateDimensions = () => {
-    if (typeof (window) === `undefined`) {
-      return null
-    }
-    const w = window,
-      d = document,
-      documentElement = d.documentElement,
-      body = d.getElementsByTagName(`body`)[0],
-      width = w.innerWidth || documentElement.clientWidth || body.clientWidth
-    // height = w.innerHeight || documentElement.clientHeight || body.clientHeight
-
-    const mobileCutOff = 992
-    const tabletCutOff = 1130
-
-    const { sizing } = this.state
-
-    if (width > tabletCutOff) {
-      if (sizing != `default`) { this.setState({ sizing: `default` }) }
-    } else if (width > mobileCutOff) {
-      if (sizing != `tablet`) { this.setState({ sizing: `tablet` }) }
-    } else {
-      if (sizing != `mobile`) { this.setState({ sizing: `mobile` }) }
-    }
-
-    console.log(sizing)
-  }
-
-  UNSAFE_componentWillMount() {
-    setTimeout(this.updateDimensions, 50)
-  }
-  componentDidMount() {
-    window.addEventListener(`resize`, this.updateDimensions)
-  }
-  componentWillUnmount() {
-    window.removeEventListener(`resize`, this.updateDimensions)
-  }
-
-  render() {
-    const {
-      sizing,
-      app: {
-        logodark,
-        name,
-        description,
-        screenshots,
-        detailedDescription,
-        links,
-      },
-    } = this.state
-
-    const isMobile = sizing == `mobile`
-
-    const contentWidth = isMobile ? `9-10` : `2-3`
-    const iconsize = isMobile ? `50px` : `100px`
-
-    const screenshotwidth = isMobile ? `162px` : `216px`
-    const screenshotheight = isMobile ? `258px` : `384px`
-    const holderWidth = isMobile ? `162px` : `648px`
-
-    return (
-      <>
-        <NavBar isScroll={false} />
-
-        <Container styling='splash-parallax'>
-          <Column
-            width={isMobile ? `9-10` : `2-3`}
-            horizontalAlignment='center'
-          >
-            {isMobile ? (
-              <>
-                <Container styling='transparent'
-                  height='35px'
-                  style={{ padding: `20px 0 5px 0` }}
-                >
-                  <ButtonView type='alternate'
-                    text='back'
-                    link='/marketplace'
-                    style={{
-                      'float': `left`,
-                      'margin': `10px 0`,
-                    }}
-                  />
-                </Container>
-                <Container styling='transparent'
-                  height={`115px`}
-                  noPadding
-                  style={{
-                    padding: `30px 0px 10px`,
-                    marginBottom: `20px`,
-                  }}
-                >
-                  <CardView
-                    type='default'
-                    width={`1-1`}
-                    style={{ padding: `10px 0` }}
-                    noPadding
-                  >
-                    <ImageView
-                      src={logodark}
-                      width={iconsize}
-                      height={iconsize}
-                      description={name + `logo`}
-                      centred
-                    />
-                    <TextView text={name} heading={2} />
-                  </CardView>
-                </Container>
-                <Container styling='transparent'
-                  height={`100px`}
-                  noPadding
-                  style={{ padding: `0 0 30px 0` }}
-                >
-                  <Column
-                    width='1-1'
-                    horizontalAlignment='center'
-                    verticalAlignment='center'
-                  >
-                    {links.map((x, key) => (
-                      <Container height="50px" noPadding key={key}>
-                        <Column
-                          width='2-3'
-                          horizontalAlignment='center'
-                        >
-                          <ButtonView text={x.name}
-                            link={x.link}
-                            type={`alternate`}
-                            key={key}
-                            style={{
-                              margin: `0`,
-                              width: `100px`,
-                            }}
-                          />
-                        </Column>
-                      </Container>
-                    ))}
-                  </Column>
-                </Container>
-              </>
-            ) : (
-                <>
-                  <Container styling='transparent'
-                    height='70px'
-                    style={{ padding: `20px 0 0 0` }}
-                  >
-                    <Column width='1-1' horizontalAlignment='center'>
-                      <Column
-                        width='fit-content'
-                        minWidth={iconsize}
-                        typeOfInline='grid'
-                        horizontalAlignment='left'
-                      >
-                        <ButtonView type='alternate'
-                          text='back'
-                          link='/marketplace'
-                          style={{
-                            'float': `left`,
-                            'margin': `10px 0`,
-                          }}
-                        />
-                      </Column>
-                    </Column>
-                  </Container>
-                  <Container styling='transparent' height='140px' noPadding>
-                    <Column
-                      width='1-1'
-                      horizontalAlignment='center'
-                      verticalAlignment='center'
-                    >
-                      <Column
-                        width='fit-content'
-                        minWidth={iconsize}
-                        typeOfInline='grid'
-                        horizontalAlignment='left'
-                      >
-                        <ImageView
-                          src={logodark}
-                          width={iconsize}
-                          height={iconsize}
-                          description={name + `logo`}
-                          centred
-                          style={{ 'margin': `0 auto 0 0` }}
-                        />
-                      </Column>
-                      <Column
-                        width='150px'
-                        horizontalAlignment='left'
-                        textAlign='left'
-                        style={{ "paddingLeft": `20px` }}
-                      >
-                        <TextView text={name} heading={2} />
-                        <TextView text={description} heading={5} />
-                      </Column>
-                      <Column
-                        width='fit-content'
-                        horizontalAlignment='left'
-                        textAlign='left'
-                        style={{ "paddingLeft": `20px` }}
-                      >
-                        {links.map((x, key) => (
-                          <Container height="50px" noPadding key={x.name}>
-                            <ButtonView text={x.name}
-                              link={x.link}
-                              type={`alternate`}
-                              key={key}
-                              style={{
-                                margin: `0`,
-                                width: `75px`,
-                              }}
-                            />
-                          </Container>
-                        ))}
-                      </Column>
-                    </Column>
-                  </Container>
-                </>
-              )}
-            <CardView width="1-1" noPadding style={{ padding: `20px 0` }}>
-              <div className="screenshot-holder"
-                style={{
-                  width: holderWidth,
-                  margin: `auto`,
-                }}
-              >
-                <Carousel
-                  showThumbs={false}
-                  centerMode={!isMobile}
-                  centerSlidePercentage={isMobile ? 100 : 33.33}
-                  showArrows={isMobile || screenshots.length > 3}
-                  showIndicators={isMobile || screenshots.length > 3}
-                  showStatus={isMobile || screenshots.length > 3}
-                  infiniteLoop
-                >
-                  {screenshots.map((screenshot) => (
-                    <div key={screenshot.img}>
-                      <img
-                        src={screenshot.img}
-                        width={screenshotwidth}
-                        height={screenshotheight}
-                      />
-                      <p className="legend">{screenshot.name}</p>
-                    </div>
-                  ))}
-                </Carousel>
-              </div>
-              <Column
-                width={contentWidth}
-                horizontalAlignment='center'
-                textAlign='left'
-              >
-                {detailedDescription}
-              </Column>
-            </CardView>
-          </Column>
-        </Container>
-
-        <Footer />
-
-      </>
-    )
-  }
-
 }
 
 class Main extends React.Component {
@@ -479,8 +222,8 @@ class Main extends React.Component {
 }
 
 ReactDOM.render(
-  <BContainerserRouter>
+  <BrowserRouter>
     <Main />
-  </BContainerserRouter>,
+  </BrowserRouter>,
   document.querySelector(`#root`)
 )

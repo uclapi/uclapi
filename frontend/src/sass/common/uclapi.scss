@@ -187,6 +187,7 @@ a:hover { color: $color-grey-light; }
 
   @include media("<=phone") {
     padding-left: 2rem;
+    width: 100% !important;
     padding-right: 2rem;
     flex-direction: column;
   }
@@ -276,6 +277,7 @@ a:hover { color: $color-grey-light; }
   min-height: fit-content;
   overflow: hidden;
   width: 100%;
+  padding: 2%;
 
   .animate-image {
     filter: brightness(75%);

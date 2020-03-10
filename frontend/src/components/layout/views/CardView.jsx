@@ -13,7 +13,8 @@ this.props.width - e.g 8-10 = 80% (Also can take fit-content)
 
 OPTIONAL ATTRIBUTES:
 this.props.type - e.g default (dark grey) / default-no-shadow (dark grey no shadow) / alternate (light grey) / emphasis (orange) / fit-content (no padding or margin for inner content)
-this.props.style (An array of styles to add to the component)
+this.props.style (An array of styles to add to the Card)
+this.props.containerStyle (Affects sizing and orientation of column wrapping card)
 
 this.props.link (default is not clickable) => 'no-action' enables hover but does not reroute
 this.props.fakeLink - same behaviour as a link
@@ -39,11 +40,12 @@ export default class CardView extends React.Component {
       containerWidth: -1,
       className: ``,
       style: {},
+      containerStyle: {}
     }
   }
 
   render() {
-    const { className, style } = this.state
+    const { className, style, containerStyle } = this.state
     const { children, link, fakeLink, type, width } = this.props
 
     if (this.DEBUGGING) { console.log(`DEBUG: CardView rendered with the following styles: ` + type + ` and class: ` + className) }
@@ -53,17 +55,15 @@ export default class CardView extends React.Component {
     // RENDER METHOD
     if (doesLinkRoute) {
       return (
-        <Column width={width}>
+        <Column width={width} style={containerStyle}>
           <a className={className} href={link} style={style}>
-            <div className={className}>
-              {children}
-            </div>
+            {children}
           </a>
         </Column>
       )
     } else {
       return (
-        <Column width={width}>
+        <Column width={width} style={containerStyle}>
           <div className={className} style={style}>
             {children}
           </div>
@@ -73,12 +73,15 @@ export default class CardView extends React.Component {
   }
 
   refresh = () => {
-    const { style: propsStyle, link, fakeLink, noShadow, type, noPadding } = this.props
+    const { style: propsStyle, link, fakeLink, noShadow, type, noPadding, containerStyle: propsContainerStyle } = this.props
     const styling = typeof type === `undefined` ? `default` : type
 
     let className = `uclapi-card uclapi-card-` + styling
     let style = {
       ...propsStyle,
+    }
+    let containerStyle = {
+      ...propsContainerStyle,
     }
     // LINK
     if (link || fakeLink) {
@@ -90,10 +93,10 @@ export default class CardView extends React.Component {
     }
     // NO PADDING
     if (noPadding) {
-      style = {
-        ...style,
-        marginLeft: 0,
-        marginRight: 0,
+      containerStyle = {
+        ...containerStyle,
+        margin: 0,
+        padding: 0,
       }
     }
 
@@ -101,6 +104,7 @@ export default class CardView extends React.Component {
     this.setState({
       className: className,
       style: style,
+      containerStyle: containerStyle,
     })
   }
 

@@ -3,7 +3,11 @@ import PropTypes from 'prop-types'
 import React from 'react'
 
 // Components
-import { ButtonView, CardView, Column, Row, TextView } from 'Layout/Items.jsx'
+import { ButtonView, CardView, Column, 
+  Row, TextView, Container, ImageView } from 'Layout/Items.jsx'
+
+// UCL Assistant splash screen
+import uclassistantmarket from 'Images/home-page/uclassistantmarket.png'
 
 const styles = {
   noPadding: {
@@ -42,27 +46,27 @@ class SettingsLayout extends React.Component {
     const isApps = appCount === 0
 
     return (
-      <Row
+      <Container
         height='fit-content'
         styling='splash-parallax'
         style={{ minHeight: `100vh` }}
       >
-        <Column
-          width='2-3'
+        <Row
+          width='9-10'
           horizontalAlignment='center'
           style={{ marginTop: `50px` }}
         >
 
           <TextView
             text={`Account`}
-            heading={2}
+            heading={1}
             align={`left`}
             style={styles.title}
           />
 
-          <CardView width='1-1' type='default' noPadding>
-            <Row noPadding>
-              <Column width='1-1' horizontalAlignment='center' >
+          <CardView width='1-1' type='default' noPadding style={{ padding: 0 }}>
+            <Container noPadding>
+              <Row width='1-1' horizontalAlignment='center' >
                 <CardView
                   width='1-2'
                   type="transparent"
@@ -96,45 +100,79 @@ class SettingsLayout extends React.Component {
                     }}
                   />
                 </CardView>
-              </Column>
-            </Row>
+              </Row>
+            </Container>
           </CardView>
 
           <TextView
             text={`Permissions`}
-            heading={2}
+            heading={1}
             align={`left`}
             style={styles.title}
           />
 
-          <CardView width='1-1' type='default' noPadding>
-            <Row noPadding>
-              <Column width='1-1'
-                horizontalAlignment='center'
-                style={{
-                  paddingTop: 20,
-                  paddingBottom: 20,
-                }}
-              >
+          <CardView 
+            width='1-1' 
+            type='default' 
+            noPadding
+            style={{ padding: 0 }}
+          >
                 {isApps ? (
-                  <>
-                    <TextView
-                      text={`No authorised apps yet. Try UCL Assistant?`}
-                      heading={2}
-                      align={`center`}
-                      style={styles.noPadding}
-                    />
-                    <ButtonView text="Download"
-                      type="alternate"
-                      link={`/marketplace/uclassistant`}
+                  <Container 
+                    noPadding
+                  >
+                    <Row width='1-1'
+                      horizontalAlignment='center'
                       style={{
-                        marginBottom: 0,
-                        cursor: `pointer`,
+                        paddingTop: 20,
+                        paddingBottom: 20,
                       }}
-                    />
-                  </>
+                    >
+                      <Column width="1-2">
+                        <ImageView src={uclassistantmarket} width="367px" height="405px" description="ucl asssitant screen shot" centred/>
+                      </Column>
+                      <Column width="1-2" alignItems="column">
+                        <TextView
+                          text="No authorised apps yet. Try UCL Assistant?"
+                          heading="2"
+                          align="left"
+                        />
+                        <TextView 
+                          text={ `UCL Assistant is a productivity app for students and staff at UCL. ` 
+                            + `It has been designed by students to be as reliable and user friendly `
+                            + `as possible.`}
+                          align="left"
+                          heading="5"
+                        />
+                        <TextView 
+                          text={ `The app has many different features but one of our users' favourites is ` 
+                          + `the ability to view your timetable in a weekly view. The app highlights your`
+                          + `current commitments to save you time as you rush about University. Check it out below!`} 
+                          align="left"
+                          heading="5"
+                        />
+                        <ButtonView text="Download"
+                          type="alternate"
+                          link={`/marketplace/uclassistant`}
+                          centred
+                          containerStyles={{
+                            marginTop: `20px`,
+                            marginBottom: 0,
+                          }}
+                        />
+                      </Column>
+                    </Row>
+                  </Container>
                 ) : (
-                    <>
+                  <Container noPadding>
+                    <Row width='1-1'
+                      horizontalAlignment='center'
+                      style={{
+                        paddingTop: 20,
+                        paddingBottom: 20,
+                      }}
+                      alignItems="column"
+                    >
                       {authorised_apps.map((app, i) =>
                         <>
                           {app.active && !isDeleted[i] ? (
@@ -210,13 +248,12 @@ class SettingsLayout extends React.Component {
                           ) : null}
                         </>
                       )}
-                    </>
-                  )}
-              </Column>
-            </Row>
+                    </Row>
+                  </Container>
+                )}
           </CardView>
-        </Column>
-      </Row>
+        </Row>
+      </Container>
     )
   }
 

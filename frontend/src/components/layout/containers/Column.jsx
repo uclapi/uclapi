@@ -8,6 +8,7 @@ REQUIRED ATTRIBUTES:
 this.props.width (1-3 => 1/3 width of a row)
 
 OPTIONAL ATTRIBUTES:
+this.props.alignItems (whether to align children as if they were columns or rows (column/row) - row by default)
 this.props.style (array of extra stylings)
 
 **/
@@ -29,7 +30,7 @@ export default class Column extends React.Component {
   }
 
   render() {
-    const { verticalAlignment, style } = this.state
+    const { style } = this.state
     const { children, className = `` } = this.props
 
     return (
@@ -61,9 +62,19 @@ export default class Column extends React.Component {
   }
 
   setTheme = (style) => {
+
+    const { alignItems } = this.props
+
     // REQUIRED ATTRIBUTES
     // Set the width and padding of the column
     style = this.setColumnWidthAndPadding(style)
+
+    if(alignItems) {
+      style = {
+        ...style,
+        flexDirection: alignItems,
+      }
+    }
 
     return style
   }

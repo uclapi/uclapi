@@ -75,10 +75,8 @@ class HomePage extends React.Component {
             <TextView text={`UCL API`} heading={1} align={`center`} />
             <TextView text={`UCL API is a student-built platform for student developers to improve the student experience of everyone at UCL.`} heading={2} align={`center`} />
             
-            <Column width="1-1" style={{padding: `0`}}>
-              <ButtonView text={startLabel} link={`/dashboard`} />
-              <ButtonView text={`DOCS`} link={`/docs`} type={`alternate`} />
-            </Column>
+            <ButtonView text={startLabel} link={`/dashboard`} centred />
+            <ButtonView text={`DOCS`} link={`/docs`} type={`alternate`} centred />
           </Row>
         </Container>
 
@@ -151,7 +149,12 @@ class HomePage extends React.Component {
         <Container styling='splash-parallax' heading="Check out our blog">
           <Row width='9-10' horizontalAlignment='center' className="Row-horizontal">
             {articles.map(x => (
-              <CardView width='1-3' minWidth='280px' link={x.url} key={x.link} snapAlign>
+              <CardView 
+                width='1-3'
+                link={x.url} 
+                key={x.link} 
+                style={{ padding: 0 }}
+              >
                 <Row width='1-1'>
                   <Container height='200px'
                     style={{
@@ -205,10 +208,15 @@ class HomePage extends React.Component {
         </Container>
 
         <div className={`mobile tablet`}>
-          <Container styling="secondary" >
-            <Row width="2-3" textAlign="center" minWidth="250px" horizontalAlignment="center">
-              <TextView text="UCL MARKETPLACE" heading={1} align="center" />
-
+          <Container 
+            styling="secondary"
+            heading="UCL Marketplace"
+          >
+            <Row width="2-3" 
+              textAlign="center" 
+              minWidth="250px" 
+              horizontalAlignment="center"
+            >
               <TextView text={`The UCL Marketplace contains all of the applications written
                     using UCL API for some of their functionality. We are constantly looking for 
                     applications to add to the marketplace and promote so we would love to hear
@@ -224,8 +232,10 @@ class HomePage extends React.Component {
                 align={`center`}
               />
 
-              <ButtonView text={`MARKETPLACE`} link={`/marketplace`} style={{ "marginLeft": `0` }} type='alternate' />
-              <ButtonView text={`UCL ASSISTANT`} link={`/marketplace/uclassistant`} type='alternate' />
+              <ButtonView text={`MARKETPLACE`} link={`/marketplace`} 
+                type='alternate' centred />
+              <ButtonView text={`UCL ASSISTANT`} link={`/marketplace/uclassistant`}
+                type='alternate' centred />
             </Row>
           </Container>
         </div>
