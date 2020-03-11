@@ -10,6 +10,8 @@ this.props.width (1-3 => 1/3 width of a row)
 OPTIONAL ATTRIBUTES:
 this.props.alignItems (whether to align children as if they were columns or rows (column/row) - row by default)
 this.props.style (array of extra stylings)
+this.props.keepInline (don't snap to a column when in mobile view)
+this.props.className (additional class identifiers)
 
 **/
 export default class Column extends React.Component {
@@ -31,10 +33,12 @@ export default class Column extends React.Component {
 
   render() {
     const { style } = this.state
-    const { children, className = `` } = this.props
+    const { children, className = ``, keepInline } = this.props
+
+    const baseClass = keepInline ? `column-always-inline` : `column`
 
     return (
-      <div className={`column`} style={style} >
+      <div className={baseClass + ` ` + className} style={style} >
         {children}
       </div>
     )

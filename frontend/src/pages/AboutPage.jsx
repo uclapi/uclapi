@@ -21,7 +21,7 @@ const member = ({ github, name, image, title }) => (
     link={github} 
     style={{ padding: 0 }}
   >
-    <Container height='300px' style={{ padding: `20px 0` }}>
+    <Container height='300px'>
       <Column width='1-1' horizontalAlignment='center' style={{ padding: 0 }}>
         <TextView text={name} heading={2} align={`center`} color={`white`} />
         <Container height='100px' src={image} style={{ backgroundSize: `Cover` }}></Container>
@@ -57,6 +57,8 @@ class AboutPage extends React.Component {
       <>
         <NavBar isScroll={false} />
 
+        {/* About us - Landing page */}
+
         <Container height='600px' styling='team-parallax'>
           <Row 
             width='2-3' 
@@ -73,6 +75,8 @@ class AboutPage extends React.Component {
           </Row>
         </Container>
 
+        {/* Current team */}
+
         <Container 
           styling='secondary'
           heading='Current Team'
@@ -84,6 +88,8 @@ class AboutPage extends React.Component {
             {current.map(x => member(x))}
           </Row>
         </Container>
+
+        {/* Alumni */}
 
         <Container 
           styling='team-parallax'

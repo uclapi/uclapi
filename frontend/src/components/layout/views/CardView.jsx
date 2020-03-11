@@ -23,7 +23,7 @@ this.props.minWidth - e.g 300px a minimum width (default is unset)
 this.props.noShadow - disables box shadow
 this.props.noPadding - disables the padding 
 
-this.props.snapAlign - snaps the cards to be in a vertical row when they get too small to display in a horizontal row 
+this.props.keepInline (don't snap to a column when in mobile view)
 **/
 
 export default class CardView extends React.Component {
@@ -46,7 +46,7 @@ export default class CardView extends React.Component {
 
   render() {
     const { className, style, containerStyle } = this.state
-    const { children, link, fakeLink, type, width } = this.props
+    const { children, link, fakeLink, type, width, minWidth='unset', keepInline } = this.props
 
     if (this.DEBUGGING) { console.log(`DEBUG: CardView rendered with the following styles: ` + type + ` and class: ` + className) }
 
@@ -55,7 +55,7 @@ export default class CardView extends React.Component {
     // RENDER METHOD
     if (doesLinkRoute) {
       return (
-        <Column width={width} style={containerStyle}>
+        <Column width={width} minWidth={minWidth} style={containerStyle} keepInline={keepInline}>
           <a className={className} href={link} style={style}>
             {children}
           </a>
@@ -63,7 +63,7 @@ export default class CardView extends React.Component {
       )
     } else {
       return (
-        <Column width={width} style={containerStyle}>
+        <Column width={width} style={containerStyle} keepInline={keepInline}>
           <div className={className} style={style}>
             {children}
           </div>

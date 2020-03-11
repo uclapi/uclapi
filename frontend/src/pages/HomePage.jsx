@@ -57,6 +57,8 @@ class HomePage extends React.Component {
 
         <NavBar isScroll={false} />
 
+        {/* Staging banner */}
+
         {host == `staging.ninja` && (
           <Container isPadded styling='warning-red'>
             <Row width='9-10' horizontalAlignment={`center`} >
@@ -65,6 +67,8 @@ class HomePage extends React.Component {
             </Row>
           </Container>
         )}
+
+        {/* API Landing page */}
 
         <Container height='600px' styling='splash-parallax'>
           <Row width='2-3' 
@@ -80,12 +84,13 @@ class HomePage extends React.Component {
           </Row>
         </Container>
 
+        {/* API Description  */}
+
         <Container styling='secondary' heading="Our Goals">
           <Row
             width='1-1'
             horizontalAlignment='center'
             maxWidth='1000px'
-            minWidth='300px'
             className="Row-horizontal"
           >
             <Column width='1-3'>
@@ -121,15 +126,16 @@ class HomePage extends React.Component {
           </Row>
         </Container>
 
+      {/* API Endpoints */}
+
         <Container styling='splash-parallax' heading="Get Started using our APIs">
           <Row width='2-3'
             horizontalAlignment='center'
             maxWidth='1000px'
-            minWidth='300px'
             className="Row-horizontal"
           >
             {endpoints.map((x, key) => (
-              <CardView width={`1-2`} minWidth={`280px`} link={x.link} key={key} snapAlign>
+              <CardView width={`1-2`} link={x.link} key={key} >
                 <Container height='100px' style={{ padding: `20px 0` }} >
                   <Row width='2-3' 
                     horizontalAlignment='center' 
@@ -144,8 +150,12 @@ class HomePage extends React.Component {
           </Row>
         </Container>
 
+        {/* Demo */}
+
         <Demo />
 
+        {/* Blog */}
+        
         <Container styling='splash-parallax' heading="Check out our blog">
           <Row width='9-10' horizontalAlignment='center' className="Row-horizontal">
             {articles.map(x => (
@@ -207,69 +217,44 @@ class HomePage extends React.Component {
           </Row>
         </Container>
 
-        <div className={`mobile tablet`}>
-          <Container 
-            styling="secondary"
-            heading="UCL Marketplace"
-          >
-            <Row width="2-3" 
-              textAlign="center" 
-              minWidth="250px" 
-              horizontalAlignment="center"
+        {/* Marketplace */}
+
+        <Container styling="secondary" >
+          <Row width="2-3" horizontalAlignment="center">
+            <Column 
+              width="1-2" 
+              className="default"
             >
+              <ImageView src={uclassistantmarket} width="367px" height="405px" description="ucl asssitant screen shot" />
+            </Column>
+
+            <Column width="1-2"
+              textAlign="left"
+            >
+              <TextView text="UCL MARKETPLACE" heading={1} align="center" />
+
               <TextView text={`The UCL Marketplace contains all of the applications written
-                    using UCL API for some of their functionality. We are constantly looking for 
-                    applications to add to the marketplace and promote so we would love to hear
-                    about your creations so we can add them!`}
+                using UCL API for some of their functionality. We are constantly looking for 
+                applications to add to the marketplace and promote so we would love to hear
+                about your creations so we can add them!`}
                 heading={5}
-                align={`center`}
+                align={`left`}
               />
 
               <TextView text={`One of these applications is UCL Assistant! An app created
-                    by the UCL API team to provide students with a reliable way to check their 
-                    timetable, find empty rooms and locate study spaces.`}
+                by the UCL API team to provide students with a reliable way to check their 
+                timetable, find empty rooms and locate study spaces.`}
                 heading={5}
-                align={`center`}
+                align={`left`}
               />
 
-              <ButtonView text={`MARKETPLACE`} link={`/marketplace`} 
-                type='alternate' centred />
-              <ButtonView text={`UCL ASSISTANT`} link={`/marketplace/uclassistant`}
-                type='alternate' centred />
-            </Row>
-          </Container>
-        </div>
-        <div className={`default`}>
-          <Container styling="secondary" >
-            <Row width="2-3" minWidth="250px" horizontalAlignment="center">
-              <Row width="1-2" minWidth="200px">
-                <ImageView src={uclassistantmarket} width="367px" height="405px" description="ucl asssitant screen shot" />
-              </Row>
+              <ButtonView text={`MARKETPLACE`} link={`/marketplace`} type='alternate' centred />
+              <ButtonView text={`UCL ASSISTANT`} link={`/marketplace/uclassistant`} type='alternate' centred />
+            </Column>
+          </Row>
+        </Container>
 
-              <Row width="1-2" minWidth="200px" textAlign="left" horizontalAlignment="right" verticalAlignment="center">
-                <TextView text="UCL MARKETPLACE" heading={1} align="left" />
-
-                <TextView text={`The UCL Marketplace contains all of the applications written
-                  using UCL API for some of their functionality. We are constantly looking for 
-                  applications to add to the marketplace and promote so we would love to hear
-                  about your creations so we can add them!`}
-                  heading={5}
-                  align={`left`}
-                />
-
-                <TextView text={`One of these applications is UCL Assistant! An app created
-                  by the UCL API team to provide students with a reliable way to check their 
-                  timetable, find empty rooms and locate study spaces.`}
-                  heading={5}
-                  align={`left`}
-                />
-
-                <ButtonView text={`MARKETPLACE`} link={`/marketplace`} style={{ "marginLeft": `0` }} type='alternate' />
-                <ButtonView text={`UCL ASSISTANT`} link={`/marketplace/uclassistant`} type='alternate' />
-              </Row>
-            </Row>
-          </Container>
-        </div>
+        {/* FAQ */}
 
         <Container 
           styling='splash-parallax' 

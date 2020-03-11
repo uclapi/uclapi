@@ -45,6 +45,8 @@ class SettingsLayout extends React.Component {
     )
     const isApps = appCount === 0
 
+    const cardPadding = `30px`
+
     return (
       <Container
         height='fit-content'
@@ -57,6 +59,8 @@ class SettingsLayout extends React.Component {
           style={{ marginTop: `50px` }}
         >
 
+          {/* Personal account details*/}
+
           <TextView
             text={`Account`}
             heading={1}
@@ -68,9 +72,12 @@ class SettingsLayout extends React.Component {
             <Container noPadding>
               <Row width='1-1' horizontalAlignment='center' >
                 <CardView
-                  width='1-2'
+                  width='6-10'
                   type="transparent"
                   noShadow
+                  keepInline
+                  style={{ padding: cardPadding}}
+                  noPadding
                 >
                   <TextView
                     text={fullname}
@@ -86,9 +93,12 @@ class SettingsLayout extends React.Component {
                   />
                 </CardView>
                 <CardView
-                  width='1-2'
+                  width='4-10'
                   type="transparent"
                   noShadow
+                  keepInline
+                  noPadding
+                  style={{ padding: cardPadding}}
                 >
                   <ButtonView
                     type="alternate"
@@ -111,6 +121,8 @@ class SettingsLayout extends React.Component {
             style={styles.title}
           />
 
+        {/* Authorised app details */}
+
           <CardView 
             width='1-1' 
             type='default' 
@@ -118,6 +130,9 @@ class SettingsLayout extends React.Component {
             style={{ padding: 0 }}
           >
                 {isApps ? (
+
+                  /* No apps authorised - suggest ucl assistant */
+
                   <Container 
                     noPadding
                   >
@@ -128,7 +143,7 @@ class SettingsLayout extends React.Component {
                         paddingBottom: 20,
                       }}
                     >
-                      <Column width="1-2">
+                      <Column width="1-2" className="default">
                         <ImageView src={uclassistantmarket} width="367px" height="405px" description="ucl asssitant screen shot" centred/>
                       </Column>
                       <Column width="1-2" alignItems="column">
@@ -145,7 +160,7 @@ class SettingsLayout extends React.Component {
                           heading="5"
                         />
                         <TextView 
-                          text={ `The app has many different features but one of our users' favourites is ` 
+                          text={ `The app has many different features but one of our favourites is `
                           + `the ability to view your timetable in a weekly view. The app highlights your`
                           + `current commitments to save you time as you rush about University. Check it out below!`} 
                           align="left"
@@ -164,6 +179,9 @@ class SettingsLayout extends React.Component {
                     </Row>
                   </Container>
                 ) : (
+
+                  /* Some apps authorised - display apps */
+
                   <Container noPadding>
                     <Row width='1-1'
                       horizontalAlignment='center'
@@ -176,75 +194,47 @@ class SettingsLayout extends React.Component {
                       {authorised_apps.map((app, i) =>
                         <>
                           {app.active && !isDeleted[i] ? (
-                            <>
-                              <div className="default tablet">
-                                <CardView
-                                  width='1-2'
-                                  type="transparent"
-                                  noShadow
-                                >
-                                  <TextView text={app.app.name.toUpperCase()}
-                                    heading={2}
-                                    align={`left`}
-                                    style={styles.noPadding}
-                                  />
-                                  <TextView text={app.app.creator.name}
-                                    heading={4}
-                                    align={`left`}
-                                    style={styles.noPadding}
-                                  />
-                                </CardView>
-                                <CardView
-                                  width='1-2'
-                                  type="transparent"
-                                  noShadow
-                                >
-                                  <ButtonView
-                                    type="alternate"
-                                    onClick={
-                                      this.handleChange(app.app.client_id, i)
-                                    }
-                                    text={`Revoke Permissions`}
-                                    style={{
-                                      float: `right`,
-                                      cursor: `pointer`,
-                                    }}
-                                  />
-                                </CardView>
-                              </div>
-                              <div className="mobile">
-                                <CardView
-                                  width='1-1'
-                                  type="transparent"
-                                  noShadow
-                                >
-                                  <TextView text={app.app.name.toUpperCase()}
-                                    heading={2}
-                                    align={`center`}
-                                    style={styles.noPadding}
-                                  />
-                                  <TextView text={app.app.creator.name}
-                                    heading={4}
-                                    align={`center`}
-                                    style={styles.noPadding}
-                                  />
-                                </CardView>
-                                <CardView
-                                  width='1-1'
-                                  type="transparent"
-                                  noShadow
-                                >
-                                  <ButtonView
-                                    type="alternate"
-                                    onClick={
-                                      this.handleChange(app.app.client_id, i)
-                                    }
-                                    text={`Revoke Permissions`}
-                                    style={{ cursor: `pointer` }}
-                                  />
-                                </CardView>
-                              </div>
-                            </>
+                            <Row width="1-1">
+                              <CardView
+                                width='1-2'
+                                type="transparent"
+                                noShadow
+                                keepInline
+                                style={{ padding : cardPadding }}
+                                noPadding
+                              >
+                                <TextView text={app.app.name.toUpperCase()}
+                                  heading={2}
+                                  align={`left`}
+                                  style={styles.noPadding}
+                                />
+                                <TextView text={app.app.creator.name}
+                                  heading={4}
+                                  align={`left`}
+                                  style={styles.noPadding}
+                                />
+                              </CardView>
+                              <CardView
+                                width='1-2'
+                                type="transparent"
+                                noShadow
+                                keepInline
+                                style={{ padding : cardPadding }}
+                                noPadding
+                              >
+                                <ButtonView
+                                  type="alternate"
+                                  onClick={
+                                    this.handleChange(app.app.client_id, i)
+                                  }
+                                  text={`Revoke Permissions`}
+                                  style={{
+                                    cursor: `pointer`,
+                                    float: `right`,
+                                  }}
+                                />
+                              </CardView>
+                            </Row>
                           ) : null}
                         </>
                       )}
