@@ -1,4 +1,5 @@
 // Containers
+import Container from './containers/Container.jsx'
 import Column from './containers/Column.jsx'
 import Row from './containers/Row.jsx'
 // Custom UCL API Components
@@ -30,4 +31,4 @@ export {
     AutoCompleteView,
     CheckBox,
     ConfirmBox
-}
+  }

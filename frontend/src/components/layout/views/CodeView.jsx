@@ -66,7 +66,7 @@ export default class CodeView extends React.Component {
     if (this.DEBUGGING) { console.log(`DEBUG: currently selected tab is: ` + tabIndex) }
 
     return (
-      <Column width='1-1'>
+      <>
         <Tabs selectedIndex={tabIndex} onSelect={this.onSelect}>
           <TabList>
             {languages.map(({ name }, index) => (
@@ -83,7 +83,7 @@ export default class CodeView extends React.Component {
             </TabPanel>
           ))}
         </Tabs>
-      </Column>
+      </>
     )
   }
 

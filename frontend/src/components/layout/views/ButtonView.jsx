@@ -9,7 +9,8 @@ this.props.link (A string that gives internal (/docs) or external (https://www.u
 this.props.text (A string to describe the link, usually ALL CAPS)
 
 OPTIONAL ATTRIBUTES:
-this.props.style (An array of styles to add to the component)
+this.props.style (An array of styles to add to the button part)
+this.props.containerStyle (Changes only the parent which could be the a tag)
 this.props.type (changes the styling of the button: Can take default (grey), alternate (white))
 this.props.centred (if added will center the button inside its parent)
 this.props.onClick (Called in place of a link)
@@ -23,64 +24,70 @@ export default class ButtonView extends React.Component {
     // To enable verbose output
     this.DEBUGGING = false
 
-    // Bind functions
-    this.setStyleKeyValuePair = this.setStyleKeyValuePair.bind(this)
-    this.getClassName = this.getClassName.bind(this)
-    this.setTheme = this.setTheme.bind(this)
-
     // Every button view should contain a link and text
     if (typeof this.props.link == `undefined`) { console.log(`EXCEPTION: ButtonView.constructor: no link defined`) }
     if (typeof this.props.text == `undefined`) { console.log(`EXCEPTION: ButtonView.constructor: no text defined`) }
 
-    // Set type of button
-    this.class = this.getClassName()
-    this.style = []
-    // If custom styling then include
-    if (this.props.style) { this.style = this.props.style }
-    // Set up button tags
-    this.setTheme()
-
     // Save class and stylings to the state
     this.state = {
-      class: this.class,
-      style: this.style,
+      class: "",
+      containerStyle: {},
     }
   }
 
   render() {
-    if(this.props.link) {
+
+    const { className, containerStyle } = this.state
+    const { style, link, onClick, text } = this.props
+
+    if(link) {
       return (
-        <a href={this.props.link}>
-          <div className={this.state.class} style={this.state.style}>
-            {this.props.text}
+        <a href={link} style={containerStyle}>
+          <div className={className} style={style}>
+            {text}
           </div>
         </a>
       )
     } else {
       return (
-        <div className={this.state.class} style={this.state.style} onClick={this.props.onClick}>
-            {this.props.text}
+        <div className={className} style={{...style, ...containerStyle}} onClick={onClick}>
+            {text}
         </div>
-        
       )
     }
   }
 
-  setStyleKeyValuePair(key, value) {
-    this.style[key] = value
-    if (this.DEBUGGING) { console.log(`DEBUG: ` + key + ` updated to: ` + value) }
+  refresh = () => {
+    const { type, centred, containerStyles } = this.props
+
+    const buttonType = typeof type !== `undefined` ? type : "default"
+    const className = "uclapi-button default-transition background-color-transition " 
+      + buttonType + "-button"
+
+    console.log(containerStyles)
+
+    var containerStyle = {
+      ...containerStyles,
+      width: `fit-content`,
+    }
+
+    // If the button should be centred
+    if(centred) {
+      containerStyle = {
+        ...containerStyle,
+        marginLeft: `auto`,
+        marginRight: `auto`,
+      }
+    }
+
+    this.setState({
+      className: className,
+      containerStyle: containerStyle,
+    })
   }
 
-  getClassName() {
-    let buttonType = `default`
-    const className = `uclapi-button default-transition background-color-transition`
-    if (this.props.type) { buttonType = this.props.type }
-    return className + ` ` + buttonType + `-button`
-  }
-
-  setTheme() {
-    // 'centred' - Center the button inside of its parent
-    if (this.props.centred) { this.class += ` ` + `center-x` }
+  componentDidMount() {
+    this.refresh()
   }
 
 }

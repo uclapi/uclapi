@@ -1,24 +1,25 @@
 /* eslint-disable react/prop-types */
 // remove this ^ when ready to add prop-types
 
+// React
 import React from 'react'
+
+// Column for sizing
+import { Column } from 'Layout/Items.jsx'
 
 /**
 REQUIRED ATTRIBUTES:
 this.props.width - e.g 8-10 = 80% (Also can take fit-content)
-
 OPTIONAL ATTRIBUTES:
 this.props.type - e.g default (dark grey) / default-no-shadow (dark grey no shadow) / alternate (light grey) / emphasis (orange) / fit-content (no padding or margin for inner content)
-this.props.style (An array of styles to add to the component)
-
+this.props.style (An array of styles to add to the Card)
+this.props.containerStyle (Affects sizing and orientation of column wrapping card)
 this.props.link (default is not clickable) => 'no-action' enables hover but does not reroute
 this.props.fakeLink - same behaviour as a link
-
 this.props.minWidth - e.g 300px a minimum width (default is unset)
 this.props.noShadow - disables box shadow
 this.props.noPadding - disables the padding 
-
-this.props.snapAlign - snaps the cards to be in a vertical row when they get too small to display in a horizontal row 
+this.props.keepInline (don't snap to a column when in mobile view)
 **/
 
 export default class CardView extends React.Component {
@@ -33,205 +34,77 @@ export default class CardView extends React.Component {
 
     this.state = {
       containerWidth: -1,
+      className: ``,
+      style: {},
+      containerStyle: {}
     }
   }
 
   render() {
-    this.updateStyle()
+    const { className, style, containerStyle } = this.state
+    const { children, link, fakeLink, type, width, minWidth='unset', keepInline } = this.props
 
-    const { class: className, style } = this
-    const {
-      type,
-      stateClass,
-    } = this.state
-    const {
-      link,
-      fakeLink,
-      children,
-    } = this.props
+    if (this.DEBUGGING) { console.log(`DEBUG: CardView rendered with the following styles: ` + type + ` and class: ` + className) }
 
-    if (this.DEBUGGING) {
-      console.log(
-        `DEBUG: CardView rendered with the following styles: `
-        + type
-        + ` and class: `
-        + stateClass
-      )
-    }
-
-    const doesLinkRoute = (
-      (typeof link != `undefined`) &&
-      (typeof fakeLink == `undefined`)
-    )
+    const doesLinkRoute = (typeof link != `undefined`) && (typeof fakeLink == `undefined`)
 
     // RENDER METHOD
     if (doesLinkRoute) {
       return (
-        <>
-          <div className={`invisible-marker`}
-            style={{
-              "position": `absolute`,
-              "visibility": `hidden`,
-              "width": `inherit`,
-            }}
-            ref={this.cardRef}
-          ></div>
-          <a href={link}>
-            <div className={className} style={style}>
-              {children}
-            </div>
+        <Column width={width} minWidth={minWidth} style={containerStyle} keepInline={keepInline}>
+          <a className={className} href={link} style={style}>
+            {children}
           </a>
-        </>
+        </Column>
       )
     } else {
       return (
-        <>
-          <div className={`invisible-marker`}
-            style={{
-              "position": `absolute`,
-              "visibility": `hidden`,
-              "width": `inherit`,
-            }}
-            ref={this.cardRef}
-          ></div>
+        <Column width={width} style={containerStyle} keepInline={keepInline}>
           <div className={className} style={style}>
             {children}
           </div>
-        </>
+        </Column>
       )
     }
   }
 
-  updateStyle = () => {
-    let minWidth = this.getMinWidth()
-    let shouldResize = false
+  refresh = () => {
+    const { style: propsStyle, link, fakeLink, noShadow, type, noPadding, containerStyle: propsContainerStyle } = this.props
+    const styling = typeof type === `undefined` ? `default` : type
 
-    const { containerWidth } = this.state
-    const { width } = this.props
-
-    if (minWidth != `unset` && containerWidth != -1) {
-      minWidth = minWidth.substring(0, minWidth.length - 2)
-      const fraction = width.split(`-`)
-      const minTotalWidth = minWidth * fraction[1] / fraction[0]
-
-      shouldResize = containerWidth <= minTotalWidth
+    let className = `uclapi-card uclapi-card-` + styling
+    let style = {
+      ...propsStyle,
+    }
+    let containerStyle = {
+      ...propsContainerStyle,
+    }
+    // LINK
+    if (link || fakeLink) {
+      className += ` default-transition background-color-transition clickable uclapi-card-clicked-` + styling
+    }
+    // ADD SHADOW AS DEFAULT
+    if (typeof noShadow === `undefined` && styling != `no-bg`) {
+      className += ` uclapi-card-shadow`
+    }
+    // NO PADDING
+    if (noPadding) {
+      containerStyle = {
+        ...containerStyle,
+        margin: 0,
+        padding: 0,
+      }
     }
 
-    this.class = `uclapi-card`
-    this.style = {}
-
-    const { style } = this.props
-    if (style) { this.style = { ...style } }
-
-    this.setTheme()
-
-    if (shouldResize) {
-      this.setStyleKeyValuePair(`marginLeft`, `auto`)
-      this.setStyleKeyValuePair(`marginRight`, `auto`)
-      this.setStyleKeyValuePair(`display`, `block`)
-      this.setStyleKeyValuePair(`float`, `unset`)
-    }
+    // Set the stylings and class
+    this.setState({
+      className: className,
+      style: style,
+      containerStyle: containerStyle,
+    })
   }
 
   componentDidMount() {
-    const { snapAlign } = this.props
-    if (snapAlign) {
-      if (this.DEBUGGING) { console.log(`CardView.componentDidMount`) }
-      window.addEventListener(`resize`, this.setMargin)
-      // SET MARGIN IN CASE TOO SMALL
-      this.setMargin()
-    }
+    this.refresh()
   }
-  componentWillUnmount() {
-    const { snapAlign } = this.props
-    if (snapAlign) {
-      if (this.DEBUGGING) { console.log(`CardView.componentWillUnmount`) }
-      window.removeEventListener(`resize`, this.setMargin)
-    }
-  }
-
-  setMargin = () => {
-    const { width } = this.props
-    const fraction = width.split(`-`)
-    const adaption = 100 - (4 * fraction[1])
-
-    const currentWidth = this.cardRef.current.clientWidth * adaption / 100
-
-    this.setState({ containerWidth: currentWidth })
-  }
-
-  setTheme = () => {
-    // REQUIRED ATTRIBUTES
-    // STYLE
-    this.class += ` uclapi-card-` + this.getStyle()
-    // WIDTH
-    this.setStyleKeyValuePair(`width`, this.getWidth())
-    // MIN WIDTH
-    this.setStyleKeyValuePair(`minWidth`, this.getMinWidth())
-
-    const { link, fakeLink, noShadow } = this.props
-
-    // OPTIONAL ATTRIBUTES
-    // LINK
-    if (link || fakeLink) {
-      this.class += ` default-transition background-color-transition`
-        + `clickable uclapi-card-clicked-`
-        + this.getStyle()
-    }
-    // ADD SHADOW AS DEFAULT
-    if (typeof noShadow === `undefined` && this.getStyle() != `no-bg`) {
-      this.class += ` uclapi-card-shadow`
-    }
-  }
-
-  setStyleKeyValuePair = (key, value) => {
-    if (this.DEBUGGING) {
-      console.log(`DEBUG: ` + key + ` updated to ` + value)
-    }
-    this.style[key] = value
-    if (this.DEBUGGING) {
-      console.log(`DEBUG: style updated to: ` + this.style)
-    }
-  }
-
-  getWidth = () => {
-    const { width, noPadding } = this.props
-    if (typeof width == `undefined`) {
-      console.exception(
-        `EXCEPTION: no width set for card view so setting card view width to `
-        + this.DEFAULT_WIDTH
-      )
-      return this.DEFAULT_WIDTH
-    }
-
-    if (width == `fit-content`) { return `fit-content` }
-
-    const fraction = width.split(`-`)
-    let adaptation = 100 - (4 * fraction[1])
-
-    if (noPadding) {
-      adaptation = 100
-      this.setStyleKeyValuePair(`marginLeft`, `0`)
-      this.setStyleKeyValuePair(`marginRight`, `0`)
-    }
-
-    const percentage = fraction[0] / fraction[1] * adaptation
-    return percentage + `%`
-  }
-
-  getMinWidth = () => {
-    const { minWidth } = this.props
-    return minWidth ? minWidth : `unset`
-  }
-
-  getMaxWidth = () => {
-    const { maxWidth } = this.props
-    return maxWidth ? maxWidth : `unset`
-  }
-
-  getStyle = () => {
-    const { type } = this.props
-    return type ? type : `default`
-  }
-
 }
