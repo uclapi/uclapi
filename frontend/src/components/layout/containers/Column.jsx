@@ -8,10 +8,10 @@ REQUIRED ATTRIBUTES:
 this.props.width (1-3 => 1/3 width of a row)
 
 OPTIONAL ATTRIBUTES:
-this.props.horizontalAlignment (left / center / right)
-this.props.verticalALignment (top / center / bottom) => Row Height must be set otherwise weird behaviour
-this.props.textAlign (like the normal inline tag)
+this.props.alignItems (whether to align children as if they were columns or rows (column/row) - row by default)
 this.props.style (array of extra stylings)
+this.props.keepInline (don't snap to a column when in mobile view)
+this.props.className (additional class identifiers)
 
 **/
 export default class Column extends React.Component {
@@ -32,14 +32,14 @@ export default class Column extends React.Component {
   }
 
   render() {
-    const { verticalAlignment, style } = this.state
-    const { children, className = `` } = this.props
+    const { style } = this.state
+    const { children, className = ``, keepInline } = this.props
+
+    const baseClass = keepInline ? `column-always-inline` : `column`
 
     return (
-      <div className={verticalAlignment} >
-        <div className={`column ${className}`} style={style} >
-          {children}
-        </div>
+      <div className={baseClass + ` ` + className} style={style} >
+        {children}
       </div>
     )
   }
@@ -66,73 +66,20 @@ export default class Column extends React.Component {
   }
 
   setTheme = (style) => {
+
+    const { alignItems } = this.props
+
     // REQUIRED ATTRIBUTES
     // Set the width and padding of the column
     style = this.setColumnWidthAndPadding(style)
 
-    // OPTIONAL ATTRIBUTES
-    // Handles horizontal alignment
-    if (this.props.horizontalAlignment) { style = this.setHorizontalAlignment(style) }
-    // Handles vertical alignment
-    if (this.props.verticalAlignment) { style = this.setVerticalAlignment(style) }
-    // Handles the text alignment
-    if (this.props.textAlign) {
+    if(alignItems) {
       style = {
         ...style,
-        textAlign: this.props.textAlign,
+        flexDirection: alignItems,
       }
     }
 
-    return style
-  }
-
-  setVerticalAlignment = (style) => {
-    switch (this.props.verticalAlignment) {
-      case `top`:
-        // Stub needs implementing
-        break
-
-      case `center`:
-        this.setState({ verticalAlignment: `vertical-align center-y` })
-        style = {
-          ...style,
-          height: `100%`,
-        }
-        break
-
-      case `bottom`:
-        this.setState({
-          verticalAlignment: `vertical-align bottom-y`,
-        })
-        break
-    }
-    return style
-  }
-
-  setHorizontalAlignment = (style) => {
-    switch (this.props.horizontalAlignment) {
-      case `left`:
-        style = {
-          ...style,
-          float: `left`,
-        }
-        break
-
-      case `center`:
-        style = {
-          ...style,
-          marginLeft: `auto`,
-          marginRight: `auto`,
-        }
-        break
-
-      case `right`:
-        style = {
-          ...style,
-          float: `right`,
-        }
-        break
-    }
     return style
   }
 

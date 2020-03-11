@@ -6,7 +6,7 @@ import github from 'Images/home-page/github.png'
 // UCL API Logo
 import twitter from 'Images/home-page/twitter.png'
 // Common Components
-import { CardView, Column, ImageView, Row } from 'Layout/Items.jsx'
+import { CardView, Column, ImageView, Container } from 'Layout/Items.jsx'
 
 export default class Footer extends React.Component {
 
@@ -18,7 +18,12 @@ export default class Footer extends React.Component {
     const logosize = `20px`
 
     return (
-      <Row styling='secondary' style={{ padding: `20px 0` }}>
+      <Container 
+        styling='secondary' 
+        height="80px"
+        noPadding
+        style={{ paddingTop: `20px` }}
+      >
         <div className="social-media-holder">
           <a href="https://github.com/uclapi">
             <div className="uclapi-card-github" style={{ width: logosize, height: logosize}} >
@@ -38,7 +43,7 @@ export default class Footer extends React.Component {
             </div>
           </a>
         </div>
-      </Row >
+      </Container >
     )
   }
 

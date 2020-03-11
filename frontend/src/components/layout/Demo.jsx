@@ -23,7 +23,7 @@ const muiTheme = getMuiTheme({
 
 // Required components
 import rooms from 'Layout/data/room_names.jsx'
-import { AutoCompleteView, CodeView, Column, Row, TextView } from 'Layout/Items.jsx'
+import { AutoCompleteView, CodeView, Row, Container, TextView } from 'Layout/Items.jsx'
 
 export default class Demo extends React.Component {
   constructor(props) {
@@ -53,24 +53,28 @@ export default class Demo extends React.Component {
     } = this.state
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <Row styling={`secondary`} height={`fit-content`} isPaddedBottom>
-          <Column width='2-3' horizontalAlignment='center'>
-            <TextView text={`Try out the API`} heading={1} align={`center`} />
+        <Container 
+          styling={`secondary`} 
+          height={`fit-content`} 
+          isPaddedBottom
+          heading="Try out the API"
+        >
+          <Row width='2-3' horizontalAlignment='center'>
             <AutoCompleteView suggestions={rooms} onSubmit={this.makeRequest} />
-          </Column>
+          </Row>
 
-          <Row height='20px' noPadding />
+          <Container height='20px' noPadding />
 
-          <Column width='2-3' horizontalAlignment='center'>
+          <Row width='2-3' horizontalAlignment='center'>
             <CodeView url={`${rootURL}/roombookings/bookings`} params={params} type={`request`} />
-          </Column>
+          </Row>
 
           {response ? (
-            <Column width='2-3' horizontalAlignment='center'>
+            <Row width='2-3' horizontalAlignment='center'>
               <CodeView response={response} type={`response`} />
-            </Column>
+            </Row>
           ) : null}
-        </Row>
+        </Container>
       </MuiThemeProvider>
     )
   }
