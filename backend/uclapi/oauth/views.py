@@ -652,7 +652,7 @@ def myapps_shibboleth_callback(request):
             user.raw_intranet_groups = groups
         user.save()
 
-    return redirect("/settings")
+    return redirect(settings)
 
 
 @ensure_csrf_cookie
@@ -763,6 +763,10 @@ def deauthorise_app(request):
 
 @ensure_csrf_cookie
 def logout(request):
+    try:
+        del request.session['user_id']
+    except KeyError:
+        pass
+        
     response = redirect('/')
-    response.delete_cookie('user_id')
     return response
