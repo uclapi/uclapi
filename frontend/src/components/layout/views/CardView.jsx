@@ -1,7 +1,11 @@
 /* eslint-disable react/prop-types */
 // remove this ^ when ready to add prop-types
 
+// React
 import React from 'react'
+
+// Column for sizing
+import { Column } from 'Layout/Items.jsx'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -9,7 +13,8 @@ this.props.width - e.g 8-10 = 80% (Also can take fit-content)
 
 OPTIONAL ATTRIBUTES:
 this.props.type - e.g default (dark grey) / default-no-shadow (dark grey no shadow) / alternate (light grey) / emphasis (orange) / fit-content (no padding or margin for inner content)
-this.props.style (An array of styles to add to the component)
+this.props.style (An array of styles to add to the Card)
+this.props.containerStyle (Affects sizing and orientation of column wrapping card)
 
 this.props.link (default is not clickable) => 'no-action' enables hover but does not reroute
 this.props.fakeLink - same behaviour as a link
@@ -18,7 +23,7 @@ this.props.minWidth - e.g 300px a minimum width (default is unset)
 this.props.noShadow - disables box shadow
 this.props.noPadding - disables the padding 
 
-this.props.snapAlign - snaps the cards to be in a vertical row when they get too small to display in a horizontal row 
+this.props.keepInline (don't snap to a column when in mobile view)
 **/
 
 export default class CardView extends React.Component {
@@ -35,12 +40,13 @@ export default class CardView extends React.Component {
       containerWidth: -1,
       className: ``,
       style: {},
+      containerStyle: {}
     }
   }
 
   render() {
-    const { className, style } = this.state
-    const { children, link, fakeLink, type } = this.props
+    const { className, style, containerStyle } = this.state
+    const { children, link, fakeLink, type, width, minWidth='unset', keepInline } = this.props
 
     if (this.DEBUGGING) { console.log(`DEBUG: CardView rendered with the following styles: ` + type + ` and class: ` + className) }
 
@@ -49,47 +55,34 @@ export default class CardView extends React.Component {
     // RENDER METHOD
     if (doesLinkRoute) {
       return (
-        <>
+        <Column width={width} minWidth={minWidth} style={containerStyle} keepInline={keepInline}>
           <a className={className} href={link} style={style}>
-            <div className={className}>
-              {children}
-            </div>
+            {children}
           </a>
-        </>
+        </Column>
       )
     } else {
       return (
-        <>
+        <Column width={width} style={containerStyle} keepInline={keepInline}>
           <div className={className} style={style}>
             {children}
           </div>
-        </>
+        </Column>
       )
     }
   }
 
   refresh = () => {
-    const { style: propsStyle, link, fakeLink, noShadow, type, noPadding } = this.props
+    const { style: propsStyle, link, fakeLink, noShadow, type, noPadding, containerStyle: propsContainerStyle } = this.props
     const styling = typeof type === `undefined` ? `default` : type
 
     let className = `uclapi-card uclapi-card-` + styling
     let style = {
       ...propsStyle,
-      width: this.getWidth(),
     }
-
-    // OPTIONAL ATTRIBUTES
-    // MIN WIDTH
-    // if (minWidth) {
-    //   style = {
-    //     ...style,
-    //     minWidth,
-    //   }
-    // }
-    // SNAP ALIGN
-    // if (this.shouldResize()) {
-    //   className += ` uclapi-card-full-width`
-    // }
+    let containerStyle = {
+      ...propsContainerStyle,
+    }
     // LINK
     if (link || fakeLink) {
       className += ` default-transition background-color-transition clickable uclapi-card-clicked-` + styling
@@ -100,10 +93,10 @@ export default class CardView extends React.Component {
     }
     // NO PADDING
     if (noPadding) {
-      style = {
-        ...style,
-        marginLeft: 0,
-        marginRight: 0,
+      containerStyle = {
+        ...containerStyle,
+        margin: 0,
+        padding: 0,
       }
     }
 
@@ -111,60 +104,11 @@ export default class CardView extends React.Component {
     this.setState({
       className: className,
       style: style,
+      containerStyle: containerStyle,
     })
   }
 
-  getWidth = () => {
-    const { width, noPadding } = this.props
-
-    if (typeof width == `undefined`) { console.exception(`EXCEPTION: no width set for card view so setting card view width to ` + this.DEFAULT_WIDTH); return this.DEFAULT_WIDTH }
-
-    if (width == `fit-content`) { return `fit-content` }
-
-    const fraction = width.split(`-`)
-    const adaptation = noPadding ? 100 : 100 - (4 * fraction[1])
-
-    const percentage = fraction[0] / fraction[1] * adaptation
-    return percentage + `%`
-  }
-
-  // shouldResize = () => {
-  //   const { minWidth, width } = this.props
-  //   const { containerWidth } = this.state
-
-  //   const fractionOfTotalWidth = width.split(`-`)[0] / width.split(`-`)[1]
-  //   const totalMinWidth = minWidth * (1 / fractionOfTotalWidth)
-
-  //   return containerWidth <= totalMinWidth
-  // }
-
   componentDidMount() {
-    // if (this.props.snapAlign) {
-    //   if (this.DEBUGGING) { console.log(`CardView.componentDidMount`) }
-    //   this.cardRef.current.addEventListener(`resize`, this.setMargin)
-    //   // SET MARGIN IN CASE TOO SMALL
-    //   this.setMargin()
-    // } else {
     this.refresh()
-    // }
   }
-  // componentWillUnmount() {
-  //   if (this.props.snapAlign) {
-  //     if (this.DEBUGGING) { console.log(`CardView.componentWillUnmount`) }
-  //     this.cardRef.current.removeEventListener(`resize`, this.setMargin)
-  //   }
-  // }
-
-  // setMargin = () => {
-  //   const fraction = this.props.width.split(`-`)
-  //   const adaption = 100 - (4 * fraction[1])
-
-  //   const currentWidth = this.cardRef.current.clientWidth * adaption / 100
-
-  //   console.log(`Checking margin + width: ` + this.cardRef.current.clientWidth + ` width array: ` + fraction
-  //     + ` width: ` + currentWidth)
-
-  //   this.setState({ containerWidth: currentWidth })
-  //   this.refresh()
-  // }
 }
