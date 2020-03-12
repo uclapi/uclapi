@@ -18,7 +18,7 @@ from django.contrib import admin
 from dashboard.views import documentation, home, about
 from oauth.views import settings, logout
 from marketplace.views import marketplace
-
+from django.urls import path
 
 app_name = "uclapi"
 
@@ -27,8 +27,8 @@ urlpatterns = [
     url(r'^dashboard/', include('dashboard.urls')),
     url(r'^docs', documentation),
     url(r'^about', about),
-    url(r'^settings', settings),
-    url(r'logout$', logout),
+    path('settings/', settings),
+    path('logout/', logout),
     url(r'^marketplace', marketplace),
     url(r'^roombookings/', include('roombookings.urls')),
     url(r'^oauth/', include('oauth.urls')),
