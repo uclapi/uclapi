@@ -17,7 +17,7 @@ import TextView from './views/TextView.jsx'
 import Field from './views/Field.jsx'
 
 export {
-    Field,
+    Container,
     Row,
     Column,
     TextView, 
@@ -29,6 +29,7 @@ export {
     NavBar, 
     Footer, 
     AutoCompleteView,
+    Field,
     CheckBox,
     ConfirmBox
   }

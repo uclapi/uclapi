@@ -5,7 +5,7 @@ import { styles } from 'Layout/data/dashboard_styles.jsx'
 
 // Components
 import { CardView, Column, Footer, NavBar, Row, TextView, 
-  ButtonView, Field, ConfirmBox, CheckBox } from 'Layout/Items.jsx'
+  ButtonView, Field, ConfirmBox, CheckBox, Container } from 'Layout/Items.jsx'
 import { editIcon, cancelIcon } from 'Layout/Icons.jsx'
 
 // External dependencies
@@ -65,46 +65,40 @@ export default class App extends React.Component {
 		return (
 		<Collapse>
         <Panel header={app.name} showArrow>
-        <Row styling='transparent' noPadding>
-		  
-		    <Row styling='transparent' noPadding>
-		      <CardView width="1-2" minWidth="200px" type="no-bg" style={styles.squareCard} snapAlign>
-		        <Field
-		          title="title: "
-		          content={app.name}
-		          onSave={(value) => { actions.saveEditTitle(index, value) }}
-		          isSmall={true}
-		        />
+        <Container styling='transparent' noPadding>
+		    <Container styling='transparent' noPadding>
+		      	<CardView 
+			      	width="1-2" 
+			      	minWidth="200px" 
+			      	type="no-bg" 
+			      	style={styles.squareCard}
+	      		>
+			        <Field
+			          title="title: "
+			          content={app.name}
+			          onSave={(value) => { actions.saveEditTitle(index, value) }}
+			          isSmall={true}
+			        />
 		      </CardView>
 		      <CardView width="1-2" minWidth="200px" type="no-bg" snapAlign style={styles.rowItem}>
-	          	<div className="default tablet">
-		          	{cancelIcon(
-			          () => { actions.deleteConfirm(index) },
-			          { float: `right`, marginTop: `40px`, backgroundColor: trashColor }
-			        )}
-			        <div className="app-times" style={{ float: `right`, marginTop: `40px` }}>
-				        <TextView text={`Created: ` + created + ` ago`} heading={6}
+	          	<Row>
+	          		<Column width="1-2">
+	          			{cancelIcon(
+				          () => { actions.deleteConfirm(index) },
+				          { float: `right`, marginTop: `40px`, backgroundColor: trashColor }
+				        )}
+	          		</Column>
+	          		<Column width="1-2">
+	          			<TextView text={`Created: ` + created + ` ago`} heading={6}
 				          align="right" style={styles.dates} />
 				        <TextView text={`Updated: ` + updated + ` ago`} heading={6}
 				          align="right" style={styles.dates} />
-		          	</div>
-	          	</div>
-		        <div className="mobile">
-		        	<div className="app-times" style={{ margin: `8px auto` }}>
-				        <TextView text={`Created: ` + created + ` ago`} heading={5}
-				          align="center" style={styles.dates} />
-				        <TextView text={`Updated: ` + updated + ` ago`} heading={5}
-				          align="center" style={styles.dates} />
-				        {cancelIcon(
-				          () => { actions.deleteConfirm(index) },
-				          { margin: `auto`, float: `unset`, marginTop: `10px` }
-				        )}
-		          	</div>
-		        </div>
+	          		</Column>
+	          	</Row>
 		      </CardView>
-		    </Row>
+		    </Container>
 		    
-		    <Row styling='transparent' noPadding>
+		    <Container styling='transparent' noPadding>
 		      <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
 		        <Field
 		          title="API Token: "
@@ -113,13 +107,13 @@ export default class App extends React.Component {
 		          onRefresh={ () => { actions.regenToken(index) } }
 		        />
 		      </CardView>
-		    </Row>
-		    <Row styling='transparent' noPadding>
+		    </Container>
+		    <Container styling='transparent' noPadding>
 		      <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
 		        <div className="settings-collapse">
 		          <Collapse>
 		            <Panel header={`OAuth Settings`} showArrow>
-		              <Row styling='transparent' noPadding>
+		              <Container styling='transparent' noPadding>
 		                <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
 		                  <TextView text={`OAuth Credentials: `}
 		                    heading={3}
@@ -143,8 +137,8 @@ export default class App extends React.Component {
 		                    onSave={(value) => { actions.saveOAuthCallback(index, value) }}
 		                  />
 		                </CardView>
-		              </Row>
-		              <Row styling='transparent' noPadding>
+		              </Container>
+		              <Container styling='transparent' noPadding>
 		                <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
 		                  <TextView text={`OAuth Scopes: `}
 		                    heading={3}
@@ -160,10 +154,10 @@ export default class App extends React.Component {
 			                  />
 		                  )}
 		                </CardView>
-		              </Row>
+		              </Container>
 		            </Panel>
 		            <Panel header={`Webhook Settings`} showArrow>
-		              <Row styling='transparent' noPadding>
+		              <Container styling='transparent' noPadding>
 		                <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
 		                  <Field
 		                    title="Verification Secret: "
@@ -192,15 +186,15 @@ export default class App extends React.Component {
 		                    onSave={(value) => { actions.webhook.saveContact(index, value) }}
 		                  />
 		                </CardView>
-		              </Row>
+		              </Container>
 		            </Panel>
 		          </Collapse>
 		        </div>
 		      </CardView>
-		    </Row>
+		    </Container>
 		
 
-        </Row>
+        </Container>
         </Panel>
         </Collapse>
 		)

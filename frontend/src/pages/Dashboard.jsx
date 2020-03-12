@@ -12,7 +12,8 @@ import Modal from 'react-modal'
 
 // Styles
 import { styles } from 'Layout/data/dashboard_styles.jsx'
-import { ButtonView, CardView, Column, ConfirmBox, Footer, NavBar, Row, TextView } from 'Layout/Items.jsx'
+import { ButtonView, CardView, Column, ConfirmBox, 
+  Footer, NavBar, Row, TextView, Container } from 'Layout/Items.jsx'
 
 // UI App Component
 import App from '../components/dashboard/App.jsx'
@@ -110,8 +111,13 @@ class Dashboard extends React.Component {
           ) : null}
         </Modal>
 
-        <Row height='fit-content' styling='splash-parallax' style={{ minHeight: `100%` }}>
-          <Column width='2-3' horizontalAlignment='center' style={{ marginTop: `80px` }}>
+        <Container height='fit-content' styling='splash-parallax' style={{ minHeight: `100%` }}>
+          <Row 
+            width='2-3' 
+            horizontalAlignment='center' 
+            style={{ marginTop: `80px` }}
+            alignItems="column"
+          >
             <TextView text={`Welcome, ` + name}
               heading={1}
               align={`left`}
@@ -156,14 +162,16 @@ class Dashboard extends React.Component {
                 </CardView>
               ) : null}
             </div>
-            <ButtonView text={`Add new project`}
+            <ButtonView 
+              text={`Add new project`}
               type={`default`}
               style={{ cursor: `pointer` }}
               onClick={() => { this.setState({ view: `add-project` }) }}
               fakeLink
+              centred
             />
-          </Column>
-        </Row>
+          </Row>
+        </Container>
 
         <Footer />
       </>
