@@ -2,7 +2,7 @@ import React from 'react'
 
 // Components
 import { CardView, Column, Row, TextView, 
-  Field, ButtonView } from 'Layout/Items.jsx'
+  Field, ButtonView, Container } from 'Layout/Items.jsx'
 
 /**
 This has the multipurpose of being both for the confirm button and
@@ -68,8 +68,8 @@ export default class ConfirmBox extends React.Component {
     return (
       <div className='overlay-wrapper' style={{ textAlign: `center` }}>
         <CardView width='1-1' type='default' noPadding>
-          <Row styling='transparent'>
-            <Column width="8-10" horizontalAlignment="center">
+          <Container styling='transparent'>
+            <Row width="8-10" horizontalAlignment="center">
               <Field
                 title={text}
                 content={value}
@@ -78,8 +78,8 @@ export default class ConfirmBox extends React.Component {
               />
               <ButtonView text={`Submit`} onClick={this.success} fakeLink style={{ cursor: `pointer` }} />
               <ButtonView text={`Cancel`} type={`alternate`} onClick={fail} fakeLink style={{ cursor: `pointer` }} />
-            </Column>
-          </Row>
+            </Row>
+          </Container>
         </CardView>
       </div>
     )

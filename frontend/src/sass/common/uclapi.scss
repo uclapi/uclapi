@@ -687,11 +687,11 @@ div.uclapi-card-github {
 
 .app-holder {
   .rc-collapse {
-    background-color: $color-white;
+    background-color: $color-grey-dark;
     
     .rc-collapse-header,
     .settings-collapse .rc-collapse .rc-collapse-item .rc-collapse-header {
-      color: black;
+      color: white;
       border: none;
       font-family: 'Source Sans Pro', 'Roboto', sans-serif;
       font-size: 0.7em;
