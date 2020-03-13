@@ -8,18 +8,18 @@ import 'Styles/common/uclapi.scss'
 import 'Styles/navbar.scss'
 import "react-responsive-carousel/lib/styles/carousel.min.css"
 
-// Standard React imports
-import React from 'react'
-import ReactDOM from 'react-dom'
-// External carousel dependency
-import { Carousel } from "react-responsive-carousel"
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
-
 // Grab titles and descriptions of app
 import { allApps } from 'Layout/data/app_pages.jsx'
 // Common Components
-import { ButtonView, CardView, Column, Footer, ImageView, 
-  NavBar, Container, TextView, Row } from 'Layout/Items.jsx'
+import {
+  CardView, Container, Footer, ImageView,
+  NavBar, Row, TextView,
+} from 'Layout/Items.jsx'
+// Standard React imports
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
+
 // Import page that displays a singular app
 import { AppPage } from './AppPage.jsx'
 
@@ -81,8 +81,8 @@ class Marketplace extends React.Component {
         </Container>
 
         <Container styling='secondary'>
-          <Row 
-            width='2-3' 
+          <Row
+            width='2-3'
             horizontalAlignment='center'
             alignItems='column'
           >
@@ -106,8 +106,8 @@ class Marketplace extends React.Component {
                   link={`/marketplace/` + app.id}
                   noPadding
                 >
-                  <Row 
-                    width='1-2' 
+                  <Row
+                    width='1-2'
                     horizontalAlignment='center'
                     alignItems='column'
                   >
@@ -138,8 +138,8 @@ class Marketplace extends React.Component {
         </Container>
 
         <Container styling='splash-parallax'>
-          <Row 
-            width='2-3' 
+          <Row
+            width='2-3'
             horizontalAlignment='center'
             alignItems='column'
           >
@@ -167,8 +167,8 @@ class Marketplace extends React.Component {
                   minWidth={`225px`}
                   snapAlign
                 >
-                  <Row 
-                    width='9-10' 
+                  <Row
+                    width='9-10'
                     horizontalAlignment='center'
                     alignItems='column'
                   >
