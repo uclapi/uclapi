@@ -42,7 +42,7 @@ export default class Icon extends React.Component {
 
     return (
       <div className='icon-wrapper' onClick={onClick}>
-        <CardView width='1-3' type='emphasis' style={{...styles.button, ...style}} fakeLink>
+        <CardView width='1-1' type='emphasis' style={{...styles.button, ...style}} fakeLink>
           <ImageView src={image}
             width={logosize}
             height={logosize}

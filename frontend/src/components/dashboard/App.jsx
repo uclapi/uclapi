@@ -66,37 +66,32 @@ export default class App extends React.Component {
 		<Collapse>
         <Panel header={app.name} showArrow>
         <Container styling='transparent' noPadding>
-		    <Container styling='transparent' noPadding>
-		      	<CardView 
-			      	width="1-2" 
-			      	minWidth="200px" 
-			      	type="no-bg" 
-			      	style={styles.squareCard}
-	      		>
+		    <Row width="1-1">
+		      	<Column width="1-2" >
 			        <Field
 			          title="title: "
 			          content={app.name}
 			          onSave={(value) => { actions.saveEditTitle(index, value) }}
 			          isSmall={true}
 			        />
-		      </CardView>
-		      <CardView width="1-2" minWidth="200px" type="no-bg" snapAlign style={styles.rowItem}>
-	          	<Row>
-	          		<Column width="1-2">
-	          			{cancelIcon(
-				          () => { actions.deleteConfirm(index) },
-				          { float: `right`, marginTop: `40px`, backgroundColor: trashColor }
-				        )}
-	          		</Column>
-	          		<Column width="1-2">
-	          			<TextView text={`Created: ` + created + ` ago`} heading={6}
-				          align="right" style={styles.dates} />
-				        <TextView text={`Updated: ` + updated + ` ago`} heading={6}
-				          align="right" style={styles.dates} />
-	          		</Column>
-	          	</Row>
-		      </CardView>
-		    </Container>
+		      	</Column>
+		      	<Column width="1-2">
+		          	<Row width="1-1">
+		          		<Column width="1-2">
+		          			{cancelIcon(
+					          () => { actions.deleteConfirm(index) },
+					          { float: `right`, marginTop: `40px`, backgroundColor: trashColor }
+					        )}
+		          		</Column>
+		          		<Column width="1-2" alignItems="row">
+		          			<TextView text={`Created: ` + created + ` ago`} heading={6}
+					          align="right" style={styles.dates} />
+					        <TextView text={`Updated: ` + updated + ` ago`} heading={6}
+					          align="right" style={styles.dates} />
+		          		</Column>
+		          	</Row>
+			    </Column>
+		    </Row>
 		    
 		    <Container styling='transparent' noPadding>
 		      <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>

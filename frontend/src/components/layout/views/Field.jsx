@@ -24,42 +24,6 @@ style
 
 **/
 
-const styles = {
-	copyableField: {
-		marginTop: `0`,
-		width: `80%`,
-		padding: `15px`,
-		textAlign: `left`,
-		backgroundColor: `transparent`,
-		color: `black`,
-	},
-	copyableFieldMobile: {
-		marginTop: `0`,
-		width: `auto`,
-		padding: `15px`,
-		textAlign: `left`,
-		color: `black`,
-		maxWidth: `30%`,
-		backgroundColor: `transparent`,
-	},
-	tokenText: {
-		float: `left`,
-		margin: `6px 10px 0 0`,
-		color: `white`,
-	},
-	fieldHolder: {
-		height: `50px`,
-		paddingBottom: `20px`,
-	},
-	field: {
-		backgroundColor: `#3498db`,
-		height: `50px`,
-		float: `left`,
-		paddingRight: `10px`,
-		width: `100%`,
-		transition: `background-color 0.2s`,
-	}
-}
 
 export default class Field extends React.Component {
 
@@ -166,46 +130,29 @@ export default class Field extends React.Component {
 		 title, content, isSmall, canCopy } = this.props
 		const { isSaved, fieldRefA, fieldRefB, value, 
 			isEditing} = this.state
-		
-		//3498DB
-		const unsavedColor = `#db4534`
-		const savedColor = `#2ecc71`
-		const defaultColor = `#eeeeee`
-		const disabledColor = `#888888`
-
-		var color = this.doesExist(onSave) ? defaultColor : disabledColor
-		if(isEditing) { color = isSaved ? savedColor : unsavedColor }
-
-		const fieldStyle = {
-			...styles.field,
-			...style,
-			backgroundColor : color
-		}
 
 		return (
 		<>
-			<TextView text={title} color="black" heading={6} align={`left`} style={styles.tokenText} />
+			{/*<TextView text={title} color="white" heading={6} align={`left`} />*/}
 			                      
-			<div className="field" style={fieldStyle} onClick={this.toggleEditing}>
+			<div className="field" onClick={this.toggleEditing}>
 			  <div className={isSmall ? `none` : `tablet default`}>
 			    <input ref={fieldRefA}
 			      type="text"
-			      className="token-input"
+			      className="field-input"
 			      readOnly={!isEditing} 
 			      onChange={isEditing ? () => { this.save(false) } : null } 
 			      value={value}
-			      style={styles.copyableField}
 			    />
 			    {canCopy ? copyIcon(() => { this.copy(true) }) : null}
 			  </div>
 			  <div className={isSmall ? `tablet mobile default` : `mobile`}>
 			    <input ref={fieldRefB}
 			      type="text"
-			      className="token-input"
+			      className="field-input"
 			      readOnly={!isEditing} 
 			      onChange={isEditing ? () => { this.save(false) } : null } 
 			      value={value}
-			      style={styles.copyableFieldMobile}
 			    />
 			    {canCopy ? copyIcon(() => { this.copy(false) }) : null}
 			  </div>

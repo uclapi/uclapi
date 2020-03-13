@@ -516,6 +516,30 @@ input[type="checkbox"] + span {
   margin-right: 4px;
 }
 
+.field {
+  background-color: #3498db;
+  height: 50px;
+  float: left;
+  padding-right: 10px;
+  width: 100%;
+  transition: background-color 0.2s;
+}
+
+.field-input {
+  margin-top: 0;
+  width: 80%;
+  padding: 0 0 0 10px;
+  text-align: left;
+  background-color: transparent;
+  color: white;
+}
+
+.icon-wrapper {
+  width: 50px;
+  height: 50px;
+  float: left;
+}
+
 /** For Autocomplete forms **/
 
 ul {
