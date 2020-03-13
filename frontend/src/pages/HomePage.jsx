@@ -36,8 +36,9 @@ class HomePage extends React.Component {
     if (window.initialData.logged_in === `True`) { loggedIn = true }
 
     if (window.initialData.has_just_logged_out === `True`) { 
-      alert("You have been logged out of UCL API. However, you are still logged in to "
-        + "other UCL services. To log out completely, please close your web browser.")
+      // TODO: Decide on a way to let user know they have not been properly logged out
+      //alert("You have been logged out of UCL API. However, you are still logged in to "
+      //  + "other UCL services. To log out completely, please close your web browser.")
     }
 
     this.state = {
