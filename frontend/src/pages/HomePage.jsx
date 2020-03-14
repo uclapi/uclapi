@@ -4,11 +4,6 @@ import 'Styles/common/uclapi.scss'
 // Legacy
 import 'Styles/navbar.scss'
 
-// External dependencies
-import Collapse, { Panel } from 'rc-collapse'
-import React from 'react'
-import ReactDOM from 'react-dom'
-
 // Images
 import docs from 'Images/home-page/docs.svg'
 import heart from 'Images/home-page/heart.svg'
@@ -17,15 +12,22 @@ import star from 'Images/home-page/star.svg'
 import uclassistantmarket from 'Images/home-page/uclassistantmarket.png'
 import { endpoints, FAQ } from 'Layout/data/homepage_constants.jsx'
 // Components
-import { ButtonView, CardView, Column, Demo, Footer, ImageView, NavBar, Row, Container, TextView } from 'Layout/Items.jsx'
-
-const questionandanswer = (question, answer) => (
-  <Collapse>
-    <Panel header={question} showArrow>
-      <TextView text={answer} heading={`p`} />
-    </Panel>
-  </Collapse>
-)
+import {
+  ButtonView,
+  CardView,
+  Column,
+  Container,
+  Demo,
+  Footer,
+  ImageView,
+  NavBar,
+  Row,
+  TextView,
+} from 'Layout/Items.jsx'
+// External dependencies
+import Collapse, { Panel } from 'rc-collapse'
+import React from 'react'
+import ReactDOM from 'react-dom'
 
 class HomePage extends React.Component {
 
@@ -68,8 +70,17 @@ class HomePage extends React.Component {
         {host == `staging.ninja` && (
           <Container isPadded styling='warning-red'>
             <Row width='9-10' horizontalAlignment={`center`} >
-              <TextView align={`center`} text={`Warning! This is our bleeding-edge staging environment, and therefore performance, accuracy and reliability of the API cannot be guaranteed. For our stable, supported API please go to:`} heading={1} />
-              <TextView align={`center`} text={`uclapi.com`} heading={2} link={`https://uclapi.com`} />
+              <TextView
+                align={`center`}
+                text={`Warning! This is our bleeding-edge staging environment. Performance, accuracy and reliability of the API cannot be guaranteed. For our stable, supported API please go to:`}
+                heading={1}
+              />
+              <TextView
+                align={`center`}
+                text={`uclapi.com`}
+                heading={2}
+                link={`https://uclapi.com`}
+              />
             </Row>
           </Container>
         )}
@@ -77,14 +88,22 @@ class HomePage extends React.Component {
         {/* API Landing page */}
 
         <Container height='600px' styling='splash-parallax'>
-          <Row width='2-3' 
-            horizontalAlignment='center' 
+          <Row width='2-3'
+            horizontalAlignment='center'
             verticalAlignment='center'
             alignItems='column'
           >
-            <TextView text={`UCL API`} heading={1} align={`center`} />
-            <TextView text={`UCL API is a student-built platform for student developers to improve the student experience of everyone at UCL.`} heading={2} align={`center`} />
-            
+            <TextView
+              text={`UCL API`}
+              heading={1}
+              align={`center`}
+            />
+            <TextView
+              text={`UCL API is a student-built platform for student developers to improve the student experience of everyone at UCL.`}
+              heading={2}
+              align={`center`}
+            />
+
             <ButtonView text={startLabel} link={`/dashboard`} centred />
             <ButtonView text={`DOCS`} link={`/docs`} type={`alternate`} centred />
           </Row>
@@ -101,7 +120,7 @@ class HomePage extends React.Component {
           >
             <Column width='1-3'>
               <TextView text={`Make Simple Interfaces`} heading={2} align={`center`} />
-              <TextView text={`The endpoints are streamlined to enable any developer to easily pick up and use the api. We hope that developers of all ability
+              <TextView text={`The endpoints are streamlined to enable any developer to easily pick up and use the API. We hope that developers of all ability
                             find our endpoints and website easy to navigate. We do not want to overcomplicate the process of developing
                             awesome apps, we want to be the easiest part of your development process!`}
                 align={`justify`}
@@ -127,29 +146,43 @@ class HomePage extends React.Component {
                 align={`justify`}
                 heading={5}
               />
-              <ImageView src={heart} width={iconsize} height={iconsize} description={`an icon of a star`} centred />
+              <ImageView
+                src={heart}
+                width={iconsize}
+                height={iconsize}
+                description={`an icon of a star`}
+                centred
+              />
             </Column>
           </Row>
         </Container>
 
-      {/* API Endpoints */}
+        {/* API Endpoints */}
 
-        <Container styling='splash-parallax' heading="Get Started using our APIs">
+        <Container
+          styling='splash-parallax'
+          heading="Get Started using our APIs"
+        >
           <Row width='2-3'
             horizontalAlignment='center'
             maxWidth='1000px'
             className="Row-horizontal"
           >
-            {endpoints.map((x, key) => (
-              <CardView width={`1-2`} link={x.link} key={key} >
+            {endpoints.map(({ name, link, description }) => (
+              <CardView width={`1-2`} link={link} key={link} >
                 <Container height='100px' style={{ padding: `20px 0` }} >
-                  <Row width='2-3' 
-                    horizontalAlignment='center' 
+                  <Row width='2-3'
+                    horizontalAlignment='center'
                     verticalAlignment='center'
                     alignItems='column'
                   >
-                    <TextView text={x.name} heading={2} align={`center`} />
-                    <TextView text={x.description} heading={5} align={`center`} noMargin />
+                    <TextView text={name} heading={2} align={`center`} />
+                    <TextView
+                      text={description}
+                      heading={5}
+                      align={`center`}
+                      noMargin
+                    />
                   </Row>
                 </Container>
               </CardView>))}
@@ -161,65 +194,86 @@ class HomePage extends React.Component {
         <Demo />
 
         {/* Blog */}
-        
+
         <Container styling='splash-parallax' heading="Check out our blog">
-          <Row width='9-10' horizontalAlignment='center' className="Row-horizontal">
-            {articles.map(x => (
-              <CardView 
-                width='1-3'
-                link={x.url} 
-                key={x.link} 
-                style={{ padding: 0 }}
-              >
-                <Row width='1-1'>
-                  <Container height='200px'
-                    style={{
-                      backgroundSize: `Cover`,
-                      overflow: `hidden`,
-                    }}
-                    noPadding
-                  >
-                    <Row width='1-1' 
-                      horizontalAlignment='center' 
-                      verticalAlignment='center'
+          <Row
+            width='9-10'
+            horizontalAlignment='center'
+            className="Row-horizontal"
+          >
+            {articles.map(({
+              url, image_url: imageURL, title, creator, published,
+            }) => (
+                <CardView
+                  width='1-3'
+                  link={url}
+                  key={url}
+                  style={{ padding: 0 }}
+                >
+                  <Row width='1-1'>
+                    <Container height='200px'
+                      style={{
+                        backgroundSize: `Cover`,
+                        overflow: `hidden`,
+                      }}
+                      noPadding
                     >
-                      <div className="animate-image">
-                        <ImageView src={x.image_url == `url_not_found` ? placeholder : x.image_url}
+                      <Row width='1-1'
+                        horizontalAlignment='center'
+                        verticalAlignment='center'
+                      >
+                        <div className="animate-image">
+                          <ImageView
+                            src={
+                              imageURL == `url_not_found`
+                                ? placeholder
+                                : imageURL
+                            }
+                            style={{
+                              display: `block`,
+                              width: `100%`,
+                              height: `200px`,
+                              objectFit: `cover`,
+                            }}
+                            description={title + ` background`}
+                            centred
+                          />
+                        </div>
+                        <TextView text={title}
+                          align={`center`}
+                          heading={3}
+                          color={`white`}
                           style={{
-                            display: `block`,
                             width: `100%`,
-                            height: `200px`,
-                            objectFit: `cover`,
+                            position: `absolute`,
+                            top: `85px`,
                           }}
-                          description={x.title + ` background`}
-                          centred
                         />
-                      </div>
-                      <TextView text={x.title}
-                        align={`center`}
-                        heading={3}
-                        color={`white`}
-                        style={{
-                          width: `100%`,
-                          position: `absolute`,
-                          top: `85px`,
-                        }}
-                      />
-                    </Row>
-                  </Container>
-                  <Container color='transparent'>
-                    <Row width='1-1' 
-                      horizontalAlignment='center' 
-                      verticalAlignment='center'
-                      alignItems='column'
-                    >
-                      <TextView text={x.creator} align={`center`} heading={6} color={`white`} />
-                      <TextView text={x.published.substring(0, 16)} align={`center`} heading={6} color={`white`} />
-                    </Row>
-                  </Container>
-                </Row>
-              </CardView>
-            ))}
+                      </Row>
+                    </Container>
+                    <Container color='transparent'>
+                      <Row width='1-1'
+                        horizontalAlignment='center'
+                        verticalAlignment='center'
+                        alignItems='column'
+                      >
+                        <TextView
+                          text={creator}
+                          align={`center`}
+                          heading={6}
+                          color={`white`}
+                        />
+                        <TextView
+                          text={published.substring(0, 16)}
+                          align={`center`}
+                          heading={6}
+                          color={`white`}
+                        />
+                      </Row>
+                    </Container>
+                  </Row>
+                </CardView>
+              ))}
           </Row>
         </Container>
 
@@ -227,8 +281,8 @@ class HomePage extends React.Component {
 
         <Container styling="secondary" >
           <Row width="2-3" horizontalAlignment="center">
-            <Column 
-              width="1-2" 
+            <Column
+              width="1-2"
               className="default"
             >
               <ImageView src={uclassistantmarket} width="367px" height="405px" description="ucl asssitant screen shot" />
@@ -262,17 +316,21 @@ class HomePage extends React.Component {
 
         {/* FAQ */}
 
-        <Container 
-          styling='splash-parallax' 
+        <Container
+          styling='splash-parallax'
           heading='Frequently asked questions'
         >
-          <Row 
-            width='2-3' 
+          <Row
+            width='2-3'
             horizontalAlignment='center'
             alignItems='column'
           >
-            {FAQ.map(x => (
-              questionandanswer(x.question, x.answer)
+            {FAQ.map(({ question, answer }) => (
+              <Collapse key={question}>
+                <Panel header={question} showArrow>
+                  <TextView text={answer} heading={`p`} />
+                </Panel>
+              </Collapse>
             ))}
           </Row>
         </Container>

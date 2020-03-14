@@ -2,10 +2,9 @@
 // remove this ^ when ready to add prop-types
 
 // React
-import React from 'react'
-
 // Column for sizing
 import { Column } from 'Layout/Items.jsx'
+import React from 'react'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -40,13 +39,13 @@ export default class CardView extends React.Component {
       containerWidth: -1,
       className: ``,
       style: {},
-      containerStyle: {}
+      containerStyle: {},
     }
   }
 
   render() {
     const { className, style, containerStyle } = this.state
-    const { children, link, fakeLink, type, width, minWidth='unset', keepInline } = this.props
+    const { children, link, fakeLink, type, width, minWidth = `unset`, keepInline } = this.props
 
     if (this.DEBUGGING) { console.log(`DEBUG: CardView rendered with the following styles: ` + type + ` and class: ` + className) }
 
@@ -55,7 +54,12 @@ export default class CardView extends React.Component {
     // RENDER METHOD
     if (doesLinkRoute) {
       return (
-        <Column width={width} minWidth={minWidth} style={containerStyle} keepInline={keepInline}>
+        <Column
+          width={width}
+          minWidth={minWidth}
+          style={containerStyle}
+          keepInline={keepInline}
+        >
           <a className={className} href={link} style={style}>
             {children}
           </a>
@@ -77,7 +81,7 @@ export default class CardView extends React.Component {
     const styling = typeof type === `undefined` ? `default` : type
 
     let className = `uclapi-card uclapi-card-` + styling
-    let style = {
+    const style = {
       ...propsStyle,
     }
     let containerStyle = {

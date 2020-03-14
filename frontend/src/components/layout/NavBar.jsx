@@ -3,15 +3,14 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import posed from 'react-pose'
 
+import about from '../../images/navbar/about.svg'
+import dashboard from '../../images/navbar/dashboard.svg'
+import docs from '../../images/navbar/docs.svg'
+import market from '../../images/navbar/market.svg'
 // Images
 import menu from '../../images/navbar/menu.svg'
-import logo from './../../images/simpleAPILogoWhite.svg'
-
 import settings from '../../images/navbar/settings.svg'
-import about from '../../images/navbar/about.svg'
-import docs from '../../images/navbar/docs.svg'
-import dashboard from '../../images/navbar/dashboard.svg'
-import market from '../../images/navbar/market.svg' 
+import logo from './../../images/simpleAPILogoWhite.svg'
 // Components
 import Link from './Link.jsx'
 
@@ -58,7 +57,7 @@ const SlideDown = posed.div({
 
 class NavBar extends React.Component {
   static propTypes = {
-    isScroll: PropTypes.boolean,
+    isScroll: PropTypes.bool,
   }
 
   constructor(props) {
