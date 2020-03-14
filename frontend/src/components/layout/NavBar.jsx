@@ -3,8 +3,13 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import posed from 'react-pose'
 
+import about from '../../images/navbar/about.svg'
+import dashboard from '../../images/navbar/dashboard.svg'
+import docs from '../../images/navbar/docs.svg'
+import market from '../../images/navbar/market.svg'
 // Images
 import menu from '../../images/navbar/menu.svg'
+import settings from '../../images/navbar/settings.svg'
 import logo from './../../images/simpleAPILogoWhite.svg'
 // Components
 import Link from './Link.jsx'
@@ -13,27 +18,27 @@ const links = [
   {
     name: `settings`,
     link: `/oauth/myapps`,
-    src: `settings`,
+    src: settings,
   },
   {
     name: `about`,
     link: `/about`,
-    src: `about`,
+    src: about,
   },
   {
     name: `documentation`,
     link: `/docs`,
-    src: `docs`,
+    src: docs,
   },
   {
     name: `dashboard`,
     link: `/dashboard`,
-    src: `dashboard`,
+    src: dashboard,
   },
   {
     name: `marketplace`,
     link: `/marketplace`,
-    src: `market`,
+    src: market,
   },
 ]
 
@@ -52,13 +57,13 @@ const SlideDown = posed.div({
 
 class NavBar extends React.Component {
   static propTypes = {
-    isScroll: PropTypes.boolean,
+    isScroll: PropTypes.bool,
   }
 
   constructor(props) {
     super(props)
 
-    this.DEBUGGING = true
+    this.DEBUGGING = false
 
     const { isScroll } = this.props
 
@@ -73,7 +78,7 @@ class NavBar extends React.Component {
 
     const { isMenuHidden } = this.state
     this.setState({
-      isMenuHidden,
+      isMenuHidden: !isMenuHidden,
     })
   }
   handleClick = (event) => {
@@ -154,7 +159,11 @@ class NavBar extends React.Component {
         <a href={`/`}>
           <img src={logo} />
         </a>
-        <div className="logoTextWhite"><div>UCL API</div></div>
+        <a href={`/`} style={{ textDecoration: `none` }} >
+          <div className="logoTextWhite">
+            UCL API
+          </div>
+        </a>
 
         <div className="link-titles">
           {!isSmall ? (

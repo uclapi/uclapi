@@ -2,17 +2,17 @@
 // remove this ^ when ready to add prop-types
 
 import React from 'react'
-
 /**
+
 REQUIRED ATTRIBUTES:
-this.props.styling ( styling types 'warning red' - red, 'splash-parallex' - primary color background, 'secondary' - dark grey, 'team-parallax' - hackathon scroll bg )
-                OR / AND
-this.props.src (pass an image to overlay in the backgorund of the row)
+this.props.width (1-3 => 1/3 width of a row)
 
 OPTIONAL ATTRIBUTES:
-this.props.height (manually set the height over what the contents)
-this.props.style (An array of styles to add to the component)
-this.props.noPadding (Removes the default padding of 50px)
+this.props.horizontalAlignment (left / center / right)
+this.props.verticalALignment (top / center / bottom) => Row Height must be set otherwise weird behaviour
+this.props.textAlign (like the normal inline tag)
+this.props.style (array of extra stylings)
+this.props.alignItems (which way to orientate items => default is row; Takes value of row or column)
 
 **/
 export default class Row extends React.Component {
@@ -20,78 +20,168 @@ export default class Row extends React.Component {
   constructor(props) {
     super(props)
 
-    this.DEBUGGING = false
-    this.DEFAULT_COLOR = `transparent`
+    this.UNSET_ERROR_WIDTH = `0px`
+    this.DEBUGGING = true
+    this.HORIZONTAL_PADDING = 2 + 2
 
-    this.updateStyling = this.updateStyling.bind(this)
-  }
+    if (typeof this.props.width == `undefined`) { console.log(`EXCEPTION: Column.constructor: no width defined`) }
 
-  updateStyling() {
-    this.class = `row`
-    this.style = {}
-
-    const { style } = this.props
-
-    if (style) { 
-      this.style = { ...style } 
-      if(this.DEBUGGING) {console.log(style) }
+    this.state = {
+      style: {},
+      verticalAlignment: `no-vertical-align`,
     }
-
-    this.setTheme()
   }
 
   render() {
-    this.updateStyling()
-
-    const className = this.class
-    const style = this.style
-
+    const { verticalAlignment, style } = this.state
     const { children } = this.props
 
     return (
-      <div className={className} style={style}>
-        {children}
+      <div className={verticalAlignment} >
+        <div className={`row`} style={style} >
+          {children}
+        </div>
       </div>
     )
   }
 
-  setStyleKeyValuePair = (key, value) => {
-    this.style[key] = value
-    if (this.DEBUGGING) { console.log(`DEBUG: ` + key + ` updated to: ` + value) }
+  refresh = () => {
+    const { style: propsStyle } = this.props
+    let style = { ...propsStyle }
+
+    style = this.setTheme(style)
+
+    this.setState({ style: { ...style } })
   }
 
-  setTheme = () => {
+  componentDidUpdate(prevProps) {
+    for (const index in prevProps) {
+      if (prevProps[index] !== this.props[index]) {
+        this.refresh()
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.refresh()
+  }
+
+  setTheme = (style) => {
+    const { horizontalAlignment, verticalAlignment, textAlign, alignItems } = this.props
+
     // REQUIRED ATTRIBUTES
-    // Either given a color or src
-    this.setupBackground()
-
-    const { noPadding, height } = this.props
-
-    // Override for padding
-    if (!noPadding) { this.class += ` vertical-padding` }
+    // Set the width and padding of the column
+    style = this.setColumnWidthAndPadding(style)
 
     // OPTIONAL ATTRIBUTES
-    // Height of container
-    if (height) { this.setStyleKeyValuePair(`height`, height) }
+    // Aligns the items in the specified direction
+    if (alignItems) {
+      style = {
+        ...style,
+        flexDirection: alignItems,
+      }
+    }
+    // Handles horizontal alignment
+    if (horizontalAlignment) { style = this.setHorizontalAlignment(style) }
+    // Handles vertical alignment
+    if (verticalAlignment) { style = this.setVerticalAlignment(style) }
+    // Handles the text alignment
+    if (textAlign) {
+      style = {
+        ...style,
+        textAlign: textAlign,
+      }
+    }
+
+    return style
   }
 
-  setupBackground = () => {
-    if (this.DEBUGGING) { console.log(`Row.setupBackground: DEBUG Background color / src is : ` + this.props.styling + ` / ` + this.props.src) }
+  setVerticalAlignment = (style) => {
+    switch (this.props.verticalAlignment) {
+      case `top`:
+        // Stub needs implementing
+        break
 
-    const { styling, src } = this.props
-    if (styling) { this.class += ` ` + styling }
+      case `center`:
+        this.setState({ verticalAlignment: `vertical-align center-y` })
+        style = {
+          ...style,
+          height: `100%`,
+        }
+        break
 
-    if (src) {
-      this.setStyleKeyValuePair(`backgroundImage`, `url(${src})`)
-      
-      this.setStyleKeyValuePair(`backgroundPosition`, `50%`)
-      this.setStyleKeyValuePair(`backgroundRepeat`, `no-repeat`)
+      case `bottom`:
+        this.setState({
+          verticalAlignment: `vertical-align bottom-y`,
+        })
+        break
+    }
+    return style
+  }
+
+  setHorizontalAlignment = (style) => {
+    switch (this.props.horizontalAlignment) {
+      case `left`:
+        style = {
+          ...style,
+          float: `left`,
+        }
+        break
+
+      case `center`:
+        style = {
+          ...style,
+          marginLeft: `auto`,
+          marginRight: `auto`,
+        }
+        break
+
+      case `right`:
+        style = {
+          ...style,
+          float: `right`,
+        }
+        break
+    }
+    return style
+  }
+
+  getColumnWidth = () => {
+    const { width } = this.props
+    if (typeof width == `undefined`) { console.log(`EXCEPTION: no width set for column so setting column width to 0`); return 0 }
+
+    const buffer = width.split(`-`)
+
+    const fraction = buffer[0] / buffer[1]
+
+    const paddingSpace = 0
+
+    const spaceForColumns = 100 - paddingSpace
+
+    const percentage = spaceForColumns * fraction
+    return percentage + `%`
+  }
+
+  setColumnWidthAndPadding = (style) => {
+    style = {
+      ...style,
+      width: this.getColumnWidth(),
     }
 
-    if (typeof styling == `undefined` && typeof src == `undefined`) {
-      console.log(`Row.setupBackground: EXCEPTION No color or source set for background so resorting to a ` + this.DEFAULT_COLOR + ` background`)
-      this.class += ` ` + this.DEFAULT_COLOR
+    if (this.props.maxWidth) {
+      style = {
+        ...style,
+        maxWidth: this.props.maxWidth,
+      }
     }
+    if (this.props.minWidth) {
+      style = {
+        ...style,
+        minWidth: this.props.minWidth,
+      }
+    }
+
+    return style
   }
 
 }

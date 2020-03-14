@@ -1,12 +1,10 @@
 // UCL API navbar
 import 'Styles/navbar.scss'
 
+import { NavBar } from 'Layout/Items.jsx'
 import React from 'react'
 
-import { NavBar } from 'Layout/Items.jsx'
-
 import GetInvolved from './GetInvolved/GetInvolved.jsx'
-import LanguageTabs from './LanguageTabs.jsx'
 import Welcome from './Meta/Welcome.jsx'
 import Authorise from './Routes/OAuth/Authorise.jsx'
 import OAuthIntro from './Routes/OAuth/OAuthIntro.jsx'
@@ -43,27 +41,43 @@ export default class DocumentationComponent extends React.Component {
       <div>
         <NavBar isScroll={false} />
         <Sidebar />
-        <LanguageTabs>
+        <div className="main">
           <Welcome key={`Welcome`} />
 
-          <SectionHeader key={`SectionHeaderWelcome`} link="oauth" title="OAuth" />
+          <SectionHeader
+            key={`SectionHeaderWelcome`}
+            link="oauth"
+            title="OAuth"
+          />
           <OAuthIntro key={`OAuthIntro`} />
           <Authorise key={`Authorise`} />
           <Token key={`Token`} />
           <UserData key={`UserData`} />
           <StudentNumber key={`StudentNumber`} />
 
-          <SectionHeader link="roombookings" title="Room Bookings" key={`SectionHeaderRoomBookings`} />
+          <SectionHeader
+            link="roombookings"
+            title="Room Bookings"
+            key={`SectionHeaderRoomBookings`}
+          />
           <GetRooms key={`GetRooms`} />
           <GetBookings key={`GetBookings`} />
           <GetEquiment key={`GetEquiment`} />
           <GetFreeRooms key={`GetFreeRooms`} />
           <Webhooks key={`Webhooks`} />
 
-          <SectionHeader link="search" title="Search" key={`SectionHeaderSearch`} />
+          <SectionHeader
+            link="search"
+            title="Search"
+            key={`SectionHeaderSearch`}
+          />
           <GetPeople key={`GetPeople`} />
 
-          <SectionHeader link="timetable" title="Timetable" key={`SectionHeaderTimetable`} />
+          <SectionHeader
+            link="timetable"
+            title="Timetable"
+            key={`SectionHeaderTimetable`}
+          />
           <GetPersonalTimetable key={`GetPersonalTimetable`} />
           <GetTimetableByModules key={`GetTimetableByModules`} />
           <GetDataDepartments key={`GetDataDepartments`} />
@@ -71,20 +85,32 @@ export default class DocumentationComponent extends React.Component {
           <GetDataCourses key={`GetDataCourses`} />
           <GetDataCoursesModules key={`GetDataCoursesModules`} />
 
-          <SectionHeader link="resources" title="Resources" key={`SectionHeaderResources`} />
+          <SectionHeader
+            link="resources"
+            title="Resources"
+            key={`SectionHeaderResources`}
+          />
           <DesktopAvailability key={`DesktopAvailability`} />
 
-          <SectionHeader link="workspaces" title="Workspaces" key={`SectionHeaderWorkspaces`} />
+          <SectionHeader
+            link="workspaces"
+            title="Workspaces"
+            key={`SectionHeaderWorkspaces`}
+          />
           <WorkspacesGetSurveys key={`WorkspacesGetSurveys`} />
           <WorkspacesGetSensors key={`WorkspacesGetSensors`} />
-          <WorkspacesGetHistoricalTimeData key={`WorkspacesGetHistoricalTimeData`} />
-          <WorkspacesGetLastSensorUpdate key={`WorkspacesGetLastSensorUpdate`} />
+          <WorkspacesGetHistoricalTimeData
+            key={`WorkspacesGetHistoricalTimeData`}
+          />
+          <WorkspacesGetLastSensorUpdate
+            key={`WorkspacesGetLastSensorUpdate`}
+          />
           <WorkspaceGetSensorsSummary key={`WorkspaceGetSensorsSummary`} />
           <WorkspacesGetImage key={`WorkspacesGetImage`} />
           <WorkspacesGetLiveImage key={`WorkspacesGetLiveImage`} />
 
           <GetInvolved key={`GetInvolved`} />
-        </LanguageTabs>
+        </div>
       </div>
     )
   }

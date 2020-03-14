@@ -1,22 +1,32 @@
-require(`dotenv`)
-  .config({
-    path: `../backend/uclapi/.env`,
-  })
+const dotenv = require(`dotenv`)
+const { parsed: env } = dotenv.config({
+  path: `../backend/uclapi/.env`,
+})
 
 const webpack = require(`webpack`)
 const path = require(`path`)
 const UglifyJsPlugin = require(`uglifyjs-webpack-plugin`)
-const MiniCssExtractPlugin = require(`mini-css-extract-plugin`)
 const OptimizeCSSAssetsPlugin = require(`optimize-css-assets-webpack-plugin`)
 const BundleTracker = require(`webpack-bundle-tracker`)
 
 const os = require(`os`)
 
-let entryPointsPathPrefix = `./src/pages`
+const entryPointsPathPrefix = `./src/pages`
 
-const publicPath = process.env.AWS_S3_STATICS === `True`
-  ? `https://${process.env.AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${process.env.AWS_S3_BUCKET_PATH}`
+const {
+  AWS_S3_STATICS,
+  AWS_S3_BUCKET_NAME,
+  AWS_S3_BUCKET_PATH,
+} = process.env
+
+const publicPath = AWS_S3_STATICS === `True`
+  ? `https://${AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${AWS_S3_BUCKET_PATH}`
   : `/static/`
+
+const envKeys = Object.keys(env).reduce((prev, next) => {
+  prev[`process.env.${next}`] = JSON.stringify(env[next])
+  return prev
+}, {})
 
 module.exports = {
   mode: `production`,
@@ -34,15 +44,12 @@ module.exports = {
     },
   },
   plugins: [
+    new webpack.DefinePlugin(envKeys),
     new UglifyJsPlugin({
       sourceMap: true,
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(`production`),
-    }),
-    new MiniCssExtractPlugin({
-      filename: `[name]-[contenthash].css`,
-      chunkFilename: `[id]-[contenthash].css`,
     }),
     new BundleTracker({
       filename: `../backend/uclapi/static/webpack-stats.json`,
@@ -59,9 +66,9 @@ module.exports = {
         },
       },
       {
-        test: /\.scss$/,
+        test: /\.scss|css$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          { loader: `style-loader` },
           { loader: `css-loader` },
           { loader: `sass-loader` },
         ],

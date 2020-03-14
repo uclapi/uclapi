@@ -1,6 +1,4 @@
 // React
-import React from 'react'
-
 // Images
 // Room Buddy
 import roombuddylogo from 'Images/marketplace/roombuddy/logo.png'
@@ -21,6 +19,7 @@ import ucsscr3 from 'Images/marketplace/uclcssa/screenshot_3.png'
 import ucsscr4 from 'Images/marketplace/uclcssa/screenshot_4.png'
 // Common Components
 import { ButtonView, TextView } from 'Layout/Items.jsx'
+import React from 'react'
 
 // Application config
 const roombuddydescription = (
@@ -154,7 +153,7 @@ const uclcssadescription = (
     />
     <TextView heading={`5`}
       text={`
-      Youu can view a live map showing which seats are available on
+      You can view a live map showing which seats are available on
       each floor in the library. You no longer need walk around the
       library hunting for a vacant seat.`}
     />
@@ -232,7 +231,20 @@ export const allApps = {
     "detailedDescription": roombuddydescription,
     "developerContact": `https://github.com/wilhelmklopp`,
     "links": [],
-    "screenshots": [rbscrn1, rbscrn2, rbscrn3],
+    "screenshots": [
+      {
+        name: `Room Buddy`,
+        img: rbscrn1,
+      },
+      {
+        name: `See the free rooms`,
+        img: rbscrn2,
+      },
+      {
+        name: `Navigate to UCL rooms`,
+        img: rbscrn3,
+      },
+    ],
   },
   "uclassistant": {
     "name": `UCL Assistant`,
@@ -254,7 +266,20 @@ export const allApps = {
         "link": `https://apps.apple.com/us/app/ucl-assistant/id1462767418`,
       },
     ],
-    "screenshots": [ucascr1, ucascr2, ucascr3],
+    "screenshots": [
+      {
+        name: `UCL Assistant`,
+        img: ucascr1,
+      },
+      {
+        name: `View your timetable`,
+        img: ucascr2,
+      },
+      {
+        name: `Find study spaces`,
+        img: ucascr3,
+      },
+    ],
   },
   "uclcssa": {
     "name": `CSSA App`,
@@ -276,12 +301,25 @@ export const allApps = {
         "name": `Website`,
         "link": `https://uclcssa.cn/`,
       },
+    ],
+    "screenshots": [
       {
-        "name": `Demo`,
-        "link": `https://uclcssa.cn/timetable/?id=demo`,
+        name: `UCL CSSA`,
+        img: ucsscr1,
+      },
+      {
+        name: `Your profile`,
+        img: ucsscr2,
+      },
+      {
+        name: `Find empty library seats`,
+        img: ucsscr3,
+      },
+      {
+        name: `View your timetable`,
+        img: ucsscr4,
       },
     ],
-    "screenshots": [ucsscr1, ucsscr2, ucsscr3, ucsscr4],
   },
 }
 
