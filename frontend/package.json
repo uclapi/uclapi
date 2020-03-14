@@ -54,7 +54,7 @@
     "js-cookie": "^2.2.1",
     "material-ui": "^0.20.2",
     "prop-types": "^15.7.2",
-    "rc-collapse": "^1.11.7",
+    "rc-collapse": "^1.11.8",
     "react": "^16.12.0",
     "react-autosuggest": "^9.4.3",
     "react-dom": "^16.12.0",
