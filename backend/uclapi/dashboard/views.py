@@ -214,3 +214,29 @@ def home(request):
 @ensure_csrf_cookie
 def documentation(request):
     return render(request, 'documentation.html')
+
+
+@ensure_csrf_cookie
+def warning(request):
+    return render(request, 'warning.html', {
+        'initial_data': {
+            'type': 'logout_incomplete'
+        }
+    })
+
+
+@ensure_csrf_cookie
+def error_404_view(request, exception):
+    return render(request, 'warning.html', {
+        'initial_data': {
+            'type': '404'
+        }
+    })
+
+
+def error_500_view(request):
+    return render(request, 'warning.html', {
+        'initial_data': {
+            'type': '500'
+        }
+    })

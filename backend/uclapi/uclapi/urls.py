@@ -5,33 +5,39 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 Examples:
 Function views
     1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
+    2. Add a URL to urlpatterns:  path('$', views.home, name='home')
 Class-based views
     1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
+    2. Add a URL to urlpatterns:  path('$', Home.as_view(), name='home')
 Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from dashboard.views import documentation, home, about
+from django.urls import path
+from dashboard.views import documentation, home, about, warning, error_404_view, error_500_view
 from marketplace.views import marketplace
-
 
 app_name = "uclapi"
 
+handler404 = error_404_view
+handler500 = error_500_view
+
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^dashboard/', include('dashboard.urls')),
-    url(r'^docs', documentation),
-    url(r'^about', about),
-    url(r'^marketplace', marketplace),
-    url(r'^roombookings/', include('roombookings.urls')),
-    url(r'^oauth/', include('oauth.urls')),
-    url(r'^timetable/', include('timetable.urls')),
-    url(r'^search/', include('search.urls')),
-    url(r'^resources/', include('resources.urls')),
-    url(r'^workspaces/', include('workspaces.urls')),
-    url(r'^$', home),
+    path('admin/', admin.site.urls),
+    path('dashboard/', include('dashboard.urls')),
+    path('docs/', documentation),
+    path('about/', about),
+    path('warning/', warning),
+    path('marketplace/', marketplace),
+    path('roombookings/', include('roombookings.urls')),
+    path('oauth/', include('oauth.urls')),
+    path('timetable/', include('timetable.urls')),
+    path('search/', include('search.urls')),
+    path('resources/', include('resources.urls')),
+    path('workspaces/', include('workspaces.urls')),
+    path('/', home),
+    path('404/', error_404_view),
+    path('500/', error_500_view)
 ]
