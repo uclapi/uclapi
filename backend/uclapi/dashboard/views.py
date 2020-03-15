@@ -240,3 +240,7 @@ def error_500_view(request):
             'type': '500'
         }
     })
+
+
+def custom_page_not_found(request):
+    return error_404_view(request, None)

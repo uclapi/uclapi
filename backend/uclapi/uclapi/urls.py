@@ -22,7 +22,8 @@ from dashboard.views import (
     about,
     warning,
     error_404_view,
-    error_500_view
+    error_500_view,
+    custom_page_not_found
 )
 from marketplace.views import marketplace
 
@@ -45,6 +46,6 @@ urlpatterns = [
     path('resources/', include('resources.urls')),
     path('workspaces/', include('workspaces.urls')),
     path('', home),
-    path('404/', error_404_view),
+    path('404/', custom_page_not_found),
     path('500/', error_500_view)
 ]
