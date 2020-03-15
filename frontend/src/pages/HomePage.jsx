@@ -98,8 +98,14 @@ class HomePage extends React.Component {
               align={`center`}
             />
 
-            <ButtonView text={startLabel} link={`/dashboard`} centred />
-            <ButtonView text={`DOCS`} link={`/docs`} type={`alternate`} centred />
+            <Row width='1-1'
+              horizontalAlignment='center'
+              alignItems='row'
+            >
+              <ButtonView text={startLabel} link={`/dashboard`} />
+              <ButtonView text={`DOCS`} link={`/docs`} type={`alternate`} />
+            </Row>
+
           </Row>
         </Container>
 

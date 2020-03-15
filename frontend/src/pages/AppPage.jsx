@@ -8,18 +8,17 @@ import 'Styles/common/uclapi.scss'
 import 'Styles/navbar.scss'
 import "react-responsive-carousel/lib/styles/carousel.min.css"
 
-// Standard React imports
-import React from 'react'
-import ReactDOM from 'react-dom'
-// External carousel dependency
-import { Carousel } from "react-responsive-carousel"
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
-
 // Grab titles and descriptions of app
 import { allApps } from 'Layout/data/app_pages.jsx'
 // Common Components
-import { ButtonView, CardView, Column, Footer, ImageView, 
-  NavBar, Container, TextView, Row } from 'Layout/Items.jsx'
+import {
+  ButtonView, CardView, Column, Container, Footer, ImageView,
+  NavBar, Row, TextView,
+} from 'Layout/Items.jsx'
+// Standard React imports
+import React from 'react'
+// External carousel dependency
+import { Carousel } from "react-responsive-carousel"
 
 export class AppPage extends React.Component {
   constructor(props) {
@@ -104,19 +103,6 @@ export class AppPage extends React.Component {
             {isMobile ? (
               <>
                 <Container styling='transparent'
-                  height='35px'
-                  style={{ padding: `20px 0 5px 0` }}
-                >
-                  <ButtonView type='alternate'
-                    text='back'
-                    link='/marketplace'
-                    style={{
-                      'float': `left`,
-                      'margin': `10px 0`,
-                    }}
-                  />
-                </Container>
-                <Container styling='transparent'
                   height={`115px`}
                   noPadding
                   style={{
@@ -161,7 +147,7 @@ export class AppPage extends React.Component {
                             type={`alternate`}
                             key={key}
                             centred
-                            style={{width: `100px`}}
+                            style={{ width: `100px` }}
                           />
                         </Row>
                       </Container>
@@ -171,32 +157,7 @@ export class AppPage extends React.Component {
               </>
             ) : (
                 <>
-                  <Container styling='transparent'
-                    height='70px'
-                    style={{ padding: `20px 0 0 0` }}
-                  >
-                    <Row 
-                      width='1-1' 
-                      horizontalAlignment='center'
-                    >
-                      <Column
-                        width='fit-content'
-                        minWidth={iconsize}
-                        typeOfInline='grid'
-                        horizontalAlignment='left'
-                      >
-                        <ButtonView type='alternate'
-                          text='back'
-                          link='/marketplace'
-                          style={{
-                            'float': `left`,
-                            'margin': `10px 0`,
-                          }}
-                        />
-                      </Column>
-                    </Row>
-                  </Container>
-                  <Container styling='transparent' height='140px' noPadding>
+                  <Container styling='transparent' height='140px'>
                     <Row
                       width='1-1'
                       horizontalAlignment='center'
@@ -221,7 +182,10 @@ export class AppPage extends React.Component {
                         width='150px'
                         horizontalAlignment='left'
                         textAlign='left'
-                        style={{ paddingLeft: `20px`, flexDirection: `column` }}
+                        style={{
+                          paddingLeft: `20px`,
+                          flexDirection: `column`,
+                        }}
                       >
                         <TextView text={name} heading={2} align="left" />
                         <TextView text={description} heading={5} align="left" />
@@ -233,9 +197,9 @@ export class AppPage extends React.Component {
                         style={{ "paddingLeft": `20px` }}
                       >
                         {links.map((x, key) => (
-                          <Container 
-                            height="50px" 
-                            noPadding 
+                          <Container
+                            height="50px"
+                            noPadding
                             key={x.name}
                             style={{ minHeight: `unset` }}
                           >
