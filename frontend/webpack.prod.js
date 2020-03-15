@@ -1,5 +1,5 @@
 const dotenv = require(`dotenv`)
-const { parsed: env } = dotenv.config({
+dotenv.config({
   path: `../backend/uclapi/.env`,
 })
 
@@ -23,8 +23,8 @@ const publicPath = AWS_S3_STATICS === `True`
   ? `https://${AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${AWS_S3_BUCKET_PATH}`
   : `/static/`
 
-const envKeys = Object.keys(env).reduce((prev, next) => {
-  prev[`process.env.${next}`] = JSON.stringify(env[next])
+const envKeys = Object.keys(process.env).reduce((prev, next) => {
+  prev[`process.env.${next}`] = JSON.stringify(process.env[next])
   return prev
 }, {})
 
