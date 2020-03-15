@@ -78,6 +78,7 @@ class Warning extends React.Component {
         <NavBar isScroll={false} />
 
         {/* Warning message */}
+
         <Container styling="splash-parallax" height="600px">
           <Row 
             width="2-3"
@@ -85,7 +86,7 @@ class Warning extends React.Component {
             verticalAlignment="center"
           >
             
-            <Column width="1-2">
+            <Column width="1-2" className="default">
               <ImageView src={warning} width="367px" height="405px" description="large exclamation point, warning!" />
             </Column>
 
