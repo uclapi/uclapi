@@ -13,10 +13,17 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path
-from dashboard.views import documentation, home, about, warning, error_404_view, error_500_view
+from dashboard.views import (
+    documentation,
+    home,
+    about,
+    warning,
+    error_404_view,
+    error_500_view
+)
 from marketplace.views import marketplace
 
 app_name = "uclapi"
@@ -37,7 +44,7 @@ urlpatterns = [
     path('search/', include('search.urls')),
     path('resources/', include('resources.urls')),
     path('workspaces/', include('workspaces.urls')),
-    path('/', home),
+    path('', home),
     path('404/', error_404_view),
     path('500/', error_500_view)
 ]
