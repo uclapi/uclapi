@@ -765,7 +765,6 @@ def deauthorise_app(request):
 def logout(request):
     try:
         del request.session['user_id']
-        request.session['has_just_logged_out'] = True
     except KeyError:
         pass
         

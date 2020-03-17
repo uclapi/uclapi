@@ -193,18 +193,11 @@ def about(request):
 @ensure_csrf_cookie
 def home(request):
     logged_in = True
-    has_just_logged_out = False
 
     try:
         request.session["user_id"]
     except KeyError:
         logged_in = False
-
-    try:
-        has_just_logged_out = request.session["has_just_logged_out"]
-        del request.session['has_just_logged_out']
-    except  KeyError:
-        pass
 
 
     articles = get_articles()
@@ -214,8 +207,7 @@ def home(request):
         'initial_data': {
             'temp_token': token,
             'logged_in': str(logged_in),
-            'medium_articles': articles,
-            'has_just_logged_out': str(has_just_logged_out)
+            'medium_articles': articles
         }
     })
 
