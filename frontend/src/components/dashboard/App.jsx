@@ -77,24 +77,30 @@ export default class App extends React.Component {
 		      	</Column>
 		      	<Column width="1-2">
 		          	<Row width="1-1">
-		          		<Column width="1-2">
+						<Column 
+							width="auto" 
+							style={{ padding: `0` }}
+						>
 		          			{cancelIcon(
 					          () => { actions.deleteConfirm(index) },
-					          { float: `right`, marginTop: `40px`, backgroundColor: trashColor }
 					        )}
 		          		</Column>
-		          		<Column width="1-2" alignItems="row">
+						<Column 
+							width="auto" 
+							alignItems="column" 
+							style={{ justifyContent: `unset`, padding: `0` }}
+						>
 		          			<TextView text={`Created: ` + created + ` ago`} heading={6}
-					          align="right" style={styles.dates} />
+					          align="left" style={styles.dates} color="white" />
 					        <TextView text={`Updated: ` + updated + ` ago`} heading={6}
-					          align="right" style={styles.dates} />
+					          align="left" style={styles.dates} color="white" />
 		          		</Column>
 		          	</Row>
 			    </Column>
 		    </Row>
 		    
 		    <Container styling='transparent' noPadding>
-		      <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
+		      <CardView width='1-1' type="no-bg" style={styles.tokenHolder} noPadding >
 		        <Field
 		          title="API Token: "
 		          content={app.token}
@@ -104,7 +110,7 @@ export default class App extends React.Component {
 		      </CardView>
 		    </Container>
 		    <Container styling='transparent' noPadding>
-		      <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
+		      <CardView width='1-1' type="no-bg" style={styles.tokenHolder} noPadding>
 		        <div className="settings-collapse">
 		          <Collapse>
 		            <Panel header={`OAuth Settings`} showArrow>

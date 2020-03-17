@@ -2,7 +2,7 @@
 import React from 'react'
 
 // Components
-import { TextView } from 'Layout/Items.jsx'
+import { TextView, Container } from 'Layout/Items.jsx'
 import { refreshIcon, editIcon, saveIcon, 
 	cancelIcon, copyIcon } from 'Layout/Icons.jsx'
 
@@ -131,37 +131,50 @@ export default class Field extends React.Component {
 		const { isSaved, fieldRefA, fieldRefB, value, 
 			isEditing} = this.state
 
+		const fieldClass = "field-input"
+		const fieldHeight = "55px"
+
 		return (
 		<>
 			{/*<TextView text={title} color="white" heading={6} align={`left`} />*/}
 			                      
-			<div className="field" onClick={this.toggleEditing}>
-			  <div className={isSmall ? `none` : `tablet default`}>
-			    <input ref={fieldRefA}
-			      type="text"
-			      className="field-input"
-			      readOnly={!isEditing} 
-			      onChange={isEditing ? () => { this.save(false) } : null } 
-			      value={value}
-			    />
-			    {canCopy ? copyIcon(() => { this.copy(true) }) : null}
-			  </div>
-			  <div className={isSmall ? `tablet mobile default` : `mobile`}>
-			    <input ref={fieldRefB}
-			      type="text"
-			      className="field-input"
-			      readOnly={!isEditing} 
-			      onChange={isEditing ? () => { this.save(false) } : null } 
-			      value={value}
-			    />
-			    {canCopy ? copyIcon(() => { this.copy(false) }) : null}
-			  </div>
+			<Container styling="primary" height={fieldHeight} noPadding>
+			  	<div 
+				  className={isSmall ? `none` : `tablet default`} 
+				  onClick={this.toggleEditing} 
+				  style={{ cursor: `pointer` }}
+				>
+					<input ref={fieldRefA}
+					type="text"
+					className={fieldClass}
+					readOnly={!isEditing} 
+					onChange={isEditing ? () => { this.save(false) } : null } 
+					value={value}
+					style={{ height: fieldHeight }}
+					/>
+					{canCopy ? copyIcon(() => { this.copy(true) }) : null}
+			 	</div>
+			  	<div 
+					className={isSmall ? `tablet mobile default` : `mobile`} 
+					onClick={this.toggleEditing} 
+					style={{ cursor: `pointer` }}
+				>
+					<input ref={fieldRefB}
+					type="text"
+					className={fieldClass}
+					readOnly={!isEditing} 
+					onChange={isEditing ? () => { this.save(false) } : null } 
+					value={value}
+					style={{ height: fieldHeight }}
+					/>
+					{canCopy ? copyIcon(() => { this.copy(false) }) : null}
+			  	</div>
 			  
-			  {this.doesExist(onSave) && isEditing ? saveIcon( () => { this.save(true) } ) : null}
-			  {this.doesExist(onSave) && isEditing ? cancelIcon(this.cancel) : null}
-			  {this.doesExist(onSave) && !isEditing ? editIcon(this.toggleEditing) : null}
-			  {this.doesExist(onRefresh) ? refreshIcon(onRefresh) : null}
-			</div>
+				{this.doesExist(onSave) && isEditing ? saveIcon( () => { this.save(true) } ) : null}
+				{this.doesExist(onSave) && isEditing ? cancelIcon(this.cancel) : null}
+				{this.doesExist(onSave) && !isEditing ? editIcon(this.toggleEditing) : null}
+				{this.doesExist(onRefresh) ? refreshIcon(onRefresh) : null}
+			</Container>
 		</>
 		)
 	}

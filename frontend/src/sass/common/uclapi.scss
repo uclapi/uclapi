@@ -526,12 +526,14 @@ input[type="checkbox"] + span {
 }
 
 .field-input {
-  margin-top: 0;
+  margin: unset;
   width: 80%;
   padding: 0 0 0 10px;
   text-align: left;
   background-color: transparent;
   color: white;
+  font-size: 0.8em;
+  font-weight: 100;
 }
 
 .icon-wrapper {
