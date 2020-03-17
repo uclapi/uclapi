@@ -90,7 +90,7 @@
     "eslint-plugin-security": "^1.4.0",
     "eslint-plugin-simple-import-sort": "^5.0.2",
     "eslint-plugin-sonarjs": "^0.5.0",
-    "file-loader": "^5.1.0",
+    "file-loader": "^6.0.0",
     "glob": "^7.1.6",
     "husky": "^4.2.3",
     "lint-staged": "^10.0.8",
