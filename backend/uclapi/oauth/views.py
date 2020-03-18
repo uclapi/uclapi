@@ -768,5 +768,5 @@ def logout(request):
     except KeyError:
         pass
         
-    response = redirect('/', )
+    response = redirect('/warning', )
     return response
