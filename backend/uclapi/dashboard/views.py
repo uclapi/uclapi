@@ -199,7 +199,6 @@ def home(request):
     except KeyError:
         logged_in = False
 
-
     articles = get_articles()
     token = get_temp_token()
 
