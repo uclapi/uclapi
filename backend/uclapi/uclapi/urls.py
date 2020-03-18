@@ -25,6 +25,7 @@ from dashboard.views import (
     error_500_view,
     custom_page_not_found
 )
+from oauth.views import settings, logout
 from marketplace.views import marketplace
 
 app_name = "uclapi"
@@ -37,6 +38,8 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('docs/', documentation),
     path('about/', about),
+    path('settings/', settings),
+    path('logout/', logout),
     path('warning/', warning),
     path('marketplace/', marketplace),
     path('roombookings/', include('roombookings.urls')),
