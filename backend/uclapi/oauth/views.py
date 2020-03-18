@@ -663,10 +663,8 @@ def settings(request):
     except KeyError:
         # Build Shibboleth callback URL
         url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
-        param = urllib.parse.urljoin(
-            request.build_absolute_uri(request.path),
-            "/oauth/myapps/shibcallback"
-        )
+        param = (request.build_absolute_uri(request.path) +
+            "user/login.callback")
         param = quote(param)
         url = url + param
 
@@ -768,5 +766,5 @@ def logout(request):
     except KeyError:
         pass
         
-    response = redirect('/warning', )
+    response = redirect('/', )
     return response
