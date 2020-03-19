@@ -586,7 +586,7 @@ def get_student_number(request, *args, **kwargs):
 
 
 @csrf_exempt
-def myapps_shibboleth_callback(request):
+def settings_shibboleth_callback(request):
     # should auth user login or signup
     # then redirect to my apps homepage
 
@@ -766,5 +766,5 @@ def logout(request):
     except KeyError:
         pass
         
-    response = redirect('/', )
+    response = redirect('/warning', )
     return response
