@@ -102,7 +102,7 @@ class SettingsLayout extends React.Component {
                 >
                   <ButtonView
                     type="alternate"
-                    link={`\logout`}
+                    link={`/logout`}
                     text={`Logout`}
                     style={{
                       float: `right`,
