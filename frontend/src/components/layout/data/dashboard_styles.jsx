@@ -1,14 +1,4 @@
 export const styles = {
-  baseText: {
-    color: `white`,
-    fontWeight: `300`,
-  },
-  titleText: {
-    color: `white`,
-    fontWeight: `300`,
-    margin: `4px 0 0 0`,
-    float: `left`,
-  },
   oauthTitles: {
     color: `white`,
     fontWeight: `300`,

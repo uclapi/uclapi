@@ -10,13 +10,15 @@ import { Row, TextView } from 'Layout/Items.jsx'
 /**
 REQUIRED ATTRIBUTES:
 this.props.styling ( styling types 'warning red' - red, 'splash-parallex' - primary color background, 'secondary' - dark grey, 'team-parallax' - hackathon scroll bg )
-                OR / AND
 this.props.src (pass an image to overlay in the backgorund of the row)
 
 OPTIONAL ATTRIBUTES:
-this.props.height (manually set the height over what the contents)
 this.props.style (An array of styles to add to the component)
+this.props.onClick (An onClick function)
+this.props.className (A class name for the row)
+
 this.props.noPadding (Removes the default padding of 50px)
+this.props.height (manually set the height over what the contents)
 
 **/
 export default class Container extends React.Component {
@@ -47,13 +49,13 @@ export default class Container extends React.Component {
   render() {
     this.updateStyling()
 
-    const className = this.class
+    const { children, heading, onClick, className: propsClassName } = this.props
+
+    const className = this.class + " " + propsClassName
     const style = this.style
 
-    const { children, heading } = this.props
-
     return (
-      <div className={className} style={style}>
+      <div className={className} style={style} onClick={onClick}>
         {heading ? (
           <Row width='1-1' horizontalAlignment='center' maxWidth='1000px' minWidth='300px'>
             <TextView text={heading} heading={1} align={`center`} style={{ margin: `5px auto` }} />

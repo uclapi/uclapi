@@ -121,12 +121,10 @@ class Dashboard extends React.Component {
             <TextView text={`Welcome, ` + name}
               heading={1}
               align={`left`}
-              style={styles.baseText}
             />
             <TextView text={`Your username is: ` + cn}
               heading={2}
               align={`left`}
-              style={styles.lightText}
             />
 
             <div className="app-holder" style={styles.appHolder}>

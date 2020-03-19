@@ -361,7 +361,6 @@ a:hover { color: $color-grey-light; }
   border-radius: 10px;
   margin: 5px 0;
   color: $color-white;
-  font-size: 28px;
   box-shadow: 0 4px 8px 0 $color-black-transparent-02;
 
   @media screen and (max-width: $break-small) {
@@ -445,31 +444,6 @@ a:hover { color: $color-grey-light; }
   border-radius: 0 0 3px 3px;
 }
 
-.settings-collapse {
-  .rc-collapse {
-    box-shadow: unset;
-    font-size: unset;
-
-    .rc-collapse-content {
-      padding: 0;
-
-      .rc-collapse-content-box {
-        border-top: unset;
-      }
-    }
-
-    .rc-collapse-item {
-      .rc-collapse-header {
-        font-size: 1.17em;
-        text-align: left;  
-        padding: 10px 0;
-        font-weight: 300;
-        border-bottom: 1px solid $color-white-transparent-0455;
-      }
-    }
-  }
-}
-
 /** Input Forms **/
 
 input {
@@ -516,30 +490,36 @@ input[type="checkbox"] + span {
   margin-right: 4px;
 }
 
-.field {
-  background-color: #3498db;
+.field-container-editing,
+.field-container-not-editing,
+.field-container-uneditable {
   height: 50px;
   float: left;
-  padding-right: 10px;
   width: 100%;
   transition: background-color 0.2s;
 }
+.field-container-editing { background-color: #22638f; cursor: unset; }
+.field-container-not-editing { background-color: #3498db; cursor: pointer; }
+.field-container-uneditable { background-color: #6cb8eb; cursor: unset; }
 
-.field-input {
+.field-input-editing,
+.field-input-not-editing,
+.field-input-uneditable {
   margin: unset;
-  width: 80%;
   padding: 0 0 0 10px;
   text-align: left;
   background-color: transparent;
   color: white;
-  font-size: 0.8em;
-  font-weight: 100;
+  width: fit-content;
 }
+.field-input-editing { cursor: unset; }
+.field-input-uneditable { cursor: unset; }
+.field-input-not-editing { cursor: pointer; }
 
 .icon-wrapper {
   width: 50px;
   height: 50px;
-  float: left;
+  float: right;
 }
 
 /** For Autocomplete forms **/
@@ -711,20 +691,14 @@ div.uclapi-card-github {
 
 /** Specific dashboard stylings **/
 
-.app-holder {
+.app-holder,
+.settings-collapse {
   .rc-collapse {
     background-color: $color-grey-dark;
     
-    .rc-collapse-header,
-    .settings-collapse .rc-collapse .rc-collapse-item .rc-collapse-header {
+    .rc-collapse-header {
       color: white;
-      border: none;
       font-family: 'Source Sans Pro', 'Roboto', sans-serif;
-      font-size: 0.7em;
-    }
-
-    .settings-collapse .rc-collapse .rc-collapse-item .rc-collapse-header {
-      padding: 0;
     }
 
     .rc-collapse-content {
@@ -739,6 +713,28 @@ div.uclapi-card-github {
       width: 20px;
       height: 20px;
       display: none;
+    }
+  }
+}
+
+.settings-collapse {
+  .rc-collapse {
+    box-shadow: unset;
+
+    .rc-collapse-content {
+      padding: 0;
+
+      .rc-collapse-content-box {
+        border-top: unset;
+      }
+    }
+
+    .rc-collapse-item {
+      .rc-collapse-header {
+        text-align: left;  
+        padding: 10px 0;
+        border-bottom: 1px dotted rgba(255, 255, 255, 0.455)
+      }
     }
   }
 }

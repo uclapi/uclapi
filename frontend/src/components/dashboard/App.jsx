@@ -76,24 +76,23 @@ export default class App extends React.Component {
 			        />
 		      	</Column>
 		      	<Column width="1-2">
-		          	<Row width="1-1">
+		          	<Row width="auto" style={{ float: `right` }}>
 						<Column 
 							width="auto" 
-							style={{ padding: `0` }}
+							alignItems="column" 
+						>
+		          			<TextView text={`Created: ` + created + ` ago`} heading={5}
+					          align="left" style={styles.dates} color="white" />
+					        <TextView text={`Updated: ` + updated + ` ago`} heading={5}
+					          align="left" style={styles.dates} color="white" />
+		          		</Column>
+						<Column 
+							width="auto" 
+							style={{ padding: `0 0 0 20px` }}
 						>
 		          			{cancelIcon(
 					          () => { actions.deleteConfirm(index) },
 					        )}
-		          		</Column>
-						<Column 
-							width="auto" 
-							alignItems="column" 
-							style={{ justifyContent: `unset`, padding: `0` }}
-						>
-		          			<TextView text={`Created: ` + created + ` ago`} heading={6}
-					          align="left" style={styles.dates} color="white" />
-					        <TextView text={`Updated: ` + updated + ` ago`} heading={6}
-					          align="left" style={styles.dates} color="white" />
 		          		</Column>
 		          	</Row>
 			    </Column>
@@ -117,9 +116,8 @@ export default class App extends React.Component {
 		              <Container styling='transparent' noPadding>
 		                <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
 		                  <TextView text={`OAuth Credentials: `}
-		                    heading={3}
+		                    heading={4}
 		                    align={`left`} 
-		                    style={styles.oauthTitles}
 		                  />
 		                  <Field
 		                    title="Client ID: "
@@ -142,9 +140,8 @@ export default class App extends React.Component {
 		              <Container styling='transparent' noPadding>
 		                <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
 		                  <TextView text={`OAuth Scopes: `}
-		                    heading={3}
+		                    heading={4}
 		                    align={`left`} 
-		                    style={styles.oauthTitles}
 		                  />
 		                  {app.oauth.scopes.map( (scope, scope_index) => 
 			                  <CheckBox 

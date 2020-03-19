@@ -13,6 +13,7 @@ this.props.verticalALignment (top / center / bottom) => Row Height must be set o
 this.props.textAlign (like the normal inline tag)
 this.props.style (array of extra stylings)
 this.props.alignItems (which way to orientate items => default is row; Takes value of row or column)
+this.props.className (optional class name to give the row in order to apply styles)
 
 **/
 export default class Row extends React.Component {
@@ -38,7 +39,7 @@ export default class Row extends React.Component {
 
     return (
       <div className={verticalAlignment} >
-        <div className={`row`} style={style} >
+        <div className={`row ` + className} style={style} >
           {children}
         </div>
       </div>
