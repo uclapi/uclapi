@@ -378,20 +378,6 @@ a:hover { color: $color-grey-light; }
       padding: 10px 40px;
       font-weight: 600;
       font-size: 20px;
-
-      .arrow {
-        border-bottom: 1px solid transparent;
-        border-left: 1px solid $color-black;
-        border-top: 1px solid transparent;
-        content: '\20';
-        display: inline-block;
-        font-size: 0;
-        height: 0;
-        line-height: 0;
-        margin-right: 8px;
-        vertical-align: middle;
-        width: 0;
-      }
     }
   }
 
@@ -403,13 +389,6 @@ a:hover { color: $color-grey-light; }
     background-color: $primary-color;
     color: $color-white;
     cursor: not-allowed;
-  }
-
-  > .rc-collapse-item-active > .rc-collapse-header .arrow {
-    border-left: 1px solid transparent;
-    border-right: 1px solid transparent;
-    border-top: 1px solid $color-black;
-    margin-right: 6px;
   }
 
 }
@@ -490,16 +469,27 @@ input[type="checkbox"] + span {
   margin-right: 4px;
 }
 
+.title-holder {
+  margin-top: 2%;
+}
+
+.settings-collapse {
+  padding-top: 0;
+}
+
 .field-container-editing,
 .field-container-not-editing,
 .field-container-uneditable {
   height: 50px;
   float: left;
   width: 100%;
+  display: flex;
   transition: background-color 0.2s;
+  box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.5);
 }
 .field-container-editing { background-color: #22638f; cursor: unset; }
 .field-container-not-editing { background-color: #3498db; cursor: pointer; }
+.field-container-not-editing:hover { background-color: #2b7cb3; cursor: pointer; }
 .field-container-uneditable { background-color: #6cb8eb; cursor: unset; }
 
 .field-input-editing,
@@ -510,16 +500,37 @@ input[type="checkbox"] + span {
   text-align: left;
   background-color: transparent;
   color: white;
-  width: fit-content;
 }
 .field-input-editing { cursor: unset; }
 .field-input-uneditable { cursor: unset; }
 .field-input-not-editing { cursor: pointer; }
 
+.field-label {
+  color: black;
+  left: 10px;
+  top: 4px;
+  font-style: italic;
+  position: absolute;
+  font-size: small;
+}
+
 .icon-wrapper {
-  width: 50px;
-  height: 50px;
+  margin: 5px;
+  width: 45px;
+  height: 45px;
   float: right;
+  border-radius: 12px;
+  display: flex;
+  flex: 0 0 45px;
+  cursor: pointer;
+  align-items: center;
+  background-color: $primary-color;
+  transition: background-color 0.2s;
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);
+
+  &:hover {
+    background-color: $primary-highlight-color;
+  }
 }
 
 /** For Autocomplete forms **/
@@ -602,9 +613,6 @@ pre {
   input {
     width: 96%;
     padding: 20px 2%;
-  }
-  .arrow {
-    display: none;
   }
 }
 
@@ -695,6 +703,7 @@ div.uclapi-card-github {
 .settings-collapse {
   .rc-collapse {
     background-color: $color-grey-dark;
+    flex: 0 0 100%;
     
     .rc-collapse-header {
       color: white;
@@ -707,12 +716,6 @@ div.uclapi-card-github {
 
     .rc-collapse-content > .rc-collapse-content-box {
       margin-bottom: 0;
-    }
-
-    > .rc-collapse-item > .rc-collapse-header .arrow {
-      width: 20px;
-      height: 20px;
-      display: none;
     }
   }
 }

@@ -144,6 +144,8 @@ export default class Field extends React.Component {
 				onClick={this.toggleEditing}
 				noPadding
 			>
+				<div className="field-label">{title}</div>
+
 				<input ref={fieldRef}
 					type="text"
 					className={fieldInputClass}

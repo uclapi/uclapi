@@ -20,7 +20,6 @@ export const styles = {
     borderRadius: `0`,
     marginTop: `5px`,
     marginBottom: `5px`,
-    padding: `0 2%`,
   },
   copyableField: {
     marginTop: `0`,

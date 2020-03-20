@@ -4,8 +4,7 @@
 import React from 'react'
 
 // Components
-import { TextView } from 'Layout/Items.jsx'
-
+import { TextView, Container} from 'Layout/Items.jsx'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -67,16 +66,24 @@ export default class CheckBox extends React.Component {
     const { text } = this.props
     const { style, isChecked } = this.state
 
-    return (
-    <div className="field" style={{...styles.field, marginTop: `12px`}}>
-      <span onClick={this.toggleCheck} style={style}>
-        <input disabled type="checkbox" checked={isChecked} />
-        <span style={{ fontSize : `8px` }}>{isChecked ? `✘` : null}</span>
-      </span>
+    const fieldClass = "field-container-not-editing"
+		const fieldHeight = "55px"
 
-      <TextView text={text} heading={5} align={`left`} style={styles.tokenText} /> 
+    return (
+      <Container 
+        className={fieldClass}
+        height={fieldHeight} 
+        onClick={this.toggleCheck}
+        noPadding
+      >
+        <span style={style}>
+          <input disabled type="checkbox" checked={isChecked} />
+          <span style={{ fontSize : `8px` }}>{isChecked ? `✘` : null}</span>
+        </span>
+
+        <TextView text={text} heading={5} align={`left`} style={styles.tokenText} /> 
       
-    </div>
+    </Container>
     )
   }
 

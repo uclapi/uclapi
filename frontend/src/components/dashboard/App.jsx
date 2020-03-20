@@ -11,12 +11,36 @@ import { editIcon, cancelIcon } from 'Layout/Icons.jsx'
 // External dependencies
 import Collapse, { Panel } from 'rc-collapse'
 
-
 /**
 	UI Definition of the app, all of the "actions" should be passed in from
 	the dashboard page and they will do all the heavy lifting whereas this
 	page is only a ui representation
 **/
+
+const arrowPath = 'M869 487.8L491.2 159.9c-2.9-2.5-6.6-3.9-10.5-3.9h-88' +
+  '.5c-7.4 0-10.8 9.2-5.2 14l350.2 304H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.' +
+  '6 8 8 8h585.1L386.9 854c-5.6 4.9-2.2 14 5.2 14h91.5c1.9 0 3.8-0.7 5.' +
+  '2-2L869 536.2c14.7-12.8 14.7-35.6 0-48.4z';
+
+function expandIcon({ isActive }) {
+  return (
+    <i style={{ marginRight: '.5rem' }}>
+      <svg
+        viewBox="0 0 1024 1024"
+        width="1em"
+        height="1em"
+        fill="currentColor"
+        style={{
+          verticalAlign: '-.125em',
+          transition: 'transform .2s',
+          transform: `rotate(${isActive ? 90 : 0}deg)`,
+        }}
+      >
+        <path d={arrowPath} p-id="5827"></path>
+      </svg>
+    </i>
+  );
+}
 
 export default class App extends React.Component {
 	
@@ -63,136 +87,117 @@ export default class App extends React.Component {
 		const trashColor = "red"
 
 		return (
-		<Collapse>
+		<Collapse expandIcon={expandIcon}>
         <Panel header={app.name} showArrow>
-        <Container styling='transparent' noPadding>
-		    <Row width="1-1">
-		      	<Column width="1-2" >
-			        <Field
-			          title="title: "
-			          content={app.name}
-			          onSave={(value) => { actions.saveEditTitle(index, value) }}
-			          isSmall={true}
-			        />
-		      	</Column>
-		      	<Column width="1-2">
-		          	<Row width="auto" style={{ float: `right` }}>
-						<Column 
-							width="auto" 
-							alignItems="column" 
-						>
-		          			<TextView text={`Created: ` + created + ` ago`} heading={5}
-					          align="left" style={styles.dates} color="white" />
-					        <TextView text={`Updated: ` + updated + ` ago`} heading={5}
-					          align="left" style={styles.dates} color="white" />
-		          		</Column>
-						<Column 
-							width="auto" 
-							style={{ padding: `0 0 0 20px` }}
-						>
-		          			{cancelIcon(
-					          () => { actions.deleteConfirm(index) },
-					        )}
-		          		</Column>
-		          	</Row>
-			    </Column>
-		    </Row>
-		    
-		    <Container styling='transparent' noPadding>
-		      <CardView width='1-1' type="no-bg" style={styles.tokenHolder} noPadding >
-		        <Field
-		          title="API Token: "
-		          content={app.token}
-		          canCopy
-		          onRefresh={ () => { actions.regenToken(index) } }
-		        />
-		      </CardView>
-		    </Container>
-		    <Container styling='transparent' noPadding>
-		      <CardView width='1-1' type="no-bg" style={styles.tokenHolder} noPadding>
-		        <div className="settings-collapse">
-		          <Collapse>
-		            <Panel header={`OAuth Settings`} showArrow>
-		              <Container styling='transparent' noPadding>
-		                <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
-		                  <TextView text={`OAuth Credentials: `}
-		                    heading={4}
-		                    align={`left`} 
-		                  />
-		                  <Field
-		                    title="Client ID: "
-		                    content={app.oauth.client_id}
-		                    canCopy
-		                  />
-		                  <Field
-		                    title="Client Secret: "
-		                    content={app.oauth.client_secret}
-		                    canCopy
-		                  />
-		                  <Field
-		                    title="Callback Url: "
-		                    content={app.oauth.callback_url == '' ? 'https://' : app.oauth.callback_url}
-		                    canCopy
-		                    onSave={(value) => { actions.saveOAuthCallback(index, value) }}
-		                  />
-		                </CardView>
-		              </Container>
-		              <Container styling='transparent' noPadding>
-		                <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
-		                  <TextView text={`OAuth Scopes: `}
-		                    heading={4}
-		                    align={`left`} 
-		                  />
-		                  {app.oauth.scopes.map( (scope, scope_index) => 
-			                  <CheckBox 
-			                    text={scope.name}
-			                    isChecked={scope.enabled}
-			                    onClick={(value) => { actions.setScope(index, scope_index, value) } }
-			                    style={{ float: `left`, margin: `12px 10px 0 10px` }}
-			                  />
-		                  )}
-		                </CardView>
-		              </Container>
-		            </Panel>
-		            <Panel header={`Webhook Settings`} showArrow>
-		              <Container styling='transparent' noPadding>
-		                <CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
-		                  <Field
-		                    title="Verification Secret: "
-		                    content={app.webhook.verification_secret}
-		                    canCopy
-		                    onRefresh={() => { actions.regenVerificationSecret(index) }}
-		                  />
-		                  <Field
-		                    title="Webhook URL: "
-		                    content={app.webhook.url=='' ? 'https://' : app.webhook.url}
-		                    onSave={(value) => { actions.webhook.saveURL(index, value) } }
-		                  />
-		                  <Field
-		                    title="'siteid' (optional):"
-		                    content={app.webhook.siteid}
-		                    onSave={(value) => { actions.webhook.saveSiteID(index, value) }}
-		                  />
-		                  <Field
-		                    title="'roomid' (optional):"
-		                    content={app.webhook.roomid}
-		                    onSave={(value) => { actions.webhook.saveRoomID(index, value) }}
-		                  />
-		                  <Field
-		                    title="Contact (optional):"
-		                    content={app.webhook.contact}
-		                    onSave={(value) => { actions.webhook.saveContact(index, value) }}
-		                  />
-		                </CardView>
-		              </Container>
-		            </Panel>
-		          </Collapse>
-		        </div>
-		      </CardView>
-		    </Container>
-		
 
-        </Container>
+			<Container styling='transparent' noPadding>
+				<Row width="1-1">
+					<Column 
+						width="1-1" 
+						className="title-holder"
+					>
+						<Field
+						title="Title: "
+						content={app.name}
+						onSave={(value) => { actions.saveEditTitle(index, value) }}
+						isSmall={true}
+						/>
+						<Field
+							title="API Token: "
+							content={app.token}
+							canCopy
+							onRefresh={ () => { actions.regenToken(index) } }
+							/>
+					</Column>
+				</Row>
+				
+				<Container styling='transparent' noPadding>
+					<Column 
+						width='1-1' 
+						className="settings-collapse"
+						noPadding
+					>
+						<Collapse expandIcon={expandIcon}>
+							<Panel header={`OAuth Settings`} showArrow>
+							<Container styling='transparent' noPadding>
+								<CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
+								<TextView text={`OAuth Credentials: `}
+									heading={4}
+									align={`left`} 
+								/>
+								<Field
+									title="Client ID: "
+									content={app.oauth.client_id}
+									canCopy
+								/>
+								<Field
+									title="Client Secret: "
+									content={app.oauth.client_secret}
+									canCopy
+								/>
+								<Field
+									title="Callback Url: "
+									content={app.oauth.callback_url == '' ? 'https://' : app.oauth.callback_url}
+									canCopy
+									onSave={(value) => { actions.saveOAuthCallback(index, value) }}
+								/>
+								</CardView>
+							</Container>
+							<Container styling='transparent' noPadding>
+								<CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
+								<TextView text={`OAuth Scopes: `}
+									heading={4}
+									align={`left`} 
+								/>
+								{app.oauth.scopes.map( (scope, scope_index) => 
+									<CheckBox 
+										text={scope.name}
+										isChecked={scope.enabled}
+										onClick={(value) => { actions.setScope(index, scope_index, value) } }
+										style={{ float: `left`, margin: `12px 10px 0 10px` }}
+									/>
+								)}
+								</CardView>
+							</Container>
+							</Panel>
+							<Panel header={`Webhook Settings`} showArrow>
+							<Container styling='transparent' noPadding>
+								<CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
+								<Field
+									title="Verification Secret: "
+									content={app.webhook.verification_secret}
+									canCopy
+									onRefresh={() => { actions.regenVerificationSecret(index) }}
+								/>
+								<Field
+									title="Webhook URL: "
+									content={app.webhook.url=='' ? 'https://' : app.webhook.url}
+									onSave={(value) => { actions.webhook.saveURL(index, value) } }
+								/>
+								<Field
+									title="'siteid' (optional):"
+									content={app.webhook.siteid}
+									onSave={(value) => { actions.webhook.saveSiteID(index, value) }}
+								/>
+								<Field
+									title="'roomid' (optional):"
+									content={app.webhook.roomid}
+									onSave={(value) => { actions.webhook.saveRoomID(index, value) }}
+								/>
+								<Field
+									title="Contact (optional):"
+									content={app.webhook.contact}
+									onSave={(value) => { actions.webhook.saveContact(index, value) }}
+								/>
+								</CardView>
+							</Container>
+							</Panel>
+						</Collapse>
+					</Column>
+				</Container>
+			
+
+			</Container>
         </Panel>
         </Collapse>
 		)
