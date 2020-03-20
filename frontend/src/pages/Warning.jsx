@@ -30,47 +30,13 @@ class Warning extends React.Component {
     super(props)
 
     this.state = {
-      type: window.initialData.type,
+      title: window.initialData.title,
+      content: window.initialData.content,
     }
   }
 
   render() {
-    const { type } = this.state
-
-    var title=""
-    var content = []
-
-    switch (type) {
-      case "logout_incomplete":
-        title = "Please note you are not fully logged out!"
-        content = [`You have been logged out from UCL API. However `
-                    + `in order to be fully logged out of all UCL services `
-                    + `you need to close your browser completely and re open.`,
-                    "Thank you! Click here to go back to the front page:"]
-        break;
-
-      case "404":
-        title = "Error 404"
-        content = [`Oops we cannot seem to find that page! `,
-                    "Please click below to go back to the front page:"]
-        break;
-
-      case "500":
-        title = "Error 500"
-        content = [`Oops... something went wrong! Sorry for the inconvenience. `,
-                    `Our team is working on it, if you have an urgent concern please get `
-                    + `in touch with us at isd.apiteam@ucl.ac.uk`,
-                    "Please click below to go back to the front page:"]
-        break;
-
-      default:
-          title = "Error"
-          content = [`Oops... something went wrong! Sorry for the inconvenience. `,
-                    `Our team is working on it, if you have an urgent concern please get `
-                    + `in touch with us at isd.apiteam@ucl.ac.uk`,
-                    "Please click below to go back to the front page:"]
-        break;
-    }
+    const { type, title, content } = this.state
 
     return (
       <>
