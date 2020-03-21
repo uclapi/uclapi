@@ -86,6 +86,8 @@ export default class App extends React.Component {
 
 		const trashColor = "red"
 
+		console.log(app.oauth.scopes)
+
 		return (
 		<Collapse expandIcon={expandIcon}>
         <Panel header={app.name} showArrow>
@@ -120,83 +122,117 @@ export default class App extends React.Component {
 						<Collapse expandIcon={expandIcon}>
 							<Panel header={`OAuth Settings`} showArrow>
 							<Container styling='transparent' noPadding>
-								<CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
-								<TextView text={`OAuth Credentials: `}
-									heading={4}
-									align={`left`} 
-								/>
-								<Field
-									title="Client ID: "
-									content={app.oauth.client_id}
-									canCopy
-								/>
-								<Field
-									title="Client Secret: "
-									content={app.oauth.client_secret}
-									canCopy
-								/>
-								<Field
-									title="Callback Url: "
-									content={app.oauth.callback_url == '' ? 'https://' : app.oauth.callback_url}
-									canCopy
-									onSave={(value) => { actions.saveOAuthCallback(index, value) }}
-								/>
-								</CardView>
+								<Column
+									width='1-1' 
+									className='settings-section'
+								>
+									<TextView text={`OAuth Credentials: `}
+										heading={4}
+										align={`left`} 
+									/>
+									<Field
+										title="Client ID: "
+										content={app.oauth.client_id}
+										canCopy
+									/>
+									<Field
+										title="Client Secret: "
+										content={app.oauth.client_secret}
+										canCopy
+									/>
+									<Field
+										title="Callback Url: "
+										content={app.oauth.callback_url == '' ? 'https://' : app.oauth.callback_url}
+										canCopy
+										onSave={(value) => { actions.saveOAuthCallback(index, value) }}
+									/>
+								</Column>
 							</Container>
 							<Container styling='transparent' noPadding>
-								<CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
-								<TextView text={`OAuth Scopes: `}
-									heading={4}
-									align={`left`} 
-								/>
-								{app.oauth.scopes.map( (scope, scope_index) => 
-									<CheckBox 
-										text={scope.name}
-										isChecked={scope.enabled}
-										onClick={(value) => { actions.setScope(index, scope_index, value) } }
-										style={{ float: `left`, margin: `12px 10px 0 10px` }}
+								<Column
+									width='1-1' 
+									className='settings-section'
+								>
+									<TextView text={`OAuth Scopes: `}
+										heading={4}
+										align={`left`} 
 									/>
-								)}
-								</CardView>
+									{app.oauth.scopes.map( (scope, scope_index) => 
+										<CheckBox 
+											text={scope.description}
+											isChecked={scope.enabled}
+											onClick={(value) => { actions.setScope(index, scope_index, value) } }
+											style={{ float: `left`, margin: `12px 10px 0 10px` }}
+										/>
+									)}
+								</Column>
 							</Container>
 							</Panel>
 							<Panel header={`Webhook Settings`} showArrow>
 							<Container styling='transparent' noPadding>
-								<CardView width='1-1' type="no-bg" style={styles.tokenHolder}>
-								<Field
-									title="Verification Secret: "
-									content={app.webhook.verification_secret}
-									canCopy
-									onRefresh={() => { actions.regenVerificationSecret(index) }}
-								/>
-								<Field
-									title="Webhook URL: "
-									content={app.webhook.url=='' ? 'https://' : app.webhook.url}
-									onSave={(value) => { actions.webhook.saveURL(index, value) } }
-								/>
-								<Field
-									title="'siteid' (optional):"
-									content={app.webhook.siteid}
-									onSave={(value) => { actions.webhook.saveSiteID(index, value) }}
-								/>
-								<Field
-									title="'roomid' (optional):"
-									content={app.webhook.roomid}
-									onSave={(value) => { actions.webhook.saveRoomID(index, value) }}
-								/>
-								<Field
-									title="Contact (optional):"
-									content={app.webhook.contact}
-									onSave={(value) => { actions.webhook.saveContact(index, value) }}
-								/>
-								</CardView>
+								<Column
+									width='1-1' 
+									className='settings-section'
+								>
+									<Field
+										title="Verification Secret: "
+										content={app.webhook.verification_secret}
+										canCopy
+										onRefresh={() => { actions.regenVerificationSecret(index) }}
+									/>
+									<Field
+										title="Webhook URL: "
+										content={app.webhook.url=='' ? 'https://' : app.webhook.url}
+										onSave={(value) => { actions.webhook.saveURL(index, value) } }
+									/>
+									<Field
+										title="'siteid' (optional):"
+										content={app.webhook.siteid}
+										onSave={(value) => { actions.webhook.saveSiteID(index, value) }}
+									/>
+									<Field
+										title="'roomid' (optional):"
+										content={app.webhook.roomid}
+										onSave={(value) => { actions.webhook.saveRoomID(index, value) }}
+									/>
+									<Field
+										title="Contact (optional):"
+										content={app.webhook.contact}
+										onSave={(value) => { actions.webhook.saveContact(index, value) }}
+									/>
+								</Column>
 							</Container>
 							</Panel>
 						</Collapse>
 					</Column>
 				</Container>
-			
+				<Container styling='transparent' noPadding>
+					<Row width="1-1">
+						<Column 
+							width="1-1"
+							className="bottom-app-column"
+						>
+							<Column 
+								width="180px" 
+								alignItems="column"
+								className="dates-holder" 
+							>
+								<TextView text={`Created: ` + created + ` ago`} heading={5}
+									align="left" style={styles.dates} color="white" />
+								<TextView text={`Updated: ` + updated + ` ago`} heading={5}
+									align="left" style={styles.dates} color="white" />
+							</Column>
 
+							<ButtonView
+								text={`Delete`} 
+								type={`remove`} 
+								onClick={() => { actions.deleteConfirm(index) }} 
+								fakeLink 
+								style={{ cursor: `pointer` }} 
+							/>
+						</Column>
+					</Row>
+				</Container>
 			</Container>
         </Panel>
         </Collapse>

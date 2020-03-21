@@ -5,11 +5,13 @@ import React from 'react'
 import Icon from './views/Icon.jsx'
 
 // Images
-import clipboardImage from 'Images/dashboard/clipboard.svg'
+import clipboardImage from 'Images/dashboard/copy.svg'
 import editImage from 'Images/dashboard/edit.svg'
 import refreshImage from 'Images/dashboard/refresh.svg'
 import saveImage from 'Images/dashboard/save.svg'
 import deleteImage from 'Images/dashboard/trash.svg'
+import checkedImage from 'Images/dashboard/checked.svg'
+import uncheckedImage from 'Images/dashboard/unchecked.svg'
 
 /** COPY **/
 export const copyIcon = (onClick, style) => <Icon image={clipboardImage} description="copy token to clipboard" onClick={onClick} style={style} />
@@ -25,3 +27,9 @@ export const saveIcon = (onClick, style) => <Icon image={saveImage} description=
 
 /** CANCEL **/
 export const cancelIcon = (onClick, style) => <Icon image={deleteImage} description="cancel action" onClick={onClick} style={style} /> 
+
+/** CHECKED */
+export const checkedIcon = (onClick, style) => <Icon image={checkedImage} description="Checked" onClick={null} style={style} /> 
+
+/** UNCHECKED */
+export const uncheckedIcon = (onClick, style) => <Icon image={uncheckedImage} description="Unchecked" onClick={null} style={style} /> 

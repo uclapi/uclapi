@@ -76,8 +76,8 @@ export default class ConfirmBox extends React.Component {
                 onSave={this.saveField}
                 isSmall
               />
-              <ButtonView text={`Submit`} onClick={this.success} fakeLink style={{ cursor: `pointer` }} />
-              <ButtonView text={`Cancel`} type={`alternate`} onClick={fail} fakeLink style={{ cursor: `pointer` }} />
+              <ButtonView text={`Submit`} type={`alternate`} onClick={this.success} fakeLink style={{ cursor: `pointer` }} />
+              <ButtonView text={`Cancel`} type={`remove`} onClick={fail} fakeLink style={{ cursor: `pointer` }} />
             </Row>
           </Container>
         </CardView>

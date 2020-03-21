@@ -5,6 +5,7 @@ import React from 'react'
 
 // Components
 import { TextView, Container} from 'Layout/Items.jsx'
+import { checkedIcon, uncheckedIcon } from 'Layout/Icons.jsx'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -67,6 +68,7 @@ export default class CheckBox extends React.Component {
     const { style, isChecked } = this.state
 
     const fieldClass = "field-container-not-editing"
+    const fieldInputClass = "field-input-not-editing"
 		const fieldHeight = "55px"
 
     return (
@@ -76,12 +78,23 @@ export default class CheckBox extends React.Component {
         onClick={this.toggleCheck}
         noPadding
       >
-        <span style={style}>
-          <input disabled type="checkbox" checked={isChecked} />
-          <span style={{ fontSize : `8px` }}>{isChecked ? `✘` : null}</span>
-        </span>
+        <div className="field-label">{text}</div>
 
-        <TextView text={text} heading={5} align={`left`} style={styles.tokenText} /> 
+        <input 
+          type="text"
+          className={fieldInputClass}
+          readOnly
+          value={"My app requires access to the user's " + text.toLowerCase() + "."}
+          style={{ height: fieldHeight }}
+        />
+
+        {
+          isChecked ? (
+            checkedIcon()
+          ) : (
+            uncheckedIcon()
+          )
+        }
       
     </Container>
     )

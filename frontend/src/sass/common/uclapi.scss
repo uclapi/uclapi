@@ -65,6 +65,9 @@ $color-white: #ffffff;
 
 $color-red: #ff0000;
 
+$color-remove: #ca3c3c;
+$color-remove-highlight: rgb(151, 44, 44);
+
 $color-green-market: #03b77b;
 
 $color-black-transparent-0: rgba(0, 0, 0, 0);
@@ -266,6 +269,9 @@ a:hover { color: $color-grey-light; }
 
 .emphasis-button, { background-color: lighten($primary-highlight-color, 10%); color: black; }
 .emphasis-button:hover { background-color: lighten($primary-highlight-color, 20%);  }
+
+.remove-button { background-color: $color-remove; color: $color-white; }
+.remove-button:hover { background-color: $color-remove-highlight;  }
 
 /** Transitions **/
 
@@ -470,11 +476,20 @@ input[type="checkbox"] + span {
 }
 
 .title-holder {
-  margin-top: 2%;
+  padding: 2% 2% 0 2%;
 }
 
 .settings-collapse {
-  padding-top: 0;
+  padding: 0 2%;
+}
+
+.settings-section {
+  padding: 0;
+  justify-content: unset;
+
+  h4 {
+    margin: 10px 0;
+  }
 }
 
 .field-container-editing,
@@ -530,6 +545,15 @@ input[type="checkbox"] + span {
 
   &:hover {
     background-color: $primary-highlight-color;
+  }
+}
+
+.bottom-app-column {
+  justify-content: unset;
+  padding: 0;
+
+  .dates-holder {
+    padding: 0 2%;
   }
 }
 
@@ -725,7 +749,8 @@ div.uclapi-card-github {
     box-shadow: unset;
 
     .rc-collapse-content {
-      padding: 0;
+      border-bottom: 1px dotted rgba(255, 255, 255, 0.455);
+      padding: 0 0 25px 0;
 
       .rc-collapse-content-box {
         border-top: unset;
