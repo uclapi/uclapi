@@ -17,7 +17,7 @@ import Link from './Link.jsx'
 const links = [
   {
     name: `settings`,
-    link: `/oauth/myapps`,
+    link: `/settings`,
     src: settings,
   },
   {
