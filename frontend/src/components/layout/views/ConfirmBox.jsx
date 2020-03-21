@@ -62,22 +62,47 @@ export default class ConfirmBox extends React.Component {
   }
 
   render() {
-    const { text, success, fail } = this.props
+    const { text, success, fail, value: check } = this.props
     const { value } = this.state
 
     return (
       <div className='overlay-wrapper' style={{ textAlign: `center` }}>
         <CardView width='1-1' type='default' noPadding>
-          <Container styling='transparent'>
-            <Row width="8-10" horizontalAlignment="center">
+          <Container styling='transparent' className="confirm-box-container">
+            <Row 
+              width="8-10" 
+              horizontalAlignment="center"
+            >
+              <TextView
+                heading="3"
+                align="left"
+                text={text}
+              />
               <Field
-                title={text}
+                title={"Click to edit"}
                 content={value}
                 onSave={this.saveField}
                 isSmall
               />
-              <ButtonView text={`Submit`} type={`alternate`} onClick={this.success} fakeLink style={{ cursor: `pointer` }} />
-              <ButtonView text={`Cancel`} type={`remove`} onClick={fail} fakeLink style={{ cursor: `pointer` }} />
+              <Column 
+                width="1-1"
+                keepInline
+              >
+                <ButtonView 
+                  text={`Submit`} 
+                  type={`alternate`} 
+                  onClick={this.success} 
+                  fakeLink 
+                  style={{ cursor: `pointer` }} 
+                />
+                <ButtonView 
+                  text={`Cancel`} 
+                  type={`remove`} 
+                  onClick={fail} 
+                  fakeLink 
+                  style={{ cursor: `pointer` }} 
+                />
+              </Column>
             </Row>
           </Container>
         </CardView>

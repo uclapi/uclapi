@@ -69,8 +69,6 @@ export const styles = {
   modal: {
     content : {
       top: '25%',
-      left: '25%',
-      right: 'auto',
       bottom: 'auto',
       padding: 0,
       height: `fit-content`,

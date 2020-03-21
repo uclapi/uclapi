@@ -211,11 +211,13 @@ export default class App extends React.Component {
 						<Column 
 							width="1-1"
 							className="bottom-app-column"
+							keepInline
 						>
 							<Column 
-								width="180px" 
+								width="165px" 
 								alignItems="column"
-								className="dates-holder" 
+								className="dates-holder default tablet" 
+								keepInline
 							>
 								<TextView text={`Created: ` + created + ` ago`} heading={5}
 									align="left" style={styles.dates} color="white" />

@@ -112,62 +112,63 @@ class Dashboard extends React.Component {
         </Modal>
 
         <Container height='fit-content' styling='splash-parallax' style={{ minHeight: `100%` }}>
-          <Row 
-            width='2-3' 
-            horizontalAlignment='center' 
-            style={{ marginTop: `80px` }}
-            alignItems="column"
-          >
-            <TextView text={`Welcome, ` + name}
-              heading={1}
-              align={`left`}
-            />
-            <TextView text={`Your username is: ` + cn}
-              heading={2}
-              align={`left`}
-            />
+          <Row width='1-1'>
+            <Column
+              width="2-3"
+              alignItems="column"
+              style={{ margin: `auto` }}
+            >
+              <TextView text={`Welcome, ` + name}
+                heading={1}
+                align={`left`}
+              />
+              <TextView text={`Your username is: ` + cn}
+                heading={2}
+                align={`left`}
+              />
 
-            <div className="app-holder" style={styles.appHolder}>
-              {apps.map((app, index) => (
-                <App
-                  key={app.name}
-                  app={app}
-                  index={index}
-                  actions={actions}
-                />
-              ))}
-              {apps.length === 0 ? (
-                <CardView width='1-1' type='default' noPadding>
-                  <Row noPadding>
-                    <Column width='1-1'
-                      horizontalAlignment='center'
-                      style={{
-                        paddingTop: 30,
-                        paddingBottom: 20,
-                      }}
-                    >
-                      <TextView
-                        text={
-                          `You haven't created any apps yet, ` +
-                          `click below to get started!`
-                        }
-                        heading={2}
-                        align={`center`}
-                        style={styles.noPadding}
-                      />
-                    </Column>
-                  </Row>
-                </CardView>
-              ) : null}
-            </div>
-            <ButtonView 
-              text={`Add new project`}
-              type={`default`}
-              style={{ cursor: `pointer` }}
-              onClick={() => { this.setState({ view: `add-project` }) }}
-              fakeLink
-              centred
-            />
+              <div className="app-holder" style={styles.appHolder}>
+                {apps.map((app, index) => (
+                  <App
+                    key={app.name}
+                    app={app}
+                    index={index}
+                    actions={actions}
+                  />
+                ))}
+                {apps.length === 0 ? (
+                  <CardView width='1-1' type='default' noPadding>
+                    <Row noPadding>
+                      <Column width='1-1'
+                        horizontalAlignment='center'
+                        style={{
+                          paddingTop: 30,
+                          paddingBottom: 20,
+                        }}
+                      >
+                        <TextView
+                          text={
+                            `You haven't created any apps yet, ` +
+                            `click below to get started!`
+                          }
+                          heading={2}
+                          align={`center`}
+                          style={styles.noPadding}
+                        />
+                      </Column>
+                    </Row>
+                  </CardView>
+                ) : null}
+              </div>
+              <ButtonView 
+                text={`Add new project`}
+                type={`default`}
+                style={{ cursor: `pointer` }}
+                onClick={() => { this.setState({ view: `add-project` }) }}
+                fakeLink
+                centred
+              />
+            </Column>
           </Row>
         </Container>
 

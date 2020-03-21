@@ -550,10 +550,18 @@ input[type="checkbox"] + span {
 
 .bottom-app-column {
   justify-content: unset;
-  padding: 0;
+  padding: 2% 0;
 
   .dates-holder {
-    padding: 0 2%;
+    padding: 3px 0 0 2%;
+  }
+
+  .remove-button {
+    margin: 0;
+  }
+
+  @include media("<=phone") {
+    justify-content: center;
   }
 }
 
@@ -716,9 +724,15 @@ div.uclapi-card-github {
 /** Overlays **/
 
 .Modal {
+  position: absolute;
+  top: 25%;
   left: 20vw;
   right: 20vw;
   padding: 0;
+}
+
+.confirm-box-container {
+  padding: 15px 0;
 }
 
 /** Specific dashboard stylings **/

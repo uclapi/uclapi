@@ -122,35 +122,6 @@
   }
 }
 
-.Modal {
-  position: absolute;
-  top: 70px;
-  left: 5vw;
-  right: 5vw;
-  height: 200px;
-	background-color: #fff;
-  outline: none;
-  padding: 20px;
-  border: solid rgb(204, 204, 204) 1px;
-  @include border-radius(5px);
-
-  @media screen and (min-width: 35.5em) {
-    left: 15vw;
-    right: 15vw;
-  }
-
-  @media screen and (min-width: 55em) {
-    left: 25vw;
-    right: 25vw;
-  }
-
-  @media screen and (min-width: 65em) {
-    left: 35vw;
-    right: 35vw;
-  }
-
-}
-
 .Overlay {
 	position: fixed;
 	top: 0;
