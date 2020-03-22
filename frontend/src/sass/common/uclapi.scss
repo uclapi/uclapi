@@ -758,6 +758,12 @@ div.uclapi-card-github {
   }
 }
 
+.app-holder {
+  flex-direction: column;
+  display: flex;
+  width: 100%;
+}
+
 .settings-collapse {
   .rc-collapse {
     box-shadow: unset;

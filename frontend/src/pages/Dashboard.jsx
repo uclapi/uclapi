@@ -160,18 +160,19 @@ class Dashboard extends React.Component {
                   </CardView>
                 ) : null}
               </div>
-              <ButtonView 
-                text={`Add new project`}
-                type={`default`}
-                style={{ cursor: `pointer` }}
-                onClick={() => { this.setState({ view: `add-project` }) }}
-                fakeLink
-                centred
-              />
             </Column>
           </Row>
+          <Row width='1-1'>
+            <ButtonView 
+            text={`+`}
+            type={`default`}
+            style={{ cursor: `pointer`, borderRadius: `10px`, padding: `20px 25px`}}
+            onClick={() => { this.setState({ view: `add-project` }) }}
+            fakeLink
+            centred
+          />
+        </Row>
         </Container>
-
         <Footer />
       </>
     )
