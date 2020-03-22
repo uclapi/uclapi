@@ -40,6 +40,7 @@ class Marketplace extends React.Component {
     appsToRender.push(allApps[`uclroombuddy`])
     appsToRender.push(allApps[`uclassistant`])
     appsToRender.push(allApps[`uclcssa`])
+    appsToRender.push(allApps[`unikomet`])
 
     this.state = {
       'featuredApps': featuredApps,
