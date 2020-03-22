@@ -242,13 +242,13 @@ const unikometdescription = (
       can be helpful are: `}
     />
     <TextView heading={`5`}
-      text={`* The student satisfaction ratings!`}
+      text={`🚀 The student satisfaction ratings!`}
     />
     <TextView heading={`5`}
-      text={`* The personal student reviews!`}
+      text={`🚀 The personal student reviews!`}
     />
     <TextView heading={`5`}
-      text={`* A platform for giving student cohorts a voice!`}
+      text={`🚀 A platform for giving student cohorts a voice!`}
     />
     <TextView heading={`5`}
       text={`We believe Unikomet can be very helpful for many students, from those
@@ -262,10 +262,7 @@ const unikometdescription = (
       text={`Made with love 💖 by and for 
     students`}
     />
-    <TextView heading={`5`}
-      text={`Made using the UCL API`}
-    />
-    <ButtonView type={`alternate`}
+    {/* <ButtonView type={`alternate`}
       isCentered
       text={`VISIT GITHUB`}
       style={{
@@ -273,7 +270,7 @@ const unikometdescription = (
         'display': `flex`,
       }}
       link={`https://github.com/uclapi/ucl-assistant-app`}
-    />
+    /> */}
   </div>
 )
 
