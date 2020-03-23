@@ -34,7 +34,7 @@ export default class Row extends React.Component {
 
   render() {
     const { verticalAlignment, style } = this.state
-    const { children, className = `` } = this.props
+    const { children } = this.props
 
     return (
       <div className={verticalAlignment} >
@@ -75,7 +75,7 @@ export default class Row extends React.Component {
 
     // OPTIONAL ATTRIBUTES
     // Aligns the items in the specified direction
-    if(alignItems) { 
+    if (alignItems) {
       style = {
         ...style,
         flexDirection: alignItems,
@@ -133,6 +133,7 @@ export default class Row extends React.Component {
           ...style,
           marginLeft: `auto`,
           marginRight: `auto`,
+          justifyContent: `center`,
         }
         break
 

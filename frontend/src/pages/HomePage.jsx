@@ -98,8 +98,14 @@ class HomePage extends React.Component {
               align={`center`}
             />
 
-            <ButtonView text={startLabel} link={`/dashboard`} centred />
-            <ButtonView text={`DOCS`} link={`/docs`} type={`alternate`} centred />
+            <Row width='1-1'
+              horizontalAlignment='center'
+              alignItems='row'
+            >
+              <ButtonView text={startLabel} link={`/dashboard`} />
+              <ButtonView text={`DOCS`} link={`/docs`} type={`alternate`} />
+            </Row>
+
           </Row>
         </Container>
 
@@ -107,8 +113,8 @@ class HomePage extends React.Component {
 
         <Container styling='secondary' heading="Our Goals">
           <Row
-            width='1-1'
             horizontalAlignment='center'
+            width='1-1'
             maxWidth='1000px'
             className="Row-horizontal"
           >
@@ -157,7 +163,7 @@ class HomePage extends React.Component {
           styling='splash-parallax'
           heading="Get Started using our APIs"
         >
-          <Row width='2-3'
+          <Row width='1-1'
             horizontalAlignment='center'
             maxWidth='1000px'
             className="Row-horizontal"
@@ -274,7 +280,7 @@ class HomePage extends React.Component {
         {/* Marketplace */}
 
         <Container styling="secondary" >
-          <Row width="2-3" horizontalAlignment="center">
+          <Row width="1-1" horizontalAlignment="center">
             <Column
               width="1-2"
               className="default"
@@ -293,6 +299,7 @@ class HomePage extends React.Component {
                 about your creations so we can add them!`}
                 heading={5}
                 align={`left`}
+                style={{ padding: `0 2%` }}
               />
 
               <TextView text={`One of these applications is UCL Assistant! An app created
@@ -300,10 +307,16 @@ class HomePage extends React.Component {
                 timetable, find empty rooms and locate study spaces.`}
                 heading={5}
                 align={`left`}
+                style={{ padding: `0 2%` }}
               />
 
-              <ButtonView text={`MARKETPLACE`} link={`/marketplace`} type='alternate' centred />
-              <ButtonView text={`UCL ASSISTANT`} link={`/marketplace/uclassistant`} type='alternate' centred />
+              <Row width='1-1'
+                horizontalAlignment='center'
+                alignItems='row'
+              >
+                <ButtonView text={`MARKETPLACE`} link={`/marketplace`} type='alternate' />
+                <ButtonView text={`UCL ASSISTANT`} link={`/marketplace/uclassistant`} type='alternate' />
+            </Row>
             </Column>
           </Row>
         </Container>
