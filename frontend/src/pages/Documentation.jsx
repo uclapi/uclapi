@@ -5,11 +5,16 @@ import {
   grey,
   pink,
 } from '@material-ui/core/colors'
-import { createMuiTheme, MuiThemeProvider, StylesProvider } from '@material-ui/core/styles'
+import {
+  createMuiTheme, MuiThemeProvider, StylesProvider,
+} from '@material-ui/core/styles'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import DocumentationComponent from '../components/documentation/Documentation.jsx'
+import DocumentationComponent from
+  '../components/documentation/Documentation.jsx'
+
+
 
 const {
   500: cyan500,

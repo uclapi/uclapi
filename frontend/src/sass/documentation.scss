@@ -309,3 +309,16 @@ pre {
     display: block;
   }
 }
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col4 {
+  flex: 4;
+}
+
+.col8 {
+  flex: 8;
+}
