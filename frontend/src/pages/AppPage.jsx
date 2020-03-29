@@ -13,8 +13,8 @@ import { allApps } from 'Layout/data/app_pages.jsx'
 // Common Components
 import {
   ButtonView, CardView, Column, Container, Footer, ImageView,
-  NavBar, Row,
-TextView} from 'Layout/Items.jsx'
+  NavBar, Row, TextView,
+} from 'Layout/Items.jsx'
 // Standard React imports
 import React from 'react'
 // External carousel dependency
@@ -103,19 +103,6 @@ export class AppPage extends React.Component {
             {isMobile ? (
               <>
                 <Container styling='transparent'
-                  height='35px'
-                  style={{ padding: `20px 0 5px 0` }}
-                >
-                  <ButtonView type='alternate'
-                    text='back'
-                    link='/marketplace'
-                    style={{
-                      'float': `left`,
-                      'margin': `10px 0`,
-                    }}
-                  />
-                </Container>
-                <Container styling='transparent'
                   height={`115px`}
                   noPadding
                   style={{
@@ -170,32 +157,7 @@ export class AppPage extends React.Component {
               </>
             ) : (
                 <>
-                  <Container styling='transparent'
-                    height='70px'
-                    style={{ padding: `20px 0 0 0` }}
-                  >
-                    <Row
-                      width='1-1'
-                      horizontalAlignment='center'
-                    >
-                      <Column
-                        width='fit-content'
-                        minWidth={iconsize}
-                        typeOfInline='grid'
-                        horizontalAlignment='left'
-                      >
-                        <ButtonView type='alternate'
-                          text='back'
-                          link='/marketplace'
-                          style={{
-                            'float': `left`,
-                            'margin': `10px 0`,
-                          }}
-                        />
-                      </Column>
-                    </Row>
-                  </Container>
-                  <Container styling='transparent' height='140px' noPadding>
+                  <Container styling='transparent' height='140px'>
                     <Row
                       width='1-1'
                       horizontalAlignment='center'
@@ -220,8 +182,10 @@ export class AppPage extends React.Component {
                         width='150px'
                         horizontalAlignment='left'
                         textAlign='left'
-                        style={{ paddingLeft: `20px`,
-flexDirection: `column` }}
+                        style={{
+                          paddingLeft: `20px`,
+                          flexDirection: `column`,
+                        }}
                       >
                         <TextView text={name} heading={2} align="left" />
                         <TextView text={description} heading={5} align="left" />

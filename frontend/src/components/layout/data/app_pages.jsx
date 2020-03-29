@@ -10,16 +10,25 @@ import uclassistantlogo from 'Images/marketplace/uclassistant/logo.png'
 import ucascr1 from 'Images/marketplace/uclassistant/screenshot_1.png'
 import ucascr2 from 'Images/marketplace/uclassistant/screenshot_2.png'
 import ucascr3 from 'Images/marketplace/uclassistant/screenshot_3.png'
+// UCLCSSA App
 import uclcssalogodark from 'Images/marketplace/uclcssa/logodark.png'
-// UCL Assistant
 import uclcssalogolight from 'Images/marketplace/uclcssa/logolight.png'
 import ucsscr1 from 'Images/marketplace/uclcssa/screenshot_1.png'
 import ucsscr2 from 'Images/marketplace/uclcssa/screenshot_2.png'
 import ucsscr3 from 'Images/marketplace/uclcssa/screenshot_3.png'
 import ucsscr4 from 'Images/marketplace/uclcssa/screenshot_4.png'
+import unikomdesktop1 from 'Images/marketplace/unikomet/desktop_screenshot_1.png'
+import unikomdesktop2 from 'Images/marketplace/unikomet/desktop_screenshot_2.png'
+import unikomdesktop3 from 'Images/marketplace/unikomet/desktop_screenshot_3.png'
+// Unikomet
+import unikometlogo from 'Images/marketplace/unikomet/logo.png'
+import unikom1 from 'Images/marketplace/unikomet/screenshot_1.png'
+import unikom2 from 'Images/marketplace/unikomet/screenshot_2.png'
+import unikom3 from 'Images/marketplace/unikomet/screenshot_3.png'
 // Common Components
 import { ButtonView, TextView } from 'Layout/Items.jsx'
 import React from 'react'
+import { Carousel } from "react-responsive-carousel"
 
 // Application config
 const roombuddydescription = (
@@ -220,6 +229,88 @@ const uclcssadescription = (
   </div>
 )
 
+const unikometdescription = (
+  <div className="unikomet-full-description"
+    style={{ "display": `inline-block` }}
+  >
+    <TextView heading={`5`}
+      text={`Unikomet is a platform built by students at UCL to enable other students
+      to post anonymous reviews of their modules. Through the website all students at UCL
+      can visit and post reviews and ratings for other students to see. This allows future
+      students to make more informed decisions about`}
+    />
+    <TextView heading={`5`}
+      text={`Unikomet can be used by students to review their modules, 
+      as well as see reviews from other students. Some ways the reviews
+      can be helpful are: `}
+    />
+    <TextView heading={`5`}
+      text={`🚀 The student satisfaction ratings!`}
+    />
+    <TextView heading={`5`}
+      text={`🚀 The personal student reviews!`}
+    />
+    <TextView heading={`5`}
+      text={`🚀 A platform for giving student cohorts a voice!`}
+    />
+    <div className="default tablet">
+      <Carousel
+        showThumbs={false}
+        showArrows
+        showIndicators
+        showStatus
+        infiniteLoop
+      >
+        <div key={`unikomet-desktop-image-1`}>
+          <img
+            src={unikomdesktop1}
+            width="100%"
+            height="auto"
+          />
+          <p className="legend">{`Search`}</p>
+        </div>
+        <div key={`unikomet-desktop-image-2`}>
+          <img
+            src={unikomdesktop2}
+            width="100%"
+            height="auto"
+          />
+          <p className="legend">{`Rate`}</p>
+        </div>
+        <div key={`unikomet-desktop-image-3`}>
+          <img
+            src={unikomdesktop3}
+            width="100%"
+            height="auto"
+          />
+          <p className="legend">{`View Reviews`}</p>
+        </div>
+      </Carousel>
+    </div>
+    <TextView heading={`5`}
+      text={`We believe Unikomet can be very helpful for many students, from those
+       who are looking for that extra guidance to pick the right modules, to applicants 
+       who want to find out more about student satisfaction in the modules
+       they're interested in. And importantly, Unikomet can also be an extremely 
+       valuable tool through which students at large can express their opinions about
+       something that is so important.`}
+    />
+    <TextView heading={`5`}
+      text={`Made with love 💖 by and for 
+    students`}
+    />
+    {/* <ButtonView type={`alternate`}
+      isCentered
+      text={`VISIT GITHUB`}
+      style={{
+        'margin': `auto`,
+        'display': `flex`,
+      }}
+      link={`https://github.com/uclapi/ucl-assistant-app`}
+    /> */}
+  </div>
+)
+
 export const allApps = {
   "uclroombuddy": {
     "name": `UCL Room Buddy`,
@@ -318,6 +409,37 @@ export const allApps = {
       {
         name: `View your timetable`,
         img: ucsscr4,
+      },
+    ],
+  },
+  "unikomet": {
+    "name": `Unikomet`,
+    "id": `unikomet`,
+    "category": `productivity`,
+    "description": `Student reviews of UCL modules`,
+    "logolight": unikometlogo,
+    "logodark": unikometlogo,
+    "detailedDescription": unikometdescription,
+    // eslint-disable-next-line no-secrets/no-secrets
+    "developerContact": `https://unikomet.com/contact`,
+    "links": [
+      {
+        "name": `Website`,
+        "link": `https://unikomet.com`,
+      },
+    ],
+    "screenshots": [
+      {
+        name: `Search`,
+        img: unikom1,
+      },
+      {
+        name: `Reviews`,
+        img: unikom2,
+      },
+      {
+        name: `Ratings`,
+        img: unikom3,
       },
     ],
   },

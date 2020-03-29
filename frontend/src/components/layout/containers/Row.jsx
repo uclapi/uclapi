@@ -133,6 +133,7 @@ export default class Row extends React.Component {
           ...style,
           marginLeft: `auto`,
           marginRight: `auto`,
+          justifyContent: `center`,
         }
         break
 
