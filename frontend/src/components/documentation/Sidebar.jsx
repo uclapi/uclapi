@@ -7,10 +7,9 @@ import {
   ListItemText,
   SwipeableDrawer,
 } from '@material-ui/core'
+import { ButtonView } from 'Layout/Items.jsx'
 import propTypes from 'prop-types'
 import React, { useCallback, useState } from 'react'
-
-import { ButtonView } from 'Layout/Items.jsx'
 
 import ChevronDown from '../../images/documentation/chevron-down.svg'
 import ChevronUp from '../../images/documentation/chevron-up.svg'
@@ -67,272 +66,187 @@ Section.defaultProps = {
   children: null,
 }
 
-const menuContents = (
-  <>
-    <List component="div">
-      <Section sectionTitle="Meta">
-        <ListItem button>
-          <ListItemText
-            primary="Welcome"
-            key="Welcome"
-            href="#welcome"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="Get Your API Key"
-            key="Get Your API Key"
-            href="#get-api-key"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="API Rate Limits"
-            key="API Rate Limits"
-            href="#api-rate-limits"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="API Data Freshness"
-            key="API Data Freshness"
-            href="#api-expiry-times"
-          />
-        </ListItem>
-      </Section>
-      <Section sectionTitle="OAuth">
-        <ListItem button>
-          <ListItemText
-            primary="Meta"
-            key="Meta"
-            href="#oauth/meta"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="Authorise"
-            key="Authorise"
-            href="#oauth/authorise"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="Token"
-            key="Token"
-            href="#oauth/token"
-          />
-        </ListItem>
+const menuContents = {
+  Meta: [
+    {
+      text: `Welcome`,
+      href: `#welcome`,
+    },
+    {
+      text: `Get Your API Key`,
+      href: `#get-api-key`,
+    },
+    {
+      text: `Rate Limits`,
+      href: `#rate-limits`,
+    },
+    {
+      text: `Data Freshness`,
+      href: `#expiry-times`,
+    },
+  ],
+  Oauth: [
+    {
+      text: `Scopes`,
+      href: `#oauth/scopes`,
+    },
+    {
+      text: `Workflow`,
+      href: `#oauth/workflow`,
+    },
+    {
+      text: `Authorise`,
+      href: `#oauth/authorise`,
+    },
+    {
+      text: `Token`,
+      href: `#oauth/token`,
+    },
+    {
+      text: `User Data`,
+      href: `#oauth/user/data`,
+    },
+    {
+      text: `Student Number`,
+      href: `#oauth/user/studentnumber`,
+    },
+  ],
+  "Room Bookings": [
+    {
+      text: `Get Rooms`,
+      href: `#roombookings/rooms`,
+    },
+    {
+      text: `Get Bookings`,
+      href: `#roombookings/bookings`,
+    },
+    {
+      text: `Get Equipment`,
+      href: `#roombookings/equipment`,
+    },
+    {
+      text: `Get Free Rooms`,
+      href: `#roombookings/freerooms`,
+    },
+    {
+      text: `Webhooks`,
+      href: `#roombookings/webhooks`,
+    },
+  ],
+  Search: [
+    {
+      text: `Get People`,
+      href: `#search/people`,
+    },
+    {
+      text: `Get Personal Timetable`,
+      href: `#timetable/personal`,
+    },
+    {
+      text: `Get Timetable By Modules`,
+      href: `#timetable/bymodule`,
+    },
+    {
+      text: `Get List of Departments`,
+      href: `#timetable/data/departments`,
+    },
+    {
+      text: `Get List of Department Modules`,
+      href: `#timetable/data/modules`,
+    },
+    {
+      text: `Get List of Deaprtment Courses`,
+      href: `#timetable/data/courses`,
+    },
+    {
+      text: `Get List of Course Modules`,
+      href: `#timetable/data/courses/modules`,
+    },
+  ],
+  Resources: [
+    {
+      text: `Get Destkop Availability`,
+      href: `#resources/desktops`,
+    },
+    {
+      text: `Get Surveys`,
+      href: `#workspaces/surveys`,
+    },
+    {
+      text: `Get Sensors`,
+      href: `#workspaces/sensors`,
+    },
+    {
+      text: `Get Average Sensor Data`,
+      href: `#workspaces/sensors/averages/time`,
+    },
+    {
+      text: `Get Last Sensor Update`,
+      href: `#workspaces/sensors/lastupdated`,
+    },
+    {
+      text: `Get Sensors Summary`,
+      href: `#workspaces/sensors/summary`,
+    },
+    {
+      text: `Get Map Image`,
+      href: `#workspaces/images/map`,
+    },
+    {
+      text: `Get Live Map Image`,
+      href: `#workspaces/images/map/live`,
+    },
+  ],
+}
 
-        <ListItem button>
-          <ListItemText
-            primary="User Data"
-            key="User Data"
-            href="#oauth/user/data"
-          />
-        </ListItem>
 
-        <ListItem button>
-          <ListItemText
-            primary="Student Number"
-            key="Student Number"
-            href="#oauth/user/studentnumber"
-          />
-        </ListItem>
-      </Section>
+const sidebarContent = (
+  <List component="div">
+    {
+      Object.entries(menuContents)
+        .map(([sectionTitle, sectionContent]) => (
+          <Section sectionTitle={sectionTitle} key={sectionTitle}>
+            {
+              sectionContent.map(({ text, href }) => (
+                <ListItem
+                  button
+                  component="a"
+                  href={href}
+                  key={href}
+                >
+                  <ListItemText
+                    primary={text}
+                  />
+                </ListItem>
+              ))
+            }
+          </Section>
+        ))
+    }
 
-      <Section sectionTitle="Room Bookings">
-        <ListItem button>
-          <ListItemText
-            primary="Get Rooms"
-            key="Get Rooms"
-            href="#roombookings/rooms"
-          />
-        </ListItem>
+    <Divider />
 
-        <ListItem button>
-          <ListItemText
-            primary="Get Bookings"
-            key="Get Bookings"
-            href="#roombookings/bookings"
-          />
-        </ListItem>
-
-        <ListItem button>
-          <ListItemText
-            primary="Get Equipment"
-            key="Get Equipment"
-            href="#roombookings/equipment"
-          />
-        </ListItem>
-
-        <ListItem button>
-          <ListItemText
-            primary="Get Free Rooms"
-            key="Get Free Rooms"
-            href="#roombookings/freerooms"
-          />
-        </ListItem>
-
-        <ListItem button>
-          <ListItemText
-            primary="Webhooks"
-            key="Webhooks"
-            href="#roombookings/webhooks"
-          />
-        </ListItem>
-      </Section>
-
-      <Section sectionTitle="Search">
-        <ListItem button>
-          <ListItemText
-            primary="Get People"
-            key="Get People"
-            href="#search/people"
-          />
-        </ListItem>
-      </Section>
-
-      <Section sectionTitle="Timetable">
-        <ListItem button>
-          <ListItemText
-            primary="Get Personal Timetable"
-            key="Get Personal Timetable"
-            href="#timetable/personal"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primaryText="Get Timetable By Modules"
-            key="Get Timetable By Modules"
-            href="#timetable/bymodule"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="Get List of Departments"
-            key="Get List of Departments"
-            href="#timetable/data/departments"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="Get List of Department Modules"
-            key="Get List of Department Modules"
-            href="#timetable/data/modules"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="Get List of Department Modules"
-            key="Get List of Department Modules"
-            href="#timetable/data/modules"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="Get List of Department Courses"
-            key="Get List of Department Courses"
-            href="#timetable/data/courses"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="Get List of Course Modules"
-            key="Get List of Course Modules"
-            href="#timetable/data/courses/modules"
-          />
-        </ListItem>
-      </Section>
-
-      <Section sectionTitle="Resources">
-        <ListItem button>
-          <ListItemText
-            primaryText="Get Desktop availability"
-            key="Get Desktop availability"
-            href="#resources/desktops"
-          />
-        </ListItem>
-      </Section>
-
-      <Section sectionTitle="Workspaces">
-        <ListItem button>
-          <ListItemText
-            primary="Get Surveys"
-            key="Get Surveys"
-            href="#workspaces/surveys"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="Get Sensors"
-            key="Get Sensors"
-            href="#workspaces/sensors"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="Get Average Sensor Data"
-            key="Get Average Sensor Data"
-            href="#workspaces/sensors/averages/time"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="Get Last Sensor Update"
-            key="Get Last Sensor Update"
-            href="#workspaces/sensors/lastupdated"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="Get Sensors Summary"
-            key="Get Sensors Summary"
-            href="#workspaces/sensors/summary"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="Get Map Image"
-            key="Get Map Image"
-            href="#workspaces/images/map"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="Get Live Map Image"
-            key="Get Live Map Image"
-            href="#workspaces/images/map/live"
-          />
-        </ListItem>
-      </Section>
-
-      <Divider />
-
-      <Section sectionTitle="Get Involved">
-        <ListItem button>
-          <ListItemText
-            primary="GitHub"
-            key="GitHub"
-            href="https://github.com/uclapi"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="Facebook"
-            key="Facebook"
-            href="https://facebook.com/uclapi"
-          />
-        </ListItem>
-        <ListItem button>
-          <ListItemText
-            primary="Twitter"
-            key="Twitter"
-            href="https://twitter.com/uclapi"
-          />
-        </ListItem>
-      </Section>
-    </List>
-  </>
+    <Section sectionTitle="Get Involved">
+      <ListItem button>
+        <ListItemText
+          primary="GitHub"
+          href="https://github.com/uclapi"
+        />
+      </ListItem>
+      <ListItem button>
+        <ListItemText
+          primary="Facebook"
+          href="https://facebook.com/uclapi"
+        />
+      </ListItem>
+      <ListItem button>
+        <ListItemText
+          primary="Twitter"
+          href="https://twitter.com/uclapi"
+        />
+      </ListItem>
+    </Section>
+  </List>
 )
 
 export default class Sidebar extends React.Component {
@@ -365,7 +279,7 @@ export default class Sidebar extends React.Component {
               width: `256px`,
             }}
             >
-              {menuContents}
+              {sidebarContent}
             </div>
           </Drawer>
         </div>
