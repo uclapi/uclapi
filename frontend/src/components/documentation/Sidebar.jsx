@@ -199,6 +199,12 @@ const menuContents = {
   ],
 }
 
+const getInvolvedContents = {
+  Github: `https://github.com/uclapi`,
+  Facebook: `https://facebook.com/uclapi`,
+  Twitter: `https://twitter.com/uclapi`,
+}
+
 
 const sidebarContent = (
   <List component="div">
@@ -213,6 +219,7 @@ const sidebarContent = (
                   component="a"
                   href={href}
                   key={href}
+                  style={{ marginLeft: `1rem` }}
                 >
                   <ListItemText
                     primary={text}
@@ -227,24 +234,22 @@ const sidebarContent = (
     <Divider />
 
     <Section sectionTitle="Get Involved">
-      <ListItem button>
-        <ListItemText
-          primary="GitHub"
-          href="https://github.com/uclapi"
-        />
-      </ListItem>
-      <ListItem button>
-        <ListItemText
-          primary="Facebook"
-          href="https://facebook.com/uclapi"
-        />
-      </ListItem>
-      <ListItem button>
-        <ListItemText
-          primary="Twitter"
-          href="https://twitter.com/uclapi"
-        />
-      </ListItem>
+      {
+        Object.entries(getInvolvedContents)
+          .map(([text, href]) => (
+            <ListItem
+              button
+              component="a"
+              href={href}
+              key={href}
+              style={{ marginLeft: `1rem` }}
+            >
+              <ListItemText
+                primary={text}
+              />
+            </ListItem>
+          ))
+      }
     </Section>
   </List>
 )

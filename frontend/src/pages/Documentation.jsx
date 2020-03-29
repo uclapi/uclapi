@@ -5,7 +5,7 @@ import {
   grey,
   pink,
 } from '@material-ui/core/colors'
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
+import { createMuiTheme, MuiThemeProvider, StylesProvider } from '@material-ui/core/styles'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
@@ -50,9 +50,11 @@ class Documentation extends React.Component {
 
   render() {
     return (
-      <MuiThemeProvider theme={muiTheme}>
-        <DocumentationComponent />
-      </MuiThemeProvider>
+      <StylesProvider injectFirst>
+        <MuiThemeProvider theme={muiTheme}>
+          <DocumentationComponent />
+        </MuiThemeProvider>
+      </StylesProvider>
     )
   }
 
