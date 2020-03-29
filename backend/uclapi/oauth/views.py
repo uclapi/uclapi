@@ -586,7 +586,7 @@ def get_student_number(request, *args, **kwargs):
 
 
 @csrf_exempt
-def myapps_shibboleth_callback(request):
+def settings_shibboleth_callback(request):
     # should auth user login or signup
     # then redirect to my apps homepage
 
@@ -663,10 +663,8 @@ def settings(request):
     except KeyError:
         # Build Shibboleth callback URL
         url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
-        param = urllib.parse.urljoin(
-            request.build_absolute_uri(request.path),
-            "/oauth/myapps/shibcallback"
-        )
+        param = (request.build_absolute_uri(request.path) +
+            "user/login.callback")
         param = quote(param)
         url = url + param
 
@@ -768,5 +766,5 @@ def logout(request):
     except KeyError:
         pass
         
-    response = redirect('/', )
+    response = redirect('/warning', )
     return response
