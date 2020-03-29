@@ -219,7 +219,10 @@ const sidebarContent = (
                   component="a"
                   href={href}
                   key={href}
-                  style={{ marginLeft: `1rem` }}
+                  style={{
+                    paddingLeft: `2rem`,
+                    boxSizing: `border-box`,
+                  }}
                 >
                   <ListItemText
                     primary={text}
@@ -242,7 +245,10 @@ const sidebarContent = (
               component="a"
               href={href}
               key={href}
-              style={{ marginLeft: `1rem` }}
+              style={{
+                paddingLeft: `2rem`,
+                boxSizing: `border-box`,
+              }}
             >
               <ListItemText
                 primary={text}
@@ -282,6 +288,7 @@ export default class Sidebar extends React.Component {
             <div style={{
               marginTop: `61px`,
               width: `256px`,
+              overflow: `auto`,
             }}
             >
               {sidebarContent}
