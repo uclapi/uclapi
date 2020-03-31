@@ -35,7 +35,7 @@ export default class Row extends React.Component {
 
   render() {
     const { verticalAlignment, style } = this.state
-    const { children } = this.props
+    const { children, className } = this.props
 
     return (
       <div className={verticalAlignment} >

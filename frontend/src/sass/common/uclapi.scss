@@ -511,7 +511,7 @@ input[type="checkbox"] + span {
 .field-input-not-editing,
 .field-input-uneditable {
   margin: unset;
-  padding: 0 0 0 10px;
+  padding: 8px 15px;
   text-align: left;
   background-color: transparent;
   color: white;
@@ -522,8 +522,8 @@ input[type="checkbox"] + span {
 
 .field-label {
   color: black;
-  left: 10px;
-  top: 4px;
+  left: 15px;
+  top: 8px;
   font-style: italic;
   position: absolute;
   font-size: small;
