@@ -43,7 +43,6 @@ urlpatterns = [
     path('logout/', logout),
     path('warning/', warning),
     path('marketplace/', marketplace),
-    path('marketplace/<id>/', marketplace),
     path('roombookings/', include('roombookings.urls')),
     path('oauth/', include('oauth.urls')),
     path('timetable/', include('timetable.urls')),

@@ -1,5 +1,5 @@
 from django.shortcuts import render
 
 
-def marketplace(request, id=None):
+def marketplace(request):
     return render(request, 'marketplace.html')
