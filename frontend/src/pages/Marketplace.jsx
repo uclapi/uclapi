@@ -108,7 +108,7 @@ class Marketplace extends React.Component {
                       src={app.logolight}
                       width={iconsize}
                       height={iconsize}
-                      style={{ 'margin': `20px 0` }}
+                      margin="20px 0"
                       centred
                     />
                     <TextView
@@ -159,7 +159,7 @@ class Marketplace extends React.Component {
                       src={app.logolight}
                       width={iconsize}
                       height={iconsize}
-                      style={{ 'margin': `20px 0` }}
+                      margin="20px 0"
                       centred
                     />
                     <TextView

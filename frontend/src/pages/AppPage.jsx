@@ -179,7 +179,7 @@ export class AppPage extends React.Component {
                         />
                       </Column>
                       <Column
-                        width='150px'
+                        width="auto"
                         horizontalAlignment='left'
                         textAlign='left'
                         style={{

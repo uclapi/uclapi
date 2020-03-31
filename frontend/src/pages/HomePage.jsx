@@ -285,7 +285,13 @@ class HomePage extends React.Component {
               width="1-2"
               className="default"
             >
-              <ImageView src={uclassistantmarket} width="367px" height="405px" description="ucl asssitant screen shot" />
+              <ImageView 
+                src={uclassistantmarket} 
+                width="367px" 
+                height="405px" 
+                description="ucl asssitant screen shot" 
+                centred
+              />
             </Column>
 
             <Column width="1-2"

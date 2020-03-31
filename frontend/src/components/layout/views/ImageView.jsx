@@ -13,6 +13,7 @@ this.props.height (need the height of the image)
 OPTIONAL ATTRIBUTES:
 this.props.centred (centers the image inside of its parent)
 this.props.style (array containing any extra style tags)
+this.props.margin (add a margin to the image box)
 **/
 
 export default class ImageView extends React.Component {
@@ -42,14 +43,9 @@ export default class ImageView extends React.Component {
   }
 
   render() {
-    const { className, style } = this.state
+    const { className, style, containerStyle } = this.state
 
     const { src, description, width, height } = this.props
-
-    const containerStyle = {
-      width: width,
-      height: height
-    }
 
     return (
       <div className={className} style={containerStyle}>
@@ -65,17 +61,37 @@ export default class ImageView extends React.Component {
   refresh = () => {
     var className = `image-view`
     var classStyle = {}
-
-    // 'centred' - Center the button inside of its parent
-    const { centred } = this.props
-    if (centred) { className += ` ` + `center-x` }
+    var containerStyle = {}
 
     // If custom styling then include
-    const { style } = this.props
+    const { style, width, height } = this.props
     if (style) { classStyle = { ...style } }
+
+    containerStyle = {
+      width: width,
+      height: height,
+    }
+
+    const { centred, margin } = this.props
+    // 'margin' - Add a margin to the image
+    if (margin) { 
+      containerStyle = { 
+        ...containerStyle, 
+        margin: margin,
+      }
+    }
+    // 'centred' - Center the button inside of its parent
+    if (centred) { 
+      containerStyle = { 
+        ...containerStyle, 
+        marginLeft: `auto`,
+        marginRight: `auto`,
+      }
+    }
 
     this.setState({
       style: classStyle,
+      containerStyle: containerStyle,
       className: className,
     })
   }
