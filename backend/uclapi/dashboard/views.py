@@ -214,3 +214,43 @@ def home(request):
 @ensure_csrf_cookie
 def documentation(request):
     return render(request, 'documentation.html')
+
+
+@ensure_csrf_cookie
+def warning(request):
+    return render(request, 'warning.html', {
+        'initial_data': {
+            'title': "Please note you are not fully logged out!",
+            'content': ["You have been logged out from UCL API. However "
+                        + "in order to be fully logged out of all UCL services "
+                        + "you need to close your browser completely and re-open.",
+                        "Thank you! Click here to go back to the front page:"]
+        }
+    })
+
+
+@ensure_csrf_cookie
+def error_404_view(request, exception):
+    return render(request, 'warning.html', {
+        'initial_data': {
+            'title': "Error 404",
+            'content': ["Oops we cannot seem to find that page! ",
+                        "Please click below to go back to the front page:"]
+        }
+    })
+
+
+def error_500_view(request):
+    return render(request, 'warning.html', {
+        'initial_data': {
+            'title': "Error 500",
+            'content': ["Oops... something went wrong! Sorry for the inconvenience. ",
+                        "Our team is working on it, if you have an urgent concern please get "
+                        + "in touch with us at isd.apiteam@ucl.ac.uk",
+                        "Please click below to go back to the front page:"]
+        }
+    })
+
+
+def custom_page_not_found(request):
+    return error_404_view(request, None)

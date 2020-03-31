@@ -40,6 +40,7 @@ class Marketplace extends React.Component {
     appsToRender.push(allApps[`uclroombuddy`])
     appsToRender.push(allApps[`uclassistant`])
     appsToRender.push(allApps[`uclcssa`])
+    appsToRender.push(allApps[`unikomet`])
 
     this.state = {
       'featuredApps': featuredApps,
@@ -66,7 +67,8 @@ class Marketplace extends React.Component {
           styling='splash-parallax'
         >
           <Row
-            width='2-3'
+            width='1-1'
+            maxWidth='1000px'
             horizontalAlignment='center'
             verticalAlignment='center'
             alignItems='column'
@@ -80,21 +82,13 @@ class Marketplace extends React.Component {
           </Row>
         </Container>
 
-        <Container styling='secondary'>
+        <Container 
+          styling='secondary'
+          heading="Featured App"
+        >
           <Row
-            width='2-3'
-            horizontalAlignment='center'
-            alignItems='column'
-          >
-            <TextView text={`Featured App`} heading={2} align={`left`} />
-            <TextView
-              text={`Our favourite usage of the API`}
-              heading={5}
-              align={`left`}
-            />
-          </Row>
-          <Row
-            width='2-3'
+            width='1-1'
+            maxWidth='1000px'
             horizontalAlignment='center'
           >
             {featuredApps.map((app, i) => {
@@ -104,7 +98,6 @@ class Marketplace extends React.Component {
                   width={`1-1`}
                   type={`emphasis`}
                   link={`/marketplace/` + app.id}
-                  noPadding
                 >
                   <Row
                     width='1-2'
@@ -137,21 +130,13 @@ class Marketplace extends React.Component {
           </Row>
         </Container>
 
-        <Container styling='splash-parallax'>
+        <Container 
+          styling='splash-parallax'
+          heading="All Apps"
+        >
           <Row
-            width='2-3'
-            horizontalAlignment='center'
-            alignItems='column'
-          >
-            <TextView text={`All Apps`} heading={2} align={`left`} />
-            <TextView
-              text={`Every app made using the API`}
-              heading={5}
-              align={`left`}
-            />
-          </Row>
-          <Row
-            width='2-3'
+            width='1-1'
+            maxWidth='1000px'
             horizontalAlignment='center'
           >
             {appsToRender.map((app, i) => {
@@ -164,8 +149,6 @@ class Marketplace extends React.Component {
                   style={{
                     float: `left`,
                   }}
-                  minWidth={`225px`}
-                  snapAlign
                 >
                   <Row
                     width='9-10'
