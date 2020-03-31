@@ -33,7 +33,7 @@ class Marketplace extends React.Component {
 
     // Set up the 'featured' apps section
     const featuredApps = []
-    featuredApps.push(allApps[`uclassistant`])
+    featuredApps.push(allApps[`unikomet`])
 
     // Segregate into groups of applications if needed
     const appsToRender = []
