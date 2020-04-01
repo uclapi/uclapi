@@ -5,6 +5,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  ListSubheader,
   SwipeableDrawer,
 } from '@material-ui/core'
 import { ButtonView } from 'Layout/Items.jsx'
@@ -165,7 +166,7 @@ const menuContents = {
   ],
   Resources: [
     {
-      text: `Get Destkop Availability`,
+      text: `Get Desktop Availability`,
       href: `#resources/desktops`,
     },
     {
@@ -197,9 +198,13 @@ const menuContents = {
       href: `#workspaces/images/map/live`,
     },
   ],
+  GetInvolved: {
+    text: `Get Involved`,
+    href: `#get-involved`,
+  },
 }
 
-const getInvolvedContents = {
+const links = {
   Github: `https://github.com/uclapi`,
   Facebook: `https://facebook.com/uclapi`,
   Twitter: `https://twitter.com/uclapi`,
@@ -210,53 +215,61 @@ const sidebarContent = (
   <List component="div">
     {
       Object.entries(menuContents)
-        .map(([sectionTitle, sectionContent]) => (
-          <Section sectionTitle={sectionTitle} key={sectionTitle}>
-            {
-              sectionContent.map(({ text, href }) => (
-                <ListItem
-                  button
-                  component="a"
-                  href={href}
-                  key={href}
-                  style={{
-                    paddingLeft: `2rem`,
-                    boxSizing: `border-box`,
-                  }}
-                >
-                  <ListItemText
-                    primary={text}
-                  />
-                </ListItem>
-              ))
-            }
-          </Section>
-        ))
+        .map(([sectionTitle, sectionContent]) =>
+          Array.isArray(sectionContent) ? (
+            <Section sectionTitle={sectionTitle} key={sectionTitle}>
+              {
+                sectionContent.map(({ text, href }) => (
+                  <ListItem
+                    button
+                    component="a"
+                    href={href}
+                    key={href}
+                    style={{
+                      paddingLeft: `2rem`,
+                      boxSizing: `border-box`,
+                    }}
+                  >
+                    <ListItemText
+                      primary={text}
+                    />
+                  </ListItem>
+                ))
+              }
+            </Section>
+          ) : (
+              <ListItem
+                button
+                component="a"
+                href={sectionContent.href}
+                key={sectionContent.href}
+              >
+                <ListItemText
+                  primary={sectionContent.text}
+                />
+              </ListItem>
+            )
+        )
     }
 
     <Divider />
 
-    <Section sectionTitle="Get Involved">
-      {
-        Object.entries(getInvolvedContents)
-          .map(([text, href]) => (
-            <ListItem
-              button
-              component="a"
-              href={href}
-              key={href}
-              style={{
-                paddingLeft: `2rem`,
-                boxSizing: `border-box`,
-              }}
-            >
-              <ListItemText
-                primary={text}
-              />
-            </ListItem>
-          ))
-      }
-    </Section>
+    <ListSubheader>Links</ListSubheader>
+    {
+      Object.entries(links)
+        .map(([text, href]) => (
+          <ListItem
+            button
+            component="a"
+            href={href}
+            key={href}
+          >
+            <ListItemText
+              primary={text}
+            />
+          </ListItem>
+        ))
+    }
   </List>
 )
 
@@ -313,7 +326,7 @@ export default class Sidebar extends React.Component {
             onClose={this.toggleOpen}
             onOpen={this.toggleOpen}
           >
-            {menuContents}
+            {sidebarContent}
           </SwipeableDrawer>
         </div>
       </>

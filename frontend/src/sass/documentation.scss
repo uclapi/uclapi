@@ -68,6 +68,7 @@ p {
 
 .col {
   max-width: 100%;
+  flex: 1;
 }
 
 .warning {
@@ -135,6 +136,7 @@ code {
     padding-bottom: 10px;
     border-bottom: 1px solid #e1e8ed;
     font-weight: 500;
+    padding-top: 0;
   }
 
   .cell {
