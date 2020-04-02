@@ -37,7 +37,7 @@ export default class ImageView extends React.Component {
 
     this.state = {
       style: {},
-      className: "image-view",
+      className: `image-view`,
     }
   }
 
@@ -58,8 +58,8 @@ export default class ImageView extends React.Component {
   }
 
   refresh = () => {
-    var className = `image-view`
-    var classStyle = {}
+    let className = `image-view`
+    let classStyle = {}
 
     // 'centred' - Center the button inside of its parent
     const { centred } = this.props

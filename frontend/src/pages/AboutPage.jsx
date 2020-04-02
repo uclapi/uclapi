@@ -4,15 +4,14 @@ import 'Styles/common/uclapi.scss'
 // Legacy
 import 'Styles/navbar.scss'
 
-import PropTypes from 'prop-types'
-import React from 'react'
-import ReactDOM from 'react-dom'
-
 // Team descriptions
 import { current, previous } from 'Layout/data/team_members.jsx'
 // Common Components
-import { CardView, Column, Footer, NavBar, 
-  Container, TextView, Row } from 'Layout/Items.jsx'
+import { CardView, Column,   Container, Footer, NavBar, 
+Row,TextView } from 'Layout/Items.jsx'
+import PropTypes from 'prop-types'
+import React from 'react'
+import ReactDOM from 'react-dom'
 
 const member = ({ github, name, image, title }) => (
   <CardView 

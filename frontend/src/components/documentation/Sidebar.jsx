@@ -1,11 +1,19 @@
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
-import Divider from 'material-ui/Divider'
-import Drawer from 'material-ui/Drawer'
-import { List, ListItem, makeSelectable } from 'material-ui/List'
-import Subheader from 'material-ui/Subheader'
-import React from 'react'
-
+import {
+  Collapse,
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListSubheader,
+  SwipeableDrawer,
+} from '@material-ui/core'
 import { ButtonView } from 'Layout/Items.jsx'
+import propTypes from 'prop-types'
+import React, { useCallback, useState } from 'react'
+
+import ChevronDown from '../../images/documentation/chevron-down.svg'
+import ChevronUp from '../../images/documentation/chevron-up.svg'
 
 /*
   Got this entire thing from
@@ -19,220 +27,250 @@ import { ButtonView } from 'Layout/Items.jsx'
   the href in the Topic component
 */
 
-const SelectableList = makeSelectable(List)
-
-const menuContents = (
-  <>
-    <SelectableList
-      value={location.pathname}
-    >
+const Section = ({ sectionTitle, children }) => {
+  const [isOpen, setOpen] = useState(false)
+  const onClick = useCallback(
+    () => setOpen(!isOpen),
+    [isOpen]
+  )
+  return (
+    <>
       <ListItem
-        href="#welcome"
-        primaryText="Meta"
-        primaryTogglesNestedList
-        nestedItems={[
-          <ListItem primaryText="Welcome" key="Welcome" href="#welcome" />,
-          <ListItem primaryText="Get Your API Key" key="Get Your API Key" href="#get-api-key" />,
-          <ListItem primaryText="API Rate Limits" key="API Rate Limits" href="#api-rate-limits" />,
-          <ListItem primaryText="API Data Freshness" key="API Data Freshness" href="#api-expiry-times" />,
-        ]}
-      />
+        button
+        onClick={onClick}
+      >
+        <ListItemText primary={sectionTitle} />
+        {isOpen ? <img src={ChevronUp} /> : <img src={ChevronDown} />}
+      </ListItem>
+      <Collapse
+        in={isOpen}
+        timeout="auto"
+        unmountOnExit
+      >
+        <List
+          component="div"
+        >
+          {children}
+        </List>
+      </Collapse>
+    </>
+  )
+}
 
-      <ListItem
-        href="#oauth"
-        primaryText="OAuth"
-        primaryTogglesNestedList
-        nestedItems={[
-          <ListItem
-            primaryText="Meta"
-            key="Meta"
-            href="#oauth/meta"
-          />,
-          <ListItem
-            primaryText="Authorise"
-            key="Authorise"
-            href="#oauth/authorise"
-          />,
-          <ListItem
-            primaryText="Token"
-            key="Token"
-            href="#oauth/token"
-          />,
-          <ListItem
-            primaryText="User Data"
-            key="User Data"
-            href="#oauth/user/data"
-          />,
-          <ListItem
-            primaryText="Student Number"
-            key="Student Number"
-            href="#oauth/user/studentnumber"
-          />,
-        ]}
-      />
+Section.propTypes = {
+  sectionTitle: propTypes.string,
+  children: propTypes.node,
+}
 
-      <ListItem
-        href="#roombookings"
-        primaryText="Room Bookings"
-        primaryTogglesNestedList
-        nestedItems={[
-          <ListItem
-            primaryText="Get Rooms"
-            key="Get Rooms"
-            href="#roombookings/rooms"
-          />,
-          <ListItem
-            primaryText="Get Bookings"
-            key="Get Bookings"
-            href="#roombookings/bookings"
-          />,
-          <ListItem
-            primaryText="Get Equipment"
-            key="Get Equipment"
-            href="#roombookings/equipment"
-          />,
-          <ListItem
-            primaryText="Get Free Rooms"
-            key="Get Free Rooms"
-            href="#roombookings/freerooms"
-          />,
-          <ListItem
-            primaryText="Webhooks"
-            key="Webhooks"
-            href="#roombookings/webhooks"
-          />,
-        ]}
-      />
+Section.defaultProps = {
+  sectionTitle: ``,
+  children: null,
+}
 
-      <ListItem
-        href="#search"
-        primaryText="Search"
-        key="Search"
-        primaryTogglesNestedList
-        nestedItems={[
-          <ListItem
-            primaryText="Get People"
-            key="Get People"
-            href="#search/people"
-          />,
-        ]}
-      />
+const menuContents = {
+  Meta: [
+    {
+      text: `Welcome`,
+      href: `#welcome`,
+    },
+    {
+      text: `Get Your API Key`,
+      href: `#get-api-key`,
+    },
+    {
+      text: `Rate Limits`,
+      href: `#rate-limits`,
+    },
+    {
+      text: `Data Freshness`,
+      href: `#expiry-times`,
+    },
+  ],
+  Oauth: [
+    {
+      text: `Scopes`,
+      href: `#oauth/scopes`,
+    },
+    {
+      text: `Workflow`,
+      href: `#oauth/workflow`,
+    },
+    {
+      text: `Authorise`,
+      href: `#oauth/authorise`,
+    },
+    {
+      text: `Token`,
+      href: `#oauth/token`,
+    },
+    {
+      text: `User Data`,
+      href: `#oauth/user/data`,
+    },
+    {
+      text: `Student Number`,
+      href: `#oauth/user/studentnumber`,
+    },
+  ],
+  "Room Bookings": [
+    {
+      text: `Get Rooms`,
+      href: `#roombookings/rooms`,
+    },
+    {
+      text: `Get Bookings`,
+      href: `#roombookings/bookings`,
+    },
+    {
+      text: `Get Equipment`,
+      href: `#roombookings/equipment`,
+    },
+    {
+      text: `Get Free Rooms`,
+      href: `#roombookings/freerooms`,
+    },
+    {
+      text: `Webhooks`,
+      href: `#roombookings/webhooks`,
+    },
+  ],
+  Search: [
+    {
+      text: `Get People`,
+      href: `#search/people`,
+    },
+    {
+      text: `Get Personal Timetable`,
+      href: `#timetable/personal`,
+    },
+    {
+      text: `Get Timetable By Modules`,
+      href: `#timetable/bymodule`,
+    },
+    {
+      text: `Get List of Departments`,
+      href: `#timetable/data/departments`,
+    },
+    {
+      text: `Get List of Department Modules`,
+      href: `#timetable/data/modules`,
+    },
+    {
+      text: `Get List of Deaprtment Courses`,
+      href: `#timetable/data/courses`,
+    },
+    {
+      text: `Get List of Course Modules`,
+      href: `#timetable/data/courses/modules`,
+    },
+  ],
+  Resources: [
+    {
+      text: `Get Desktop Availability`,
+      href: `#resources/desktops`,
+    },
+    {
+      text: `Get Surveys`,
+      href: `#workspaces/surveys`,
+    },
+    {
+      text: `Get Sensors`,
+      href: `#workspaces/sensors`,
+    },
+    {
+      text: `Get Average Sensor Data`,
+      href: `#workspaces/sensors/averages/time`,
+    },
+    {
+      text: `Get Last Sensor Update`,
+      href: `#workspaces/sensors/lastupdated`,
+    },
+    {
+      text: `Get Sensors Summary`,
+      href: `#workspaces/sensors/summary`,
+    },
+    {
+      text: `Get Map Image`,
+      href: `#workspaces/images/map`,
+    },
+    {
+      text: `Get Live Map Image`,
+      href: `#workspaces/images/map/live`,
+    },
+  ],
+  GetInvolved: {
+    text: `Get Involved`,
+    href: `#get-involved`,
+  },
+}
 
-      <ListItem
-        href="#timetable"
-        primaryText="Timetable"
-        key="Timetable"
-        primaryTogglesNestedList
-        nestedItems={[
-          <ListItem
-            primaryText="Get Personal Timetable"
-            key="Get Personal Timetable"
-            href="#timetable/personal"
-          />,
-          <ListItem
-            primaryText="Get Timetable By Modules"
-            key="Get Timetable By Modules"
-            href="#timetable/bymodule"
-          />,
-          <ListItem
-            primaryText="Get List of Departments"
-            key="Get List of Departments"
-            href="#timetable/data/departments"
-          />,
-          <ListItem
-            primaryText="Get List of Department Modules"
-            key="Get List of Department Modules"
-            href="#timetable/data/modules"
-          />,
-          <ListItem
-            primaryText="Get List of Department Courses"
-            key="Get List of Department Courses"
-            href="#timetable/data/courses"
-          />,
-          <ListItem
-            primaryText="Get List of Course Modules"
-            key="Get List of Course Modules"
-            href="#timetable/data/courses/modules"
-          />,
-        ]}
-      />
+const links = {
+  Github: `https://github.com/uclapi`,
+  Facebook: `https://facebook.com/uclapi`,
+  Twitter: `https://twitter.com/uclapi`,
+}
 
-      <ListItem
-        href="#resources"
-        primaryText="Resources"
-        key="Resources"
-        primaryTogglesNestedList
-        nestedItems={[
-          <ListItem
-            primaryText="Get Desktop availability"
-            key="Get Desktop availability"
-            href="#resources/desktops"
-          />,
-        ]}
-      />
 
-      <ListItem
-        href="#workspaces"
-        primaryText="Workspaces"
-        key="Workspaces"
-        primaryTogglesNestedList
-        nestedItems={[
-          <ListItem
-            primaryText="Get Surveys"
-            key="Get Surveys"
-            href="#workspaces/surveys"
-          />,
-          <ListItem
-            primaryText="Get Sensors"
-            key="Get Sensors"
-            href="#workspaces/sensors"
-          />,
-          <ListItem
-            primaryText="Get Average Sensor Data"
-            key="Get Average Sensor Data"
-            href="#workspaces/sensors/averages/time"
-          />,
-          <ListItem
-            primaryText="Get Last Sensor Update"
-            key="Get Last Sensor Update"
-            href="#workspaces/sensors/lastupdated"
-          />,
-          <ListItem
-            primaryText="Get Sensors Summary"
-            key="Get Sensors Summary"
-            href="#workspaces/sensors/summary"
-          />,
-          <ListItem
-            primaryText="Get Map Image"
-            key="Get Map Image"
-            href="#workspaces/images/map"
-          />,
-          <ListItem
-            primaryText="Get Live Map Image"
-            key="Get Live Map Image"
-            href="#workspaces/images/map/live"
-          />,
-        ]}
-      />
-
-      <ListItem
-        primaryText="Get Involved"
-        key="Get Involved"
-        href="#getInvolved"
-      />
-    </SelectableList>
+const sidebarContent = (
+  <List component="div">
+    {
+      Object.entries(menuContents)
+        .map(([sectionTitle, sectionContent]) =>
+          Array.isArray(sectionContent) ? (
+            <Section sectionTitle={sectionTitle} key={sectionTitle}>
+              {
+                sectionContent.map(({ text, href }) => (
+                  <ListItem
+                    button
+                    component="a"
+                    href={href}
+                    key={href}
+                    style={{
+                      paddingLeft: `2rem`,
+                      boxSizing: `border-box`,
+                    }}
+                  >
+                    <ListItemText
+                      primary={text}
+                    />
+                  </ListItem>
+                ))
+              }
+            </Section>
+          ) : (
+              <ListItem
+                button
+                component="a"
+                href={sectionContent.href}
+                key={sectionContent.href}
+              >
+                <ListItemText
+                  primary={sectionContent.text}
+                />
+              </ListItem>
+            )
+        )
+    }
 
     <Divider />
 
-    <SelectableList
-      value=""
-    >
-      <Subheader>Links</Subheader>
-      <ListItem primaryText="GitHub" key="GitHub" href="https://github.com/uclapi" />
-      <ListItem primaryText="facebook" key="Facebook" href="https://facebook.com/uclapi" />
-      <ListItem primaryText="Twitter" key="Twitter" href="https://twitter.com/uclapi" />
-    </SelectableList>
-  </>
+    <ListSubheader>Links</ListSubheader>
+    {
+      Object.entries(links)
+        .map(([text, href]) => (
+          <ListItem
+            button
+            component="a"
+            href={href}
+            key={href}
+          >
+            <ListItemText
+              primary={text}
+            />
+          </ListItem>
+        ))
+    }
+  </List>
 )
 
 export default class Sidebar extends React.Component {
@@ -240,29 +278,34 @@ export default class Sidebar extends React.Component {
   constructor(props) {
     super(props)
 
-    this.toggleOpen = this.toggleOpen.bind(this)
-
     this.state = {
       isOpen: false,
     }
   }
 
-  toggleOpen() {
+  toggleOpen = () => {
+    const { isOpen } = this.state
     this.setState({
-      isOpen: !this.state.isOpen,
+      isOpen: !isOpen,
     })
   }
 
   render() {
-
+    const { isOpen } = this.state
     return (
       <>
         <div className={`default`}>
           <Drawer
-            open
-            containerStyle={{ top: 61 }}
+            variant="permanent"
           >
-            {menuContents}
+            <div style={{
+              marginTop: `61px`,
+              width: `256px`,
+              overflow: `auto`,
+            }}
+            >
+              {sidebarContent}
+            </div>
           </Drawer>
         </div>
         <div className={`mobile tablet`}>
@@ -279,11 +322,11 @@ export default class Sidebar extends React.Component {
           />
 
           <SwipeableDrawer
-            open={this.state.isOpen}
+            open={isOpen}
             onClose={this.toggleOpen}
             onOpen={this.toggleOpen}
           >
-            {menuContents}
+            {sidebarContent}
           </SwipeableDrawer>
         </div>
       </>

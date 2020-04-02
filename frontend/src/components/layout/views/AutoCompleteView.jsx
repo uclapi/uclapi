@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
 // remove this ^ when ready to add prop-types
 
+import { CardView, Container,Row, TextView } from 'Layout/Items.jsx'
 import React from 'react'
 import Autosuggest from 'react-autosuggest'
-
-import { CardView, Column, Row, TextView, Container } from 'Layout/Items.jsx'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -19,8 +18,19 @@ const row_size = 40
 const renderSuggestion = suggestion => (
   <Container styling="primary-highlight" height={row_size + `px`} style={{ "padding": `0` }} >
     <Row width="2-3" horizontalAlignment="center" verticalAlignment="center">
-      <CardView width="1-1" type="emphasis" fakeLink noShadow style={{ height: `30px`, paddingTop: `10px` }}>
-        <TextView align="center" text={suggestion} heading={5} style={{ margin: `0`, padding: 0 }}/>
+      <CardView width="1-1"
+        type="emphasis"
+        fakeLink
+        noShadow
+        style={{ height: `30px`,
+paddingTop: `10px` }}
+      >
+        <TextView align="center"
+          text={suggestion}
+          heading={5}
+          style={{ margin: `0`,
+padding: 0 }}
+        />
       </CardView>
     </Row>
   </Container>
