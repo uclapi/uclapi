@@ -3,7 +3,7 @@ amqp==2.5.2
 botocore==1.15.36
 boto3==1.12.31
 celery==4.4.2
-certifi==2019.11.28
+certifi==2020.4.5.1
 chardet==3.0.4
 Django==2.2.10
 ciso8601==2.1.3
