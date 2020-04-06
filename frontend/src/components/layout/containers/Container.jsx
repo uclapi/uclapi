@@ -2,10 +2,9 @@
 // remove this ^ when ready to add prop-types
 
 // React
-import React from 'react'
-
 // Row for heading
 import { Row, TextView } from 'Layout/Items.jsx'
+import React from 'react'
 
 /**
 REQUIRED ATTRIBUTES:

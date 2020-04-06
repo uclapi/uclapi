@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
 
+import { CodeView } from 'Layout/Items.jsx'
 import React from 'react'
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter'
 import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript'
 import py from 'react-syntax-highlighter/dist/esm/languages/hljs/python'
 import sh from 'react-syntax-highlighter/dist/esm/languages/hljs/shell'
-
-import { CodeView } from 'Layout/Items.jsx'
 
 SyntaxHighlighter.registerLanguage(`javascript`, js)
 SyntaxHighlighter.registerLanguage(`python`, py)

@@ -1,21 +1,34 @@
 import {
-  cyan500,
-  darkBlack, fullBlack,
-  grey100, grey300, grey400, grey500,
-  pinkA200,
-  white,
-} from 'material-ui/styles/colors'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+  cyan,
+  grey,
+  pink,
+} from '@material-ui/core/colors'
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import { Footer,NavBar } from 'Layout/Items.jsx'
+import { Footer, NavBar } from 'Layout/Items.jsx'
 
 import LogInLayout from '../components/appsettings/LogInLayout.jsx'
 import SettingsLayout from '../components/appsettings/SettingsLayout.jsx'
 
-const muiTheme = getMuiTheme({
+const {
+  500: cyan500,
+} = cyan
+const {
+  100: grey100,
+  300: grey300,
+  400: grey400,
+  500: grey500,
+  900: darkBlack,
+} = grey
+const {
+  A200: pinkA200,
+} = pink
+const white = `#ffffff`
+const fullBlack = `#000000`
+
+const muiTheme = createMuiTheme({
   fontFamily: `Roboto, sans-serif`,
   palette: {
     primary1Color: `#434343`,
@@ -50,20 +63,20 @@ class AppSettings extends React.Component {
       apps,
     } } = this.state
     if (status !== `ONLINE`) {
-      return <MuiThemeProvider muiTheme={muiTheme}>
-        <NavBar isScroll={false}/>
-          <LogInLayout url={url} />
+      return <MuiThemeProvider theme={muiTheme}>
+        <NavBar isScroll={false} />
+        <LogInLayout url={url} />
         <Footer />
       </MuiThemeProvider>
     } else {
-      return <MuiThemeProvider muiTheme={muiTheme}>
-      <NavBar isScroll={false}/>
+      return <MuiThemeProvider theme={muiTheme}>
+        <NavBar isScroll={false} />
         <SettingsLayout
           fullname={fullname}
           department={department}
           authorised_apps={apps}
         />
-      <Footer />
+        <Footer />
       </MuiThemeProvider>
     }
   }
