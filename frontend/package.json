@@ -49,7 +49,7 @@
     "axios": "^0.19.2",
     "dayjs": "^1.8.23",
     "glamor": "^2.20.40",
-    "immutability-helper": "^3.0.1",
+    "immutability-helper": "^3.0.2",
     "include-media": "^1.4.9",
     "js-cookie": "^2.2.1",
     "prop-types": "^15.7.2",
