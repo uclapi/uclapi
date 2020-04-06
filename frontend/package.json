@@ -43,7 +43,7 @@
     ]
   },
   "dependencies": {
-    "@material-ui/core": "^4.9.8",
+    "@material-ui/core": "^4.9.9",
     "ajv": "^6.12.0",
     "aphrodite": "^2.4.0",
     "axios": "^0.19.2",
@@ -58,7 +58,7 @@
     "react-autosuggest": "^9.4.3",
     "react-dom": "^16.13.1",
     "react-pose": "^4.0.10",
-    "react-responsive-carousel": "^3.1.51",
+    "react-responsive-carousel": "^3.1.56",
     "react-router-dom": "^5.1.2",
     "react-syntax-highlighter": "^12.2.1",
     "react-tabs": "^3.1.0",
