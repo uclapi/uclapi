@@ -349,6 +349,8 @@ class Command(BaseCommand):
 
             if settings.UCLAPI_DOMAIN_CURRENT == "staging.ninja":
                 delete_incident("Gencache-Staging")
+            elif settings.UCLAPI_DOMAIN_CURRENT == "uclapi.com":
+                delete_incident("Gencache-Prod")
 
             call_command('trigger_webhooks')
         except Exception as gencache_error:
@@ -366,6 +368,8 @@ class Command(BaseCommand):
 
             if settings.UCLAPI_DOMAIN_CURRENT == "staging.ninja":
                 create_incident(gencache_error, "Gencache-Staging")
+            elif settings.UCLAPI_DOMAIN_CURRENT == "uclapi.com":
+                create_incident(gencache_error, "Gencache-Prod")
 
             self._redis.delete(cache_running_key)
             raise
