@@ -10,9 +10,9 @@ class CachetException(Exception):
 def get_incident_name(base):
     incident_name = None
     if settings.UCLAPI_DOMAIN_CURRENT == "staging.ninja":
-        incident_name = base+"-Staging"
+        incident_name = base + "-Staging"
     elif settings.UCLAPI_DOMAIN_CURRENT == "uclapi.com":
-        incident_name = base+"-Prod"
+        incident_name = base + "-Prod"
     return incident_name
 
 
