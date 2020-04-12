@@ -122,7 +122,7 @@ class OccupeyeCache():
                 location_data = self._const.SURVEY_LOCATIONS[survey["Name"]]
             else:
                 location_data = {
-                 "lat": "", "long": "", "address": ["", "", "", ""]
+                    "lat": "", "long": "", "address": ["", "", "", ""]
                 }
             pipeline.hmset(
                 survey_key,
@@ -640,17 +640,6 @@ class OccupeyeCache():
             timespec='seconds'
         )
         self._redis.set(last_modified_key, current_timestamp)
-
-        if not settings.DEBUG:
-            url = settings.CACHET_URL
-            url = url+"components/3"
-            cachet_token = settings.CACHET_TOKEN
-            cachet_format = "application/x-www-form-urlencoded"
-            payload_headers = {"X-Cachet-Token": cachet_token,
-                               "Content-Type": cachet_format}
-            payload = {"status": 1}
-            requests.put(url, data=payload, headers=payload_headers)
-            print("[+] Cachet updated")
 
         print("[+] Done")
 

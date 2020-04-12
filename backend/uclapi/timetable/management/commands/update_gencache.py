@@ -23,7 +23,8 @@ from roombookings.models import \
     Booking, BookingA, BookingB
 from common.helpers import LOCAL_TIMEZONE
 
-from common.cachet import create_incident, delete_incident, CachetException
+from common.cachet import create_incident, delete_incident, CachetException, \
+    get_incident_name
 
 import gc
 
@@ -347,11 +348,7 @@ class Command(BaseCommand):
             # to be run again in the future.
             self._redis.delete(cache_running_key)
 
-            incident_name = None
-            if settings.UCLAPI_DOMAIN_CURRENT == "staging.ninja":
-                incident_name = "Gencache-Staging"
-            elif settings.UCLAPI_DOMAIN_CURRENT == "uclapi.com":
-                incident_name = "Gencache-Prod"
+            incident_name = get_incident_name("Gencache")
             if incident_name is not None:
                 try:
                     delete_incident(incident_name)
@@ -381,11 +378,7 @@ class Command(BaseCommand):
                 print(f"Failed to send message to Microsoft Teams. "
                       f"Reason: {repr(teams_error)}")
 
-            incident_name = None
-            if settings.UCLAPI_DOMAIN_CURRENT == "staging.ninja":
-                incident_name = "Gencache-Staging"
-            elif settings.UCLAPI_DOMAIN_CURRENT == "uclapi.com":
-                incident_name = "Gencache-Prod"
+            incident_name = get_incident_name("Gencache")
             if incident_name is not None:
                 try:
                     create_incident(gencache_error, incident_name)
