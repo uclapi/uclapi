@@ -2,7 +2,7 @@ fail_on_violations: true
 
 flake8:
   enabled: true
-  config_file: .flake8.ini
+  config_file: backend/uclapi/.flake8.ini
 
 scss:
   enabled: true
