@@ -1,4 +1,4 @@
-import RaisedButton from 'material-ui/RaisedButton'
+import RaisedButton from '@material-ui/core/Button'
 import PropTypes from 'prop-types'
 import React from 'react'
 
