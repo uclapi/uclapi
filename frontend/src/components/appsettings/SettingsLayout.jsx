@@ -1,9 +1,14 @@
 import axios from 'axios'
+// UCL Assistant splash screen
+import uclassistantmarket from 'Images/home-page/uclassistantmarket.png'
+// Components
+import {
+  ButtonView, CardView, Column,
+Container, ImageView,
+  Row, TextView} from 'Layout/Items.jsx'
 import PropTypes from 'prop-types'
 import React from 'react'
-
-// Components
-import { ButtonView, CardView, Column, Row, TextView } from 'Layout/Items.jsx'
+import { useHistory } from 'react-router-dom'
 
 const styles = {
   noPadding: {
@@ -41,32 +46,39 @@ class SettingsLayout extends React.Component {
     )
     const isApps = appCount === 0
 
+    const cardPadding = `30px`
+
     return (
-      <Row
+      <Container
         height='fit-content'
         styling='splash-parallax'
         style={{ minHeight: `100vh` }}
       >
-        <Column
-          width='2-3'
+        <Row
+          width='9-10'
           horizontalAlignment='center'
           style={{ marginTop: `50px` }}
         >
 
+          {/* Personal account details*/}
+
           <TextView
             text={`Account`}
-            heading={2}
+            heading={1}
             align={`left`}
             style={styles.title}
           />
 
-          <CardView width='1-1' type='default' noPadding>
-            <Row noPadding>
-              <Column width='1-1' horizontalAlignment='center' >
+          <CardView width='1-1' type='default' noPadding style={{ padding: 0 }}>
+            <Container noPadding>
+              <Row width='1-1' horizontalAlignment='center' >
                 <CardView
-                  width='1-2'
+                  width='6-10'
                   type="transparent"
                   noShadow
+                  keepInline
+                  style={{ padding: cardPadding }}
+                  noPadding
                 >
                   <TextView
                     text={fullname}
@@ -82,13 +94,16 @@ class SettingsLayout extends React.Component {
                   />
                 </CardView>
                 <CardView
-                  width='1-2'
+                  width='4-10'
                   type="transparent"
                   noShadow
+                  keepInline
+                  noPadding
+                  style={{ padding: cardPadding }}
                 >
                   <ButtonView
                     type="alternate"
-                    link={`\logout`}
+                    link={`/logout`}
                     text={`Logout`}
                     style={{
                       float: `right`,
@@ -96,127 +111,140 @@ class SettingsLayout extends React.Component {
                     }}
                   />
                 </CardView>
-              </Column>
-            </Row>
+              </Row>
+            </Container>
           </CardView>
 
           <TextView
             text={`Permissions`}
-            heading={2}
+            heading={1}
             align={`left`}
             style={styles.title}
           />
 
-          <CardView width='1-1' type='default' noPadding>
-            <Row noPadding>
-              <Column width='1-1'
-                horizontalAlignment='center'
-                style={{
-                  paddingTop: 20,
-                  paddingBottom: 20,
-                }}
+          {/* Authorised app details */}
+
+          <CardView
+            width='1-1'
+            type='default'
+            noPadding
+            style={{ padding: 0 }}
+          >
+            {isApps ? (
+
+              /* No apps authorised - suggest ucl assistant */
+
+              <Container
+                noPadding
               >
-                {isApps ? (
-                  <>
+                <Row width='1-1'
+                  horizontalAlignment='center'
+                  style={{
+                    paddingTop: 20,
+                    paddingBottom: 20,
+                  }}
+                >
+                  <Column width="1-2" className="default">
+                    <ImageView src={uclassistantmarket} width="367px" height="405px" description="ucl asssitant screen shot" centred />
+                  </Column>
+                  <Column width="1-2" alignItems="column">
                     <TextView
-                      text={`No authorised apps yet. Try UCL Assistant?`}
-                      heading={2}
-                      align={`center`}
-                      style={styles.noPadding}
+                      text="No authorised apps yet. Try UCL Assistant?"
+                      heading="2"
+                      align="left"
+                    />
+                    <TextView
+                      text={`UCL Assistant is a productivity app for students and staff at UCL. `
+                        + `It has been designed by students to be as reliable and user friendly `
+                        + `as possible.`}
+                      align="left"
+                      heading="5"
+                    />
+                    <TextView
+                      text={`The app has many different features but one of our favourites is `
+                        + `the ability to view your timetable in a weekly view. The app highlights your`
+                        + `current commitments to save you time as you rush about University. Check it out below!`}
+                      align="left"
+                      heading="5"
                     />
                     <ButtonView text="Download"
                       type="alternate"
                       link={`/marketplace/uclassistant`}
-                      style={{
+                      centred
+                      containerStyles={{
+                        marginTop: `20px`,
                         marginBottom: 0,
-                        cursor: `pointer`,
                       }}
                     />
-                  </>
-                ) : (
-                    <>
-                      {authorised_apps.map((app, i) =>
-                        <>
-                          {app.active && !isDeleted[i] ? (
-                            <>
-                              <div className="default tablet">
-                                <CardView
-                                  width='1-2'
-                                  type="transparent"
-                                  noShadow
-                                >
-                                  <TextView text={app.app.name.toUpperCase()}
-                                    heading={2}
-                                    align={`left`}
-                                    style={styles.noPadding}
-                                  />
-                                  <TextView text={app.app.creator.name}
-                                    heading={4}
-                                    align={`left`}
-                                    style={styles.noPadding}
-                                  />
-                                </CardView>
-                                <CardView
-                                  width='1-2'
-                                  type="transparent"
-                                  noShadow
-                                >
-                                  <ButtonView
-                                    type="alternate"
-                                    onClick={
-                                      this.handleChange(app.app.client_id, i)
-                                    }
-                                    text={`Revoke Permissions`}
-                                    style={{
-                                      float: `right`,
-                                      cursor: `pointer`,
-                                    }}
-                                  />
-                                </CardView>
-                              </div>
-                              <div className="mobile">
-                                <CardView
-                                  width='1-1'
-                                  type="transparent"
-                                  noShadow
-                                >
-                                  <TextView text={app.app.name.toUpperCase()}
-                                    heading={2}
-                                    align={`center`}
-                                    style={styles.noPadding}
-                                  />
-                                  <TextView text={app.app.creator.name}
-                                    heading={4}
-                                    align={`center`}
-                                    style={styles.noPadding}
-                                  />
-                                </CardView>
-                                <CardView
-                                  width='1-1'
-                                  type="transparent"
-                                  noShadow
-                                >
-                                  <ButtonView
-                                    type="alternate"
-                                    onClick={
-                                      this.handleChange(app.app.client_id, i)
-                                    }
-                                    text={`Revoke Permissions`}
-                                    style={{ cursor: `pointer` }}
-                                  />
-                                </CardView>
-                              </div>
-                            </>
-                          ) : null}
-                        </>
-                      )}
-                    </>
-                  )}
-              </Column>
-            </Row>
+                  </Column>
+                </Row>
+              </Container>
+            ) : (
+
+                /* Some apps authorised - display apps */
+
+                <Container noPadding>
+                  <Row width='1-1'
+                    horizontalAlignment='center'
+                    style={{
+                      paddingTop: 20,
+                      paddingBottom: 20,
+                    }}
+                    alignItems="column"
+                  >
+                    {authorised_apps.map((app, i) =>
+                      <>
+                        {app.active && !isDeleted[i] ? (
+                          <Row width="1-1">
+                            <CardView
+                              width='1-2'
+                              type="transparent"
+                              noShadow
+                              keepInline
+                              style={{ padding: cardPadding }}
+                              noPadding
+                            >
+                              <TextView text={app.app.name.toUpperCase()}
+                                heading={2}
+                                align={`left`}
+                                style={styles.noPadding}
+                              />
+                              <TextView text={app.app.creator.name}
+                                heading={4}
+                                align={`left`}
+                                style={styles.noPadding}
+                              />
+                            </CardView>
+                            <CardView
+                              width='1-2'
+                              type="transparent"
+                              noShadow
+                              keepInline
+                              style={{ padding: cardPadding }}
+                              noPadding
+                            >
+                              <ButtonView
+                                type="alternate"
+                                onClick={
+                                  this.handleChange(app.app.client_id, i)
+                                }
+                                text={`Revoke Permissions`}
+                                style={{
+                                  cursor: `pointer`,
+                                  float: `right`,
+                                }}
+                              />
+                            </CardView>
+                          </Row>
+                        ) : null}
+                      </>
+                    )}
+                  </Row>
+                </Container>
+              )}
           </CardView>
-        </Column>
-      </Row>
+        </Row>
+      </Container>
     )
   }
 
@@ -233,10 +261,10 @@ class SettingsLayout extends React.Component {
   }
 
   logout = () => {
-    if (confirm("Are you sure you want to logout")) {
-      let path = `/logout`;
-      let history = useHistory();
-      history.push(path);
+    if (confirm(`Are you sure you want to logout`)) {
+      const path = `/logout`
+      const history = useHistory()
+      history.push(path)
     }
   }
 

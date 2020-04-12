@@ -1,9 +1,8 @@
 // UCL API navbar
 import 'Styles/navbar.scss'
 
-import React from 'react'
-
 import { NavBar } from 'Layout/Items.jsx'
+import React from 'react'
 
 import GetInvolved from './GetInvolved/GetInvolved.jsx'
 import Welcome from './Meta/Welcome.jsx'

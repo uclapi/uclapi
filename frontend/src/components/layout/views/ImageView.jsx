@@ -22,10 +22,6 @@ export default class ImageView extends React.Component {
 
     this.DEBUGGING = false
 
-    // Bind functions
-    this.setTheme = this.setTheme.bind(this)
-    this.updateStyle = this.updateStyle.bind(this)
-
     const {
       src,
       description,
@@ -38,13 +34,15 @@ export default class ImageView extends React.Component {
     if (typeof description == `undefined`) { console.log(`EXCEPTION: ImageView.constructor: no description defined`) }
     if (typeof width == `undefined`) { console.log(`EXCEPTION: ImageView.constructor: no width defined`) }
     if (typeof height == `undefined`) { console.log(`EXCEPTION: ImageView.constructor: no height defined`) }
+
+    this.state = {
+      style: {},
+      className: `image-view`,
+    }
   }
 
   render() {
-    this.updateStyle()
-
-    const className = this.className
-    const style = this.style
+    const { className, style } = this.state
 
     const { src, description, width, height } = this.props
 
@@ -55,21 +53,26 @@ export default class ImageView extends React.Component {
     )
   }
 
-  updateStyle() {
-    this.class = `image-view`
-    this.style = {}
-    // If custom styling then include
-    const { style } = this.props
-    if (style) { this.style = { ...style } }
-    // Set up button tags
-    this.setTheme()
+  componentDidMount() {
+    this.refresh()
   }
 
-  setTheme() {
+  refresh = () => {
+    let className = `image-view`
+    let classStyle = {}
+
     // 'centred' - Center the button inside of its parent
     const { centred } = this.props
-    if (centred) { this.class += ` ` + `center-x` }
-  }
+    if (centred) { className += ` ` + `center-x` }
 
+    // If custom styling then include
+    const { style } = this.props
+    if (style) { classStyle = { ...style } }
+
+    this.setState({
+      style: classStyle,
+      className: className,
+    })
+  }
 
 }

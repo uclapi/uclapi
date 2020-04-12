@@ -1,7 +1,7 @@
 const path = require(`path`)
 const BundleTracker = require(`webpack-bundle-tracker`)
 
-let entryPointsPathPrefix = `./src/pages`
+const entryPointsPathPrefix = `./src/pages`
 
 const publicPath = `/static/`
 
@@ -25,7 +25,7 @@ module.exports = {
         },
       },
       {
-        test: /\.scss$/,
+        test: /\.(scss|css)$/,
         use: [
           { loader: `style-loader` },
           { loader: `css-loader` },
@@ -52,6 +52,7 @@ module.exports = {
     dashboard: entryPointsPathPrefix + `/Dashboard.jsx`,
     marketplace: entryPointsPathPrefix + `/Marketplace.jsx`,
     authorise: entryPointsPathPrefix + `/Authorise.jsx`,
+    warning: entryPointsPathPrefix + `/Warning.jsx`,
     settings: entryPointsPathPrefix + `/AppSettings.jsx`,
     vendors: [`react`],
   },

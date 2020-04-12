@@ -4,16 +4,13 @@
 // Standard React components
 import 'whatwg-fetch'
 
+// Code Generator
+import * as RequestGenerator from 'Layout/data/RequestGenerator.jsx'
 import React from 'react'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import { androidstudio } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 // DEPENDENCIES
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
-
-// Code Generator
-import * as RequestGenerator from 'Layout/data/RequestGenerator.jsx'
-// Common Components
-import { Column } from 'Layout/Items.jsx'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -66,7 +63,7 @@ export default class CodeView extends React.Component {
     if (this.DEBUGGING) { console.log(`DEBUG: currently selected tab is: ` + tabIndex) }
 
     return (
-      <Column width='1-1'>
+      <>
         <Tabs selectedIndex={tabIndex} onSelect={this.onSelect}>
           <TabList>
             {languages.map(({ name }, index) => (
@@ -83,7 +80,7 @@ export default class CodeView extends React.Component {
             </TabPanel>
           ))}
         </Tabs>
-      </Column>
+      </>
     )
   }
 
@@ -110,7 +107,7 @@ export default class CodeView extends React.Component {
     // type is 'real-response' - Use the passed response
     if (type == `response`) { languages = this.getResponse(response) }
     // type is raw-examples - Use the passed examples
-    if (type == `raw-examples`) { 
+    if (type == `raw-examples`) {
       languages = [
         {
           "name": `python`,
