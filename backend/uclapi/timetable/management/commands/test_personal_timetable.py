@@ -10,10 +10,10 @@ class Command(BaseCommand):
 
     help = 'Clones timetable related dbs to speed up queries'
 
+    def add_arguments(self, parser):
+        parser.add_argument('upi')
+
     def handle(self, *args, **options):
-        upi = input("Please enter the student UPI: ")
-        start_time = time.time()
+        upi = options['upi']
         tt = get_personal_timetable(upi)
-        elapsed_time = time.time() - start_time
-        print(elapsed_time)
         print(json.dumps(tt))

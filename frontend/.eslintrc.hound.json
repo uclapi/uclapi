@@ -1,0 +1,103 @@
+{
+  "env": {
+    "node": true,
+    "browser": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:security/recommended"
+  ],
+  "rules": {
+    "semi": [
+      "error",
+      "never"
+    ],
+    "quotes": [
+      "error",
+      "backtick"
+    ],
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "no-var": "error",
+    "react/jsx-indent-props": [
+      "error",
+      2
+    ],
+    "react/jsx-closing-bracket-location": [
+      "error"
+    ],
+    "react/static-property-placement": [
+      "error",
+      "static public field"
+    ],
+    "react/jsx-fragments": [
+      "error",
+      "syntax"
+    ],
+    "react/jsx-boolean-value": [
+      "error",
+      "never"
+    ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "packageDir": "./",
+        "devDependencies": true,
+        "optionalDependencies": false,
+        "peerDependencies": false
+      }
+    ],
+    "security/detect-non-literal-require": "off" // until https://github.com/nodesecurity/eslint-plugin-security/pull/32 is merged
+  },
+  "plugins": [
+    "react",
+    "import",
+    "security"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "settings": {
+    "import/resolver": {
+      "webpack": "webpack.prod.js",
+      "alias": {
+        "map": [
+          [
+            "Images",
+            "./src/images"
+          ],
+          [
+            "Layout",
+            "./src/components/layout"
+          ],
+          [
+            "Styles",
+            "./src/sass"
+          ]
+        ],
+        "extensions": [
+          "jpg",
+          "png",
+          "svg",
+          "jpeg",
+          "js",
+          "jsx",
+          "scss"
+        ]
+      }
+    },
+    "react": {
+      "version": "detect"
+    }
+  }
+}

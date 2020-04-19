@@ -17,6 +17,7 @@ from .amp import ModuleInstance
 from .models import (
     CminstancesA, CminstancesB,
     CourseA, CourseB,
+    ClassificationsA, ClassificationsB,
     CrscompmodulesA, CrscompmodulesB,
     CrsavailmodulesA, CrsavailmodulesB,
     DeptsA, DeptsB,
@@ -67,7 +68,8 @@ def get_cache(model_name):
         "cminstances": [CminstancesA, CminstancesB],
         "course": [CourseA, CourseB],
         "crsavailmodules": [CrsavailmodulesA, CrsavailmodulesB],
-        "crscompmodules": [CrscompmodulesA, CrscompmodulesB]
+        "crscompmodules": [CrscompmodulesA, CrscompmodulesB],
+        "classifications": [ClassificationsA, ClassificationsB]
     }
     roombookings_models = {
         "booking": [BookingA, BookingB]

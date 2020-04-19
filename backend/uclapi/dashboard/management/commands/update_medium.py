@@ -4,6 +4,7 @@ import redis
 import xml.etree.ElementTree as ET
 from requests import get as rget
 
+
 class Command(BaseCommand):
 
     help = 'Updates medium blogs on website'
@@ -51,7 +52,7 @@ class Command(BaseCommand):
 
             if content.startswith("<figure><img"):
                 link = content[25:]
-                split = link.split(" />")
+                split = link.split('" />')
                 link = split[0]
 
             pipe.set(redis_key_title, title)

@@ -122,6 +122,12 @@ class ImageBuilder():
                 # If the sensor is in a strange state just treat
                 # it as a free space.
                 occupied = False
+            except KeyError:
+                # Fix for API-4Y, i.e. UCL added a sensor called 'HOST653'
+                # which isn't actually a sensor. Hence the sensor status
+                # doesn't exist...
+                occupied = False
+                circle.attrib["opacity"] = "0"
 
             if occupied:
                 circle.attrib["fill"] = self._occupied_colour

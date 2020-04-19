@@ -2,75 +2,113 @@
   "name": "api-dashboard",
   "version": "1.0.0",
   "description": "Dashboard for the UCL API",
-  "scripts": {
-    "start": "NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors",
-    "build": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "profile": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors --profile --json > stats.json"
+  "homepage": "https://uclapi.com",
+  "bugs": {
+    "url": "https://github.com/uclapi/uclapi/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/uclapi/uclapi.git"
   },
-  "author": "UCL API",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/uclapi/uclapi/issues"
+  "author": "UCL API",
+  "scripts": {
+    "analyse": "npx webpack-bundle-analyzer stats.json",
+    "build": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors",
+    "pre-commit": "lint-staged",
+    "profile": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors --profile --json > stats.json",
+    "start": "NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors"
   },
-  "homepage": "https://uclapi.com",
-  "dependencies": {
-    "@material-ui/core": "^4.4.2",
-    "ajv": "^6.10.2",
-    "aphrodite": "^2.4.0",
-    "axios": "^0.19.0",
-    "glamor": "^2.20.40",
-    "immutability-helper": "^3.0.1",
-    "js-cookie": "^2.2.1",
-    "material-ui": "^0.20.2",
-    "moment": "^2.24.0",
-    "prop-types": "^15.7.2",
-    "rc-collapse": "^1.11.7",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-pose": "^4.0.8",
-    "react-router-dom": "^5.0.1",
-    "react-syntax-highlighter": "^11.0.2",
-    "react-transition-group": "^4.3.0",
-    "whatwg-fetch": "^3.0.0"
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run pre-commit"
+    }
   },
-  "devDependencies": {
-    "@babel/core": "^7.6.0",
-    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "@babel/preset-env": "^7.6.0",
-    "@babel/preset-react": "^7.0.0",
-    "babel-eslint": "^10.0.3",
-    "eslint": "^6.3.0",
-    "eslint-plugin-react": "^7.14.3",
-    "babel-loader": "^8.0.6",
-    "babelify": "^10.0.0",
-    "css-loader": "^3.1.0",
-    "dotenv": "^8.1.0",
-    "file-loader": "^4.1.0",
-    "glob": "^7.1.4",
-    "mini-css-extract-plugin": "^0.8.0",
-    "node-sass": "^4.12.0",
-    "optimize-css-assets-webpack-plugin": "^5.0.3",
-    "react-modal": "^3.10.1",
-    "sass-loader": "^7.3.1",
-    "style-loader": "^1.0.0",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "url-loader": "^2.1.0",
-    "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0",
-    "vinyl-transform": "^1.0.0",
-    "webpack": "^4.39.3",
-    "webpack-bundle-tracker": "^0.4.2-beta",
-    "webpack-cli": "^3.3.8"
+  "lint-staged": {
+    "*.{js,jsx,json}": [
+      "eslint --fix"
+    ],
+    "*.{scss}": [
+      "stylelint --fix"
+    ],
+    "../**/*.py": [
+      "autopep8 --in-place --global-config ../backend/uclapi/.flake8.ini",
+      "flake8"
+    ]
   },
   "browserify": {
     "transform": [
       "babelify",
       "envify"
     ]
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.9.11",
+    "ajv": "^6.12.1",
+    "aphrodite": "^2.4.0",
+    "axios": "^0.19.2",
+    "dayjs": "^1.8.24",
+    "glamor": "^2.20.40",
+    "immutability-helper": "^3.0.2",
+    "include-media": "^1.4.9",
+    "js-cookie": "^2.2.1",
+    "prop-types": "^15.7.2",
+    "rc-collapse": "^1.11.8",
+    "react": "^16.13.1",
+    "react-autosuggest": "^9.4.3",
+    "react-dom": "^16.13.1",
+    "react-pose": "^4.0.10",
+    "react-responsive-carousel": "^3.2.4",
+    "react-router-dom": "^5.1.2",
+    "react-syntax-highlighter": "^12.2.1",
+    "react-tabs": "^3.1.0",
+    "react-transition-group": "^4.3.0",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-react": "^7.9.4",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-transform-imports": "^2.0.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "babelify": "^10.0.0",
+    "css-loader": "^3.5.2",
+    "dotenv": "^8.2.0",
+    "eslint": "^6.8.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-import-resolver-webpack": "^0.12.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-json-format": "^2.0.1",
+    "eslint-plugin-no-secrets": "^0.6.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-security": "^1.4.0",
+    "eslint-plugin-simple-import-sort": "^5.0.2",
+    "eslint-plugin-sonarjs": "^0.5.0",
+    "file-loader": "^6.0.0",
+    "glob": "^7.1.6",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.1.6",
+    "mini-css-extract-plugin": "^0.9.0",
+    "node-sass": "^4.13.1",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "react-modal": "^3.11.2",
+    "sass-loader": "^8.0.2",
+    "style-loader": "^1.1.4",
+    "stylelint": "^13.3.2",
+    "stylelint-config-recommended": "^3.0.0",
+    "stylelint-scss": "^3.17.0",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "url-loader": "^4.1.0",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0",
+    "vinyl-transform": "^1.0.0",
+    "webpack": "^4.42.1",
+    "webpack-bundle-tracker": "^0.4.3",
+    "webpack-cli": "^3.3.11"
   }
 }

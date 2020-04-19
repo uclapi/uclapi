@@ -1,11 +1,15 @@
 fail_on_violations: true
 
-python:
+flake8:
   enabled: true
+  config_file: backend/uclapi/.flake8.ini
 
 scss:
-  enabled: false
+  enabled: true
+  config_file: frontend/.stylelintrc.yml
 
 eslint:
   enabled: true
-  config_file: frontend/.eslintrc
+  config_file: frontend/.eslintrc.hound.json
+  ignore_file: frontend/.eslintignore
+  version: 6.3.0

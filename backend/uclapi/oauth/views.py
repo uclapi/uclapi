@@ -586,7 +586,7 @@ def get_student_number(request, *args, **kwargs):
 
 
 @csrf_exempt
-def myapps_shibboleth_callback(request):
+def settings_shibboleth_callback(request):
     # should auth user login or signup
     # then redirect to my apps homepage
 
@@ -652,21 +652,19 @@ def myapps_shibboleth_callback(request):
             user.raw_intranet_groups = groups
         user.save()
 
-    return redirect("/oauth/myapps")
+    return redirect(settings)
 
 
 @ensure_csrf_cookie
-def my_apps(request):
+def settings(request):
     # Check whether the user is logged in
     try:
         user_id = request.session["user_id"]
     except KeyError:
         # Build Shibboleth callback URL
         url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
-        param = urllib.parse.urljoin(
-            request.build_absolute_uri(request.path),
-            "/shibcallback"
-        )
+        param = (request.build_absolute_uri(request.path) +
+            "user/login.callback")
         param = quote(param)
         url = url + param
 
@@ -705,7 +703,7 @@ def my_apps(request):
     }
 
     initial_data = json.dumps(initial_data_dict, cls=DjangoJSONEncoder)
-    return render(request, 'appsettings.html', {
+    return render(request, 'settings.html', {
         'initial_data': initial_data
     })
 
@@ -758,4 +756,15 @@ def deauthorise_app(request):
         "message": "App successfully deauthorised."
     })
     response.status_code = 200
+    return response
+
+
+@ensure_csrf_cookie
+def logout(request):
+    try:
+        del request.session['user_id']
+    except KeyError:
+        pass
+        
+    response = redirect('/warning', )
     return response
