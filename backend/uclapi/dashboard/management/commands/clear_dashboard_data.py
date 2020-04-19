@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 
-from dashboard.models import *
+from dashboard.models import User, App, APICall, Webhook, WebhookTriggerHistory
+
 
 class Command(BaseCommand):
 
