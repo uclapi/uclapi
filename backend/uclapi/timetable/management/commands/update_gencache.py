@@ -1,3 +1,27 @@
+import pymsteams
+from timetable.models import \
+    Classifications, ClassificationsA, ClassificationsB, \
+    Cminstances, CminstancesA, CminstancesB, \
+    Crsavailmodules, CrsavailmodulesA, CrsavailmodulesB, \
+    Crscompmodules, CrscompmodulesA, CrscompmodulesB, \
+    Course, CourseA, CourseB, \
+    Depts, DeptsA, DeptsB, \
+    Lecturer, LecturerA, LecturerB, \
+    Module, ModuleA, ModuleB, \
+    Modulegroups, ModulegroupsA, ModulegroupsB, \
+    Sites, SitesA, SitesB, \
+    Stuclasses, StuclassesA, StuclassesB, \
+    Stumodules, StumodulesA, StumodulesB, \
+    Students, StudentsA, StudentsB, \
+    Timetable, TimetableA, TimetableB, \
+    Weekmapnumeric, WeekmapnumericA, WeekmapnumericB, \
+    Weekmapstring, WeekmapstringA, WeekmapstringB, \
+    Weekstructure, WeekstructureA, WeekstructureB, \
+    Lock
+from roombookings.models import \
+    Room, RoomA, RoomB, \
+    Booking, BookingA, BookingB
+from common.helpers import LOCAL_TIMEZONE
 import gc
 
 import django
@@ -22,29 +46,6 @@ from django import db
 if not apps.ready and not settings.configured:
     django.setup()
 
-from common.helpers import LOCAL_TIMEZONE
-from roombookings.models import \
-    Room, RoomA, RoomB, \
-    Booking, BookingA, BookingB
-from timetable.models import \
-    Cminstances, CminstancesA, CminstancesB, \
-    Crsavailmodules, CrsavailmodulesA, CrsavailmodulesB, \
-    Crscompmodules, CrscompmodulesA, CrscompmodulesB, \
-    Course, CourseA, CourseB, \
-    Depts, DeptsA, DeptsB, \
-    Lecturer, LecturerA, LecturerB, \
-    Module, ModuleA, ModuleB, \
-    Modulegroups, ModulegroupsA, ModulegroupsB, \
-    Sites, SitesA, SitesB, \
-    Stuclasses, StuclassesA, StuclassesB, \
-    Stumodules, StumodulesA, StumodulesB, \
-    Students, StudentsA, StudentsB, \
-    Timetable, TimetableA, TimetableB, \
-    Weekmapnumeric, WeekmapnumericA, WeekmapnumericB, \
-    Weekmapstring, WeekmapstringA, WeekmapstringB, \
-    Weekstructure, WeekstructureA, WeekstructureB, \
-    Lock
-
 
 """
     Table format
@@ -63,6 +64,7 @@ tables = [
     (Booking, BookingA, BookingB, True, True, True),
     (Cminstances, CminstancesA, CminstancesB, True, False, False),
     (Course, CourseA, CourseB, True, False, False),
+    (Classifications, ClassificationsA, ClassificationsB, True, False, False),
     (Crsavailmodules, CrsavailmodulesA, CrsavailmodulesB, True, False, True),
     (Crscompmodules, CrscompmodulesA, CrscompmodulesB, True, False, True),
     (Depts, DeptsA, DeptsB, False, False, False),
@@ -96,8 +98,8 @@ def cache_table_process(index, destination_table_index, options):
     table_prefix = "roombookings_" if table_data[4] else "timetable_"
     gencache_cursor.execute(
         "TRUNCATE TABLE {}{} RESTART IDENTITY;".format(
-                table_prefix,
-                table_data[destination_table_index].__name__.lower()
+            table_prefix,
+            table_data[destination_table_index].__name__.lower()
         )
     )
 
@@ -276,70 +278,85 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        start_time = time.time()
-        # We first check if we are already caching so that we don't
-        # tread over ourselves by trying to cache twice at once
-        print("Connecting to Redis")
-        self._redis = redis.Redis(
-            host=settings.REDIS_UCLAPI_HOST,
-            charset="utf-8",
-            decode_responses=True
-        )
-
-        cache_running_key = "cron:gencache:in_progress"
-        running = self._redis.get(cache_running_key)
-        if running:
-            print("## A gencache update job is still in progress ##")
-            # Only quit if we haven't specified that we want to override
-            # this check
-            if not options['skip_run_check']:
-                return
-
-        # There is no other job running so we can cache now
-        # We set the TTL to 2700 seconds = 45 minutes, the maximum time
-        # that the cache operation could ever take before we consider it
-        # to have died or failed.
-        self._redis.set(cache_running_key, "True", ex=2700)
-
-        lock = Lock.objects.all()[0]
-        destination_table_index = 2 if lock.a else 1
-
-        with Pool(processes=2) as pool:
-            # Build up a list of argument tuples for the child process calls
-            pool_args = []
-            for i in range(0, len(tables)):
-                pool_args.append((i, destination_table_index, options))
-
-            pool.starmap(cache_table_process, pool_args)
-
-            pool.close()
-            pool.join()
-        for i in tables:
-            print()
-
-        print()
-        elapsed_time = time.time() - start_time
-        print(
-            "Caching process completed in {}m {}s".format(
-                int(elapsed_time // 60),
-                int(elapsed_time % 60)
+        try:
+            start_time = time.time()
+            # We first check if we are already caching so that we don't
+            # tread over ourselves by trying to cache twice at once
+            print("Connecting to Redis")
+            self._redis = redis.Redis(
+                host=settings.REDIS_UCLAPI_HOST,
+                charset="utf-8",
+                decode_responses=True
             )
-        )
 
-        print("Inverting lock")
-        lock.a, lock.b = not lock.a, not lock.b
-        lock.save()
+            cache_running_key = "cron:gencache:in_progress"
+            running = self._redis.get(cache_running_key)
+            if running:
+                print("## A gencache update job is still in progress ##")
+                # Only quit if we haven't specified that we want to override
+                # this check
+                if not options['skip_run_check']:
+                    return
 
-        print("Setting Last-Modified key")
-        last_modified_key = "http:headers:Last-Modified:gencache"
+            # There is no other job running so we can cache now
+            # We set the TTL to 2700 seconds = 45 minutes, the maximum time
+            # that the cache operation could ever take before we consider it
+            # to have died or failed.
+            self._redis.set(cache_running_key, "True", ex=2700)
 
-        current_timestamp = datetime.now(LOCAL_TIMEZONE).isoformat(
-            timespec='seconds'
-        )
-        self._redis.set(last_modified_key, current_timestamp)
+            lock = Lock.objects.all()[0]
+            destination_table_index = 2 if lock.a else 1
 
-        # Cache has been run now, so we can delete the key to allow it
-        # to be run again in the future.
-        self._redis.delete(cache_running_key)
+            with Pool(processes=2) as pool:
+                # Build up a list of argument tuples for child process calls
+                pool_args = []
+                for i in range(0, len(tables)):
+                    pool_args.append((i, destination_table_index, options))
 
-        call_command('trigger_webhooks')
+                pool.starmap(cache_table_process, pool_args)
+
+                pool.close()
+                pool.join()
+            for i in tables:
+                print()
+
+            print()
+            elapsed_time = time.time() - start_time
+            print(
+                "Caching process completed in {}m {}s".format(
+                    int(elapsed_time // 60),
+                    int(elapsed_time % 60)
+                )
+            )
+
+            print("Inverting lock")
+            lock.a, lock.b = not lock.a, not lock.b
+            lock.save()
+
+            print("Setting Last-Modified key")
+            last_modified_key = "http:headers:Last-Modified:gencache"
+
+            current_timestamp = datetime.now(LOCAL_TIMEZONE).isoformat(
+                timespec='seconds'
+            )
+            self._redis.set(last_modified_key, current_timestamp)
+
+            # Cache has been run now, so we can delete the key to allow it
+            # to be run again in the future.
+            self._redis.delete(cache_running_key)
+
+            call_command('trigger_webhooks')
+        except Exception as gencache_error:
+            try:
+                if "localhost" not in settings.UCLAPI_DOMAIN_CURRENT:
+                    teams = pymsteams.connectorcard(
+                        settings.TEAMS_BACKEND_WEBHOOK)
+                    teams.text(f"Gencache failed on "
+                               f"{settings.UCLAPI_DOMAIN_CURRENT}"
+                               f" with error: {repr(gencache_error)}")
+                    teams.send()
+            except Exception as teams_error:
+                print(f"Failed to send message to Microsoft Teams. "
+                      f"Reason: {repr(teams_error)}")
+            self._redis.delete(cache_running_key)
+            raise

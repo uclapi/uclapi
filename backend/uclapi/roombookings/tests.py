@@ -25,10 +25,10 @@ from .helpers import (
     TOKEN_EXPIRY_TIME
 )
 
-from .models import Room
+from .models import RoomA
 from timetable.models import Lock
 
-from .views import get_bookings
+from .views import get_bookings, get_rooms
 
 from uclapi.settings import REDIS_UCLAPI_HOST
 
@@ -41,45 +41,45 @@ class FakeModelClass:
 
 class EquipmentSerializationTestCase(SimpleTestCase):
 
-        def test_serialize_equipment(self):
-            equipment_list = [
-                FakeModelClass(
-                    setid=settings.ROOMBOOKINGS_SETID,
-                    roomid="016",
-                    units=1,
-                    description="Chairs with Tables",
-                    siteid="267",
-                    type="FF"
-                ),
-                FakeModelClass(
-                    setid=settings.ROOMBOOKINGS_SETID,
-                    roomid="105",
-                    units=1,
-                    description="Software - Earth Sciences - self learning",
-                    siteid="002",
-                    type="FF"
-                )
-            ]
-            none_qs = Room.objects.none()
-            equipment_qs = list(chain(none_qs, equipment_list))
-            serialised_equipment = _serialize_equipment(equipment_qs)
-            self.assertEqual(
-                serialised_equipment, [
-                    {
-                        "type": "FF",
-                        "description": "Chairs with Tables",
-                        "units": 1
-                    },
-                    {
-                        "type": "FF",
-                        "description": (
-                            "Software - Earth Sciences"
-                            " - self learning"
-                        ),
-                        "units": 1
-                    }
-                ]
+    def test_serialize_equipment(self):
+        equipment_list = [
+            FakeModelClass(
+                setid=settings.ROOMBOOKINGS_SETID,
+                roomid="016",
+                units=1,
+                description="Chairs with Tables",
+                siteid="267",
+                type="FF"
+            ),
+            FakeModelClass(
+                setid=settings.ROOMBOOKINGS_SETID,
+                roomid="105",
+                units=1,
+                description="Software - Earth Sciences - self learning",
+                siteid="002",
+                type="FF"
             )
+        ]
+        none_qs = RoomA.objects.none()
+        equipment_qs = list(chain(none_qs, equipment_list))
+        serialised_equipment = _serialize_equipment(equipment_qs)
+        self.assertEqual(
+            serialised_equipment, [
+                {
+                    "type": "FF",
+                    "description": "Chairs with Tables",
+                    "units": 1
+                },
+                {
+                    "type": "FF",
+                    "description": (
+                        "Software - Earth Sciences"
+                        " - self learning"
+                    ),
+                    "units": 1
+                }
+            ]
+        )
 
 
 class ParseDateTimeTestCase(SimpleTestCase):
@@ -112,18 +112,18 @@ class ParseDateTimeTestCase(SimpleTestCase):
         ]
 
         expected = [
-            (datetime.datetime(2016, 2, 19, 0, 0, 1),
-                datetime.datetime(2016, 2, 19, 23, 59, 59), True),
-            (datetime.datetime(2017, 3, 20, 0, 0, 1),
-                datetime.datetime(2017, 3, 20, 23, 59, 59), True),
-            (datetime.datetime(2017, 12, 14, 0, 0, 1),
-                datetime.datetime(2017, 12, 14, 23, 59, 59), True),
-            (datetime.datetime(2017, 10, 8, 0, 0, 1),
-                datetime.datetime(2017, 10, 8, 23, 59, 59), True),
-            (datetime.datetime(2017, 1, 1, 0, 0, 1),
-                datetime.datetime(2017, 1, 1, 23, 59, 59), True),
-            (datetime.datetime(2018, 1, 1, 0, 0, 1),
-                datetime.datetime(2018, 1, 1, 23, 59, 59), True),
+            (datetime.datetime(2016, 2, 19, 0, 0, 0, 0),
+                datetime.datetime(2016, 2, 19, 23, 59, 59, 999999), True),
+            (datetime.datetime(2017, 3, 20, 0, 0, 0, 0),
+                datetime.datetime(2017, 3, 20, 23, 59, 59, 999999), True),
+            (datetime.datetime(2017, 12, 14, 0, 0, 0, 0),
+                datetime.datetime(2017, 12, 14, 23, 59, 59, 999999), True),
+            (datetime.datetime(2017, 10, 8, 0, 0, 0, 0),
+                datetime.datetime(2017, 10, 8, 23, 59, 59, 999999), True),
+            (datetime.datetime(2017, 1, 1, 0, 0, 0, 0),
+                datetime.datetime(2017, 1, 1, 23, 59, 59, 999999), True),
+            (datetime.datetime(2018, 1, 1, 0, 0, 0, 0),
+                datetime.datetime(2018, 1, 1, 23, 59, 59, 999999), True),
             (-1, -1, False),
             (-1, -1, False),
             (-1, -1, False),
@@ -442,6 +442,33 @@ class CreateRedisPageTokenTest(TestCase):
             query_decoded["test"],
             "test_data"
         )
+
+
+class GetRoomsEndpointTest(TestCase):
+
+    def setUp(self):
+        self.factory = APIRequestFactory()
+
+        # Standard Token data
+        self.user_ = User.objects.create(cn="test", employee_id=7357)
+        self.app = App.objects.create(user=self.user_, name="An App")
+
+    # TODO: Github Issue #1155
+    # def test_get_rooms_default(self):
+    #     request = self.factory.get(
+    #         '/roombookings/rooms',
+    #         {'token': self.app.api_token}
+    #     )
+    #     response = get_rooms(request
+    #     self.assertEqual(response.status_code, 200)
+
+    def test_get_rooms_with_invalid_capacity(self):
+        request = self.factory.get(
+            '/roombookings/rooms',
+            {'token': self.app.api_token, 'capacity': '5-'}
+        )
+        response = get_rooms(request)
+        self.assertEqual(response.status_code, 400)
 
 
 class GetBookingEndpointTest(TestCase):

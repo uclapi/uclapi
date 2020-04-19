@@ -160,15 +160,13 @@ def _parse_datetime(start_time, end_time, search_date):
             if search_date:
                 search_date = datetime.datetime.strptime(
                                             search_date, "%Y%m%d").date()
-                day_start = datetime.time(0, 0, 1)  # start of the day
-                day_end = datetime.time(23, 59, 59)  # end of the day
                 parsed_start_time = datetime.datetime.combine(
                     search_date,
-                    day_start
+                    datetime.time.min  # start of the day
                 )
                 parsed_end_time = datetime.datetime.combine(
                     search_date,
-                    day_end
+                    datetime.time.max  # end of the day
                 )
     except (TypeError, NameError, ValueError, AttributeError):
         return -1, -1, False

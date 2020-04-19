@@ -83,6 +83,8 @@ celerybeat-schedule
 
 # dotenv
 .env
+.env.prod
+.env.staging
 
 # Other .env files
 *.env
@@ -100,12 +102,9 @@ ENV/
 # PyCharm & IntelliJ
 .idea/
 
-#vim files
+# vim files
 *~
 *.swp
-
-#js stuff
-node_modules
 
 .DS_STORE
 *.sqlite3
@@ -136,6 +135,8 @@ dump.rdb
 /scripts/shibboleth/sp-cert.staging.pem
 /scripts/shibboleth/sp-key.prod.pem
 /scripts/shibboleth/sp-key.staging.pem
+/deployment_production.sh
+/deployment_staging.sh
 
 # use NPM not yarn
 yarn.lock

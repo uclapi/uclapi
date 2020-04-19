@@ -6,6 +6,8 @@ class ModelRouter(object):
             "bookingb",
             "rooma",
             "roomb",
+            "classificationsa",
+            "classificationsb",
             "cminstancesa",
             "cminstancesb",
             "coursea",

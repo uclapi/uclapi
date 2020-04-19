@@ -184,7 +184,14 @@ def dashboard(request):
 
 
 @ensure_csrf_cookie
-def get_started(request):
+def about(request):
+    return render(request, 'about.html', {
+        'initial_data': {}
+    })
+
+
+@ensure_csrf_cookie
+def home(request):
     logged_in = True
 
     try:
@@ -195,7 +202,7 @@ def get_started(request):
     articles = get_articles()
     token = get_temp_token()
 
-    return render(request, 'getStarted.html', {
+    return render(request, 'index.html', {
         'initial_data': {
             'temp_token': token,
             'logged_in': str(logged_in),
@@ -207,3 +214,43 @@ def get_started(request):
 @ensure_csrf_cookie
 def documentation(request):
     return render(request, 'documentation.html')
+
+
+@ensure_csrf_cookie
+def warning(request):
+    return render(request, 'warning.html', {
+        'initial_data': {
+            'title': "Please note you are not fully logged out!",
+            'content': ["You have been logged out from UCL API. However "
+                        + "in order to be fully logged out of all UCL services "
+                        + "you need to close your browser completely and re-open.",
+                        "Thank you! Click here to go back to the front page:"]
+        }
+    })
+
+
+@ensure_csrf_cookie
+def error_404_view(request, exception):
+    return render(request, 'warning.html', {
+        'initial_data': {
+            'title': "Error 404",
+            'content': ["Oops we cannot seem to find that page! ",
+                        "Please click below to go back to the front page:"]
+        }
+    })
+
+
+def error_500_view(request):
+    return render(request, 'warning.html', {
+        'initial_data': {
+            'title': "Error 500",
+            'content': ["Oops... something went wrong! Sorry for the inconvenience. ",
+                        "Our team is working on it, if you have an urgent concern please get "
+                        + "in touch with us at isd.apiteam@ucl.ac.uk",
+                        "Please click below to go back to the front page:"]
+        }
+    })
+
+
+def custom_page_not_found(request):
+    return error_404_view(request, None)

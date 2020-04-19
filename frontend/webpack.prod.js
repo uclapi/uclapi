@@ -1,53 +1,60 @@
-require('dotenv')
-  .config({
-    path: '../backend/uclapi/.env'
-  });
+const dotenv = require(`dotenv`)
+dotenv.config({
+  path: `../backend/uclapi/.env`,
+})
 
-const webpack = require('webpack');
-const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const BundleTracker = require('webpack-bundle-tracker');
+const webpack = require(`webpack`)
+const path = require(`path`)
+const UglifyJsPlugin = require(`uglifyjs-webpack-plugin`)
+const OptimizeCSSAssetsPlugin = require(`optimize-css-assets-webpack-plugin`)
+const BundleTracker = require(`webpack-bundle-tracker`)
 
-const os = require('os');
+const os = require(`os`)
 
-var entryPointsPathPrefix = './src/pages';
+const entryPointsPathPrefix = `./src/pages`
 
-const publicPath = process.env.AWS_S3_STATICS === 'True'
-  ? `https://${process.env.AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${process.env.AWS_S3_BUCKET_PATH}`
-  : '/static/';
+const {
+  AWS_S3_STATICS,
+  AWS_S3_BUCKET_NAME,
+  AWS_S3_BUCKET_PATH,
+} = process.env
+
+const publicPath = AWS_S3_STATICS === `True`
+  ? `https://${AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${AWS_S3_BUCKET_PATH}`
+  : `/static/`
+
+const envKeys = Object.keys(process.env).reduce((prev, next) => {
+  prev[`process.env.${next}`] = JSON.stringify(process.env[next])
+  return prev
+}, {})
 
 module.exports = {
-  mode: 'production',
+  mode: `production`,
   optimization: {
     minimizer: [],  // This list is built below as per platform requirements
     splitChunks: {
       name: false,
       cacheGroups: {
         vendors: {
-          chunks: 'all',
-          name: 'vendors',
+          chunks: `all`,
+          name: `vendors`,
           test: /[\\/]node_modules[\\/]/,
         },
       },
     },
   },
   plugins: [
+    new webpack.DefinePlugin(envKeys),
     new UglifyJsPlugin({
-      sourceMap: true
+      sourceMap: true,
     }),
     new webpack.DefinePlugin({
-     'process.env.NODE_ENV': JSON.stringify('production')
-    }),
-    new MiniCssExtractPlugin({
-      filename: "[name]-[contenthash].css",
-      chunkFilename: "[id]-[contenthash].css"
+      'process.env.NODE_ENV': JSON.stringify(`production`),
     }),
     new BundleTracker({
-      filename: '../backend/uclapi/static/webpack-stats.json'
+      filename: `../backend/uclapi/static/webpack-stats.json`,
     }),
-    new webpack.HashedModuleIdsPlugin()
+    new webpack.HashedModuleIdsPlugin(),
   ],
   module: {
     rules: [
@@ -55,58 +62,67 @@ module.exports = {
         test: /\.jsx$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
-        }
+          loader: `babel-loader`,
+        },
       },
       {
-        test: /\.scss$/,
+        test: /\.scss|css$/,
         use: [
-          MiniCssExtractPlugin.loader,
-          { loader: "css-loader" },
-          { loader: "sass-loader" }
-        ]
+          { loader: `style-loader` },
+          { loader: `css-loader` },
+          { loader: `sass-loader` },
+        ],
       },
       {
-        test: /\.(jpg|png|svg)$/,
-        loader: 'file-loader'
+        test: /\.(jpg|png|svg|jpeg)$/,
+        loader: `url-loader`,
       },
-    ]
+    ],
+  },
+  resolve: {
+    alias: {
+      'Images': path.resolve(__dirname, `./src/images`),
+      'Layout': path.resolve(__dirname, `./src/components/layout`),
+      'Styles': path.resolve(__dirname, `./src/sass`),
+    },
   },
   entry: {
-    getStarted: entryPointsPathPrefix + '/getStarted.jsx',
-    documentation: entryPointsPathPrefix + '/documentation.jsx',
-    dashboard: entryPointsPathPrefix + '/dashboard.jsx',
-    marketplace: entryPointsPathPrefix + '/marketplace.jsx',
-    authorise: entryPointsPathPrefix + '/authorise.jsx',
-    appsettings: entryPointsPathPrefix + '/appsettings.jsx',
-    vendors: ['react'],
+    index: entryPointsPathPrefix + `/HomePage.jsx`,
+    documentation: entryPointsPathPrefix + `/Documentation.jsx`,
+    about: entryPointsPathPrefix + `/AboutPage.jsx`,
+    dashboard: entryPointsPathPrefix + `/Dashboard.jsx`,
+    marketplace: entryPointsPathPrefix + `/Marketplace.jsx`,
+    authorise: entryPointsPathPrefix + `/Authorise.jsx`,
+    warning: entryPointsPathPrefix + `/Warning.jsx`,
+    settings: entryPointsPathPrefix + `/AppSettings.jsx`,
+    vendors: [`react`],
   },
   output: {
-    path: path.resolve(__dirname, '../backend/uclapi/static/'),
+    path: path.resolve(__dirname, `../backend/uclapi/static/`),
     publicPath,
-    filename: '[name]-[contenthash].js'
-  }
-};
+    filename: `[name]-[contenthash].js`,
+  },
+}
 
 // Do not enable parallelisation for Windows Subsystem for Linux
 // https://github.com/webpack-contrib/uglifyjs-webpack-plugin/issues/302
 // https://stackoverflow.com/a/44356310/5297057
-if (os.platform == "linux" && os.release().indexOf("Microsoft") != -1) {
+if (os.platform == `linux` && os.release().indexOf(`Microsoft`) != -1) {
   module.exports.optimization.minimizer.push(
     new UglifyJsPlugin({
       cache: true,
-      sourceMap: true
+      sourceMap: true,
     })
-  );
+  )
 } else {
   module.exports.optimization.minimizer.push(
     new UglifyJsPlugin({
       cache: true,
       sourceMap: true,
-      parallel: true
+      parallel: true,
     })
-  );
+  )
 }
 module.exports.optimization.minimizer.push(
   new OptimizeCSSAssetsPlugin({})
-);
+)
