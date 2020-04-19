@@ -20,6 +20,7 @@ import ucsscr4 from 'Images/marketplace/uclcssa/screenshot_4.png'
 import unikomdesktop1 from 'Images/marketplace/unikomet/desktop_screenshot_1.png'
 import unikomdesktop2 from 'Images/marketplace/unikomet/desktop_screenshot_2.png'
 import unikomdesktop3 from 'Images/marketplace/unikomet/desktop_screenshot_3.png'
+import unikomdesktop4 from 'Images/marketplace/unikomet/desktop_screenshot_4.png'
 // Unikomet
 import unikometlogo from 'Images/marketplace/unikomet/logo.png'
 import unikom1 from 'Images/marketplace/unikomet/screenshot_1.png'
@@ -284,6 +285,14 @@ const unikometdescription = (
             height="auto"
           />
           <p className="legend">{`View Reviews`}</p>
+        </div>
+        <div key={`unikomet-desktop-image-4`}>
+          <img
+            src={unikomdesktop4}
+            width="100%"
+            height="auto"
+          />
+          <p className="legend">{`Sort by department`}</p>
         </div>
       </Carousel>
     </div>
