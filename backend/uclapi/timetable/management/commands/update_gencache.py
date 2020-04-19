@@ -1,30 +1,36 @@
 import pymsteams
-from timetable.models import \
-    Classifications, ClassificationsA, ClassificationsB, \
-    Cminstances, CminstancesA, CminstancesB, \
-    Crsavailmodules, CrsavailmodulesA, CrsavailmodulesB, \
-    Crscompmodules, CrscompmodulesA, CrscompmodulesB, \
-    Course, CourseA, CourseB, \
-    Depts, DeptsA, DeptsB, \
-    Lecturer, LecturerA, LecturerB, \
-    Module, ModuleA, ModuleB, \
-    Modulegroups, ModulegroupsA, ModulegroupsB, \
-    Sites, SitesA, SitesB, \
-    Stuclasses, StuclassesA, StuclassesB, \
-    Stumodules, StumodulesA, StumodulesB, \
-    Students, StudentsA, StudentsB, \
-    Timetable, TimetableA, TimetableB, \
-    Weekmapnumeric, WeekmapnumericA, WeekmapnumericB, \
-    Weekmapstring, WeekmapstringA, WeekmapstringB, \
-    Weekstructure, WeekstructureA, WeekstructureB, \
+
+from timetable.models import (
+    Classifications, ClassificationsA, ClassificationsB,
+    Cminstances, CminstancesA, CminstancesB,
+    Crsavailmodules, CrsavailmodulesA, CrsavailmodulesB,
+    Crscompmodules, CrscompmodulesA, CrscompmodulesB,
+    Course, CourseA, CourseB,
+    Depts, DeptsA, DeptsB,
+    Lecturer, LecturerA, LecturerB,
+    Module, ModuleA, ModuleB,
+    Modulegroups, ModulegroupsA, ModulegroupsB,
+    Sites, SitesA, SitesB,
+    Stuclasses, StuclassesA, StuclassesB,
+    Stumodules, StumodulesA, StumodulesB,
+    Students, StudentsA, StudentsB,
+    Timetable, TimetableA, TimetableB,
+    Weekmapnumeric, WeekmapnumericA, WeekmapnumericB,
+    Weekmapstring, WeekmapstringA, WeekmapstringB,
+    Weekstructure, WeekstructureA, WeekstructureB,
     Lock
-from roombookings.models import \
-    Room, RoomA, RoomB, \
+)
+
+from roombookings.models import (
+    Room, RoomA, RoomB,
     Booking, BookingA, BookingB
+)
+
 from common.helpers import LOCAL_TIMEZONE
 
-from common.cachet import create_incident, delete_incident, CachetException, \
-    get_incident_name
+from common.cachet import (
+    create_incident, delete_incident, CachetException, get_incident_name
+)
 
 import gc
 
@@ -349,7 +355,7 @@ class Command(BaseCommand):
             self._redis.delete(cache_running_key)
 
             incident_name = get_incident_name("Gencache")
-            if incident_name is not None:
+            if incident_name:
                 try:
                     delete_incident(incident_name)
                 except CachetException as cachet_error:
@@ -358,6 +364,8 @@ class Command(BaseCommand):
                 except Exception as cachet_error:
                     print(f"Unexpected: Failed to delete cachet incident. "
                           f"Reason: {repr(cachet_error)}")
+            else:
+                print("Could not find appropriate incident in Cachet!")
 
             if settings.UCLAPI_DOMAIN_CURRENT == "staging.ninja":
                 delete_incident("Gencache-Staging")
@@ -379,7 +387,7 @@ class Command(BaseCommand):
                       f"Reason: {repr(teams_error)}")
 
             incident_name = get_incident_name("Gencache")
-            if incident_name is not None:
+            if incident_name:
                 try:
                     create_incident(gencache_error, incident_name)
                 except CachetException as cachet_error:
@@ -388,6 +396,8 @@ class Command(BaseCommand):
                 except Exception as cachet_error:
                     print(f"Unexpected: Failed to create cachet incident. "
                           f"Reason: {repr(cachet_error)}")
+            else:
+                print("Could not find appropriate incident in Cachet!")
 
             self._redis.delete(cache_running_key)
             raise
