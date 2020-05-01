@@ -1,7 +1,9 @@
 from django.core.management.base import BaseCommand
 
-from common.cachet import get_incident_name, delete_incident, \
+from common.cachet import (
+    get_incident_name, delete_incident,
     CachetException, create_incident
+)
 from workspaces.occupeye.cache import OccupeyeCache
 
 
@@ -19,7 +21,14 @@ class Command(BaseCommand):
             print("Done!")
             incident_name = get_incident_name("Occupeye-Mini")
             if incident_name:
-                delete_incident(incident_name)
+                try:
+                    delete_incident(incident_name)
+                except CachetException as cachet_error:
+                    print(f"Failed to delete cachet incident. "
+                          f"Reason: {repr(cachet_error)}")
+                except Exception as cachet_error:
+                    print(f"Unexpected: Failed to delete cachet incident. "
+                          f"Reason: {repr(cachet_error)}")
             else:
                 print("Could not find appropriate incident in Cachet!")
         except Exception as occupeye_error:

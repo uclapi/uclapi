@@ -367,11 +367,6 @@ class Command(BaseCommand):
             else:
                 print("Could not find appropriate incident in Cachet!")
 
-            if settings.UCLAPI_DOMAIN_CURRENT == "staging.ninja":
-                delete_incident("Gencache-Staging")
-            elif settings.UCLAPI_DOMAIN_CURRENT == "uclapi.com":
-                delete_incident("Gencache-Prod")
-
             call_command('trigger_webhooks')
         except Exception as gencache_error:
             try:

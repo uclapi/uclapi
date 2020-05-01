@@ -21,7 +21,14 @@ class Command(BaseCommand):
             print("Done!")
             incident_name = get_incident_name("Occupeye")
             if incident_name:
-                delete_incident(incident_name)
+                try:
+                    delete_incident(incident_name)
+                except CachetException as cachet_error:
+                    print(f"Failed to delete cachet incident. "
+                          f"Reason: {repr(cachet_error)}")
+                except Exception as cachet_error:
+                    print(f"Unexpected: Failed to delete cachet incident. "
+                          f"Reason: {repr(cachet_error)}")
             else:
                 print("No incident present in Cachet!")
         except Exception as occupeye_error:

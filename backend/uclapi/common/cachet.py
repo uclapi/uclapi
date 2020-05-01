@@ -36,6 +36,13 @@ def get_incident_name(base):
     Get and append the appropriate suffix for the component using the current
     domain. For example if we are running on staging.ninja we add the
     '-staging' suffix.
+
+    :param base: Base incident name
+    :type base: str
+    :return: Base incident name with correct environment suffix such as
+    -prod or -staging
+    :rtype: str
+
     """
 
     incident_name = ""
@@ -53,6 +60,11 @@ def create_incident(error_message, component_name):
     Create an incident with the error message specified for the component
     name specified. This marks the status as 4 - major outage - and the
     incident status as 1 - investigating.
+
+    :param error_message: Error message to display on incident
+    :type error_message: str
+    :param component_name: Component name to create incident for
+    :type component_name: str
     """
 
     target_comp = _get_component(component_name)
@@ -81,6 +93,9 @@ def delete_incident(component_name):
     Deletes the incident associated with the component given by name. This
     changes the component status to 1 - operational - and then deletes the
     incident.
+
+    :param component_name: Component name to delete incident for
+    :type component_name: str
     """
 
     target_comp = _get_component(component_name)
@@ -105,6 +120,15 @@ def delete_incident(component_name):
 
 
 def _get_component(comp_name):
+    """
+    Given a component name returns the actual component object.
+
+    :param comp_name: Component name to fetch
+    :type comp_name: str
+    :return: Component object with the given name
+    :rtype: dict
+    """
+
     components = cachet.Components(
         endpoint=settings.CACHET_URL,
         api_token=settings.CACHET_TOKEN
