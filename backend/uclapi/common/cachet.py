@@ -5,7 +5,7 @@ from django.conf import settings
 """
 This file handles all things cachet. From creating incidents to deleting
 them when fixed. The results can be seen on our cachet status dashboard at
-http://cachet.apps.uclapi.com/ .
+https://cachet.apps.uclapi.com/ .
 
 Incidents can be added to components of which we currently have 6 indicating
 problems with that specific system.
