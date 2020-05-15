@@ -229,40 +229,40 @@ def shibcallback(request):
 
     try:
         token = OAuthToken.objects.get(app=app, user=user)
-        if token.scope.scopeIsEqual(app.scope) and token.active:
-            code = generate_random_verification_code()
-
-            r = redis.Redis(host=REDIS_UCLAPI_HOST)
-
-            verification_data = {
-                "client_id": app.client_id,
-                "state": state,
-                "upi": user.employee_id
-            }
-
-            verification_data_str = json.dumps(
-                verification_data, cls=DjangoJSONEncoder)
-
-            # Store this verification data in redis so that it can be obtained
-            # later when the client wants to swap the code for a token.
-            # The code will only be valid for 90 seconds after which redis will
-            # just drop it and the process will be invalidated.
-            r.set(code, verification_data_str, ex=90)
-
-            # Now redirect the user back to the app, at long last.
-            # Just in case they've tried to be super clever and host multiple
-            # apps with the same callback URL, we'll provide the client ID
-            # along with the state
-            return redirect(
-                app.callback_url + "?result=allowed&code=" + code +
-                "&client_id=" + app.client_id + "&state=" + state
-            )
-        else:
-            return render(request, 'permissions.html', {
-                'initial_data': initial_data
-            })
-
     except OAuthToken.DoesNotExist:
+        return render(request, 'permissions.html', {
+            'initial_data': initial_data
+        })
+
+    if token.scope.scopeIsEqual(app.scope) and token.active:
+        code = generate_random_verification_code()
+
+        r = redis.Redis(host=REDIS_UCLAPI_HOST)
+
+        verification_data = {
+            "client_id": app.client_id,
+            "state": state,
+            "upi": user.employee_id
+        }
+
+        verification_data_str = json.dumps(
+            verification_data, cls=DjangoJSONEncoder)
+
+        # Store this verification data in redis so that it can be obtained
+        # later when the client wants to swap the code for a token.
+        # The code will only be valid for 90 seconds after which redis will
+        # just drop it and the process will be invalidated.
+        r.set(code, verification_data_str, ex=90)
+
+        # Now redirect the user back to the app, at long last.
+        # Just in case they've tried to be super clever and host multiple
+        # apps with the same callback URL, we'll provide the client ID
+        # along with the state
+        return redirect(
+            app.callback_url + "?result=allowed&code=" + code +
+            "&client_id=" + app.client_id + "&state=" + state
+        )
+    else:
         return render(request, 'permissions.html', {
             'initial_data': initial_data
         })
