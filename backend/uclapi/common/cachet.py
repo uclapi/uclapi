@@ -31,7 +31,7 @@ class CachetException(Exception):
     pass
 
 
-def get_incident_name(base):
+def get_incident_name(base: str) -> str:
     """
     Get and append the appropriate suffix for the component using the current
     domain. For example if we are running on staging.ninja we add the
@@ -55,7 +55,7 @@ def get_incident_name(base):
     return incident_name
 
 
-def create_incident(error_message, component_name):
+def create_incident(error_message: str, component_name: str):
     """
     Create an incident with the error message specified for the component
     name specified. This marks the status as 4 - major outage - and the
@@ -88,7 +88,7 @@ def create_incident(error_message, component_name):
         )
 
 
-def delete_incident(component_name):
+def delete_incident(component_name: str):
     """
     Deletes the incident associated with the component given by name. This
     changes the component status to 1 - operational - and then deletes the
@@ -119,7 +119,7 @@ def delete_incident(component_name):
                 incidents.delete(id=i["id"])
 
 
-def _get_component(comp_name):
+def _get_component(comp_name: str) -> dict:
     """
     Given a component name returns the actual component object.
 
