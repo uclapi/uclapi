@@ -704,6 +704,60 @@ class ViewsTestCase(TestCase):
             "shibtests"
         )
 
+    def test_auto_accept_shibcallback_real_account(self):
+        dev_user_ = User.objects.create(
+            email="testdev@ucl.ac.uk",
+            cn="test",
+            given_name="Test Dev",
+            employee_id='testdev01'
+        )
+        app_ = App.objects.create(
+            user=dev_user_,
+            name="An App",
+            callback_url="www.somecallbackurl.com/callback"
+        )
+        test_user_ = User.objects.create(
+            email="testxxx@ucl.ac.uk",
+            cn="testxxx",
+            given_name="Test User",
+            employee_id='xxxtest01'
+        )
+
+        signer = signing.TimestampSigner()
+        # Generate a random state for testing
+        state = ''.join(
+            random.choices(string.ascii_letters + string.digits, k=32)
+        )
+        data = app_.client_id + state
+        signed_data = signer.sign(data)
+
+        app_scope = app_.scope
+        app_scope.id = None
+        app_scope.save()
+
+        # Now set up a new token with that scope
+        token = OAuthToken(
+            app=app_,
+            user=test_user_,
+            scope=app_scope
+        )
+        token.save()
+
+        response = self.client.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': signed_data
+            },
+            HTTP_EPPN='testxxx@ucl.ac.uk',
+            HTTP_CN='testxxx',
+            HTTP_DEPARTMENT='Dept of Tests',
+            HTTP_GIVENNAME='Test New Name',
+            HTTP_DISPLAYNAME='Test User',
+            HTTP_EMPLOYEEID='xxxtest01',
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+        )
+        self.assertEqual(response.status_code, 302)
+
 
 class AppHelpersTestCase(TestCase):
     def test_generate_random_verification_code(self):
