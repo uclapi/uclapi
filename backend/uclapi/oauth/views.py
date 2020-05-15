@@ -254,8 +254,8 @@ def shibcallback(request):
             # apps with the same callback URL, we'll provide the client ID
             # along with the state
             return redirect(
-                app.callback_url + "?result=allowed&code=" + code
-                + "&client_id=" + app.client_id + "&state=" + state
+                app.callback_url + "?result=allowed&code=" + code +
+                "&client_id=" + app.client_id + "&state=" + state
             )
         else:
             return render(request, 'permissions.html', {
