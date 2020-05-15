@@ -229,10 +229,7 @@ def shibcallback(request):
 
     try:
         token = OAuthToken.objects.get(app=app, user=user)
-        if not token.scope.scopeIsEqual(app.scope):
-            raise OAuthToken.DoesNotExist
-        elif token.active:
-
+        if token.scope.scopeIsEqual(app.scope) and token.active:
             code = generate_random_verification_code()
 
             r = redis.Redis(host=REDIS_UCLAPI_HOST)
@@ -260,6 +257,10 @@ def shibcallback(request):
                 app.callback_url + "?result=allowed&code=" + code + "&client_id=" +
                 app.client_id + "&state=" + state
             )
+        else:
+            return render(request, 'permissions.html', {
+                'initial_data': initial_data
+            })
 
     except OAuthToken.DoesNotExist:
         return render(request, 'permissions.html', {
