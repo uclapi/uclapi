@@ -275,7 +275,7 @@ def userdeny(request):
     try:
         signed_data = request.POST.get("signed_app_data")
         raw_data_str = signer.unsign(signed_data, max_age=300)
-    except:
+    except (signing.BadSignature, KeyError, TypeError):
         response = PrettyJsonResponse({
             "ok": False,
             "error": ("The signed data received was invalid."
@@ -334,7 +334,7 @@ def userallow(request):
     try:
         raw_data_str = signer.unsign(
             request.POST.get("signed_app_data"), max_age=300)
-    except (signing.BadSignature, KeyError):
+    except (signing.BadSignature, KeyError, TypeError):
         response = PrettyJsonResponse({
             "ok": False,
             "error": ("The signed data received was invalid."

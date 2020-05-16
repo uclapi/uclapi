@@ -4,6 +4,7 @@ import random
 import string
 import unittest.mock
 
+from django.core.serializers.json import DjangoJSONEncoder
 from django.test import Client, TestCase
 from rest_framework.test import APIRequestFactory
 from django.core import signing
@@ -757,6 +758,121 @@ class ViewsTestCase(TestCase):
             HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
         )
         self.assertEqual(response.status_code, 302)
+
+    def test_userallow_no_post_data(self):
+        response = self.client.get(
+            '/oauth/user/allow',
+            {}
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["error"],
+                         ("The signed data received "
+                          "was invalid." 
+                          " Please try the login process again."
+                          " If this issue persists, please contact support."))
+
+    def test_userallow_bad_but_signed_post_data(self):
+        signer = signing.TimestampSigner()
+        signed_data = signer.sign("")
+        response = self.client.post(
+            '/oauth/user/allow',
+            {
+                'signed_app_data': signed_data
+            },
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["error"],
+                         ("The JSON data was not in the expected format. "
+                          "Please contact support."))
+
+    def test_userdeny_no_post_data(self):
+        response = self.client.get(
+            '/oauth/user/deny',
+            {}
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["error"],
+                         ("The signed data received "
+                          "was invalid." 
+                          " Please try the login process again."
+                          " If this issue persists, please contact support."))
+
+    def test_userdeny_bad_but_signed_post_data(self):
+        signer = signing.TimestampSigner()
+        signed_data = signer.sign("")
+        response = self.client.post(
+            '/oauth/user/deny',
+            {
+                'signed_app_data': signed_data
+            },
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["error"],
+                         ("The JSON data was not in the expected format. "
+                          "Please contact support."))
+
+    def test_userdeny_good_flow(self):
+        dev_user_ = User.objects.create(
+            email="testdev@ucl.ac.uk",
+            cn="test",
+            given_name="Test Dev",
+            employee_id='testdev01'
+        )
+        app_ = App.objects.create(
+            user=dev_user_,
+            name="An App",
+            callback_url="www.somecallbackurl.com/callback"
+        )
+        test_user_ = User.objects.create(
+            email="testxxx@ucl.ac.uk",
+            cn="testxxx",
+            given_name="Test User",
+            employee_id='xxxtest01'
+        )
+        signer = signing.TimestampSigner()
+        # Generate a random state for testing
+        state = ''.join(
+            random.choices(string.ascii_letters + string.digits, k=32)
+        )
+
+        response_data = {
+            "client_id": app_.client_id,
+            "state": state,
+            "user_upi": test_user_.employee_id
+        }
+
+        response_data_str = json.dumps(response_data, cls=DjangoJSONEncoder)
+        signed_data = signer.sign(response_data_str)
+
+        app_scope = app_.scope
+        app_scope.id = None
+        app_scope.save()
+
+        token = OAuthToken(
+            app=app_,
+            user=test_user_,
+            scope=app_scope
+        )
+        token.save()
+
+        tokens = OAuthToken.objects.filter(app=app_, user=test_user_)
+        for token in tokens:
+            self.assertTrue(token.active)
+
+        response = self.client.post(
+            '/oauth/user/deny',
+            {
+                'signed_app_data': signed_data
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        print(response.url)
+        self.assertEqual(response.url,
+                         app_.callback_url+"?result=denied&state="+state)
+        tokens = OAuthToken.objects.filter(app=app_, user=test_user_)
+        for token in tokens:
+            self.assertFalse(token.active)
 
 
 class AppHelpersTestCase(TestCase):
