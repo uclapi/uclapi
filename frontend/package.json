@@ -76,7 +76,7 @@
     "babel-plugin-transform-imports": "^2.0.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "babelify": "^10.0.0",
-    "css-loader": "^3.5.2",
+    "css-loader": "^3.5.3",
     "dotenv": "^8.2.0",
     "eslint": "^6.8.0",
     "eslint-import-resolver-alias": "^1.1.2",
@@ -107,7 +107,7 @@
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "vinyl-transform": "^1.0.0",
-    "webpack": "^4.42.1",
+    "webpack": "^4.43.0",
     "webpack-bundle-tracker": "^0.4.3",
     "webpack-cli": "^3.3.11"
   }
