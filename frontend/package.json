@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.9.11",
-    "ajv": "^6.12.1",
+    "ajv": "^6.12.2",
     "aphrodite": "^2.4.0",
     "axios": "^0.19.2",
     "dayjs": "^1.8.24",
