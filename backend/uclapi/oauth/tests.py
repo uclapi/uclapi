@@ -46,19 +46,19 @@ class ScopingTestCase(TestCase):
 
     def test_add_scope(self):
         self.scope_a.scope_number = self.s.add_scope(
-                                        self.scope_a.scope_number,
-                                        "roombookings"
-                                    )
+            self.scope_a.scope_number,
+            "roombookings"
+        )
         self.scope_a.scope_number = self.s.add_scope(
-                                        self.scope_a.scope_number,
-                                        "timetable"
-                                    )
+            self.scope_a.scope_number,
+            "timetable"
+        )
         self.scope_a.save()
 
         self.scope_b.scope_number = self.s.add_scope(
-                                        self.scope_b.scope_number,
-                                        "timetable"
-                                    )
+            self.scope_b.scope_number,
+            "timetable"
+        )
         self.scope_b.save()
 
         self.assertEqual(self.scope_a.scope_number, 3)
@@ -75,9 +75,9 @@ class ScopingTestCase(TestCase):
     def test_remove_scope(self):
         self.scope_a.scope_number = 3
         self.scope_a.scope_number = self.s.remove_scope(
-                                        self.scope_a.scope_number,
-                                        "roombookings"
-                                    )
+            self.scope_a.scope_number,
+            "roombookings"
+        )
         self.scope_a.save()
 
         self.assertEqual(self.scope_a.scope_number, 2)
@@ -630,7 +630,6 @@ class ViewsTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 400)
 
-
     def test_valid_shibcallback_test_account(self):
         dev_user_ = User.objects.create(
             email="testdev@ucl.ac.uk",
@@ -767,7 +766,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["error"],
                          ("The signed data received "
-                          "was invalid." 
+                          "was invalid."
                           " Please try the login process again."
                           " If this issue persists, please contact support."))
 
@@ -793,7 +792,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["error"],
                          ("The signed data received "
-                          "was invalid." 
+                          "was invalid."
                           " Please try the login process again."
                           " If this issue persists, please contact support."))
 
@@ -869,7 +868,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         print(response.url)
         self.assertEqual(response.url,
-                         app_.callback_url+"?result=denied&state="+state)
+                         app_.callback_url + "?result=denied&state=" + state)
         tokens = OAuthToken.objects.filter(app=app_, user=test_user_)
         for token in tokens:
             self.assertFalse(token.active)
