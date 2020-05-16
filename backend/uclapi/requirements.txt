@@ -1,7 +1,7 @@
-autopep8==1.5.1
+autopep8==1.5.2
 amqp==2.5.2
-boto3==1.12.41
-botocore==1.15.41
+boto3==1.13.11
+botocore==1.16.11
 celery==4.4.2
 certifi==2020.4.5.1
 chardet==3.0.4
@@ -27,7 +27,7 @@ hiredis==1.0.1
 idna==2.9
 jinjasql==0.1.7
 jmespath==0.9.5
-jsonpickle==1.4
+jsonpickle==1.4.1
 kombu==4.6.8
 lxml==4.5.0
 Markupsafe==1.1.1
@@ -43,12 +43,12 @@ pytz==2019.3
 raven==6.10.0
 redis==3.5.2
 requests==2.23.0
-requests-file==1.4.3
+requests-file==1.5.1
 requests-futures==1.0.0
 setproctitle==1.1.10
 six==1.14.0
 tldextract==2.2.2
-tqdm==4.45.0
+tqdm==4.46.0
 urllib3==1.25.9
 validators==0.14.3
 vine==1.3.0
