@@ -1,4 +1,4 @@
-autopep8==1.5.1
+autopep8==1.5.2
 amqp==2.5.2
 boto3==1.12.41
 botocore==1.16.11
@@ -43,7 +43,7 @@ pytz==2019.3
 raven==6.10.0
 redis==3.5.2
 requests==2.23.0
-requests-file==1.4.3
+requests-file==1.5.1
 requests-futures==1.0.0
 setproctitle==1.1.10
 six==1.14.0
