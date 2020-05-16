@@ -99,7 +99,7 @@
     "react-modal": "^3.11.2",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.1.4",
-    "stylelint": "^13.3.2",
+    "stylelint": "^13.3.3",
     "stylelint-config-recommended": "^3.0.0",
     "stylelint-scss": "^3.17.2",
     "uglifyjs-webpack-plugin": "^2.2.0",
