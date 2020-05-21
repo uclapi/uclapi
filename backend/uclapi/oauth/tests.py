@@ -4,6 +4,7 @@ import random
 import string
 import unittest.mock
 
+from django.core.serializers.json import DjangoJSONEncoder
 from django.test import Client, TestCase
 from rest_framework.test import APIRequestFactory
 from django.core import signing
@@ -45,19 +46,19 @@ class ScopingTestCase(TestCase):
 
     def test_add_scope(self):
         self.scope_a.scope_number = self.s.add_scope(
-                                        self.scope_a.scope_number,
-                                        "roombookings"
-                                    )
+            self.scope_a.scope_number,
+            "roombookings"
+        )
         self.scope_a.scope_number = self.s.add_scope(
-                                        self.scope_a.scope_number,
-                                        "timetable"
-                                    )
+            self.scope_a.scope_number,
+            "timetable"
+        )
         self.scope_a.save()
 
         self.scope_b.scope_number = self.s.add_scope(
-                                        self.scope_b.scope_number,
-                                        "timetable"
-                                    )
+            self.scope_b.scope_number,
+            "timetable"
+        )
         self.scope_b.save()
 
         self.assertEqual(self.scope_a.scope_number, 3)
@@ -74,9 +75,9 @@ class ScopingTestCase(TestCase):
     def test_remove_scope(self):
         self.scope_a.scope_number = 3
         self.scope_a.scope_number = self.s.remove_scope(
-                                        self.scope_a.scope_number,
-                                        "roombookings"
-                                    )
+            self.scope_a.scope_number,
+            "roombookings"
+        )
         self.scope_a.save()
 
         self.assertEqual(self.scope_a.scope_number, 2)
@@ -629,7 +630,6 @@ class ViewsTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 400)
 
-
     def test_valid_shibcallback_test_account(self):
         dev_user_ = User.objects.create(
             email="testdev@ucl.ac.uk",
@@ -758,6 +758,160 @@ class ViewsTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 302)
 
+    def test_userallow_no_post_data(self):
+        response = self.client.get(
+            '/oauth/user/allow',
+            {}
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["error"],
+                         ("The signed data received "
+                          "was invalid."
+                          " Please try the login process again."
+                          " If this issue persists, please contact support."))
+
+    def test_userallow_bad_but_signed_post_data(self):
+        signer = signing.TimestampSigner()
+        signed_data = signer.sign("")
+        response = self.client.post(
+            '/oauth/user/allow',
+            {
+                'signed_app_data': signed_data
+            },
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["error"],
+                         ("The JSON data was not in the expected format. "
+                          "Please contact support."))
+
+    def test_userdeny_no_post_data(self):
+        response = self.client.get(
+            '/oauth/user/deny',
+            {}
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["error"],
+                         ("The signed data received "
+                          "was invalid."
+                          " Please try the login process again."
+                          " If this issue persists, please contact support."))
+
+    def test_userdeny_bad_but_signed_post_data(self):
+        signer = signing.TimestampSigner()
+        signed_data = signer.sign("")
+        response = self.client.post(
+            '/oauth/user/deny',
+            {
+                'signed_app_data': signed_data
+            },
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["error"],
+                         ("The JSON data was not in the expected format. "
+                          "Please contact support."))
+
+    def test_userdeny_user_does_not_exist(self):
+        dev_user_ = User.objects.create(
+            email="testdev@ucl.ac.uk",
+            cn="test",
+            given_name="Test Dev",
+            employee_id='testdev01'
+        )
+        app_ = App.objects.create(
+            user=dev_user_,
+            name="An App",
+            callback_url="www.somecallbackurl.com/callback"
+        )
+
+        signer = signing.TimestampSigner()
+        # Generate a random state for testing
+        state = ''.join(
+            random.choices(string.ascii_letters + string.digits, k=32)
+        )
+
+        response_data = {
+            "client_id": app_.client_id,
+            "state": state,
+            "user_upi": "bogus"
+        }
+
+        response_data_str = json.dumps(response_data, cls=DjangoJSONEncoder)
+        signed_data = signer.sign(response_data_str)
+
+        response = self.client.post(
+            '/oauth/user/deny',
+            {
+                'signed_app_data': signed_data
+            },
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["error"],
+                         ("User does not exist. This should never occur. "
+                          "Please contact support."))
+
+    def test_userdeny_good_flow(self):
+        dev_user_ = User.objects.create(
+            email="testdev@ucl.ac.uk",
+            cn="test",
+            given_name="Test Dev",
+            employee_id='testdev01'
+        )
+        app_ = App.objects.create(
+            user=dev_user_,
+            name="An App",
+            callback_url="www.somecallbackurl.com/callback"
+        )
+        test_user_ = User.objects.create(
+            email="testxxx@ucl.ac.uk",
+            cn="testxxx",
+            given_name="Test User",
+            employee_id='xxxtest01'
+        )
+        signer = signing.TimestampSigner()
+        # Generate a random state for testing
+        state = ''.join(
+            random.choices(string.ascii_letters + string.digits, k=32)
+        )
+
+        response_data = {
+            "client_id": app_.client_id,
+            "state": state,
+            "user_upi": test_user_.employee_id
+        }
+
+        response_data_str = json.dumps(response_data, cls=DjangoJSONEncoder)
+        signed_data = signer.sign(response_data_str)
+
+        app_scope = app_.scope
+        app_scope.id = None
+        app_scope.save()
+
+        token = OAuthToken(
+            app=app_,
+            user=test_user_,
+            scope=app_scope
+        )
+        token.save()
+
+        tokens = OAuthToken.objects.filter(app=app_, user=test_user_)
+        for token in tokens:
+            self.assertTrue(token.active)
+
+        response = self.client.post(
+            '/oauth/user/deny',
+            {
+                'signed_app_data': signed_data
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url,
+                         app_.callback_url + "?result=denied&state=" + state)
+        tokens = OAuthToken.objects.filter(app=app_, user=test_user_)
+        for token in tokens:
+            self.assertFalse(token.active)
+
 
 class AppHelpersTestCase(TestCase):
     def test_generate_random_verification_code(self):
@@ -838,6 +992,32 @@ class DeleteAToken(TestCase):
         self.assertEqual(
             content["error"],
             "A Client ID must be provided to deauthorise an app."
+        )
+
+    def test_deauthorise_bad_client_id(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        request = self.factory.get(
+            '/oauth/testcase',
+            {
+                'client_secret': 'abcdefg',
+                'token': 'uclapi-123456',
+                'client_id': '404_not_found'
+            }
+        )
+        request.session = {'user_id': user_.id}
+
+        response = deauthorise_app(request)
+        self.assertEqual(response.status_code, 400)
+
+        content = json.loads(response.content.decode())
+        self.assertFalse(content["ok"])
+        self.assertEqual(
+            content["error"],
+            "App does not exist with the Client ID provided."
         )
 
     def test_deauthorise_no_token_for_app_and_user(self):
