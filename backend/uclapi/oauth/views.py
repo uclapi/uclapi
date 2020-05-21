@@ -308,7 +308,7 @@ def userdeny(request):
     try:
         users = User.objects.filter(employee_id=data["user_upi"])
         user = users[0]
-    except (User.DoesNotExist, KeyError):
+    except (User.DoesNotExist, KeyError, IndexError):
         response = PrettyJsonResponse({
             "ok": False,
             "error":
