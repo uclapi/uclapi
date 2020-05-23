@@ -53,7 +53,7 @@
     "include-media": "^1.4.9",
     "js-cookie": "^2.2.1",
     "prop-types": "^15.7.2",
-    "rc-collapse": "^1.11.8",
+    "rc-collapse": "^2.0.0",
     "react": "^16.13.1",
     "react-autosuggest": "^10.0.0",
     "react-dom": "^16.13.1",
