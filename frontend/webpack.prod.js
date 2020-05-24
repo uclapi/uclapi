@@ -5,7 +5,7 @@ dotenv.config({
 
 const webpack = require(`webpack`)
 const path = require(`path`)
-const UglifyJsPlugin = require(`uglifyjs-webpack-plugin`)
+const TerserPlugin = require(`terser-webpack-plugin`)
 const OptimizeCSSAssetsPlugin = require(`optimize-css-assets-webpack-plugin`)
 const BundleTracker = require(`webpack-bundle-tracker`)
 
@@ -31,6 +31,7 @@ const envKeys = Object.keys(process.env).reduce((prev, next) => {
 module.exports = {
   mode: `production`,
   optimization: {
+    minimize: true,
     minimizer: [],  // This list is built below as per platform requirements
     splitChunks: {
       name: false,
@@ -45,9 +46,6 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin(envKeys),
-    new UglifyJsPlugin({
-      sourceMap: true,
-    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(`production`),
     }),
@@ -107,16 +105,16 @@ module.exports = {
 // Do not enable parallelisation for Windows Subsystem for Linux
 // https://github.com/webpack-contrib/uglifyjs-webpack-plugin/issues/302
 // https://stackoverflow.com/a/44356310/5297057
-if (os.platform == `linux` && os.release().indexOf(`Microsoft`) != -1) {
+if (os.platform() == `linux` && os.release().indexOf(`Microsoft`) != -1) {
   module.exports.optimization.minimizer.push(
-    new UglifyJsPlugin({
+    new TerserPlugin({
       cache: true,
       sourceMap: true,
     })
   )
 } else {
   module.exports.optimization.minimizer.push(
-    new UglifyJsPlugin({
+    new TerserPlugin({
       cache: true,
       sourceMap: true,
       parallel: true,
