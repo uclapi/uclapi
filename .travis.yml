@@ -19,6 +19,8 @@ addons:
 jobs:
   include:
   - stage: test
+    env:
+    - NODE_OPTIONS=--max_old_space_size=4096
     before_script:
     - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
     - nvm install --lts && nvm use --lts
@@ -53,6 +55,7 @@ jobs:
     - AWS_S3_BUCKET_NAME=uclapi-static-staging
     - AWS_S3_BUCKET_PATH=static/
     - AWS_S3_REGION=eu-west-2
+    - NODE_OPTIONS=--max_old_space_size=4096
     before_script:
     - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
     - nvm install --lts && nvm use --lts
