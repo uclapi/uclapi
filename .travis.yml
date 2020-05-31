@@ -42,6 +42,7 @@ jobs:
     - npm ci
     - npm run build
     script:
+    - cd ../backend/uclapi
     - python ./manage.py migrate
     - coverage run --source='.' --omit='*migrations*' manage.py test --testrunner
       'uclapi.custom_test_runner.NoDbTestRunner' --settings=uclapi.settings_mocked
