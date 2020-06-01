@@ -26,7 +26,7 @@ gunicorn==20.0.4
 hiredis==1.0.1
 idna==2.9
 jinjasql==0.1.7
-jmespath==0.9.5
+jmespath==0.10.0
 jsonpickle==1.4.1
 kombu==4.6.8
 lxml==4.5.1
