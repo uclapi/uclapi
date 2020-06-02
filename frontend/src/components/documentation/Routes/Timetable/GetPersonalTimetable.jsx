@@ -106,7 +106,8 @@ export default class GetPersonalTimetable extends React.Component {
                 name="Date"
                 requirement="optional"
                 example="2020-03-27"
-                description="Specify a date to filter the timetable for, only displaying entries on that date." />
+                description="Specify a date to filter the timetable for, only displaying entries on that date."
+              />
               <Cell
                 name="client_secret"
                 requirement="required"
