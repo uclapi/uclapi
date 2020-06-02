@@ -25,7 +25,7 @@ greenlet==0.4.15
 gunicorn==20.0.4
 hiredis==1.0.1
 idna==2.9
-jinjasql==0.1.7
+jinjasql==0.1.8
 jmespath==0.10.0
 jsonpickle==1.4.1
 kombu==4.6.9
