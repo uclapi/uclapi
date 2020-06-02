@@ -1,7 +1,7 @@
 autopep8==1.5.2
 amqp==2.5.2
 botocore==1.16.20
-boto3==1.13.19
+boto3==1.13.20
 celery==4.4.2
 certifi==2020.4.5.1
 chardet==3.0.4
@@ -42,7 +42,7 @@ python-dateutil==2.8.1
 pymsteams==0.1.12
 pytz==2020.1
 raven==6.10.0
-redis==3.5.2
+redis==3.5.3
 requests==2.23.0
 requests-file==1.5.1
 requests-futures==1.0.0
