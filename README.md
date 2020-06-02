@@ -31,6 +31,8 @@ sudo apt-get -y install git curl libpq-dev libpq5 libpython3-dev \
     redis-server nodejs npm
 ```
 
+Note: redhat based systems such as RHEL, Fedora or CentOS need to install ```libnsl``` aswell for oracle DB support.
+
 ### Start Redis
 ```
 sudo service redis-server start
