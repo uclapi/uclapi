@@ -47,7 +47,7 @@
     "ajv": "^6.12.2",
     "aphrodite": "^2.4.0",
     "axios": "^0.19.2",
-    "dayjs": "^1.8.27",
+    "dayjs": "^1.8.28",
     "glamor": "^2.20.40",
     "immutability-helper": "^3.1.1",
     "include-media": "^1.4.9",
