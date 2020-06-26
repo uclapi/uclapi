@@ -140,10 +140,10 @@ export default class GetEquiment extends React.Component {
                 example="COMP0030,COMP0133-A7U-T1"
                 description="A comma-separated list of the module codes you want the timetable of. You can supply either standard module codes (e.g. COMP0133), or full codes including the instance of the module (COMP0133-A7U-T1). Note that if you do not supply an instance, every single timetable entry will be returned including duplicates for the same module taught as multiple instances. It is recommended that a full module code including instance be supplied." />
               <Cell
-                  name="date"
-                  requirement="optional"
-                  example="2020-03-27"
-                  description="Specify a date to filter the timetable for, only displaying entries on that date."
+                name="date"
+                requirement="optional"
+                example="2020-03-27"
+                description="Specify a date to filter the timetable for, only displaying entries on that date."
               />
             </Table>
           </Topic>
