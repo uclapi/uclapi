@@ -2,7 +2,7 @@ autopep8==1.5.3
 amqp==2.6.0
 botocore==1.17.11
 boto3==1.14.11
-celery==4.4.3
+celery==4.4.6
 certifi==2020.6.20
 chardet==3.0.4
 Django==2.2.13
@@ -28,7 +28,7 @@ idna==2.9
 jinjasql==0.1.8
 jmespath==0.10.0
 jsonpickle==1.4.1
-kombu==4.6.9
+kombu==4.6.11
 lxml==4.5.1
 Markupsafe==1.1.1
 mock==4.0.2
