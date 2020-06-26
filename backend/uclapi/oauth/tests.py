@@ -768,7 +768,8 @@ class ViewsTestCase(TestCase):
                          ("The signed data received "
                           "was invalid."
                           " Please try the login process again."
-                          " If this issue persists, please contact support."))
+                          " If this issue persists, please contact us at "
+                          "isd.apiteam@ucl.ac.uk or on github."))
 
     def test_userallow_bad_but_signed_post_data(self):
         signer = signing.TimestampSigner()
@@ -782,7 +783,8 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["error"],
                          ("The JSON data was not in the expected format. "
-                          "Please contact support."))
+                          "Please contact us at "
+                          "isd.apiteam@ucl.ac.uk or on github."))
 
     def test_userdeny_no_post_data(self):
         response = self.client.get(
@@ -794,7 +796,8 @@ class ViewsTestCase(TestCase):
                          ("The signed data received "
                           "was invalid."
                           " Please try the login process again."
-                          " If this issue persists, please contact support."))
+                          " If this issue persists, please contact us at "
+                          "isd.apiteam@ucl.ac.uk or on github."))
 
     def test_userdeny_bad_but_signed_post_data(self):
         signer = signing.TimestampSigner()
@@ -808,7 +811,8 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["error"],
                          ("The JSON data was not in the expected format. "
-                          "Please contact support."))
+                          "Please contact us at "
+                          "isd.apiteam@ucl.ac.uk or on github."))
 
     def test_userdeny_user_does_not_exist(self):
         dev_user_ = User.objects.create(
@@ -848,7 +852,8 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()["error"],
                          ("User does not exist. This should never occur. "
-                          "Please contact support."))
+                          "Please contact us at "
+                          "isd.apiteam@ucl.ac.uk or on github."))
 
     def test_userdeny_good_flow(self):
         dev_user_ = User.objects.create(
