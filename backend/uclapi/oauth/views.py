@@ -280,7 +280,8 @@ def userdeny(request):
             "ok": False,
             "error": ("The signed data received was invalid."
                       " Please try the login process again. "
-                      "If this issue persists, please contact support.")
+                      "If this issue persists, please contact us at "
+                      "isd.apiteam@ucl.ac.uk or on github.")
         })
         response.status_code = 400
         return response
@@ -291,7 +292,8 @@ def userdeny(request):
         response = PrettyJsonResponse({
             "ok": False,
             "error": ("The JSON data was not in the expected format."
-                      " Please contact support.")
+                      " Please contact us at "
+                      "isd.apiteam@ucl.ac.uk or on github.")
         })
         response.status_code = 400
         return response
@@ -313,7 +315,8 @@ def userdeny(request):
             "ok": False,
             "error":
                 "User does not exist. This should never occur. "
-                "Please contact support."
+                "Please contact us at "
+                "isd.apiteam@ucl.ac.uk or on github."
         })
         response.status_code = 400
         return response
@@ -339,7 +342,8 @@ def userallow(request):
             "ok": False,
             "error": ("The signed data received was invalid."
                       " Please try the login process again."
-                      " If this issue persists, please contact support.")
+                      " If this issue persists, please contact us at"
+                      " isd.apiteam@ucl.ac.uk or on github.")
         })
         response.status_code = 400
         return response
@@ -350,7 +354,8 @@ def userallow(request):
         response = PrettyJsonResponse({
             "ok": False,
             "error": ("The JSON data was not in the expected format."
-                      " Please contact support.")
+                      " Please contact us at"
+                      " isd.apiteam@ucl.ac.uk or on github.")
         })
         response.status_code = 400
         return response
