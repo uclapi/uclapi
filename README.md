@@ -31,6 +31,8 @@ sudo apt-get -y install git curl libpq-dev libpq5 libpython3-dev \
     redis-server nodejs npm
 ```
 
+Note: redhat based systems such as RHEL, Fedora or CentOS need to install ```libnsl``` aswell for oracle DB support.
+
 ### Start Redis
 ```
 sudo service redis-server start
@@ -310,8 +312,6 @@ These were covered above but for completeness you have at your disposal the foll
 ```
 python manage.py create_lock
 python manage.py update_gencache
-python manage.py create_timetable_lock
-python manage.py update_timetable_gencache
 python manage.py feed_occupeye_cache
 python manage.py feed_occupeye_cache_mini
 ```
