@@ -66,7 +66,7 @@ def get_modules_timetable_endpoint(request, *args, **kwargs):
 
     modules = module_ids.split(',')
 
-    date_filter = request.GET.get("date_filter")
+    date_filter = request.GET.get("date")
     custom_timetable = get_custom_timetable(modules, date_filter)
 
     if custom_timetable:
