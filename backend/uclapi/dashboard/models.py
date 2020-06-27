@@ -3,13 +3,12 @@ from .app_helpers import (
     generate_app_id,
     generate_app_client_id,
     generate_app_client_secret,
-    generate_temp_api_token,
     generate_secret
 )
 
 from common.helpers import generate_api_token
 
-from oauth.models import OAuthScope
+from oauth.models import OAuthScope, OAuthToken
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -89,6 +88,7 @@ class App(models.Model):
     class Meta:
         _DATABASE = 'default'
 
+
 class APICall(models.Model):
     ts = models.DateTimeField(auto_now_add=True)
     app = models.ForeignKey(
@@ -101,7 +101,18 @@ class APICall(models.Model):
         on_delete=models.CASCADE,
         related_name='api_call'
     )
-    raw_request = models.TextField(max_length=10000000)
+
+    token = models.ForeignKey(
+        OAuthToken,
+        on_delete=models.CASCADE,
+        related_name='api_call',
+        blank=True,
+        null=True
+    )
+    token_type = models.CharField(max_length=100)
+    service = models.CharField(max_length=100)
+    method = models.CharField(max_length=100)
+    queryparams = models.TextField(max_length=1000)
 
     class Meta:
         _DATABASE = 'default'

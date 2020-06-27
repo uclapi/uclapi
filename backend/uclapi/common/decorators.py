@@ -8,7 +8,7 @@ from datetime import timezone
 from email.utils import format_datetime
 from functools import wraps
 
-from dashboard.models import App
+from dashboard.models import App, APICall
 
 from oauth.models import OAuthToken
 from oauth.scoping import Scopes
@@ -60,27 +60,42 @@ def log_api_call(request, token, token_type):
 
     queryparams = dict(request.GET)
 
+    # token is either app or OAuthToken type. This should be changed,
+    # we don't want variables that can store multiple types....
+
     if token_type in {"general", "oauth"}:
-        parameters = {
-            "userid": token.user.id,
-            "email": token.user.email,
-            "name": token.user.given_name,
-            "service": service,
-            "method": method,
-            "version-headers": version_headers,
-            "queryparams": queryparams,
-            "temp_token": False,
-            "token_type": token_type
-        }
-    elif token_type == "general-temp":
-        parameters = {
-            "service": service,
-            "method": method,
-            "version-headers": version_headers,
-            "queryparams": queryparams,
-            "temp_token": True,
-            "token_type": token_type
-        }
+        # parameters = {
+        #     "userid": token.user.id,
+        #     "email": token.user.email,
+        #     "name": token.user.given_name,
+        #     "service": service,
+        #     "method": method,
+        #     "version-headers": version_headers,
+        #     "queryparams": queryparams,
+        #     "temp_token": False,
+        #     "token_type": token_type
+        # }
+        if token_type == "general":
+            call_log = APICall(app=token, user=token.user, token=None,
+                               token_type=token_type, service=service,
+                               method=method, queryparams=queryparams)
+            call_log.save()
+        else:
+            call_log = APICall(app=token.app, user=token.user, token=token,
+                               token_type=token_type, service=service,
+                               method=method, queryparams=queryparams)
+            call_log.save()
+
+    # elif token_type == "general-temp":
+    #     parameters = {
+    #         "service": service,
+    #         "method": method,
+    #         "version-headers": version_headers,
+    #         "queryparams": queryparams,
+    #         "temp_token": True,
+    #         "token_type": token_type
+    #     }
+
 
 def throttle_api_call(token, token_type):
     if token_type == 'general':
