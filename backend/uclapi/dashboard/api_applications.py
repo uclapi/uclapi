@@ -5,7 +5,7 @@ from common.helpers import PrettyJsonResponse
 
 from .app_helpers import (is_url_unsafe, NOT_HTTPS,
                           NOT_VALID, URL_BLACKLISTED, NOT_PUBLIC)
-from .models import App, User
+from .models import App, User, APICall
 
 
 def get_user_by_id(user_id):
@@ -360,3 +360,17 @@ def update_scopes(request):
             "success": True,
             "message": "Scope successfully changed.",
         })
+
+
+def number_of_requests(request):
+    token = request.GET["token"]
+    type = request.GET["type"]
+    if type == "general":
+        calls = APICall.objects.filter(app__api_token__exact=token)
+    else:
+        calls = APICall.objects.filter(token__token__exact=token)
+
+    return PrettyJsonResponse({
+        "success": True,
+        "num": len(calls),
+    })
