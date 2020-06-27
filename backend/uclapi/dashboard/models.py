@@ -111,10 +111,10 @@ class APICall(models.Model):
         blank=True,
         null=True
     )
-    token_type = models.CharField(max_length=100)
-    service = models.CharField(max_length=100)
-    method = models.CharField(max_length=100)
-    queryparams = models.TextField(max_length=1000)
+    token_type = models.CharField(max_length=100, default="")
+    service = models.CharField(max_length=100, default="")
+    method = models.CharField(max_length=100, default="")
+    queryparams = models.TextField(max_length=1000, default="")
 
     class Meta:
         _DATABASE = 'default'
