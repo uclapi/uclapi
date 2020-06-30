@@ -3,6 +3,7 @@ import redis
 from django.db.models import Count
 
 from django.http import JsonResponse
+from django.utils.datastructures import MultiValueDictKeyError
 
 from oauth.models import OAuthToken
 from oauth.scoping import Scopes
@@ -400,7 +401,6 @@ def quota_remaining(request):
     elif token.startswith('uclapi-user-'):
         Otoken = OAuthToken.objects.filter(token__exact=token).first()
 
-
         cache_key = Otoken.user.email
         limit = 10000
     else:
@@ -414,7 +414,7 @@ def quota_remaining(request):
     count_data = int(r.get(cache_key))
     return PrettyJsonResponse({
         "success": True,
-        "remaining": limit-count_data,
+        "remaining": limit - count_data,
     })
 
 
@@ -434,7 +434,7 @@ def most_popular_method(request):
         service = request.GET["service"]
         most_common = APICall.objects.filter(service__exact=service).values(
             "method").annotate(count=Count('method')).order_by("-count")
-    except:
+    except MultiValueDictKeyError:
         most_common = APICall.objects.values(
             "method").annotate(count=Count('method')).order_by("-count")
 
