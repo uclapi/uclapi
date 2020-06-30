@@ -1,7 +1,13 @@
 import json
+import redis
+from django.db.models import Count
 
+from django.http import JsonResponse
+
+from oauth.models import OAuthToken
 from oauth.scoping import Scopes
 from common.helpers import PrettyJsonResponse
+from uclapi.settings import REDIS_UCLAPI_HOST
 
 from .app_helpers import (is_url_unsafe, NOT_HTTPS,
                           NOT_VALID, URL_BLACKLISTED, NOT_PUBLIC)
@@ -364,13 +370,77 @@ def update_scopes(request):
 
 def number_of_requests(request):
     token = request.GET["token"]
-    type = request.GET["type"]
-    if type == "general":
+    if token.startswith('uclapi-'):
         calls = APICall.objects.filter(app__api_token__exact=token)
-    else:
+    elif token.startswith('uclapi-user-'):
         calls = APICall.objects.filter(token__token__exact=token)
+    else:
+        response = JsonResponse({
+            "ok": False,
+            "error": "Token is invalid."
+        })
+        response.status_code = 400
+        return response
 
     return PrettyJsonResponse({
         "success": True,
         "num": len(calls),
+    })
+
+
+def quota_remaining(request):
+    token = request.GET["token"]
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
+
+    if token.startswith('uclapi-'):
+        app = APICall.objects.filter(app__api_token__exact=token).first()
+        cache_key = app.user.email
+        limit = 10000
+
+    elif token.startswith('uclapi-user-'):
+        Otoken = OAuthToken.objects.filter(token__exact=token).first()
+
+
+        cache_key = Otoken.user.email
+        limit = 10000
+    else:
+        response = JsonResponse({
+            "ok": False,
+            "error": "Token is invalid."
+        })
+        response.status_code = 400
+        return response
+
+    count_data = int(r.get(cache_key))
+    return PrettyJsonResponse({
+        "success": True,
+        "remaining": limit-count_data,
+    })
+
+
+def most_popular_service(request):
+    most_common = APICall.objects.values("service").annotate(
+        count=Count('service')).order_by("-count")
+    most_common = list(most_common)
+
+    return PrettyJsonResponse({
+        "success": True,
+        "data": most_common
+    })
+
+
+def most_popular_method(request):
+    try:
+        service = request.GET["service"]
+        most_common = APICall.objects.filter(service__exact=service).values(
+            "method").annotate(count=Count('method')).order_by("-count")
+    except:
+        most_common = APICall.objects.values(
+            "method").annotate(count=Count('method')).order_by("-count")
+
+    most_common = list(most_common)
+
+    return PrettyJsonResponse({
+        "success": True,
+        "data": most_common
     })
