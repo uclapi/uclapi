@@ -444,3 +444,23 @@ def most_popular_method(request):
         "success": True,
         "data": most_common
     })
+
+
+def users_per_app(request):
+    token = request.GET["token"]
+    users = OAuthToken.objects.filter(app__api_token__exact=token)
+    return PrettyJsonResponse({
+        "success": True,
+        "users": len(users)
+    })
+
+
+def users_per_app_by_dept(request):
+    token = request.GET["token"]
+    users = User.objects.filter(oauthtoken__app__api_token__exact=token)\
+        .values("department").annotate(count=Count('department'))\
+        .order_by("-count")
+    return PrettyJsonResponse({
+        "success": True,
+        "data": list(users)
+    })
