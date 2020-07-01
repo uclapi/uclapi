@@ -16,7 +16,8 @@ from .webhook_views import (
 )
 from dashboard.api_applications import (
     create_app, delete_app, regenerate_app_token, rename_app, set_callback_url,
-    update_scopes, get_user_by_id
+    update_scopes, get_user_by_id, number_of_requests, quota_remaining,
+    users_per_app, users_per_app_by_dept
 )
 
 
@@ -1032,3 +1033,43 @@ class ApiApplicationsTestCase(TestCase):
         )
         app_ = App.objects.filter(id=app_.id, user=user_.id)[0]
         self.assertEqual(app_.scope.scope_number, 2)
+
+    def test_analytics_no_token_provided(self):
+        endpoints = self.functions = {
+            '/api/analytics/requests/total': number_of_requests,
+            '/api/analytics/requests/quota': quota_remaining,
+            # '/api/analytics/requests/services': most_popular_service,
+            # '/api/analytics/requests/methods': most_popular_method,
+            '/api/analytics/requests/oauth/total': users_per_app,
+            '/api/analytics/requests/oauth/total_by_dept':
+                users_per_app_by_dept
+        }
+
+        for url in endpoints:
+            request = self.factory.get(
+                url,
+                {
+                }
+            )
+            response = endpoints[url](request)
+            content = json.loads(response.content.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(content["message"], "No token provided")
+
+    def test_analytics_bad_token_provided(self):
+        endpoints = self.functions = {
+            '/api/analytics/requests/total': number_of_requests,
+            '/api/analytics/requests/quota': quota_remaining,
+        }
+
+        for url in endpoints:
+            request = self.factory.get(
+                url,
+                {
+                    "token": "this-is-very-garbage"
+                }
+            )
+            response = endpoints[url](request)
+            content = json.loads(response.content.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(content["message"], "Token is invalid")
