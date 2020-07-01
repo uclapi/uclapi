@@ -4,6 +4,7 @@ from django.db.models import Count
 
 from django.http import JsonResponse
 from django.utils.datastructures import MultiValueDictKeyError
+from django.utils.datetime_safe import datetime
 
 from oauth.models import OAuthToken
 from oauth.scoping import Scopes
@@ -448,7 +449,20 @@ def most_popular_method(request):
 
 def users_per_app(request):
     token = request.GET["token"]
-    users = OAuthToken.objects.filter(app__api_token__exact=token)
+
+    try:
+        start = request.GET["start_datetime"]
+        end = request.GET["end_datetime"]
+
+        start_date = datetime.strptime(start, "%Y-%m-%d")
+        end_date = datetime.strptime(end, "%Y-%m-%d")
+
+        users = OAuthToken.objects.filter(creation_date__range=(start_date,
+                                                                end_date))
+
+    except MultiValueDictKeyError:
+        users = OAuthToken.objects.filter(app__api_token__exact=token)
+
     return PrettyJsonResponse({
         "success": True,
         "users": len(users)
