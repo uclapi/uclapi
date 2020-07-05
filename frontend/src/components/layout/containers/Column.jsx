@@ -88,7 +88,7 @@ export default class Column extends React.Component {
     if (typeof width == `undefined`) { console.log(`EXCEPTION: no width set for column so setting column width to 0`); return 0 }
 
     // In case the width is not of the form "x-y"
-    if(!width.includes("-")) {
+    if(!width.includes(`-`)) {
       return width
     }
 

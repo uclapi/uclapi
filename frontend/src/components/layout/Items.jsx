@@ -11,25 +11,25 @@ import ButtonView from './views/ButtonView.jsx'
 import CardView from './views/CardView.jsx'
 import CheckBox from './views/CheckBox.jsx'
 import CodeView from './views/CodeView.jsx'
-import ImageView from './views/ImageView.jsx'
 import ConfirmBox from './views/ConfirmBox.jsx'
-import TextView from './views/TextView.jsx'
 import Field from './views/Field.jsx'
+import ImageView from './views/ImageView.jsx'
+import TextView from './views/TextView.jsx'
 
 export {
-    Container,
-    Row,
-    Column,
-    TextView, 
-    ButtonView, 
-    CardView,
-    ImageView, 
-    CodeView,
-    Demo, 
-    NavBar, 
-    Footer, 
-    AutoCompleteView,
-    Field,
-    CheckBox,
-    ConfirmBox
-  }
+  Container,
+  Row,
+  Column,
+  TextView,
+  ButtonView,
+  CardView,
+  ImageView,
+  CodeView,
+  Demo,
+  NavBar,
+  Footer,
+  AutoCompleteView,
+  Field,
+  CheckBox,
+  ConfirmBox,
+}

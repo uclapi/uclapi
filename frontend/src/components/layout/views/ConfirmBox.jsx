@@ -1,8 +1,10 @@
-import React from 'react'
-
+/* eslint-disable react/prop-types */
 // Components
-import { CardView, Column, Row, TextView, 
-  Field, ButtonView, Container } from 'Layout/Items.jsx'
+import {
+  ButtonView, CardView, Column,
+  Container, Field, Row, TextView,
+} from 'Layout/Items.jsx'
+import React from 'react'
 
 /**
 This has the multipurpose of being both for the confirm button and
@@ -25,7 +27,7 @@ export default class ConfirmBox extends React.Component {
 
     this.state = {
       canSubmit: false,
-      value: "", 
+      value: ``, 
     }
   }
 
@@ -33,15 +35,15 @@ export default class ConfirmBox extends React.Component {
     if(this.DEBUGGING) { console.log(value) }
 
     const { value: check, shouldCheckValue } = this.props
-    var canSubmit = false
+    let canSubmit = false
 
     if(shouldCheckValue && value == check) {
       canSubmit = true
-    } else if(value != ""){
-      canSubmit = true
+    } else if(value != ``){
+      canSubmit = false
     }
 
-    if(this.DEBUGGING) { console.log("canSubmit: " + canSubmit + " value: " + value + " against: " + check) }
+    if(this.DEBUGGING) { console.log(`canSubmit: ` + canSubmit + ` value: ` + value + ` against: ` + check) }
 
     this.setState({
       value: value,
@@ -56,13 +58,13 @@ export default class ConfirmBox extends React.Component {
     if(canSubmit) {
       success(value)
     } else {
-      alert( (shouldCheckValue ? "Sorry please enter the correct value (" + check +  ") and try again" : 
-        "Please enter a valid name and try again") + " (remember to click save)")
+      alert( (shouldCheckValue ? `Sorry please enter the correct value (` + check +  `) and try again` : 
+        `Please enter a valid name and try again`) + ` (remember to click save)`)
     }
   }
 
   render() {
-    const { text, success, fail, value: check } = this.props
+    const { text, fail } = this.props
     const { value } = this.state
 
     return (
@@ -79,7 +81,7 @@ export default class ConfirmBox extends React.Component {
                 text={text}
               />
               <Field
-                title={"Click to edit"}
+                title={`Click to edit`}
                 content={value}
                 onSave={this.saveField}
                 isSmall

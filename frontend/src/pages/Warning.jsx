@@ -1,28 +1,22 @@
-// Standard React imports
-// Styles
-import 'Styles/common/uclapi.scss'
-// Legacy
-import 'Styles/navbar.scss'
-
-// Images
 import warning from 'Images/warning/warning.svg'
-
-// Components
 import {
   ButtonView,
-  CardView,
+
   Column,
   Container,
-  Demo,
+
   Footer,
   ImageView,
   NavBar,
   Row,
   TextView,
 } from 'Layout/Items.jsx'
-// External dependencies
 import React from 'react'
 import ReactDOM from 'react-dom'
+import 'Styles/common/uclapi.scss'
+import 'Styles/navbar.scss'
+
+
 
 class Warning extends React.Component {
 
@@ -36,7 +30,7 @@ class Warning extends React.Component {
   }
 
   render() {
-    const { type, title, content } = this.state
+    const { title, content } = this.state
 
     return (
       <>
@@ -71,7 +65,7 @@ class Warning extends React.Component {
                 />
               )}
               <ButtonView 
-                text={"Home"} 
+                text={`Home`} 
                 link={`/`} 
                 centred 
               />

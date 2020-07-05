@@ -1,16 +1,19 @@
+import 'Styles/common/uclapi.scss'
+import 'Styles/navbar.scss'
+
 import {
   cyan,
   grey,
   pink,
 } from '@material-ui/core/colors'
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
+import { Footer, NavBar } from 'Layout/Items.jsx'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import { Footer, NavBar } from 'Layout/Items.jsx'
-
 import LogInLayout from '../components/appsettings/LogInLayout.jsx'
 import SettingsLayout from '../components/appsettings/SettingsLayout.jsx'
+
 
 const {
   500: cyan500,
@@ -46,8 +49,6 @@ const muiTheme = createMuiTheme({
   },
 })
 
-import 'Styles/common/uclapi.scss'
-import 'Styles/navbar.scss'
 
 class AppSettings extends React.Component {
   constructor(props) {

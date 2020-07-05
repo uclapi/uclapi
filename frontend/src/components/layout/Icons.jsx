@@ -1,17 +1,17 @@
 // React
-import React from 'react'
-
-// Base Icon
-import Icon from './views/Icon.jsx'
-
+import checkedImage from 'Images/dashboard/checked.svg'
 // Images
 import clipboardImage from 'Images/dashboard/copy.svg'
 import editImage from 'Images/dashboard/edit.svg'
 import refreshImage from 'Images/dashboard/refresh.svg'
 import saveImage from 'Images/dashboard/save.svg'
 import deleteImage from 'Images/dashboard/trash.svg'
-import checkedImage from 'Images/dashboard/checked.svg'
 import uncheckedImage from 'Images/dashboard/unchecked.svg'
+import React from 'react'
+
+// Base Icon
+import Icon from './views/Icon.jsx'
+
 
 /** COPY **/
 export const copyIcon = (onClick, style) => <Icon image={clipboardImage} description="copy token to clipboard" onClick={onClick} style={style} />

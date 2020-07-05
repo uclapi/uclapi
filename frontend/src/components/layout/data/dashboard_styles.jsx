@@ -68,14 +68,14 @@ export const styles = {
   },
   modal: {
     content : {
-      top: '25%',
-      bottom: 'auto',
+      top: `25%`,
+      bottom: `auto`,
       padding: 0,
       height: `fit-content`,
       background: `none`,
       border: `none`,
-    }
-  }
+    },
+  },
 }
 
 export default {

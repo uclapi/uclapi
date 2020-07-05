@@ -1,5 +1,6 @@
 {
   "env": {
+    "node": true,
     "browser": true
   },
   "extends": [
@@ -12,18 +13,9 @@
     "plugin:sonarjs/recommended"
   ],
   "rules": {
-    "semi": [
-      "error",
-      "never"
-    ],
-    "quotes": [
-      "error",
-      "backtick"
-    ],
-    "comma-dangle": [
-      "error",
-      "always-multiline"
-    ],
+    "semi": ["error", "never"],
+    "quotes": ["error", "backtick"],
+    "comma-dangle": ["error", "always-multiline"],
     "no-var": "error",
     "prefer-const": "error",
     "max-len": [
@@ -34,29 +26,12 @@
     ],
     "object-property-newline": "error",
     "no-secrets/no-secrets": "error",
-    "react/jsx-indent-props": [
-      "error",
-      2
-    ],
-    "react/jsx-closing-bracket-location": [
-      "error"
-    ],
-    "react/static-property-placement": [
-      "error",
-      "static public field"
-    ],
-    "react/jsx-fragments": [
-      "error",
-      "syntax"
-    ],
-    "react/jsx-boolean-value": [
-      "error",
-      "never"
-    ],
-    "react/destructuring-assignment": [
-      "warn",
-      "always"
-    ],
+    "react/jsx-indent-props": ["error", 2],
+    "react/jsx-closing-bracket-location": ["error"],
+    "react/static-property-placement": ["error", "static public field"],
+    "react/jsx-fragments": ["error", "syntax"],
+    "react/jsx-boolean-value": ["error", "never"],
+    "react/destructuring-assignment": ["warn", "always"],
     "react/jsx-no-bind": [
       "error",
       {
@@ -92,6 +67,7 @@
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
+    "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
     }
@@ -101,28 +77,11 @@
       "webpack": "webpack.prod.js",
       "alias": {
         "map": [
-          [
-            "Images",
-            "./src/images"
-          ],
-          [
-            "Layout",
-            "./src/components/layout"
-          ],
-          [
-            "Styles",
-            "./src/sass"
-          ]
+          ["Images", "./src/images"],
+          ["Layout", "./src/components/layout"],
+          ["Styles", "./src/sass"]
         ],
-        "extensions": [
-          "jpg",
-          "png",
-          "svg",
-          "jpeg",
-          "js",
-          "jsx",
-          "scss"
-        ]
+        "extensions": ["jpg", "png", "svg", "jpeg", "js", "jsx", "scss"]
       }
     },
     "react": {

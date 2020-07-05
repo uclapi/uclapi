@@ -1,11 +1,10 @@
 /* eslint-disable react/prop-types */
 // remove this ^ when ready to add prop-types
 
-import React from 'react'
-
-// Components
-import { TextView, Container} from 'Layout/Items.jsx'
 import { checkedIcon, uncheckedIcon } from 'Layout/Icons.jsx'
+// Components
+import { Container } from 'Layout/Items.jsx'
+import React from 'react'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -17,22 +16,22 @@ OPTIONAL ATTRIBUTES:
 this.props.style
 **/
 
-const styles = {
-  tokenText: {
-    float: `left`,
-    margin: `6px 10px 0 0`,
-    color: `white`,
-    fontWeight: `300`,
-  },
-  field: {
-    backgroundColor: `#3498db`,
-    height: `50px`,
-    float: `left`,
-    paddingRight: `10px`,
-    width: `100%`,
-    transition: `background-color 0.2s`,
-  }
-}
+// const styles = {
+//   tokenText: {
+//     float: `left`,
+//     margin: `6px 10px 0 0`,
+//     color: `white`,
+//     fontWeight: `300`,
+//   },
+//   field: {
+//     backgroundColor: `#3498db`,
+//     height: `50px`,
+//     float: `left`,
+//     paddingRight: `10px`,
+//     width: `100%`,
+//     transition: `background-color 0.2s`,
+//   },
+// }
 
 export default class CheckBox extends React.Component {
 
@@ -65,11 +64,11 @@ export default class CheckBox extends React.Component {
   render() {
 
     const { text } = this.props
-    const { style, isChecked } = this.state
+    const { isChecked } = this.state
 
-    const fieldClass = "field-container-not-editing"
-    const fieldInputClass = "field-input-not-editing"
-		const fieldHeight = "55px"
+    const fieldClass = `field-container-not-editing`
+    const fieldInputClass = `field-input-not-editing`
+		const fieldHeight = `55px`
 
     return (
       <Container 
@@ -84,7 +83,7 @@ export default class CheckBox extends React.Component {
           type="text"
           className={fieldInputClass}
           readOnly
-          value={"My app requires access to the user's " + text.toLowerCase() + "."}
+          value={`My app requires access to the user's ` + text.toLowerCase() + `.`}
           style={{ height: fieldHeight }}
         />
 

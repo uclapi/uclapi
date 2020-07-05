@@ -50,7 +50,7 @@ export default class Container extends React.Component {
 
     const { children, heading, onClick, className: propsClassName } = this.props
 
-    const className = this.class + " " + propsClassName
+    const className = this.class + ` ` + propsClassName
     const style = this.style
 
     return (

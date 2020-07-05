@@ -1,20 +1,16 @@
-// Styling
-import 'Styles/common/uclapi.scss'
-// Legacy
-import 'Styles/navbar.scss'
-
-// Dependencies
+/* eslint-disable react/jsx-no-bind */
 import dayjs from 'dayjs'
 import Cookies from 'js-cookie'
+import { styles } from 'Layout/data/dashboard_styles.jsx'
+import {
+  ButtonView, CardView, Column, ConfirmBox,
+  Container, Footer, NavBar, Row, TextView,
+} from 'Layout/Items.jsx'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Modal from 'react-modal'
-
-// Styles
-import { styles } from 'Layout/data/dashboard_styles.jsx'
-import { ButtonView, CardView, Column, ConfirmBox, 
-  Footer, NavBar, Row, TextView, Container } from 'Layout/Items.jsx'
-
+import 'Styles/common/uclapi.scss'
+import 'Styles/navbar.scss'
 // UI App Component
 import App from '../components/dashboard/App.jsx'
 
@@ -103,7 +99,7 @@ class Dashboard extends React.Component {
           {toDelete !== -1 ? (
             <ConfirmBox
               text={`Enter the name of your project to confirm deletion (` + apps[toDelete].name + `)`}
-              success={(value) => { actions.deleteProject(toDelete) }}
+              success={() => { actions.deleteProject(toDelete) }}
               fail={() => { this.setState({ view: `default` }) }}
               value={apps[toDelete].name}
               shouldCheckValue
@@ -164,13 +160,15 @@ class Dashboard extends React.Component {
           </Row>
           <Row width='1-1'>
             <ButtonView 
-            text={`+`}
-            type={`default`}
-            style={{ cursor: `pointer`, borderRadius: `10px`, padding: `20px 25px`}}
-            onClick={() => { this.setState({ view: `add-project` }) }}
-            fakeLink
-            centred
-          />
+              text={`+`}
+              type={`default`}
+              style={{ cursor: `pointer`,
+borderRadius: `10px`,
+padding: `20px 25px`}}
+              onClick={() => { this.setState({ view: `add-project` }) }}
+              fakeLink
+              centred
+            />
         </Row>
         </Container>
         <Footer />
@@ -246,7 +244,7 @@ class Dashboard extends React.Component {
       const { data } = this.state
       data.apps[index].oauth.callback_url = value
 
-      this.queryDashboardAPI(`/dashboard/api/setcallbackurl/`, `app_id=` + updatedData.apps[index].id + `&callback_url=` + value, (json) => {
+      this.queryDashboardAPI(`/dashboard/api/setcallbackurl/`, `app_id=` + data.apps[index].id + `&callback_url=` + value, (json) => {
         console.log(json)
       })
 
