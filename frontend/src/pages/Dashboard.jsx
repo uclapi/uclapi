@@ -98,7 +98,11 @@ class Dashboard extends React.Component {
         >
           {toDelete !== -1 ? (
             <ConfirmBox
-              text={`Enter the name of your project to confirm deletion (` + apps[toDelete].name + `)`}
+              text={
+                `Enter the name of your project to confirm deletion (${
+                  apps[toDelete].name
+                })`
+              }
               success={() => { actions.deleteProject(toDelete) }}
               fail={() => { this.setState({ view: `default` }) }}
               value={apps[toDelete].name}
@@ -107,7 +111,11 @@ class Dashboard extends React.Component {
           ) : null}
         </Modal>
 
-        <Container height='fit-content' styling='splash-parallax' style={{ minHeight: `100%` }}>
+        <Container
+          height='fit-content'
+          styling='splash-parallax'
+          style={{ minHeight: `100%` }}
+        >
           <Row width='1-1'>
             <Column
               width="2-3"
@@ -216,7 +224,7 @@ padding: `20px 25px`}}
 
         // Remove the deleted app
         console.log(`deleting index: ` + index)
-        const newData = { ...this.state.data }
+        const newData = { ...data }
         newData.apps.splice(index, 1)
 
         // Go to default state visually
@@ -231,7 +239,10 @@ padding: `20px 25px`}}
   saveEditTitle = (index, value) => {
     const { data } = this.state
 
-    this.queryDashboardAPI(`/dashboard/api/rename/`, `new_name=` + value + `&app_id=` + data.apps[index].id, (json) => {
+    this.queryDashboardAPI(
+      `/dashboard/api/rename/`,
+      `new_name=` + value + `&app_id=` + data.apps[index].id,
+      (json) => {
       if (this.DEBUGGING) { console.log(json) }
     })
 
@@ -240,7 +251,10 @@ padding: `20px 25px`}}
   }
 
   saveOAuthCallback = (index, value) => {
-    if (value.startsWith(`https://`) || value.startsWith(`http://`) || value == ``) {
+    if (value.startsWith(`https://`) ||
+      value.startsWith(`http://`) ||
+      value == ``
+    ) {
       const { data } = this.state
       data.apps[index].oauth.callback_url = value
 

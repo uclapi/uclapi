@@ -55,7 +55,7 @@
       }
     ],
     "security/detect-non-literal-require": "off", // until https://github.com/nodesecurity/eslint-plugin-security/pull/32 is merged
-    "security/detect-object-injection": "warn"
+    "security/detect-object-injection": "off"
   },
   "plugins": [
     "react",
