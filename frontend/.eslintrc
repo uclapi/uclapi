@@ -1,6 +1,5 @@
 {
   "env": {
-    "node": true,
     "browser": true
   },
   "extends": [
@@ -8,6 +7,7 @@
     "plugin:react/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
+    "plugin:import/typescript",
     "plugin:security/recommended",
     "plugin:sonarjs/recommended"
   ],
@@ -79,7 +79,6 @@
         "peerDependencies": false
       }
     ],
-    "simple-import-sort/sort": "error",
     "security/detect-non-literal-require": "off", // until https://github.com/nodesecurity/eslint-plugin-security/pull/32 is merged
     "security/detect-object-injection": "warn"
   },
@@ -89,16 +88,13 @@
     "security",
     "no-secrets",
     "json-format",
-    "simple-import-sort",
     "sonarjs"
   ],
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 6,
     "ecmaFeatures": {
       "jsx": true
-    },
-    "sourceType": "module"
+    }
   },
   "settings": {
     "import/resolver": {

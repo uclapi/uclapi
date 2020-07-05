@@ -1,2 +1,5 @@
 **/package-lock.json
 package.json
+backend/
+docker/
+.github/
