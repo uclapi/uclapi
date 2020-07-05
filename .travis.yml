@@ -1,14 +1,14 @@
 language: python
+os: linux
 branches:
   only:
   - master
 python:
 - '3.6'
 dist: bionic
-sudo: required
 cache: pip
 services:
-- redis-server
+- redis
 install:
 - "(sed '/cx.*/d' ./backend/uclapi/requirements.txt | sed -e 's/^\\-e //') | xargs
   -n 1 pip3 install"
@@ -19,8 +19,11 @@ addons:
 jobs:
   include:
   - stage: test
+    env:
+    - NODE_OPTIONS=--max_old_space_size=4096
     before_script:
     - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
+    - nvm install --lts && nvm use --lts
     - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
     - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
     - sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip
@@ -34,7 +37,12 @@ jobs:
     - cd ./../backend/uclapi
     - pip3 install $(cat requirements.txt | grep "cx-Oracle")
     - cp webpack-stats.sample.json ./static/webpack-stats.json
+    - cd ../../frontend/
+    - npm config set strict-ssl false
+    - npm ci
+    - npm run build
     script:
+    - cd ../backend/uclapi
     - python ./manage.py migrate
     - coverage run --source='.' --omit='*migrations*' manage.py test --testrunner
       'uclapi.custom_test_runner.NoDbTestRunner' --settings=uclapi.settings_mocked
@@ -48,8 +56,10 @@ jobs:
     - AWS_S3_BUCKET_NAME=uclapi-static-staging
     - AWS_S3_BUCKET_PATH=static/
     - AWS_S3_REGION=eu-west-2
+    - NODE_OPTIONS=--max_old_space_size=4096
     before_script:
-    - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5 npm nodejs
+    - sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
+    - nvm install --lts && nvm use --lts
     - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
     - sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
     - sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip
@@ -65,9 +75,8 @@ jobs:
     - pip3 install awscli
     - cp webpack-stats.sample.json ./static/webpack-stats.json
     - cd ../../frontend/
-    - nvm use node
     - npm config set strict-ssl false
-    - npm install
+    - npm ci
     - npm run build
     script:
     - cd ../backend/uclapi

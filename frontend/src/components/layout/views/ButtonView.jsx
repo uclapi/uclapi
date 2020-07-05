@@ -30,7 +30,7 @@ export default class ButtonView extends React.Component {
 
     // Save class and stylings to the state
     this.state = {
-      class: "",
+      class: ``,
       containerStyle: {},
     }
   }
@@ -50,7 +50,11 @@ export default class ButtonView extends React.Component {
       )
     } else {
       return (
-        <div className={className} style={{...style, ...containerStyle}} onClick={onClick}>
+        <div className={className}
+          style={{...style,
+...containerStyle}}
+          onClick={onClick}
+        >
             {text}
         </div>
       )
@@ -60,13 +64,13 @@ export default class ButtonView extends React.Component {
   refresh = () => {
     const { type, centred, containerStyles } = this.props
 
-    const buttonType = typeof type !== `undefined` ? type : "default"
-    const className = "uclapi-button default-transition background-color-transition " 
-      + buttonType + "-button"
+    const buttonType = typeof type !== `undefined` ? type : `default`
+    const className = `uclapi-button default-transition background-color-transition ` 
+      + buttonType + `-button`
 
     console.log(containerStyles)
 
-    var containerStyle = {
+    let containerStyle = {
       ...containerStyles,
       width: `fit-content`,
     }

@@ -1,6 +1,4 @@
 // React
-import React from 'react'
-
 // Images
 // Room Buddy
 import roombuddylogo from 'Images/marketplace/roombuddy/logo.png'
@@ -19,16 +17,18 @@ import ucsscr1 from 'Images/marketplace/uclcssa/screenshot_1.png'
 import ucsscr2 from 'Images/marketplace/uclcssa/screenshot_2.png'
 import ucsscr3 from 'Images/marketplace/uclcssa/screenshot_3.png'
 import ucsscr4 from 'Images/marketplace/uclcssa/screenshot_4.png'
+import unikomdesktop1 from 'Images/marketplace/unikomet/desktop_screenshot_1.png'
+import unikomdesktop2 from 'Images/marketplace/unikomet/desktop_screenshot_2.png'
+import unikomdesktop3 from 'Images/marketplace/unikomet/desktop_screenshot_3.png'
+import unikomdesktop4 from 'Images/marketplace/unikomet/desktop_screenshot_4.png'
 // Unikomet
 import unikometlogo from 'Images/marketplace/unikomet/logo.png'
 import unikom1 from 'Images/marketplace/unikomet/screenshot_1.png'
 import unikom2 from 'Images/marketplace/unikomet/screenshot_2.png'
 import unikom3 from 'Images/marketplace/unikomet/screenshot_3.png'
-import unikomdesktop1 from 'Images/marketplace/unikomet/desktop_screenshot_1.png'
-import unikomdesktop2 from 'Images/marketplace/unikomet/desktop_screenshot_2.png'
-import unikomdesktop3 from 'Images/marketplace/unikomet/desktop_screenshot_3.png'
 // Common Components
 import { ButtonView, TextView } from 'Layout/Items.jsx'
+import React from 'react'
 import { Carousel } from "react-responsive-carousel"
 
 // Application config
@@ -262,29 +262,37 @@ const unikometdescription = (
         showStatus
         infiniteLoop
       >
-        <div key={"unikomet-desktop-image-1"}>
+        <div key={`unikomet-desktop-image-1`}>
           <img
             src={unikomdesktop1}
             width="100%"
             height="auto"
           />
-          <p className="legend">{"Search"}</p>
+          <p className="legend">{`Search`}</p>
         </div>
-        <div key={"unikomet-desktop-image-2"}>
+        <div key={`unikomet-desktop-image-2`}>
           <img
             src={unikomdesktop2}
             width="100%"
             height="auto"
           />
-          <p className="legend">{"Rate"}</p>
+          <p className="legend">{`Rate`}</p>
         </div>
-        <div key={"unikomet-desktop-image-3"}>
+        <div key={`unikomet-desktop-image-3`}>
           <img
             src={unikomdesktop3}
             width="100%"
             height="auto"
           />
-          <p className="legend">{"View Reviews"}</p>
+          <p className="legend">{`View Reviews`}</p>
+        </div>
+        <div key={`unikomet-desktop-image-4`}>
+          <img
+            src={unikomdesktop4}
+            width="100%"
+            height="auto"
+          />
+          <p className="legend">{`Sort by department`}</p>
         </div>
       </Carousel>
     </div>
@@ -326,15 +334,15 @@ export const allApps = {
     "screenshots": [
       {
         name: `Room Buddy`,
-        img: rbscrn1
+        img: rbscrn1,
       },
       {
         name: `See the free rooms`,
-        img: rbscrn2
+        img: rbscrn2,
       },
       {
         name: `Navigate to UCL rooms`,
-        img: rbscrn3
+        img: rbscrn3,
       },
     ],
   },
@@ -361,15 +369,15 @@ export const allApps = {
     "screenshots": [
       {
         name: `UCL Assistant`,
-        img: ucascr1
+        img: ucascr1,
       },
       {
         name: `View your timetable`,
-        img: ucascr2
+        img: ucascr2,
       },
       {
         name: `Find study spaces`,
-        img: ucascr3
+        img: ucascr3,
       },
     ],
   },

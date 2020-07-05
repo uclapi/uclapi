@@ -1,12 +1,10 @@
 import json
 import os
-import urllib.parse
 
 import redis
 from django.core import signing
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.signing import TimestampSigner
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.http import quote
 from django.views.decorators.csrf import (
@@ -57,13 +55,13 @@ def authorise(request):
         response = PrettyJsonResponse({
             "ok": False,
             "error": (
-                        "This app does not have a callback URL set. "
-                        "If you are the developer of this app, "
-                        "please ensure you have set a valid callback "
-                        "URL for your application in the Dashboard. "
-                        "If you are a user, please contact the app's "
-                        "developer to rectify this."
-                      )
+                "This app does not have a callback URL set. "
+                "If you are the developer of this app, "
+                "please ensure you have set a valid callback "
+                "URL for your application in the Dashboard. "
+                "If you are a user, please contact the app's "
+                "developer to rectify this."
+            )
         })
         response.status_code = 400
         return response
@@ -228,9 +226,46 @@ def shibcallback(request):
     }
 
     initial_data = json.dumps(page_data, cls=DjangoJSONEncoder)
-    return render(request, 'permissions.html', {
-        'initial_data': initial_data
-    })
+
+    try:
+        token = OAuthToken.objects.get(app=app, user=user)
+    except OAuthToken.DoesNotExist:
+        return render(request, 'permissions.html', {
+            'initial_data': initial_data
+        })
+
+    if token.scope.scopeIsEqual(app.scope) and token.active:
+        code = generate_random_verification_code()
+
+        r = redis.Redis(host=REDIS_UCLAPI_HOST)
+
+        verification_data = {
+            "client_id": app.client_id,
+            "state": state,
+            "upi": user.employee_id
+        }
+
+        verification_data_str = json.dumps(
+            verification_data, cls=DjangoJSONEncoder)
+
+        # Store this verification data in redis so that it can be obtained
+        # later when the client wants to swap the code for a token.
+        # The code will only be valid for 90 seconds after which redis will
+        # just drop it and the process will be invalidated.
+        r.set(code, verification_data_str, ex=90)
+
+        # Now redirect the user back to the app, at long last.
+        # Just in case they've tried to be super clever and host multiple
+        # apps with the same callback URL, we'll provide the client ID
+        # along with the state
+        return redirect(
+            app.callback_url + "?result=allowed&code=" + code +
+            "&client_id=" + app.client_id + "&state=" + state
+        )
+    else:
+        return render(request, 'permissions.html', {
+            'initial_data': initial_data
+        })
 
 
 @csrf_protect
@@ -240,12 +275,13 @@ def userdeny(request):
     try:
         signed_data = request.POST.get("signed_app_data")
         raw_data_str = signer.unsign(signed_data, max_age=300)
-    except:
+    except (signing.BadSignature, KeyError, TypeError):
         response = PrettyJsonResponse({
             "ok": False,
             "error": ("The signed data received was invalid."
                       " Please try the login process again. "
-                      "If this issue persists, please contact support.")
+                      "If this issue persists, please contact us at "
+                      "isd.apiteam@ucl.ac.uk or on github.")
         })
         response.status_code = 400
         return response
@@ -256,7 +292,8 @@ def userdeny(request):
         response = PrettyJsonResponse({
             "ok": False,
             "error": ("The JSON data was not in the expected format."
-                      " Please contact support.")
+                      " Please contact us at "
+                      "isd.apiteam@ucl.ac.uk or on github.")
         })
         response.status_code = 400
         return response
@@ -273,12 +310,13 @@ def userdeny(request):
     try:
         users = User.objects.filter(employee_id=data["user_upi"])
         user = users[0]
-    except (User.DoesNotExist, KeyError):
+    except (User.DoesNotExist, KeyError, IndexError):
         response = PrettyJsonResponse({
             "ok": False,
             "error":
                 "User does not exist. This should never occur. "
-                "Please contact support."
+                "Please contact us at "
+                "isd.apiteam@ucl.ac.uk or on github."
         })
         response.status_code = 400
         return response
@@ -299,12 +337,13 @@ def userallow(request):
     try:
         raw_data_str = signer.unsign(
             request.POST.get("signed_app_data"), max_age=300)
-    except (signing.BadSignature, KeyError):
+    except (signing.BadSignature, KeyError, TypeError):
         response = PrettyJsonResponse({
             "ok": False,
             "error": ("The signed data received was invalid."
                       " Please try the login process again."
-                      " If this issue persists, please contact support.")
+                      " If this issue persists, please contact us at"
+                      " isd.apiteam@ucl.ac.uk or on github.")
         })
         response.status_code = 400
         return response
@@ -315,7 +354,8 @@ def userallow(request):
         response = PrettyJsonResponse({
             "ok": False,
             "error": ("The JSON data was not in the expected format."
-                      " Please contact support.")
+                      " Please contact us at"
+                      " isd.apiteam@ucl.ac.uk or on github.")
         })
         response.status_code = 400
         return response
@@ -664,7 +704,7 @@ def settings(request):
         # Build Shibboleth callback URL
         url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
         param = (request.build_absolute_uri(request.path) +
-            "user/login.callback")
+                 "user/login.callback")
         param = quote(param)
         url = url + param
 
@@ -765,6 +805,6 @@ def logout(request):
         del request.session['user_id']
     except KeyError:
         pass
-        
+
     response = redirect('/warning', )
     return response

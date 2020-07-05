@@ -24,15 +24,14 @@ ENV UCLAPI_REVISION_SHA1 ${UCLAPI_REVISION_SHA1}
 RUN mkdir -p /opt/oracle
 
 RUN apt-get update && \
-    apt-get install -y python3 \
-                       python3-wheel \
-                       python3-setuptools \
+    apt-get install -y python3.7 \
+                       python3-distutils \
                        libaio1 \
                        wget \
                        git \
                        libpq-dev \
                        libpq5 \
-                       libpython3-dev \
+                       libpython3.7-dev \
                        unzip \
                        build-essential \
                        libpcre3 \
@@ -52,7 +51,7 @@ ENV LC_ALL en_GB.UTF-8
 # Using ADD means that when the installation script changes remotely the container will
 # rebuild from this stage. Otherwise, it should progress.
 ADD https://bootstrap.pypa.io/get-pip.py get-pip.py
-RUN python3 get-pip.py
+RUN python3.7 get-pip.py
 
 # Install Oracle. This does the following:
 # - Downloads and unzips the instant client
@@ -78,15 +77,15 @@ RUN wget -O instantclient.zip ${ORACLE_INSTANTCLIENT_BASIC_URL} && \
 
 COPY backend/uclapi/requirements.txt requirements.txt
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3.7 install --no-cache-dir -r requirements.txt
 
 EXPOSE 8000
 
 CMD echo "Migrating Main DB"; \
-    python3 /web/uclapi/backend/uclapi/manage.py migrate; \
+    python3.7 /web/uclapi/backend/uclapi/manage.py migrate; \
     echo "Migrating Gencache DB"; \
-    python3 /web/uclapi/backend/uclapi/manage.py migrate --database gencache; \
+    python3.7 /web/uclapi/backend/uclapi/manage.py migrate --database gencache; \
     echo "Running Development Environment Setup"; \
-    python3 /web/uclapi/backend/uclapi/manage.py dev_environment_setup; \
+    python3.7 /web/uclapi/backend/uclapi/manage.py dev_environment_setup; \
     echo "Starting Django on Port 8000"; \
-    python3 /web/uclapi/backend/uclapi/manage.py runserver 0.0.0.0:8000
+    python3.7 /web/uclapi/backend/uclapi/manage.py runserver 0.0.0.0:8000
