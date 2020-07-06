@@ -47,7 +47,12 @@ class Warning extends React.Component {
           >
             
             <Column width="1-2" className="default">
-              <ImageView src={warning} width="367px" height="405px" description="large exclamation point, warning!" />
+              <ImageView
+                src={warning}
+                width="367px"
+                height="405px"
+                description="large exclamation point, warning!"
+              />
             </Column>
 
             <Column width="1-2" alignItems="column">

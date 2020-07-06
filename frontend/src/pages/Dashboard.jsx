@@ -258,18 +258,24 @@ padding: `20px 25px`}}
       const { data } = this.state
       data.apps[index].oauth.callback_url = value
 
-      this.queryDashboardAPI(`/dashboard/api/setcallbackurl/`, `app_id=` + data.apps[index].id + `&callback_url=` + value, (json) => {
-        console.log(json)
-      })
+      this.queryDashboardAPI(
+        `/dashboard/api/setcallbackurl/`,
+        `app_id=` + data.apps[index].id + `&callback_url=` + value,
+        (json) => {
+          console.log(json)
+        }
+      )
 
       this.setState({ data: data })
     }
   }
 
   setScope = (index, scope, value) => {
-    if (this.DEBUGGING) { console.log(`Change app, ` + index + ` scope, ` + scope + ` to ` + value) }
-
-    const newData = { ...this.state.data }
+    if (this.DEBUGGING) {
+      console.log(`Change app, ` + index + ` scope, ` + scope + ` to ` + value)
+    }
+    const { data } = this.state
+    const newData = { ...data }
 
     // Update data
     newData.apps[index].oauth.scopes[scope].enabled = value
@@ -284,8 +290,10 @@ padding: `20px 25px`}}
 
     const json = JSON.stringify(scopesData)
 
-    this.queryDashboardAPI(`/dashboard/api/updatescopes/`, `app_id=` + newData.apps[index].id +
-      `&scopes=` + encodeURIComponent(json), (json) => {
+    this.queryDashboardAPI(
+      `/dashboard/api/updatescopes/`,
+      `app_id=${newData.apps[index].id}&scopes=${encodeURIComponent(json)}`,
+      (json) => {
         console.log(json)
       })
 
@@ -295,30 +303,47 @@ padding: `20px 25px`}}
   regenToken = (index) => {
     const { data } = this.state
 
-    this.queryDashboardAPI(`/dashboard/api/regen/`, `app_id=` + data.apps[index].id, (json) => {
-      data.apps[index].token = json.app.token
-      this.setState({ data: data })
-    })
+    this.queryDashboardAPI(
+      `/dashboard/api/regen/`,
+      `app_id=` + data.apps[index].id,
+      (json) => {
+        data.apps[index].token = json.app.token
+        this.setState({ data: data })
+      }
+    )
   }
 
   regenVerificationSecret = (index) => {
     const { data } = this.state
 
-    this.queryDashboardAPI(`dashboard/api/webhook/refreshsecret/`, `app_id=` + data.apps[index].id, (json) => {
-      data.apps[index].webhook.verification_secret = json.new_secret
-      this.setState({ data: data })
-    })
+    this.queryDashboardAPI(
+      `dashboard/api/webhook/refreshsecret/`,
+      `app_id=` + data.apps[index].id,
+      (json) => {
+        data.apps[index].webhook.verification_secret = json.new_secret
+        this.setState({ data: data })
+      }
+    )
   }
 
   saveWebhookURL = (index, value) => {
-    if (value.startsWith(`https://`) || value.startsWith(`http://`) || value == ``) {
+    if (value.startsWith(`https://`)
+      || value.startsWith(`http://`)
+      || value == ``
+    ) {
       this.updateWebhookSettings({ url: value }, index)
     }
   }
 
-  saveWebhookContact = (index, value) => { this.updateWebhookSettings({ contact: value }, index) }
-  saveWebhookSiteID = (index, value) => { this.updateWebhookSettings({ siteid: value }, index) }
-  saveWebhookRoomID = (index, value) => { this.updateWebhookSettings({ roomid: value }, index) }
+  saveWebhookContact = (index, value) => this.updateWebhookSettings(
+    { contact: value }, index
+  )
+  saveWebhookSiteID = (index, value) => this.updateWebhookSettings(
+    { siteid: value }, index
+  )
+  saveWebhookRoomID = (index, value) => this.updateWebhookSettings(
+    { roomid: value }, index
+  )
 
   updateWebhookSettings = (newValues, index) => {
     const { data } = this.state
@@ -329,13 +354,26 @@ padding: `20px 25px`}}
       ...newValues,
     }
 
-    const parameters = `url=` + values.url + `&siteid=` + values.siteid + `&roomid=` + values.roomid
-      + `&contact=` + values.contact + `&app_id=` + data.apps[index].id
+    const parameters = `url=${
+      values.url
+    }&siteid=${
+      values.siteid
+    }&roomid=${
+      values.roomid
+    }&contact=${
+      values.contact
+    }&app_id=${
+      data.apps[index].id
+    }`
 
-    this.queryDashboardAPI(`dashboard/api/webhook/edit/`, parameters, (json) => {
-      console.log(`For parameters: ` + parameters)
-      console.log(json)
-    })
+    this.queryDashboardAPI(
+      `dashboard/api/webhook/edit/`,
+      parameters,
+      (json) => {
+        console.log(`For parameters: ` + parameters)
+        console.log(json)
+      }
+    )
 
     data.apps[index].webhook = values
     this.setState({ data: data })

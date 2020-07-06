@@ -1,9 +1,5 @@
 // Standard React imports
 // Styles
-import 'Styles/common/uclapi.scss'
-// Legacy
-import 'Styles/navbar.scss'
-
 // Images
 import docs from 'Images/home-page/docs.svg'
 import heart from 'Images/home-page/heart.svg'
@@ -28,6 +24,10 @@ import {
 import Collapse, { Panel } from 'rc-collapse'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import 'Styles/common/uclapi.scss'
+// Legacy
+import 'Styles/navbar.scss'
+
 
 class HomePage extends React.Component {
 
@@ -66,7 +66,11 @@ class HomePage extends React.Component {
             <Row width='9-10' horizontalAlignment={`center`} >
               <TextView
                 align={`center`}
-                text={`Warning! This is our bleeding-edge staging environment. Performance, accuracy and reliability of the API cannot be guaranteed. For our stable, supported API please go to:`}
+                text={
+                  `Warning! This is our bleeding-edge staging environment.` +
+                  `Performance, accuracy and reliability of the API cannot `+
+                  `be guaranteed. For our stable, supported API please go to:`
+                }
                 heading={1}
               />
               <TextView
@@ -93,7 +97,11 @@ class HomePage extends React.Component {
               align={`center`}
             />
             <TextView
-              text={`UCL API is a student-built platform for student developers to improve the student experience of everyone at UCL.`}
+              text={
+                `UCL API is a student-built platform for student `+
+                `developers to improve the student experience of `+
+                `everyone at UCL.`
+              }
               heading={2}
               align={`center`}
             />
@@ -119,30 +127,72 @@ class HomePage extends React.Component {
             className="Row-horizontal"
           >
             <Column width='1-3'>
-              <TextView text={`Make Simple Interfaces`} heading={2} align={`center`} />
-              <TextView text={`The endpoints are streamlined to enable any developer to easily pick up and use the API. We hope that developers of all ability
-                            find our endpoints and website easy to navigate. We do not want to overcomplicate the process of developing
-                            awesome apps, we want to be the easiest part of your development process!`}
+              <TextView
+                text={`Make Simple Interfaces`}
+                heading={2}
+                align={`center`}
+              />
+              <TextView
+                text={
+                  `The endpoints are streamlined to enable any developer `+
+                  `to easily pick up and use the API. We hope that developers `+
+                  `of all abilities find our endpoints and website easy to ` +
+                  `navigate. We want integrating with our API to be the ` +
+                  `easiest part of your development process!`
+                }
                 align={`justify`}
                 heading={5}
               />
-              <ImageView src={star} width={iconsize} height={iconsize} description={`an icon of a love heart`} centred />
+              <ImageView
+                src={star}
+                width={iconsize}
+                height={iconsize}
+                description={`an icon of a love heart`}
+                centred
+              />
             </Column>
             <Column width='1-3'>
-              <TextView text={`Put Documentation First`} heading={2} align={`center`} />
-              <TextView text={`As developers we feel the pain of bad documentation: this is why we are driven by good documentation. We want you
-                             to spend less time worrying about how to use our api and more time thinking about how to revolutionise the student experience.
-                             With good documentation we allow you to focus on building helpful applications.`}
+              <TextView
+                text={`Put Documentation First`}
+                heading={2}
+                align={`center`}
+              />
+              <TextView
+                text={
+                  `As developers we feel the pain of bad documentation: ` + 
+                  `this is why we are strive to write clear and concise ` + 
+                  `documentation. We want you to spend less time worrying ` +
+                  `about how to use our API and more time thinking about how `+ 
+                  `to revolutionise the student experience. With good ` +
+                  `documentation we allow you to focus on building helpful `+
+                  `applications.`
+                }
                 align={`justify`}
                 heading={5}
               />
-              <ImageView src={docs} width={iconsize} height={iconsize} description={`an icon of a clipboard`} centred />
+              <ImageView
+                src={docs}
+                width={iconsize}
+                height={iconsize}
+                description={`an icon of a clipboard`}
+                centred
+              />
             </Column>
             <Column width='1-3'>
-              <TextView text={`Enable Developers`} heading={2} align={`center`} />
-              <TextView text={`We want the api to be so comprehensive that any idea, no matter how big, can be created in order to improve students lives. We are always
-                             open to suggestions for new endpoints and functionality so we can enable a greater range of applications to be developed. We
-                             cannot wait to see what you will develop!`}
+              <TextView
+                text={`Enable Developers`}
+                heading={2}
+                align={`center`}
+              />
+              <TextView
+                text={
+                  `We want the API to be able to support any idea, `+
+                  `no matter how big, that improves students lives. `+
+                  `We are always open to suggestions for new endpoints `+
+                  `and functionality so we can enable a greater range `+
+                  `of applications to be developed. We cannot wait to see ` +
+                  `what you will develop!`
+                }
                 align={`justify`}
                 heading={5}
               />
@@ -299,18 +349,23 @@ class HomePage extends React.Component {
             >
               <TextView text="UCL MARKETPLACE" heading={1} align="center" />
 
-              <TextView text={`The UCL Marketplace contains all of the applications written
-                using UCL API for some of their functionality. We are constantly looking for 
-                applications to add to the marketplace and promote so we would love to hear
-                about your creations so we can add them!`}
+              <TextView text={
+                `The UCL Marketplace contains all known public `+
+                `integrations with the UCL API. We are constantly looking ` +
+                `for more to add to the marketplace and promote so we ` +
+                `would love to hear about your creations so we can add them!`
+                }
                 heading={5}
                 align={`left`}
                 style={{ padding: `0 2%` }}
               />
 
-              <TextView text={`One of these applications is UCL Assistant! An app created
-                by the UCL API team to provide students with a reliable way to check their 
-                timetable, find empty rooms and locate study spaces.`}
+              <TextView text={
+                `One of these applications is UCL Assistant! An app created
+                by the UCL API team to provide students with a reliable way to
+                check their timetable, find empty rooms and locate study
+                spaces.`
+              }
                 heading={5}
                 align={`left`}
                 style={{ padding: `0 2%` }}
@@ -320,8 +375,16 @@ class HomePage extends React.Component {
                 horizontalAlignment='center'
                 alignItems='row'
               >
-                <ButtonView text={`MARKETPLACE`} link={`/marketplace`} type='alternate' />
-                <ButtonView text={`UCL ASSISTANT`} link={`/marketplace/uclassistant`} type='alternate' />
+                <ButtonView
+                  text={`MARKETPLACE`}
+                  link={`/marketplace`}
+                  type='alternate'
+                />
+                <ButtonView
+                  text={`UCL ASSISTANT`}
+                  link={`/marketplace/uclassistant`}
+                  type='alternate'
+                />
             </Row>
             </Column>
           </Row>

@@ -453,6 +453,7 @@ input:focus{
 input[type="checkbox"] {
   display: none;
 }
+
 input[type="checkbox"] + span {
   display: inline-block;
   position: relative;
@@ -466,13 +467,11 @@ input[type="checkbox"] + span {
   cursor: pointer;
   transition-property: all;
   transition-duration: 200ms;
-}
-input[type="checkbox"]:checked + span {
-  background:  lighten($primary-highlight-color, 10%) left top no-repeat;
+  margin-right: 4px;
 }
 
-input[type="checkbox"] + span {
-  margin-right: 4px;
+input[type="checkbox"]:checked + span {
+  background:  lighten($primary-highlight-color, 10%) left top no-repeat;
 }
 
 .title-holder {
@@ -481,6 +480,27 @@ input[type="checkbox"] + span {
 
 .settings-collapse {
   padding: 0 2%;
+
+  .rc-collapse {
+    box-shadow: unset;
+
+    .rc-collapse-content {
+      border-bottom: 1px dotted rgba(255, 255, 255, 0.455);
+      padding: 0 0 25px;
+
+      .rc-collapse-content-box {
+        border-top: unset;
+      }
+    }
+
+    .rc-collapse-item {
+      .rc-collapse-header {
+        text-align: left;  
+        padding: 10px 0;
+        border-bottom: 1px dotted rgba(255, 255, 255, 0.455);
+      }
+    }
+  }
 }
 
 .settings-section {
@@ -762,27 +782,4 @@ div.uclapi-card-github {
   flex-direction: column;
   display: flex;
   width: 100%;
-}
-
-.settings-collapse {
-  .rc-collapse {
-    box-shadow: unset;
-
-    .rc-collapse-content {
-      border-bottom: 1px dotted rgba(255, 255, 255, 0.455);
-      padding: 0 0 25px 0;
-
-      .rc-collapse-content-box {
-        border-top: unset;
-      }
-    }
-
-    .rc-collapse-item {
-      .rc-collapse-header {
-        text-align: left;  
-        padding: 10px 0;
-        border-bottom: 1px dotted rgba(255, 255, 255, 0.455)
-      }
-    }
-  }
 }
