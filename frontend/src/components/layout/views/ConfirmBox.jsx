@@ -14,7 +14,8 @@ REQUIRED:
 
 this.props.text => Description of what to do
 this.props.value => Value needing to be entered
-this.props.shouldCheckValue => Whether or not to check the value (default - false)
+this.props.shouldCheckValue => Whether or not to check the value
+  (default - false)
 this.props.success => Function to be called on a successful click
 this.props.fail => Function to be called on an unsuccessful click
 **/
@@ -43,7 +44,9 @@ export default class ConfirmBox extends React.Component {
       canSubmit = false
     }
 
-    if(this.DEBUGGING) { console.log(`canSubmit: ` + canSubmit + ` value: ` + value + ` against: ` + check) }
+    if(this.DEBUGGING) {
+      console.log(`canSubmit: ${canSubmit} value: ${value} against: ${check}`)
+    }
 
     this.setState({
       value: value,
@@ -58,8 +61,13 @@ export default class ConfirmBox extends React.Component {
     if(canSubmit) {
       success(value)
     } else {
-      alert( (shouldCheckValue ? `Sorry please enter the correct value (` + check +  `) and try again` : 
-        `Please enter a valid name and try again`) + ` (remember to click save)`)
+      alert(
+        (shouldCheckValue
+          ? `Sorry please enter the correct value (${check}) and try again`
+          : `Please enter a valid name and try again`
+        )
+        + ` (remember to click save)`
+      )
     }
   }
 

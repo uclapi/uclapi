@@ -16,7 +16,7 @@
   - Alignments
   - Containers
   - Buttons
-  - Transitions 
+  - Transitions
   - Cards
   - Code Segments
   - RC-Collapse
@@ -37,11 +37,17 @@
 $break-small: 780px;
 $breakpoints: (phone: 768px, tablet: 992px, desktop: 1200px);
 
-html, button, input, select, textarea {
-  font-family: 'Source Sans Pro','Roboto', sans-serif;
+html,
+button,
+input,
+select,
+textarea {
+  font-family: 'Source Sans Pro', 'Roboto', sans-serif;
 }
 
-.app, html, body {
+.app,
+html,
+body {
   height: 100%;
   width: 100%;
 }
@@ -53,17 +59,17 @@ $primary-highlight-color: #3498db;
 
 $secondary-color: #313537;
 
-$accent-color: #8D6E63;
-$highlight-color: #B18453;
+$accent-color: #8d6e63;
+$highlight-color: #b18453;
 
-$color-black: #000000;
+$color-black: black;
 $color-grey-dark: #313537;
 $color-grey-mid: #75797b;
-$color-grey-light: #bbbbbb;
-$color-grey-light2: #cccccc;
-$color-white: #ffffff;
+$color-grey-light: #bbb;
+$color-grey-light2: #ccc;
+$color-white: white;
 
-$color-red: #ff0000;
+$color-red: red;
 
 $color-remove: #ca3c3c;
 $color-remove-highlight: rgb(151, 44, 44);
@@ -90,37 +96,35 @@ body {
 /** Row Colours **/
 
 .splash-parallax {
-  background-image: url("~Images/home-page/splash_screen.png");
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-image: url('~Images/home-page/splash_screen.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   box-shadow: inset 0 0 10px $color-black-transparent-04;
 
   /* Full height */
   height: 100%;
-
-  /* Create the parallax scrolling effect */
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
 }
 
 .team-parallax {
-  background-image: url("~Images/team/teambg.jpg");
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-image: url('~Images/team/teambg.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   box-shadow: inset 0 0 10px $color-black-transparent-04;
 
   /* Full height */
   height: 100%;
-
-  /* Create the parallax scrolling effect */
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
 }
 
-.primary-highlight { background-color: $primary-highlight-color }
-.primary { background-color: $primary-color }
+.primary-highlight { background-color: $primary-highlight-color; }
+.primary { background-color: $primary-color; }
 
-.secondary { background-color: $secondary-color;}
+.secondary { background-color: $secondary-color; }
 .warning-red { background-color: $color-red; }
 .market-green { background-color: $color-green-market; }
 .transparent { background-color: $color-white-transparent-0; }
@@ -166,11 +170,23 @@ h1 {
   text-align: center;
 }
 
-a { color: $color-white; text-decoration-color: $color-white; }
-a:hover { color: $color-grey-light; }
+a {
+  color: $color-white;
+  text-decoration-color: $color-white;
 
-.alt-text { color: lighten($primary-highlight-color, 10%); text-decoration-color: $color-grey-dark; }
-.alt-text:hover { color: lighten($primary-highlight-color, 20%); }
+  &:hover {
+    color: $color-grey-light;
+  }
+}
+
+.alt-text {
+  color: lighten($primary-highlight-color, 10%);
+  text-decoration-color: $color-grey-dark;
+
+  &:hover {
+    color: lighten($primary-highlight-color, 20%);
+  }
+}
 
 /** Alignments **/
 
@@ -179,28 +195,28 @@ a:hover { color: $color-grey-light; }
 }
 
 .row {
-  text-align: center;
-  overflow: hidden;
   display: flex;
   flex-wrap: wrap;
+  overflow: hidden;
+  text-align: center;
 }
 
 .column,
-.column-always-inline{
-  text-align: center;
+.column-always-inline {
+  box-sizing: border-box;
   display: flex;
   flex-direction: row;
-  box-sizing: border-box;
+  flex-wrap: wrap;
   justify-content: center;
   padding: 2%;
-  flex-wrap: wrap;
+  text-align: center;
 }
 
-.column { 
-  @include media("<=phone") {
+.column {
+  @include media('<=phone') {
+    flex-direction: column;
     padding-left: 2rem;
     padding-right: 2rem;
-    flex-direction: column;
     width: 100% !important;
   }
 }
@@ -211,8 +227,8 @@ a:hover { color: $color-grey-light; }
 }
 
 .vertical-align {
-	width: inherit;
-	position: absolute;
+  position: absolute;
+  width: inherit;
 }
 
 .no-vertical-align {
@@ -255,23 +271,35 @@ a:hover { color: $color-grey-light; }
 
 .circular-button { border-radius: 25%; }
 
-.default-button { background-color: $color-grey-dark; color: $color-white; }
+.default-button {
+  background-color: $color-grey-dark;
+  color: $color-white;
+}
 
 .default-button:hover,
-.uclapi-card-clicked-default:hover { background-color: $color-grey-mid;  }
+.uclapi-card-clicked-default:hover { background-color: $color-grey-mid; }
 
 .alternate-button,
-.image-button { background-color: $color-white; color: $color-black; }
+.image-button {
+  background-color: $color-white;
+  color: $color-black;
+}
 
 .alternate-button:hover,
 .image-button:hover,
-.uclapi-card-clicked-alternate:hover { background-color: $color-grey-light2;  }
+.uclapi-card-clicked-alternate:hover { background-color: $color-grey-light2; }
 
-.emphasis-button, { background-color: lighten($primary-highlight-color, 10%); color: black; }
-.emphasis-button:hover { background-color: lighten($primary-highlight-color, 20%);  }
+.emphasis-button, {
+  background-color: lighten($primary-highlight-color, 10%);
+  color: black;
+}
+.emphasis-button:hover { background-color: lighten($primary-highlight-color, 20%); }
 
-.remove-button { background-color: $color-remove; color: $color-white; }
-.remove-button:hover { background-color: $color-remove-highlight;  }
+.remove-button {
+  background-color: $color-remove;
+  color: $color-white;
+}
+.remove-button:hover { background-color: $color-remove-highlight; }
 
 /** Transitions **/
 
@@ -290,17 +318,17 @@ a:hover { color: $color-grey-light; }
   height: auto;
   min-height: fit-content;
   overflow: hidden;
-  width: 100%;
   padding: 2%;
+  width: 100%;
 
   .animate-image {
     filter: brightness(75%);
-    transition: .5s linear;
+    transition: 0.5s linear;
   }
 
   &:hover .animate-image {
-    transform: scale(1.15);
     filter: grayscale(50%) blur(1px);
+    transform: scale(1.15);
   }
 }
 
@@ -317,10 +345,10 @@ a:hover { color: $color-grey-light; }
 }
 
 .uclapi-card-full-screen {
-  margin-left: auto;
-  margin-right: auto;
   display: block;
   float: unset;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .uclapi-card-alternate {
@@ -340,9 +368,9 @@ a:hover { color: $color-grey-light; }
 }
 
 .invisible-marker {
+  position: fixed;
   visibility: hidden;
   width: inherit;
-  position: fixed;
 }
 
 .clickable {
@@ -365,25 +393,24 @@ a:hover { color: $color-grey-light; }
 .rc-collapse {
   background-color: $secondary-color;
   border-radius: 10px;
-  margin: 5px 0;
-  color: $color-white;
   box-shadow: 0 4px 8px 0 $color-black-transparent-02;
+  color: $color-white;
+  margin: 5px 0;
 
   @media screen and (max-width: $break-small) {
     font-size: 18px;
   }
 
   > .rc-collapse-item {
-
     > .rc-collapse-header {
       color: $color-white;
       cursor: pointer;
+      font-size: 20px;
+      font-weight: 600;
       line-height: 38px;
-      text-indent: 0px;
       outline: 0;
       padding: 10px 40px;
-      font-weight: 600;
-      font-size: 20px;
+      text-indent: 0;
     }
   }
 
@@ -396,28 +423,26 @@ a:hover { color: $color-grey-light; }
     color: $color-white;
     cursor: not-allowed;
   }
-
 }
 
 .rc-collapse-anim-active {
-  transition: height .2s ease-out;
+  transition: height 0.2s ease-out;
 }
-
 
 .rc-collapse-content {
   overflow: hidden;
   padding: 0 40px;
 
   > .rc-collapse-content-box {
-    margin-bottom: 16px;
     border-top: 1px dotted $color-white-transparent-0455;
+    margin-bottom: 16px;
   }
 
   p {
     color: $color-white;
     font-size: 14px;
-    text-align: justify;
     margin-top: 10px;
+    text-align: justify;
   }
 }
 
@@ -446,36 +471,36 @@ input::placeholder {
   color: $color-white;
 }
 
-input:focus{
+input:focus {
   outline: none;
 }
 
-input[type="checkbox"] {
+input[type='checkbox'] {
   display: none;
 }
 
-input[type="checkbox"] + span {
-  display: inline-block;
-  position: relative;
-  top: -1px;
-  width: 12px;
-  height: 12px;
-  margin: -1px 0px 0 0;
-  vertical-align: middle;
+input[type='checkbox'] + span {
   background: white left top no-repeat;
   border: 1px solid #ccc;
   cursor: pointer;
-  transition-property: all;
-  transition-duration: 200ms;
+  display: inline-block;
+  height: 12px;
+  margin: -1px 0 0;
   margin-right: 4px;
+  position: relative;
+  top: -1px;
+  transition-duration: 200ms;
+  transition-property: all;
+  vertical-align: middle;
+  width: 12px;
 }
 
-input[type="checkbox"]:checked + span {
-  background:  lighten($primary-highlight-color, 10%) left top no-repeat;
+input[type='checkbox']:checked + span {
+  background: lighten($primary-highlight-color, 10%) left top no-repeat;
 }
 
 .title-holder {
-  padding: 2% 2% 0 2%;
+  padding: 2% 2% 0;
 }
 
 .settings-collapse {
@@ -495,17 +520,17 @@ input[type="checkbox"]:checked + span {
 
     .rc-collapse-item {
       .rc-collapse-header {
-        text-align: left;  
-        padding: 10px 0;
         border-bottom: 1px dotted rgba(255, 255, 255, 0.455);
+        padding: 10px 0;
+        text-align: left;
       }
     }
   }
 }
 
 .settings-section {
-  padding: 0;
   justify-content: unset;
+  padding: 0;
 
   h4 {
     margin: 10px 0;
@@ -515,26 +540,42 @@ input[type="checkbox"]:checked + span {
 .field-container-editing,
 .field-container-not-editing,
 .field-container-uneditable {
-  height: 50px;
-  float: left;
-  width: 100%;
-  display: flex;
-  transition: background-color 0.2s;
   box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.5);
+  display: flex;
+  float: left;
+  height: 50px;
+  transition: background-color 0.2s;
+  width: 100%;
 }
-.field-container-editing { background-color: #22638f; cursor: unset; }
-.field-container-not-editing { background-color: #3498db; cursor: pointer; }
-.field-container-not-editing:hover { background-color: #2b7cb3; cursor: pointer; }
-.field-container-uneditable { background-color: #6cb8eb; cursor: unset; }
+
+.field-container-editing {
+  background-color: #22638f;
+  cursor: unset;
+}
+
+.field-container-not-editing {
+  background-color: #3498db;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #2b7cb3;
+    cursor: pointer;
+  }
+}
+
+.field-container-uneditable {
+  background-color: #6cb8eb;
+  cursor: unset;
+}
 
 .field-input-editing,
 .field-input-not-editing,
 .field-input-uneditable {
+  background-color: transparent;
+  color: white;
   margin: unset;
   padding: 8px 15px;
   text-align: left;
-  background-color: transparent;
-  color: white;
 }
 .field-input-editing { cursor: unset; }
 .field-input-uneditable { cursor: unset; }
@@ -542,26 +583,26 @@ input[type="checkbox"]:checked + span {
 
 .field-label {
   color: black;
-  left: 15px;
-  top: 8px;
-  font-style: italic;
-  position: absolute;
   font-size: small;
+  font-style: italic;
+  left: 15px;
+  position: absolute;
+  top: 8px;
 }
 
 .icon-wrapper {
-  margin: 5px;
-  width: 45px;
-  height: 45px;
-  float: right;
-  border-radius: 12px;
-  display: flex;
-  flex: 0 0 45px;
-  cursor: pointer;
   align-items: center;
   background-color: $primary-color;
-  transition: background-color 0.2s;
+  border-radius: 12px;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  display: flex;
+  flex: 0 0 45px;
+  float: right;
+  height: 45px;
+  margin: 5px;
+  transition: background-color 0.2s;
+  width: 45px;
 
   &:hover {
     background-color: $primary-highlight-color;
@@ -572,6 +613,10 @@ input[type="checkbox"]:checked + span {
   justify-content: unset;
   padding: 2% 0;
 
+  @include media('<=phone') {
+    justify-content: center;
+  }
+
   .dates-holder {
     padding: 3px 0 0 2%;
   }
@@ -579,28 +624,26 @@ input[type="checkbox"]:checked + span {
   .remove-button {
     margin: 0;
   }
-
-  @include media("<=phone") {
-    justify-content: center;
-  }
 }
 
 /** For Autocomplete forms **/
 
 ul {
+  border-radius: 10px;
   margin: 0;
   padding-left: 0;
-  border-radius: 10px
 }
+
 li {
+  float: left;
   list-style-type: none;
   margin: 0;
-  float: left;
   width: 100%;
 }
 
 /** Code View styling **/
 
+/* stylelint-disable-next-line selector-class-pattern */
 .react-autosuggest__container {
   width: 100%;
 }
@@ -614,6 +657,7 @@ pre {
   width: 100%;
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .react-tabs__tab-panel {
   display: flex;
   width: 100%;
@@ -623,26 +667,26 @@ pre {
   }
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .react-tabs__tab-list {
-
   ul {
     overflow: hidden;
   }
 
   li {
-    cursor: pointer;
     color: $color-white;
+    cursor: pointer;
+    display: inline-block;
+    float: left;
     list-style-type: none;
     margin: 0;
-    float: left;
-    display: inline-block;
-    padding: 10px 50px;
     margin-right: 5px;
-    width: 100%;
+    padding: 10px 50px;
     text-align: left;
     transition-duration: 200ms;
-    transition-timing-function: linear;
     transition-property: background-color;
+    transition-timing-function: linear;
+    width: 100%;
   }
 }
 
@@ -654,35 +698,38 @@ pre {
   background-color: $primary-color;
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .react-tabs__tab-list li:hover {
   background-color: $primary-color;
 }
+
 @media screen and (max-width: 700px) {
+  /* stylelint-disable-next-line selector-class-pattern */
   .react-tabs__tab-list li {
-    width: 100%;
     text-align: left;
+    width: 100%;
   }
+
   input {
-    width: 96%;
     padding: 20px 2%;
+    width: 96%;
   }
 }
 
 /** Social Media Icons **/
 
 .social-media-holder {
-  width: 210px;
   margin: 0 auto;
+  width: 210px;
 }
 
 div.uclapi-card-facebook,
 div.uclapi-card-github,
 div.uclapi-card-twitter {
   border-radius: 40px;
-  padding: 20px;
-  margin: 0 5px;
   float: left;
-
+  margin: 0 5px;
+  padding: 20px;
   transition-duration: 0.5s;
   transition-property: background-color;
   transition-timing-function: ease-out;
@@ -743,12 +790,12 @@ div.uclapi-card-github {
 
 /** Overlays **/
 
-.Modal {
-  position: absolute;
-  top: 25%;
+.modal {
   left: 20vw;
-  right: 20vw;
   padding: 0;
+  position: absolute;
+  right: 20vw;
+  top: 25%;
 }
 
 .confirm-box-container {
@@ -762,7 +809,7 @@ div.uclapi-card-github {
   .rc-collapse {
     background-color: $color-grey-dark;
     flex: 0 0 100%;
-    
+
     .rc-collapse-header {
       color: white;
       font-family: 'Source Sans Pro', 'Roboto', sans-serif;
@@ -779,7 +826,7 @@ div.uclapi-card-github {
 }
 
 .app-holder {
-  flex-direction: column;
   display: flex;
+  flex-direction: column;
   width: 100%;
 }

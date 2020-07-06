@@ -77,8 +77,8 @@ class Dashboard extends React.Component {
           isOpen={view == `add-project`}
           contentLabel="Create app form"
           onRequestClose={() => this.setState({ view: `default` })}
-          className="Modal"
-          overlayClassName="Overlay"
+          className="modal"
+          overlayClassName="overlay"
           style={styles.modal}
         >
           <ConfirmBox
@@ -92,8 +92,8 @@ class Dashboard extends React.Component {
           isOpen={view == `delete-project`}
           contentLabel="Delete app form"
           onRequestClose={() => this.setState({ view: `default` })}
-          className="Modal"
-          overlayClassName="Overlay"
+          className="modal"
+          overlayClassName="overlay"
           style={styles.modal}
         >
           {toDelete !== -1 ? (

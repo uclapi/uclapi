@@ -1,11 +1,11 @@
 // 404 page
-.notFound {
+.not-found {
+  background-position: 50%;
+  background-size: cover;
+  color: white;
+  display: table;
   height: 100vh;
   width: 100vw;
-  background-size: cover;
-  background-position: 50%;
-	color: white;
-  display: table;
 
   .text {
     display: table-cell;
@@ -27,53 +27,67 @@
 }
 
 .pad {
-  padding-top: 60px;
   padding-bottom: 60px;
+  padding-top: 60px;
 }
 
 // Old helper classes
 
 @mixin border-radius($radius) {
-  -webkit-border-radius: $radius;
-     -moz-border-radius: $radius;
-      -ms-border-radius: $radius;
-          border-radius: $radius;
+  border-radius: $radius;
 }
 
-@mixin boxShadow($level) {
+@mixin box-shadow($level) {
   @if $level == 1 {
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  } @else if $level == 2 {
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-  } @else if $level == 3 {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-  } @else if $level == 4 {
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-  } @else if $level == 5 {
-    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  }
+
+  @else if $level == 2 {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  }
+
+  @else if $level == 3 {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  }
+
+  @else if $level == 4 {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  }
+
+  @else if $level == 5 {
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
   }
 }
 
-@mixin inShadow($level) {
+@mixin in-shadow($level) {
   @if $level == 1 {
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05)
-  } @else if $level == 2 {
-    box-shadow: inset 0 3px 3px rgba(0, 0, 0, .05)
-  } @else if $level == 3 {
-    box-shadow: inset 0 10px 10px rgba(0, 0, 0, .05)
-  } @else if $level == 4 {
-    box-shadow: inset 0 14px 14px rgba(0, 0, 0, .05)
-  } @else if $level == 5 {
-    box-shadow: inset 0 19px 19px rgba(0, 0, 0, .05)
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  }
+
+  @else if $level == 2 {
+    box-shadow: inset 0 3px 3px rgba(0, 0, 0, 0.05);
+  }
+
+  @else if $level == 3 {
+    box-shadow: inset 0 10px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  @else if $level == 4 {
+    box-shadow: inset 0 14px 14px rgba(0, 0, 0, 0.05);
+  }
+
+  @else if $level == 5 {
+    box-shadow: inset 0 19px 19px rgba(0, 0, 0, 0.05);
   }
 }
 
 .card {
-  background-color: white;
-  padding: 15px;
-  margin: 10px;
-  @include boxShadow(1);
+  @include box-shadow(1);
   @include border-radius(2px);
+
+  background-color: white;
+  margin: 10px;
+  padding: 15px;
 }
 
 .button-error {
@@ -82,78 +96,77 @@
 }
 
 .button-primary-inverted {
-  background-color: #fff;
+  background-color: white;
   color: #0078e7;
 
-  &:hover{
-    background-image:none;
+  &:hover {
+    background-image: none;
   }
 }
 
-.flexCentre{
-  display: flex;
+.flex-centre {
   align-items: center;
+  display: flex;
   justify-content: center;
 }
 
-.flexTopRight {
-  display: flex;
+.flex-top-right {
   align-items: flex-start;
+  display: flex;
   justify-content: flex-end;
 }
 
-
 .tooltip {
   span {
-		display:none;
-		color:#fff;
-		background:rgba(51,51,51,0.75);
-		padding:5px;
-		border-radius:4px;
-		-moz-border-radius:4px;
-		-webkit-border-radius:4px;
-		text-align:center;
-		position: absolute;
-		z-index:10;
+    background: rgba(51, 51, 51, 0.75);
+    border-radius: 4px;
+    color: white;
+    display: none;
+    padding: 5px;
+    position: absolute;
+    text-align: center;
+    z-index: 10;
   }
 
   &:hover span {
-    display:block;
+    display: block;
   }
 }
 
-.Overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: rgba(255, 255, 255, 0.75);
+.overlay {
+  background-color: rgba(255, 255, 255, 0.75);
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
 }
 
 .pure-form button[type=button],
 .pure-form button[type=submit] {
-  margin: .7em 0 0;
+  margin: 0.7em 0 0;
 }
 
-.roundButton {
-  color: white;
+.round-button {
   @include border-radius(50%);
-  @include boxShadow(3);
+  @include box-shadow(3);
+
+  background-color: #0078e7;
+  border: 0;
+  color: white;
+  height: 100px;
   margin: 10px;
   width: 100px;
-  height: 100px;
-  background-color: #0078e7;
-  border: none;
 }
 
 .well {
-  min-height: 20px;
-  padding: 19px;
-  background-color: #f5f5f5;
+  @include in-shadow(1);
+
+  background-color: whitesmoke;
   border: 1px solid #e3e3e3;
   border-radius: 4px;
-  @include inShadow(1)
+  min-height: 20px;
+  padding: 19px;
 }
 
 .padded {

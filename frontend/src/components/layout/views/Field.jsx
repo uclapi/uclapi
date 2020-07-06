@@ -13,17 +13,19 @@ import { Container } from 'Layout/Items.jsx'
 import React from 'react'
 
 /**
-A generic field that is styled to fit in with the dashboard, uses the same sort of aesthetic as 
-the auto complete form
+A generic field that is styled to fit in with the dashboard,
+uses the same sort of aesthetic as the auto complete form
 
 PROPS:
 
 title => text to be shown above the field
 content => the initial content of the field
 canCopy => If true will add button to copy value to clipboard
-isSmall => A boolean flag of whether to render the field in a mobile friendly way
+isSmall => A boolean flag of whether to render the field in a 
+            mobile friendly way
 
-onSave => Makes field editable and will be the function called when user clicks save
+onSave => Makes field editable and will be the function called
+          when user clicks save
 onRefresh => Will add a refresh button allowing any extra functionality
 
 style
@@ -59,7 +61,8 @@ export default class Field extends React.Component {
   }
 
   onKeyDown = (event) => {
-    // 'keypress' event misbehaves on mobile so we track 'Enter' key via 'keydown' event
+    // 'keypress' event misbehaves on mobile so we track
+    // 'Enter' key via 'keydown' event
     if (event.key === `Enter`) {
       event.preventDefault()
       event.stopPropagation()
@@ -174,10 +177,18 @@ export default class Field extends React.Component {
 
         {canCopy ? copyIcon(() => { this.copy() }) : null}
         
-        {this.doesExist(onSave) && isEditing ? saveIcon( () => { this.save(true) } ) : null}
-        {this.doesExist(onSave) && isEditing ? cancelIcon(this.cancel) : null}
-        {this.doesExist(onSave) && !isEditing ? editIcon(this.toggleEditing) : null}
-        {this.doesExist(onRefresh) ? refreshIcon(onRefresh) : null}
+        {this.doesExist(onSave) && isEditing
+          ? saveIcon( () => { this.save(true) } )
+          : null}
+        {this.doesExist(onSave) && isEditing
+          ? cancelIcon(this.cancel)
+          : null}
+        {this.doesExist(onSave) && !isEditing
+          ? editIcon(this.toggleEditing)
+          : null}
+        {this.doesExist(onRefresh)
+          ? refreshIcon(onRefresh)
+          : null}
       </Container>
     </>
     )

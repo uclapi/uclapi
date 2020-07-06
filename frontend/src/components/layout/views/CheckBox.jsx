@@ -41,15 +41,21 @@ export default class CheckBox extends React.Component {
     // To enable verbose output
     this.DEBUGGING = false
     
+    const { onClick, isChecked } = this.props
     // Every CheckBox needs an on click event and also an initial state
-    if (typeof this.props.onClick == `undefined`) { console.log(`EXCEPTION: CheckBox.constructor: no click function defined`) }
-    if (typeof this.props.isChecked == `undefined`) { console.log(`EXCEPTION: CheckBox.constructor: no initial state defined`) }
+    if (typeof onClick == `undefined`) {
+      console.log(`EXCEPTION: CheckBox.constructor: no click function defined`)
+    }
+    if (typeof isChecked == `undefined`) {
+      console.log(`EXCEPTION: CheckBox.constructor: no initial state defined`)
+    }
     
     // Set type of button
     this.class = `uclapi-checkbox`
     this.style = []
     // If custom styling then include
-    if (this.props.style) { this.style = this.props.style }
+    const { style } = this.props
+    if (style) { this.style = style }
     // Set up button tags
     this.setTheme()
 
@@ -57,7 +63,7 @@ export default class CheckBox extends React.Component {
     this.state = {
       class: this.class,
       style: this.style,
-      isChecked: this.props.isChecked,
+      isChecked: isChecked,
     }
   }
 
@@ -83,7 +89,7 @@ export default class CheckBox extends React.Component {
           type="text"
           className={fieldInputClass}
           readOnly
-          value={`My app requires access to the user's ` + text.toLowerCase() + `.`}
+          value={`My app requires access to the user's ${text.toLowerCase()}.`}
           style={{ height: fieldHeight }}
         />
 
@@ -109,7 +115,9 @@ export default class CheckBox extends React.Component {
 
   setStyleKeyValuePair = (key, value) => {
     this.style[key] = value
-    if (this.DEBUGGING) { console.log(`DEBUG: ` + key + ` updated to: ` + value) }
+    if (this.DEBUGGING) {
+      console.log(`DEBUG: ` + key + ` updated to: ` + value)
+    }
   }
 
   setTheme() {

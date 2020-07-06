@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import React from 'react'
-
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic.jsx'
+
 
 
 /* eslint-disable no-secrets/no-secrets */
@@ -20,7 +20,8 @@ print(r.json())`,
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb
 `,
 
-  javascript: `fetch("https://uclapi.com/resources/desktops?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
+  javascript: `fetch("https://uclapi.com/resources/desktops?token=uclapi-`+
+  `5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
 .then((response) => {
   return response.json()
 })
@@ -36,7 +37,9 @@ const response = `{
     "ok": true,
     "data": [
         {
-            "room_status": "Room available all day. For accurate Library opening times, please check the Library Opening hours website http://www.ucl.ac.uk/library/opening",
+            "room_status": "Room available all day. ` +
+            `For accurate Library opening times, please check the Library ` + 
+            `Opening hours website http://www.ucl.ac.uk/library/opening",
             "total_seats": "35",
             "location": {
                 "latitude": "51.523481",
@@ -64,15 +67,17 @@ const responseCodeExample = {
 export default class GetEquiment extends React.Component {
 
     render () {
+      const { activeLanguage } = this.props
       return (
         <div>
           <Topic
-            activeLanguage={this.props.activeLanguage}
+            activeLanguage={activeLanguage}
             codeExamples={codeExamples}
           >
             <h1 id="resources/desktops">Get desktop availability.</h1>
             <p>
-              This endpoint returns number of desktops and how many are free at the time of making the request.
+              This endpoint returns number of desktops
+              and how many are free at the time of making the request.
             </p>
 
             <Table
@@ -81,22 +86,27 @@ export default class GetEquiment extends React.Component {
               <Cell
                 name="token"
                 requirement="required"
-                example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
+                example={
+                  `uclapi-5d58c3c4e6bf9c-c2910ad3b6e0`+
+                  `54-7ef60f44f1c14f-a05147bfd17fdb`
+                }
                 description="Authentication token"
               />
             </Table>
           </Topic>
 
           <Topic
-            activeLanguage={this.props.activeLanguage}
+            activeLanguage={activeLanguage}
             codeExamples={responseCodeExample}
           >
             <h2>Response</h2>
             <p>
-              The equipment field contains a list of places with desktops. All the cluster spaces information are always returned.
+              The equipment field contains a list of places with desktops.
+              All the cluster spaces information are always returned.
             </p>
             <p>
-              Each room has information about location and number of desktops and how many are available.
+              Each room has information about location and number of
+              desktops and how many are available.
             </p>
             <Table
               name="Response"
@@ -165,8 +175,14 @@ export default class GetEquiment extends React.Component {
               name="Errors"
             >
               <Cell
-                name="Could not parse the desktop availability data. Please try again later or contact us for support"
-                description="We don't currently have the up to date data. Wait a while before you make next request."
+                name={
+                  `Could not parse the desktop availability data. `+
+                  `Please try again later or contact us for support`
+                }
+                description={
+                  `We don't currently have the up to date data.`+
+                  ` Wait a while before you make next request.`
+                }
               />
             </Table>
           </Topic>

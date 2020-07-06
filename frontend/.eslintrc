@@ -88,7 +88,7 @@
     "import",
     "security",
     "no-secrets",
-    "json-format",
+    // "json-format", Hound doesn't support this
     "sonarjs"
   ],
   "parser": "babel-eslint",

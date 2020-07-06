@@ -4,8 +4,8 @@
 import { styles } from 'Layout/data/dashboard_styles.jsx'
 // Components
 import {
-	ButtonView, CheckBox,
-	Column, Container, Field, Row, TextView,
+  ButtonView, CheckBox,
+  Column, Container, Field, Row, TextView,
 } from 'Layout/Items.jsx'
 // External dependencies
 import Collapse, { Panel } from 'rc-collapse'
@@ -132,9 +132,11 @@ export default class App extends React.Component {
                   />
                   <Field
                     title="Callback Url: "
-                    content={app.oauth.callback_url == `` ? `https://` : app.oauth.callback_url}
+                    content={app.oauth.callback_url == ``
+                      ? `https://`
+                      : app.oauth.callback_url}
                     canCopy
-                    onSave={(value) => { actions.saveOAuthCallback(index, value) }}
+                    onSave={(value) => actions.saveOAuthCallback(index, value)}
                   />
                 </Column>
               </Container>
@@ -152,7 +154,10 @@ export default class App extends React.Component {
                       key={scope_index}
                       text={scope.description}
                       isChecked={scope.enabled}
-                      onClick={(value) => { actions.setScope(index, scope_index, value) } }
+                      onClick={(value) => actions.setScope(
+                        index, scope_index, value
+                        )
+                      }
                       style={{
 												float: `left`,
 												margin: `12px 10px 0 10px`,
@@ -172,27 +177,30 @@ export default class App extends React.Component {
                     title="Verification Secret: "
                     content={app.webhook.verification_secret}
                     canCopy
-                    onRefresh={() => { actions.regenVerificationSecret(index) }}
+                    onRefresh={() => actions.regenVerificationSecret(index)}
                   />
                   <Field
                     title="Webhook URL: "
                     content={app.webhook.url==`` ? `https://` : app.webhook.url}
-                    onSave={(value) => { actions.webhook.saveURL(index, value) } }
+                    onSave={(value) => actions.webhook.saveURL(index, value) }
                   />
                   <Field
                     title="'siteid' (optional):"
                     content={app.webhook.siteid}
-                    onSave={(value) => { actions.webhook.saveSiteID(index, value) }}
+                    onSave={(value) => actions.webhook.saveSiteID(index, value)}
                   />
                   <Field
                     title="'roomid' (optional):"
                     content={app.webhook.roomid}
-                    onSave={(value) => { actions.webhook.saveRoomID(index, value) }}
+                    onSave={(value) => actions.webhook.saveRoomID(index, value)}
                   />
                   <Field
                     title="Contact (optional):"
                     content={app.webhook.contact}
-                    onSave={(value) => { actions.webhook.saveContact(index, value) }}
+                    onSave={(value) => actions.webhook.saveContact(
+                        index, value
+                      )
+                    }
                   />
                 </Column>
               </Container>
