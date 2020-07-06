@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
+import React from 'react'
 
 
 /*
@@ -26,7 +27,7 @@ export default class Cell extends React.Component {
           <code>{this.props.example}</code>
         </div>
       </div>
-    );
+    )
   }
 
 }

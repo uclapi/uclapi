@@ -1,8 +1,26 @@
 extends:
-  - stylelint-config-recommended
+  - stylelint-config-standard 
+  # - stylelint-config-sass-guidelines
+  # because Hound doesn't support it
+  # https://github.com/houndci/hound/issues/1771
 
 plugins:
   - stylelint-scss
 
 rules:
   at-rule-no-unknown: null
+  no-descending-specificity: null
+  max-nesting-depth: 4
+  scss/at-import-no-partial-leading-underscore: null
+  scss/at-import-partial-extension-blacklist: [
+    "less",
+    "sass"
+  ]
+  color-named: always-where-possible
+  selector-no-qualifying-type:
+    - true
+    - ignore:
+      - attribute
+      - class
+      - id
+  selector-max-compound-selectors: null

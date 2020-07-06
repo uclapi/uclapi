@@ -31,7 +31,7 @@ export default class TextView extends React.Component {
     if (typeof this.props.text == `undefined`) { console.log(`EXCEPTION: TextView.constructor: no text defined`) }
 
     // Set type of button
-    this.style = []
+    this.style = {}
     // If custom styling then include
     if (this.props.style) { this.style = {...this.props.style} }
     // Set up button tags

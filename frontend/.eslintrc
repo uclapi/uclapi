@@ -1,5 +1,6 @@
 {
   "env": {
+    "node": true,
     "browser": true
   },
   "extends": [
@@ -80,17 +81,17 @@
       }
     ],
     "security/detect-non-literal-require": "off", // until https://github.com/nodesecurity/eslint-plugin-security/pull/32 is merged
-    "security/detect-object-injection": "warn"
+    "security/detect-object-injection": "off"
   },
   "plugins": [
     "react",
     "import",
     "security",
     "no-secrets",
-    "json-format",
+    // "json-format", Hound doesn't support this
     "sonarjs"
   ],
-  "parser": "@typescript-eslint/parser",
+  "parser": "babel-eslint",
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
