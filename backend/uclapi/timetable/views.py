@@ -34,11 +34,8 @@ def get_personal_timetable_endpoint(request, *args, **kwargs):
     """
     token = kwargs['token']
     user = token.user
-    try:
-        date_filter = request.GET["date_filter"]
-        timetable = get_student_timetable(user.employee_id, date_filter)
-    except KeyError:
-        timetable = get_student_timetable(user.employee_id)
+    date_filter = request.GET.get("date")
+    timetable = get_student_timetable(user.employee_id, date_filter)
 
     response = {
         "ok": True,

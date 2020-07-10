@@ -103,16 +103,16 @@ export default class GetPersonalTimetable extends React.Component {
                 example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
                 description="Authentication token." />
               <Cell
-                name="Date"
-                requirement="optional"
-                example="2020-03-27"
-                description="Specify a date to filter the timetable for, only displaying entries on that date."
-              />
-              <Cell
                 name="client_secret"
                 requirement="required"
                 example="mysecret"
                 description="Client secret of the authenticating app." />
+              <Cell
+                  name="date"
+                  requirement="optional"
+                  example="2020-03-27"
+                  description="Specify a date to filter the timetable for, only displaying entries on that date."
+              />
             </Table>
           </Topic>
 
