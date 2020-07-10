@@ -1,18 +1,18 @@
 @import './helpers';
 
-$navbarHeight: 60px;
+$navbar-height: 60px;
 
 .navbar-extras {
   .link-titles-menu {
-    position: fixed;
-    overflow: hidden;
-    width: 100vw;
     background-color: #313537;
     box-shadow: 0 0 10px #555;
+    overflow: hidden;
+    position: fixed;
     top: 60px;
+    transition-duration: 0.3s;
     transition-property: all;
     transition-timing-function: ease-out;
-    transition-duration: 0.3s;
+    width: 100vw;
     z-index: 1301;
 
     .link-to-page {
@@ -20,48 +20,44 @@ $navbarHeight: 60px;
     }
   }
 }
+
 .navbarconsistent {
-  z-index: 1302;
-  position: fixed;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
-  height: $navbarHeight;
-  width: 100vw;
-  top: 0;
+  @include box-shadow(1);
 
-  background-color: #313537;
-
-  display: flex;
   align-items: center;
-
-  transition-property: top;
+  background-color: #313537;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+  display: flex;
+  height: $navbar-height;
+  position: fixed;
+  top: 0;
   transition-duration: 0.2s;
+  transition-property: top;
   transition-timing-function: linear;
-
-  @include boxShadow(1);
+  width: 100vw;
+  z-index: 1302;
 
   img {
-    height: $navbarHeight - 15px;
+    height: $navbar-height - 15px;
     margin-left: 25px;
   }
-  .logoTextWhite {
-  	color: #FFF;
-  	display: inline;
-    margin: 10px;
+
+  .logo-text-white {
+    color: white;
+    display: inline;
     font-size: 2em;
+    margin: 10px;
   }
+
   .menu-icon {
-    width: 50px;
-    height: 50px;
-
-    border-radius: 25px;
-
-    padding: 5px;
-
     background-color: none;
-
-    transition-property: background-color;
+    border-radius: 25px;
+    height: 50px;
+    padding: 5px;
     transition-duration: 0.2s;
+    transition-property: background-color;
     transition-timing-function: linear;
+    width: 50px;
 
     img {
       height: 40px;
@@ -69,56 +65,63 @@ $navbarHeight: 60px;
       margin-top: 5px;
     }
   }
+
   .menu-icon:active {
-    background-color: #ffffff22;
+    background-color: #fff2;
   }
 }
-.bounce-image {
-    float: left;
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    transition-property: margin-right;
-    transition-timing-function: linear;
-    transition-duration: 0.15s;
-    margin-right: 16px;
-}
-.link-to-page { 
-    display: inline-block;
-    float: right;
-    height: 16px;
-    padding: 20px 5px 0 5px;
 
-    img {
-      width: 16px;
-      height: 16px;
-      margin: 0;
-    }
+.bounce-image {
+  display: inline-block;
+  float: left;
+  height: 16px;
+  margin-right: 16px;
+  transition-duration: 0.15s;
+  transition-property: margin-right;
+  transition-timing-function: linear;
+  width: 16px;
 }
-.link-to-page h1 {
-    border: solid;
-    border-color: #fff;
-    border-width: 0 0 0 1px;
-    padding: 0 20px;
+
+.link-to-page {
+  display: inline-block;
+  float: right;
+  height: 16px;
+  padding: 20px 5px 0;
+
+  img {
+    height: 16px;
     margin: 0;
-    font-size: 1em;
-    font-weight: normal;
-    transition-timing-function: linear;
-    transition-duration: 0.2s;
-    transition-property: border-width;
-    color: #fff;
-    text-shadow: unset;
+    width: 16px;
+  }
 }
+
+.link-to-page h1 {
+  border: solid;
+  border-color: white;
+  border-width: 0 0 0 1px;
+  color: white;
+  font-size: 1em;
+  font-weight: normal;
+  margin: 0;
+  padding: 0 20px;
+  text-shadow: unset;
+  transition-duration: 0.2s;
+  transition-property: border-width;
+  transition-timing-function: linear;
+}
+
 .link-to-page a {
-    display: inline-block;
-    float: left;
-    text-decoration: none;
+  display: inline-block;
+  float: left;
+  text-decoration: none;
 }
+
 .link-to-page h1:hover {
   border-width: 0 0 0 5px;
 }
+
 .link-titles {
-  right: 50px;
-  position: absolute;
   height: 60px;
+  position: absolute;
+  right: 50px;
 }

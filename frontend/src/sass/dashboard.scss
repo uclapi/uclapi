@@ -5,7 +5,7 @@ button,
 input,
 select,
 textarea,
-.pure-g [class *= "pure-u"] {
+.pure-g [class*='pure-u'] {
   font-family: 'Roboto', sans-serif;
 }
 
@@ -17,33 +17,34 @@ h5 {
   font-family: 'Roboto', sans-serif;
 }
 
-.content{
-  margin-top: 78px;
+.content {
   margin-bottom: 30px;
+  margin-top: 78px;
 }
 
-$navbarHeight: 60px;
+$navbar-height: 60px;
 
 .navbar {
+  @include box-shadow(1);
+
+  align-items: center;
+  background-color: white;
   border-bottom: 1px solid rgba(0, 0, 0, 0.14);
-  height: $navbarHeight;
-  width: 100%;
+  display: flex;
+  height: $navbar-height;
   position: fixed;
   top: 0;
-  background-color: white;
-  display: flex;
-  align-items: center;
-  @include boxShadow(1);
+  width: 100%;
 
-  img{
-    height: $navbarHeight - 15px;;
+  img {
+    height: $navbar-height - 15px;
     margin-left: 25px;
   }
 
-  .logoText{
+  .logo-text {
     display: inline;
-    margin: 10px;
     font-size: 2em;
+    margin: 10px;
   }
 }
 
@@ -56,7 +57,7 @@ body {
 }
 
 input {
-  color: #000;
+  color: black;
 }
 
 .webhook {
@@ -78,7 +79,7 @@ $light-grey: #f7f7f7;
 $light-grey-2: #f3f3f3;
 $dark-grey: #666;
 $medium-grey: #999;
-$white: #fff;
+$white: white;
 
 .rc-collapse {
   background-color: $light-grey;
@@ -127,13 +128,11 @@ $white: #fff;
     border-top: 4px solid $dark-grey;
     margin-right: 6px;
   }
-
 }
 
 .rc-collapse-anim-active {
-  transition: height .2s ease-out;
+  transition: height 0.2s ease-out;
 }
-
 
 .rc-collapse-content {
   background-color: $white;
@@ -146,7 +145,6 @@ $white: #fff;
     margin-top: 16px;
   }
 }
-
 
 .rc-collapse-content-inactive {
   display: none;

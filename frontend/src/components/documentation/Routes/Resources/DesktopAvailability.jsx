@@ -1,11 +1,13 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
+import React from 'react'
+import Cell from './../../Cell.jsx'
+import Table from './../../Table.jsx'
+import Topic from './../../Topic.jsx'
 
-import Topic from './../../Topic.jsx';
-import Table from './../../Table.jsx';
-import Cell from './../../Cell.jsx';
 
 
-let codeExamples = {
+/* eslint-disable no-secrets/no-secrets */
+const codeExamples = {
   python: `import requests
 
 params = {
@@ -18,22 +20,26 @@ print(r.json())`,
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb
 `,
 
-  javascript: `fetch("https://uclapi.com/resources/desktops?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
+  javascript: `fetch("https://uclapi.com/resources/desktops?token=uclapi-`+
+  `5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
 .then((response) => {
   return response.json()
 })
 .then((json) => {
   console.log(json);
 })
-`
+`,
 }
+/* eslint-enable no-secrets/no-secrets */
 
 
-let response = `{
+const response = `{
     "ok": true,
     "data": [
         {
-            "room_status": "Room available all day. For accurate Library opening times, please check the Library Opening hours website http://www.ucl.ac.uk/library/opening",
+            "room_status": "Room available all day. ` +
+            `For accurate Library opening times, please check the Library ` + 
+            `Opening hours website http://www.ucl.ac.uk/library/opening",
             "total_seats": "35",
             "location": {
                 "latitude": "51.523481",
@@ -51,103 +57,133 @@ let response = `{
 }
 `
 
-let responseCodeExample = {
+const responseCodeExample = {
   python: response,
   javascript: response,
-  shell: response
+  shell: response,
 }
 
 
 export default class GetEquiment extends React.Component {
 
     render () {
+      const { activeLanguage } = this.props
       return (
         <div>
           <Topic
-            activeLanguage={this.props.activeLanguage}
-            codeExamples={codeExamples}>
+            activeLanguage={activeLanguage}
+            codeExamples={codeExamples}
+          >
             <h1 id="resources/desktops">Get desktop availability.</h1>
             <p>
-              This endpoint returns number of desktops and how many are free at the time of making the request.
+              This endpoint returns number of desktops
+              and how many are free at the time of making the request.
             </p>
 
             <Table
-              name="Query Pararmeters">
+              name="Query Pararmeters"
+            >
               <Cell
                 name="token"
                 requirement="required"
-                example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
-                description="Authentication token" />
+                example={
+                  `uclapi-5d58c3c4e6bf9c-c2910ad3b6e0`+
+                  `54-7ef60f44f1c14f-a05147bfd17fdb`
+                }
+                description="Authentication token"
+              />
             </Table>
           </Topic>
 
           <Topic
-            activeLanguage={this.props.activeLanguage}
-            codeExamples={responseCodeExample}>
+            activeLanguage={activeLanguage}
+            codeExamples={responseCodeExample}
+          >
             <h2>Response</h2>
             <p>
-              The equipment field contains a list of places with desktops. All the cluster spaces information are always returned.
+              The equipment field contains a list of places with desktops.
+              All the cluster spaces information are always returned.
             </p>
             <p>
-              Each room has information about location and number of desktops and how many are available.
+              Each room has information about location and number of
+              desktops and how many are available.
             </p>
             <Table
-              name="Response">
+              name="Response"
+            >
               <Cell
                 name="total_seats"
                 extra="int"
                 example="25"
-                description="Total number of computers available in the room." />
+                description="Total number of computers available in the room."
+              />
               <Cell
                 name="free_seats"
                 extra="int"
                 example="24"
-                description="Number of free seats in the room." />
+                description="Number of free seats in the room."
+              />
               <Cell
                 name="latitude"
                 extra="string"
                 example="51.523481"
-                description="latitude of the location of the site." />
+                description="latitude of the location of the site."
+              />
               <Cell
                 name="longitude"
                 extra="string"
                 example="50.523481"
-                description="longitude of the location of the site." />
+                description="longitude of the location of the site."
+              />
               <Cell
                 name="postcode"
                 extra="string"
                 example="WC1E 6BT"
-                description="Postcode of the location of the room" />
+                description="Postcode of the location of the room"
+              />
               <Cell
                 name="address"
                 extra="string"
                 example="Malet Place, Gower Street."
-                description="Address of the room." />
+                description="Address of the room."
+              />
               <Cell
                 name="roomname"
                 extra="string"
                 example="Ground-Ground floor - Public."
-                description="Name of the room." />
+                description="Name of the room."
+              />
               <Cell
                 name="building_name"
                 extra="string"
                 example="DMS Watson Science Library."
-                description="Name of the building." />
+                description="Name of the building."
+              />
               <Cell
                 name="room_status"
                 extra="string"
                 example="Room available all day."
-                description="Some information about the room." />
+                description="Some information about the room."
+              />
             </Table>
           </Topic>
 
           <Topic
-            noExamples={true}>
+            noExamples
+          >
             <Table
-              name="Errors">
+              name="Errors"
+            >
               <Cell
-                name="Could not parse the desktop availability data. Please try again later or contact us for support"
-                description="We don't currently have the up to date data. Wait a while before you make next request." />
+                name={
+                  `Could not parse the desktop availability data. `+
+                  `Please try again later or contact us for support`
+                }
+                description={
+                  `We don't currently have the up to date data.`+
+                  ` Wait a while before you make next request.`
+                }
+              />
             </Table>
           </Topic>
         </div>
