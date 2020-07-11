@@ -75,28 +75,34 @@ export default class UsersPerAppPerDept extends React.Component {
 
         <Topic
           activeLanguage={this.props.activeLanguage}
-          codeExamples={responseCodeExample}>
+          codeExamples={responseCodeExample}
+        >
           <h2>Response</h2>
           <p>
             The response contains the total number of users for an app by department.
           </p>
           <Table
-            name="Response">
+            name="Response"
+          >
             <Cell
               name="data"
               extra="list"
               example="-"
-              description="List of departments users for the app are from and quantity per department." />
+              description="List of departments users for the app are from and quantity per department."
+            />
           </Table>
         </Topic>
 
         <Topic
-          noExamples={true}>
+          noExamples={true}
+        >
           <Table
-            name="Errors">
+            name="Errors"
+          >
             <Cell
               name="No token provided"
-              description="Gets returned when you have not supplied a token in your request." />
+              description="Gets returned when you have not supplied a token in your request."
+            />
           </Table>
         </Topic>
       </div>
