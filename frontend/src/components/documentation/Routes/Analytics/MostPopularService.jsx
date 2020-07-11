@@ -59,18 +59,21 @@ export default class MostPopularService extends React.Component {
 
         <Topic
           activeLanguage={this.props.activeLanguage}
-          codeExamples={responseCodeExample}>
+          codeExamples={responseCodeExample}
+        >
           <h2>Response</h2>
           <p>
             The response contains all services by popularity.
           </p>
           <Table
-            name="Response">
+            name="Response"
+          >
             <Cell
               name="data"
               extra="List"
               example="-"
-              description="List of objects containing a service name and the number of requests each has recieved." />
+              description="List of objects containing a service name and the number of requests each has recieved."
+            />
           </Table>
         </Topic>
       </div>

@@ -66,7 +66,8 @@ export default class TotalNumRequests extends React.Component {
 
         <Topic
           activeLanguage={this.props.activeLanguage}
-          codeExamples={responseCodeExample}>
+          codeExamples={responseCodeExample}
+        >
           <h2>Response</h2>
           <p>
             The response contains the total number of requests made from a given token.
@@ -77,20 +78,25 @@ export default class TotalNumRequests extends React.Component {
               name="num"
               extra="int"
               example="1024"
-              description="The number of requests made with the token." />
+              description="The number of requests made with the token."
+            />
           </Table>
         </Topic>
 
         <Topic
-          noExamples={true}>
+          noExamples={true}
+        >
           <Table
-            name="Errors">
+            name="Errors"
+          >
             <Cell
               name="No token provided"
-              description="Gets returned when you have not supplied a token in your request." />
+              description="Gets returned when you have not supplied a token in your request."
+            />
             <Cell
               name="Token is invalid"
-              description="Gets returned when you supply an invalid token." />
+              description="Gets returned when you supply an invalid token."
+            />
           </Table>
         </Topic>
       </div>

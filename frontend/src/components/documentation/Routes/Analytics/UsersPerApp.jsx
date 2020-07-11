@@ -78,28 +78,34 @@ export default class UsersPerApp extends React.Component {
 
         <Topic
           activeLanguage={this.props.activeLanguage}
-          codeExamples={responseCodeExample}>
+          codeExamples={responseCodeExample}
+        >
           <h2>Response</h2>
           <p>
             The response contains the total number of users for an app, optionally filtered by date.
           </p>
           <Table
-            name="Response">
+            name="Response"
+          >
             <Cell
               name="users"
               extra="int"
               example="1024"
-              description="The number of users for the app." />
+              description="The number of users for the app."
+            />
           </Table>
         </Topic>
 
         <Topic
-          noExamples={true}>
+          noExamples={true}
+        >
           <Table
-            name="Errors">
+            name="Errors"
+          >
             <Cell
               name="No token provided"
-              description="Gets returned when you have not supplied a token in your request." />
+              description="Gets returned when you have not supplied a token in your request."
+            />
           </Table>
         </Topic>
       </div>

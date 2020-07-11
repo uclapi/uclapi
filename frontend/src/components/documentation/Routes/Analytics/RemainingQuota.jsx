@@ -66,31 +66,38 @@ export default class RemainingQuota extends React.Component {
 
         <Topic
           activeLanguage={this.props.activeLanguage}
-          codeExamples={responseCodeExample}>
+          codeExamples={responseCodeExample}
+        >
           <h2>Response</h2>
           <p>
             The response contains the remaining daily quota for the token.
           </p>
           <Table
-            name="Response">
+            name="Response"
+          >
             <Cell
               name="remaining"
               extra="int"
               example="1024"
-              description="Quota remaining for the token for today." />
+              description="Quota remaining for the token for today."
+            />
           </Table>
         </Topic>
 
         <Topic
-          noExamples={true}>
+          noExamples={true}
+        >
           <Table
-            name="Errors">
+            name="Errors"
+          >
             <Cell
               name="No token provided"
-              description="Gets returned when you have not supplied a token in your request." />
+              description="Gets returned when you have not supplied a token in your request."
+            />
             <Cell
               name="Token is invalid"
-              description="Gets returned when you supply an invalid token." />
+              description="Gets returned when you supply an invalid token."
+            />
           </Table>
         </Topic>
       </div>
