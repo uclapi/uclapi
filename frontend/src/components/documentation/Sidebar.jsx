@@ -198,6 +198,32 @@ const menuContents = {
       href: `#workspaces/images/map/live`,
     },
   ],
+  Analytics: [
+    {
+      text: `Get Number of Requests`,
+      href: `#dashboard/api/analytics/total`,
+    },
+    {
+      text: `Get Remaining Quota for Token`,
+      href: `#dashboard/api/analytics/quota`,
+    },
+    {
+      text: `Get List of Services by Popularity`,
+      href: `#dashboard/api/analytics/services`,
+    },
+    {
+      text: `Get List of Methods by Popularity`,
+      href: `#dashboard/api/analytics/methods`,
+    },
+    {
+      text: `Get Number of Users of an App`,
+      href: `#dashboard/api/analytics/oauth/total`,
+    },
+    {
+      text: `Get Number of Users per App per Dept`,
+      href: `#dashboard/api/analytics/oauth/total_by_dept`,
+    },
+  ],
   GetInvolved: {
     text: `Get Involved`,
     href: `#get-involved`,
