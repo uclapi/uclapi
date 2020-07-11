@@ -36,7 +36,7 @@ let response = `{
 let responseCodeExample = {
     python: response,
     javascript: response,
-    shell: response
+    shell: response,
 }
 
 export default class UsersPerApp extends React.Component {

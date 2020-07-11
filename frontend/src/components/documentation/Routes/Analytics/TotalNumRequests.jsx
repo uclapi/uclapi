@@ -36,7 +36,7 @@ let response = `{
 let responseCodeExample = {
     python: response,
     javascript: response,
-    shell: response
+    shell: response,
 }
 
 export default class TotalNumRequests extends React.Component {
@@ -73,7 +73,8 @@ export default class TotalNumRequests extends React.Component {
             The response contains the total number of requests made from a given token.
           </p>
           <Table
-            name="Response">
+            name="Response"
+          >
             <Cell
               name="num"
               extra="int"
