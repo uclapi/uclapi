@@ -443,7 +443,7 @@ def most_popular_service(request):
     most_common = list(most_common)
 
     return PrettyJsonResponse({
-        "success": True,
+        "ok": True,
         "data": most_common
     })
 
@@ -477,8 +477,8 @@ def users_per_app(request):
         return response
 
     try:
-        start = request.GET["start_datetime"]
-        end = request.GET["end_datetime"]
+        start = request.GET["start_date"]
+        end = request.GET["end_date"]
 
         start_date = datetime.strptime(start, "%Y-%m-%d")
         end_date = datetime.strptime(end, "%Y-%m-%d")

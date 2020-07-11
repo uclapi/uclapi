@@ -10,12 +10,12 @@ from . import views, webhook_views
 
 urlpatterns = [
     url(r'^$', views.dashboard),
-    url(r'api/analytics/requests/total$', number_of_requests),
-    url(r'api/analytics/requests/quota$', quota_remaining),
-    url(r'api/analytics/requests/services$', most_popular_service),
-    url(r'api/analytics/requests/methods$', most_popular_method),
-    url(r'api/analytics/requests/oauth/total$', users_per_app),
-    url(r'api/analytics/requests/oauth/total_by_dept$', users_per_app_by_dept),
+    url(r'api/analytics/total$', number_of_requests),
+    url(r'api/analytics/quota$', quota_remaining),
+    url(r'api/analytics/services$', most_popular_service),
+    url(r'api/analytics/methods$', most_popular_method),
+    url(r'api/analytics/oauth/total$', users_per_app),
+    url(r'api/analytics/oauth/total_by_dept$', users_per_app_by_dept),
     url(r'api/create/$', create_app),
     url(r'api/rename/$', rename_app),
     url(r'api/regen/$', regenerate_app_token),
