@@ -33,12 +33,12 @@ import WorkspaceGetSensorsSummary from './Routes/Workspaces/GetSensorSummary.jsx
 import WorkspacesGetSurveys from './Routes/Workspaces/GetSurveys.jsx'
 import SectionHeader from './SectionHeader.jsx'
 import Sidebar from './Sidebar.jsx'
-import TotalNumRequests from "./Routes/Analytics/TotalNumRequests.jsx";
-import RemainingQuota from "./Routes/Analytics/RemainingQuota.jsx";
-import MostPopularService from "./Routes/Analytics/MostPopularService.jsx";
-import MostPopularMethod from "./Routes/Analytics/MostPopularMethod.jsx";
-import UsersPerApp from "./Routes/Analytics/UsersPerApp.jsx";
-import UsersPerAppPerDept from "./Routes/Analytics/UsersPerAppPerDept.jsx";
+import TotalNumRequests from "./Routes/Analytics/TotalNumRequests.jsx"
+import RemainingQuota from "./Routes/Analytics/RemainingQuota.jsx"
+import MostPopularService from "./Routes/Analytics/MostPopularService.jsx"
+import MostPopularMethod from "./Routes/Analytics/MostPopularMethod.jsx"
+import UsersPerApp from "./Routes/Analytics/UsersPerApp.jsx"
+import UsersPerAppPerDept from "./Routes/Analytics/UsersPerAppPerDept.jsx"
 
 export default class DocumentationComponent extends React.Component {
 
@@ -120,12 +120,12 @@ export default class DocumentationComponent extends React.Component {
             title="Analytics"
             key={`SectionHeaderAnalytics`}
           />
-          <TotalNumRequests key={'TotalNumRequests'} />
-          <RemainingQuota key={'RemainingQuota'} />
-          <MostPopularService key={'MostPopularService'} />
-          <MostPopularMethod key={'MostPopularMethod'} />
-          <UsersPerApp key={'UsersPerApp'} />
-          <UsersPerAppPerDept key={'UsersPerAppPerDept'} />
+          <TotalNumRequests key={`TotalNumRequests`} />
+          <RemainingQuota key={`RemainingQuota`} />
+          <MostPopularService key={`MostPopularService`} />
+          <MostPopularMethod key={`MostPopularMethod`} />
+          <UsersPerApp key={`UsersPerApp`} />
+          <UsersPerAppPerDept key={`UsersPerAppPerDept`} />
 
           <GetInvolved key={`GetInvolved`} />
         </div>
