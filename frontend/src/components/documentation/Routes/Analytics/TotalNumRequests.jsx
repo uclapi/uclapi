@@ -48,7 +48,8 @@ export default class TotalNumRequests extends React.Component {
         >
           <h1 id="dashboard/api/analytics/total">Total Number of Requests</h1>
           <p>
-            Endpoint: <code>https://uclapi.com/dashboard/api/analytics/total</code>
+            Endpoint:&nbsp;
+            <code>https://uclapi.com/dashboard/api/analytics/total</code>
           </p>
 
           <Table
@@ -69,7 +70,8 @@ export default class TotalNumRequests extends React.Component {
         >
           <h2>Response</h2>
           <p>
-            The response contains the total number of requests made from a given token.
+            The response contains the total number&nbsp;
+            of requests made from a given token.
           </p>
           <Table
             name="Response"

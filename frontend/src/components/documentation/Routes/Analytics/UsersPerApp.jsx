@@ -48,7 +48,8 @@ export default class UsersPerApp extends React.Component {
         >
           <h1 id="dashboard/api/analytics/oauth/total">Total Number of Users for an App</h1>
           <p>
-            Endpoint: <code>https://uclapi.com/dashboard/api/analytics/oauth/total</code>
+            Endpoint:&nbsp;
+            <code>https://uclapi.com/dashboard/api/analytics/oauth/total</code>
           </p>
 
           <Table
@@ -81,7 +82,8 @@ export default class UsersPerApp extends React.Component {
         >
           <h2>Response</h2>
           <p>
-            The response contains the total number of users for an app, optionally filtered by date.
+            The response contains the total number of&nbsp;
+            users for an app, optionally filtered by date.
           </p>
           <Table
             name="Response"
