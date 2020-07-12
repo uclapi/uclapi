@@ -1,9 +1,7 @@
 import React from 'react'
-
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic.jsx'
-
 
 const codeExamples = {
   python: `import requests
@@ -27,7 +25,7 @@ print(r.json())`,
 })`,
 }
 
-let response = `{
+const response = `{
   "ok": true,
   "data": [
     {
@@ -42,7 +40,7 @@ let response = `{
 }
 `
 
-let responseCodeExample = {
+const responseCodeExample = {
     python: response,
     javascript: response,
     shell: response,
@@ -50,15 +48,17 @@ let responseCodeExample = {
 
 export default class MostPopularMethod extends React.Component {
   render() {
+    const { activeLanguage } = this.props
     return (
       <div>
         <Topic
-          activeLanguage={this.props.activeLanguage}
+          activeLanguage={activeLanguage}
           codeExamples={codeExamples}
         >
           <h1 id="dashboard/api/analytics/methods">Methods by Popularity</h1>
           <p>
-            Endpoint: <code>https://uclapi.com/dashboard/api/analytics/methods</code>
+            Endpoint:&nbsp;
+            <code>https://uclapi.com/dashboard/api/analytics/methods</code>
           </p>
 
           <Table
@@ -74,12 +74,13 @@ export default class MostPopularMethod extends React.Component {
         </Topic>
 
         <Topic
-          activeLanguage={this.props.activeLanguage}
+          activeLanguage={activeLanguage}
           codeExamples={responseCodeExample}
         >
           <h2>Response</h2>
           <p>
-            The response contains all methods for a given service, or all services, by popularity.
+            The response contains all methods for a given service,
+            or all services, by popularity.
           </p>
           <Table
             name="Response"
@@ -88,7 +89,10 @@ export default class MostPopularMethod extends React.Component {
               name="data"
               extra="List"
               example="-"
-              description="List of objects containing a method name and the number of requests each has recieved."
+              description={
+                `List of objects containing a method `+
+                `name and the number of requests each has recieved.`
+              }
             />
           </Table>
         </Topic>

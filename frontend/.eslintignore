@@ -3,3 +3,4 @@ package.json
 backend/
 docker/
 .github/
+!.eslintrc
