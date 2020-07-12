@@ -3,8 +3,6 @@ import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic.jsx'
 
-
-
 const codeExamples = {
   python: `import requests
 
@@ -50,7 +48,8 @@ export default class RemainingQuota extends React.Component {
         >
           <h1 id="dashboard/api/analytics/quota">Daily Quota Left for Token</h1>
           <p>
-            Endpoint: <code>https://uclapi.com/dashboard/api/analytics/quota</code>
+            Endpoint:&nbsp;
+            <code>https://uclapi.com/dashboard/api/analytics/quota</code>
           </p>
 
           <Table

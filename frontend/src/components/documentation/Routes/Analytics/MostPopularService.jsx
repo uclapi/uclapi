@@ -54,7 +54,8 @@ export default class MostPopularService extends React.Component {
         >
           <h1 id="dashboard/api/analytics/services">Services by Popularity</h1>
           <p>
-            Endpoint: <code>https://uclapi.com/dashboard/api/analytics/services</code>
+            Endpoint:&nbsp;
+            <code>https://uclapi.com/dashboard/api/analytics/services</code>
           </p>
         </Topic>
 
@@ -73,11 +74,14 @@ export default class MostPopularService extends React.Component {
               name="data"
               extra="List"
               example="-"
-              description="List of objects containing a service name and the number of requests each has recieved."
+              description={
+                `List of objects containing a service name `+
+                `and the number of requests each has recieved.`
+              }
             />
           </Table>
         </Topic>
       </div>
-)
-}
+    )
+  }
 }

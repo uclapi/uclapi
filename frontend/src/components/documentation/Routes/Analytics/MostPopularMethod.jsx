@@ -97,6 +97,6 @@ export default class MostPopularMethod extends React.Component {
           </Table>
         </Topic>
       </div>
-)
-}
+    )
+  }
 }
