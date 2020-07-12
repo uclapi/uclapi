@@ -99,7 +99,7 @@
   },
   "settings": {
     "import/resolver": {
-      "webpack": "webpack.prod.js",
+      "webpack": "./nonsense.js",
       "alias": {
         "map": [
           [
