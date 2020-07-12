@@ -80,7 +80,7 @@
         "peerDependencies": false
       }
     ],
-    "security/detect-non-literal-require": "off", // until https://github.com/nodesecurity/eslint-plugin-security/pull/32 is merged
+    "security/detect-non-literal-require": "off",
     "security/detect-object-injection": "off"
   },
   "plugins": [
@@ -88,7 +88,6 @@
     "import",
     "security",
     "no-secrets",
-    // "json-format", Hound doesn't support this
     "sonarjs"
   ],
   "parser": "babel-eslint",
@@ -98,34 +97,6 @@
     }
   },
   "settings": {
-    "import/resolver": {
-      "webpack": "webpack.prod.js",
-      "alias": {
-        "map": [
-          [
-            "Images",
-            "./src/images"
-          ],
-          [
-            "Layout",
-            "./src/components/layout"
-          ],
-          [
-            "Styles",
-            "./src/sass"
-          ]
-        ],
-        "extensions": [
-          "jpg",
-          "png",
-          "svg",
-          "jpeg",
-          "js",
-          "jsx",
-          "scss"
-        ]
-      }
-    },
     "react": {
       "version": "detect"
     }
