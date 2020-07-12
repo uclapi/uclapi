@@ -9,19 +9,15 @@ import React from 'react'
 /**
 REQUIRED ATTRIBUTES:
 this.props.width - e.g 8-10 = 80% (Also can take fit-content)
-
 OPTIONAL ATTRIBUTES:
 this.props.type - e.g default (dark grey) / default-no-shadow (dark grey no shadow) / alternate (light grey) / emphasis (orange) / fit-content (no padding or margin for inner content)
 this.props.style (An array of styles to add to the Card)
 this.props.containerStyle (Affects sizing and orientation of column wrapping card)
-
 this.props.link (default is not clickable) => 'no-action' enables hover but does not reroute
 this.props.fakeLink - same behaviour as a link
-
 this.props.minWidth - e.g 300px a minimum width (default is unset)
 this.props.noShadow - disables box shadow
 this.props.noPadding - disables the padding 
-
 this.props.keepInline (don't snap to a column when in mobile view)
 **/
 

@@ -9,9 +9,11 @@ import NavBar from './NavBar.jsx'
 import AutoCompleteView from './views/AutoCompleteView.jsx'
 import ButtonView from './views/ButtonView.jsx'
 import CardView from './views/CardView.jsx'
+import CheckBox from './views/CheckBox.jsx'
 import CodeView from './views/CodeView.jsx'
+import ConfirmBox from './views/ConfirmBox.jsx'
+import Field from './views/Field.jsx'
 import ImageView from './views/ImageView.jsx'
-// Views
 import TextView from './views/TextView.jsx'
 
 export {
@@ -27,4 +29,7 @@ export {
   NavBar,
   Footer,
   AutoCompleteView,
+  Field,
+  CheckBox,
+  ConfirmBox,
 }

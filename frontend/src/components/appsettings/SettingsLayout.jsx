@@ -4,8 +4,9 @@ import uclassistantmarket from 'Images/home-page/uclassistantmarket.png'
 // Components
 import {
   ButtonView, CardView, Column,
-Container, ImageView,
-  Row, TextView} from 'Layout/Items.jsx'
+  Container, ImageView,
+  Row, TextView,
+} from 'Layout/Items.jsx'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
@@ -145,7 +146,13 @@ class SettingsLayout extends React.Component {
                   }}
                 >
                   <Column width="1-2" className="default">
-                    <ImageView src={uclassistantmarket} width="367px" height="405px" description="ucl asssitant screen shot" centred />
+                    <ImageView
+                      src={uclassistantmarket}
+                      width="367px"
+                      height="405px"
+                      description="ucl asssitant screen shot"
+                      centred
+                    />
                   </Column>
                   <Column width="1-2" alignItems="column">
                     <TextView

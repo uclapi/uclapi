@@ -8,6 +8,7 @@
     "plugin:react/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
+    "plugin:import/typescript",
     "plugin:security/recommended",
     "plugin:sonarjs/recommended"
   ],
@@ -79,26 +80,22 @@
         "peerDependencies": false
       }
     ],
-    "simple-import-sort/sort": "error",
     "security/detect-non-literal-require": "off", // until https://github.com/nodesecurity/eslint-plugin-security/pull/32 is merged
-    "security/detect-object-injection": "warn"
+    "security/detect-object-injection": "off"
   },
   "plugins": [
     "react",
     "import",
     "security",
     "no-secrets",
-    "json-format",
-    "simple-import-sort",
+    // "json-format", Hound doesn't support this
     "sonarjs"
   ],
   "parser": "babel-eslint",
   "parserOptions": {
-    "ecmaVersion": 6,
     "ecmaFeatures": {
       "jsx": true
-    },
-    "sourceType": "module"
+    }
   },
   "settings": {
     "import/resolver": {
