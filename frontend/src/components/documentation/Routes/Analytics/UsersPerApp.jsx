@@ -1,9 +1,7 @@
 import React from 'react'
-
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic.jsx'
-
 
 const codeExamples = {
   python: `import requests
@@ -27,13 +25,13 @@ print(r.json())`,
 })`,
 }
 
-let response = `{
+const response = `{
   "ok": true,
   "users": 1024
 }
 `
 
-let responseCodeExample = {
+const responseCodeExample = {
     python: response,
     javascript: response,
     shell: response,
@@ -41,10 +39,11 @@ let responseCodeExample = {
 
 export default class UsersPerApp extends React.Component {
   render() {
+    const { activeLanguage } = this.props
     return (
       <div>
         <Topic
-          activeLanguage={this.props.activeLanguage}
+          activeLanguage={activeLanguage}
           codeExamples={codeExamples}
         >
           <h1 id="dashboard/api/analytics/oauth/total">Total Number of Users for an App</h1>
@@ -77,7 +76,7 @@ export default class UsersPerApp extends React.Component {
         </Topic>
 
         <Topic
-          activeLanguage={this.props.activeLanguage}
+          activeLanguage={activeLanguage}
           codeExamples={responseCodeExample}
         >
           <h2>Response</h2>
@@ -97,7 +96,7 @@ export default class UsersPerApp extends React.Component {
         </Topic>
 
         <Topic
-          noExamples={true}
+          noExamples
         >
           <Table
             name="Errors"
@@ -109,6 +108,6 @@ export default class UsersPerApp extends React.Component {
           </Table>
         </Topic>
       </div>
-)
-}
+    )
+  }
 }

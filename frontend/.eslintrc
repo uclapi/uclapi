@@ -34,7 +34,15 @@
       }
     ],
     "object-property-newline": "error",
-    "no-secrets/no-secrets": "error",
+    "no-secrets/no-secrets": [
+      "error",
+      {
+        "ignoreContent": [
+          "^curl ",
+          "^fetch\\("
+        ]
+      }
+    ],
     "react/jsx-indent-props": [
       "error",
       2
@@ -71,6 +79,7 @@
         "when": "multiline"
       }
     ],
+    "react/prop-types": "off",
     "import/no-extraneous-dependencies": [
       "error",
       {
