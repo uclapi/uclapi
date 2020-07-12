@@ -1,0 +1,147 @@
+{
+  "env": {
+    "node": true,
+    "browser": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:security/recommended",
+    "plugin:sonarjs/recommended"
+  ],
+  "rules": {
+    "semi": [
+      "error",
+      "never"
+    ],
+    "quotes": [
+      "error",
+      "backtick"
+    ],
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "no-var": "error",
+    "prefer-const": "error",
+    "max-len": [
+      "warn",
+      {
+        "code": 80
+      }
+    ],
+    "object-property-newline": "error",
+    "no-secrets/no-secrets": "error",
+    "react/jsx-indent-props": [
+      "error",
+      2
+    ],
+    "react/jsx-closing-bracket-location": [
+      "error"
+    ],
+    "react/static-property-placement": [
+      "error",
+      "static public field"
+    ],
+    "react/jsx-fragments": [
+      "error",
+      "syntax"
+    ],
+    "react/jsx-boolean-value": [
+      "error",
+      "never"
+    ],
+    "react/destructuring-assignment": [
+      "warn",
+      "always"
+    ],
+    "react/jsx-no-bind": [
+      "error",
+      {
+        "ignoreRefs": true
+      }
+    ],
+    "react/jsx-max-props-per-line": [
+      "warn",
+      {
+        "maximum": 1,
+        "when": "multiline"
+      }
+    ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "packageDir": "./",
+        "devDependencies": true,
+        "optionalDependencies": false,
+        "peerDependencies": false
+      }
+    ],
+    "security/detect-non-literal-require": "off",
+    "security/detect-object-injection": "off"
+  },
+  "plugins": [
+    "react",
+    "import",
+    "security",
+    "no-secrets",
+    "json-format",
+    "sonarjs",
+    "disable"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.json"
+      ],
+      "settings": {
+        "disable/plugins": [
+          "no-secrets"
+        ]
+      }
+    }
+  ],
+  "processor": "disable/disable",
+  "settings": {
+    "import/resolver": {
+      "webpack": "./webpack.prod.js",
+      "alias": {
+        "map": [
+          [
+            "Images",
+            "./src/images"
+          ],
+          [
+            "Layout",
+            "./src/components/layout"
+          ],
+          [
+            "Styles",
+            "./src/sass"
+          ]
+        ],
+        "extensions": [
+          "jpg",
+          "png",
+          "svg",
+          "jpeg",
+          "js",
+          "jsx",
+          "scss"
+        ]
+      }
+    },
+    "react": {
+      "version": "detect"
+    }
+  }
+}
