@@ -1,0 +1,16 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/backend/uclapi"
+  schedule:
+    interval: daily
+    time: "08:00"
+    timezone: Europe/London
+  open-pull-requests-limit: 10
+- package-ecosystem: npm
+  directory: "/frontend"
+  schedule:
+    interval: daily
+    time: "08:00"
+    timezone: Europe/London
+  open-pull-requests-limit: 10
