@@ -56,7 +56,7 @@ export default class UsersPerAppPerDept extends React.Component {
           activeLanguage={this.props.activeLanguage}
           codeExamples={codeExamples}
         >
-          <h1 id="dashboard/api/analytics/oauth/total">Total Number of Users for an App by Department</h1>
+          <h1 id="dashboard/api/analytics/oauth/total_by_dept">Total Number of Users for an App by Department</h1>
           <p>
             Endpoint: <code>https://uclapi.com/dashboard/api/analytics/oauth/total_by_dept</code>
           </p>
