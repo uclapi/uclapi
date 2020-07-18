@@ -3,11 +3,6 @@
 
 
 // Styles
-import 'Styles/common/uclapi.scss'
-// Legacy
-import 'Styles/navbar.scss'
-import "react-responsive-carousel/lib/styles/carousel.min.css"
-
 // Grab titles and descriptions of app
 import { allApps } from 'Layout/data/app_pages.jsx'
 // Common Components
@@ -19,6 +14,11 @@ import {
 import React from 'react'
 // External carousel dependency
 import { Carousel } from "react-responsive-carousel"
+import "react-responsive-carousel/lib/styles/carousel.min.css"
+import 'Styles/common/uclapi.scss'
+// Legacy
+import 'Styles/navbar.scss'
+
 
 export class AppPage extends React.Component {
   constructor(props) {
@@ -41,7 +41,8 @@ export class AppPage extends React.Component {
       documentElement = d.documentElement,
       body = d.getElementsByTagName(`body`)[0],
       width = w.innerWidth || documentElement.clientWidth || body.clientWidth
-    // height = w.innerHeight || documentElement.clientHeight || body.clientHeight
+      // height = w.innerHeight ||
+      // documentElement.clientHeight || body.clientHeight
 
     const mobileCutOff = 992
     const tabletCutOff = 1130
@@ -179,7 +180,7 @@ export class AppPage extends React.Component {
                         />
                       </Column>
                       <Column
-                        width='150px'
+                        width="auto"
                         horizontalAlignment='left'
                         textAlign='left'
                         style={{

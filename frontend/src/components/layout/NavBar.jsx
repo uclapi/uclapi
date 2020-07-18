@@ -2,7 +2,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import posed from 'react-pose'
-
 import about from '../../images/navbar/about.svg'
 import dashboard from '../../images/navbar/dashboard.svg'
 import docs from '../../images/navbar/docs.svg'
@@ -13,6 +12,7 @@ import settings from '../../images/navbar/settings.svg'
 import logo from './../../images/simpleAPILogoWhite.svg'
 // Components
 import Link from './Link.jsx'
+
 
 const links = [
   {
@@ -160,7 +160,7 @@ class NavBar extends React.Component {
           <img src={logo} />
         </a>
         <a href={`/`} style={{ textDecoration: `none` }} >
-          <div className="logoTextWhite">
+          <div className="logo-text-white">
             UCL API
           </div>
         </a>

@@ -1,8 +1,8 @@
 import React from 'react'
-
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic.jsx'
+
 
 
 const codeExamples = {
@@ -22,7 +22,7 @@ print(r.json())`,
 })`,
 }
 
-let response = `{
+const response = `{
   "ok": true,
   "data": [
     {
@@ -37,7 +37,7 @@ let response = `{
 }
 `
 
-let responseCodeExample = {
+const responseCodeExample = {
     python: response,
     javascript: response,
     shell: response,
@@ -45,20 +45,22 @@ let responseCodeExample = {
 
 export default class MostPopularService extends React.Component {
   render() {
+    const { activeLanguage } = this.props
     return (
       <div>
         <Topic
-          activeLanguage={this.props.activeLanguage}
+          activeLanguage={activeLanguage}
           codeExamples={codeExamples}
         >
           <h1 id="dashboard/api/analytics/services">Services by Popularity</h1>
           <p>
-            Endpoint: <code>https://uclapi.com/dashboard/api/analytics/services</code>
+            Endpoint:&nbsp;
+            <code>https://uclapi.com/dashboard/api/analytics/services</code>
           </p>
         </Topic>
 
         <Topic
-          activeLanguage={this.props.activeLanguage}
+          activeLanguage={activeLanguage}
           codeExamples={responseCodeExample}
         >
           <h2>Response</h2>
@@ -72,11 +74,14 @@ export default class MostPopularService extends React.Component {
               name="data"
               extra="List"
               example="-"
-              description="List of objects containing a service name and the number of requests each has recieved."
+              description={
+                `List of objects containing a service name `+
+                `and the number of requests each has recieved.`
+              }
             />
           </Table>
         </Topic>
       </div>
-)
-}
+    )
+  }
 }

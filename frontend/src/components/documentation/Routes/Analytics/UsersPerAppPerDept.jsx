@@ -1,9 +1,7 @@
 import React from 'react'
-
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic.jsx'
-
 
 const codeExamples = {
   python: `import requests
@@ -27,7 +25,7 @@ print(r.json())`,
 })`,
 }
 
-let response = `{
+const response = `{
   "ok": true,
   "data": [
     {
@@ -42,7 +40,7 @@ let response = `{
 }
 `
 
-let responseCodeExample = {
+const responseCodeExample = {
     python: response,
     javascript: response,
     shell: response,
@@ -50,15 +48,19 @@ let responseCodeExample = {
 
 export default class UsersPerAppPerDept extends React.Component {
   render() {
+    const { activeLanguage } = this.props
     return (
       <div>
         <Topic
-          activeLanguage={this.props.activeLanguage}
+          activeLanguage={activeLanguage}
           codeExamples={codeExamples}
         >
           <h1 id="dashboard/api/analytics/oauth/total_by_dept">Total Number of Users for an App by Department</h1>
           <p>
-            Endpoint: <code>https://uclapi.com/dashboard/api/analytics/oauth/total_by_dept</code>
+            Endpoint:&nbsp;
+            <code>
+              https://uclapi.com/dashboard/api/analytics/oauth/total_by_dept
+            </code>
           </p>
 
           <Table
@@ -74,12 +76,13 @@ export default class UsersPerAppPerDept extends React.Component {
         </Topic>
 
         <Topic
-          activeLanguage={this.props.activeLanguage}
+          activeLanguage={activeLanguage}
           codeExamples={responseCodeExample}
         >
           <h2>Response</h2>
           <p>
-            The response contains the total number of users for an app by department.
+            The response contains the total number of&nbsp;
+            users for an app by department.
           </p>
           <Table
             name="Response"
@@ -94,7 +97,7 @@ export default class UsersPerAppPerDept extends React.Component {
         </Topic>
 
         <Topic
-          noExamples={true}
+          noExamples
         >
           <Table
             name="Errors"
@@ -106,6 +109,6 @@ export default class UsersPerAppPerDept extends React.Component {
           </Table>
         </Topic>
       </div>
-)
-}
+    )
+  }
 }

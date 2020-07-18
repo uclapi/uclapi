@@ -8,6 +8,7 @@
     "plugin:react/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
+    "plugin:import/typescript",
     "plugin:security/recommended",
     "plugin:sonarjs/recommended"
   ],
@@ -29,11 +30,21 @@
     "max-len": [
       "warn",
       {
-        "code": 80
+        "code": 80,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
       }
     ],
     "object-property-newline": "error",
-    "no-secrets/no-secrets": "error",
+    "no-secrets/no-secrets": [
+      "error",
+      {
+        "ignoreContent": [
+          "^curl ",
+          "^fetch\\("
+        ]
+      }
+    ],
     "react/jsx-indent-props": [
       "error",
       2
@@ -70,6 +81,7 @@
         "when": "multiline"
       }
     ],
+    "react/prop-types": "off",
     "import/no-extraneous-dependencies": [
       "error",
       {
@@ -79,9 +91,8 @@
         "peerDependencies": false
       }
     ],
-    "simple-import-sort/sort": "error",
-    "security/detect-non-literal-require": "off", // until https://github.com/nodesecurity/eslint-plugin-security/pull/32 is merged
-    "security/detect-object-injection": "warn"
+    "security/detect-non-literal-require": "off",
+    "security/detect-object-injection": "off"
   },
   "plugins": [
     "react",
@@ -89,20 +100,31 @@
     "security",
     "no-secrets",
     "json-format",
-    "simple-import-sort",
-    "sonarjs"
+    "sonarjs",
+    "disable"
   ],
   "parser": "babel-eslint",
   "parserOptions": {
-    "ecmaVersion": 6,
     "ecmaFeatures": {
       "jsx": true
-    },
-    "sourceType": "module"
+    }
   },
+  "overrides": [
+    {
+      "files": [
+        "*.json"
+      ],
+      "settings": {
+        "disable/plugins": [
+          "no-secrets"
+        ]
+      }
+    }
+  ],
+  "processor": "disable/disable",
   "settings": {
     "import/resolver": {
-      "webpack": "webpack.prod.js",
+      "webpack": "./webpack.prod.js",
       "alias": {
         "map": [
           [

@@ -8,7 +8,9 @@
     "plugin:react/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
-    "plugin:security/recommended"
+    "plugin:import/typescript",
+    "plugin:security/recommended",
+    "plugin:sonarjs/recommended"
   ],
   "rules": {
     "semi": [
@@ -24,6 +26,25 @@
       "always-multiline"
     ],
     "no-var": "error",
+    "prefer-const": "error",
+    "max-len": [
+      "warn",
+      {
+        "code": 80,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
+      }
+    ],
+    "object-property-newline": "error",
+    "no-secrets/no-secrets": [
+      "error",
+      {
+        "ignoreContent": [
+          "^curl ",
+          "^fetch\\("
+        ]
+      }
+    ],
     "react/jsx-indent-props": [
       "error",
       2
@@ -43,6 +64,24 @@
       "error",
       "never"
     ],
+    "react/destructuring-assignment": [
+      "warn",
+      "always"
+    ],
+    "react/jsx-no-bind": [
+      "error",
+      {
+        "ignoreRefs": true
+      }
+    ],
+    "react/jsx-max-props-per-line": [
+      "warn",
+      {
+        "maximum": 1,
+        "when": "multiline"
+      }
+    ],
+    "react/prop-types": "off",
     "import/no-extraneous-dependencies": [
       "error",
       {
@@ -52,50 +91,23 @@
         "peerDependencies": false
       }
     ],
-    "security/detect-non-literal-require": "off" // until https://github.com/nodesecurity/eslint-plugin-security/pull/32 is merged
+    "security/detect-non-literal-require": "off",
+    "security/detect-object-injection": "off"
   },
   "plugins": [
     "react",
     "import",
-    "security"
+    "security",
+    "no-secrets",
+    "sonarjs"
   ],
   "parser": "babel-eslint",
   "parserOptions": {
-    "ecmaVersion": 6,
     "ecmaFeatures": {
       "jsx": true
-    },
-    "sourceType": "module"
+    }
   },
   "settings": {
-    "import/resolver": {
-      "webpack": "webpack.prod.js",
-      "alias": {
-        "map": [
-          [
-            "Images",
-            "./src/images"
-          ],
-          [
-            "Layout",
-            "./src/components/layout"
-          ],
-          [
-            "Styles",
-            "./src/sass"
-          ]
-        ],
-        "extensions": [
-          "jpg",
-          "png",
-          "svg",
-          "jpeg",
-          "js",
-          "jsx",
-          "scss"
-        ]
-      }
-    },
     "react": {
       "version": "detect"
     }

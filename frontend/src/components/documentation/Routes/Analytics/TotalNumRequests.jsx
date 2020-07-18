@@ -1,9 +1,7 @@
 import React from 'react'
-
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic.jsx'
-
 
 const codeExamples = {
   python: `import requests
@@ -27,13 +25,13 @@ print(r.json())`,
 })`,
 }
 
-let response = `{
+const response = `{
   "ok": true,
   "num": 1024
 }
 `
 
-let responseCodeExample = {
+const responseCodeExample = {
     python: response,
     javascript: response,
     shell: response,
@@ -41,15 +39,17 @@ let responseCodeExample = {
 
 export default class TotalNumRequests extends React.Component {
   render() {
+    const { activeLanguage } = this.props
     return (
       <div>
         <Topic
-          activeLanguage={this.props.activeLanguage}
+          activeLanguage={activeLanguage}
           codeExamples={codeExamples}
         >
           <h1 id="dashboard/api/analytics/total">Total Number of Requests</h1>
           <p>
-            Endpoint: <code>https://uclapi.com/dashboard/api/analytics/total</code>
+            Endpoint:&nbsp;
+            <code>https://uclapi.com/dashboard/api/analytics/total</code>
           </p>
 
           <Table
@@ -65,12 +65,13 @@ export default class TotalNumRequests extends React.Component {
         </Topic>
 
         <Topic
-          activeLanguage={this.props.activeLanguage}
+          activeLanguage={activeLanguage}
           codeExamples={responseCodeExample}
         >
           <h2>Response</h2>
           <p>
-            The response contains the total number of requests made from a given token.
+            The response contains the total number&nbsp;
+            of requests made from a given token.
           </p>
           <Table
             name="Response"
@@ -84,9 +85,7 @@ export default class TotalNumRequests extends React.Component {
           </Table>
         </Topic>
 
-        <Topic
-          noExamples={true}
-        >
+        <Topic noExamples>
           <Table
             name="Errors"
           >
@@ -101,6 +100,6 @@ export default class TotalNumRequests extends React.Component {
           </Table>
         </Topic>
       </div>
-)
-}
+    )
+  }
 }
