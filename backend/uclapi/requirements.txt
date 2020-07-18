@@ -51,6 +51,6 @@ six==1.15.0
 tldextract==2.2.2
 tqdm==4.47.0
 urllib3==1.25.9
-validators==0.15.0
+validators==0.16.0
 vine==1.3.0
 -e git+git://github.com/uclapi/django-webpack-loader@master#egg=django-webpack-loader
