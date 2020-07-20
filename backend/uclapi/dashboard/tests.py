@@ -1386,7 +1386,6 @@ class ApiApplicationsTestCase(TestCase):
         )
         response = most_popular_service(request)
         content = json.loads(response.content.decode())
-        print(content["data"])
         self.assertEqual(response.status_code, 200)
         self.assertEqual(content["data"], [{'service': 'service1', 'count': 2},
                                            {'service': 'service2', 'count':
