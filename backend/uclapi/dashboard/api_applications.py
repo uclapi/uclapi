@@ -419,7 +419,7 @@ def quota_remaining(request):
         limit = 10000
 
     elif token.startswith('uclapi-'):
-        app = APICall.objects.filter(app__api_token__exact=token).first()
+        app = App.objects.filter(api_token__exact=token).first()
         cache_key = app.user.email
         limit = 10000
 
