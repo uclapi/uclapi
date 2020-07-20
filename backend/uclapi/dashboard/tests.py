@@ -6,7 +6,9 @@ from rest_framework.test import APIRequestFactory
 from django.conf import settings
 import redis
 
+from common.decorators import throttle_api_call
 from oauth.models import OAuthToken
+from uclapi.settings import REDIS_UCLAPI_HOST
 from .app_helpers import is_url_unsafe, generate_api_token, \
     generate_app_client_id, generate_app_client_secret, \
     generate_app_id, get_articles
@@ -578,6 +580,7 @@ class ApiApplicationsTestCase(TestCase):
             "Request does not have app_id/new_name",
             "Request does not have an app_id."
         )
+        self.r = redis.Redis(host=REDIS_UCLAPI_HOST)
 
     def test_get_user_returns_correct_user(self):
         user_ = User.objects.create(
@@ -1111,6 +1114,29 @@ class ApiApplicationsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(content["num"], 2)
 
+    def test_analytics_num_requests_zero_app_token_flow(self):
+        # Set up token
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+
+        token = app_.api_token
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/requests/total',
+            {
+                "token": token
+            }
+        )
+        response = number_of_requests(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["num"], 0)
+
     def test_analytics_num_requests_good_oauth_token_flow(self):
         # Set up token
         dev_ = User.objects.create(
@@ -1157,3 +1183,170 @@ class ApiApplicationsTestCase(TestCase):
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(content["num"], 2)
+
+    def test_analytics_num_requests_zero_oauth_token_flow(self):
+        # Set up token
+        dev_ = User.objects.create(
+            email="dev@ucl.ac.uk",
+            cn="dev",
+            given_name="Test Test",
+            employee_id="1"
+        )
+
+        user_ = User.objects.create(
+            email="user@ucl.ac.uk",
+            cn="user",
+            given_name="Test Test",
+            employee_id="2"
+        )
+
+        app_ = App.objects.create(user=dev_, name="An App")
+
+        token = OAuthToken.objects.create(app=app_, user=user_,
+                                          scope=app_.scope)
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/requests/total',
+            {
+                "token": token.token
+            }
+        )
+        response = number_of_requests(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["num"], 0)
+
+    def test_analytics_quota_good_oauth_token_flow(self):
+        # Set up token
+        dev_ = User.objects.create(
+            email="dev@ucl.ac.uk",
+            cn="dev",
+            given_name="Test Test",
+            employee_id="1"
+        )
+
+        user_ = User.objects.create(
+            email="user@ucl.ac.uk",
+            cn="user",
+            given_name="Test Test",
+            employee_id="2"
+        )
+
+        app_ = App.objects.create(user=dev_, name="An App")
+
+        token = OAuthToken.objects.create(app=app_, user=user_,
+                                          scope=app_.scope)
+
+        # Use decorator library to decrement quota
+
+        throttle_api_call(token, "oauth")
+
+        throttle_api_call(token, "oauth")
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/requests/quota',
+            {
+                "token": token.token
+            }
+        )
+        response = quota_remaining(request)
+        content = json.loads(response.content.decode())
+        # Clean up redis
+        self.r.delete(token.user.email)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["remaining"], 9998)
+
+    def test_analytics_quota_zero_oauth_token_flow(self):
+        # Set up token
+        dev_ = User.objects.create(
+            email="dev@ucl.ac.uk",
+            cn="dev",
+            given_name="Test Test",
+            employee_id="1"
+        )
+
+        user_ = User.objects.create(
+            email="user@ucl.ac.uk",
+            cn="user",
+            given_name="Test Test",
+            employee_id="2"
+        )
+
+        app_ = App.objects.create(user=dev_, name="An App")
+
+        token = OAuthToken.objects.create(app=app_, user=user_,
+                                          scope=app_.scope)
+
+        # Use decorator library to decrement quota
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/requests/quota',
+            {
+                "token": token.token
+            }
+        )
+        response = quota_remaining(request)
+        content = json.loads(response.content.decode())
+        # Clean up redis
+        self.r.delete(token.user.email)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["remaining"], 10000)
+
+    def test_analytics_quota_good_app_token_flow(self):
+        # Set up token
+        user_ = User.objects.create(
+            email="quota_test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        token = app_.api_token
+
+        # Use decorator library to decrement quota
+        throttle_api_call(app_, "general")
+        throttle_api_call(app_, "general")
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/requests/quota',
+            {
+                "token": token
+            }
+        )
+        response = quota_remaining(request)
+        content = json.loads(response.content.decode())
+        # Clean up redis
+        self.r.delete(app_.user.email)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["remaining"], 9998)
+
+    def test_analytics_quota_zero_app_token_flow(self):
+        # Set up token
+        user_ = User.objects.create(
+            email="quota_test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+
+        app_ = App.objects.create(user=user_, name="An App")
+
+        token = app_.api_token
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/requests/quota',
+            {
+                "token": token
+            }
+        )
+        response = quota_remaining(request)
+        content = json.loads(response.content.decode())
+        # Clean up redis
+        self.r.delete(app_.user.email)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["remaining"], 10000)
