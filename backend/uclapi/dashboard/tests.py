@@ -20,7 +20,7 @@ from .webhook_views import (
 from dashboard.api_applications import (
     create_app, delete_app, regenerate_app_token, rename_app, set_callback_url,
     update_scopes, get_user_by_id, number_of_requests, quota_remaining,
-    users_per_app, users_per_app_by_dept
+    users_per_app, users_per_app_by_dept, most_popular_service
 )
 
 
@@ -1350,3 +1350,44 @@ class ApiApplicationsTestCase(TestCase):
         self.r.delete(app_.user.email)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(content["remaining"], 10000)
+
+    def test_analytics_most_popular_service_good_flow(self):
+        # Set up token
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+
+        # Create some request objects
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="service1",
+                                   method="rooms",
+                                   queryparams="")
+
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="service1",
+                                   method="rooms",
+                                   queryparams="")
+
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="service2",
+                                   method="rooms",
+                                   queryparams="")
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/requests/services',
+            {}
+        )
+        response = most_popular_service(request)
+        content = json.loads(response.content.decode())
+        print(content["data"])
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["data"], [{'service': 'service1', 'count': 2},
+                                           {'service': 'service2', 'count':
+                                               1}])
