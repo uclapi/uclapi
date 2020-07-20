@@ -20,7 +20,8 @@ from .webhook_views import (
 from dashboard.api_applications import (
     create_app, delete_app, regenerate_app_token, rename_app, set_callback_url,
     update_scopes, get_user_by_id, number_of_requests, quota_remaining,
-    users_per_app, users_per_app_by_dept, most_popular_service
+    users_per_app, users_per_app_by_dept, most_popular_service,
+    most_popular_method
 )
 
 
@@ -1390,3 +1391,124 @@ class ApiApplicationsTestCase(TestCase):
         self.assertEqual(content["data"], [{'service': 'service1', 'count': 2},
                                            {'service': 'service2', 'count':
                                                1}])
+
+    def test_analytics_most_popular_service_empty_flow(self):
+        # Set up token
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        _ = App.objects.create(user=user_, name="An App")
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/requests/services',
+            {}
+        )
+        response = most_popular_service(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["data"], [])
+
+    def test_analytics_most_popular_method_good_flow(self):
+        # Set up token
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+
+        # Create some request objects
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="service1",
+                                   method="method1",
+                                   queryparams="")
+
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="service1",
+                                   method="method1",
+                                   queryparams="")
+
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="service2",
+                                   method="method2",
+                                   queryparams="")
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/requests/methods',
+            {}
+        )
+        response = most_popular_method(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["data"], [{'method': 'method1', 'count': 2},
+                                           {'method': 'method2', 'count':
+                                               1}])
+
+    def test_analytics_most_popular_method_filter_by_service_good_flow(self):
+        # Set up token
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+
+        # Create some request objects
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="service1",
+                                   method="method1",
+                                   queryparams="")
+
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="service1",
+                                   method="method1",
+                                   queryparams="")
+
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="service2",
+                                   method="method2",
+                                   queryparams="")
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/requests/methods',
+            {
+                "service": "service1"
+            }
+        )
+        response = most_popular_method(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["data"], [{'method': 'method1', 'count': 2}])
+
+    def test_analytics_most_popular_method_filter_by_service_empty_good_flow(
+            self):
+        # Set up token
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        _ = App.objects.create(user=user_, name="An App")
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/requests/methods',
+            {
+                "service": "service1"
+            }
+        )
+        response = most_popular_method(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["data"], [])
