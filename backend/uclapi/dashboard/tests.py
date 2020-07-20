@@ -2,12 +2,13 @@ import json
 from unittest.mock import patch
 
 from django.test import RequestFactory, TestCase
+from django.utils.datetime_safe import datetime
 from rest_framework.test import APIRequestFactory
 from django.conf import settings
 import redis
 
 from common.decorators import throttle_api_call
-from oauth.models import OAuthToken
+from oauth.models import OAuthToken, OAuthScope
 from uclapi.settings import REDIS_UCLAPI_HOST
 from .app_helpers import is_url_unsafe, generate_api_token, \
     generate_app_client_id, generate_app_client_secret, \
@@ -1041,12 +1042,12 @@ class ApiApplicationsTestCase(TestCase):
 
     def test_analytics_no_token_provided(self):
         endpoints = self.functions = {
-            '/api/analytics/requests/total': number_of_requests,
-            '/api/analytics/requests/quota': quota_remaining,
-            # '/api/analytics/requests/services': most_popular_service,
-            # '/api/analytics/requests/methods': most_popular_method,
-            '/api/analytics/requests/oauth/total': users_per_app,
-            '/api/analytics/requests/oauth/total_by_dept':
+            '/api/analytics/total': number_of_requests,
+            '/api/analytics/quota': quota_remaining,
+            # '/api/analytics/services': most_popular_service,
+            # '/api/analytics/methods': most_popular_method,
+            '/api/analytics/oauth/total': users_per_app,
+            '/api/analytics/oauth/total_by_dept':
                 users_per_app_by_dept
         }
 
@@ -1063,8 +1064,8 @@ class ApiApplicationsTestCase(TestCase):
 
     def test_analytics_bad_token_provided(self):
         endpoints = self.functions = {
-            '/api/analytics/requests/total': number_of_requests,
-            '/api/analytics/requests/quota': quota_remaining,
+            '/api/analytics/total': number_of_requests,
+            '/api/analytics/quota': quota_remaining,
         }
 
         for url in endpoints:
@@ -1105,7 +1106,7 @@ class ApiApplicationsTestCase(TestCase):
 
         # Hit endpoint and check number is correct
         request = self.factory.get(
-            '/api/analytics/requests/total',
+            '/api/analytics/total',
             {
                 "token": token
             }
@@ -1128,7 +1129,7 @@ class ApiApplicationsTestCase(TestCase):
 
         # Hit endpoint and check number is correct
         request = self.factory.get(
-            '/api/analytics/requests/total',
+            '/api/analytics/total',
             {
                 "token": token
             }
@@ -1156,8 +1157,11 @@ class ApiApplicationsTestCase(TestCase):
 
         app_ = App.objects.create(user=dev_, name="An App")
 
+        scope_ = OAuthScope.objects.create(
+            scope_number=app_.scope.scope_number)
+
         token = OAuthToken.objects.create(app=app_, user=user_,
-                                          scope=app_.scope)
+                                          scope=scope_)
 
         # Create some request objects
 
@@ -1175,7 +1179,7 @@ class ApiApplicationsTestCase(TestCase):
 
         # Hit endpoint and check number is correct
         request = self.factory.get(
-            '/api/analytics/requests/total',
+            '/api/analytics/total',
             {
                 "token": token.token
             }
@@ -1203,12 +1207,15 @@ class ApiApplicationsTestCase(TestCase):
 
         app_ = App.objects.create(user=dev_, name="An App")
 
+        scope_ = OAuthScope.objects.create(
+            scope_number=app_.scope.scope_number)
+
         token = OAuthToken.objects.create(app=app_, user=user_,
-                                          scope=app_.scope)
+                                          scope=scope_)
 
         # Hit endpoint and check number is correct
         request = self.factory.get(
-            '/api/analytics/requests/total',
+            '/api/analytics/total',
             {
                 "token": token.token
             }
@@ -1236,8 +1243,11 @@ class ApiApplicationsTestCase(TestCase):
 
         app_ = App.objects.create(user=dev_, name="An App")
 
+        scope_ = OAuthScope.objects.create(
+            scope_number=app_.scope.scope_number)
+
         token = OAuthToken.objects.create(app=app_, user=user_,
-                                          scope=app_.scope)
+                                          scope=scope_)
 
         # Use decorator library to decrement quota
 
@@ -1247,7 +1257,7 @@ class ApiApplicationsTestCase(TestCase):
 
         # Hit endpoint and check number is correct
         request = self.factory.get(
-            '/api/analytics/requests/quota',
+            '/api/analytics/quota',
             {
                 "token": token.token
             }
@@ -1277,14 +1287,15 @@ class ApiApplicationsTestCase(TestCase):
 
         app_ = App.objects.create(user=dev_, name="An App")
 
-        token = OAuthToken.objects.create(app=app_, user=user_,
-                                          scope=app_.scope)
+        scope_ = OAuthScope.objects.create(
+            scope_number=app_.scope.scope_number)
 
-        # Use decorator library to decrement quota
+        token = OAuthToken.objects.create(app=app_, user=user_,
+                                          scope=scope_)
 
         # Hit endpoint and check number is correct
         request = self.factory.get(
-            '/api/analytics/requests/quota',
+            '/api/analytics/quota',
             {
                 "token": token.token
             }
@@ -1314,7 +1325,7 @@ class ApiApplicationsTestCase(TestCase):
 
         # Hit endpoint and check number is correct
         request = self.factory.get(
-            '/api/analytics/requests/quota',
+            '/api/analytics/quota',
             {
                 "token": token
             }
@@ -1340,7 +1351,7 @@ class ApiApplicationsTestCase(TestCase):
 
         # Hit endpoint and check number is correct
         request = self.factory.get(
-            '/api/analytics/requests/quota',
+            '/api/analytics/quota',
             {
                 "token": token
             }
@@ -1382,7 +1393,7 @@ class ApiApplicationsTestCase(TestCase):
 
         # Hit endpoint and check number is correct
         request = self.factory.get(
-            '/api/analytics/requests/services',
+            '/api/analytics/services',
             {}
         )
         response = most_popular_service(request)
@@ -1403,7 +1414,7 @@ class ApiApplicationsTestCase(TestCase):
 
         # Hit endpoint and check number is correct
         request = self.factory.get(
-            '/api/analytics/requests/services',
+            '/api/analytics/services',
             {}
         )
         response = most_popular_service(request)
@@ -1441,7 +1452,7 @@ class ApiApplicationsTestCase(TestCase):
 
         # Hit endpoint and check number is correct
         request = self.factory.get(
-            '/api/analytics/requests/methods',
+            '/api/analytics/methods',
             {}
         )
         response = most_popular_method(request)
@@ -1481,7 +1492,7 @@ class ApiApplicationsTestCase(TestCase):
 
         # Hit endpoint and check number is correct
         request = self.factory.get(
-            '/api/analytics/requests/methods',
+            '/api/analytics/methods',
             {
                 "service": "service1"
             }
@@ -1503,12 +1514,222 @@ class ApiApplicationsTestCase(TestCase):
 
         # Hit endpoint and check number is correct
         request = self.factory.get(
-            '/api/analytics/requests/methods',
+            '/api/analytics/methods',
             {
                 "service": "service1"
             }
         )
         response = most_popular_method(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["data"], [])
+
+    def test_analytics_users_per_app_good_flow(self):
+        dev_ = User.objects.create(
+            email="dev@ucl.ac.uk",
+            cn="dev",
+            given_name="Test Test",
+            employee_id="1"
+        )
+
+        user_ = User.objects.create(
+            email="user@ucl.ac.uk",
+            cn="user",
+            given_name="Test Test",
+            employee_id="2"
+        )
+
+        user2_ = User.objects.create(
+            email="user2@ucl.ac.uk",
+            cn="user2",
+            given_name="Test Test",
+            employee_id="3"
+        )
+
+        app_ = App.objects.create(user=dev_, name="An App")
+
+        scope1 = OAuthScope.objects.create(
+            scope_number=app_.scope.scope_number)
+        scope2 = OAuthScope.objects.create(
+            scope_number=app_.scope.scope_number)
+
+        _ = OAuthToken.objects.create(app=app_, user=user_,
+                                      scope=scope1)
+
+        _ = OAuthToken.objects.create(app=app_, user=user2_,
+                                      scope=scope2)
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/oauth/total',
+            {
+                "token": app_.api_token
+            }
+        )
+        response = users_per_app(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["users"], 2)
+
+    def test_analytics_users_per_app_zero_flow(self):
+        dev_ = User.objects.create(
+            email="dev@ucl.ac.uk",
+            cn="dev",
+            given_name="Test Test",
+            employee_id="1"
+        )
+
+        app_ = App.objects.create(user=dev_, name="An App")
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/oauth/total',
+            {
+                "token": app_.api_token
+            }
+        )
+        response = users_per_app(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["users"], 0)
+
+    def test_analytics_users_per_app_date_filter_good_flow(self):
+        dev_ = User.objects.create(
+            email="dev@ucl.ac.uk",
+            cn="dev",
+            given_name="Test Test",
+            employee_id="1"
+        )
+
+        user_ = User.objects.create(
+            email="user@ucl.ac.uk",
+            cn="user",
+            given_name="Test Test",
+            employee_id="2"
+        )
+
+        user2_ = User.objects.create(
+            email="user2@ucl.ac.uk",
+            cn="user2",
+            given_name="Test Test",
+            employee_id="3"
+        )
+
+        app_ = App.objects.create(user=dev_, name="An App")
+
+        scope1 = OAuthScope.objects.create(
+            scope_number=app_.scope.scope_number)
+        scope2 = OAuthScope.objects.create(
+            scope_number=app_.scope.scope_number)
+
+        date1 = datetime.strptime("2020-12-15", "%Y-%m-%d")
+        date2 = datetime.strptime("2010-12-15", "%Y-%m-%d")
+
+        otoken1 = OAuthToken.objects.create(app=app_, user=user_,
+                                            scope=scope1)
+        otoken1.creation_date = date1
+        otoken1.save()
+
+        otoken2 = OAuthToken.objects.create(app=app_, user=user2_,
+                                            scope=scope2)
+        otoken2.creation_date = date2
+        otoken2.save()
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/oauth/total',
+            {
+                "token": app_.api_token,
+                "start_date": "2020-12-01",
+                "end_date": "2020-12-30"
+            }
+        )
+        response = users_per_app(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["users"], 1)
+
+    def test_analytics_users_per_app_per_dept_good_flow(self):
+        dev_ = User.objects.create(
+            email="dev@ucl.ac.uk",
+            cn="dev",
+            given_name="Test Test",
+            employee_id="1"
+        )
+
+        user_ = User.objects.create(
+            email="user@ucl.ac.uk",
+            cn="user",
+            given_name="Test Test",
+            employee_id="2",
+            department="dep1"
+        )
+
+        user2_ = User.objects.create(
+            email="user2@ucl.ac.uk",
+            cn="user2",
+            given_name="Test Test",
+            employee_id="3",
+            department="dep2"
+        )
+
+        user3_ = User.objects.create(
+            email="user3@ucl.ac.uk",
+            cn="user3",
+            given_name="Test Test",
+            employee_id="4",
+            department="dep2"
+        )
+
+        app_ = App.objects.create(user=dev_, name="An App")
+
+        scope1 = OAuthScope.objects.create(
+            scope_number=app_.scope.scope_number)
+        scope2 = OAuthScope.objects.create(
+            scope_number=app_.scope.scope_number)
+        scope3 = OAuthScope.objects.create(
+            scope_number=app_.scope.scope_number)
+
+        _ = OAuthToken.objects.create(app=app_, user=user_,
+                                      scope=scope1)
+
+        _ = OAuthToken.objects.create(app=app_, user=user2_,
+                                      scope=scope2)
+
+        _ = OAuthToken.objects.create(app=app_, user=user3_,
+                                      scope=scope3)
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/oauth/total_by_dept',
+            {
+                "token": app_.api_token
+            }
+        )
+        response = users_per_app_by_dept(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["data"], [{"department": "dep2", "count": 2},
+                                           {"department": "dep1", "count": 1}])
+
+    def test_analytics_users_per_app_per_dept_zero_flow(self):
+        dev_ = User.objects.create(
+            email="dev@ucl.ac.uk",
+            cn="dev",
+            given_name="Test Test",
+            employee_id="1"
+        )
+
+        app_ = App.objects.create(user=dev_, name="An App")
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/oauth/total_by_dept',
+            {
+                "token": app_.api_token
+            }
+        )
+        response = users_per_app_by_dept(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(content["data"], [])
