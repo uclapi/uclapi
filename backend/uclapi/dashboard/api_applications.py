@@ -381,10 +381,10 @@ def number_of_requests(request):
         response.status_code = 400
         return response
 
-    if token.startswith('uclapi-'):
-        calls = APICall.objects.filter(app__api_token__exact=token)
-    elif token.startswith('uclapi-user-'):
+    if token.startswith('uclapi-user-'):
         calls = APICall.objects.filter(token__token__exact=token)
+    elif token.startswith('uclapi-'):
+        calls = APICall.objects.filter(app__api_token__exact=token)
     else:
         response = JsonResponse({
             "ok": False,
@@ -412,16 +412,17 @@ def quota_remaining(request):
 
     r = redis.Redis(host=REDIS_UCLAPI_HOST)
 
-    if token.startswith('uclapi-'):
-        app = APICall.objects.filter(app__api_token__exact=token).first()
-        cache_key = app.user.email
-        limit = 10000
-
-    elif token.startswith('uclapi-user-'):
+    if token.startswith('uclapi-user-'):
         Otoken = OAuthToken.objects.filter(token__exact=token).first()
 
         cache_key = Otoken.user.email
         limit = 10000
+
+    elif token.startswith('uclapi-'):
+        app = APICall.objects.filter(app__api_token__exact=token).first()
+        cache_key = app.user.email
+        limit = 10000
+
     else:
         response = JsonResponse({
             "ok": False,
@@ -484,7 +485,8 @@ def users_per_app(request):
         end_date = datetime.strptime(end, "%Y-%m-%d")
 
         users = OAuthToken.objects.filter(creation_date__range=(start_date,
-                                                                end_date))
+                                                                end_date),
+                                          app__api_token__exact=token)
 
     except MultiValueDictKeyError:
         users = OAuthToken.objects.filter(app__api_token__exact=token)
