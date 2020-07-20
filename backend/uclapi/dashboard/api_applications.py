@@ -489,8 +489,8 @@ def users_per_app(request):
         start_date = datetime.strptime(start, "%Y-%m-%d")
         end_date = datetime.strptime(end, "%Y-%m-%d")
 
-        users = OAuthToken.objects.filter(creation_date__range=(start_date,
-                                                                end_date),
+        users = OAuthToken.objects.filter(creation_date__gte=start_date,
+                                          creation_date__lte=end_date,
                                           app__api_token__exact=token)
 
     except MultiValueDictKeyError:
