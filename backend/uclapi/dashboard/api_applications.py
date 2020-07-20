@@ -431,7 +431,12 @@ def quota_remaining(request):
         response.status_code = 400
         return response
 
-    count_data = int(r.get(cache_key))
+    count_data = r.get(cache_key)
+
+    if count_data:
+        count_data = int(r.get(cache_key))
+    else:
+        count_data = 0
     return PrettyJsonResponse({
         "ok": True,
         "remaining": limit - count_data,
