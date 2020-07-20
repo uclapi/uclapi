@@ -47,7 +47,7 @@ def how_many_seconds_until_midnight():
 
 
 def log_api_call(request, token, token_type):
-    """This functions handles logging of api calls using keen events."""
+    """This functions handles logging of api calls."""
     service = request.path.split("/")[1]
     method = request.path.split("/")[2]
 
@@ -391,9 +391,6 @@ def uclapi_protected_endpoint(
 
             kwargs['token'] = token
 
-            # Log the API call before carrying it out
-            log_api_call(request, token, kwargs['token_type'])
-
             # Get throttle data
             (
                 throttled,
@@ -423,6 +420,9 @@ def uclapi_protected_endpoint(
                 kwargs['X-RateLimit-Limit'] = limit
                 kwargs['X-RateLimit-Remaining'] = remaining
                 kwargs['X-RateLimit-Retry-After'] = reset_secs
+
+            # Log the API call before carrying it out
+            log_api_call(request, token, kwargs['token_type'])
 
             return view_func(request, *args, **kwargs)
         return wrapped
