@@ -6,11 +6,12 @@ from rest_framework.test import APIRequestFactory
 from django.conf import settings
 import redis
 
+from oauth.models import OAuthToken
 from .app_helpers import is_url_unsafe, generate_api_token, \
     generate_app_client_id, generate_app_client_secret, \
     generate_app_id, get_articles
 from .middleware.fake_shibboleth_middleware import FakeShibbolethMiddleWare
-from .models import App, User
+from .models import App, User, APICall
 from .webhook_views import (
     edit_webhook, refresh_verification_secret, user_owns_app, verify_ownership
 )
@@ -1073,3 +1074,86 @@ class ApiApplicationsTestCase(TestCase):
             content = json.loads(response.content.decode())
             self.assertEqual(response.status_code, 400)
             self.assertEqual(content["message"], "Token is invalid")
+
+    def test_analytics_num_requests_good_app_token_flow(self):
+        # Set up token
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+
+        token = app_.api_token
+
+        # Create some request objects
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="roombookings",
+                                   method="rooms",
+                                   queryparams="")
+
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="roombookings",
+                                   method="rooms",
+                                   queryparams="")
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/requests/total',
+            {
+                "token": token
+            }
+        )
+        response = number_of_requests(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["num"], 2)
+
+    def test_analytics_num_requests_good_oauth_token_flow(self):
+        # Set up token
+        dev_ = User.objects.create(
+            email="dev@ucl.ac.uk",
+            cn="dev",
+            given_name="Test Test",
+            employee_id="1"
+        )
+
+        user_ = User.objects.create(
+            email="user@ucl.ac.uk",
+            cn="user",
+            given_name="Test Test",
+            employee_id="2"
+        )
+
+        app_ = App.objects.create(user=dev_, name="An App")
+
+        token = OAuthToken.objects.create(app=app_, user=user_,
+                                          scope=app_.scope)
+
+        # Create some request objects
+
+        _ = APICall.objects.create(app=app_, user=dev_,
+                                   token_type="oauth",
+                                   service="timetable",
+                                   method="personal",
+                                   queryparams="", token=token)
+
+        _ = APICall.objects.create(app=app_, user=dev_,
+                                   token_type="oauth",
+                                   service="timetable",
+                                   method="personal",
+                                   queryparams="", token=token)
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/requests/total',
+            {
+                "token": token.token
+            }
+        )
+        response = number_of_requests(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["num"], 2)
