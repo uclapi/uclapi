@@ -26,7 +26,8 @@ class User(models.Model):
     raw_intranet_groups = models.CharField(max_length=2000)
     agreement = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
-    quota = models.IntegerField(default=10000)
+    dev_quota = models.IntegerField(default=10000)
+    oauth_quota = models.IntegerField(default=10000)
 
     class Meta:
         _DATABASE = 'default'
