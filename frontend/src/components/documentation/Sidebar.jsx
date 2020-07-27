@@ -139,6 +139,8 @@ const menuContents = {
       text: `Get People`,
       href: `#search/people`,
     },
+  ],
+  Timetable: [
     {
       text: `Get Personal Timetable`,
       href: `#timetable/personal`,
@@ -168,7 +170,9 @@ const menuContents = {
     {
       text: `Get Desktop Availability`,
       href: `#resources/desktops`,
-    },
+    }
+  ],
+  Workspaces: [
     {
       text: `Get Surveys`,
       href: `#workspaces/surveys`,
