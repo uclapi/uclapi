@@ -170,7 +170,7 @@ const menuContents = {
     {
       text: `Get Desktop Availability`,
       href: `#resources/desktops`,
-    }
+    },
   ],
   Workspaces: [
     {
