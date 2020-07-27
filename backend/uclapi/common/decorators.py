@@ -61,7 +61,7 @@ def log_api_call(request, token, token_type):
     queryparams = dict(request.GET)
 
     if token_type in {"general", "oauth"}:
-        parameters = {
+        _ = {
             "userid": token.user.id,
             "email": token.user.email,
             "name": token.user.given_name,
@@ -73,7 +73,7 @@ def log_api_call(request, token, token_type):
             "token_type": token_type
         }
     elif token_type == "general-temp":
-        parameters = {
+        _ = {
             "service": service,
             "method": method,
             "version-headers": version_headers,
@@ -82,16 +82,17 @@ def log_api_call(request, token, token_type):
             "token_type": token_type
         }
 
+
 def throttle_api_call(token, token_type):
     if token_type == 'general':
         cache_key = token.user.email
-        limit = 10000
+        limit = token.user.quota
     elif token_type == 'general-temp':
         cache_key = token
         limit = 10
     elif token_type == 'oauth':
         cache_key = token.user.email
-        limit = 10000
+        limit = token.user.quota
     elif token_type == 'test-token':
         cache_key = token
         limit = 1
