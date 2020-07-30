@@ -78,7 +78,7 @@
     "babel-plugin-transform-imports": "^2.0.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "babelify": "^10.0.0",
-    "css-loader": "^4.0.0",
+    "css-loader": "^4.1.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.5.0",
     "eslint-import-resolver-alias": "^1.1.2",
