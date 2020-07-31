@@ -70,6 +70,9 @@ export default class GetEquiment extends React.Component {
         >
           <h1 id="search/people">Get People</h1>
           <p>
+            Endpoint: <code>https://uclapi.com/search/people</code>
+          </p>
+          <p>
             This endpoint returns matching people and information about them.
             </p>
           <p>
