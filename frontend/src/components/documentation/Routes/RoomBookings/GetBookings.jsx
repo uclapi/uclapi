@@ -70,6 +70,9 @@ export default class GetBookings extends React.Component {
             codeExamples={codeExamples}>
             <h1 id="roombookings/bookings">Get Bookings</h1>
             <p>
+              Endpoint: <code>https://uclapi.com/roombookings/bookings</code>
+            </p>
+            <p>
               This endpoint shows the results to a bookings or space availability query.
               It returns a paginated list of bookings. Note: This endpoint only returns publicly displayed bookings. Departmental bookings are not included.
             </p>

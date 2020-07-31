@@ -76,6 +76,9 @@ export default class GetEquiment extends React.Component {
           >
             <h1 id="resources/desktops">Get desktop availability.</h1>
             <p>
+              Endpoint: <code>https://uclapi.com/resources/desktops</code>
+            </p>
+            <p>
               This endpoint returns number of desktops
               and how many are free at the time of making the request.
             </p>
