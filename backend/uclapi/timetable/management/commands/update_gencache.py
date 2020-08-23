@@ -29,7 +29,7 @@ from roombookings.models import (
 from common.helpers import LOCAL_TIMEZONE
 
 from common.cachet import (
-    create_incident, delete_incident, CachetException, get_incident_name
+    create_incident, CachetException, get_incident_name
 )
 
 import gc
@@ -369,12 +369,13 @@ class Command(BaseCommand):
             incident_name = get_incident_name("Gencache")
             if incident_name:
                 try:
-                    delete_incident(incident_name)
+                    create_incident("Gencache Succeeded", incident_name, 4)
                 except CachetException as cachet_error:
-                    print(f"Failed to delete cachet incident. "
+                    print(f"Failed to create fixed cachet incident. "
                           f"Reason: {repr(cachet_error)}")
                 except Exception as cachet_error:
-                    print(f"Unexpected: Failed to delete cachet incident. "
+                    print(f"Unexpected: Failed to create fixed cachet "
+                          f"incident. "
                           f"Reason: {repr(cachet_error)}")
             else:
                 print("Could not find appropriate incident in Cachet!")
@@ -396,7 +397,7 @@ class Command(BaseCommand):
             incident_name = get_incident_name("Gencache")
             if incident_name:
                 try:
-                    create_incident(gencache_error, incident_name)
+                    create_incident(gencache_error, incident_name, 1)
                 except CachetException as cachet_error:
                     print(f"Failed to create cachet incident. "
                           f"Reason: {repr(cachet_error)}")
