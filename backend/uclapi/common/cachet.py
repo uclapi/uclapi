@@ -7,15 +7,17 @@ This file handles all things cachet. From creating incidents to deleting
 them when fixed. The results can be seen on our cachet status dashboard at
 https://cachet.apps.uclapi.com/ .
 
-Incidents can be added to components of which we currently have 6 indicating
+Incidents can be added to components of which we currently have 8 indicating
 problems with that specific system.
 List of components:
 Gencache-Staging,
 Occupeye-Staging,
 Occupeye-Mini-Staging,
+OAuth-Staging,
 Gencache-Prod,
 Occupeye-Prod,
-Occupeye-Mini-Prod
+Occupeye-Mini-Prod,
+OAuth-Prod
 
 You can add a component in the admin dashboard and then reference it using
 the functions in this file without finding out its ID or attached information.
@@ -55,36 +57,59 @@ def get_incident_name(base: str) -> str:
     return incident_name
 
 
-def create_incident(error_message: str, component_name: str):
+def create_incident(error_message: str, component_name: str, status: int):
     """
-    Create an incident with the error message specified for the component
-    name specified. This marks the status as 4 - major outage - and the
-    incident status as 1 - investigating.
+    Create an incident with the error message and status specified for the
+    component with its name specified . The status specified can be one of:
+    0 | Scheduled,
+    1 | Investigating,
+    2 | Identified,
+    3 | Watching,
+    4 | Fixed
+    If the incident is investigating then we set the component to an outage,
+    if the incident is set to fixed then the component is set to online.
 
     :param error_message: Error message to display on incident
     :type error_message: str
     :param component_name: Component name to create incident for
     :type component_name: str
+    :param status: Status for the incident
+    :type status: int
     """
 
     target_comp = _get_component(component_name)
 
     # If component is not already in an outage, create an incident and
     # change the components status
-    if target_comp["status"] == 1:
+    if status == 4 and target_comp["status"] == 1:
         incidents = cachet.Incidents(
             endpoint=settings.CACHET_URL,
             api_token=settings.CACHET_TOKEN
         )
-        message = (f"Gencache failed on "
+        message = (f"{component_name} failed on "
                    f"{settings.UCLAPI_DOMAIN_CURRENT}"
                    f" with error: {repr(error_message)}")
         incidents.post(
-            name='Gencache failed',
+            name=f"{component_name} failed",
             message=message,
             status=1,
             component_id=target_comp["id"],
             component_status=4
+        )
+    elif status == 1 and target_comp["status"] == 4:
+        incidents = cachet.Incidents(
+            endpoint=settings.CACHET_URL,
+            api_token=settings.CACHET_TOKEN
+        )
+        message = (f"{component_name} fixed on "
+                   f"{settings.UCLAPI_DOMAIN_CURRENT}"
+                   f" with status: {repr(error_message)}")
+        incidents.post(
+            name=f"{component_name} fixed",
+            message=message,
+            status=4,
+            component_id=target_comp["id"],
+            component_status=1
         )
 
 
