@@ -77,6 +77,10 @@ def authorise(request):
     target = request.build_absolute_uri(
         "/oauth/shibcallback?appdata={}".format(signed_data)
     )
+
+    if target[4] == ':':  # If using HTTP
+        target = "https"+target[4:]  # Make sure we return on HTTPs
+
     target = quote(target)
     url += target
 
