@@ -3,7 +3,6 @@ from .app_helpers import (
     generate_app_id,
     generate_app_client_id,
     generate_app_client_secret,
-    generate_temp_api_token,
     generate_secret
 )
 
@@ -27,6 +26,8 @@ class User(models.Model):
     raw_intranet_groups = models.CharField(max_length=2000)
     agreement = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
+    dev_quota = models.IntegerField(default=10000)
+    oauth_quota = models.IntegerField(default=10000)
 
     class Meta:
         _DATABASE = 'default'
@@ -88,6 +89,7 @@ class App(models.Model):
 
     class Meta:
         _DATABASE = 'default'
+
 
 class APICall(models.Model):
     ts = models.DateTimeField(auto_now_add=True)
