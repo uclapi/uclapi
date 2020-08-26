@@ -91,7 +91,7 @@ def throttle_api_call(token, token_type):
         cache_key = token
         limit = 10
     elif token_type == 'oauth':
-        cache_key = token.user.email
+        cache_key = "oauth:" + token.user.email
         limit = token.user.oauth_quota
     elif token_type == 'test-token':
         cache_key = token
