@@ -85,6 +85,7 @@ class Dashboard extends React.Component {
             text="Enter the name of your new project"
             success={(value) => { actions.addNewProject(value) }}
             fail={() => { this.setState({ view: `default` }) }}
+            shouldCheckValue={false}
           />
         </Modal>
 
