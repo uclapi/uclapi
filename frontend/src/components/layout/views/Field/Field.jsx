@@ -1,6 +1,3 @@
-/* eslint-disable react/prop-types */
-
-// React
 import {
   cancelIcon,
   copyIcon,
@@ -8,9 +5,9 @@ import {
   refreshIcon,
   saveIcon,
 } from 'Layout/Icons.jsx'
-// Components
 import { Container } from 'Layout/Items.jsx'
 import React from 'react'
+import './Field.scss'
 
 /**
 A generic field that is styled to fit in with the dashboard,
@@ -148,17 +145,11 @@ export default class Field extends React.Component {
     const state = this.doesExist(onSave) ? (
       isEditing ? `editing` : `not-editing`
     ) : `uneditable`
-    const fieldClass = `field-container-` + state
-    const fieldInputClass = `field-input-` + state
-    const fieldHeight = `55px`
 
     return (
-    <>
-      {/*<TextView text={title} color="white" heading={6} align={`left`} />*/}
-                            
+    <>                            
       <Container 
-        className={fieldClass}
-        height={fieldHeight} 
+        className={[`field-container`, state].join(` `)}
         onClick={this.toggleEditing}
         noPadding
       >
@@ -166,13 +157,12 @@ export default class Field extends React.Component {
 
         <input ref={fieldRef}
           type="text"
-          className={fieldInputClass}
+          className={[`field-input`, state].join(` `)}
           readOnly={!isEditing} 
           // eslint-disable-next-line react/jsx-no-bind
           onChange={isEditing ? () => { this.save(false) } : null } 
           onKeyDown={this.onKeyDown}
           value={value}
-          style={{ height: fieldHeight }}
         />
 
         {canCopy ? copyIcon(() => { this.copy() }) : null}
