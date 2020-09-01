@@ -6,7 +6,6 @@ import editImage from 'Images/dashboard/edit.svg'
 import refreshImage from 'Images/dashboard/refresh.svg'
 import saveImage from 'Images/dashboard/save.svg'
 import deleteImage from 'Images/dashboard/trash.svg'
-import uncheckedImage from 'Images/dashboard/unchecked.svg'
 import React from 'react'
 // Base Icon
 import Icon from './views/Icon.jsx'
@@ -62,7 +61,7 @@ export const cancelIcon = (onClick, style) => (
 )
 
 /** CHECKED */
-export const checkedIcon = (onClick, style) => (
+export const checkedIcon = (style) => (
   <Icon image={checkedImage}
     description="Checked"
     onClick={null}
@@ -71,9 +70,8 @@ export const checkedIcon = (onClick, style) => (
 )
 
 /** UNCHECKED */
-export const uncheckedIcon = (onClick, style) => (
-  <Icon image={uncheckedImage}
-    description="Unchecked"
+export const uncheckedIcon = (style) => (
+  <Icon image={null}
     onClick={null}
     style={style}
   /> 
