@@ -30,12 +30,8 @@
 **/
 
 /** Setup **/
-
+@import '../core.scss';
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
-@import '~include-media/dist/_include-media.scss';
-
-$break-small: 780px;
-$breakpoints: (phone: 768px, tablet: 992px, desktop: 1200px);
 
 html,
 button,
@@ -51,41 +47,6 @@ body {
   height: 100%;
   width: 100%;
 }
-
-/** Color Scheme **/
-
-$primary-color: #296da7;
-$primary-highlight-color: #3498db;
-
-$secondary-color: #313537;
-
-$accent-color: #8d6e63;
-$highlight-color: #b18453;
-
-$color-black: black;
-$color-grey-dark: #313537;
-$color-grey-mid: #75797b;
-$color-grey-light: #bbb;
-$color-grey-light2: #ccc;
-$color-white: white;
-
-$color-red: red;
-
-$color-remove: #ca3c3c;
-$color-remove-highlight: rgb(151, 44, 44);
-
-$color-green-market: #03b77b;
-
-$color-black-transparent-0: rgba(0, 0, 0, 0);
-$color-black-transparent-02: rgba(0, 0, 0, 0.2);
-$color-black-transparent-04: rgba(0, 0, 0, 0.4);
-$color-black-transparent-045: rgba(0, 0, 0, 0.45);
-
-$color-white-transparent-0: rgba(255, 255, 255, 0);
-$color-white-transparent-0455: rgba(255, 255, 255, 0.455);
-
-$color-facebook: #3b5998;
-$color-twitter: #38a1f3;
 
 html,
 body {
@@ -287,7 +248,7 @@ a {
 
 .alternate-button:hover,
 .image-button:hover,
-.uclapi-card-clicked-alternate:hover { background-color: $color-grey-light2; }
+.uclapi-card-clicked-alternate:hover { background-color: $color-grey-lighter; }
 
 .emphasis-button, {
   background-color: lighten($primary-highlight-color, 10%);
@@ -392,10 +353,9 @@ a {
 
 .rc-collapse {
   background-color: $secondary-color;
-  border-radius: 10px;
+  border-radius: 1rem;
   box-shadow: 0 4px 8px 0 $color-black-transparent-02;
   color: $color-white;
-  margin: 5px 0;
 
   @media screen and (max-width: $break-small) {
     font-size: 18px;
@@ -439,9 +399,8 @@ a {
   }
 
   p {
-    color: $color-white;
+    color: #fff;
     font-size: 14px;
-    margin-top: 10px;
     text-align: justify;
   }
 }
@@ -526,68 +485,6 @@ input[type='checkbox']:checked + span {
       }
     }
   }
-}
-
-.settings-section {
-  justify-content: unset;
-  padding: 0;
-
-  h4 {
-    margin: 10px 0;
-  }
-}
-
-.field-container-editing,
-.field-container-not-editing,
-.field-container-uneditable {
-  box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.5);
-  display: flex;
-  float: left;
-  height: 50px;
-  transition: background-color 0.2s;
-  width: 100%;
-}
-
-.field-container-editing {
-  background-color: #22638f;
-  cursor: unset;
-}
-
-.field-container-not-editing {
-  background-color: #3498db;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #2b7cb3;
-    cursor: pointer;
-  }
-}
-
-.field-container-uneditable {
-  background-color: #6cb8eb;
-  cursor: unset;
-}
-
-.field-input-editing,
-.field-input-not-editing,
-.field-input-uneditable {
-  background-color: transparent;
-  color: white;
-  margin: unset;
-  padding: 8px 15px;
-  text-align: left;
-}
-.field-input-editing { cursor: unset; }
-.field-input-uneditable { cursor: unset; }
-.field-input-not-editing { cursor: pointer; }
-
-.field-label {
-  color: black;
-  font-size: small;
-  font-style: italic;
-  left: 15px;
-  position: absolute;
-  top: 8px;
 }
 
 .icon-wrapper {
@@ -800,33 +697,4 @@ div.uclapi-card-github {
 
 .confirm-box-container {
   padding: 15px 0;
-}
-
-/** Specific dashboard stylings **/
-
-.app-holder,
-.settings-collapse {
-  .rc-collapse {
-    background-color: $color-grey-dark;
-    flex: 0 0 100%;
-
-    .rc-collapse-header {
-      color: white;
-      font-family: 'Source Sans Pro', 'Roboto', sans-serif;
-    }
-
-    .rc-collapse-content {
-      padding: 0;
-    }
-
-    .rc-collapse-content > .rc-collapse-content-box {
-      margin-bottom: 0;
-    }
-  }
-}
-
-.app-holder {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
 }
