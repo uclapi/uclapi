@@ -1,36 +1,5 @@
 @import './helpers';
-
-/** Color Scheme **/
-
-$primary-color: #296da7;
-$primary-highlight-color: #3498db;
-
-$secondary-color: #313537;
-
-$accent-color: #8d6e63;
-$highlight-color: #b18453;
-
-$color-black: black;
-$color-grey-dark: #313537;
-$color-grey-mid: #75797b;
-$color-grey-light: #bbb;
-$color-grey-light2: #ccc;
-$color-white: white;
-
-$color-red: red;
-
-$color-green-market: #03b77b;
-
-$color-black-transparent-0: rgba(0, 0, 0, 0);
-$color-black-transparent-02: rgba(0, 0, 0, 0.2);
-$color-black-transparent-04: rgba(0, 0, 0, 0.4);
-$color-black-transparent-045: rgba(0, 0, 0, 0.45);
-
-$color-white-transparent-0: rgba(255, 255, 255, 0);
-$color-white-transparent-0455: rgba(255, 255, 255, 0.455);
-
-$color-facebook: #3b5998;
-$color-twitter: #38a1f3;
+@import './core.scss';
 
 body,
 html {
