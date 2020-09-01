@@ -13,20 +13,12 @@ $field-height: 4rem;
     width: 100%;
   }
 
-  &.editing {
-    
-  }
-
   &.not-editing {
-    
     cursor: pointer;
 
     &:hover {
       cursor: pointer;
     }
-  }
-
-  &.uneditable {
   }
 
   &.uneditable,

@@ -10,7 +10,7 @@
 
   .navbar {
     @include box-shadow(1);
-  
+
     align-items: center;
     background-color: white;
     border-bottom: 1px solid rgba(0, 0, 0, 0.14);
@@ -19,12 +19,12 @@
     position: fixed;
     top: 0;
     width: 100%;
-  
+
     img {
       height: $navbar-height - 15px;
       margin-left: 25px;
     }
-  
+
     .logo-text {
       display: inline;
       font-size: 2em;
@@ -34,18 +34,17 @@
 
   > .container.splash-parallax {
     > .no-vertical-align {
-      > .row {
-        > .column {
-          flex-wrap: unset;
-          > h1,
-          > h3 {
-            text-align: left;
-          }
+      > .row > .column {
+        flex-wrap: unset;
+
+        > h1,
+        > h3 {
+          text-align: left;
         }
       }
     }
   }
-  
+
   .app-holder,
   .settings-collapse {
     .rc-collapse {
@@ -81,7 +80,7 @@
     .settings-section {
       justify-content: unset;
       padding: 0;
-    
+
       h4 {
         margin: 10px 0;
       }
