@@ -10,6 +10,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Modal from 'react-modal'
 import 'Styles/common/uclapi.scss'
+import 'Styles/dashboard.scss'
 import 'Styles/navbar.scss'
 // UI App Component
 import App from '../components/dashboard/App.jsx'
@@ -85,6 +86,7 @@ class Dashboard extends React.Component {
             text="Enter the name of your new project"
             success={(value) => { actions.addNewProject(value) }}
             fail={() => { this.setState({ view: `default` }) }}
+            shouldCheckValue={false}
           />
         </Modal>
 
@@ -122,24 +124,10 @@ class Dashboard extends React.Component {
               alignItems="column"
               style={{ margin: `auto` }}
             >
-              <TextView text={`Welcome, ` + name}
-                heading={1}
-                align={`left`}
-              />
-              <TextView text={`Your username is: ` + cn}
-                heading={2}
-                align={`left`}
-              />
+              <h1>Welcome, {name}</h1>
+              <h3>username: {cn}</h3>
 
               <div className="app-holder" style={styles.appHolder}>
-                {apps.map((app, index) => (
-                  <App
-                    key={app.name}
-                    app={app}
-                    index={index}
-                    actions={actions}
-                  />
-                ))}
                 {apps.length === 0 ? (
                   <CardView width='1-1' type='default' noPadding>
                     <Row noPadding>
@@ -162,7 +150,14 @@ class Dashboard extends React.Component {
                       </Column>
                     </Row>
                   </CardView>
-                ) : null}
+                ) : apps.map((app, index) => (
+                  <App
+                    key={app.name}
+                    app={app}
+                    index={index}
+                    actions={actions}
+                  />
+                ))}
               </div>
             </Column>
           </Row>
@@ -170,9 +165,11 @@ class Dashboard extends React.Component {
             <ButtonView 
               text={`+`}
               type={`default`}
-              style={{ cursor: `pointer`,
-borderRadius: `10px`,
-padding: `20px 25px`}}
+              style={{
+                cursor: `pointer`,
+                borderRadius: `10px`,
+                padding: `20px 25px`,
+              }}
               onClick={() => { this.setState({ view: `add-project` }) }}
               fakeLink
               centred
@@ -251,10 +248,7 @@ padding: `20px 25px`}}
   }
 
   saveOAuthCallback = (index, value) => {
-    if (value.startsWith(`https://`) ||
-      value.startsWith(`http://`) ||
-      value == ``
-    ) {
+    if (value.startsWith(`https://`) || value == ``) {
       const { data } = this.state
       data.apps[index].oauth.callback_url = value
 
@@ -262,11 +256,16 @@ padding: `20px 25px`}}
         `/dashboard/api/setcallbackurl/`,
         `app_id=` + data.apps[index].id + `&callback_url=` + value,
         (json) => {
-          console.log(json)
+          const { success, message } = json
+          if(!success){
+            window.alert(message)
+          }
         }
       )
 
       this.setState({ data: data })
+    } else {
+      window.alert(`Must start with https://`)
     }
   }
 
@@ -332,6 +331,8 @@ padding: `20px 25px`}}
       || value == ``
     ) {
       this.updateWebhookSettings({ url: value }, index)
+    } else {
+      window.alert(`Must start with https:// or http://`)
     }
   }
 
@@ -371,7 +372,10 @@ padding: `20px 25px`}}
       parameters,
       (json) => {
         console.log(`For parameters: ` + parameters)
-        console.log(json)
+        const { ok, message } = json
+        if(!ok){
+          window.alert(message)
+        }
       }
     )
 
