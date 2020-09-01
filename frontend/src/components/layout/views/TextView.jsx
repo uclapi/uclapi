@@ -1,6 +1,3 @@
-/* eslint-disable react/prop-types */
-// remove this ^ when ready to add prop-types
-
 import React from 'react'
 
 /**
@@ -51,22 +48,18 @@ export default class TextView extends React.Component {
 
   render() {
 
-    const removeDuplicatedStyles = {...this.state.style}
+    const { style = {}, link = `#` } = this.state
+    const { text = `` } = this.props
+    const removeDuplicatedStyles = {...style}
     removeDuplicatedStyles[`top`] = `0`
 
     return (
-      <this.state.heading style={this.state.style}>
-        {this.state.link ? (
-          <a className='default-transition color-transition' href={this.props.link}>
-            <div style={removeDuplicatedStyles}>
-              {this.props.text}
-            </div>
+      <this.state.heading style={style}>
+        {link ? (
+          <a className='default-transition color-transition' href={link}>
+            {text}
           </a>
-        ) : (
-            <div style={removeDuplicatedStyles}>
-              {this.props.text}
-            </div>
-          )}
+        ) : text}
       </this.state.heading>
     )
   }

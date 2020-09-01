@@ -40,12 +40,16 @@ export default class ConfirmBox extends React.Component {
 
     if(shouldCheckValue && value == check) {
       canSubmit = true
-    } else if(value != ``){
+    } else if(value === ``){
       canSubmit = false
     }
 
+    if(!shouldCheckValue){
+      canSubmit = true
+    }
+
     if(this.DEBUGGING) {
-      console.log(`canSubmit: ${canSubmit} value: ${value} against: ${check}`)
+      console.log(`canSubmit: ${canSubmit} value: ${value} against: ${check}, should check: ${shouldCheckValue}`)
     }
 
     this.setState({
