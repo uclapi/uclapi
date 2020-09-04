@@ -143,13 +143,15 @@ export class AppPage extends React.Component {
                           width='2-3'
                           horizontalAlignment='center'
                         >
-                          <Button text={x.name}
+                          <Button
                             link={x.link}
                             type={`alternate`}
                             key={key}
                             centred
                             style={{ width: `100px` }}
-                          />
+                          >
+                            {x.name}
+                          </Button>
                         </Row>
                       </Container>
                     ))}
@@ -204,7 +206,7 @@ export class AppPage extends React.Component {
                             key={x.name}
                             style={{ minHeight: `unset` }}
                           >
-                            <Button text={x.name}
+                            <Button
                               link={x.link}
                               type={`alternate`}
                               key={key}
@@ -212,7 +214,9 @@ export class AppPage extends React.Component {
                                 margin: `0`,
                                 width: `75px`,
                               }}
-                            />
+                            >
+                              {x.name}
+                            </Button>
                           </Container>
                         ))}
                       </Column>

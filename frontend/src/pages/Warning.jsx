@@ -54,12 +54,13 @@ const Warning = () => {
                 key={key}
               />
             )}
-            <Button 
-              text={`Home`} 
+            <Button
               link={`/`} 
               centred 
-            />
-          </Column>            
+            >
+              Home
+            </Button>
+          </Column>
         </Row>
       </Container>
       <Footer />

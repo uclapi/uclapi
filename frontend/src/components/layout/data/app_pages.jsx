@@ -61,13 +61,14 @@ const roombuddydescription = (
     Submit a pull request:`}
     />
     <Button type={`alternate`}
-      text={`VISIT GITHUB`}
       style={{
         'margin': `auto`,
         'display': `flex`,
       }}
       link={`https://github.com/uclapi/ucl-assistant-app`}
-    />
+    >
+      VISIT GITHUB
+    </Button>
     <TextView
       heading={`5`}
       text={`This app and its platform have been 
@@ -125,13 +126,14 @@ const uclassistantdescription = (
     />
     <Button type={`alternate`}
       isCentered
-      text={`VISIT GITHUB`}
       style={{
         'margin': `auto`,
         'display': `flex`,
       }}
       link={`https://github.com/uclapi/ucl-assistant-app`}
-    />
+    >
+      VISIT GITHUB
+    </Button>
     <TextView heading={`5`}
       text={`This app and its platform have 
     been built by the UCL API Team, a group of students

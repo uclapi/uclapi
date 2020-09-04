@@ -103,19 +103,21 @@ export default class ConfirmBox extends React.Component {
                 keepInline
               >
                 <Button 
-                  text={`Submit`} 
                   type={`alternate`} 
                   onClick={this.success} 
                   fakeLink 
                   style={{ cursor: `pointer` }} 
-                />
-                <Button 
-                  text={`Cancel`} 
+                >
+                  Submit
+                </Button>
+                <Button
                   type={`remove`} 
                   onClick={fail} 
                   fakeLink 
                   style={{ cursor: `pointer` }} 
-                />
+                >
+                  Cancel
+                </Button>
               </Column>
             </Row>
           </Container>

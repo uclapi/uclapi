@@ -110,8 +110,8 @@ class HomePage extends React.Component {
               horizontalAlignment='center'
               alignItems='row'
             >
-              <Button text={startLabel} link={`/dashboard`} />
-              <Button text={`DOCS`} link={`/docs`} type={`alternate`} />
+              <Button link={`/dashboard`}>{startLabel}</Button>
+              <Button link={`/docs`} type={`alternate`}>DOCS</Button>
             </Row>
 
           </Row>
@@ -376,15 +376,17 @@ class HomePage extends React.Component {
                 alignItems='row'
               >
                 <Button
-                  text={`MARKETPLACE`}
                   link={`/marketplace`}
                   type='alternate'
-                />
+                >
+                  MARKETPLACE
+                </Button>
                 <Button
-                  text={`UCL ASSISTANT`}
                   link={`/marketplace/uclassistant`}
                   type='alternate'
-                />
+                >
+                  UCL ASSISTANT
+                </Button>
             </Row>
             </Column>
           </Row>

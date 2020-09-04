@@ -105,12 +105,13 @@ class SettingsLayout extends React.Component {
                   <Button
                     type="alternate"
                     link={`/logout`}
-                    text={`Logout`}
                     style={{
                       float: `right`,
                       cursor: `pointer`,
                     }}
-                  />
+                  >
+                    Logout
+                  </Button>
                 </CardView>
               </Row>
             </Container>
@@ -178,7 +179,7 @@ class SettingsLayout extends React.Component {
                       align="left"
                       heading="5"
                     />
-                    <Button text="Download"
+                    <Button
                       type="alternate"
                       link={`/marketplace/uclassistant`}
                       centred
@@ -186,7 +187,9 @@ class SettingsLayout extends React.Component {
                         marginTop: `20px`,
                         marginBottom: 0,
                       }}
-                    />
+                    >
+                      Download
+                    </Button>
                   </Column>
                 </Row>
               </Container>
@@ -239,12 +242,13 @@ class SettingsLayout extends React.Component {
                                 onClick={
                                   this.handleChange(app.app.client_id, i)
                                 }
-                                text={`Revoke Permissions`}
                                 style={{
                                   cursor: `pointer`,
                                   float: `right`,
                                 }}
-                              />
+                              >
+                                Revoke Permissions
+                              </Button>
                             </CardView>
                           </Row>
                         ) : null}

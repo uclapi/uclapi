@@ -213,12 +213,13 @@ export default class App extends React.Component {
               </Column>
 
               <Button
-                text={`Delete`} 
                 type={`remove`} 
                 onClick={() => { actions.deleteConfirm(index) }} 
                 fakeLink 
                 style={{ cursor: `pointer` }} 
-              />
+              >
+                Delete
+              </Button>
             </Column>
           </Row>
         </Container>

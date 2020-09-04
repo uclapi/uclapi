@@ -5,7 +5,7 @@ const Button = ({
   className,
   link,
   onClick,
-  text, // usually ALL CAPS
+  children,
   style = {},
   centred = false, // if added will center the button inside its parent
   type = `default`,
@@ -18,7 +18,7 @@ const Button = ({
     `background-color-transition`,
     `${type}-button`,
     className,
-  ]
+  ].join(` `)
 
   const buttonStyle = {
     ...style,
@@ -31,14 +31,14 @@ const Button = ({
 
   return link ? (
     <a href={link} className={componentClass} style={buttonStyle}>
-      {text}
+      {children}
     </a>
   ) : (
     <div className={componentClass}
       style={buttonStyle}
       onClick={onClick}
     >
-      {text}
+      {children}
     </div>
   )
 }

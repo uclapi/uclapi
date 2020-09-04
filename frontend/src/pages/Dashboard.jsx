@@ -162,8 +162,7 @@ class Dashboard extends React.Component {
             </Column>
           </Row>
           <Row width='1-1'>
-            <Button 
-              text={`+`}
+            <Button
               type={`default`}
               style={{
                 cursor: `pointer`,
@@ -171,9 +170,10 @@ class Dashboard extends React.Component {
                 padding: `20px 25px`,
               }}
               onClick={() => { this.setState({ view: `add-project` }) }}
-              fakeLink
               centred
-            />
+            >
+              +
+            </Button>
         </Row>
         </Container>
         <Footer />

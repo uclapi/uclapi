@@ -4,6 +4,7 @@ import {
 } from '@material-ui/core'
 import { Button } from 'Layout/Items.jsx'
 import React, { useCallback, useState } from 'react'
+import { FiSidebar } from 'react-icons/fi'
 import Menu from './MenuContent.jsx'
 import './Sidebar.scss'
 
@@ -21,10 +22,12 @@ const Sidebar = () => {
         </Drawer>
       </div>
       <div className="mobile tablet">
-        <Button text={`≡`}
+        <Button
           onClick={toggleOpen}
           className="hamburger-button"
-        />
+        >
+          <FiSidebar />
+        </Button>
 
         <SwipeableDrawer
           open={isOpen}
