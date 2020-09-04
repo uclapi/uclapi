@@ -46,7 +46,8 @@
           "^curl -G",
           "^fetch\\(\"",
           "^token=",
-          "^[ \n]*<svg"
+          "^[ \n]*<svg",
+          "^<a href="
         ]
       }
     ],

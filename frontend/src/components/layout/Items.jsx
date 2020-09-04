@@ -10,7 +10,7 @@ import AutoCompleteView from './views/AutoCompleteView.jsx'
 import Button from './views/Button'
 import CardView from './views/CardView.jsx'
 import CheckBox from './views/CheckBox'
-import CodeView from './views/CodeView.jsx'
+import Code from './views/Code'
 import ConfirmBox from './views/ConfirmBox.jsx'
 import Field from './views/Field'
 import ImageView from './views/ImageView.jsx'
@@ -24,7 +24,7 @@ export {
   Button,
   CardView,
   ImageView,
-  CodeView,
+  Code,
   Demo,
   NavBar,
   Footer,

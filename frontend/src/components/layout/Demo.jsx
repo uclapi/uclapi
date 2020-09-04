@@ -1,11 +1,14 @@
-import 'whatwg-fetch'
-
 import {
   grey,
   pink,
 } from '@material-ui/core/colors'
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
+// Required components
+import rooms from 'Layout/data/room_names.jsx'
+import { AutoCompleteView, Code, Container, Row } from 'Layout/Items.jsx'
 import React from 'react'
+import 'whatwg-fetch'
+
 
 const {
   100: grey100,
@@ -27,9 +30,6 @@ const muiTheme = createMuiTheme({
   },
 })
 
-// Required components
-import rooms from 'Layout/data/room_names.jsx'
-import { AutoCompleteView, CodeView, Container,Row } from 'Layout/Items.jsx'
 
 export default class Demo extends React.Component {
   constructor(props) {
@@ -76,12 +76,12 @@ export default class Demo extends React.Component {
           <Container height='20px' noPadding />
 
           <Row width='2-3' horizontalAlignment='center'>
-            <CodeView url={`${rootURL}/roombookings/bookings`} params={params} type={`request`} />
+            <Code url={`${rootURL}/roombookings/bookings`} params={params} type={`request`} />
           </Row>
 
           {response ? (
             <Row width='2-3' horizontalAlignment='center'>
-              <CodeView response={response} type={`response`} />
+              <Code response={response} type={`response`} />
             </Row>
           ) : null}
         </Container>

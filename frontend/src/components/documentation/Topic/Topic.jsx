@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 
-import { CodeView } from 'Layout/Items.jsx'
+import { Code } from 'Layout/Items.jsx'
 import React from 'react'
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter'
+import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars'
 import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript'
 import py from 'react-syntax-highlighter/dist/esm/languages/hljs/python'
 import sh from 'react-syntax-highlighter/dist/esm/languages/hljs/shell'
@@ -11,6 +12,7 @@ import './Topic.scss'
 SyntaxHighlighter.registerLanguage(`javascript`, js)
 SyntaxHighlighter.registerLanguage(`python`, py)
 SyntaxHighlighter.registerLanguage(`shell`, sh)
+SyntaxHighlighter.registerLanguage(`html`, html)
 
 /*
   This is the main component that contains content for the documentation.
@@ -37,7 +39,11 @@ const Topic = ({
 
   const codeType = noExamples
     ? `no-examples`
-    : (codeExamples.python == codeExamples.javascript)
+    : (
+      codeExamples.python
+      && codeExamples.python.length > 0
+      && codeExamples.python === codeExamples.javascript
+    )
       ? `response`
       : `raw-examples`
   
@@ -58,10 +64,10 @@ const Topic = ({
         */}
         {children}
         {codeType == `raw-examples` && (
-          <CodeView languages={codeExamples} type={codeType} />
+          <Code languages={codeExamples} type={codeType} />
         )}
         {codeType == `response` && (
-          <CodeView response={codeExamples.python} type={codeType} />
+          <Code response={codeExamples.python} type={codeType} />
         )}
       </div>
     </div>
