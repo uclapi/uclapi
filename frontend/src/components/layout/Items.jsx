@@ -7,7 +7,7 @@ import Demo from './Demo.jsx'
 import Footer from './Footer.jsx'
 import NavBar from './NavBar.jsx'
 import AutoCompleteView from './views/AutoCompleteView.jsx'
-import ButtonView from './views/ButtonView.jsx'
+import Button from './views/Button'
 import CardView from './views/CardView.jsx'
 import CheckBox from './views/CheckBox'
 import CodeView from './views/CodeView.jsx'
@@ -21,7 +21,7 @@ export {
   Row,
   Column,
   TextView,
-  ButtonView,
+  Button,
   CardView,
   ImageView,
   CodeView,

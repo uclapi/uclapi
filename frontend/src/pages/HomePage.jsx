@@ -9,7 +9,7 @@ import uclassistantmarket from 'Images/home-page/uclassistantmarket.png'
 import { endpoints, FAQ } from 'Layout/data/homepage_constants.jsx'
 // Components
 import {
-  ButtonView,
+  Button,
   CardView,
   Column,
   Container,
@@ -110,8 +110,8 @@ class HomePage extends React.Component {
               horizontalAlignment='center'
               alignItems='row'
             >
-              <ButtonView text={startLabel} link={`/dashboard`} />
-              <ButtonView text={`DOCS`} link={`/docs`} type={`alternate`} />
+              <Button text={startLabel} link={`/dashboard`} />
+              <Button text={`DOCS`} link={`/docs`} type={`alternate`} />
             </Row>
 
           </Row>
@@ -375,12 +375,12 @@ class HomePage extends React.Component {
                 horizontalAlignment='center'
                 alignItems='row'
               >
-                <ButtonView
+                <Button
                   text={`MARKETPLACE`}
                   link={`/marketplace`}
                   type='alternate'
                 />
-                <ButtonView
+                <Button
                   text={`UCL ASSISTANT`}
                   link={`/marketplace/uclassistant`}
                   type='alternate'

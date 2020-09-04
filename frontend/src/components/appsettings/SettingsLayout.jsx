@@ -3,7 +3,7 @@ import axios from 'axios'
 import uclassistantmarket from 'Images/home-page/uclassistantmarket.png'
 // Components
 import {
-  ButtonView, CardView, Column,
+  Button, CardView, Column,
   Container, ImageView,
   Row, TextView,
 } from 'Layout/Items.jsx'
@@ -102,7 +102,7 @@ class SettingsLayout extends React.Component {
                   noPadding
                   style={{ padding: cardPadding }}
                 >
-                  <ButtonView
+                  <Button
                     type="alternate"
                     link={`/logout`}
                     text={`Logout`}
@@ -161,20 +161,24 @@ class SettingsLayout extends React.Component {
                       align="left"
                     />
                     <TextView
-                      text={`UCL Assistant is a productivity app for students and staff at UCL. `
-                        + `It has been designed by students to be as reliable and user friendly `
-                        + `as possible.`}
+                      text={`UCL Assistant is a productivity app for `
+                        + `students and staff at UCL. `
+                        + `It has been designed by students to be as `
+                        + `reliable and user friendly as possible.`}
                       align="left"
                       heading="5"
                     />
                     <TextView
-                      text={`The app has many different features but one of our favourites is `
-                        + `the ability to view your timetable in a weekly view. The app highlights your`
-                        + `current commitments to save you time as you rush about University. Check it out below!`}
+                      text={`The app has many different features but one `
+                        + `of our favourites is `
+                        + `the ability to view your timetable in a weekly `
+                        + `view. The app highlights your current commitments `
+                        + `to save you time as you rush about University. `
+                        + `Check it out below!`}
                       align="left"
                       heading="5"
                     />
-                    <ButtonView text="Download"
+                    <Button text="Download"
                       type="alternate"
                       link={`/marketplace/uclassistant`}
                       centred
@@ -230,7 +234,7 @@ class SettingsLayout extends React.Component {
                               style={{ padding: cardPadding }}
                               noPadding
                             >
-                              <ButtonView
+                              <Button
                                 type="alternate"
                                 onClick={
                                   this.handleChange(app.app.client_id, i)

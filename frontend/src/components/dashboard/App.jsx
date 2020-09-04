@@ -3,7 +3,7 @@
 import { styles } from 'Layout/data/dashboard_styles.jsx'
 // Components
 import {
-  ButtonView, CheckBox,
+  Button, CheckBox,
   Column, Container, Field, Row, TextView,
 } from 'Layout/Items.jsx'
 // External dependencies
@@ -212,7 +212,7 @@ export default class App extends React.Component {
                 />
               </Column>
 
-              <ButtonView
+              <Button
                 text={`Delete`} 
                 type={`remove`} 
                 onClick={() => { actions.deleteConfirm(index) }} 

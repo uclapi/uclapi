@@ -30,7 +30,12 @@
     "max-len": [
       "warn",
       {
-        "code": 80
+        "code": 80,
+        "ignoreComments": true,
+        "ignoreTrailingComments": true,
+        "ignoreUrls": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
       }
     ],
     "object-property-newline": "error",

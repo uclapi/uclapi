@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import Cookies from 'js-cookie'
 import { styles } from 'Layout/data/dashboard_styles.jsx'
 import {
-  ButtonView, CardView, Column, ConfirmBox,
+  Button, CardView, Column, ConfirmBox,
   Container, Footer, NavBar, Row, TextView,
 } from 'Layout/Items.jsx'
 import React from 'react'
@@ -162,7 +162,7 @@ class Dashboard extends React.Component {
             </Column>
           </Row>
           <Row width='1-1'>
-            <ButtonView 
+            <Button 
               text={`+`}
               type={`default`}
               style={{

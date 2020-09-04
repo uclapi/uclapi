@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 // Components
 import {
-  ButtonView, CardView, Column,
+  Button, CardView, Column,
   Container, Field, Row, TextView,
 } from 'Layout/Items.jsx'
 import React from 'react'
@@ -102,14 +102,14 @@ export default class ConfirmBox extends React.Component {
                 width="1-1"
                 keepInline
               >
-                <ButtonView 
+                <Button 
                   text={`Submit`} 
                   type={`alternate`} 
                   onClick={this.success} 
                   fakeLink 
                   style={{ cursor: `pointer` }} 
                 />
-                <ButtonView 
+                <Button 
                   text={`Cancel`} 
                   type={`remove`} 
                   onClick={fail} 

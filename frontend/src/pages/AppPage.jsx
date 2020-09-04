@@ -7,7 +7,7 @@
 import { allApps } from 'Layout/data/app_pages.jsx'
 // Common Components
 import {
-  ButtonView, CardView, Column, Container, Footer, ImageView,
+  Button, CardView, Column, Container, Footer, ImageView,
   NavBar, Row, TextView,
 } from 'Layout/Items.jsx'
 // Standard React imports
@@ -143,7 +143,7 @@ export class AppPage extends React.Component {
                           width='2-3'
                           horizontalAlignment='center'
                         >
-                          <ButtonView text={x.name}
+                          <Button text={x.name}
                             link={x.link}
                             type={`alternate`}
                             key={key}
@@ -204,7 +204,7 @@ export class AppPage extends React.Component {
                             key={x.name}
                             style={{ minHeight: `unset` }}
                           >
-                            <ButtonView text={x.name}
+                            <Button text={x.name}
                               link={x.link}
                               type={`alternate`}
                               key={key}
