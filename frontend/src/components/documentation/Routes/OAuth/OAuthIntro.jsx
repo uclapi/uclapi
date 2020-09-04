@@ -2,10 +2,8 @@
 
 import propTypes from 'prop-types'
 import React from 'react'
-
 import signInButton from './../../../../images/signInWithUCLAPI.png'
-import Topic from './../../Topic.jsx'
-
+import Topic from './../../Topic'
 
 const codeExamples = {
   python: `<a href="https://uclapi.com/oauth/authorise?client_id=CLIENT_ID&state=STATE">

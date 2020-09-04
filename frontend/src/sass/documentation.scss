@@ -88,16 +88,31 @@ a {
   box-sizing: border-box;
   margin-top: 60px;
   overflow-x: hidden;
-  padding: 2rem;
 
-  @media screen and (min-width: 1130px) {
+  @include media(">phone") {
     margin-left: 256px;
+  }
+
+  @include media("<=phone") {
+    padding-top: 3rem;
   }
 
   h1,
   h2 {
     margin-top: -80px;
     padding-top: 80px;
+    position: relative; // not static, so z-index has an effect
+    z-index: -1;
+  }
+
+  .col.text {
+    > p:first-of-type {
+      margin-top: 0;
+    }
+
+    > p:last-of-type {
+      margin-bottom: 0;
+    }
   }
 }
 

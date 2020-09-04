@@ -39,7 +39,17 @@
       }
     ],
     "object-property-newline": "error",
-    "no-secrets/no-secrets": "error",
+    "no-secrets/no-secrets": [
+      "error",
+      {
+        "ignoreContent": [
+          "^curl -G",
+          "^fetch\\(\"",
+          "^token=",
+          "^[ \n]*<svg"
+        ]
+      }
+    ],
     "react/jsx-indent-props": [
       "error",
       2
