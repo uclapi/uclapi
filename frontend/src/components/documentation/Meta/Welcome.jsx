@@ -1,6 +1,6 @@
 import React from 'react'
-
 import Topic from './../Topic.jsx'
+
 
 
 export default class Welcome extends React.Component {
@@ -62,8 +62,9 @@ export default class Welcome extends React.Component {
         <p>
           Much of the data available from the API is served from cache.
           Bookings and Timetable data are updated every twenty minutes from UCL,
-          and we update the Library Study Spaces (Workspaces) API
-          every two minutes.
+          and we update the&nbsp;
+          <a href="#workspaces">Library Study Spaces (Workspaces) API</a>
+          &nbsp;every two minutes.
           The <code>Last-Modified</code> header will provide the time that
           the most recent caching operation completed in&nbsp;
           <a href="https://stackoverflow.com/a/21121453">RFC 2616</a>
@@ -81,7 +82,9 @@ export default class Welcome extends React.Component {
         </p>
         <p>
           If you notice that the <code>Last-Modified</code> timestamp you see
-          is unreasonably old, please get in contact with us ASAP to report this
+          is unreasonably old, please&nbsp;
+          <a href="mailto:isd.apiteam@ucl.ac.uk">get in contact with us</a>
+          &nbsp;ASAP to report this
           as it may indicate very stale data and an issue at our end.
         </p>
       </Topic>
