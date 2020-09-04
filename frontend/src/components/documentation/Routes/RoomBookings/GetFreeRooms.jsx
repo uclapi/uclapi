@@ -163,18 +163,13 @@ const GetFreeRooms = ({ activeLanguage }) => {
             name="location"
             extra="string"
             example="-"
-            description="Contains an object with two keys address, and coordinates. address contains an array of address information, which when combined will make up a complete address.
-coordinates contains a lat and lng key with the latitude and longitude of the room."
+            description="Contains an object with two keys address, and coordinates. address contains an array of address information, which when combined will make up a complete address. Coordinates contains a lat and lng key with the latitude and longitude of the room."
           />
         </Table>
       </Topic>
 
-      <Topic
-        noExamples
-      >
-        <Table
-          name="Errors"
-        >
+      <Topic noExamples>
+        <Table name="Errors">
           <Cell
             name="No token provided"
             description="Gets returned when you have not supplied a token in your request."

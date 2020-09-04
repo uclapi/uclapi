@@ -137,9 +137,9 @@ const WorkspacesGetSurveys = ({ activeLanguage }) => {
           (i.e. Gower Street, London),
           which may not be helpful.
           
-          If it is present, the
+          If it is present, the&nbsp;
           <code>location[coordinates]</code>
-          will generally be more precise.
+          &nbsp;will generally be more precise.
         </p>
         <Table
           name="Response"

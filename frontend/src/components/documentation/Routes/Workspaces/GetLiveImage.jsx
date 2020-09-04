@@ -68,7 +68,7 @@ const WorkspacesGetLiveImage = ({ activeLanguage }) => {
         </p>
         <p>
           This endpoint takes <code>survey_id</code> and
-          <code>map_id</code> as parameters and displays a
+          &nbsp;<code>map_id</code> as parameters and displays a
           dynamically generated SVG map,
           correct as of the time of the API call (aside from caching overhead),
           showing the map&apos;s plan image with a circle overlaid on each seat.
@@ -138,7 +138,7 @@ const WorkspacesGetLiveImage = ({ activeLanguage }) => {
             The response will be XML SVG data
             that contains a base64-encoded PNG map
             (the same data that is returned by
-            <code>/workspaces/images/map</code>)
+            &nbsp;<code>/workspaces/images/map</code>)
             and vector circles designating which seats are free and occupied.
             Each &lt;g&gt; SVG element contains an ID that corresponds to
             the sensor ID, where additional information about the sensor

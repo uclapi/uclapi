@@ -49,7 +49,7 @@ const StudentNumber = ({ activeLanguage }) => {
           Endpoint: <code>https://uclapi.com/oauth/user/studentnumber</code>
         </p>
         <p>
-          You can use the <code>oauth/user/data</code>
+          You can use the <code>oauth/user/data</code>&nbsp;
           endpoint to find out whether the user is a student
           before you call this endpoint.
           
@@ -57,8 +57,8 @@ const StudentNumber = ({ activeLanguage }) => {
           an error will be returned.
         </p>
         <p>
-          Please note: to use this endpoint you must have ticked the
-          <em>Student Number</em> scope for your application in the
+          Please note: to use this endpoint you must have ticked the&nbsp;
+          <em>Student Number</em> scope for your application in the&nbsp;
           <a href="/dashboard">Dashboard</a>.
           
           This piece of information has been separated from the others

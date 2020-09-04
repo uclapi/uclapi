@@ -153,14 +153,15 @@ const Webhooks = ({ activeLanguage }) => {
         <h2>Events</h2>
         <p>
           Whenever you receive data on your webhook we call that an “event”.
-          At the moment there are 2 events we send:
-          <code>challenge</code> and <code>bookings_changed</code>.</p>
+          At the moment there are 2 events we send:&nbsp;
+          <code>challenge</code> and <code>bookings_changed</code>.
+        </p>
         <p>
           Events are always delivered as POST requests to your webhook URL.
           The data will be JSON inside the body of the POST request.
-          Every event will contain at least 3 components:
-          <code>service</code>,
-          <code>name</code>,
+          Every event will contain at least 3 components:&nbsp;
+          <code>service</code>,&nbsp;
+          <code>name</code>,&nbsp;
           <code>verification_secret</code>.
           You can see an example on the right.
         </p>

@@ -60,7 +60,7 @@ const WorkspacesGetImage = ({ activeLanguage }) => {
           by the passed in <code>image_id</code>.
           
           Image IDs are provided by the <code>/workspaces/surveys</code>
-          endpoint within the array of maps.
+          &nbsp;endpoint within the array of maps.
           
           Each map has a corresponding image.
         </p>

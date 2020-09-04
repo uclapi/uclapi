@@ -77,7 +77,7 @@ const GetEquipment = ({ activeLanguage }) => {
             </p>
           <p>
             You need to supply a <code>token</code>,
-            <code>roomid</code>,
+            &nbsp;<code>roomid</code>,
             and <code>siteid</code> to get a response.
           </p>
 

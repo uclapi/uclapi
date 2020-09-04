@@ -60,18 +60,27 @@ const Token = ({ activeLanguage }) => (
         is requesting data from the API.
       </p>
 
-      <p>Tokens are a long string variable of numbers and letters.
-            e.g. <code>
-              uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb
-            </code>
+      <p>
+        Tokens are a long string variable of numbers and letters.
+        e.g. <code>
+          uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb
+        </code>
       </p>
 
-      <p>There are two different kinds of tokens you can work with:
-            </p>
+      <p>
+        There are two different kinds of tokens you can work with:
+      </p>
 
       <p>
         1.    Generic Tokens:
-        These are tokens that are used to request non-personal data. These tokens are used between applications and the API to request any sort of data that the app may need that is not tied to a specific student. For example, <a href="https://uclapi.com/docs#roombookings">UCL API’s Room booking service</a> uses tokens to return information about rooms, when they are booked and which UCL rooms are free.
+        These are tokens that are used to request non-personal data.
+        These tokens are used between applications and the API to request
+        any sort of data that the app may need that is not tied to a specific
+        student.
+        For example,&nbsp;
+        <a href="https://uclapi.com/docs#roombookings">UCL API’s Room booking service</a>
+        &nbsp;uses tokens to return information about rooms -
+        when they are booked and which UCL rooms are free.
       </p>
 
       <p>
@@ -82,7 +91,8 @@ const Token = ({ activeLanguage }) => (
         is when you sign in via UCL on an app.&nbsp;
         The app will then use a token to request a user’s personal data such as:
       </p>
-      <ul><li>Department</li>
+      <ul>
+        <li>Department</li>
         <li> Email </li>
         <li> Full name </li>
         <li> Given name </li>
@@ -92,7 +102,7 @@ const Token = ({ activeLanguage }) => (
       </ul>
       <p>
         <sup>*</sup>
-        To get this, you need to tick the
+        &nbsp;To get this, you need to tick the
         relevant scope in the dashboard before a user logs in.
         More on scopes <a href="https://uclapi.com/docs#oauth/meta">here</a>.
       </p>
@@ -114,8 +124,8 @@ const Token = ({ activeLanguage }) => (
       <p>
         To use this type of token for your app,
         you need to redirect the user to the
-        &quot;Authorise&quot; endpoint at:
-        <code>https://uclapi.com/oauth/authorise</code>
+        &quot;Authorise&quot; endpoint at:&nbsp;
+        <code>https://uclapi.com/oauth/authorise</code>&nbsp;
         which can be done directly or by including a “Sign in With UCL Button”
         in your app, such as the one provided below,
         which links users to the authorisation endpoint with
@@ -164,7 +174,7 @@ const Token = ({ activeLanguage }) => (
       <h2>Response</h2>
       <p>
         Redirection to authorise page.
-            </p>
+      </p>
     </Topic>
 
     <Topic

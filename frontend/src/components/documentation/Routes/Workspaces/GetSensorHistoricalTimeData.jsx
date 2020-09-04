@@ -112,7 +112,7 @@ const WorkspacesGetSensorHistoricalTimeData = ({ activeLanguage }) => {
           Endpoint: <code>https://uclapi.com/workspaces/sensors/averages/time</code>
         </p>
         <p>
-          This endpoint will show for every <code>survey_id</code>
+          This endpoint will show for every <code>survey_id</code>&nbsp;
           provided the average utilisation of the associated library
           at ten minute intervals throughout the day.
           
@@ -179,7 +179,7 @@ const WorkspacesGetSensorHistoricalTimeData = ({ activeLanguage }) => {
           This is because we perform an integer division calculation to
           get an average based on multiple days&apos; worth of data,
           so you may encounter
-          off-by-one errors if you check that
+          off-by-one errors if you check that&nbsp;
           <code>sensors_absent + sensors_occupied == sensors_total</code>.
           
           Please do not be alarmed by this!
@@ -197,7 +197,7 @@ const WorkspacesGetSensorHistoricalTimeData = ({ activeLanguage }) => {
           not properly been saved by our data provider.
           
           In cases like this, our response to your app will include an empty
-          <code>averages</code> object with no times within it.
+          &nbsp;<code>averages</code> object with no times within it.
           
           Your code should account for this possibility by checking whether
           each time period is actually present.

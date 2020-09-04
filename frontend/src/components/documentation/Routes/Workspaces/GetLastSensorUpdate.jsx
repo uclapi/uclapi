@@ -84,10 +84,10 @@ const WorkspacesGetLastSensorUpdate = ({ activeLanguage }) => {
             <h2>Response</h2>
             <p>
               This endpoint will return a dictionary with the
-              ID of the survey requested and an
+              ID of the survey requested and an&nbsp;
               <a href="https://www.iso.org/iso-8601-date-and-time-format.html">
                 ISO8601-formatted
-              </a>
+              </a>&nbsp;
               timestamp with the last time new data was sent
               from a sensor to the Cad-Capture backend.
             </p>

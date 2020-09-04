@@ -123,7 +123,7 @@ const WorkspacesGetSensorsSummary = ({ activeLanguage }) => {
           sequential requests to fetch survey sensor counts.
         </p>
         <p>
-          This endpoint takes into account UCL&apos;s
+          This endpoint takes into account UCL&apos;s&nbsp;
           <a href="https://www.ucl.ac.uk/library/sites/seats/study-space-availability-faqs">
             thirty minute rule
           </a>,

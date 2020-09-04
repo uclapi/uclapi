@@ -77,7 +77,7 @@ const responseCodeExample = {
 
 const GetPersonalTimetable = ({ activeLanguage }) => {
   return (
-    <div>
+    <>
       <Topic
         activeLanguage={activeLanguage}
         codeExamples={codeExamples}
@@ -263,7 +263,7 @@ const GetPersonalTimetable = ({ activeLanguage }) => {
           />
         </Table>
       </Topic>
-    </div>
+    </>
   )
 }
 

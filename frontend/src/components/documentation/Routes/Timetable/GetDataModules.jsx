@@ -296,12 +296,8 @@ const GetDataModules = ({ activeLanguage }) => {
         </Table>
       </Topic>
 
-      <Topic
-        noExamples
-      >
-        <Table
-          name="Errors"
-        >
+      <Topic noExamples>
+        <Table name="Errors">
           <Cell
             name="No token provided"
             description="Gets returned when you have not supplied a token in your request."
