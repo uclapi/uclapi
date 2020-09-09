@@ -116,10 +116,16 @@ def cache_table_process(index, destination_table_index, options):
     if table_data[5]:
         oracle_cursor = connections['roombookings'].cursor()
         if table_data[3]:
-            query = "SELECT COUNT(SETID) FROM {} WHERE SETID = '{}'".format(
-                table_data[0]._meta.db_table,
-                settings.ROOMBOOKINGS_SETID
-            )
+            if index == 0:
+                query = "SELECT COUNT(SETID) FROM (SELECT DISTINCT * FROM {} WHERE SETID = '{}')".format(
+                    table_data[0]._meta.db_table,
+                    settings.ROOMBOOKINGS_SETID
+                )
+            else:
+                query = "SELECT COUNT(SETID) FROM {} WHERE SETID = '{}'".format(
+                    table_data[0]._meta.db_table,
+                    settings.ROOMBOOKINGS_SETID
+                )
         else:
             query = "SELECT COUNT(*) FROM {}".format(
                 table_data[0]._meta.db_table
@@ -130,10 +136,16 @@ def cache_table_process(index, destination_table_index, options):
         total_records = count_data[0]
 
         if table_data[3]:
-            query = "SELECT * FROM {} WHERE SETID = '{}'".format(
-                table_data[0]._meta.db_table,
-                settings.ROOMBOOKINGS_SETID
-            )
+            if index == 0:
+                query = "SELECT DISTINCT * FROM {} WHERE SETID = '{}'".format(
+                    table_data[0]._meta.db_table,
+                    settings.ROOMBOOKINGS_SETID
+                )
+            else:
+                query = "SELECT * FROM {} WHERE SETID = '{}'".format(
+                    table_data[0]._meta.db_table,
+                    settings.ROOMBOOKINGS_SETID
+                )
         else:
             query = "SELECT * FROM {}".format(
                 table_data[0]._meta.db_table
