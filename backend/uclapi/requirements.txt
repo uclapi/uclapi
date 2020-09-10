@@ -1,7 +1,7 @@
 amqp==2.6.1
 autopep8==1.5.4
-boto3==1.14.52
-botocore==1.17.52
+boto3==1.14.58
+botocore==1.17.58
 celery==4.4.7
 certifi==2020.6.20
 chardet==3.0.4
@@ -17,7 +17,7 @@ django-storages==1.10
 djangorestframework==3.11.1
 django-postgrespool2==1.0.1
 docutils==0.16
-eventlet==0.26.1
+eventlet==0.27.0
 gevent==20.6.2
 freezegun==0.3.15
 flake8==3.8.3
