@@ -33,7 +33,7 @@ lxml==4.5.2
 Markupsafe==1.1.1
 mock==4.0.2
 model-mommy==2.0.0
-pbr==5.4.5
+pbr==5.5.0
 pycodestyle==2.6.0
 pycryptodome==3.9.8
 python-cachetclient==0.2.5
