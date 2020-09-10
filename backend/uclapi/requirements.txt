@@ -1,4 +1,4 @@
-amqp==2.6.1
+amqp==5.0.1
 autopep8==1.5.4
 boto3==1.14.58
 botocore==1.17.58
@@ -19,7 +19,7 @@ django-postgrespool2==1.0.1
 docutils==0.16
 eventlet==0.27.0
 gevent==20.6.2
-freezegun==0.3.15
+freezegun==1.0.0
 flake8==3.8.3
 greenlet==0.4.16
 gunicorn==20.0.4
