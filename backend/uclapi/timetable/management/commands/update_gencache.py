@@ -29,8 +29,10 @@ from roombookings.models import (
 from common.helpers import LOCAL_TIMEZONE
 
 from common.cachet import (
-    create_incident, CachetException, get_incident_name
+    create_incident, CachetException, get_incident_name, update_incident
 )
+
+from cachetclient.v1 import enums
 
 import gc
 
@@ -357,7 +359,8 @@ class Command(BaseCommand):
             incident_name = get_incident_name("Gencache")
             if incident_name:
                 try:
-                    create_incident("Gencache Succeeded", incident_name, 4)
+                    update_incident("Gencache Succeeded", incident_name,
+                                    enums.INCIDENT_FIXED)
                 except CachetException as cachet_error:
                     print(f"Failed to create fixed cachet incident. "
                           f"Reason: {repr(cachet_error)}")
@@ -385,7 +388,9 @@ class Command(BaseCommand):
             incident_name = get_incident_name("Gencache")
             if incident_name:
                 try:
-                    create_incident(gencache_error, incident_name, 1)
+                    create_incident(gencache_error, incident_name,
+                                    enums.INCIDENT_INVESTIGATING,
+                                    enums.COMPONENT_STATUS_MAJOR_OUTAGE)
                 except CachetException as cachet_error:
                     print(f"Failed to create cachet incident. "
                           f"Reason: {repr(cachet_error)}")
