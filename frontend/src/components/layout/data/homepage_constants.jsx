@@ -53,7 +53,8 @@ export const FAQ = [
           <a className={linkclass} href="https://www.ucl.ac.uk/isd/">
             Information Services Division (ISD)
           </a>
-          . This means that all of the features in UCL API have been developed by
+          . This means that all of the features in UCL API
+          have been developed by
           students and are aimed at students such as yourself, so jump right in!
       </p>
       </>
@@ -76,7 +77,8 @@ export const FAQ = [
         <a className={linkclass} href="https://github.com/uclapi/uclapi">
           a public Github repository
         </a>
-        &nbsp;for anybody to clone and inspect. Find an bug? Feel free to open an&nbsp;
+        &nbsp;for anybody to clone and inspect.
+        Find an bug? Feel free to open an&nbsp;
         <a className={linkclass} href="https://github.com/uclapi/uclapi/issues">
           Issue
         </a>
@@ -84,7 +86,8 @@ export const FAQ = [
         <a className={linkclass} href="https://github.com/uclapi/uclapi/pulls">
           Pull Request
         </a>
-        &nbsp;with a proposed fix! We also have annual hiring windows to recruit more
+        &nbsp;with a proposed fix!
+        We also have annual hiring windows to recruit more
         students as others graduate, so keep an
         eye on our social media accounts.
       </p>
@@ -92,7 +95,9 @@ export const FAQ = [
   },
   {
     'question': `Does this cost anything?`,
-    'answer': `UCL API is and always will be completely free to use.`,
+    'answer': (
+      <p>UCL API is and always will be completely free to use.</p>
+    ),
   },
   {
     'question': `Who owns the Intellectual Property (IP) of what I build?`,

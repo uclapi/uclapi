@@ -30,11 +30,27 @@
     "max-len": [
       "warn",
       {
-        "code": 80
+        "code": 80,
+        "ignoreComments": true,
+        "ignoreTrailingComments": true,
+        "ignoreUrls": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
       }
     ],
     "object-property-newline": "error",
-    "no-secrets/no-secrets": "error",
+    "no-secrets/no-secrets": [
+      "error",
+      {
+        "ignoreContent": [
+          "^curl -G",
+          "^fetch\\(\"",
+          "^token=",
+          "^[ \n]*<svg",
+          "^<a href="
+        ]
+      }
+    ],
     "react/jsx-indent-props": [
       "error",
       2
