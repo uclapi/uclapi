@@ -1,13 +1,9 @@
-// Standard React imports
-// Styles
-// Images
 import docs from 'Images/home-page/docs.svg'
 import heart from 'Images/home-page/heart.svg'
 import placeholder from 'Images/home-page/splash_screen.png'
 import star from 'Images/home-page/star.svg'
 import uclassistantmarket from 'Images/home-page/uclassistantmarket.png'
 import { endpoints, FAQ } from 'Layout/data/homepage_constants.jsx'
-// Components
 import {
   Button,
   CardView,
@@ -20,14 +16,11 @@ import {
   Row,
   TextView,
 } from 'Layout/Items.jsx'
-// External dependencies
 import Collapse, { Panel } from 'rc-collapse'
 import React from 'react'
-import ReactDOM from 'react-dom'
 import 'Styles/common/uclapi.scss'
-// Legacy
 import 'Styles/navbar.scss'
-
+import './HomePage.scss'
 
 class HomePage extends React.Component {
 
@@ -403,13 +396,13 @@ class HomePage extends React.Component {
             horizontalAlignment='center'
             alignItems='column'
           >
+            <Collapse>
             {FAQ.map(({ question, answer }) => (
-              <Collapse key={question}>
-                <Panel header={question} showArrow>
-                  <TextView text={answer} heading={`p`} />
-                </Panel>
-              </Collapse>
+              <Panel openAnimation={{}} key={question} header={question} showArrow>
+                {answer}
+              </Panel>
             ))}
+          </Collapse>
           </Row>
         </Container>
 
@@ -418,10 +411,6 @@ class HomePage extends React.Component {
       </>
     )
   }
-
 }
 
-ReactDOM.render(
-  <HomePage />,
-  document.querySelector(`.app`)
-)
+export default HomePage
