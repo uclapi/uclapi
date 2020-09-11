@@ -1,10 +1,8 @@
 import propTypes from 'prop-types'
 import React from 'react'
-
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
-import Topic from './../../Topic.jsx'
-
+import Topic from './../../Topic'
 
 const codeExamples = {
   python: `import requests
