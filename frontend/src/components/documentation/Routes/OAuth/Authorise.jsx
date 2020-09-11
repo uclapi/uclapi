@@ -5,26 +5,73 @@ import Table from './../../Table.jsx'
 import Topic from './../../Topic'
 
 const codeExamples = {
-  python: `import requests
+  python: `
+  url = "https://uclapi.com/oauth/authorise/?client_id=123&state=1"
 
-params = {
-  "client_id": "123.456",
-  "state": "1",
-}
-r = requests.get("https://uclapi.com/oauth/authorise", params=params)
-print(r.json())`,
+  '''
+    in a desktop app, script, or for testing
+  '''
+  import webbrowser
+  webbrowser.open_new(url) 
+  # note that you will also need some way receive the callback
+  # this can be done via a web server (e.g. below)
+  
+  '''
+    on a Flask server
+    this example covers both redirecting the user to
+    the /authorise page and receiving the callback
+  '''
+  from flask import Flask, redirect, request
+  app = Flask(__name__)
 
-  shell: `curl -G https://uclapi.com/oauth/authorise/ \
--d client_id=123.456 \
--d state=1`,
+  @app.route('/login')
+  def uclapi_login():
+      return redirect(url)
+  
+  @app.route('/callback')
+      # receive parameters
+      result = request.args.get('result', '')
+      code = request.args.get('code', '')
+      state = request.args.get('state', '')
+      # do something with these parameters
+      # e.g. request an auth token from /oauth/token
+      return`,
 
-  javascript: `fetch("https://uclapi.com/oauth/authorise/?client_id=123.456&state=1")
-.then((response) => {
-  return response.json()
-})
-.then((json) => {
-  console.log(json);
-})`,
+  shell: `
+  # linux
+  xdg-open "https://uclapi.com/oauth/authorise/?client_id=123.456&state=1"
+  
+  # WSL
+  cmd.exe /c start "https://uclapi.com/oauth/authorise/?client_id=123^&state=1"
+
+  # note that you will also need some way to receive the callback
+  `,
+
+  javascript: `
+  const url = "https://uclapi.com/oauth/authorise/?client_id=123.456&state=1"
+
+  /* in-browser */
+  window.location.href = url
+  // note that you will also need some way to receive the callback
+  // this can be done via a web server (e.g. below)
+
+  /* Node.JS Express server */
+  const express = require('express')
+  const app = express()
+
+  app.get('/login', (req, res) => res.redirect(url))
+  app.get('/callback', (req, res) => {
+    const {
+      result,
+      code,
+      state
+    } = req.params
+    // do something with these parameters
+    // e.g. request an auth token from /oauth/token
+  })
+
+  app.listen(3000)
+  `,
 }
 
 const Authorise = ({ activeLanguage }) => (
@@ -56,44 +103,75 @@ const Authorise = ({ activeLanguage }) => (
       </Table>
     </Topic>
 
-    <Topic
-      noExamples
-    >
+    <Topic noExamples>
       <h2>Response</h2>
       <p>
-        Redirection to authorise page.
-            </p>
+        Redirections the user to the authorise page.
+        If the user signs in successfully,
+        they are redirected again to the callback URL
+        specified in the&nbsp;
+        <a href="/dashboard">Dashboard</a>.
+      </p>
+      <p>
+        The callback URL specified in&nbsp;
+        <a href="/dashboard">Dashboard</a>
+        &nbsp;will receive the following query parameters:
+      </p>
+      <Table
+        name="Response (Query Parameters)"
+      >
+        <Cell
+          name="client_id"
+          extra="string"
+          example="123.456"
+          description="Client ID of the authenticating app"
+        />
+        <Cell
+          name="state"
+          extra="string"
+          example="1"
+          description="The same state parameter originally sent as a query parameter to /oauth/authorise"
+        />
+        <Cell
+          name="result"
+          extra="string"
+          example="allowed"
+          description="Either 'allowed' or 'denied', depending on whether the user granted permission"
+        />
+        <Cell
+          name="code"
+          extra="string"
+          example="mysecretcode"
+          description="A secret code used to obtain an OAuth token via the /oauth/token endpoint"
+        />
+      </Table>
     </Topic>
 
-    <Topic
-      noExamples
-    >
+    <Topic noExamples>
       <Table
         name="Errors"
       >
         <Cell
           name="Incorrect parameters supplied."
           description={
-            `Gets returned when you have not supplied` +
-            `a client_id and a state in your request.`
+            `You did not supply a client_id and a state in your request.`
           }
         />
         <Cell
           name="App does not exist for client id."
-          description="Gets returned when you supply an invalid client_id."
+          description="You supplied an invalid client_id."
         />
         <Cell
           name="No callback URL set for this app."
           description={
-            `Gets returned when you have`
-            + `not set a callback URL for your app.`
+            `You did not set a callback URL for your app.`
           }
         />
         <Cell
           name="UCL has sent incomplete headers"
           description={
-            `Gets returned when UCL sends us incomplete headers. `
-            + `If the issues persist please contact the UCL API Team.`
+            `UCL sent us incomplete headers. `
+            + `If the issue persists, please contact the UCL API Team.`
           }
         />
       </Table>

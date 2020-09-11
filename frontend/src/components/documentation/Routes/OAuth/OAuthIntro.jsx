@@ -26,10 +26,22 @@ const OAuthIntro = ({ activeLanguage }) => (
         personal timetable.
       </p>
       <p>
-        Check out a demo&nbsp;
+        Check out a JS web app demo&nbsp;
         <a href="https://uclapi-oauth-demo.glitch.me/">here</a>.
         The source code for the demo is available&nbsp;
         <a href="https://glitch.com/edit/#!/uclapi-oauth-demo">here</a>.
+      </p>
+
+      <p>
+        For an example of a mobile app implementation, check out&nbsp;
+        <a href="https://github.com/uclapi/ucl-assistant-app">
+          UCL Assistant
+        </a>
+        &nbsp;(written in React Native) and the accompanying&nbsp;
+        <a href="https://github.com/uclapi/ucl-assistant-api/tree/master/src/oauth">
+          UCL Assistant API
+        </a>
+        &nbsp;backend (written in Node.JS).
       </p>
 
       <h1>Sign In With UCL Button</h1>
@@ -64,16 +76,17 @@ const OAuthIntro = ({ activeLanguage }) => (
         Then the app should follow this procedure:
       </p>
       <p>
-        1. Send a request to <code>https://uclapi.com/oauth/authorise</code>&nbsp;
-        with <code>state</code> and the application’s <code>client_id</code>.
+        1. Redirect the user to <code>https://uclapi.com/oauth/authorise</code>&nbsp;
+        with <code>state</code> and the application’s <code>client_id</code> as
+        query parameters.
       </p>
       <p>
-        2. The user will need to log in with their UCL credentials on the
+        2. The user logs in with their UCL credentials on the
         UCL Single Sign-on website (if not logged in already).
       </p>
       <p>
-        3. The user will be allowed to either authorise or deny the application,
-        based on the OAuth scope requested.
+        3. The user reviews the OAuth scopes requested and either
+        authorises or denies the application&apos;s request.
         If the application is authorised, the callback URL receives&nbsp;
         <code>client_id</code>, <code>state</code> (specified in 1.),&nbsp;
         <code>result</code>, and <code>code</code>.
@@ -85,15 +98,15 @@ const OAuthIntro = ({ activeLanguage }) => (
         will be provided to the application.
       </p>
       <p>
-        1. To receive the OAuth user token
-        (for performing actions on user’s behalf),
+        1. To obtain a OAuth user token
+        (necessary for retrieving personal data and certain API endpoints),
         we require <code>code</code> (from 3.),&nbsp;
         <code>client_id</code>, and <code>client_secret</code>.
         These should then be sent to <code>https://uclapi.com/oauth/token</code>,
         which will return a response containing&nbsp;
         <code>state</code>, <code>ok</code>, <code>client_id</code>,&nbsp;
         <code>token</code> (OAuth user token), and <code>scope</code>&nbsp;
-        (scopes the app can access on the user’s behalf).
+        (OAuth scopes the app can access on the user’s behalf).
       </p>
       <p>
         <b>Note:</b> OAuth tokens and general API tokes are different.
