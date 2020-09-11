@@ -398,7 +398,12 @@ class HomePage extends React.Component {
           >
             <Collapse>
             {FAQ.map(({ question, answer }) => (
-              <Panel openAnimation={{}} key={question} header={question} showArrow>
+              <Panel
+                openAnimation={{}}
+                key={question}
+                header={question}
+                showArrow
+              >
                 {answer}
               </Panel>
             ))}
