@@ -1,0 +1,41 @@
+@import "../../../sass/core.scss";
+
+.mobile,
+.tablet,
+.default {
+  display: none;
+}
+
+.default {
+  .menu-container {
+    margin-top: 61px;
+    width: 256px;
+    overflow: auto;
+  }
+
+  @include media(">phone") {
+    display: block;
+  }
+}
+
+.mobile.tablet {
+  .hamburger-button {
+    $button-size: 2.5rem;
+
+    position: fixed;
+    padding: 0;
+    margin: 1rem;
+    width: $button-size;
+    height: $button-size;
+    border-radius: $button-size;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    font-size: 1.25rem;
+  }
+
+  @include media("<=phone") {
+    display: block;
+  }
+}

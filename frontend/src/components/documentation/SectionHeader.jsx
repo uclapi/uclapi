@@ -1,6 +1,6 @@
 import propTypes from 'prop-types'
 import React from 'react'
-import Topic from './Topic.jsx'
+import Topic from './Topic'
 
 
 

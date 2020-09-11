@@ -1,20 +1,17 @@
-import 'Styles/documentation.scss'
-
 import {
   cyan,
   grey,
   pink,
 } from '@material-ui/core/colors'
 import {
-  createMuiTheme, MuiThemeProvider, StylesProvider,
+  createMuiTheme,
+  MuiThemeProvider,
+  StylesProvider,
 } from '@material-ui/core/styles'
 import React from 'react'
 import ReactDOM from 'react-dom'
-
-import DocumentationComponent from
-  '../components/documentation/Documentation.jsx'
-
-
+import 'Styles/documentation.scss'
+import DocumentationComponent from '../components/documentation'
 
 const {
   500: cyan500,
@@ -31,7 +28,6 @@ const {
 } = grey
 const white = `#ffffff`
 const fullBlack = `#000000`
-
 
 const muiTheme = createMuiTheme({
   fontFamily: `Roboto, sans-serif`,
@@ -51,19 +47,13 @@ const muiTheme = createMuiTheme({
   },
 })
 
-class Documentation extends React.Component {
-
-  render() {
-    return (
-      <StylesProvider injectFirst>
-        <MuiThemeProvider theme={muiTheme}>
-          <DocumentationComponent />
-        </MuiThemeProvider>
-      </StylesProvider>
-    )
-  }
-
-}
+const Documentation = () => (
+  <StylesProvider injectFirst>
+    <MuiThemeProvider theme={muiTheme}>
+      <DocumentationComponent />
+    </MuiThemeProvider>
+  </StylesProvider>
+)
 
 ReactDOM.render(
   <Documentation />,
