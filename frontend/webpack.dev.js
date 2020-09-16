@@ -18,7 +18,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
           loader: `babel-loader`,
@@ -47,7 +47,7 @@ module.exports = {
     },
   },
   entry: {
-    index: entryPointsPathPrefix + `/HomePage.jsx`,
+    index: entryPointsPathPrefix + `/Home`,
     documentation: entryPointsPathPrefix + `/Documentation.jsx`,
     about: entryPointsPathPrefix + `/AboutPage.jsx`,
     dashboard: entryPointsPathPrefix + `/Dashboard.jsx`,

@@ -1,36 +1,21 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-no-bind */
 // Stylings
 import { styles } from 'Layout/data/dashboard_styles.jsx'
 // Components
 import {
-  ButtonView, CheckBox,
+  Button, CheckBox,
   Column, Container, Field, Row, TextView,
 } from 'Layout/Items.jsx'
 // External dependencies
 import Collapse, { Panel } from 'rc-collapse'
 import React from 'react'
+import AccordionIcon from './AccordionIcon.jsx'
 
 /**
   UI Definition of the app, all of the "actions" should be passed in from
   the dashboard page and they will do all the heavy lifting whereas this
   page is only a ui representation
 **/
-
-function expandIcon({ isActive }) {
-  return (
-      <div
-        style={{
-          marginRight: `.5rem`,
-          display: `inline-block`,
-          transition: `transform .2s`,
-          transform: `rotate(${isActive ? 90 : 0}deg)`,
-        }}
-      >
-        &#707;
-      </div>
-  )
-}
 
 export default class App extends React.Component {
   
@@ -42,12 +27,12 @@ export default class App extends React.Component {
     const { app } = this.props
 
     const updated = this.timeSince(new Date(app.updated))
-        const created = this.timeSince(new Date(app.created))
+    const created = this.timeSince(new Date(app.created))
 
-        this.state = {
-          updated: updated,
-          created: created,
-        }
+    this.state = {
+      updated: updated,
+      created: created,
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -59,12 +44,12 @@ export default class App extends React.Component {
       const { app } = this.props
 
       const updated = this.timeSince(new Date(app.updated))
-          const created = this.timeSince(new Date(app.created))
+      const created = this.timeSince(new Date(app.created))
 
-          this.setState({
-            updated: updated,
-            created: created,
-          })
+      this.setState({
+        updated: updated,
+        created: created,
+      })
     }
   }
 
@@ -74,28 +59,24 @@ export default class App extends React.Component {
 
     if(this.DEBUGGING) { console.log(`re-rendering app, name: ` + app.name) }
 
-    // const trashColor = `red`
-
-    console.log(app.oauth.scopes)
-
     return (
-    <Collapse expandIcon={expandIcon}>
-        <Panel header={app.name} showArrow>
+    <Collapse expandIcon={AccordionIcon}>
+      <Panel header={app.name} showArrow>
 
-      <Container styling='transparent' noPadding>
+      <Container noPadding>
         <Row width="1-1">
           <Column 
             width="1-1" 
             className="title-holder"
           >
             <Field
-              title="Title: "
+              title="Title"
               content={app.name}
               onSave={(value) => { actions.saveEditTitle(index, value) }}
               isSmall
             />
             <Field
-              title="API Token: "
+              title="API Token"
               content={app.token}
               canCopy
               onRefresh={ () => { actions.regenToken(index) } }
@@ -103,15 +84,15 @@ export default class App extends React.Component {
           </Column>
         </Row>
         
-        <Container styling='transparent' noPadding>
+        <Container noPadding>
           <Column 
             width='1-1' 
             className="settings-collapse"
             noPadding
           >
-            <Collapse expandIcon={expandIcon}>
+            <Collapse expandIcon={AccordionIcon}>
               <Panel header={`OAuth Settings`} showArrow>
-              <Container styling='transparent' noPadding>
+              <Container noPadding>
                 <Column
                   width='1-1' 
                   className='settings-section'
@@ -121,17 +102,17 @@ export default class App extends React.Component {
                     align={`left`} 
                   />
                   <Field
-                    title="Client ID: "
+                    title="Client ID"
                     content={app.oauth.client_id}
                     canCopy
                   />
                   <Field
-                    title="Client Secret: "
+                    title="Client Secret"
                     content={app.oauth.client_secret}
                     canCopy
                   />
                   <Field
-                    title="Callback Url: "
+                    title="Callback URL"
                     content={app.oauth.callback_url == ``
                       ? `https://`
                       : app.oauth.callback_url}
@@ -140,12 +121,12 @@ export default class App extends React.Component {
                   />
                 </Column>
               </Container>
-              <Container styling='transparent' noPadding>
+              <Container noPadding>
                 <Column
                   width='1-1' 
                   className='settings-section'
                 >
-                  <TextView text={`OAuth Scopes: `}
+                  <TextView text={`OAuth Scopes`}
                     heading={4}
                     align={`left`} 
                   />
@@ -158,44 +139,40 @@ export default class App extends React.Component {
                         index, scope_index, value
                         )
                       }
-                      style={{
-												float: `left`,
-												margin: `12px 10px 0 10px`,
-											}}
                     />
                   )}
                 </Column>
               </Container>
               </Panel>
               <Panel header={`Webhook Settings`} showArrow>
-              <Container styling='transparent' noPadding>
+              <Container noPadding>
                 <Column
-                  width='1-1' 
+                  width='1-1'
                   className='settings-section'
                 >
                   <Field
-                    title="Verification Secret: "
+                    title="Verification Secret"
                     content={app.webhook.verification_secret}
                     canCopy
                     onRefresh={() => actions.regenVerificationSecret(index)}
                   />
                   <Field
-                    title="Webhook URL: "
+                    title="Webhook URL"
                     content={app.webhook.url==`` ? `https://` : app.webhook.url}
                     onSave={(value) => actions.webhook.saveURL(index, value) }
                   />
                   <Field
-                    title="'siteid' (optional):"
+                    title="'siteid' (optional)"
                     content={app.webhook.siteid}
                     onSave={(value) => actions.webhook.saveSiteID(index, value)}
                   />
                   <Field
-                    title="'roomid' (optional):"
+                    title="'roomid' (optional)"
                     content={app.webhook.roomid}
                     onSave={(value) => actions.webhook.saveRoomID(index, value)}
                   />
                   <Field
-                    title="Contact (optional):"
+                    title="Contact (optional)"
                     content={app.webhook.contact}
                     onSave={(value) => actions.webhook.saveContact(
                         index, value
@@ -208,7 +185,7 @@ export default class App extends React.Component {
             </Collapse>
           </Column>
         </Container>
-        <Container styling='transparent' noPadding>
+        <Container noPadding>
           <Row width="1-1">
             <Column 
               width="1-1"
@@ -235,13 +212,14 @@ export default class App extends React.Component {
                 />
               </Column>
 
-              <ButtonView
-                text={`Delete`} 
+              <Button
                 type={`remove`} 
                 onClick={() => { actions.deleteConfirm(index) }} 
                 fakeLink 
                 style={{ cursor: `pointer` }} 
-              />
+              >
+                Delete
+              </Button>
             </Column>
           </Row>
         </Container>

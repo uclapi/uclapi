@@ -1,71 +1,12 @@
 import {
-  Collapse,
   Divider,
-  Drawer,
   List,
   ListItem,
   ListItemText,
   ListSubheader,
-  SwipeableDrawer,
 } from '@material-ui/core'
-import { ButtonView } from 'Layout/Items.jsx'
-import propTypes from 'prop-types'
-import React, { useCallback, useState } from 'react'
-
-import ChevronDown from '../../images/documentation/chevron-down.svg'
-import ChevronUp from '../../images/documentation/chevron-up.svg'
-
-/*
-  Got this entire thing from
-  https://github.com/callemall/material-ui/blob/master/docs/src/app/components/AppNavDrawer.js
-  as our side bar just needs to be similar to the material-ui docs sidebar here:
-  http://www.material-ui.com/#/components/drawer
-
-  Didn't get the time to look into how the links will work
-  but I think we can have an href inside each Topic component
-  and when you click on the link in the sidebar, you get routed to
-  the href in the Topic component
-*/
-
-const Section = ({ sectionTitle, children }) => {
-  const [isOpen, setOpen] = useState(false)
-  const onClick = useCallback(
-    () => setOpen(!isOpen),
-    [isOpen]
-  )
-  return (
-    <>
-      <ListItem
-        button
-        onClick={onClick}
-      >
-        <ListItemText primary={sectionTitle} />
-        {isOpen ? <img src={ChevronUp} /> : <img src={ChevronDown} />}
-      </ListItem>
-      <Collapse
-        in={isOpen}
-        timeout="auto"
-        unmountOnExit
-      >
-        <List
-          component="div"
-        >
-          {children}
-        </List>
-      </Collapse>
-    </>
-  )
-}
-
-Section.propTypes = {
-  sectionTitle: propTypes.string,
-  children: propTypes.node,
-}
-
-Section.defaultProps = {
-  sectionTitle: ``,
-  children: null,
-}
+import React from 'react'
+import Section from './Section.jsx'
 
 const menuContents = {
   Meta: [
@@ -86,7 +27,7 @@ const menuContents = {
       href: `#expiry-times`,
     },
   ],
-  Oauth: [
+  OAuth: [
     {
       text: `Scopes`,
       href: `#oauth/scopes`,
@@ -139,6 +80,8 @@ const menuContents = {
       text: `Get People`,
       href: `#search/people`,
     },
+  ],
+  Timetable: [
     {
       text: `Get Personal Timetable`,
       href: `#timetable/personal`,
@@ -169,6 +112,8 @@ const menuContents = {
       text: `Get Desktop Availability`,
       href: `#resources/desktops`,
     },
+  ],
+  Workspaces: [
     {
       text: `Get Surveys`,
       href: `#workspaces/surveys`,
@@ -231,13 +176,12 @@ const menuContents = {
 }
 
 const links = {
-  Github: `https://github.com/uclapi`,
+  GitHub: `https://github.com/uclapi`,
   Facebook: `https://facebook.com/uclapi`,
   Twitter: `https://twitter.com/uclapi`,
 }
 
-
-const sidebarContent = (
+const MenuComponent = () => (
   <List component="div">
     {
       Object.entries(menuContents)
@@ -256,9 +200,7 @@ const sidebarContent = (
                       boxSizing: `border-box`,
                     }}
                   >
-                    <ListItemText
-                      primary={text}
-                    />
+                    <ListItemText primary={text} />
                   </ListItem>
                 ))
               }
@@ -299,64 +241,4 @@ const sidebarContent = (
   </List>
 )
 
-export default class Sidebar extends React.Component {
-
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      isOpen: false,
-    }
-  }
-
-  toggleOpen = () => {
-    const { isOpen } = this.state
-    this.setState({
-      isOpen: !isOpen,
-    })
-  }
-
-  render() {
-    const { isOpen } = this.state
-    return (
-      <>
-        <div className={`default`}>
-          <Drawer
-            variant="permanent"
-          >
-            <div style={{
-              marginTop: `61px`,
-              width: `256px`,
-              overflow: `auto`,
-            }}
-            >
-              {sidebarContent}
-            </div>
-          </Drawer>
-        </div>
-        <div className={`mobile tablet`}>
-          <ButtonView text={`≡`}
-            onClick={this.toggleOpen}
-            style={{
-              left: `2px`,
-              padding: `15px 20px`,
-              top: `62px`,
-              position: `fixed`,
-              borderRadius: `50px`,
-              cursor: `pointer`,
-            }}
-          />
-
-          <SwipeableDrawer
-            open={isOpen}
-            onClose={this.toggleOpen}
-            onOpen={this.toggleOpen}
-          >
-            {sidebarContent}
-          </SwipeableDrawer>
-        </div>
-      </>
-    )
-  }
-
-}
+export default MenuComponent

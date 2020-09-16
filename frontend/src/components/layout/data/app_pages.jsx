@@ -27,7 +27,7 @@ import unikom1 from 'Images/marketplace/unikomet/screenshot_1.png'
 import unikom2 from 'Images/marketplace/unikomet/screenshot_2.png'
 import unikom3 from 'Images/marketplace/unikomet/screenshot_3.png'
 // Common Components
-import { ButtonView, TextView } from 'Layout/Items.jsx'
+import { Button, TextView } from 'Layout/Items.jsx'
 import React from 'react'
 import { Carousel } from "react-responsive-carousel"
 
@@ -60,14 +60,15 @@ const roombuddydescription = (
       text={`Want to contribute to room buddy? 
     Submit a pull request:`}
     />
-    <ButtonView type={`alternate`}
-      text={`VISIT GITHUB`}
+    <Button type={`alternate`}
       style={{
         'margin': `auto`,
         'display': `flex`,
       }}
       link={`https://github.com/uclapi/ucl-assistant-app`}
-    />
+    >
+      VISIT GITHUB
+    </Button>
     <TextView
       heading={`5`}
       text={`This app and its platform have been 
@@ -123,15 +124,16 @@ const uclassistantdescription = (
     suggestions or even some new code to improve 
      the app? We welcome it:`}
     />
-    <ButtonView type={`alternate`}
+    <Button type={`alternate`}
       isCentered
-      text={`VISIT GITHUB`}
       style={{
         'margin': `auto`,
         'display': `flex`,
       }}
       link={`https://github.com/uclapi/ucl-assistant-app`}
-    />
+    >
+      VISIT GITHUB
+    </Button>
     <TextView heading={`5`}
       text={`This app and its platform have 
     been built by the UCL API Team, a group of students
@@ -308,7 +310,7 @@ const unikometdescription = (
       text={`Made with love 💖 by and for 
     students`}
     />
-    {/* <ButtonView type={`alternate`}
+    {/* <Button type={`alternate`}
       isCentered
       text={`VISIT GITHUB`}
       style={{

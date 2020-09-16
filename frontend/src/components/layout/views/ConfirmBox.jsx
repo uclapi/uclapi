@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 // Components
 import {
-  ButtonView, CardView, Column,
+  Button, CardView, Column,
   Container, Field, Row, TextView,
 } from 'Layout/Items.jsx'
 import React from 'react'
@@ -40,12 +40,16 @@ export default class ConfirmBox extends React.Component {
 
     if(shouldCheckValue && value == check) {
       canSubmit = true
-    } else if(value != ``){
+    } else if(value === ``){
       canSubmit = false
     }
 
+    if(!shouldCheckValue){
+      canSubmit = true
+    }
+
     if(this.DEBUGGING) {
-      console.log(`canSubmit: ${canSubmit} value: ${value} against: ${check}`)
+      console.log(`canSubmit: ${canSubmit} value: ${value} against: ${check}, should check: ${shouldCheckValue}`)
     }
 
     this.setState({
@@ -98,20 +102,22 @@ export default class ConfirmBox extends React.Component {
                 width="1-1"
                 keepInline
               >
-                <ButtonView 
-                  text={`Submit`} 
+                <Button 
                   type={`alternate`} 
                   onClick={this.success} 
                   fakeLink 
                   style={{ cursor: `pointer` }} 
-                />
-                <ButtonView 
-                  text={`Cancel`} 
+                >
+                  Submit
+                </Button>
+                <Button
                   type={`remove`} 
                   onClick={fail} 
                   fakeLink 
                   style={{ cursor: `pointer` }} 
-                />
+                >
+                  Cancel
+                </Button>
               </Column>
             </Row>
           </Container>

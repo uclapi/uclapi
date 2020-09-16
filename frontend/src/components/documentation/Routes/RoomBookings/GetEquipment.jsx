@@ -1,11 +1,9 @@
-import React from 'react';
+import React from 'react'
+import Cell from './../../Cell.jsx'
+import Table from './../../Table.jsx'
+import Topic from './../../Topic'
 
-import Topic from './../../Topic.jsx';
-import Table from './../../Table.jsx';
-import Cell from './../../Cell.jsx';
-
-
-let codeExamples = {
+const codeExamples = {
   python: `import requests
 
 params = {
@@ -29,11 +27,10 @@ print(r.json())`,
 .then((json) => {
   console.log(json);
 })
-`
+`,
 }
 
-
-let response = `{
+const response = `{
   "ok": true,
   "equipment": [
     {
@@ -51,99 +48,128 @@ let response = `{
 }
 `
 
-let responseCodeExample = {
+const responseCodeExample = {
   python: response,
   javascript: response,
-  shell: response
+  shell: response,
 }
 
+const GetEquipment = ({ activeLanguage }) => {
+  return (
+    (
+      <div>
+        <Topic
+          activeLanguage={activeLanguage}
+          codeExamples={codeExamples}
+        >
+          <h1 id="roombookings/equipment">Get Equipment</h1>
+          <p>
+            Endpoint: <code>https://uclapi.com/roombookings/equipment</code>
+          </p>
+          <p>
+            This endpoint returns information about the features of and
+            equipment present in a specific room. 
 
-export default class GetEquiment extends React.Component {
-
-    render () {
-      return (
-        <div>
-          <Topic
-            activeLanguage={this.props.activeLanguage}
-            codeExamples={codeExamples}>
-            <h1 id="roombookings/equipment">Get Equipment</h1>
-            <p>
-              This endpoint returns any equipment/feature information about a specific room. So, for example whether there is a Whiteboard or a DVD Player in the room. A full example can be seen here.
+            Use this to find out, for instance, whether there is a
+            whiteboard, DVD Player, or ramp in the room.
+            
+            A full example can be seen here.
             </p>
-            <p>
-              You need to supply a token, roomid, and siteid to get a response.
+          <p>
+            You need to supply a <code>token</code>,
+            &nbsp;<code>roomid</code>,
+            and <code>siteid</code> to get a response.
+          </p>
+
+          <Table
+            name="Query Parameters"
+          >
+            <Cell
+              name="token"
+              requirement="required"
+              example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
+              description="Authentication token."
+            />
+            <Cell
+              name="roomid"
+              requirement="required"
+              example="433"
+              description="The room ID (not to be confused with the roomname)."
+            />
+            <Cell
+              name="siteid"
+              requirement="required"
+              example="086"
+              description="Every room is inside a site (building). All sites have IDs."
+            />
+          </Table>
+        </Topic>
+
+        <Topic
+          activeLanguage={activeLanguage}
+          codeExamples={responseCodeExample}
+        >
+          <h2>Response</h2>
+          <p>
+            The equipment field contains a list of equipment.
+            The length of the list will vary between rooms.
+            It may also be empty.
             </p>
-
-            <Table
-              name="Query Parameters">
-              <Cell
-                name="token"
-                requirement="required"
-                example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
-                description="Authentication token." />
-              <Cell
-                name="roomid"
-                requirement="required"
-                example="433"
-                description="The room ID (not to be confused with the roomname)." />
-              <Cell
-                name="siteid"
-                requirement="required"
-                example="086"
-                description="Every room is inside a site (building). All sites have IDs." />
-            </Table>
-          </Topic>
-
-          <Topic
-            activeLanguage={this.props.activeLanguage}
-            codeExamples={responseCodeExample}>
-            <h2>Response</h2>
-            <p>
-              The equipment field contains a list of equipment items. This list can have a different length depending on the room, and it can also be empty.
+          <p>
+            Each piece of equipment has a type, a description,
+            and a quantity (the number of units).
             </p>
-            <p>
-              Each equipment item contains a type, a description, and the number of units.
-            </p>
-            <Table
-              name="Response">
-              <Cell
-                name="type"
-                extra="string"
-                example="FE"
-                description="The type of equipment. Either Fixed Equipment (FE) or Fixed Feature (FF)." />
-              <Cell
-                name="description"
-                extra="string"
-                example="Managed PC"
-                description="What the piece of equipment actually is." />
-              <Cell
-                name="units"
-                extra="int"
-                example="1"
-                description="The number of times this piece of equipment exists in the room." />
-            </Table>
-          </Topic>
+          <Table
+            name="Response"
+          >
+            <Cell
+              name="type"
+              extra="string"
+              example="FE"
+              description="The type of equipment. Either Fixed Equipment (FE) or Fixed Feature (FF)."
+            />
+            <Cell
+              name="description"
+              extra="string"
+              example="Managed PC"
+              description="What the piece of equipment actually is."
+            />
+            <Cell
+              name="units"
+              extra="int"
+              example="1"
+              description="The number of times this piece of equipment exists in the room."
+            />
+          </Table>
+        </Topic>
 
-          <Topic
-            noExamples={true}>
-            <Table
-              name="Errors">
-              <Cell
-                name="No token provided"
-                description="Gets returned when you have not supplied a token in your request." />
-              <Cell
-                name="Token does not exist"
-                description="Gets returned when you supply an invalid token." />
-              <Cell
-                name="No roomid supplied"
-                description="Gets returned when you don’t supply a roomid." />
-              <Cell
-                name="No siteid supplied"
-                description="Gets returned when you don’t supply a siteid." />
-              </Table>
-          </Topic>
-        </div>
-      )
-    }
-
+        <Topic
+          noExamples
+        >
+          <Table
+            name="Errors"
+          >
+            <Cell
+              name="No token provided"
+              description="Gets returned when you have not supplied a token in your request."
+            />
+            <Cell
+              name="Token does not exist"
+              description="Gets returned when you supply an invalid token."
+            />
+            <Cell
+              name="No roomid supplied"
+              description="Gets returned when you don’t supply a roomid."
+            />
+            <Cell
+              name="No siteid supplied"
+              description="Gets returned when you don’t supply a siteid."
+            />
+          </Table>
+        </Topic>
+      </div>
+    )
+  )
 }
+
+export default GetEquipment

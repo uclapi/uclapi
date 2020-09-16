@@ -31,6 +31,9 @@
       "warn",
       {
         "code": 80,
+        "ignoreComments": true,
+        "ignoreTrailingComments": true,
+        "ignoreUrls": true,
         "ignoreStrings": true,
         "ignoreTemplateLiterals": true
       }
@@ -40,8 +43,11 @@
       "error",
       {
         "ignoreContent": [
-          "^curl ",
-          "^fetch\\("
+          "^curl -G",
+          "^fetch\\(\"",
+          "^token=",
+          "^[ \n]*<svg",
+          "^<a href="
         ]
       }
     ],
@@ -49,6 +55,7 @@
       "error",
       2
     ],
+    "react/prop-types": "off",
     "react/jsx-closing-bracket-location": [
       "error"
     ],

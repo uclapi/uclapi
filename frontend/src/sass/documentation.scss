@@ -1,36 +1,7 @@
 @import './helpers';
+@import './core.scss';
 
-/** Color Scheme **/
-
-$primary-color: #296da7;
-$primary-highlight-color: #3498db;
-
-$secondary-color: #313537;
-
-$accent-color: #8d6e63;
-$highlight-color: #b18453;
-
-$color-black: black;
-$color-grey-dark: #313537;
-$color-grey-mid: #75797b;
-$color-grey-light: #bbb;
-$color-grey-light2: #ccc;
-$color-white: white;
-
-$color-red: red;
-
-$color-green-market: #03b77b;
-
-$color-black-transparent-0: rgba(0, 0, 0, 0);
-$color-black-transparent-02: rgba(0, 0, 0, 0.2);
-$color-black-transparent-04: rgba(0, 0, 0, 0.4);
-$color-black-transparent-045: rgba(0, 0, 0, 0.45);
-
-$color-white-transparent-0: rgba(255, 255, 255, 0);
-$color-white-transparent-0455: rgba(255, 255, 255, 0.455);
-
-$color-facebook: #3b5998;
-$color-twitter: #38a1f3;
+$text-color: #4c555a;
 
 body,
 html {
@@ -40,7 +11,7 @@ html {
 
 body {
   background: $color-white;
-  color: #4c555a;
+  color: $text-color;
   font-family: 'Source Sans Pro', sans-serif;
   margin: 0;
 }
@@ -67,6 +38,15 @@ p {
   line-height: 26px;
 }
 
+a {
+  color: $text-color;
+  text-decoration: underline dotted;
+
+  &:hover {
+    color: darken($text-color, 20%);
+  }
+}
+
 .col {
   flex: 1;
   max-width: 100%;
@@ -85,14 +65,6 @@ p {
   padding: 20px;
 }
 
-.code {
-  // background: #282A36;
-  background: #2d3134;
-  font-size: 14px;
-  overflow-x: auto;
-  padding: 20px;
-}
-
 .tab {
   margin-left: 256px;
   position: fixed;
@@ -108,26 +80,45 @@ p {
   box-sizing: border-box;
   margin-top: 60px;
   overflow-x: hidden;
-  padding: 2rem;
+  padding-bottom: 2rem;
 
-  @media screen and (min-width: 1130px) {
+  @include media(">phone") {
     margin-left: 256px;
+  }
+
+  @include media("<=phone") {
+    padding-top: 3rem;
   }
 
   h1,
   h2 {
     margin-top: -80px;
     padding-top: 80px;
+    position: relative; // not static, so z-index has an effect
+    z-index: -1;
+  }
+
+  .col.text {
+    > p:first-of-type {
+      margin-top: 0;
+    }
+
+    > p:last-of-type {
+      margin-bottom: 0;
+    }
   }
 }
 
-code {
-  background-color: rgba(0, 0, 0, 0.05);
+p > code {
   font-family: 'Source Code Pro', monospace;
-  font-size: 12px;
+  font-size: 0.85em;
+  padding: 0.2rem 0.4rem;
+  background-color: #f0f0fa;
+  color: black;
 }
 
 .table {
+  margin-top: 1rem;
   font-size: 14px;
 
   h1 {
@@ -189,7 +180,6 @@ code {
 
 .section-header {
   border-bottom: 1px solid #e4e4e4;
-  border-top: 1px solid #e4e4e4;
   font-size: 36px;
   font-weight: 600;
   margin-bottom: 0;
@@ -228,12 +218,24 @@ pre {
 
   .inner-tab {
     width: 100%;
+
+    > pre {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+
+      > code {
+        display: block;
+        margin: 0.5rem;
+      }
+    }
   }
 }
 
 /* stylelint-disable-next-line selector-class-pattern */
 .react-tabs__tab-list {
+  display: flex;
   width: 100%;
+  margin-bottom: 0;
 
   li {
     color: $color-white;
@@ -242,7 +244,6 @@ pre {
     float: left;
     list-style-type: none;
     margin: 0;
-    margin-right: 5px;
     padding: 10px 2%;
     text-align: left;
     transition-duration: 200ms;
@@ -283,48 +284,12 @@ pre {
 
 /** Buttons **/
 
-.uclapi-button {
-  border-radius: 2px;
-  box-shadow: 0 4px 8px 0 $color-black-transparent-02;
-  display: inline-block;
-  margin: 10px;
-  padding: 10px 20px;
-  text-decoration: none;
-  width: fit-content;
-}
-
 .default-button {
   background-color: $color-grey-dark;
   color: $color-white;
 }
 
 .default-button:hover { background-color: $color-grey-mid; }
-
-/** Sizing **/
-
-.mobile,
-.tablet,
-.default {
-  display: none;
-}
-
-@media screen and (min-width: 1130px) {
-  .default {
-    display: block;
-  }
-}
-
-@media screen and (max-width: 1130px) and (min-width: 700px) {
-  .tablet {
-    display: block;
-  }
-}
-
-@media screen and (max-width: 700px) {
-  .mobile {
-    display: block;
-  }
-}
 
 .row {
   display: flex;

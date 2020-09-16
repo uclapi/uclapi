@@ -100,13 +100,13 @@ def log_api_call(request, token, token_type):
 def throttle_api_call(token, token_type):
     if token_type == 'general':
         cache_key = token.user.email
-        limit = 10000
+        limit = token.user.dev_quota
     elif token_type == 'general-temp':
         cache_key = token
         limit = 10
     elif token_type == 'oauth':
-        cache_key = token.user.email
-        limit = 10000
+        cache_key = "oauth:" + token.user.email
+        limit = token.user.oauth_quota
     elif token_type == 'test-token':
         cache_key = token
         limit = 1
