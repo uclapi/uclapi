@@ -416,12 +416,12 @@ def quota_remaining(request):
         Otoken = OAuthToken.objects.filter(token__exact=token).first()
 
         cache_key = Otoken.user.email
-        limit = 10000
+        limit = Otoken.user.oauth_quota
 
     elif token.startswith('uclapi-'):
         app = App.objects.filter(api_token__exact=token).first()
         cache_key = app.user.email
-        limit = 10000
+        limit = app.user.dev_quota
 
     else:
         response = JsonResponse({
