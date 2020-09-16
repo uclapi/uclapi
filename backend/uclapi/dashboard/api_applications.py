@@ -415,7 +415,7 @@ def quota_remaining(request):
     if token.startswith('uclapi-user-'):
         Otoken = OAuthToken.objects.filter(token__exact=token).first()
 
-        cache_key = Otoken.user.email
+        cache_key = "oauth:" + Otoken.user.email
         limit = Otoken.user.oauth_quota
 
     elif token.startswith('uclapi-'):

@@ -1265,7 +1265,7 @@ class ApiApplicationsTestCase(TestCase):
         response = quota_remaining(request)
         content = json.loads(response.content.decode())
         # Clean up redis
-        self.r.delete(token.user.email)
+        self.r.delete("oauth:" + token.user.email)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(content["remaining"], 9998)
 
@@ -1303,7 +1303,7 @@ class ApiApplicationsTestCase(TestCase):
         response = quota_remaining(request)
         content = json.loads(response.content.decode())
         # Clean up redis
-        self.r.delete(token.user.email)
+        self.r.delete("oauth:" + token.user.email)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(content["remaining"], 10000)
 
