@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dashboard', '0013_auto_20200627_1627'),
+        ('dashboard', '0012_delete_temporarytoken'),
     ]
 
     operations = [

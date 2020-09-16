@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('oauth', '0002_oauthtoken_active'),
-        ('dashboard', '0012_delete_temporarytoken'),
+        ('dashboard', '0014_auto_20200727_1828'),
     ]
 
     operations = [
