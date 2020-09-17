@@ -93,6 +93,8 @@ module.exports = {
     marketplace: entryPointsPathPrefix + `/Marketplace.jsx`,
     authorise: entryPointsPathPrefix + `/Authorise.jsx`,
     warning: entryPointsPathPrefix + `/Warning.jsx`,
+    404: entryPointsPathPrefix + `/404.jsx`,
+    500: entryPointsPathPrefix + `/500.jsx`,
     settings: entryPointsPathPrefix + `/AppSettings.jsx`,
     vendors: [`react`],
   },
