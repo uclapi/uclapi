@@ -79,7 +79,7 @@ def authorise(request):
     )
 
     if target[4] == ':':  # If using HTTP
-        target = "https"+target[4:]  # Make sure we return on HTTPs
+        target = "https" + target[4:]  # Make sure we return on HTTPs
 
     target = quote(target)
     url += target
@@ -292,7 +292,7 @@ def userdeny(request):
 
     try:
         data = json.loads(raw_data_str)
-    except:
+    except Exception:
         response = PrettyJsonResponse({
             "ok": False,
             "error": ("The JSON data was not in the expected format."
@@ -422,7 +422,7 @@ def token(request):
     try:
         data_json = r.get(code).decode('ascii')
 
-    except:
+    except Exception:
         response = PrettyJsonResponse({
             "ok": False,
             "error": ("The code received was invalid, or has expired."
@@ -436,7 +436,7 @@ def token(request):
     # code has expired between getting and deleting.
     try:
         r.delete(code)
-    except:
+    except Exception:
         pass
 
     data = json.loads(data_json)
@@ -703,6 +703,32 @@ def settings_shibboleth_callback(request):
 def settings(request):
     # Check whether the user is logged in
     try:
+        request.session["user_id"]
+    except KeyError:
+        # Build Shibboleth callback URL
+        url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
+        param = (request.build_absolute_uri(request.path) +
+                 "user/login.callback")
+        param = quote(param)
+        url = url + param
+
+        return redirect(url)
+
+    return render(request, 'settings.html')
+
+
+@ensure_csrf_cookie
+def get_settings(request):
+    if request.method != "GET":
+        response = PrettyJsonResponse({
+            "success": False,
+            "error": "Must be a GET request"
+        })
+        response.status_code = 400
+        return response
+
+    # Check whether the user is logged in
+    try:
         user_id = request.session["user_id"]
     except KeyError:
         # Build Shibboleth callback URL
@@ -746,10 +772,7 @@ def settings(request):
         "apps": authorised_apps
     }
 
-    initial_data = json.dumps(initial_data_dict, cls=DjangoJSONEncoder)
-    return render(request, 'settings.html', {
-        'initial_data': initial_data
-    })
+    return PrettyJsonResponse(initial_data_dict)
 
 
 @ensure_csrf_cookie
