@@ -8,11 +8,14 @@ import {
 } from '@material-ui/core/colors'
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import { Footer, NavBar } from 'Layout/Items.jsx'
-import React from 'react'
+import React, { useState , useEffect } from 'react'
 import ReactDOM from 'react-dom'
 
 import LogInLayout from '../components/appsettings/LogInLayout.jsx'
 import SettingsLayout from '../components/appsettings/SettingsLayout.jsx'
+import Api from '../lib/Api.js'
+
+
 
 
 const {
@@ -49,37 +52,47 @@ const muiTheme = createMuiTheme({
   },
 })
 
+const AppSettings = () => {
+  const [data, setData] = useState({
+    status: ``,
+    fullname: ``,
+    user_id: 0,
+    department: ``,
+    scopes: [],
+    apps: [],
+  })
 
-class AppSettings extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { data: window.initialData }
-  }
-  render() {
-    const { data: {
-      status,
-      url,
-      fullname,
-      department,
-      apps,
-    } } = this.state
-    if (status !== `ONLINE`) {
-      return <MuiThemeProvider theme={muiTheme}>
-        <NavBar isScroll={false} />
-        <LogInLayout url={url} />
-        <Footer />
-      </MuiThemeProvider>
-    } else {
-      return <MuiThemeProvider theme={muiTheme}>
-        <NavBar isScroll={false} />
-        <SettingsLayout
-          fullname={fullname}
-          department={department}
-          authorised_apps={apps}
-        />
-        <Footer />
-      </MuiThemeProvider>
-    }
+  useEffect(() => {
+    (async () => {
+      const data = await Api.getSettings()
+      setData(data)
+    })()
+  }, [])
+
+  const {
+    status,
+    url,
+    fullname,
+    department,
+    apps,
+  } = data
+
+  if (status !== `ONLINE`) {
+    return <MuiThemeProvider theme={muiTheme}>
+      <NavBar isScroll={false} />
+      <LogInLayout url={url} />
+      <Footer />
+    </MuiThemeProvider>
+  } else {
+    return <MuiThemeProvider theme={muiTheme}>
+      <NavBar isScroll={false} />
+      <SettingsLayout
+        fullname={fullname}
+        department={department}
+        authorised_apps={apps}
+      />
+      <Footer />
+    </MuiThemeProvider>
   }
 }
 

@@ -717,7 +717,6 @@ def settings(request):
     return render(request, 'settings.html')
 
 
-@ensure_csrf_cookie
 def get_settings(request):
     if request.method != "GET":
         response = PrettyJsonResponse({
