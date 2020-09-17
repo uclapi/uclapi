@@ -392,11 +392,67 @@ def number_of_requests(request):
         })
         response.status_code = 400
         return response
-
     return PrettyJsonResponse({
         "ok": True,
         "num": len(calls),
     })
+
+
+def get_apps(request):
+    if request.method != "GET":
+        response = PrettyJsonResponse({
+            "success": False,
+            "error": "Request is not of method GET"
+        })
+        response.status_code = 400
+        return response
+    try:
+        user_id = request.session["user_id"]
+    except (KeyError, AttributeError):
+        response = PrettyJsonResponse({
+            "success": False,
+            "message": "User ID not set in session. Please log in again."
+        })
+        response.status_code = 400
+        return response
+
+    user = get_user_by_id(user_id)
+
+    user_meta = {
+        "name": user.full_name,
+        "cn": user.cn,
+        "department": user.department,
+        "intranet_groups": user.raw_intranet_groups,
+        "apps": []
+    }
+
+    user_apps = App.objects.filter(user=user, deleted=False)
+
+    s = Scopes()
+
+    for app in user_apps:
+        user_meta["apps"].append({
+            "name": app.name,
+            "id": app.id,
+            "token": app.api_token,
+            "created": app.created,
+            "updated": app.last_updated,
+            "oauth": {
+                "client_id": app.client_id,
+                "client_secret": app.client_secret,
+                "callback_url": app.callback_url,
+                "scopes": s.scope_dict_all(app.scope.scope_number)
+            },
+            "webhook": {
+                "verification_secret": app.webhook.verification_secret,
+                "url": app.webhook.url,
+                "siteid": app.webhook.siteid,
+                "roomid": app.webhook.roomid,
+                "contact": app.webhook.contact
+            }
+        })
+
+    return PrettyJsonResponse(user_meta)
 
 
 def quota_remaining(request):

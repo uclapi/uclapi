@@ -1,19 +1,16 @@
-import json
 import os
 from distutils.util import strtobool
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.http import quote
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
-from oauth.scoping import Scopes
 from uclapi.settings import FAIR_USE_POLICY
 
 from .app_helpers import get_temp_token, get_articles
-from .models import App, User
+from .models import User
 from .tasks import add_user_to_mailing_list_task
 
 
@@ -124,7 +121,7 @@ def dashboard(request):
         if request.method != "POST":
             return render(request, "agreement.html", {
                 'fair_use': FAIR_USE_POLICY
-                })
+            })
 
         try:
             agreement = strtobool(request.POST["agreement"])
@@ -143,44 +140,7 @@ def dashboard(request):
                 "error": "You must agree to the fair use policy"
             })
 
-    user_meta = {
-        "name": user.full_name,
-        "cn": user.cn,
-        "department": user.department,
-        "intranet_groups": user.raw_intranet_groups,
-        "apps": []
-    }
-
-    user_apps = App.objects.filter(user=user, deleted=False)
-
-    s = Scopes()
-
-    for app in user_apps:
-        user_meta["apps"].append({
-            "name": app.name,
-            "id": app.id,
-            "token": app.api_token,
-            "created": app.created,
-            "updated": app.last_updated,
-            "oauth": {
-                "client_id": app.client_id,
-                "client_secret": app.client_secret,
-                "callback_url": app.callback_url,
-                "scopes": s.scope_dict_all(app.scope.scope_number)
-            },
-            "webhook": {
-                "verification_secret": app.webhook.verification_secret,
-                "url": app.webhook.url,
-                "siteid": app.webhook.siteid,
-                "roomid": app.webhook.roomid,
-                "contact": app.webhook.contact
-            }
-        })
-
-    initial_data = json.dumps(user_meta, cls=DjangoJSONEncoder)
-    return render(request, 'dashboard.html', {
-        'initial_data': initial_data
-    })
+    return render(request, 'dashboard.html')
 
 
 @ensure_csrf_cookie
@@ -221,10 +181,12 @@ def warning(request):
     return render(request, 'warning.html', {
         'initial_data': {
             'title': "Please note you are not fully logged out!",
-            'content': ["You have been logged out from UCL API. However "
-                        + "in order to be fully logged out of all UCL services "
-                        + "you need to close your browser completely and re-open.",
-                        "Thank you! Click here to go back to the front page:"]
+            'content': [
+                "You have been logged out from UCL API. However "
+                + "in order to be fully logged out of all UCL services "
+                + "you need to close your browser completely and re-open.",
+                "Thank you! Click here to go back to the front page:"
+            ]
         }
     })
 
@@ -244,10 +206,13 @@ def error_500_view(request):
     return render(request, 'warning.html', {
         'initial_data': {
             'title': "Error 500",
-            'content': ["Oops... something went wrong! Sorry for the inconvenience. ",
-                        "Our team is working on it, if you have an urgent concern please get "
-                        + "in touch with us at isd.apiteam@ucl.ac.uk",
-                        "Please click below to go back to the front page:"]
+            'content': [
+                "Oops... something went wrong! Sorry for the inconvenience. ",
+                "Our team is working on it, "
+                + "if you have an urgent concern please get "
+                + "in touch with us at isd.apiteam@ucl.ac.uk",
+                "Please click below to go back to the front page:"
+            ]
         }
     })
 

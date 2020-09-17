@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-no-bind */
-import dayjs from 'dayjs'
 import { styles } from 'Layout/data/dashboard_styles.jsx'
 import {
   Button, CardView, Column, ConfirmBox,
@@ -20,27 +19,21 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props)
 
-    this.DEBUGGING = false
-
-    // Sort the apps by last updated property
-    window.initialData.apps.sort((a, b) => {
-      const dateA = dayjs(a.created)
-      const dateB = dayjs(b.created)
-
-      if (dateA.isBefore(dateB)) {
-        return -1
-      } else if (dateB.isBefore(dateA)) {
-        return 1
-      } else {
-        return 0
-      }
-    })
-
     this.state = {
-      data: window.initialData,
+      data: {
+        name: ``,
+        cn: ``,
+        department: ``,
+        intranet_groups: ``,
+        apps: [],
+      },
       view: `default`,
       toDelete: -1,
     }
+  }
+
+  componentDidMount(){
+    this.getData()
   }
 
   render() {
@@ -173,6 +166,11 @@ class Dashboard extends React.Component {
         <Footer />
       </>
     )
+  }
+
+  getData = async () => {
+    const data = await Api.getData()
+    this.setState({ data })
   }
 
   addNewProject = async (name) => {
