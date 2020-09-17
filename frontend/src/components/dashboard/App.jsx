@@ -72,7 +72,7 @@ export default class App extends React.Component {
             <Field
               title="Title"
               content={app.name}
-              onSave={(value) => { actions.saveEditTitle(index, value) }}
+              onSave={(value) => { actions.renameProject(index, value) }}
               isSmall
             />
             <Field

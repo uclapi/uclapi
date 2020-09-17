@@ -1,11 +1,19 @@
 import json
+import redis
+from django.db.models import Count
 
+from django.http import JsonResponse
+from django.utils.datastructures import MultiValueDictKeyError
+from django.utils.datetime_safe import datetime
+
+from oauth.models import OAuthToken
 from oauth.scoping import Scopes
 from common.helpers import PrettyJsonResponse
+from uclapi.settings import REDIS_UCLAPI_HOST
 
 from .app_helpers import (is_url_unsafe, NOT_HTTPS,
                           NOT_VALID, URL_BLACKLISTED, NOT_PUBLIC)
-from .models import App, User
+from .models import App, User, APICall
 
 
 def get_user_by_id(user_id):
@@ -360,3 +368,211 @@ def update_scopes(request):
             "success": True,
             "message": "Scope successfully changed.",
         })
+
+
+def number_of_requests(request):
+    try:
+        token = request.GET["token"]
+    except MultiValueDictKeyError:
+        response = JsonResponse({
+            "ok": False,
+            "message": "No token provided"
+        })
+        response.status_code = 400
+        return response
+
+    if token.startswith('uclapi-user-'):
+        calls = APICall.objects.filter(token__token__exact=token)
+    elif token.startswith('uclapi-'):
+        calls = APICall.objects.filter(app__api_token__exact=token)
+    else:
+        response = JsonResponse({
+            "ok": False,
+            "message": "Token is invalid"
+        })
+        response.status_code = 400
+        return response
+    return PrettyJsonResponse({
+        "ok": True,
+        "num": len(calls),
+    })
+
+
+def get_apps(request):
+    if request.method != "GET":
+        response = PrettyJsonResponse({
+            "success": False,
+            "error": "Request is not of method GET"
+        })
+        response.status_code = 400
+        return response
+    try:
+        user_id = request.session["user_id"]
+    except (KeyError, AttributeError):
+        response = PrettyJsonResponse({
+            "success": False,
+            "message": "User ID not set in session. Please log in again."
+        })
+        response.status_code = 400
+        return response
+
+    user = get_user_by_id(user_id)
+
+    user_meta = {
+        "name": user.full_name,
+        "cn": user.cn,
+        "department": user.department,
+        "intranet_groups": user.raw_intranet_groups,
+        "apps": []
+    }
+
+    user_apps = App.objects.filter(user=user, deleted=False)
+
+    s = Scopes()
+
+    for app in user_apps:
+        user_meta["apps"].append({
+            "name": app.name,
+            "id": app.id,
+            "token": app.api_token,
+            "created": app.created,
+            "updated": app.last_updated,
+            "oauth": {
+                "client_id": app.client_id,
+                "client_secret": app.client_secret,
+                "callback_url": app.callback_url,
+                "scopes": s.scope_dict_all(app.scope.scope_number)
+            },
+            "webhook": {
+                "verification_secret": app.webhook.verification_secret,
+                "url": app.webhook.url,
+                "siteid": app.webhook.siteid,
+                "roomid": app.webhook.roomid,
+                "contact": app.webhook.contact
+            }
+        })
+
+    return PrettyJsonResponse(user_meta)
+
+
+def quota_remaining(request):
+    try:
+        token = request.GET["token"]
+    except MultiValueDictKeyError:
+        response = JsonResponse({
+            "ok": False,
+            "message": "No token provided"
+        })
+        response.status_code = 400
+        return response
+
+    r = redis.Redis(host=REDIS_UCLAPI_HOST)
+
+    if token.startswith('uclapi-user-'):
+        Otoken = OAuthToken.objects.filter(token__exact=token).first()
+
+        cache_key = "oauth:" + Otoken.user.email
+        limit = Otoken.user.oauth_quota
+
+    elif token.startswith('uclapi-'):
+        app = App.objects.filter(api_token__exact=token).first()
+        cache_key = app.user.email
+        limit = app.user.dev_quota
+
+    else:
+        response = JsonResponse({
+            "ok": False,
+            "message": "Token is invalid"
+        })
+        response.status_code = 400
+        return response
+
+    count_data = r.get(cache_key)
+
+    if count_data:
+        count_data = int(r.get(cache_key))
+    else:
+        count_data = 0
+    return PrettyJsonResponse({
+        "ok": True,
+        "remaining": limit - count_data,
+    })
+
+
+def most_popular_service(request):
+    most_common = APICall.objects.values("service").annotate(
+        count=Count('service')).order_by("-count")
+    most_common = list(most_common)
+
+    return PrettyJsonResponse({
+        "ok": True,
+        "data": most_common
+    })
+
+
+def most_popular_method(request):
+    try:
+        service = request.GET["service"]
+        most_common = APICall.objects.filter(service__exact=service).values(
+            "method").annotate(count=Count('method')).order_by("-count")
+    except MultiValueDictKeyError:
+        most_common = APICall.objects.values(
+            "method").annotate(count=Count('method')).order_by("-count")
+
+    most_common = list(most_common)
+
+    return PrettyJsonResponse({
+        "ok": True,
+        "data": most_common
+    })
+
+
+def users_per_app(request):
+    try:
+        token = request.GET["token"]
+    except MultiValueDictKeyError:
+        response = JsonResponse({
+            "ok": False,
+            "message": "No token provided"
+        })
+        response.status_code = 400
+        return response
+
+    try:
+        start = request.GET["start_date"]
+        end = request.GET["end_date"]
+
+        start_date = datetime.strptime(start, "%Y-%m-%d")
+        end_date = datetime.strptime(end, "%Y-%m-%d")
+
+        users = OAuthToken.objects.filter(creation_date__gte=start_date,
+                                          creation_date__lte=end_date,
+                                          app__api_token__exact=token)
+
+    except MultiValueDictKeyError:
+        users = OAuthToken.objects.filter(app__api_token__exact=token)
+
+    return PrettyJsonResponse({
+        "ok": True,
+        "users": len(users)
+    })
+
+
+def users_per_app_by_dept(request):
+    try:
+        token = request.GET["token"]
+    except MultiValueDictKeyError:
+        response = JsonResponse({
+            "ok": False,
+            "message": "No token provided"
+        })
+        response.status_code = 400
+        return response
+
+    users = User.objects.filter(oauthtoken__app__api_token__exact=token)\
+        .values("department").annotate(count=Count('department'))\
+        .order_by("-count")
+    return PrettyJsonResponse({
+        "ok": True,
+        "data": list(users)
+    })

@@ -1,6 +1,4 @@
 /* eslint-disable react/jsx-no-bind */
-import dayjs from 'dayjs'
-import Cookies from 'js-cookie'
 import { styles } from 'Layout/data/dashboard_styles.jsx'
 import {
   Button, CardView, Column, ConfirmBox,
@@ -14,45 +12,34 @@ import 'Styles/dashboard.scss'
 import 'Styles/navbar.scss'
 // UI App Component
 import App from '../components/dashboard/App.jsx'
-
-const defaultHeaders = {
-  'Content-Type': `application/x-www-form-urlencoded`,
-  'X-CSRFToken': Cookies.get(`csrftoken`),
-}
+import Api from '../lib/Api.js'
 
 class Dashboard extends React.Component {
 
   constructor(props) {
     super(props)
 
-    this.DEBUGGING = false
-
-    // Sort the apps by last updated property
-    window.initialData.apps.sort((a, b) => {
-      const dateA = dayjs(a.created)
-      const dateB = dayjs(b.created)
-
-      if (dateA.isBefore(dateB)) {
-        return -1
-      } else if (dateB.isBefore(dateA)) {
-        return 1
-      } else {
-        return 0
-      }
-    })
-
     this.state = {
-      data: window.initialData,
+      data: {
+        name: ``,
+        cn: ``,
+        department: ``,
+        intranet_groups: ``,
+        apps: [],
+      },
       view: `default`,
       toDelete: -1,
     }
+  }
+
+  componentDidMount(){
+    this.getData()
   }
 
   render() {
     const { data: { name, cn, apps }, view, toDelete } = this.state
 
     const actions = {
-      toggleEditTitle: this.toggleEditTitle,
       regenToken: this.regenToken,
       regenVerificationSecret: this.regenVerificationSecret,
       webhook: {
@@ -61,7 +48,7 @@ class Dashboard extends React.Component {
         saveSiteID: this.saveWebhookSiteID,
         saveRoomID: this.saveWebhookRoomID,
       },
-      saveEditTitle: this.saveEditTitle,
+      renameProject: this.renameProject,
       cancelEditTitle: this.cancelEditTitle,
       setScope: this.setScope,
       saveOAuthCallback: this.saveOAuthCallback,
@@ -181,148 +168,144 @@ class Dashboard extends React.Component {
     )
   }
 
-  addNewProject = (name) => {
-    this.queryDashboardAPI(`/dashboard/api/create/`, `name=` + name, (json) => {
-      // For debugging
-      if (this.DEBUGGING) { console.log(json) }
-
-      // Add the new app to the state so it gets rendered
-      const newApp = json.app
-      newApp[`name`] = name
-
-      const { data } = this.state
-      const newData = { ...data }
-      newData.apps.push(newApp)
-
-      // Go to new state visually
-      this.setState({
-        view: `default`,
-        data: newData,
-      })
-    })
+  getData = async () => {
+    const data = await Api.getData()
+    this.setState({ data })
   }
 
-  deleteConfirm = (index) => {
+  addNewProject = async (name) => {
+    const newApp = await Api.addNewProject(name)
+    const { data } = this.state
     this.setState({
-      view: `delete-project`,
-      toDelete: index,
+      view: `default`,
+      data: {
+        ...data,
+        apps: [...data.apps, newApp],
+      },
     })
   }
 
-  deleteProject = (index) => {
+  deleteConfirm = (index) => this.setState({
+    view: `delete-project`,
+    toDelete: index,
+  })
+
+  deleteProject = async (index) => {
     const { data } = this.state
+  
+    try {
+      await Api.deleteProject(data.apps[index].id)
 
-    this.queryDashboardAPI(
-      `/dashboard/api/delete/`,
-      `app_id=` + data.apps[index].id,
-      (json) => {
-        // For debugging
-        if (this.DEBUGGING) { console.log(json) }
-
-        // Remove the deleted app
-        console.log(`deleting index: ` + index)
-        const newData = { ...data }
-        newData.apps.splice(index, 1)
-
-        // Go to default state visually
-        this.setState({
-          toDelete: -1,
-          view: `default`,
-          data: newData,
-        })
+      this.setState({
+        toDelete: -1,
+        view: `default`,
+        data: {
+          ...data,
+          apps: [
+            ...data.apps.slice(0, index),
+            ...data.apps.slice(index + 1),
+          ],
+        },
       })
+    } catch (error) {
+      window.alert(error.message)
+    }
   }
 
-  saveEditTitle = (index, value) => {
+  renameProject = async (index, value) => {
     const { data } = this.state
 
-    this.queryDashboardAPI(
-      `/dashboard/api/rename/`,
-      `new_name=` + value + `&app_id=` + data.apps[index].id,
-      (json) => {
-      if (this.DEBUGGING) { console.log(json) }
-    })
-
-    data.apps[index].name = value
-    this.setState({ data: data })
+    try {
+      await Api.renameProject(data.apps[index].id, value)
+      this.updateAppState(index, { name: value })
+    } catch (error) {
+      window.alert(error.message)
+    }
   }
 
-  saveOAuthCallback = (index, value) => {
+  saveOAuthCallback = async (index, value) => {
     if (value.startsWith(`https://`) || value == ``) {
       const { data } = this.state
-      data.apps[index].oauth.callback_url = value
 
-      this.queryDashboardAPI(
-        `/dashboard/api/setcallbackurl/`,
-        `app_id=` + data.apps[index].id + `&callback_url=` + value,
-        (json) => {
-          const { success, message } = json
-          if(!success){
-            window.alert(message)
-          }
-        }
-      )
-
-      this.setState({ data: data })
+      try {
+        await Api.saveOAuthCallback(data.apps[index].id, value)
+        this.updateAppState(index, {
+          oauth: {
+            ...data.apps[index].oauth,
+            callback_url: value,
+          },
+        })
+      } catch (error) {
+        window.alert(error.message)
+      }
+       
     } else {
       window.alert(`Must start with https://`)
     }
   }
 
-  setScope = (index, scope, value) => {
-    if (this.DEBUGGING) {
-      console.log(`Change app, ` + index + ` scope, ` + scope + ` to ` + value)
+  setScope = async (index, scope, value) => {
+    const { data } = this.state
+
+    const updatedAppState = ({
+      oauth: {
+        ...data.apps[index].oauth,
+        scopes: [
+          ...data.apps[index].oauth.scopes.slice(0, scope),
+          {
+            ...data.apps[index].oauth.scopes[scope],
+            enabled: value,
+          },
+          ...data.apps[index].oauth.scopes.slice(scope + 1),
+        ],
+      },
+    })
+  
+    const { oauth: { scopes } } = updatedAppState
+    const scopesData = scopes.map(scope => ({
+      name: scope.name,
+      checked: scope.enabled,
+    }))
+  
+    try {
+      await Api.setScope(data.apps[index].id, JSON.stringify(scopesData))
+
+      this.updateAppState(index, updatedAppState)
+    } catch (error) {
+      window.alert(error.message)
     }
-    const { data } = this.state
-    const newData = { ...data }
-
-    // Update data
-    newData.apps[index].oauth.scopes[scope].enabled = value
-
-    // Convert scopes into form for backend
-    const scopes = newData.apps[index].oauth.scopes
-    const scopesData = scopes.map(scope =>
-      ({
-        name: scope.name,
-        checked: scope.enabled,
-      }))
-
-    const json = JSON.stringify(scopesData)
-
-    this.queryDashboardAPI(
-      `/dashboard/api/updatescopes/`,
-      `app_id=${newData.apps[index].id}&scopes=${encodeURIComponent(json)}`,
-      (json) => {
-        console.log(json)
-      })
-
-    this.setState({ data: newData })
   }
 
-  regenToken = (index) => {
+  updateAppState = (index, newAppState) => {
     const { data } = this.state
-
-    this.queryDashboardAPI(
-      `/dashboard/api/regen/`,
-      `app_id=` + data.apps[index].id,
-      (json) => {
-        data.apps[index].token = json.app.token
-        this.setState({ data: data })
-      }
-    )
+    return this.setState({
+      data: {
+        ...data,
+        apps: [
+          ...data.apps.slice(0, index),
+          {
+            ...data.apps[index],
+            ...newAppState,
+          },
+          ...data.apps.slice(index + 1),
+        ],
+      },
+    })
   }
 
-  regenVerificationSecret = (index) => {
+  regenToken = async (index) => {
     const { data } = this.state
+    const token = await Api.regenToken(data.apps[index].id)
+    this.updateAppState(index, { token })
+  }
 
-    this.queryDashboardAPI(
-      `dashboard/api/webhook/refreshsecret/`,
-      `app_id=` + data.apps[index].id,
-      (json) => {
-        data.apps[index].webhook.verification_secret = json.new_secret
-        this.setState({ data: data })
-      }
-    )
+  regenVerificationSecret = async (index) => {
+    const { data } = this.state
+    const secret = await Api.regenVerificationSecret(data.apps[index].id)
+    this.updateAppState(index, { webhook: {
+      ...data.apps[index].webhook,
+      verification_secret: secret,
+    }})
   }
 
   saveWebhookURL = (index, value) => {
@@ -346,56 +329,32 @@ class Dashboard extends React.Component {
     { roomid: value }, index
   )
 
-  updateWebhookSettings = (newValues, index) => {
+  updateWebhookSettings = async (newValues, index) => {
     const { data } = this.state
 
     const app = data.apps[index]
-    const values = {
+    const {
+      url,
+      siteid,
+      roomid,
+      contact,
+    } = {
       ...app.webhook,
       ...newValues,
     }
 
-    const parameters = `url=${
-      values.url
-    }&siteid=${
-      values.siteid
-    }&roomid=${
-      values.roomid
-    }&contact=${
-      values.contact
-    }&app_id=${
-      data.apps[index].id
-    }`
-
-    this.queryDashboardAPI(
-      `dashboard/api/webhook/edit/`,
-      parameters,
-      (json) => {
-        console.log(`For parameters: ` + parameters)
-        const { ok, message } = json
-        if(!ok){
-          window.alert(message)
-        }
-      }
-    )
-
-    data.apps[index].webhook = values
-    this.setState({ data: data })
-  }
-
-  queryDashboardAPI = (url, querystring, callback) => {
-    fetch(url, {
-      method: `POST`,
-      credentials: `include`,
-      headers: defaultHeaders,
-      body: querystring,
-    }).then((res) => {
-      return res.json()
-    }).then(callback)
-      .catch((err) => {
-        console.log(`Failed to save details to: ` + url)
-        console.log(err)
+    try {
+      const result = await Api.updateWebhookSettings(app.id, {
+        url,
+        siteid,
+        roomid,
+        contact,
       })
+
+      this.updateAppState(index, { webhook: result })
+    } catch (error) {
+      window.alert(error.message)
+    }
   }
 }
 
