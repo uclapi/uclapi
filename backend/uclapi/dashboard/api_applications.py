@@ -396,7 +396,7 @@ def number_of_requests(request):
         "ok": True,
         "num": len(calls),
     })
-    
+
 
 def get_apps(request):
     if request.method != "GET":
@@ -414,7 +414,8 @@ def get_apps(request):
             "message": "User ID not set in session. Please log in again."
         })
         response.status_code = 400
-        return response  
+        return response
+    
     user = get_user_by_id(user_id)
 
     user_meta = {
