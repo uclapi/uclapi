@@ -5,6 +5,8 @@ from psycopg2.extras import RealDictCursor
 from timetable.amp import ModuleInstance
 from timetable.models import Lock
 
+import timetable.app_helpers
+
 from .utils import (
     get_location_coordinates,
     SESSION_TYPE_MAP
@@ -96,9 +98,17 @@ def get_personal_timetable(upi):
             "session_group": row['modgrpcode']
         }
 
-        date = row['startdatetime'].strftime("%Y-%m-%d")
-        if date not in full_timetable:
-            full_timetable[date] = []
-        full_timetable[date].append(booking_data)
+        dates = []
+        if row['startdatetime']:
+            dates.append(row['startdatetime'].strftime("%Y-%m-%d"))
+        else:
+            # If no rooms are booked (e.g. because of COVID-19) we'll have to
+            # calculate the bookings ourself based on the weekid/weekday.
+            dates = timetable.app_helpers._get_real_dates(row["weekid"], row["weekday"])
+
+        for date in dates:
+            if date not in full_timetable:
+                full_timetable[date] = []
+            full_timetable[date].append(booking_data)
 
     return full_timetable
