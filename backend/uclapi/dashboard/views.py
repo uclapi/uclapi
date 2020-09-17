@@ -6,10 +6,9 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.http import quote
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
-
 from uclapi.settings import FAIR_USE_POLICY
 
-from .app_helpers import get_temp_token, get_articles
+from .app_helpers import get_articles, get_temp_token
 from .models import User
 from .tasks import add_user_to_mailing_list_task
 
@@ -109,8 +108,8 @@ def dashboard(request):
         user_id = request.session["user_id"]
     except KeyError:
         url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
-        param = (request.build_absolute_uri(request.path) +
-                 "user/login.callback")
+        param = (request.build_absolute_uri(request.path)
+                 + "user/login.callback")
         param = quote(param)
         url = url + param
         return redirect(url)
