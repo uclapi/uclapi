@@ -396,8 +396,8 @@ def number_of_requests(request):
         "ok": True,
         "num": len(calls),
     })
-          
     
+
 def get_apps(request):
     if request.method != "GET":
         response = PrettyJsonResponse({
@@ -415,7 +415,7 @@ def get_apps(request):
         })
         response.status_code = 400
         return response  
-        user = get_user_by_id(user_id)
+    user = get_user_by_id(user_id)
 
     user_meta = {
         "name": user.full_name,
@@ -464,7 +464,7 @@ def quota_remaining(request):
         })
         response.status_code = 400
         return response
-      
+    
     r = redis.Redis(host=REDIS_UCLAPI_HOST)
 
     if token.startswith('uclapi-user-'):
