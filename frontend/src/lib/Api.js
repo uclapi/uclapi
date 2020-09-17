@@ -13,6 +13,7 @@ class Api {
   })
 
   static post = (url, body) => Api.req.post(url, qs.stringify(body))
+  static get = (url) => Api.req.get(url)
 
   static regenToken = async (appId) => {
     const { data: { app: { token } } } = await Api.post(`/regen/`, { app_id: appId })
@@ -69,6 +70,11 @@ class Api {
       app_id: appId,
       scopes,
     })
+    return data
+  }
+
+  static getData = async () => {
+    const { data } = await Api.get(`/apps/`)
     return data
   }
 }
