@@ -1,6 +1,7 @@
 import datetime
 import json
 from distutils.util import strtobool
+from typing import List
 
 import redis
 from django.conf import settings
@@ -30,7 +31,7 @@ from .models import (
     WeekmapnumericA, WeekmapnumericB,
     WeekstructureA, WeekstructureB
 )
-from .personal_timetable import get_personal_timetable
+import timetable.personal_timetable
 from .tasks import cache_student_timetable
 from .utils import (
     get_location_coordinates,
@@ -277,7 +278,7 @@ def _get_timetable_events(full_modules):
             if not event_bookings.exists():
                 # We have to trust the data in the event because
                 # no rooms are booked for some weird reason.
-                for date in _get_real_dates(event):
+                for date in _get_real_dates(event.weekid, event.weekday):
                     event_data = {
                         "start_time": event.starttime,
                         "end_time": event.finishtime,
@@ -320,10 +321,9 @@ def _get_timetable_events(full_modules):
                         event_data["module"]["lecturer"] = \
                             _lecturers_cache[None]
 
-                    date_str = date.strftime("%Y-%m-%d")
-                    if date_str not in full_timetable:
-                        full_timetable[date_str] = []
-                    full_timetable[date_str].append(event_data)
+                    if date not in full_timetable:
+                        full_timetable[date] = []
+                    full_timetable[date].append(event_data)
             else:
                 for booking in event_bookings:
                     event_data = {
@@ -423,12 +423,14 @@ def _map_weeks():
         _week_map[week.weekid].append(week.weeknumber)
 
 
-def _get_real_dates(slot):
+def _get_real_dates(weekid: int, weekday: int) -> List[str]:
+    if not _week_map:
+        _map_weeks()
     return [
-        _week_num_date_map[startdate] + datetime.timedelta(
-            days=slot.weekday - 1
-        )
-        for startdate in _week_map[slot.weekid]
+        (_week_num_date_map[startdate] + datetime.timedelta(
+            days=weekday - 1
+        )).strftime("%Y-%m-%d")
+        for startdate in _week_map[weekid]
     ]
 
 
@@ -486,7 +488,7 @@ def get_student_timetable(upi, date_filter=None):
         data = r.get(timetable_key)
         student_events = json.loads(data)
     else:
-        student_events = get_personal_timetable(upi)
+        student_events = timetable.personal_timetable.get_personal_timetable(upi)
         # Celery task to cache for the next request
         cache_student_timetable.delay(upi, student_events)
 
