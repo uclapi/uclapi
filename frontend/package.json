@@ -33,7 +33,7 @@
     ],
     "../**/*.py": [
       "autopep8 --in-place --global-config ../backend/uclapi/.flake8.ini",
-      "flake8"
+      "flake8 --config ../backend/uclapi/.flake8.ini"
     ]
   },
   "browserify": {
