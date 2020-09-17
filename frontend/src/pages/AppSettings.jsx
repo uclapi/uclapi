@@ -13,10 +13,7 @@ import ReactDOM from 'react-dom'
 
 import LogInLayout from '../components/appsettings/LogInLayout.jsx'
 import SettingsLayout from '../components/appsettings/SettingsLayout.jsx'
-import Api from '../lib/Api.js'
-
-
-
+import Api from '../lib/Api'
 
 const {
   500: cyan500,
@@ -64,7 +61,7 @@ const AppSettings = () => {
 
   useEffect(() => {
     (async () => {
-      const data = await Api.getSettings()
+      const data = await Api.settings.getSettings()
       setData(data)
     })()
   }, [])

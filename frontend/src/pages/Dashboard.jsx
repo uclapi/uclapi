@@ -12,7 +12,7 @@ import 'Styles/dashboard.scss'
 import 'Styles/navbar.scss'
 // UI App Component
 import App from '../components/dashboard/App.jsx'
-import Api from '../lib/Api.js'
+import Api from '../lib/Api'
 
 class Dashboard extends React.Component {
 
@@ -169,12 +169,12 @@ class Dashboard extends React.Component {
   }
 
   getData = async () => {
-    const data = await Api.getData()
+    const data = await Api.dashboard.getData()
     this.setState({ data })
   }
 
   addNewProject = async (name) => {
-    const newApp = await Api.addNewProject(name)
+    const newApp = await Api.dashboard.addNewProject(name)
     const { data } = this.state
     this.setState({
       view: `default`,
@@ -194,7 +194,7 @@ class Dashboard extends React.Component {
     const { data } = this.state
   
     try {
-      await Api.deleteProject(data.apps[index].id)
+      await Api.dashboard.deleteProject(data.apps[index].id)
 
       this.setState({
         toDelete: -1,
@@ -216,7 +216,7 @@ class Dashboard extends React.Component {
     const { data } = this.state
 
     try {
-      await Api.renameProject(data.apps[index].id, value)
+      await Api.dashboard.renameProject(data.apps[index].id, value)
       this.updateAppState(index, { name: value })
     } catch (error) {
       window.alert(error.message)
@@ -228,7 +228,7 @@ class Dashboard extends React.Component {
       const { data } = this.state
 
       try {
-        await Api.saveOAuthCallback(data.apps[index].id, value)
+        await Api.dashboard.saveOAuthCallback(data.apps[index].id, value)
         this.updateAppState(index, {
           oauth: {
             ...data.apps[index].oauth,
@@ -268,7 +268,7 @@ class Dashboard extends React.Component {
     }))
   
     try {
-      await Api.setScope(data.apps[index].id, JSON.stringify(scopesData))
+      await Api.dashboard.setScope(data.apps[index].id, JSON.stringify(scopesData))
 
       this.updateAppState(index, updatedAppState)
     } catch (error) {
@@ -295,13 +295,13 @@ class Dashboard extends React.Component {
 
   regenToken = async (index) => {
     const { data } = this.state
-    const token = await Api.regenToken(data.apps[index].id)
+    const token = await Api.dashboard.regenToken(data.apps[index].id)
     this.updateAppState(index, { token })
   }
 
   regenVerificationSecret = async (index) => {
     const { data } = this.state
-    const secret = await Api.regenVerificationSecret(data.apps[index].id)
+    const secret = await Api.dashboard.regenVerificationSecret(data.apps[index].id)
     this.updateAppState(index, { webhook: {
       ...data.apps[index].webhook,
       verification_secret: secret,
@@ -344,7 +344,7 @@ class Dashboard extends React.Component {
     }
 
     try {
-      const result = await Api.updateWebhookSettings(app.id, {
+      const result = await Api.dashboard.updateWebhookSettings(app.id, {
         url,
         siteid,
         roomid,
