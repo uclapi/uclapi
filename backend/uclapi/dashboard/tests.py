@@ -152,8 +152,6 @@ class DashboardTestCase(TestCase):
 
         res = self.client.post('/dashboard/', {'agreement': 'True'})
         self.assertTemplateUsed(res, "dashboard.html")
-        self.assertContains(res, "An App")
-        self.assertContains(res, "Test testington")
 
     def test_unsafe_urls(self):
         assert is_url_unsafe("ftp://test.com")
