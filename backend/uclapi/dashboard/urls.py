@@ -2,13 +2,14 @@ from django.conf.urls import url
 
 from dashboard.api_applications import (
     create_app, delete_app, regenerate_app_token, rename_app, set_callback_url,
-    update_scopes
+    update_scopes, get_apps
 )
 
 from . import views, webhook_views
 
 urlpatterns = [
     url(r'^$', views.dashboard),
+    url(r'api/apps/$', get_apps),
     url(r'api/create/$', create_app),
     url(r'api/rename/$', rename_app),
     url(r'api/regen/$', regenerate_app_token),
