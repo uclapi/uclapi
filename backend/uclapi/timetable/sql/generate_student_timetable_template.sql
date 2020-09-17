@@ -37,7 +37,8 @@ RETURNS TABLE (
     siteaddr4           TEXT,                   -- 32
     starttime           VARCHAR,                -- 33
     finishtime          VARCHAR,                -- 34
-    descrip             VARCHAR                 -- 35
+    descrip             VARCHAR,                -- 35
+    weekday             BIGINT                  -- 36
 )
 LANGUAGE plpgsql
 AS $$
@@ -245,15 +246,17 @@ SELECT rb.startdatetime     as startdatetime,
            WHERE de.deptid = lecturer.owner
        )                    as lecturerdeptname,
        lecturer.linkcode    as lecturereppn,
-       rb.title             as title,
+       -- Use module name if title of booking or the booking itself doesn't
+       -- exist.
+       COALESCE(rb.title, m.name::VARCHAR) as title,
        classifications.classid as sessiontypeid,
        classifications.name as sessiontypestr,
 --     rb.condisplayname    as condisplayname,
        string_agg(DISTINCT rb.condisplayname, ' / ') as condisplayname,
        tes.modgrpcode       as modgrpcode,
        tes.instcode         as instcode,
-       COALESCE(tt.siteid, rb.siteid) as siteid,
-       COALESCE(tt.roomid, rb.roomid) as roomid,
+       COALESCE(tt.siteid, rb.siteid::TEXT) as siteid,
+       COALESCE(tt.roomid, rb.roomid::TEXT) as roomid,
        sites.sitename       as sitename,
        rooms.roomname       as roomname,
        rooms.capacity       as roomcapacity,
@@ -263,9 +266,10 @@ SELECT rb.startdatetime     as startdatetime,
        sites.address2       as siteaddr2,
        sites.address3       as siteaddr3,
        sites.address4       as siteaddr4,
-       rb.starttime         as starttime,
-       rb.finishtime        as finishtime,
-       rb.descrip           as descrip
+       COALESCE(tt.starttime::VARCHAR, rb.starttime) as starttime,
+       COALESCE(tt.finishtime::VARCHAR, rb.finishtime) as finishtime,
+       rb.descrip           as descrip,
+       tt.weekday           as weekday
 
 FROM timetable_timetable{{ bucket_id | sqlsafe }} tt
 INNER JOIN tt_tmp_events_slot_id tes
@@ -327,7 +331,7 @@ GROUP BY rb.startdatetime,
             lecturer.owner,
             lecturerdeptname,
             lecturer.linkcode,
-            rb.title, 
+            COALESCE(rb.title, m.name::VARCHAR),
             classifications.classid,
             classifications.name,
             tes.modgrpcode,
@@ -343,9 +347,10 @@ GROUP BY rb.startdatetime,
             sites.address2,
             sites.address3,
             sites.address4,
-            rb.starttime,
-            rb.finishtime,
-            rb.descrip
+            COALESCE(tt.starttime::VARCHAR, rb.starttime),
+            COALESCE(tt.finishtime::VARCHAR, rb.finishtime),
+            rb.descrip,
+            tt.weekday
 ORDER BY startdatetime,
             moduleid,
             title,
@@ -363,8 +368,7 @@ ORDER BY startdatetime,
         moduleid,
         modgrpcode
     ) *
-    FROM tt_tmp_timetable_events te
-    WHERE te.startdatetime IS NOT NULL;
+    FROM tt_tmp_timetable_events te;
 
 END
 $$;
