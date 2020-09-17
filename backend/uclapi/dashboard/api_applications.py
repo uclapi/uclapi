@@ -415,7 +415,7 @@ def get_apps(request):
         })
         response.status_code = 400
         return response
-    
+
     user = get_user_by_id(user_id)
 
     user_meta = {
@@ -465,7 +465,7 @@ def quota_remaining(request):
         })
         response.status_code = 400
         return response
-    
+
     r = redis.Redis(host=REDIS_UCLAPI_HOST)
 
     if token.startswith('uclapi-user-'):
