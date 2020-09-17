@@ -99,17 +99,23 @@ class MediumArticleScraperTestCase(TestCase):
 
 
 class DashboardTestCase(TestCase):
+
+    TEST_USER = dict(
+        email="test@test.com",
+        full_name="Test testington",
+        given_name="test",
+        department="CS",
+        cn="test",
+        raw_intranet_groups="none",
+        employee_id=12345
+    )
+
+    TEST_APP = dict(name="An App")
+
     def setUp(self):
-        u = User.objects.create(email="test@test.com",
-                                full_name="Test testington",
-                                given_name="test",
-                                department="CS",
-                                cn="test",
-                                raw_intranet_groups="none",
-                                employee_id=12345
-                                )
+        u = User.objects.create(**DashboardTestCase.TEST_USER)
         App.objects.create(user=u,
-                           name="An App")
+                           **DashboardTestCase.TEST_APP)
         session = self.client.session
         session["user_id"] = u.id
         session.save()
@@ -155,6 +161,41 @@ class DashboardTestCase(TestCase):
     def test_safe_url(self):
         assert not is_url_unsafe("https://mytestapp.com/callback")
         assert not is_url_unsafe("https://uclapiexample.com/callback")
+
+    def test_get_apps(self):
+        with patch.dict(
+            'os.environ',
+            {'SHIBBOLETH_ROOT': "http://rooturl.com"}
+        ):
+            session = self.client.session
+            session.save()
+
+            res = self.client.get('/dashboard/api/apps/')
+            self.assertEqual(res.status_code, 200)
+
+            content = json.loads(res.content.decode())
+            self.assertEqual(
+                content["name"],
+                DashboardTestCase.TEST_USER["full_name"]
+            )
+            self.assertEqual(
+                content["cn"],
+                DashboardTestCase.TEST_USER["cn"]
+            )
+            self.assertEqual(
+                content["department"],
+                DashboardTestCase.TEST_USER["department"]
+            )
+            self.assertEqual(
+                content["intranet_groups"],
+                DashboardTestCase.TEST_USER["raw_intranet_groups"]
+            )
+            self.assertTrue(isinstance(content["apps"], list))
+            self.assertEqual(len(content["apps"]), 1)
+            self.assertEqual(
+                content["apps"][0]["name"],
+                DashboardTestCase.TEST_APP["name"]
+            )
 
 
 class FakeShibbolethMiddleWareTestCase(TestCase):
