@@ -44,3 +44,5 @@ class OAuthToken(models.Model):
 
     # Whether the token is active or not
     active = models.BooleanField(default=True)
+
+    creation_date = models.DateTimeField(auto_now_add=True)

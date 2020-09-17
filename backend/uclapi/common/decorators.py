@@ -8,7 +8,7 @@ from datetime import timezone
 from email.utils import format_datetime
 from functools import wraps
 
-from dashboard.models import App
+from dashboard.models import App, APICall
 
 from oauth.models import OAuthToken
 from oauth.scoping import Scopes
@@ -47,7 +47,7 @@ def how_many_seconds_until_midnight():
 
 
 def log_api_call(request, token, token_type):
-    """This functions handles logging of api calls using keen events."""
+    """This functions handles logging of api calls."""
     service = request.path.split("/")[1]
     method = request.path.split("/")[2]
 
@@ -60,27 +60,41 @@ def log_api_call(request, token, token_type):
 
     queryparams = dict(request.GET)
 
+    # token is either app or OAuthToken type. This should be changed,
+    # we don't want variables that can store multiple types....
+
     if token_type in {"general", "oauth"}:
-        _ = {
-            "userid": token.user.id,
-            "email": token.user.email,
-            "name": token.user.given_name,
-            "service": service,
-            "method": method,
-            "version-headers": version_headers,
-            "queryparams": queryparams,
-            "temp_token": False,
-            "token_type": token_type
-        }
-    elif token_type == "general-temp":
-        _ = {
-            "service": service,
-            "method": method,
-            "version-headers": version_headers,
-            "queryparams": queryparams,
-            "temp_token": True,
-            "token_type": token_type
-        }
+        # parameters = {
+        #     "userid": token.user.id,
+        #     "email": token.user.email,
+        #     "name": token.user.given_name,
+        #     "service": service,
+        #     "method": method,
+        #     "version-headers": version_headers,
+        #     "queryparams": queryparams,
+        #     "temp_token": False,
+        #     "token_type": token_type
+        # }
+        if token_type == "general":
+            call_log = APICall(app=token, user=token.user, token=None,
+                               token_type=token_type, service=service,
+                               method=method, queryparams=queryparams)
+            call_log.save()
+        else:
+            call_log = APICall(app=token.app, user=token.user, token=token,
+                               token_type=token_type, service=service,
+                               method=method, queryparams=queryparams)
+            call_log.save()
+
+    # elif token_type == "general-temp":
+    #     parameters = {
+    #         "service": service,
+    #         "method": method,
+    #         "version-headers": version_headers,
+    #         "queryparams": queryparams,
+    #         "temp_token": True,
+    #         "token_type": token_type
+    #     }
 
 
 def throttle_api_call(token, token_type):
@@ -377,9 +391,6 @@ def uclapi_protected_endpoint(
 
             kwargs['token'] = token
 
-            # Log the API call before carrying it out
-            log_api_call(request, token, kwargs['token_type'])
-
             # Get throttle data
             (
                 throttled,
@@ -409,6 +420,9 @@ def uclapi_protected_endpoint(
                 kwargs['X-RateLimit-Limit'] = limit
                 kwargs['X-RateLimit-Remaining'] = remaining
                 kwargs['X-RateLimit-Retry-After'] = reset_secs
+
+            # Log the API call before carrying it out
+            log_api_call(request, token, kwargs['token_type'])
 
             return view_func(request, *args, **kwargs)
         return wrapped
