@@ -107,7 +107,7 @@
     "stylelint-scss": "^3.18.0",
     "terser-webpack-plugin": "^4.2.1",
     "url-loader": "^4.1.0",
-    "webpack": "^4.44.1",
+    "webpack": "^4.44.2",
     "webpack-bundle-tracker": "^0.4.3",
     "webpack-cli": "^3.3.12"
   }
