@@ -173,4 +173,5 @@ def _get_incident(cachet_client: cachetclient.v1.Client, target_comp:
                 enums.INCIDENT_FIXED:
             return i
 
-    pass
+    raise CachetException("Failed to get cachet incident: Cachet Incident not "
+                          "found!")
