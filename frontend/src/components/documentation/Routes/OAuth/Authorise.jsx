@@ -29,6 +29,7 @@ const codeExamples = {
       return redirect(url)
   
   @app.route('/callback')
+  def receive_callback():
       # receive parameters
       result = request.args.get('result', '')
       code = request.args.get('code', '')
