@@ -8,7 +8,7 @@ from .app_helpers import (
 
 from common.helpers import generate_api_token
 
-from oauth.models import OAuthScope
+from oauth.models import OAuthScope, OAuthToken
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -103,7 +103,18 @@ class APICall(models.Model):
         on_delete=models.CASCADE,
         related_name='api_call'
     )
-    raw_request = models.TextField(max_length=10000000)
+
+    token = models.ForeignKey(
+        OAuthToken,
+        on_delete=models.CASCADE,
+        related_name='api_call',
+        blank=True,
+        null=True
+    )
+    token_type = models.CharField(max_length=100, default="")
+    service = models.CharField(max_length=100, default="")
+    method = models.CharField(max_length=100, default="")
+    queryparams = models.TextField(max_length=1000, default="")
 
     class Meta:
         _DATABASE = 'default'

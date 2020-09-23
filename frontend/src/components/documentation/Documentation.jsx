@@ -33,6 +33,12 @@ import {
 } from './Routes/Workspaces'
 import SectionHeader from './SectionHeader.jsx'
 import Sidebar from './Sidebar'
+import TotalNumRequests from "./Routes/Analytics/TotalNumRequests.jsx"
+import RemainingQuota from "./Routes/Analytics/RemainingQuota.jsx"
+import MostPopularService from "./Routes/Analytics/MostPopularService.jsx"
+import MostPopularMethod from "./Routes/Analytics/MostPopularMethod.jsx"
+import UsersPerApp from "./Routes/Analytics/UsersPerApp.jsx"
+import UsersPerAppPerDept from "./Routes/Analytics/UsersPerAppPerDept.jsx"
 
 const DocumentationComponent = () => (
   <>
@@ -105,6 +111,19 @@ const DocumentationComponent = () => (
       <WorkspaceGetSensorsSummary key={`WorkspaceGetSensorsSummary`} />
       <WorkspacesGetImage key={`WorkspacesGetImage`} />
       <WorkspacesGetLiveImage key={`WorkspacesGetLiveImage`} />
+
+      <SectionHeader
+        link="analytics"
+        title="Analytics"
+        key={`SectionHeaderAnalytics`}
+      />
+      <TotalNumRequests key={`TotalNumRequests`} />
+      <RemainingQuota key={`RemainingQuota`} />
+      <MostPopularService key={`MostPopularService`} />
+      <MostPopularMethod key={`MostPopularMethod`} />
+      <UsersPerApp key={`UsersPerApp`} />
+      <UsersPerAppPerDept key={`UsersPerAppPerDept`} />
+
 
       <GetInvolved key={`GetInvolved`} />
     </div>
