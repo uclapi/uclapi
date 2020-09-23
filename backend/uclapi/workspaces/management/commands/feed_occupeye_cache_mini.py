@@ -1,10 +1,12 @@
 from django.core.management.base import BaseCommand
 
 from common.cachet import (
-    get_incident_name, delete_incident,
-    CachetException, create_incident
+    get_incident_name,
+    CachetException, create_incident, update_incident
 )
 from workspaces.occupeye.cache import OccupeyeCache
+
+from cachetclient.v1 import enums
 
 
 class Command(BaseCommand):
@@ -22,12 +24,14 @@ class Command(BaseCommand):
             incident_name = get_incident_name("Occupeye-Mini")
             if incident_name:
                 try:
-                    delete_incident(incident_name)
+                    update_incident("Occupeye Mini-Cache succeeded",
+                                    incident_name, enums.INCIDENT_FIXED)
                 except CachetException as cachet_error:
-                    print(f"Failed to delete cachet incident. "
+                    print(f"Failed to create fixed cachet incident. "
                           f"Reason: {repr(cachet_error)}")
                 except Exception as cachet_error:
-                    print(f"Unexpected: Failed to delete cachet incident. "
+                    print(f"Unexpected: Failed to create fixed cachet "
+                          f"incident. "
                           f"Reason: {repr(cachet_error)}")
             else:
                 print("Could not find appropriate incident in Cachet!")
@@ -35,7 +39,10 @@ class Command(BaseCommand):
             incident_name = get_incident_name("Occupeye-Mini")
             if incident_name:
                 try:
-                    create_incident(occupeye_error, incident_name)
+                    create_incident(occupeye_error,
+                                    incident_name,
+                                    enums.INCIDENT_INVESTIGATING,
+                                    enums.COMPONENT_STATUS_MAJOR_OUTAGE)
                 except CachetException as cachet_error:
                     print(f"Failed to create cachet incident. "
                           f"Reason: {repr(cachet_error)}")
