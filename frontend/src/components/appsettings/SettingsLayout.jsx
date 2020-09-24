@@ -20,13 +20,13 @@ const styles = {
 }
 
 const SettingsLayout = ({
-  authorised_apps,
+  authorised_apps: authorisedApps,
   fullname,
   department,
 }) => {
-  const [isDeleted, setIsDeleted] = useState(authorised_apps.map(() => false))
+  const [isDeleted, setIsDeleted] = useState(authorisedApps.map(() => false))
 
-  const appCount = authorised_apps.reduce(
+  const appCount = authorisedApps.reduce(
     (prev, curApp) => curApp.active ? (prev + 1) : prev,
     0
   )
@@ -42,17 +42,17 @@ const SettingsLayout = ({
       true,
       ...isDeleted.slice(index + 1),
     ])
-  })
+  }, [isDeleted])
 
   const handleChange = useCallback((client_id, index) => () => {
     // Add toast to confirm deauthorisation
     const deauthoriseConfirmation = `Are you sure you want to deauthorise `
-      + authorised_apps[index].app.name + `? It will probably stop working and `
+      + authorisedApps[index].app.name + `? It will probably stop working and `
       + `you'll need to re-authenticate with it again if you want to use it`
     if (confirm(deauthoriseConfirmation)) {
       deauthoriseApp(client_id, index)
     }
-  }, [deauthoriseApp])
+  }, [deauthoriseApp, authorisedApps])
 
 
   return (
@@ -212,7 +212,7 @@ const SettingsLayout = ({
                   }}
                   alignItems="column"
                 >
-                  {authorised_apps.map((app, i) =>
+                  {authorisedApps.map((app, i) =>
                     <>
                       {app.active && !isDeleted[i] ? (
                         <Row width="1-1">
