@@ -1,13 +1,12 @@
 {% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html>
+
 <head>
 
   <title>UCL API Authorisation</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-  <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css" integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/grids-responsive-min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   {% render_bundle 'authorise' 'css' %}
 </head>
@@ -16,11 +15,11 @@
 <body>
 
   <script>
-    window.initialData = {{ initial_data|safe }};
+    window.initialData = {{ initial_data | safe }};
   </script>
   <div class="app"></div>
-  <script src="https://use.fontawesome.com/c70d56d6fc.js"></script>
   {% render_bundle 'vendors' 'js' %}
   {% render_bundle 'authorise' 'js' %}
 </body>
+
 </html>

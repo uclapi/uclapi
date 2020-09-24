@@ -5,14 +5,13 @@ import {
   Container, Footer, NavBar, Row, TextView,
 } from 'Layout/Items.jsx'
 import React from 'react'
-import ReactDOM from 'react-dom'
 import Modal from 'react-modal'
 import 'Styles/common/uclapi.scss'
-import 'Styles/dashboard.scss'
 import 'Styles/navbar.scss'
 // UI App Component
-import App from '../components/dashboard/App.jsx'
-import Api from '../lib/Api'
+import App from '../../components/dashboard/App.jsx'
+import Api from '../../lib/Api'
+import './Dashboard.scss'
 
 class Dashboard extends React.Component {
 
@@ -268,7 +267,10 @@ class Dashboard extends React.Component {
     }))
   
     try {
-      await Api.dashboard.setScope(data.apps[index].id, JSON.stringify(scopesData))
+      await Api.dashboard.setScope(
+        data.apps[index].id,
+        JSON.stringify(scopesData)
+      )
 
       this.updateAppState(index, updatedAppState)
     } catch (error) {
@@ -301,7 +303,9 @@ class Dashboard extends React.Component {
 
   regenVerificationSecret = async (index) => {
     const { data } = this.state
-    const secret = await Api.dashboard.regenVerificationSecret(data.apps[index].id)
+    const secret = await Api.dashboard.regenVerificationSecret(
+      data.apps[index].id
+    )
     this.updateAppState(index, { webhook: {
       ...data.apps[index].webhook,
       verification_secret: secret,
@@ -358,7 +362,4 @@ class Dashboard extends React.Component {
   }
 }
 
-ReactDOM.render(
-  <Dashboard />,
-  document.querySelector(`.app`)
-)
+export default Dashboard
