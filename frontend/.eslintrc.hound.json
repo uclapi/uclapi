@@ -10,8 +10,7 @@
     "plugin:import/warnings",
     "plugin:import/typescript",
     "plugin:security/recommended",
-    "plugin:sonarjs/recommended",
-    "plugin:react-hooks/recommended"
+    "plugin:sonarjs/recommended"
   ],
   "rules": {
     "semi": [

@@ -108,7 +108,8 @@
     "no-secrets",
     "json-format",
     "sonarjs",
-    "disable"
+    "disable",
+    "react-hooks"
   ],
   "parser": "babel-eslint",
   "parserOptions": {
