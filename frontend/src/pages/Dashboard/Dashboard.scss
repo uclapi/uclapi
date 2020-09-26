@@ -1,5 +1,5 @@
-@import './helpers';
-@import './core.scss';
+@import "../../sass/core.scss";
+@import '../../sass/helpers';
 
 .app {
   padding-top: 1rem;
@@ -75,6 +75,10 @@
       width: 100vw;
       margin-left: -2rem;
       border-radius: 0;
+    }
+
+    > .rc-collapse + .rc-collapse {
+      margin-top: 1rem;
     }
 
     .settings-section {
