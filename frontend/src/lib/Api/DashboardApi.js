@@ -2,7 +2,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import qs from 'qs'
 
-class Api {
+class DashboardApi {
   static req = axios.create({
     baseURL: `/dashboard/api`,
     withCredentials: true,
@@ -12,21 +12,21 @@ class Api {
     },
   })
 
-  static post = (url, body) => Api.req.post(url, qs.stringify(body))
-  static get = (url) => Api.req.get(url)
+  static post = (url, body) => DashboardApi.req.post(url, qs.stringify(body))
+  static get = (url) => DashboardApi.req.get(url)
 
   static regenToken = async (appId) => {
-    const { data: { app: { token } } } = await Api.post(`/regen/`, { app_id: appId })
+    const { data: { app: { token } } } = await DashboardApi.post(`/regen/`, { app_id: appId })
     return token
   }
 
   static regenVerificationSecret = async (appId) => {
-    const { data: { new_secret } } = await Api.post(`/webhook/refreshsecret/`, { app_id: appId })
+    const { data: { new_secret } } = await DashboardApi.post(`/webhook/refreshsecret/`, { app_id: appId })
     return new_secret
   }
 
   static updateWebhookSettings = async (appId, settings) => {
-    const { data: { ok, message, ...values } } = await Api.post(`/webhook/edit/`, {
+    const { data: { ok, message, ...values } } = await DashboardApi.post(`/webhook/edit/`, {
       app_id: appId,
       ...settings,
     })
@@ -37,17 +37,17 @@ class Api {
   }
 
   static addNewProject = async (name) => {
-    const { data: { app } } = await Api.post(`/create/`, { name })
+    const { data: { app } } = await DashboardApi.post(`/create/`, { name })
     return app
   }
 
   static deleteProject = async (appId) => {
-    const { data } = await Api.post(`/delete/`, { app_id: appId })
+    const { data } = await DashboardApi.post(`/delete/`, { app_id: appId })
     return data
   }
 
   static renameProject = async (appId, name) => {
-    const { data } = await Api.post(`/rename/`, {
+    const { data } = await DashboardApi.post(`/rename/`, {
       app_id: appId,
       new_name: name,
     })
@@ -55,7 +55,7 @@ class Api {
   }
 
   static saveOAuthCallback = async (appId, url) => {
-    const { data: { success, message } } = await Api.post(`/setcallbackurl/`, {
+    const { data: { success, message } } = await DashboardApi.post(`/setcallbackurl/`, {
       app_id: appId,
       callback_url: url,
     })
@@ -66,7 +66,7 @@ class Api {
   }
 
   static setScope = async (appId, scopes) => {
-    const { data } = await Api.post(`/updatescopes/`, {
+    const { data } = await DashboardApi.post(`/updatescopes/`, {
       app_id: appId,
       scopes,
     })
@@ -74,9 +74,9 @@ class Api {
   }
 
   static getData = async () => {
-    const { data } = await Api.get(`/apps/`)
+    const { data } = await DashboardApi.get(`/apps/`)
     return data
   }
 }
 
-export default Api
+export default DashboardApi
