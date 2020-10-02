@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
   python: `import requests
@@ -10,14 +11,14 @@ params = {
   "token": "uclapi-user-abd-def-ghi-jkl",
   "client_secret": "secret",
 }
-r = requests.get("https://uclapi.com/oauth/user/studentnumber", params=params)
+r = requests.get("${Constants.DOMAIN}/oauth/user/studentnumber", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/oauth/user/studentnumber \
+  shell: `curl -G ${Constants.DOMAIN}/oauth/user/studentnumber \
 -d client_secret=secret \\
 -d token=uclapi-user-abd-def-ghi-jkl`,
 
-  javascript: `fetch("https://uclapi.com/oauth/user/studentnumber?client_secret=secret&token=uclapi-user-abd-def-ghi-jkl")
+  javascript: `fetch("${Constants.DOMAIN}/oauth/user/studentnumber?client_secret=secret&token=uclapi-user-abd-def-ghi-jkl")
 .then((response) => {
   return response.json()
 })
@@ -46,7 +47,7 @@ const StudentNumber = ({ activeLanguage }) => {
       >
         <h1 id="oauth/user/studentnumber">Student Number</h1>
         <p>
-          Endpoint: <code>https://uclapi.com/oauth/user/studentnumber</code>
+          Endpoint: <code>{Constants.DOMAIN}/oauth/user/studentnumber</code>
         </p>
         <p>
           You can use the <code>oauth/user/data</code>&nbsp;

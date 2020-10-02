@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
   python: `import requests
@@ -11,14 +12,14 @@ params = {
   "modules": "COMP0030,COMP0133-A7U-T1"
 }
 
-r = requests.get("https://uclapi.com/timetable/bymodule", params=params)
+r = requests.get("${Constants.DOMAIN}/timetable/bymodule", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/timetable/bymodule \\
+  shell: `curl -G ${Constants.DOMAIN}/timetable/bymodule \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d modules=COMP0030,COMP0133-A7U-T1`,
 
-  javascript: `fetch("https://uclapi.com/timetable/bymodule?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&modules=COMP0030,COMP0133-A7U-T1",
+  javascript: `fetch("${Constants.DOMAIN}/timetable/bymodule?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&modules=COMP0030,COMP0133-A7U-T1",
 {
     method: "GET",
 })
@@ -117,7 +118,7 @@ const GetTimetableByModules = ({ activeLanguage }) => {
       >
         <h1 id="timetable/bymodule">Get Timetable By Modules</h1>
         <p>
-          Endpoint: <code>https://uclapi.com/timetable/bymodule</code>
+          Endpoint: <code>{Constants.DOMAIN}/timetable/bymodule</code>
         </p>
         <p>
           This endpoint returns a yearly timetable for the supplied modules.

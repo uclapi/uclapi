@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
   python: `import requests
@@ -12,15 +13,15 @@ params = {
   "siteid": "086"
 }
 
-r = requests.get("https://uclapi.com/roombookings/equipment", params=params)
+r = requests.get("${Constants.DOMAIN}/roombookings/equipment", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/roombookings/equipment \\
+  shell: `curl -G ${Constants.DOMAIN}/roombookings/equipment \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d roomid=433 \
 -d siteid=086`,
 
-  javascript: `fetch("https://uclapi.com/roombookings/equipment?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&roomid=433&siteid=086")
+  javascript: `fetch("${Constants.DOMAIN}/roombookings/equipment?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&roomid=433&siteid=086")
 .then((response) => {
   return response.json()
 })
@@ -64,7 +65,7 @@ const GetEquipment = ({ activeLanguage }) => {
         >
           <h1 id="roombookings/equipment">Get Equipment</h1>
           <p>
-            Endpoint: <code>https://uclapi.com/roombookings/equipment</code>
+            Endpoint: <code>{Constants.DOMAIN}/roombookings/equipment</code>
           </p>
           <p>
             This endpoint returns information about the features of and

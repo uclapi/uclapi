@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
     python: `import requests
@@ -11,14 +12,14 @@ params = {
   "survey_id": "46"
 }
 
-r = requests.get("https://uclapi.com/workspaces/sensors/lastupdated", params=params)
+r = requests.get("${Constants.DOMAIN}/workspaces/sensors/lastupdated", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/workspaces/sensors/lastupdated \\
+  shell: `curl -G ${Constants.DOMAIN}/workspaces/sensors/lastupdated \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d survey_id=46`,
 
-  javascript: `fetch("https://uclapi.com/workspaces/sensors/lastupdated?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=46",
+  javascript: `fetch("${Constants.DOMAIN}/workspaces/sensors/lastupdated?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=46",
 {
     method: "GET",
 })
@@ -50,7 +51,8 @@ const WorkspacesGetLastSensorUpdate = ({ activeLanguage }) => {
         >
           <h1 id="workspaces/sensors/lastupdated">Get Last Sensor Update by Survey</h1>
           <p>
-            Endpoint: <code>https://uclapi.com/workspaces/sensors/lastupdated</code>
+            Endpoint:&nbsp;
+            <code>{Constants.DOMAIN}/workspaces/sensors/lastupdated</code>
           </p>
           <p>
             This endpoint replies with the timestamp of the

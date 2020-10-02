@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
     python: `import requests
@@ -12,15 +13,15 @@ params = {
   "survey_ids": "46,45"
 }
 
-r = requests.get("https://uclapi.com/workspaces/sensors/averages/time", params=params)
+r = requests.get("${Constants.DOMAIN}/workspaces/sensors/averages/time", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/workspaces/sensors/averages/time \\
+  shell: `curl -G ${Constants.DOMAIN}/workspaces/sensors/averages/time \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d days=30 \
 -d survey_ids=46,45`,
 
-  javascript: `fetch("https://uclapi.com/workspaces/sensors/averages/time?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&days=40&survey_ids=46,45",
+  javascript: `fetch("${Constants.DOMAIN}/workspaces/sensors/averages/time?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&days=40&survey_ids=46,45",
 {
     method: "GET",
 })
@@ -109,7 +110,8 @@ const WorkspacesGetSensorHistoricalTimeData = ({ activeLanguage }) => {
       >
         <h1 id="workspaces/sensors/averages/time">Get Historical Data by Time</h1>
         <p>
-          Endpoint: <code>https://uclapi.com/workspaces/sensors/averages/time</code>
+          Endpoint:&nbsp;
+          <code>{Constants.DOMAIN}/workspaces/sensors/averages/time</code>
         </p>
         <p>
           This endpoint will show for every <code>survey_id</code>&nbsp;

@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
   python: `import requests
@@ -11,15 +12,15 @@ params = {
   "start_datetime": "2017-10-25T03:36:45+00:00",
   "end_datetime": "2017-10-25T23:36:45+00:00"
 }
-r = requests.get("https://uclapi.com/roombookings/freerooms", params=params)
+r = requests.get("${Constants.DOMAIN}/roombookings/freerooms", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/roombookings/rooms \\
+  shell: `curl -G ${Constants.DOMAIN}/roombookings/rooms \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d start_datetime=2017-10-25T03:36:45+00:00 \\
 -d end_datetime=2017-10-25T23:36:45+00:00`,
 
-  javascript: `fetch("https://uclapi.com/roombookings/rooms?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&start_datetime=2017-10-25T03:36:45+00:00&end_datetime=2017-10-25T23:36:45+00:00")
+  javascript: `fetch("${Constants.DOMAIN}/roombookings/rooms?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&start_datetime=2017-10-25T03:36:45+00:00&end_datetime=2017-10-25T23:36:45+00:00")
 .then((response) => {
   return response.json()
 })
@@ -69,7 +70,7 @@ const GetFreeRooms = ({ activeLanguage }) => {
       >
         <h1 id="roombookings/freerooms">Get Rooms</h1>
         <p>
-          Endpoint: <code>https://uclapi.com/roombookings/freerooms</code>
+          Endpoint: <code>{Constants.DOMAIN}/roombookings/freerooms</code>
         </p>
         <p>
           Given a start time and an end time,

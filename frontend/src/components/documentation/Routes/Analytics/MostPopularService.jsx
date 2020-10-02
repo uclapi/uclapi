@@ -2,18 +2,17 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
-
-
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
   python: `import requests
 
-r = requests.get("https://uclapi.com/dashboard/api/analytics/services/")
+r = requests.get("${Constants.DOMAIN}/dashboard/api/analytics/services/")
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/dashboard/api/analytics/services/`,
+  shell: `curl -G ${Constants.DOMAIN}/dashboard/api/analytics/services/`,
 
-  javascript: `fetch("https://uclapi.com/dashboard/api/analytics/services/")
+  javascript: `fetch("${Constants.DOMAIN}/dashboard/api/analytics/services/")
 .then((response) => {
   return response.json()
 })
@@ -55,7 +54,7 @@ export default class MostPopularService extends React.Component {
           <h1 id="dashboard/api/analytics/services">Services by Popularity</h1>
           <p>
             Endpoint:&nbsp;
-            <code>https://uclapi.com/dashboard/api/analytics/services</code>
+            <code>{Constants.DOMAIN}/dashboard/api/analytics/services</code>
           </p>
         </Topic>
 

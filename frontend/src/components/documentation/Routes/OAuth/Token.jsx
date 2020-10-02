@@ -3,6 +3,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
   python: `import requests
@@ -12,15 +13,15 @@ params = {
   "code": "1",
   "client_secret": "secret",
 }
-r = requests.get("https://uclapi.com/oauth/token", params=params)
+r = requests.get("${Constants.DOMAIN}/oauth/token", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/oauth/token \
+  shell: `curl -G ${Constants.DOMAIN}/oauth/token \
 -d code=mysecretcode \
 -d client_id=123.456 \\
 -d client_secret=secret`,
 
-  javascript: `fetch("https://uclapi.com/oauth/token?code=mysecretcode&client_id=123.456&client_secret=secret")
+  javascript: `fetch("${Constants.DOMAIN}/oauth/token?code=mysecretcode&client_id=123.456&client_secret=secret")
 .then((response) => {
   return response.json()
 })
@@ -52,7 +53,7 @@ const Token = ({ activeLanguage }) => (
     >
       <h1 id="oauth/token">Token</h1>
       <p>
-        Endpoint: <code>https://uclapi.com/oauth/token</code>
+        Endpoint: <code>{Constants.DOMAIN}/oauth/token</code>
       </p>
 
       <p>
@@ -78,7 +79,7 @@ const Token = ({ activeLanguage }) => (
         any sort of data that the app may need that is not tied to a specific
         student.
         For example,&nbsp;
-        <a href="https://uclapi.com/docs#roombookings">UCL API’s Room booking service</a>
+        <a href="/docs#roombookings">UCL API’s Room booking service</a>
         &nbsp;uses tokens to return information about rooms -
         when they are booked and which UCL rooms are free.
       </p>
@@ -104,7 +105,7 @@ const Token = ({ activeLanguage }) => (
         <sup>*</sup>
         &nbsp;To get this, you need to tick the
         relevant scope in the dashboard before a user logs in.
-        More on scopes <a href="https://uclapi.com/docs#oauth/meta">here</a>.
+        More on scopes <a href="/docs#oauth/meta">here</a>.
       </p>
 
       <p>
@@ -125,7 +126,7 @@ const Token = ({ activeLanguage }) => (
         To use this type of token for your app,
         you need to redirect the user to the
         &quot;Authorise&quot; endpoint at:&nbsp;
-        <code>https://uclapi.com/oauth/authorise</code>&nbsp;
+        <code>{Constants.DOMAIN}/oauth/authorise</code>&nbsp;
         which can be done directly or by including a “Sign in With UCL Button”
         in your app, such as the one provided below,
         which links users to the authorisation endpoint with
