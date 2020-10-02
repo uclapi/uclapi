@@ -49,7 +49,13 @@ export default class ImageView extends React.Component {
 
     return (
       <div className={className} style={containerStyle}>
-        <img src={src} alt={description} width={width} height={height} style={style}></img>
+        <img
+          src={src}
+          alt={description}
+          width={width}
+          height={height}
+          style={style}
+        />
       </div>
     )
   }

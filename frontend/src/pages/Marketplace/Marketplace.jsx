@@ -7,6 +7,7 @@ import 'Styles/common/uclapi.scss'
 // Legacy
 import 'Styles/navbar.scss'
 import "react-responsive-carousel/lib/styles/carousel.min.css"
+import "./Marketplace.scss"
 
 // Grab titles and descriptions of app
 import { allApps } from 'Layout/data/app_pages.jsx'
@@ -16,8 +17,7 @@ import {
   NavBar, Row, TextView,
 } from 'Layout/Items.jsx'
 // Standard React imports
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React, { useCallback } from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 // Import page that displays a singular app
@@ -188,25 +188,26 @@ class Marketplace extends React.Component {
   }
 }
 
-class Main extends React.Component {
-  renderAppPage = (props) => (
-    <AppPage appId={props.match.params.appId} />
+const Main = () => {
+  const renderAppPage = useCallback(
+    ({ match: { params: { appId } } }) => <AppPage appId={appId} />,
+    []
   )
-  render() {
-    return (
-      <main>
-        <Switch>
-          <Route exact path='/marketplace' component={Marketplace} />
-          <Route path='/marketplace/:appId' render={this.renderAppPage} />
-        </Switch>
-      </main>
-    )
-  }
+
+  return (
+    <main>
+      <Switch>
+        <Route exact path='/marketplace' component={Marketplace} />
+        <Route path='/marketplace/:appId' render={renderAppPage} />
+      </Switch>
+    </main>
+  )
 }
 
-ReactDOM.render(
+const MarketplaceRoot = () => (
   <BrowserRouter>
     <Main />
-  </BrowserRouter>,
-  document.querySelector(`#root`)
+  </BrowserRouter>
 )
+
+export default MarketplaceRoot
