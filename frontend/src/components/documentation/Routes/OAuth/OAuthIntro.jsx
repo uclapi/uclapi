@@ -2,9 +2,11 @@ import React from 'react'
 import signInButton from './../../../../images/signInWithUCLAPI.png'
 import Topic from './../../Topic'
 import './OAuthIntro.scss'
+import Constants from '../../../../lib/Constants'
+
 
 const codeExamples = {
-  html: `<a href="https://uclapi.com/oauth/authorise?client_id=CLIENT_ID&state=STATE">
+  html: `<a href="${Constants.DOMAIN}/oauth/authorise?client_id=CLIENT_ID&state=STATE">
   <img src="https://s3.eu-west-2.amazonaws.com/uclapi-static/SignInWithUCLSmall.png">
 </a>`,
 }
@@ -64,7 +66,7 @@ const OAuthIntro = ({ activeLanguage }) => (
       <p>
         OAuth scopes specify what access your app needs to a UCL user’s account.
         As an app developer, you set the desired scopes in the&nbsp;
-        <a href="https://uclapi.com/dashboard">API Dashboard</a>.
+        <a href="/dashboard">API Dashboard</a>.
         When a user is responding to your authorisation request,
         the requested scopes will be displayed to the user.
       </p>
@@ -76,7 +78,8 @@ const OAuthIntro = ({ activeLanguage }) => (
         Then the app should follow this procedure:
       </p>
       <p>
-        1. Redirect the user to <code>https://uclapi.com/oauth/authorise</code>&nbsp;
+        1. Redirect the user to&nbsp;
+        <code>{Constants.DOMAIN}/oauth/authorise</code>&nbsp;
         with <code>state</code> and the application’s <code>client_id</code> as
         query parameters.
       </p>
@@ -102,7 +105,8 @@ const OAuthIntro = ({ activeLanguage }) => (
         (necessary for retrieving personal data and certain API endpoints),
         we require <code>code</code> (from 3.),&nbsp;
         <code>client_id</code>, and <code>client_secret</code>.
-        These should then be sent to <code>https://uclapi.com/oauth/token</code>,
+        These should then be sent to&nbsp;
+        <code>{Constants.DOMAIN}/oauth/token</code>,
         which will return a response containing&nbsp;
         <code>state</code>, <code>ok</code>, <code>client_id</code>,&nbsp;
         <code>token</code> (OAuth user token), and <code>scope</code>&nbsp;

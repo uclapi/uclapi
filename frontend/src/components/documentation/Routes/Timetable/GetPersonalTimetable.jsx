@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
   python: `import requests
@@ -10,14 +11,14 @@ params = {
   "token": "uclapi-user-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
   "client_secret": "secret"
 }
-r = requests.get("https://uclapi.com/timetable/personal", params=params)
+r = requests.get("${Constants.DOMAIN}/timetable/personal", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/timetable/personal \\
+  shell: `curl -G ${Constants.DOMAIN}/timetable/personal \\
 -d token=uclapi-user-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d client_secret=secret`,
 
-  javascript: `fetch("https://uclapi.com/timetable/personal?token=uclapi-user-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&client_secret=secret")
+  javascript: `fetch("${Constants.DOMAIN}/timetable/personal?token=uclapi-user-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&client_secret=secret")
 .then((response) => {
   return response.json()
 })
@@ -84,7 +85,7 @@ const GetPersonalTimetable = ({ activeLanguage }) => {
       >
         <h1 id="timetable/personal">Get Personal Timetable</h1>
         <p>
-          Endpoint: <code>https://uclapi.com/timetable/personal</code>
+          Endpoint: <code>{Constants.DOMAIN}/timetable/personal</code>
         </p>
         <p>
           This endpoint returns the personal timetable of the user.

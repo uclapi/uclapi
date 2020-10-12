@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
   python: `import requests
@@ -9,13 +10,13 @@ const codeExamples = {
 params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
 }
-r = requests.get("https://uclapi.com/dashboard/api/analytics/oauth/total_by_dept/", params=params)
+r = requests.get("${Constants.DOMAIN}/dashboard/api/analytics/oauth/total_by_dept/", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/dashboard/api/analytics/oauth/total_by_dept/ \
+  shell: `curl -G ${Constants.DOMAIN}/dashboard/api/analytics/oauth/total_by_dept/ \
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb`,
 
-  javascript: `fetch("https://uclapi.com/dashboard/api/analytics/oauth/total_by_dept/?token=
+  javascript: `fetch("${Constants.DOMAIN}/dashboard/api/analytics/oauth/total_by_dept/?token=
   uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
 .then((response) => {
   return response.json()
@@ -59,7 +60,7 @@ export default class UsersPerAppPerDept extends React.Component {
           <p>
             Endpoint:&nbsp;
             <code>
-              https://uclapi.com/dashboard/api/analytics/oauth/total_by_dept
+              {Constants.DOMAIN}/dashboard/api/analytics/oauth/total_by_dept
             </code>
           </p>
 

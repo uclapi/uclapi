@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
     python: `import requests
@@ -12,15 +13,15 @@ params = {
   "map_id": "105"
 }
 
-r = requests.get("https://uclapi.com/workspaces/images/map/live", params=params)
+r = requests.get("${Constants.DOMAIN}/workspaces/images/map/live", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/workspaces/images/map/live \\
+  shell: `curl -G ${Constants.DOMAIN}/workspaces/images/map/live \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d survey_id=38 \
 -d map_id=105`,
 
-  javascript: `fetch("https://uclapi.com/workspaces/images/map/live?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=38&map_id=105",
+  javascript: `fetch("${Constants.DOMAIN}/workspaces/images/map/live?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=38&map_id=105",
 {
     method: "GET",
 })
@@ -64,7 +65,7 @@ const WorkspacesGetLiveImage = ({ activeLanguage }) => {
       >
         <h1 id="workspaces/images/map/live">Get a Map&apos;s Image with Seat States Shown</h1>
         <p>
-            Endpoint: <code>https://uclapi.com/workspaces/images/map/live</code>
+            Endpoint: <code>{Constants.DOMAIN}/workspaces/images/map/live</code>
         </p>
         <p>
           This endpoint takes <code>survey_id</code> and

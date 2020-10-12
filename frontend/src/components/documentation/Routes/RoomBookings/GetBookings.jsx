@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
   python: `import requests
@@ -10,14 +11,14 @@ params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
   "contact": "Mark"
 }
-r = requests.get("https://uclapi.com/roombookings/bookings", params=params)
+r = requests.get("${Constants.DOMAIN}/roombookings/bookings", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/roombookings/bookings \\
+  shell: `curl -G ${Constants.DOMAIN}/roombookings/bookings \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d contact=Mark`,
 
-  javascript: `fetch("https://uclapi.com/roombookings/bookings?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&contact=Mark")
+  javascript: `fetch("${Constants.DOMAIN}/roombookings/bookings?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&contact=Mark")
 .then((response) => {
   return response.json()
 })
@@ -65,7 +66,7 @@ const GetBookings = ({ activeLanguage }) => {
       >
         <h1 id="roombookings/bookings">Get Bookings</h1>
         <p>
-          Endpoint: <code>https://uclapi.com/roombookings/bookings</code>
+          Endpoint: <code>{Constants.DOMAIN}/roombookings/bookings</code>
         </p>
         <p>
           This endpoint shows the results to a bookings or

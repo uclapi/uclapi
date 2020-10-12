@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
   python: `import requests
@@ -9,13 +10,13 @@ const codeExamples = {
 params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
 }
-r = requests.get("https://uclapi.com/timetable/data/departments", params=params)
+r = requests.get("${Constants.DOMAIN}/timetable/data/departments", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/timetable/data/departments \\
+  shell: `curl -G ${Constants.DOMAIN}/timetable/data/departments \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb`,
 
-  javascript: `fetch("https://uclapi.com/timetable/data/departments?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
+  javascript: `fetch("${Constants.DOMAIN}/timetable/data/departments?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb")
 .then((response) => {
   return response.json()
 })
@@ -56,7 +57,7 @@ const GetDataDepartments = ({ activeLanguage }) => {
       >
         <h1 id="timetable/data/departments">Get List of Departments</h1>
         <p>
-          Endpoint: <code>https://uclapi.com/timetable/data/departments</code>
+          Endpoint: <code>{Constants.DOMAIN}/timetable/data/departments</code>
         </p>
         <p>
           This endpoint returns a list of every department at UCL,

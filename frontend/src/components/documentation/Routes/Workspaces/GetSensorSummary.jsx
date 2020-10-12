@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
     python: `import requests
@@ -11,14 +12,14 @@ params = {
   "survey_ids": "46,45"
 }
 
-r = requests.get("https://uclapi.com/workspaces/sensors/summary", params=params)
+r = requests.get("${Constants.DOMAIN}/workspaces/sensors/summary", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/workspaces/sensors/summary \\
+  shell: `curl -G ${Constants.DOMAIN}/workspaces/sensors/summary \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d survey_ids=46,45`,
 
-  javascript: `fetch("https://uclapi.com/workspaces/sensors/summary?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_ids=46,45",
+  javascript: `fetch("${Constants.DOMAIN}/workspaces/sensors/summary?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_ids=46,45",
 {
     method: "GET",
 })
@@ -111,7 +112,7 @@ const WorkspacesGetSensorsSummary = ({ activeLanguage }) => {
       >
         <h1 id="workspaces/sensors/summary">Get Survey Sensors Summary</h1>
         <p>
-          Endpoint: <code>https://uclapi.com/workspaces/sensors/summary</code>
+          Endpoint: <code>{Constants.DOMAIN}/workspaces/sensors/summary</code>
         </p>
         <p>
           This endpoint summarises, with a one-minute accuracy,

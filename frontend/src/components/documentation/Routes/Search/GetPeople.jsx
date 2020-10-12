@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
   python: `import requests
@@ -10,14 +11,14 @@ params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
   "query": "Jane"
 }
-r = requests.get("https://uclapi.com/search/people", params=params)
+r = requests.get("${Constants.DOMAIN}/search/people", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/search/people \\
+  shell: `curl -G ${Constants.DOMAIN}/search/people \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d query='Jane'`,
 
-  javascript: `fetch("https://uclapi.com/search/people?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&query=Jane")
+  javascript: `fetch("${Constants.DOMAIN}/search/people?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&query=Jane")
 .then((response) => {
   return response.json()
 })
@@ -56,7 +57,7 @@ const GetPeople = ({ activeLanguage }) => {
       >
         <h1 id="search/people">Get People</h1>
         <p>
-          Endpoint: <code>https://uclapi.com/search/people</code>
+          Endpoint: <code>{Constants.DOMAIN}/search/people</code>
         </p>
         <p>
           This endpoint returns matching people and information about them.

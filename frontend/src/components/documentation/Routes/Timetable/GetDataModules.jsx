@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
   python: `import requests
@@ -10,14 +11,14 @@ params = {
   "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
   "department": "COMPS_ENG"
 }
-r = requests.get("https://uclapi.com/timetable/data/modules", params=params)
+r = requests.get("${Constants.DOMAIN}/timetable/data/modules", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/timetable/data/modules \\
+  shell: `curl -G ${Constants.DOMAIN}/timetable/data/modules \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d department=COMPS_ENG`,
 
-  javascript: `fetch("https://uclapi.com/timetable/data/modules?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&department=COMPS_ENG")
+  javascript: `fetch("${Constants.DOMAIN}/timetable/data/modules?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&department=COMPS_ENG")
 .then((response) => {
   return response.json()
 })
@@ -112,7 +113,7 @@ const GetDataModules = ({ activeLanguage }) => {
           Get List of Department Modules
         </h1>
         <p>
-          Endpoint: <code>https://uclapi.com/timetable/data/modules</code>
+          Endpoint: <code>{Constants.DOMAIN}/timetable/data/modules</code>
         </p>
         <p>
           This endpoint returns a list of every module
