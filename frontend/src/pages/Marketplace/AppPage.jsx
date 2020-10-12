@@ -235,9 +235,9 @@ export class AppPage extends React.Component {
                   showThumbs={false}
                   centerMode={!isMobile}
                   centerSlidePercentage={isMobile ? 100 : 33.33}
-                  showArrows={isMobile || screenshots.length > 3}
-                  showIndicators={isMobile || screenshots.length > 3}
-                  showStatus={isMobile || screenshots.length > 3}
+                  showArrows
+                  showIndicators
+                  showStatus
                   infiniteLoop
                 >
                   {screenshots.map((screenshot) => (
