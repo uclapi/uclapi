@@ -206,7 +206,7 @@ Now fill the following variables into `uclapi/backend/uclapi/env.`:
 ```
 SHIBBOLETH_ROOT=http://localhost:8001
 UCLAPI_PRODUCTION=False
-UCLAPI_DOMAIN=localhost:8000
+UCLAPI_DOMAIN=localhost
 UCLAPI_RUNNING_ON_AWS_ELB=False
 FORBIDDEN_CALLBACK_URLS=uclapi.com;staging.ninja
 
