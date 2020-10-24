@@ -3,6 +3,7 @@ import alex from 'Images/team/alex.jpg'
 import anirudh from 'Images/team/anirudh.jpeg'
 import anush from 'Images/team/anush.jpg'
 import chris from 'Images/team/chris.jpeg'
+import ethan from 'Images/team/ethan.jpeg'
 import faiz from 'Images/team/faiz.jpeg'
 import harry from 'Images/team/harry.jpg'
 import henry from 'Images/team/henry.jpeg'
@@ -67,6 +68,15 @@ export const previous = [
     "github": `https://github.com/wilhelmklopp`,
     "image": wilhelm,
   },
+  {
+    "name": `Harry`,
+    "startYear": `2019`,
+    "endYear": `present`,
+    "title": `Part Timer`,
+    "email": `harry.liversedge.17@ucl.ac.uk`,
+    "github": `https://github.com/TuxedoFish`,
+    "image": harry,
+  },
 ]
 
 export const current = [
@@ -116,13 +126,13 @@ export const current = [
     "image": anush,
   },
   {
-    "name": `Harry`,
-    "startYear": `2019`,
+    "name": `Ethan`,
+    "startYear": `2020`,
     "endYear": `present`,
-    "title": `Part Timer`,
-    "email": `harry.liversedge.17@ucl.ac.uk`,
-    "github": `https://github.com/TuxedoFish`,
-    "image": harry,
+    "title": `Windows Necromancer`,
+    "email": `ethan.wood.18@ucl.ac.uk`,
+    "github": `https://github.com/greenfrogs`,
+    "image": ethan,
   },
 ]
 
