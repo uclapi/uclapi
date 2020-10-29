@@ -26,8 +26,8 @@ export default class App extends React.Component {
 
     const { app } = this.props
 
-    const updated = this.timeSince(new Date(app.updated))
-    const created = this.timeSince(new Date(app.created))
+    const updated = this.timeSince(new Date(app.updated + `Z`))
+    const created = this.timeSince(new Date(app.created + `Z`))
 
     this.state = {
       updated: updated,
@@ -43,8 +43,8 @@ export default class App extends React.Component {
     if(app != prevProps.app || index != prevProps.index) { 
       const { app } = this.props
 
-      const updated = this.timeSince(new Date(app.updated))
-      const created = this.timeSince(new Date(app.created))
+      const updated = this.timeSince(new Date(app.updated + `Z`))
+      const created = this.timeSince(new Date(app.created + `Z`))
 
       this.setState({
         updated: updated,
