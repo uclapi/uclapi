@@ -182,6 +182,16 @@ export default class App extends React.Component {
                 </Column>
               </Container>
               </Panel>
+              <Panel header={`Analytics`} showArrow>
+              <Container noPadding>
+                <Column
+                  width='1-1'
+                  className='settings-section'
+                >
+                  Analytics here
+                </Column>
+              </Container>
+              </Panel>
             </Collapse>
           </Column>
         </Container>
