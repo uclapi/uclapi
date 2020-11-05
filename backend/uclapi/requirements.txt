@@ -1,7 +1,7 @@
 amqp==5.0.1
 autopep8==1.5.4
 botocore==1.18.5
-boto3==1.15.5
+boto3==1.16.11
 celery==4.4.7
 certifi==2020.6.20
 chardet==3.0.4
