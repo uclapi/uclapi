@@ -460,24 +460,15 @@ def get_apps(request):
                 "contact": app.webhook.contact
             },
             "analytics": {
-                "requests": get_number_of_requests(app.api_token)
+                "requests": get_number_of_requests(app.api_token),
+                "remaining_quota": get_quota_remaining(app.api_token),
             }
         })
 
     return PrettyJsonResponse(user_meta)
 
 
-def quota_remaining(request):
-    try:
-        token = request.GET["token"]
-    except MultiValueDictKeyError:
-        response = JsonResponse({
-            "ok": False,
-            "message": "No token provided"
-        })
-        response.status_code = 400
-        return response
-
+def get_quota_remaining(token):
     r = redis.Redis(host=REDIS_UCLAPI_HOST)
 
     if token.startswith('uclapi-user-'):
@@ -505,9 +496,24 @@ def quota_remaining(request):
         count_data = int(r.get(cache_key))
     else:
         count_data = 0
+
+    return limit - count_data
+
+
+def quota_remaining(request):
+    try:
+        token = request.GET["token"]
+    except MultiValueDictKeyError:
+        response = JsonResponse({
+            "ok": False,
+            "message": "No token provided"
+        })
+        response.status_code = 400
+        return response
+
     return PrettyJsonResponse({
         "ok": True,
-        "remaining": limit - count_data,
+        "remaining": get_quota_remaining(token),
     })
 
 
