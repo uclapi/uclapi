@@ -462,6 +462,7 @@ def get_apps(request):
             "analytics": {
                 "requests": get_number_of_requests(app.api_token),
                 "remaining_quota": get_quota_remaining(app.api_token),
+                "users": get_users_per_app(app.api_token)
             }
         })
 
@@ -545,6 +546,20 @@ def most_popular_method(request):
     })
 
 
+def get_users_per_app(token, start=None, end=None):
+    if start and end:
+        start_date = datetime.strptime(start, "%Y-%m-%d")
+        end_date = datetime.strptime(end, "%Y-%m-%d")
+
+        users = OAuthToken.objects.filter(creation_date__gte=start_date,
+                                          creation_date__lte=end_date,
+                                          app__api_token__exact=token)
+    else:
+        users = OAuthToken.objects.filter(app__api_token__exact=token)
+
+    return len(users)
+
+
 def users_per_app(request):
     try:
         token = request.GET["token"]
@@ -559,20 +574,13 @@ def users_per_app(request):
     try:
         start = request.GET["start_date"]
         end = request.GET["end_date"]
-
-        start_date = datetime.strptime(start, "%Y-%m-%d")
-        end_date = datetime.strptime(end, "%Y-%m-%d")
-
-        users = OAuthToken.objects.filter(creation_date__gte=start_date,
-                                          creation_date__lte=end_date,
-                                          app__api_token__exact=token)
-
+        users_count = get_users_per_app(token, start, end)
     except MultiValueDictKeyError:
-        users = OAuthToken.objects.filter(app__api_token__exact=token)
+        users_count = get_users_per_app(token)
 
     return PrettyJsonResponse({
         "ok": True,
-        "users": len(users)
+        "users": users_count
     })
 
 
