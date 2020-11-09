@@ -370,6 +370,17 @@ def update_scopes(request):
         })
 
 
+def get_number_of_requests(token):
+    if token.startswith('uclapi-user-'):
+        calls = APICall.objects.filter(token__token__exact=token)
+    elif token.startswith('uclapi-'):
+        calls = APICall.objects.filter(app__api_token__exact=token)
+    else:
+        return None
+
+    return len(calls)
+
+
 def number_of_requests(request):
     try:
         token = request.GET["token"]
@@ -381,17 +392,15 @@ def number_of_requests(request):
         response.status_code = 400
         return response
 
-    if token.startswith('uclapi-user-'):
-        calls = APICall.objects.filter(token__token__exact=token)
-    elif token.startswith('uclapi-'):
-        calls = APICall.objects.filter(app__api_token__exact=token)
-    else:
+    calls = get_number_of_requests(token)
+    if calls is None:
         response = JsonResponse({
             "ok": False,
             "message": "Token is invalid"
         })
         response.status_code = 400
         return response
+
     return PrettyJsonResponse({
         "ok": True,
         "num": len(calls),
@@ -449,6 +458,9 @@ def get_apps(request):
                 "siteid": app.webhook.siteid,
                 "roomid": app.webhook.roomid,
                 "contact": app.webhook.contact
+            },
+            "analytics": {
+                "requests": get_number_of_requests(app.api_token)
             }
         })
 
