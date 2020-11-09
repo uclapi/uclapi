@@ -15,6 +15,7 @@ import ConfirmBox from './views/ConfirmBox.jsx'
 import Field from './views/Field'
 import ImageView from './views/ImageView.jsx'
 import TextView from './views/TextView.jsx'
+import AnalyticInfo from './views/AnalyticInfo.jsx'
 
 export {
   Container,
@@ -32,4 +33,5 @@ export {
   Field,
   CheckBox,
   ConfirmBox,
+  AnalyticInfo,
 }

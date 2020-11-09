@@ -3,7 +3,7 @@
 import { styles } from 'Layout/data/dashboard_styles.jsx'
 // Components
 import {
-  Button, CheckBox,
+  Button, CheckBox, AnalyticInfo,
   Column, Container, Field, Row, TextView,
 } from 'Layout/Items.jsx'
 // External dependencies
@@ -188,7 +188,15 @@ export default class App extends React.Component {
                   width='1-1'
                   className='settings-section'
                 >
-                  Analytics here
+                  {Object.entries(app.analytics).map(
+                    ([analytic, value], analytic_index) =>
+                      <AnalyticInfo
+                        key={analytic_index}
+                        analytic={analytic}
+                        value={value}
+                      />
+                    )
+                  }
                 </Column>
               </Container>
               </Panel>
