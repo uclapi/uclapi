@@ -462,7 +462,8 @@ def get_apps(request):
             "analytics": {
                 "requests": get_number_of_requests(app.api_token),
                 "remaining_quota": get_quota_remaining(app.api_token),
-                "users": get_users_per_app(app.api_token)
+                "users": get_users_per_app(app.api_token),
+                "users_per_dept": get_users_per_app_per_dept(app.api_token)
             }
         })
 
@@ -584,6 +585,13 @@ def users_per_app(request):
     })
 
 
+def get_users_per_app_per_dept(token):
+    users = User.objects.filter(oauthtoken__app__api_token__exact=token)\
+        .values("department").annotate(count=Count('department'))\
+        .order_by("-count")
+    return list(users)
+
+
 def users_per_app_by_dept(request):
     try:
         token = request.GET["token"]
@@ -595,10 +603,9 @@ def users_per_app_by_dept(request):
         response.status_code = 400
         return response
 
-    users = User.objects.filter(oauthtoken__app__api_token__exact=token)\
-        .values("department").annotate(count=Count('department'))\
-        .order_by("-count")
+    users = get_users_per_app_per_dept(token)
+
     return PrettyJsonResponse({
         "ok": True,
-        "data": list(users)
+        "data": users
     })
