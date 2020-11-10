@@ -403,7 +403,7 @@ def number_of_requests(request):
 
     return PrettyJsonResponse({
         "ok": True,
-        "num": len(calls),
+        "num": calls,
     })
 
 
@@ -485,12 +485,7 @@ def get_quota_remaining(token):
         limit = app.user.dev_quota
 
     else:
-        response = JsonResponse({
-            "ok": False,
-            "message": "Token is invalid"
-        })
-        response.status_code = 400
-        return response
+        return None
 
     count_data = r.get(cache_key)
 
@@ -513,9 +508,18 @@ def quota_remaining(request):
         response.status_code = 400
         return response
 
+    quota = get_quota_remaining(token)
+    if quota is None:
+        response = JsonResponse({
+            "ok": False,
+            "message": "Token is invalid"
+        })
+        response.status_code = 400
+        return response
+
     return PrettyJsonResponse({
         "ok": True,
-        "remaining": get_quota_remaining(token),
+        "remaining": quota,
     })
 
 
