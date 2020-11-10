@@ -1,5 +1,6 @@
 import { Container } from 'Layout/Items.jsx'
 import React  from 'react'
+import './AnalyticInfo.scss'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -12,7 +13,6 @@ const getFriendlyText = (key) => {
     case `remaining_quota`: return `Remaining Quota`
     case `requests`: return `Requests`
     case `users`: return `Users`
-    case `users_per_dept`: return `Users by Dept.`
     default: return key
   }
 }
@@ -23,12 +23,11 @@ const AnalyticInfo = ({
 }) => {
   return (
     <Container
-      className="checkbox"
-      height={`55px`}
+      className="analytic-info-row"
       noPadding
     >
-      <div className="field-label">{getFriendlyText(analytic)}</div>
-      <p>{value}</p>
+      <div>{getFriendlyText(analytic)}</div>
+      <p className='analytic-number'>{value}</p>
     </Container>
   )
 }
