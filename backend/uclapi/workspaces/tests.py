@@ -85,7 +85,7 @@ class OccupEyeApiTestCase(TestCase):
         )
         self._consts = OccupEyeConstants()
         self.api = OccupEyeApi()
-        self.cache = OccupeyeCache()
+        self.cache = OccupeyeCache(testing=True)
 
         # Create some sample data
         data_lpush = {

@@ -22,7 +22,7 @@ from .utils import (
 
 
 class OccupeyeCache():
-    def __init__(self):
+    def __init__(self, testing=False):
         self._redis = redis.Redis(
             host=settings.REDIS_UCLAPI_HOST,
             charset="utf-8",
@@ -30,17 +30,18 @@ class OccupeyeCache():
         )
         self._const = OccupEyeConstants()
 
-        access_token = self._redis.get(
-            self._const.ACCESS_TOKEN_KEY
-        )
-        access_token_expiry = self._redis.get(
-            self._const.ACCESS_TOKEN_EXPIRY_KEY
-        )
-        self.bearer_token = get_bearer_token(
-            access_token,
-            access_token_expiry,
-            self._const
-        )
+        if not testing:
+            access_token = self._redis.get(
+                self._const.ACCESS_TOKEN_KEY
+            )
+            access_token_expiry = self._redis.get(
+                self._const.ACCESS_TOKEN_EXPIRY_KEY
+            )
+            self.bearer_token = get_bearer_token(
+                access_token,
+                access_token_expiry,
+                self._const
+            )
 
     def cache_maps_for_survey(self, survey_id):
         """
