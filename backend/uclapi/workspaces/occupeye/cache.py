@@ -187,7 +187,7 @@ class OccupeyeCache():
         cache.
         """
         headers = {
-            "Authorization": self.get_bearer_token(self._const)
+            "Authorization": self.bearer_token
         }
         url = self._const.URL_SURVEY_MAX_TIMESTAMP.format(
             survey_id
@@ -499,8 +499,8 @@ class OccupeyeCache():
                     )
                 )
                 if (
-                    "last_trigger_type" not in sensor_map or
-                    "last_trigger_timestamp" not in sensor_map
+                    "last_trigger_type" not in sensor_map
+                    or "last_trigger_timestamp" not in sensor_map
                 ):
                     continue
                 try:
@@ -630,6 +630,7 @@ class OccupeyeCache():
                     )
 
             self.cache_all_survey_sensor_states(survey_id)
+            self.cache_survey_sensors_max_timestamp(survey_id)
         print("[+] Summaries")
         self.cache_common_summaries()
 

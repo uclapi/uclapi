@@ -1,11 +1,9 @@
+from cachetclient.v1 import enums
 from django.core.management.base import BaseCommand
 
 from common.cachet import (
     create_incident, CachetException, get_incident_name, update_incident
 )
-
-from cachetclient.v1 import enums
-
 from workspaces.occupeye.cache import OccupeyeCache
 
 
@@ -50,4 +48,8 @@ class Command(BaseCommand):
                     print(f"Unexpected: Failed to create cachet incident. "
                           f"Reason: {repr(cachet_error)}")
             else:
+                import sys
+                import traceback
+                exc_info = sys.exc_info()
+                traceback.print_exception(*exc_info)
                 print("Could not find appropriate incident in Cachet!")

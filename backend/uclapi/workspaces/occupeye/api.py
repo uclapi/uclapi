@@ -60,20 +60,20 @@ class OccupEyeApi():
                     "coordinates": {
                         "lat": survey_data["lat"],
                         "lng": survey_data["long"]
-                        },
+                    },
                     "address": [
                         survey_data["address1"],
                         survey_data["address2"],
                         survey_data["address3"],
                         survey_data["address4"]
-                        ]
-                    }
+                    ]
                 }
+            }
             # If we want to filter out staff surveys and this is a staff
             # one then we skip over it.
             if (
-                survey_filter == "student" and survey["staff_survey"] or
-                survey_filter == "staff" and not survey["staff_survey"]
+                survey_filter == "student" and survey["staff_survey"]
+                or survey_filter == "staff" and not survey["staff_survey"]
             ):
                 continue
 
@@ -99,9 +99,9 @@ class OccupEyeApi():
                 )
                 survey_maps.append(
                     {
-                       "id": int(survey_map["id"]),
-                       "name": survey_map["name"],
-                       "image_id": int(survey_map["image_id"])
+                        "id": int(survey_map["id"]),
+                        "name": survey_map["name"],
+                        "image_id": int(survey_map["image_id"])
                     }
                 )
             survey["maps"] = survey_maps
@@ -131,18 +131,6 @@ class OccupEyeApi():
         content_type = self._redis.get(content_type_key)
 
         return (image_b64, content_type)
-
-    def get_survey_sensor_max_timestamp(self, survey_id):
-        """
-        Retrieves the max sensor timestamp from cache.
-        """
-        max_timestamp_key = self._const.SURVEY_MAX_TIMESTAMP_KEY.format(
-            survey_id
-        )
-        if self._redis.exists(max_timestamp_key):
-            return self._redis.get(max_timestamp_key)
-        else:
-            raise BadOccupEyeRequest
 
     def get_survey_sensors(self, survey_id):
         """
