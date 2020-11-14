@@ -905,6 +905,29 @@ class ApiApplicationsTestCase(TestCase):
             "The requested callback URL does not start with 'https://'."
         )
 
+    def test_change_callback_url_https_not_valid(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+        request = self.factory.post(
+            '/api/setcallbackurl/',
+            {
+                "app_id": app_.id,
+                "callback_url": "https://a"
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = set_callback_url(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            content["message"],
+            "The requested callback URL is not valid."
+        )
+
     def test_change_callback_url_success(self):
         user_ = User.objects.create(
             email="test@ucl.ac.uk",
@@ -1587,6 +1610,12 @@ class ApiApplicationsTestCase(TestCase):
 
         _ = APICall.objects.create(app=app_, user=user_,
                                    token_type="general",
+                                   service="service1",
+                                   method="method2",
+                                   queryparams="")
+
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
                                    service="service2",
                                    method="method2",
                                    queryparams="")
@@ -1606,6 +1635,10 @@ class ApiApplicationsTestCase(TestCase):
                 {
                     "method": "method1",
                     "count": 2,
+                },
+                {
+                    "method": "method2",
+                    "count": 1,
                 }
             ],
             "service2": [
