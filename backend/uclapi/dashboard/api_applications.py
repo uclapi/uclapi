@@ -247,7 +247,7 @@ def set_callback_url(request):
     url_not_safe_saved = is_url_unsafe(new_callback_url)
     if url_not_safe_saved:
         if url_not_safe_saved == NOT_HTTPS:
-            message = "The requested callback URL does not "\
+            message = "The requested callback URL does not " \
                       "start with 'https://'."
         elif url_not_safe_saved == NOT_VALID:
             message = "The requested callback URL is not valid."
@@ -511,15 +511,45 @@ def most_popular_service(request):
 
 
 def most_popular_method(request):
-    try:
-        service = request.GET["service"]
-        most_common = APICall.objects.filter(service__exact=service).values(
-            "method").annotate(count=Count('method')).order_by("-count")
-    except MultiValueDictKeyError:
-        most_common = APICall.objects.values(
-            "method").annotate(count=Count('method')).order_by("-count")
+    service = request.GET.get("service", False)
+    split_by_service = request.GET.get("split_services", "false")
+    split_by_service = False if split_by_service.lower() in ["false", "0"] \
+        else True
 
-    most_common = list(most_common)
+    if service:
+        most_common = APICall.objects.filter(service__exact=service).values(
+            "service", "method" if split_by_service else "method").annotate(
+            count=Count('method')).order_by("-count")
+    else:
+        most_common = APICall.objects.values(
+            "service", "method" if split_by_service else "method").annotate(
+            count=Count('method')).order_by("-count")
+
+    if not split_by_service:
+        t_most_common_counter = {}
+        for m in most_common:
+            if m["method"].split("/")[0] in t_most_common_counter:
+                t_most_common_counter[m["method"].split("/")[0]] += m["count"]
+            else:
+                t_most_common_counter[m["method"].split("/")[0]] = m["count"]
+        print(t_most_common_counter)
+
+        most_common = [{"method": method, "count": count} for method, count in
+                       t_most_common_counter.items()]
+    else:
+        temp_most_common_aggregate = {}
+        for method in most_common:
+            if method["service"] in temp_most_common_aggregate:
+                temp_most_common_aggregate[method["service"]].append(
+                    {"method": method["method"],
+                     "count": method["count"]}
+                )
+            else:
+                temp_most_common_aggregate[method["service"]] = [
+                    {"method": method["method"],
+                     "count": method["count"]}
+                ]
+        most_common = temp_most_common_aggregate
 
     return PrettyJsonResponse({
         "ok": True,
@@ -569,8 +599,8 @@ def users_per_app_by_dept(request):
         response.status_code = 400
         return response
 
-    users = User.objects.filter(oauthtoken__app__api_token__exact=token)\
-        .values("department").annotate(count=Count('department'))\
+    users = User.objects.filter(oauthtoken__app__api_token__exact=token) \
+        .values("department").annotate(count=Count('department')) \
         .order_by("-count")
     return PrettyJsonResponse({
         "ok": True,
