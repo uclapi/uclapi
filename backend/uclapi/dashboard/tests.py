@@ -1563,6 +1563,100 @@ class ApiApplicationsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(content["data"], [])
 
+    def test_analytics_most_popular_method_alternate_split_services(self):
+        # Set up token
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+
+        # Create some request objects
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="service1",
+                                   method="method1",
+                                   queryparams="")
+
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="service1",
+                                   method="method1",
+                                   queryparams="")
+
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="service2",
+                                   method="method2",
+                                   queryparams="")
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/methods',
+            {
+                "split_services": "true"
+            }
+        )
+        response = most_popular_method(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["data"], {
+            "service1": [
+                {
+                    "method": "method1",
+                    "count": 2,
+                }
+            ],
+            "service2": [
+                {
+                    "method": "method2",
+                    "count": 1,
+                }
+            ]
+        })
+
+    def test_analytics_most_popular_method_alternate_no_split_services(self):
+        # Set up token
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test"
+        )
+        app_ = App.objects.create(user=user_, name="An App")
+
+        # Create some request objects
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="service1",
+                                   method="method1/name1",
+                                   queryparams="")
+
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="service1",
+                                   method="method1/name2",
+                                   queryparams="")
+
+        _ = APICall.objects.create(app=app_, user=user_,
+                                   token_type="general",
+                                   service="service2",
+                                   method="method2",
+                                   queryparams="")
+
+        # Hit endpoint and check number is correct
+        request = self.factory.get(
+            '/api/analytics/methods',
+            {
+                "split_services": "false"
+            }
+        )
+        response = most_popular_method(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(content["data"], [{'method': 'method1', 'count': 2},
+                                           {'method': 'method2', 'count': 1}])
+
     def test_analytics_users_per_app_good_flow(self):
         dev_ = User.objects.create(
             email="dev@ucl.ac.uk",
