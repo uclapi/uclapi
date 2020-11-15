@@ -66,6 +66,8 @@ class OccupEyeCacheTestCase(TestCase):
         with open(os.path.join(__location__, "tests_strings.json")) as f:
             self.results = json.load(f)
 
+        self.cache.feed_cache(full=True)
+
     def redisEqual(self, key, value):
         self.assertEqual(value, self.redis.get(key))
 
@@ -175,8 +177,8 @@ class OccupEyeCacheTestCase(TestCase):
 
     def test_cache_sensors_for_map(self):
         self.cache.cache_sensors_for_map(99991, 66662)
-        self.redisDictEqual(self._const.SURVEY_MAP_SENSOR_PROPERTIES_KEY.format(99991, 66662, 22221), {
-            "hardware_id": "22221",
+        self.redisDictEqual(self._const.SURVEY_MAP_SENSOR_PROPERTIES_KEY.format(99991, 66662, 22223), {
+            "hardware_id": "22223",
             "x_pos": "23236.0",
             "y_pos": "7493.0",
         })
