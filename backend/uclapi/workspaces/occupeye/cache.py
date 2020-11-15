@@ -446,7 +446,6 @@ class OccupeyeCache:
 
         pipeline.delete(survey_maps_list_key)
         for map_id in maps_to_delete:
-            print(self._const.SURVEY_MAP_DATA_KEY.format(survey_id, map_id))
             pipeline.delete(self._const.SURVEY_MAP_DATA_KEY.format(survey_id, map_id))
             pipeline.delete(self._const.SURVEY_MAP_VMAX_X_KEY.format(survey_id, map_id))
             pipeline.delete(self._const.SURVEY_MAP_VMAX_Y_KEY.format(survey_id, map_id))

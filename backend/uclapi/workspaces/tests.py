@@ -14,6 +14,8 @@ from .occupeye.endpoint import TestEndpoint
 from .occupeye.exceptions import BadOccupEyeRequest
 from .occupeye.token import get_bearer_token, token_valid
 
+from django.core.management import call_command
+
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 
@@ -210,6 +212,14 @@ class OccupEyeCacheTestCase(TestCase):
 
         self.assertEqual(len(self.redis.keys(self._const.SURVEY_MAPS_LIST_KEY.format(99991))), 0)
         self.assertEqual(len(self.redis.keys(self._const.SURVEY_MAP_DATA_KEY.format(99991, 66661))), 0)
+
+    def test_commands(self):
+        # This is to verify if the command works, we cannot specifically test anything
+        # as the endpoint is only provided with an empty dictionary
+        call_command("feed_occupeye_cache", "--test")
+
+    def test_commands_mini(self):
+        call_command("feed_occupeye_cache_mini", "--test")
 
 
 class OccupEyeApiTestCase(TestCase):

@@ -8,16 +8,23 @@ from common.cachet import (
     update_incident,
 )
 from workspaces.occupeye.cache import OccupeyeCache
+from workspaces.occupeye.endpoint import TestEndpoint
 
 
 class Command(BaseCommand):
     help = "Caches current OccupEye sensor statuses into Redis"
 
+    def add_arguments(self, parser):
+        parser.add_argument("--test", action='store_true')
+
     def handle(self, *args, **options):
         try:
             print("Running Mini OccupEye Caching Operation")
             print("[+] Feeding Cache")
-            cache = OccupeyeCache()
+            if options['test']:
+                cache = OccupeyeCache(endpoint=TestEndpoint({}))
+            else:
+                cache = OccupeyeCache()
             cache.feed_cache(full=False)
             print("Done!")
             incident_name = get_incident_name("Occupeye-Mini")
