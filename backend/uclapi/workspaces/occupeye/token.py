@@ -14,20 +14,15 @@ def get_token(consts):
     body = {
         "Grant_type": "password",
         "Username": consts.USERNAME,
-        "Password": consts.PASSWORD
+        "Password": consts.PASSWORD,
     }
 
-    response = requests.post(
-        url=url,
-        data=body
-    )
+    response = requests.post(url=url, data=body)
 
     response_data = json.loads(response.text)
 
     access_token = response_data["access_token"]
-    access_token_expiry = int(time_now()) + int(
-        response_data["expires_in"]
-    )
+    access_token_expiry = int(time_now()) + int(response_data["expires_in"])
 
     return (access_token, access_token_expiry)
 
