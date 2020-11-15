@@ -1,8 +1,7 @@
 import json
+from time import time as time_now
 
 import requests
-
-from time import time as time_now
 
 
 def get_token(consts):

@@ -1,18 +1,16 @@
 import re
-
 from base64 import b64decode
+
+from rest_framework.decorators import api_view
 
 from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse
 from common.helpers import RateLimitHttpResponse as HttpResponse
-
-from rest_framework.decorators import api_view
-
+from .image_builder import ImageBuilder
 # from .occupeye import BadOccupEyeRequest, OccupEyeApi
 from .occupeye.api import OccupEyeApi
 from .occupeye.constants import OccupEyeConstants
 from .occupeye.exceptions import BadOccupEyeRequest
-from .image_builder import ImageBuilder
 
 
 @api_view(["GET"])

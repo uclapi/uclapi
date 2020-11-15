@@ -1,16 +1,9 @@
 import datetime
-import requests
 
 from dateutil import parser as dateutil_parser
 from pytz import timezone
 
 from .exceptions import BadOccupEyeRequest, OccupEyeOtherSensorState
-
-
-def authenticated_request(url, bearer):
-    headers = {"Authorization": bearer}
-    r = requests.get(url=url, headers=headers)
-    return r.json()
 
 
 def survey_ids_to_surveys(surveys_data, survey_ids):

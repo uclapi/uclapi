@@ -1,10 +1,8 @@
 import json
-
 from collections import OrderedDict
 from distutils.util import strtobool
 
 import redis
-
 from django.conf import settings
 
 from .constants import OccupEyeConstants

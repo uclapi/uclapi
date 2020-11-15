@@ -1,6 +1,7 @@
 import json
 import os
 from binascii import hexlify
+from datetime import datetime
 
 import redis
 from django.conf import settings
@@ -9,8 +10,11 @@ from django.test import TestCase
 from .occupeye.api import OccupEyeApi
 from .occupeye.cache import OccupeyeCache
 from .occupeye.constants import OccupEyeConstants
+from .occupeye.endpoint import TestEndpoint
 from .occupeye.exceptions import BadOccupEyeRequest
 from .occupeye.token import get_bearer_token, token_valid
+
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 
 class OccupEyeTokenTestCase(TestCase):
@@ -51,21 +55,178 @@ class OccupEyeTokenTestCase(TestCase):
         )
 
 
+class OccupEyeCacheTestCase(TestCase):
+    def setUp(self):
+        self.redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
+        self._const = OccupEyeConstants()
+        with open(os.path.join(__location__, "tests_cache.json")) as f:
+            self.cache = OccupeyeCache(endpoint=TestEndpoint(json.load(f)))
+        with open(os.path.join(__location__, "tests_strings.json")) as f:
+            self.results = json.load(f)
+
+    def redisEqual(self, key, value):
+        self.assertEqual(value, self.redis.get(key))
+
+    def redisDictEqual(self, key, value):
+        self.assertDictEqual(value, self.redis.hgetall(key))
+
+    def redisListEqual(self, key, value):
+        self.assertListEqual(value, self.redis.lrange(key, 0, -1))
+
+    def assert_99991(self):
+        self.redisListEqual(self._const.SURVEY_SENSORS_LIST_KEY.format(99991), ["22221", "22222"])
+        self.redisDictEqual(self._const.SURVEY_SENSOR_DATA_KEY.format(99991, 22221), {
+            "survey_id": "99991",
+            "hardware_id": "22221",
+            "survey_device_id": "1",
+            "host_address": "520",
+            "pir_address": "1",
+            "device_type": "Desk",
+            "location": "Test location",
+            "description_1": "Reading Area",
+            "description_2": "",
+            "description_3": "",
+            "room_id": "1",
+            "room_name": "T01",
+            "share_id": "None",
+            "floor": "-1",
+            "room_type": "Open Plan",
+            "building_name": "Test",
+            "room_description": "Description",
+        })
+
+    def assert_loc_99992(self):
+        self.redisDictEqual(self._const.SURVEY_DATA_KEY.format(99992), {
+            "id": "99992",
+            "active": "True",
+            "name": "Central House LG05",
+            "start_time": "08:00",
+            "end_time": "20:00",
+            "staff_survey": "False",
+            "lat": "51.526759",
+            "long": "-0.129938",
+            "address1": "14 Upper Woburn Place",
+            "address2": "Bloomsbury",
+            "address3": "London",
+            "address4": "WC1H 0NN",
+        })
+
+    def assert_99992(self):
+        self.redisListEqual(self._const.SURVEY_SENSORS_LIST_KEY.format(99992), ["22223", "22224"])
+        self.redisDictEqual(self._const.SURVEY_SENSOR_DATA_KEY.format(99992, 22223), {
+            "survey_id": "99992",
+            "hardware_id": "22223",
+            "survey_device_id": "1",
+            "host_address": "520",
+            "pir_address": "1",
+            "device_type": "Desk",
+            "location": "Test location",
+            "description_1": "Reading Area",
+            "description_2": "",
+            "description_3": "",
+            "room_id": "1",
+            "room_name": "T01",
+            "share_id": "None",
+            "floor": "-1",
+            "room_type": "Open Plan",
+            "building_name": "Test",
+            "room_description": "Description",
+        })
+
+    def test_cache_maps_for_survey(self):
+        self.cache.cache_maps_for_survey(99991)
+        self.redisDictEqual(self._const.SURVEY_MAP_DATA_KEY.format(99991, 66661), {
+            "id": "66661",
+            "name": "Test Map",
+            "image_id": "33331",
+        })
+
+    def test_cache_survey_data(self):
+        self.cache.cache_survey_data()
+        self.assert_loc_99992()
+        self.assertTrue(len(self.redis.keys(self._const.SURVEY_DATA_KEY.format(99993))) == 0)
+
+    def test_cache_image(self):
+        self.cache.cache_image(99991)
+        self.redisEqual(self._const.IMAGE_BASE64_KEY.format(99991), "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAD"
+                                                                    "UlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==")
+        self.redisEqual(self._const.IMAGE_CONTENT_TYPE_KEY.format(99991), "image/png")
+
+    def test_cache_survey_sensors_max_timestamp(self):
+        self.cache.cache_survey_sensors_max_timestamp(99991)
+        self.redisEqual(self._const.SURVEY_MAX_TIMESTAMP_KEY.format(99991), "2020-11-12T22:45:10")
+
+    def test_cache_survey_sensor_data(self):
+        self.cache.cache_survey_sensor_data(99991)
+        self.assert_99991()
+
+    def test_cache_all_survey_sensor_states(self):
+        self.cache.cache_all_survey_sensor_states(99991)
+        self.assert_99991()
+        self.redisDictEqual(self._const.SURVEY_SENSOR_STATUS_KEY.format(99991, 22221), {
+            "occupied": "False",
+            "hardware_id": "22221",
+            "last_trigger_type": "Absent",
+            "last_trigger_timestamp": "2020-04-18T11:33:34+01:00",
+        })
+
+    def test_cache_sensors_for_map(self):
+        self.cache.cache_sensors_for_map(99991, 66662)
+        self.redisDictEqual(self._const.SURVEY_MAP_SENSOR_PROPERTIES_KEY.format(99991, 66662, 22221), {
+            "hardware_id": "22221",
+            "x_pos": "23236.0",
+            "y_pos": "7493.0",
+        })
+
+        self.redisEqual(self._const.SURVEY_MAP_VMAX_X_KEY.format(99991, 66662), "123456.0")
+        self.redisEqual(self._const.SURVEY_MAP_VMAX_Y_KEY.format(99991, 66662), "654321.0")
+        self.redisEqual(self._const.SURVEY_MAP_VIEWBOX_KEY.format(99991, 66662), "0 0 41176 20031")
+
+    def test_cache_historical_time_usage_data(self):
+        self.cache.cache_historical_time_usage_data(99991, 1, cur_date=datetime.strptime('2020-01-02 16:00:00',
+                                                                                         '%Y-%m-%d %H:%M:%S'))
+
+        self.redisEqual(self._const.TIMEAVERAGE_KEY.format(99991, 1),
+                        self.results["test_cache_historical_time_usage_data_1"])
+
+    def test_cache_common_summaries(self):
+        self.cache.cache_survey_data()
+        self.cache.cache_common_summaries()
+        self.redisEqual(self._const.SUMMARY_CACHE_SURVEY.format(99991), self.results["test_cache_common_summaries_1"])
+
+    def test_feed_cache(self):
+        self.cache.feed_cache(full=False)
+        self.cache.feed_cache(full=True)
+        self.assert_99991()
+        self.assert_99992()
+        self.assert_loc_99992()
+
+    def test_delete_maps(self):
+        self.cache.feed_cache(full=True)
+        key = self._const.SURVEY_MAPS_LIST_KEY.format(99991)
+        pipeline = self.redis.pipeline()
+        self.cache.delete_maps(pipeline, 99991, key, [])
+        pipeline.execute()
+
+        self.assertEqual(len(self.redis.keys(self._const.SURVEY_MAPS_LIST_KEY.format(99991))), 0)
+        self.assertEqual(len(self.redis.keys(self._const.SURVEY_MAP_DATA_KEY.format(99991, 66661))), 0)
+
+
 class OccupEyeApiTestCase(TestCase):
     def setUp(self):
-        self.r = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
+        self.redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
         self._consts = OccupEyeConstants()
         self.api = OccupEyeApi()
-        self.cache = OccupeyeCache(testing=True)
+        self.cache = OccupeyeCache(endpoint=TestEndpoint({}))
 
         # Create some sample data
-        data_lpush = {
+        self._data_lpush = {
             self._consts.SURVEYS_LIST_KEY: [9991, 9992, 9993],
             self._consts.SURVEY_SENSORS_LIST_KEY.format(9991): [6666661],
             self._consts.SURVEY_MAPS_LIST_KEY.format(9991): [3331],
             self._consts.SURVEY_MAP_SENSORS_LIST_KEY.format(9991, 3331): [6666661],
         }
-        data_set = {
+        self._data_set = {
             self._consts.SURVEY_DATA_KEY.format(9991): {
                 "id": 9991,
                 "active": str(True),
@@ -109,7 +270,7 @@ class OccupEyeApiTestCase(TestCase):
                 "address4": "postcode please3",
             },
             self._consts.IMAGE_BASE64_KEY.format(9991): "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQV"
-            "R42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+                                                        "R42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
             self._consts.IMAGE_CONTENT_TYPE_KEY.format(9991): "image/png",
             self._consts.SURVEY_MAP_DATA_KEY.format(9991, 3331): {
                 "id": "3331",
@@ -163,22 +324,22 @@ class OccupEyeApiTestCase(TestCase):
             self._consts.SURVEY_MAP_VIEWBOX_KEY.format(9991, 3331): "0 0 1234 4321",
         }
 
-        pipeline = self.r.pipeline()
-        for key in list(data_lpush.keys()) + list(data_set.keys()):
+        pipeline = self.redis.pipeline()
+        for key in list(self._data_lpush.keys()) + list(self._data_set.keys()):
             pipeline.delete(key)
 
-        for key, value in data_lpush.items():
+        for key, value in self._data_lpush.items():
             for v in value:
                 pipeline.lpush(key, v)
-            # pipeline.expire(key, 20)
+            pipeline.expire(key, 20)
 
-        for key, value in data_set.items():
+        for key, value in self._data_set.items():
             if type(value) is dict:
                 pipeline.hmset(key, value)
             else:
                 pipeline.set(key, value)
 
-            # pipeline.expire(key, 20)
+            pipeline.expire(key, 20)
         pipeline.execute()
         self.cache.cache_common_summaries()
 
@@ -450,3 +611,9 @@ class OccupEyeApiTestCase(TestCase):
     def test_get_survey_image_map_data(self):
         map_data = self.api.get_survey_image_map_data("9991", "3331")
         self.assert_nested(map_data, {"VMaxX": "123", "VMaxY": "321", "ViewBox": "0 0 1234 4321"})
+
+    def tearDown(self):
+        pipeline = self.redis.pipeline()
+        for key in list(self._data_lpush.keys()) + list(self._data_set.keys()):
+            pipeline.delete(key)
+        pipeline.execute()

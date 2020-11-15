@@ -1,3 +1,4 @@
+from cachetclient.v1 import enums
 from django.core.management.base import BaseCommand
 
 from common.cachet import (
@@ -7,8 +8,6 @@ from common.cachet import (
     update_incident,
 )
 from workspaces.occupeye.cache import OccupeyeCache
-
-from cachetclient.v1 import enums
 
 
 class Command(BaseCommand):

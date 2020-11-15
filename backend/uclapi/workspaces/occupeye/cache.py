@@ -1,32 +1,23 @@
 import json
-
-from base64 import b64encode
 from datetime import datetime, timedelta
 from distutils.util import strtobool
 
 import redis
-import requests
-
-from common.helpers import LOCAL_TIMEZONE
-
 from django.conf import settings
 
+from common.helpers import LOCAL_TIMEZONE
 from .api import OccupEyeApi
 from .constants import OccupEyeConstants
+from .endpoint import OccupeyeEndpoint, Endpoint
 from .exceptions import OccupEyeOtherSensorState
-from .token import get_bearer_token
-from .utils import authenticated_request, is_sensor_occupied
+from .utils import is_sensor_occupied
 
 
 class OccupeyeCache:
-    def __init__(self, testing=False):
+    def __init__(self, endpoint: Endpoint = OccupeyeEndpoint()):
         self._redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
         self._const = OccupEyeConstants()
-
-        if not testing:
-            access_token = self._redis.get(self._const.ACCESS_TOKEN_KEY)
-            access_token_expiry = self._redis.get(self._const.ACCESS_TOKEN_EXPIRY_KEY)
-            self.bearer_token = get_bearer_token(access_token, access_token_expiry, self._const)
+        self._endpoint = endpoint
 
     def cache_maps_for_survey(self, survey_id):
         """
@@ -36,7 +27,7 @@ class OccupeyeCache:
         can be quickly retrieved later.
         """
         survey_maps_list_key = (self._const.SURVEY_MAPS_LIST_KEY).format(survey_id)
-        survey_maps_data = authenticated_request(self._const.URL_MAPS_BY_SURVEY.format(survey_id), self.bearer_token)
+        survey_maps_data = self._endpoint.request(self._const.URL_MAPS_BY_SURVEY.format(survey_id))
         pipeline = self._redis.pipeline()
 
         self.delete_maps(pipeline, survey_id, survey_maps_list_key, survey_maps_data)
@@ -62,7 +53,7 @@ class OccupeyeCache:
         helper function above to tie all maps to surveys.
         """
         pipeline = self._redis.pipeline()
-        surveys_data = authenticated_request(self._const.URL_SURVEYS, self.bearer_token)
+        surveys_data = self._endpoint.request(self._const.URL_SURVEYS)
         self.delete_surveys(pipeline, surveys_data)
         for survey in surveys_data:
             # Check whether the survey has been discontinued. If so, we skip
@@ -109,15 +100,9 @@ class OccupeyeCache:
         Downloads map images from the API and stores their
         base64 representation and associated data type in Redis.
         """
-        headers = {"Authorization": self.bearer_token}
-        url = self._const.URL_IMAGE.format(image_id)
-        response = requests.get(url=url, headers=headers, stream=True)
-        content_type = response.headers["Content-Type"]
-
-        raw_image = response.content
-        image_b64 = b64encode(raw_image)
+        image, content_type = self._endpoint.image(image_id)
         pipeline = self._redis.pipeline()
-        pipeline.set(self._const.IMAGE_BASE64_KEY.format(image_id), image_b64)
+        pipeline.set(self._const.IMAGE_BASE64_KEY.format(image_id), image)
         pipeline.set(self._const.IMAGE_CONTENT_TYPE_KEY.format(image_id), content_type)
         pipeline.execute()
 
@@ -129,10 +114,7 @@ class OccupeyeCache:
         This is especially important given how much data we
         cache.
         """
-        headers = {"Authorization": self.bearer_token}
-        url = self._const.URL_SURVEY_MAX_TIMESTAMP.format(survey_id)
-        r = requests.get(url=url, headers=headers)
-        max_sensor_timestamp = r.text.replace('"', "")
+        max_sensor_timestamp = self._endpoint.request_fragment(self._const.URL_SURVEY_MAX_TIMESTAMP.format(survey_id))
         self._redis.set(self._const.SURVEY_MAX_TIMESTAMP_KEY.format(survey_id), max_sensor_timestamp)
 
     def cache_survey_sensor_data(self, survey_id):
@@ -145,9 +127,9 @@ class OccupeyeCache:
         does not create any lists of sensors (we just cache data
         about each one by ID)
         """
-        all_sensors_data = authenticated_request(self._const.URL_SURVEY_DEVICES.format(survey_id), self.bearer_token)
+        all_sensors_data = self._endpoint.request(self._const.URL_SURVEY_DEVICES.format(survey_id))
         pipeline = self._redis.pipeline()
-        survey_sensors_list_key = (self._const.SURVEY_SENSORS_LIST_KEY).format(survey_id)
+        survey_sensors_list_key = self._const.SURVEY_SENSORS_LIST_KEY.format(survey_id)
         self.delete_sensors(pipeline, survey_id, survey_sensors_list_key, all_sensors_data)
 
         for sensor_data in all_sensors_data:
@@ -185,16 +167,14 @@ class OccupeyeCache:
         """
         Caches all sensors in a survey, including their latest states
         """
-        all_sensors_data = authenticated_request(
-            self._const.URL_SURVEY_DEVICES_LATEST.format(survey_id), self.bearer_token
-        )
+        all_sensors_data = self._endpoint.request(self._const.URL_SURVEY_DEVICES_LATEST.format(survey_id))
         if not isinstance(all_sensors_data, list):
             print("[-] Survey {} has bad sensor data, ignoring...".format(survey_id))
             return
         pipeline = self._redis.pipeline()
         for sensor_data in all_sensors_data:
             hardware_id = sensor_data["HardwareID"]
-            sensor_status_key = (self._const.SURVEY_SENSOR_STATUS_KEY).format(survey_id, hardware_id)
+            sensor_status_key = self._const.SURVEY_SENSOR_STATUS_KEY.format(survey_id, hardware_id)
 
             try:
                 occupied_state = is_sensor_occupied(sensor_data["LastTriggerType"], sensor_data["LastTriggerTime"])
@@ -218,7 +198,7 @@ class OccupeyeCache:
         Map ID requested.
         """
         url = self._const.URL_MAPS.format(map_id)
-        all_map_sensors_data = authenticated_request(url, self.bearer_token)
+        all_map_sensors_data = self._endpoint.request(url)
 
         pipeline = self._redis.pipeline()
         map_sensors_list_key = (self._const.SURVEY_MAP_SENSORS_LIST_KEY).format(survey_id, map_id)
@@ -231,7 +211,7 @@ class OccupeyeCache:
         for map_sensor_data in all_map_sensors_data["MapItemViewModels"]:
             hardware_id = map_sensor_data["HardwareID"]
             pipeline.rpush(map_sensors_list_key, hardware_id)
-            properties_key = (self._const.SURVEY_MAP_SENSOR_PROPERTIES_KEY).format(survey_id, map_id, hardware_id)
+            properties_key = self._const.SURVEY_MAP_SENSOR_PROPERTIES_KEY.format(survey_id, map_id, hardware_id)
             pipeline.hmset(
                 properties_key,
                 {
@@ -243,14 +223,14 @@ class OccupeyeCache:
 
         map_vmax_x_key = self._const.SURVEY_MAP_VMAX_X_KEY.format(survey_id, map_id)
         map_vmax_y_key = self._const.SURVEY_MAP_VMAX_Y_KEY.format(survey_id, map_id)
-        map_viewbox_key = (self._const.SURVEY_MAP_VIEWBOX_KEY).format(survey_id, map_id)
+        map_viewbox_key = self._const.SURVEY_MAP_VIEWBOX_KEY.format(survey_id, map_id)
         pipeline.set(map_vmax_x_key, all_map_sensors_data["VMaxX"])
         pipeline.set(map_vmax_y_key, all_map_sensors_data["VMaxY"])
         pipeline.set(map_viewbox_key, all_map_sensors_data["ViewBox"])
 
         pipeline.execute()
 
-    def cache_historical_time_usage_data(self, survey_id, day_count):
+    def cache_historical_time_usage_data(self, survey_id, day_count, cur_date=datetime.now()):
         """
         Function to cache in Redis the historical usage data over each 10
         minute time period.
@@ -261,11 +241,11 @@ class OccupeyeCache:
         This is to support apps which show historical survey usage data.
         """
 
-        end_date = datetime.now() - timedelta(days=1)
+        end_date = cur_date - timedelta(days=1)
         start_date = end_date - timedelta(days=day_count - 1)
         url = self._const.URL_QUERY.format(start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"), survey_id)
 
-        response = authenticated_request(url, self.bearer_token)
+        response = self._endpoint.request(url)
 
         slots = {}
 
@@ -297,7 +277,7 @@ class OccupeyeCache:
                 "sensors_total": value["CountTotal"],
             }
 
-        average_key = (self._const.TIMEAVERAGE_KEY).format(survey_id, day_count)
+        average_key = self._const.TIMEAVERAGE_KEY.format(survey_id, day_count)
 
         self._redis.set(average_key, json.dumps(data, sort_keys=True))
 
@@ -466,6 +446,7 @@ class OccupeyeCache:
 
         pipeline.delete(survey_maps_list_key)
         for map_id in maps_to_delete:
+            print(self._const.SURVEY_MAP_DATA_KEY.format(survey_id, map_id))
             pipeline.delete(self._const.SURVEY_MAP_DATA_KEY.format(survey_id, map_id))
             pipeline.delete(self._const.SURVEY_MAP_VMAX_X_KEY.format(survey_id, map_id))
             pipeline.delete(self._const.SURVEY_MAP_VMAX_Y_KEY.format(survey_id, map_id))

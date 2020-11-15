@@ -1,7 +1,6 @@
 import redis
-
-from lxml import etree
 from django.conf import settings
+from lxml import etree
 
 from .occupeye.api import OccupEyeApi
 from .occupeye.exceptions import BadOccupEyeRequest, OccupEyeOtherSensorState
