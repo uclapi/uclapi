@@ -163,6 +163,7 @@ class OccupEyeCacheTestCase(TestCase):
         self.assert_99991()
 
     def test_cache_all_survey_sensor_states(self):
+        self.cache.feed_cache(full=True)
         self.cache.cache_all_survey_sensor_states(99991)
         self.assert_99991()
         self.redisDictEqual(self._const.SURVEY_SENSOR_STATUS_KEY.format(99991, 22221), {
@@ -192,6 +193,7 @@ class OccupEyeCacheTestCase(TestCase):
                         self.results["test_cache_historical_time_usage_data_1"])
 
     def test_cache_common_summaries(self):
+        self.cache.feed_cache(full=True)
         self.cache.cache_survey_data()
         self.cache.cache_common_summaries()
         self.redisEqual(self._const.SUMMARY_CACHE_SURVEY.format(99991), self.results["test_cache_common_summaries_1"])

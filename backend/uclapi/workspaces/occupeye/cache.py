@@ -14,7 +14,9 @@ from .utils import is_sensor_occupied
 
 
 class OccupeyeCache:
-    def __init__(self, endpoint: Endpoint = OccupeyeEndpoint()):
+    def __init__(self, endpoint: Endpoint = None):
+        if endpoint is None:
+            endpoint = OccupeyeEndpoint()
         self._redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
         self._const = OccupEyeConstants()
         self._endpoint = endpoint
