@@ -48,7 +48,7 @@ requests-file==1.5.1
 requests-futures==1.0.0
 setproctitle==1.1.10
 six==1.15.0
-tldextract==2.2.3
+tldextract==3.0.2
 tqdm==4.51.0
 urllib3==1.26.2
 validators==0.18.1
