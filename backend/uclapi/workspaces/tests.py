@@ -61,9 +61,11 @@ class OccupEyeCacheTestCase(TestCase):
     def setUp(self):
         self.redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
         self._const = OccupEyeConstants()
-        with open(os.path.join(__location__, "tests_cache.json")) as f:
+        with open(os.path.join(__location__, "tests_cache.json"), encoding="utf-8") as f:
+            print(json.load(f))
+        with open(os.path.join(__location__, "tests_cache.json"), encoding="utf-8") as f:
             self.cache = OccupeyeCache(endpoint=TestEndpoint(json.load(f)))
-        with open(os.path.join(__location__, "tests_strings.json")) as f:
+        with open(os.path.join(__location__, "tests_strings.json"), encoding="utf-8") as f:
             self.results = json.load(f)
 
         self.cache.feed_cache(full=True)
