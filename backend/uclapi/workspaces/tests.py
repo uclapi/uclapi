@@ -59,11 +59,25 @@ class OccupEyeTokenTestCase(TestCase):
 
 class RedisTest(TestCase):
     def setUp(self):
+        print("Redis Test Cases")
         self.redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
 
     def test_set_get(self):
-        self.redis.set('foo', 'bar')
-        self.assertEqual(self.redis.get('foo'), 'bar')
+        self.redis.set("foo", "bar")
+        self.assertEqual(self.redis.get("foo"), "bar")
+
+    def test_cache_file(self):
+        with open(os.path.join(__location__, "tests_cache.json"), encoding="utf-8") as f:
+            j = json.load(f)
+        self.assertGreater(len(j.keys()), 1)
+
+        with open(os.path.join(__location__, "tests_strings.json"), encoding="utf-8") as f:
+            j = json.load(f)
+        self.assertGreater(len(j.keys()), 1)
+
+    def test_hmset_hgetall(self):
+        self.redis.hmset("foo_dict", {"foo": "bar"})
+        self.assertDictEqual({"foo": "bar"}, self.redis.hgetall("foo_dict"))
 
 
 class OccupEyeCacheTestCase(TestCase):
@@ -153,6 +167,7 @@ class OccupEyeCacheTestCase(TestCase):
 
     def test_cache_maps_for_survey(self):
         self.cache.cache_maps_for_survey(99991)
+        print(self.redis.keys())
         self.redisDictEqual(self._const.SURVEY_MAP_DATA_KEY.format(99991, 66661), {
             "id": "66661",
             "name": "Test Map",
@@ -202,8 +217,8 @@ class OccupEyeCacheTestCase(TestCase):
         self.redisEqual(self._const.SURVEY_MAP_VIEWBOX_KEY.format(99991, 66662), "0 0 41176 20031")
 
     def test_cache_historical_time_usage_data(self):
-        self.cache.cache_historical_time_usage_data(99991, 1, cur_date=datetime.strptime('2020-01-02 16:00:00',
-                                                                                         '%Y-%m-%d %H:%M:%S'))
+        self.cache.cache_historical_time_usage_data(99991, 1, cur_date=datetime.strptime("2020-01-02 16:00:00",
+                                                                                         "%Y-%m-%d %H:%M:%S"))
 
         self.redisEqual(self._const.TIMEAVERAGE_KEY.format(99991, 1),
                         self.results["test_cache_historical_time_usage_data_1"])
