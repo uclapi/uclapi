@@ -57,6 +57,15 @@ class OccupEyeTokenTestCase(TestCase):
         )
 
 
+class RedisTest(TestCase):
+    def setUp(self):
+        self.redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
+
+    def test_set_get(self):
+        self.redis.set('foo', 'bar')
+        self.assertEqual(self.redis.get('foo'), 'bar')
+
+
 class OccupEyeCacheTestCase(TestCase):
     def setUp(self):
         self.redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
