@@ -30,16 +30,12 @@ class OccupeyeCache:
         """
         survey_maps_list_key = (self._const.SURVEY_MAPS_LIST_KEY).format(survey_id)
         survey_maps_data = self._endpoint.request(self._const.URL_MAPS_BY_SURVEY.format(survey_id))
-        print("Cache Maps For Survey")
-        print(survey_maps_data)
         pipeline = self._redis.pipeline()
 
         self.delete_maps(pipeline, survey_id, survey_maps_list_key, survey_maps_data)
 
         for survey_map in survey_maps_data:
-            print(survey_map)
             survey_map_id = self._const.SURVEY_MAP_DATA_KEY.format(survey_id, str(survey_map["MapID"]))
-            print(survey_map_id)
             pipeline.hmset(
                 survey_map_id,
                 {

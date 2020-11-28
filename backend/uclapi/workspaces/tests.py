@@ -57,38 +57,10 @@ class OccupEyeTokenTestCase(TestCase):
         )
 
 
-class RedisTest(TestCase):
-    def setUp(self):
-        print("Redis Test Cases")
-        self.redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
-
-    def test_set_get(self):
-        self.redis.set("foo", "bar")
-        self.assertEqual(self.redis.get("foo"), "bar")
-
-    def test_cache_file(self):
-        with open(os.path.join(__location__, "tests_cache.json"), encoding="utf-8") as f:
-            j = json.load(f)
-        self.assertGreater(len(j.keys()), 1)
-
-        with open(os.path.join(__location__, "tests_strings.json"), encoding="utf-8") as f:
-            j = json.load(f)
-        self.assertGreater(len(j.keys()), 1)
-
-    def test_hmset_hgetall(self):
-        self.redis.hmset("foo_dict", {"foo": "bar"})
-        self.assertDictEqual({"foo": "bar"}, self.redis.hgetall("foo_dict"))
-
-
 class OccupEyeCacheTestCase(TestCase):
     def setUp(self):
         self.redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
         self._const = OccupEyeConstants()
-        print("Cache from: ", os.path.join(__location__, "tests_cache.json"))
-        print("Tests from ", os.path.join(__location__, "tests_strings.json"))
-        from os import listdir
-        from os.path import isfile, join
-        print("All file ", [f for f in listdir(__location__) if isfile(join(__location__, f))])
         with open(os.path.join(__location__, "tests_cache.json"), encoding="utf-8") as f:
             self.cache = OccupeyeCache(endpoint=TestEndpoint(json.load(f)))
         with open(os.path.join(__location__, "tests_strings.json"), encoding="utf-8") as f:
@@ -167,7 +139,6 @@ class OccupEyeCacheTestCase(TestCase):
 
     def test_cache_maps_for_survey(self):
         self.cache.cache_maps_for_survey(99991)
-        print(self.redis.keys())
         self.redisDictEqual(self._const.SURVEY_MAP_DATA_KEY.format(99991, 66661), {
             "id": "66661",
             "name": "Test Map",
