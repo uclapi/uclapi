@@ -58,12 +58,10 @@ class OccupeyeEndpoint(Endpoint):
 class TestEndpoint(Endpoint):
     def __init__(self, responses: dict):
         self._const = OccupEyeConstants()
-        print(responses)
         self._results = defaultdict(dict, responses)
 
     def request(self, url: str):
         print("Requesting: %s" % url)
-        print("Returning: ", self._results[url])
         return self._results[url]
 
     def request_fragment(self, url: str):
