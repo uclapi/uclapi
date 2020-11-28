@@ -1,0 +1,80 @@
+[tool.poetry]
+name = "UCL API"
+
+readme = 'README.md'  # Markdown files are supported
+
+repository = "https://github.com/uclapi"
+homepage = "https://uclapi.com"
+
+
+[tool.poetry.dependencies]
+python = "~2.7 || ^3.8"  # Compatible python versions must be declared here
+toml = "^0.9"
+# Dependencies with extras
+requests = { version = "^2.13", extras = [ "security" ] }
+# Python specific dependencies with prereleases allowed
+pathlib2 = { version = "^2.2", python = "~2.7", allow-prereleases = true }
+
+amqp = { version = "5.0.2" }
+autopep8={ version = "1.5.4" }
+botocore={ version = "1.19.17" }
+boto3={ version = "1.16.17" }
+celery={ version = "4.4.7" }
+certifi={ version = "2020.11.8" }
+chardet={ version = "3.0.4" }
+Django={ version = "2.2.17" }
+ciso8601={ version = "2.1.3" }
+cx-Oracle={ version = "8.0.1" }
+decorator={ version = "4.4.2" }
+deepdiff={ version = "5.0.2" }
+django-cors-headers={ version = "3.5.0" }
+django-dotenv={ version = "1.4.2" }
+django-mock-queries={ version = "2.1.5" }
+django-storages={ version = "1.10.1" }
+djangorestframework={ version = "3.11.2" }
+django-postgrespool2={ version = "1.0.1" }
+docutils={ version = "0.16" }
+eventlet={ version = "0.28.1" }
+gevent={ version = "20.9.0" }
+freezegun={ version = "1.0.0" }
+flake8={ version = "3.8.4" }
+greenlet={ version = "0.4.17" }
+gunicorn={ version = "20.0.4" }
+hiredis={ version = "1.1.0" }
+idna={ version = "2.10" }
+jinjasql={ version = "0.1.8" }
+jmespath={ version = "0.10.0" }
+jsonpickle={ version = "1.4.1" }
+kombu={ version = "4.6.11" }
+lxml={ version = "4.5.2" }
+Markupsafe={ version = "1.1.1" }
+mock={ version = "4.0.2" }
+model-mommy={ version = "2.0.0" }
+pbr={ version = "5.5.1" }
+pycodestyle={ version = "2.6.0" }
+pycryptodome={ version = "3.9.9" }
+cachet-client={ version = "3.1.1" }
+psycopg2-binary={ version = "2.8.6" }
+python-dateutil={ version = "2.8.1" }
+pymsteams = { version = "0.1.14" }
+pytz = { version = "2020.4" }
+raven = { version = "6.10.0" }
+redis = { version = "3.5.3" }
+requests = { version = "2.25.0" }
+requests-file = { version = "1.5.1" }
+requests-futures = { version = "1.0.0" }
+setproctitle = { version = "1.1.10" }
+six = { version = "1.15.0" }
+tldextract = { version = "2.2.3" }
+tqdm = { version = "4.51.0" }
+urllib3 = { version = "1.26.2" }
+validators = { version = "0.18.1" }
+vine = { version = "1.3.0" }
+
+# Git dependencies
+django-webpack-loader = { git = "https://github.com/uclapi/django-webpack-loader@master#egg=django-webpack-loader", branch = "master" }
+
+#????
+[tool.poetry.dev-dependencies]
+pytest = "^3.0"
+pytest-cov = "^2.4"
