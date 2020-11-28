@@ -61,6 +61,11 @@ class OccupEyeCacheTestCase(TestCase):
     def setUp(self):
         self.redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
         self._const = OccupEyeConstants()
+        print("Cache from: ", os.path.join(__location__, "tests_cache.json"))
+        print("Tests from ", os.path.join(__location__, "tests_strings.json"))
+        from os import listdir
+        from os.path import isfile, join
+        print("All file ", [f for f in listdir(__location__) if isfile(join(__location__, f))])
         with open(os.path.join(__location__, "tests_cache.json"), encoding="utf-8") as f:
             self.cache = OccupeyeCache(endpoint=TestEndpoint(json.load(f)))
         with open(os.path.join(__location__, "tests_strings.json"), encoding="utf-8") as f:
