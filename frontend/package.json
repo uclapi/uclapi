@@ -14,10 +14,10 @@
   "author": "UCL API",
   "scripts": {
     "analyse": "npx webpack-bundle-analyzer stats.json",
-    "build": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors",
+    "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js --progress --colors",
     "pre-commit": "lint-staged",
-    "profile": "NODE_ENV=production webpack --config webpack.prod.js --progress --colors --profile --json > stats.json",
-    "start": "NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors"
+    "profile": "cross-env NODE_ENV=production webpack --config webpack.prod.js --progress --colors --profile --json > stats.json",
+    "start": "cross-env NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors"
   },
   "husky": {
     "hooks": {
@@ -76,6 +76,7 @@
     "babel-loader": "^8.1.0",
     "babel-plugin-transform-imports": "^2.0.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "cross-env": "^7.0.2",
     "css-loader": "^4.3.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.10.0",

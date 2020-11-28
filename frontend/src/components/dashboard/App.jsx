@@ -3,7 +3,7 @@
 import { styles } from 'Layout/data/dashboard_styles.jsx'
 // Components
 import {
-  Button, CheckBox,
+  Button, CheckBox, AnalyticInfo, AnalyticUserInfo,
   Column, Container, Field, Row, TextView,
 } from 'Layout/Items.jsx'
 // External dependencies
@@ -26,8 +26,8 @@ export default class App extends React.Component {
 
     const { app } = this.props
 
-    const updated = this.timeSince(new Date(app.updated))
-    const created = this.timeSince(new Date(app.created))
+    const updated = this.timeSince(new Date(app.updated + `Z`))
+    const created = this.timeSince(new Date(app.created + `Z`))
 
     this.state = {
       updated: updated,
@@ -43,8 +43,8 @@ export default class App extends React.Component {
     if(app != prevProps.app || index != prevProps.index) { 
       const { app } = this.props
 
-      const updated = this.timeSince(new Date(app.updated))
-      const created = this.timeSince(new Date(app.created))
+      const updated = this.timeSince(new Date(app.updated + `Z`))
+      const created = this.timeSince(new Date(app.created + `Z`))
 
       this.setState({
         updated: updated,
@@ -178,6 +178,23 @@ export default class App extends React.Component {
                         index, value
                       )
                     }
+                  />
+                </Column>
+              </Container>
+              </Panel>
+              <Panel header={`Analytics`} showArrow>
+              <Container noPadding>
+                <Column width='1-1'>
+                  {[`requests`, `remaining_quota`].map((analytic, analytic_index) =>
+                    <AnalyticInfo
+                      key={analytic_index}
+                      analytic={analytic}
+                      value={app.analytics[analytic]}
+                    />
+                  )}
+                  <AnalyticUserInfo
+                    users={app.analytics.users}
+                    usersPerDept={app.analytics.users_per_dept}
                   />
                 </Column>
               </Container>
