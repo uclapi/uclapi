@@ -8,7 +8,7 @@ python:
 dist: bionic
 cache: pip
 services:
-- redis
+- redis-server
 install:
 - "(sed '/cx.*/d' ./backend/uclapi/requirements.txt | sed -e 's/^\\-e //') | xargs
   -n 1 pip3 install"
