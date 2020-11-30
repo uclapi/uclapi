@@ -36,4 +36,5 @@ requests-futures==1.0.0
 Sphinx==4.3.1
 tqdm==4.62.3
 validators==0.18.2
+requests-mock==1.8.0
 git+git://github.com/uclapi/django-webpack-loader@master#egg=django-webpack-loader
