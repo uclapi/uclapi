@@ -20,6 +20,7 @@ Welcome to UCL API's documentation!
    workspaces
    workspaces-historical
    openapi
+   libcal
 
 
 
