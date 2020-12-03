@@ -3,7 +3,7 @@
 import { styles } from 'Layout/data/dashboard_styles.jsx'
 // Components
 import {
-  Button, CheckBox,
+  Button, CheckBox, AnalyticInfo, AnalyticUserInfo,
   Column, Container, Field, Row, TextView,
 } from 'Layout/Items.jsx'
 // External dependencies
@@ -178,6 +178,23 @@ export default class App extends React.Component {
                         index, value
                       )
                     }
+                  />
+                </Column>
+              </Container>
+              </Panel>
+              <Panel header={`Analytics`} showArrow>
+              <Container noPadding>
+                <Column width='1-1'>
+                  {[`requests`, `remaining_quota`].map((analytic, analytic_index) =>
+                    <AnalyticInfo
+                      key={analytic_index}
+                      analytic={analytic}
+                      value={app.analytics[analytic]}
+                    />
+                  )}
+                  <AnalyticUserInfo
+                    users={app.analytics.users}
+                    usersPerDept={app.analytics.users_per_dept}
                   />
                 </Column>
               </Container>
