@@ -135,7 +135,8 @@ export default class MostPopularMethod extends React.Component {
         >
           <p>
             Alternatively, the response contains all methods of a given service,
-            or all methods for each available services, if <code>split_services</code> is <code>true</code>.
+            or all methods for each available services,
+            if <code>split_services</code> is <code>true</code>.
           </p>
           <Table
             name="Response"
