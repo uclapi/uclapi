@@ -513,17 +513,15 @@ def most_popular_service(request):
 def most_popular_method(request):
     service = request.GET.get("service", False)
     split_by_service = request.GET.get("split_services", "false")
-    split_by_service = False if split_by_service.lower() in ["false", "0"] \
-        else True
+    split_by_service = False if split_by_service.lower() in [
+        "false", "0"] else True
 
     if service:
-        most_common = APICall.objects.filter(service__exact=service).values(
-            "service", "method" if split_by_service else "method").annotate(
-            count=Count('method')).order_by("-count")
+        most_common = APICall.objects.filter(service__exact=service)\
+            .values("service", "method").annotate(count=Count('method')).order_by("-count")
     else:
-        most_common = APICall.objects.values(
-            "service", "method" if split_by_service else "method").annotate(
-            count=Count('method')).order_by("-count")
+        most_common = APICall.objects\
+            .values("service", "method").annotate(count=Count('method')).order_by("-count")
 
     if not split_by_service:
         t_most_common_counter = {}
@@ -534,21 +532,21 @@ def most_popular_method(request):
                 t_most_common_counter[m["method"].split("/")[0]] = m["count"]
         print(t_most_common_counter)
 
-        most_common = [{"method": method, "count": count} for method, count in
-                       t_most_common_counter.items()]
+        most_common = [{"method": method, "count": count}
+                       for method, count in t_most_common_counter.items()]
     else:
         temp_most_common_aggregate = {}
         for method in most_common:
             if method["service"] in temp_most_common_aggregate:
-                temp_most_common_aggregate[method["service"]].append(
-                    {"method": method["method"],
-                     "count": method["count"]}
-                )
+                temp_most_common_aggregate[method["service"]].append({
+                    "method": method["method"],
+                    "count": method["count"]
+                })
             else:
-                temp_most_common_aggregate[method["service"]] = [
-                    {"method": method["method"],
-                     "count": method["count"]}
-                ]
+                temp_most_common_aggregate[method["service"]] = [{
+                    "method": method["method"],
+                    "count": method["count"]
+                }]
         most_common = temp_most_common_aggregate
 
     return PrettyJsonResponse({
@@ -599,9 +597,9 @@ def users_per_app_by_dept(request):
         response.status_code = 400
         return response
 
-    users = User.objects.filter(oauthtoken__app__api_token__exact=token) \
-        .values("department").annotate(count=Count('department')) \
-        .order_by("-count")
+    users = User.objects.filter(oauthtoken__app__api_token__exact=token).values("department")\
+        .annotate(count=Count('department')).order_by("-count")
+
     return PrettyJsonResponse({
         "ok": True,
         "data": list(users)
