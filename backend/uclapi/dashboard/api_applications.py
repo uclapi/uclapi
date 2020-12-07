@@ -370,6 +370,17 @@ def update_scopes(request):
         })
 
 
+def get_number_of_requests(token):
+    if token.startswith('uclapi-user-'):
+        calls = APICall.objects.filter(token__token__exact=token)
+    elif token.startswith('uclapi-'):
+        calls = APICall.objects.filter(app__api_token__exact=token)
+    else:
+        return None
+
+    return len(calls)
+
+
 def number_of_requests(request):
     try:
         token = request.GET["token"]
@@ -381,20 +392,18 @@ def number_of_requests(request):
         response.status_code = 400
         return response
 
-    if token.startswith('uclapi-user-'):
-        calls = APICall.objects.filter(token__token__exact=token)
-    elif token.startswith('uclapi-'):
-        calls = APICall.objects.filter(app__api_token__exact=token)
-    else:
+    calls = get_number_of_requests(token)
+    if calls is None:
         response = JsonResponse({
             "ok": False,
             "message": "Token is invalid"
         })
         response.status_code = 400
         return response
+
     return PrettyJsonResponse({
         "ok": True,
-        "num": len(calls),
+        "num": calls,
     })
 
 
@@ -449,23 +458,19 @@ def get_apps(request):
                 "siteid": app.webhook.siteid,
                 "roomid": app.webhook.roomid,
                 "contact": app.webhook.contact
+            },
+            "analytics": {
+                "requests": get_number_of_requests(app.api_token),
+                "remaining_quota": get_quota_remaining(app.api_token),
+                "users": get_users_per_app(app.api_token),
+                "users_per_dept": get_users_per_app_per_dept(app.api_token)
             }
         })
 
     return PrettyJsonResponse(user_meta)
 
 
-def quota_remaining(request):
-    try:
-        token = request.GET["token"]
-    except MultiValueDictKeyError:
-        response = JsonResponse({
-            "ok": False,
-            "message": "No token provided"
-        })
-        response.status_code = 400
-        return response
-
+def get_quota_remaining(token):
     r = redis.Redis(host=REDIS_UCLAPI_HOST)
 
     if token.startswith('uclapi-user-'):
@@ -480,12 +485,7 @@ def quota_remaining(request):
         limit = app.user.dev_quota
 
     else:
-        response = JsonResponse({
-            "ok": False,
-            "message": "Token is invalid"
-        })
-        response.status_code = 400
-        return response
+        return None
 
     count_data = r.get(cache_key)
 
@@ -493,9 +493,33 @@ def quota_remaining(request):
         count_data = int(r.get(cache_key))
     else:
         count_data = 0
+
+    return limit - count_data
+
+
+def quota_remaining(request):
+    try:
+        token = request.GET["token"]
+    except MultiValueDictKeyError:
+        response = JsonResponse({
+            "ok": False,
+            "message": "No token provided"
+        })
+        response.status_code = 400
+        return response
+
+    quota = get_quota_remaining(token)
+    if quota is None:
+        response = JsonResponse({
+            "ok": False,
+            "message": "Token is invalid"
+        })
+        response.status_code = 400
+        return response
+
     return PrettyJsonResponse({
         "ok": True,
-        "remaining": limit - count_data,
+        "remaining": quota,
     })
 
 
@@ -555,6 +579,20 @@ def most_popular_method(request):
     })
 
 
+def get_users_per_app(token, start=None, end=None):
+    if start and end:
+        start_date = datetime.strptime(start, "%Y-%m-%d")
+        end_date = datetime.strptime(end, "%Y-%m-%d")
+
+        users = OAuthToken.objects.filter(creation_date__gte=start_date,
+                                          creation_date__lte=end_date,
+                                          app__api_token__exact=token)
+    else:
+        users = OAuthToken.objects.filter(app__api_token__exact=token)
+
+    return len(users)
+
+
 def users_per_app(request):
     try:
         token = request.GET["token"]
@@ -569,21 +607,21 @@ def users_per_app(request):
     try:
         start = request.GET["start_date"]
         end = request.GET["end_date"]
-
-        start_date = datetime.strptime(start, "%Y-%m-%d")
-        end_date = datetime.strptime(end, "%Y-%m-%d")
-
-        users = OAuthToken.objects.filter(creation_date__gte=start_date,
-                                          creation_date__lte=end_date,
-                                          app__api_token__exact=token)
-
+        users_count = get_users_per_app(token, start, end)
     except MultiValueDictKeyError:
-        users = OAuthToken.objects.filter(app__api_token__exact=token)
+        users_count = get_users_per_app(token)
 
     return PrettyJsonResponse({
         "ok": True,
-        "users": len(users)
+        "users": users_count
     })
+
+
+def get_users_per_app_per_dept(token):
+    users = User.objects.filter(oauthtoken__app__api_token__exact=token)\
+        .values("department").annotate(count=Count('department'))\
+        .order_by("-count")
+    return list(users)
 
 
 def users_per_app_by_dept(request):
@@ -597,10 +635,9 @@ def users_per_app_by_dept(request):
         response.status_code = 400
         return response
 
-    users = User.objects.filter(oauthtoken__app__api_token__exact=token).values("department")\
-        .annotate(count=Count('department')).order_by("-count")
+    users = get_users_per_app_per_dept(token)
 
     return PrettyJsonResponse({
         "ok": True,
-        "data": list(users)
+        "data": users
     })
