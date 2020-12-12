@@ -383,7 +383,7 @@ class Command(BaseCommand):
             else:
                 print("Could not find appropriate incident in Cachet!")
 
-            # call_command('trigger_webhooks')  # Disabled until UCL provides a better way to webhooks
+            # call_command('trigger_webhooks')  # Disabled until UCL provides a better way to run webhooks
         except Exception as gencache_error:
             try:
                 if "localhost" not in settings.UCLAPI_DOMAIN_CURRENT:
