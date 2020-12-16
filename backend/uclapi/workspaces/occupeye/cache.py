@@ -381,10 +381,8 @@ class OccupeyeCache:
             self._const.SUMMARY_CACHE_ALL_STAFF_SURVEYS,
             json.dumps([s for s in surveys if s["staff_survey"]]),
         )
-        self._redis.set(
-            self._const.SUMMARY_CACHE_ALL_STUDENT_SURVEYS,
-            json.dumps([s for s in surveys if not s["staff_survey"]]),
-        )
+        self.set = self._redis.set(self._const.SUMMARY_CACHE_ALL_STUDENT_SURVEYS,
+                                   json.dumps([s for s in surveys if not s["staff_survey"]]), )
 
     def feed_cache(self, full):
         """

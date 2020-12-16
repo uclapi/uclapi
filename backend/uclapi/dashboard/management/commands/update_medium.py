@@ -7,7 +7,7 @@ from requests import get as rget
 
 class Command(BaseCommand):
 
-    help = 'Updates medium blogs on website'
+    help = 'Surveys medium blogs on website'
 
     def handle(self, *args, **options):
         print("Getting latest medium articles")
