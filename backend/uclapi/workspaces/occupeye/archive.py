@@ -170,7 +170,7 @@ class OccupeyeArchive:
                         unique_sensors[unique_key] = (key, unique_value)
 
                 filtered_sensors = []
-                for key, value in unique_sensors.items():
+                for _, value in unique_sensors.items():
                     filtered_sensors.append(sensors[value[0]])
 
                 sensors = filtered_sensors
