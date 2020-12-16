@@ -11,6 +11,9 @@ class Sensors(models.Model):
     hardware_id = models.IntegerField()
     survey_device_id = models.IntegerField()
 
+    def __str__(self):
+        return f"Sensors object, {self.sensor_id} @ {self.survey_id}"
+
     class Meta:
         _DATABASE = 'default'
         unique_together = ('sensor_id', 'survey_id')
@@ -26,6 +29,9 @@ class SensorReplacements(models.Model):
     new_survey_id = models.IntegerField()
     datetime = models.DateTimeField()
 
+    def __str__(self):
+        return f"Sensor replacement object, {self.sensor_id}: {self.datetime}"
+
     class Meta:
         _DATABASE = 'default'
 
@@ -40,6 +46,9 @@ class Historical(models.Model):
     datetime = models.DateTimeField()
     state = models.IntegerField()
 
+    def __str__(self):
+        return f"Historical object, {self.sensor_id}, {self.survey_id}, {self.datetime}: {self.state}"
+
     class Meta:
         _DATABASE = 'default'
         unique_together = ('sensor_id', 'survey_id', 'datetime')
@@ -52,6 +61,9 @@ class Surveys(models.Model):
     end_datetime = models.DateTimeField()
     active = models.BooleanField()
     last_updated = models.DateTimeField()
+
+    def __str__(self):
+        return f"Survey object, {self.survey_id}: {self.name} from {self.last_updated}"
 
     class Meta:
         _DATABASE = 'default'
@@ -68,6 +80,9 @@ class SurveyChanges(models.Model):
     new_end_datetime = models.DateTimeField()
     new_active = models.BooleanField()
     datetime = models.DateTimeField(default=datetime.now, blank=True)
+
+    def __str__(self):
+        return f"Survey changes object, {self.survey_id}: {self.datetime}"
 
     class Meta:
         _DATABASE = 'default'
