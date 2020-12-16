@@ -601,7 +601,7 @@ class OccupEyeApiTestCase(TestCase):
         )
 
     def test_get_historical_time_usage_data(self):
-        historical = self.api.get_historical_time_usage_data("9991", 1, "student")
+        historical = self.api.get_time_averages("9991", 1, "student")
         self.assert_nested(
             historical,
             [

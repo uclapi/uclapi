@@ -1,5 +1,26 @@
-import pymsteams
+import gc
+import time
+from datetime import datetime
+from multiprocessing import Pool
 
+import pymsteams
+import redis
+from cachetclient.v1 import enums
+from django import db
+from django.conf import settings
+from django.core.management import call_command
+from django.core.management.base import BaseCommand
+from django.db import connections
+from tqdm import tqdm
+
+from common.cachet import (
+    create_incident, CachetException, get_incident_name, update_incident
+)
+from common.helpers import LOCAL_TIMEZONE
+from roombookings.models import (
+    Room, RoomA, RoomB,
+    Booking, BookingA, BookingB
+)
 from timetable.models import (
     Classifications, ClassificationsA, ClassificationsB,
     Cminstances, CminstancesA, CminstancesB,
@@ -21,41 +42,10 @@ from timetable.models import (
     Lock
 )
 
-from roombookings.models import (
-    Room, RoomA, RoomB,
-    Booking, BookingA, BookingB
-)
-
-from common.helpers import LOCAL_TIMEZONE
-
-from common.cachet import (
-    create_incident, CachetException, get_incident_name, update_incident
-)
-
-from cachetclient.v1 import enums
-
-import gc
-
-import django
-import redis
-
-import time
-
-from datetime import datetime
-from multiprocessing import Pool
-
-from django.apps import apps
-from django.conf import settings
-from django.core.management import call_command
-from django.core.management.base import BaseCommand
-from django.db import connections
-from tqdm import tqdm
-from django import db
-
 # Nasty hack to ensure we can initialise models in worker processes
 # Courtesy of: https://stackoverflow.com/a/39996838
-if not apps.ready and not settings.configured:
-    django.setup()
+# if not apps.ready and not settings.configured:
+#     django.setup()
 
 
 """

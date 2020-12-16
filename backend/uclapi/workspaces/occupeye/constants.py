@@ -52,6 +52,7 @@ class OccupEyeConstants:
     # Cad-Cap Endpoints
     URL_MAPS_BY_SURVEY = URL_BASE_DEPLOYMENT + "/api/Maps/?surveyid={}"
     URL_SURVEYS = URL_BASE_DEPLOYMENT + "/api/Surveys/"
+    URL_SURVEYS_ALL = URL_SURVEYS + "?active_only=false"
     URL_SURVEY_DEVICES = URL_BASE_DEPLOYMENT + "/api/SurveyDevices?surveyid={}"
 
     URL_SURVEY_DEVICES_LATEST = URL_BASE_DEPLOYMENT + "/api/SurveySensorsLatest/{}"
@@ -74,8 +75,17 @@ class OccupEyeConstants:
         "GroupBy[]=TimeSlot&"
     )
 
+    URL_ARCHIVE = URL_BASE_DEPLOYMENT + "/api/Query?"\
+                                        "StartDate={}&StartTime=00%3A00&"\
+                                        "EndDate={}&EndTime=00%3A00&"\
+                                        "SurveyID={}&QueryType=SensorActivity"
+
     # Valid historical time periods
     VALID_HISTORICAL_DATA_DAYS = [1, 7, 30]
+
+    # Max cost for a historical request
+    # a single sensor running in one year will generate 52,000 entries
+    MAX_SURVEY_REQUESTS = 2500000
 
     # Set a filter for surveys designed for staff only
     STAFF_SURVEY_IDS = [88]
