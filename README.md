@@ -23,6 +23,15 @@ Note that since the Creators Update (which includes 16.04.2; if you have not upg
 ### Install Dependencies
 We provide this simple command to install most of the dependencies using the apt package manager (standard on ubuntu, debian etc...). If not using this package manager you will have to find the package names for your distro yourself. The base depenencies are postgres, python3, virtual environments for python, nodejs, npm, redis and some kernel modules for async and regular expressions. The rest are for making the installation easier such as git, curl, wget and sed. These allow you to follow this readme much easier.
 
+### Mac OS
+
+```
+pip3 install virtualenv
+brew install node
+brew install redis
+```
+
+### Linux
 ```
 sudo apt-get -y install git curl libpq-dev libpq5 libpython3-dev \
     python3 python3-pip python3-virtualenv python-virtualenv \
@@ -36,6 +45,11 @@ Note: redhat based systems such as RHEL, Fedora or CentOS need to install ```lib
 ### Start Redis
 ```
 sudo service redis-server start
+```
+
+### Mac OS
+```
+brew services start redis
 ```
 
 ### Set up Oracle (Linux)
@@ -86,17 +100,26 @@ popd
 Go to this page: http://www.oracle.com/technetwork/topics/intel-macsoft-096467.html
 
 Download:  
-- instantclient-basic-macos.x64-12.1.0.2.0.zip
-- instantclient-sdk-macos.x64-12.1.0.2.0.zip
+- instantclient-basic-macos.x64-18.1.0.0.0.zip
+- instantclient-sdk-macos.x64-18.1.0.0.0-2.zip
 
 Now in a terminal window, run:
 ```
 cd /usr/local/lib/
 mkdir share && cd share
 mkdir oracle && cd oracle
-tar -xzf ~/Downloads/instantclient-basic-macos.x64-12.1.0.2.0.zip
-tar -xzf ~/Downloads/instantclient-sdk-macos.x64-12.1.0.2.0.zip
+tar -xzf ~/Downloads/instantclient-basic-macos.x64-18.1.0.0.0.zip
+tar -xzf ~/Downloads/instantclient-sdk-macos.x64-18.1.0.0.0-2.zip
 cd instantclient_12_1
+mkdir lib
+```
+At this stage you need to move every file from 'instantclient_12_1' folder into 'lib'. Then, you need to quarantine these files (due to gatekeeper protection system in Catalina - Follow issue on [Github](https://github.com/oracle/python-cx_Oracle/issues/341)) 
+
+```
+sudo xattr -d com.apple.quarantine *.dylib.*
+```
+Reinitialize your terminal window and then, run:
+```
 ln -s libclntsh.dylib.12.1 libclntsh.dylib
 ln -s libocci.dylib.12.1 libocci.dylib
 export ORACLE_HOME=/usr/local/lib/share/oracle/instantclient_12_1
