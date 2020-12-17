@@ -232,7 +232,7 @@ class OccupeyeCache:
 
         pipeline.execute()
 
-    def cache_historical_time_usage_data(self, survey_id, day_count, cur_date=datetime.now()):
+    def cache_historical_time_usage_data(self, survey_id, day_count):
         """
         Function to cache in Redis the historical usage data over each 10
         minute time period.
@@ -243,7 +243,7 @@ class OccupeyeCache:
         This is to support apps which show historical survey usage data.
         """
 
-        end_date = cur_date - timedelta(days=1)
+        end_date = datetime.now() - timedelta(days=1)
         start_date = end_date - timedelta(days=day_count - 1)
         url = self._const.URL_QUERY.format(start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"), survey_id)
 

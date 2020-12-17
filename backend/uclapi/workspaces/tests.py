@@ -1,11 +1,12 @@
 import json
 import os
 from binascii import hexlify
-from datetime import datetime
 
 import redis
 from django.conf import settings
+from django.core.management import call_command
 from django.test import TestCase
+from freezegun import freeze_time
 
 from .occupeye.api import OccupEyeApi
 from .occupeye.cache import OccupeyeCache
@@ -13,8 +14,6 @@ from .occupeye.constants import OccupEyeConstants
 from .occupeye.endpoint import TestEndpoint
 from .occupeye.exceptions import BadOccupEyeRequest
 from .occupeye.token import get_bearer_token, token_valid
-
-from django.core.management import call_command
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -187,9 +186,9 @@ class OccupEyeCacheTestCase(TestCase):
         self.redisEqual(self._const.SURVEY_MAP_VMAX_Y_KEY.format(99991, 66662), "654321.0")
         self.redisEqual(self._const.SURVEY_MAP_VIEWBOX_KEY.format(99991, 66662), "0 0 41176 20031")
 
+    @freeze_time("2020-01-02 16:00:00")
     def test_cache_historical_time_usage_data(self):
-        self.cache.cache_historical_time_usage_data(99991, 1, cur_date=datetime.strptime("2020-01-02 16:00:00",
-                                                                                         "%Y-%m-%d %H:%M:%S"))
+        self.cache.cache_historical_time_usage_data(99991, 1)
 
         self.redisEqual(self._const.TIMEAVERAGE_KEY.format(99991, 1),
                         self.results["test_cache_historical_time_usage_data_1"])
