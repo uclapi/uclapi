@@ -28,7 +28,7 @@ idna==2.10
 jinjasql==0.1.8
 jmespath==0.10.0
 jsonpickle==1.4.1
-kombu==4.6.11
+kombu==5.0.2
 lxml==4.6.2
 Markupsafe==1.1.1
 mock==4.0.2
