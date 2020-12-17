@@ -24,7 +24,7 @@ def get_surveys(request, *args, **kwargs):
         response = JsonResponse(
             {
                 "ok": False,
-                "error": ("The survey filter you provided is invalid. " "Valid survey filters are: ")
+                "error": "The survey filter you provided is invalid. Valid survey filters are: "
                 + str(consts.VALID_SURVEY_FILTERS),
             },
             custom_header_data=kwargs,
@@ -54,7 +54,7 @@ def get_map_image(request, *args, **kwargs):
         response = JsonResponse(
             {
                 "ok": False,
-                "error": ("The image with the ID you requested " "does not exist."),
+                "error": "The image with the ID you requested does not exist.",
             },
             custom_header_data=kwargs,
         )
@@ -79,7 +79,7 @@ def get_map_image(request, *args, **kwargs):
         response = JsonResponse(
             {
                 "ok": False,
-                "error": ("You specified a response format that " "was not either raw or base64."),
+                "error": "You specified a response format that was not either raw or base64.",
             },
             custom_header_data=kwargs,
         )
@@ -146,7 +146,7 @@ def get_survey_sensors_summary(request, *args, **kwargs):
         response = JsonResponse(
             {
                 "ok": False,
-                "error": ("The survey filter you provided is invalid. " "Valid survey filters are: ")
+                "error": "The survey filter you provided is invalid. Valid survey filters are: "
                 + str(consts.VALID_SURVEY_FILTERS),
             },
             custom_header_data=kwargs,
@@ -161,7 +161,7 @@ def get_survey_sensors_summary(request, *args, **kwargs):
         response = JsonResponse(
             {
                 "ok": False,
-                "error": ("One or more of the survey_ids you requested is not valid."),
+                "error": "One or more of the survey_ids you requested is not valid.",
             },
             custom_header_data=kwargs,
         )
@@ -185,7 +185,7 @@ def get_historical_time_data(request, *args, **kwargs):
         response = JsonResponse(
             {
                 "ok": False,
-                "error": ("The survey filter you provided is invalid. " "Valid survey filters are: ")
+                "error": "The survey filter you provided is invalid. Valid survey filters are: "
                 + str(consts.VALID_SURVEY_FILTERS),
             },
             custom_header_data=kwargs,
@@ -199,10 +199,8 @@ def get_historical_time_data(request, *args, **kwargs):
         response = JsonResponse(
             {
                 "ok": False,
-                "error": (
-                    "You did not specify how many days of historical data " "should be returned. Valid options are: "
-                )
-                + str(consts.VALID_HISTORICAL_DATA_DAYS),
+                "error": "You did not specify how many days of historical data should be returned. "
+                         "Valid options are: " + str(consts.VALID_HISTORICAL_DATA_DAYS),
             },
             custom_header_data=kwargs,
         )
@@ -213,7 +211,7 @@ def get_historical_time_data(request, *args, **kwargs):
         response = JsonResponse(
             {
                 "ok": False,
-                "error": ("You did not specify an integer number of days of " "historical days. Valid options are: ")
+                "error": "You did not specify an integer number of days of historical days. Valid options are: "
                 + str(consts.VALID_HISTORICAL_DATA_DAYS),
             },
             custom_header_data=kwargs,
@@ -227,7 +225,7 @@ def get_historical_time_data(request, *args, **kwargs):
         response = JsonResponse(
             {
                 "ok": False,
-                "error": ("You did not specify a valid number of days of " "historical days. Valid options are: ")
+                "error": "You did not specify a valid number of days of historical days. Valid options are: "
                 + str(consts.VALID_HISTORICAL_DATA_DAYS),
             },
             custom_header_data=kwargs,
@@ -241,7 +239,7 @@ def get_historical_time_data(request, *args, **kwargs):
         response = JsonResponse(
             {
                 "ok": False,
-                "error": ("One or more of the survey_ids you requested is not valid."),
+                "error": "One or more of the survey_ids you requested is not valid.",
             },
             custom_header_data=kwargs,
         )
@@ -263,7 +261,7 @@ def get_live_map(request, *args, **kwargs):
         response = JsonResponse(
             {
                 "ok": False,
-                "error": ("You must provide a Survey ID and a Map ID " "to get a live sensor status image."),
+                "error": "You must provide a Survey ID and a Map ID to get a live sensor status image.",
             },
             custom_header_data=kwargs,
         )
@@ -337,7 +335,7 @@ def get_live_map(request, *args, **kwargs):
         response = JsonResponse(
             {
                 "ok": False,
-                "error": ("Either the IDs you sent were not " "integers, or they do not exist."),
+                "error": "Either the IDs you sent were not integers, or they do not exist.",
             },
             custom_header_data=kwargs,
         )
