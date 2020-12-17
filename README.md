@@ -21,7 +21,7 @@ We only support development under Linux. macOS is unofficially supported, and we
 Note that since the Creators Update (which includes 16.04.2; if you have not upgraded from Ubuntu 14 then there are tutorials online to do this) we have experienced zero issues building and running under Bash on Ubuntu on Windows.
 
 ### Install Dependencies
-We provide this simple command to install most of the dependencies using the apt package manager (standard on ubuntu, debian etc...). If not using this package manager you will have to find the package names for your distro yourself. The base depenencies are postgres, python3, virtual environments for python, nodejs, npm, redis and some kernel modules for async and regular expressions. The rest are for making the installiion easier such as git, curl, wget and sed. These allow you to follow this readme much easier.
+We provide this simple command to install most of the dependencies using the apt package manager (standard on ubuntu, debian etc...). If not using this package manager you will have to find the package names for your distro yourself. The base depenencies are postgres, python3, virtual environments for python, nodejs, npm, redis and some kernel modules for async and regular expressions. The rest are for making the installation easier such as git, curl, wget and sed. These allow you to follow this readme much easier.
 
 ### Mac OS
 
@@ -342,15 +342,13 @@ python manage.py feed_occupeye_cache_mini
 
 ## Developing using docker
 
-### Installation of docker (Windows using WSL)
+### Installation of Docker
 
-Make sure to have an installation of Windows 10 Education (Free licence through UCL) 
-
-Download docker for windows
+If you're using Windows, this section assumes you're using [WSL 2](https://docs.microsoft.com/en-us/windows/wsl/compare-versions) with the latest [Docker for Windows installed](https://docs.docker.com/docker-for-windows/). Make sure to have an installation of Windows 10 Education ([free licence through UCL](https://www.ucl.ac.uk/isd/services/software-hardware/software-general-information/microsoft/microsoft-software-available)).
 
 ### Cloning the repository
 
-Install uclapi into a common source folder on your computer using:
+Download the uclapi source into a common source folder on your computer using (if using Windows, make sure you're cloning this inside WSL2, not with your Windows files):
 
 ```
 git clone https://github.com/uclapi/uclapi.git
@@ -360,26 +358,45 @@ git clone https://github.com/uclapi/uclapi.git
 
 ```
 cd frontend
-npm start
+npm install
+npm build
 ```
 
-### Running docker
+### Configure environment variables
 
-copy the .env.example into the root/uclapi folder and rename to .env
+The [docker-compose.yml](./docker-compose.yml) file will automatically override many of the environment variables set in `.env`, so you don't need to perform a lot of the updates mentioned on the rest of this page (e.g. database configs).
 
-navigate to docker settings > shared drives > enable c
+You will however need to update the `DB_ROOMS_*`, `SEARCH_API_*`, `PCA_LINK` and `OCCUPEYE_*` variables for a full setup. See above for more details on these variables and how to edit the `.env` file.
 
-run the following command inside WSL:
+### Running with Docker
 
-```
-export DOCKER_HOST=tcp://localhost:2375" >> ~/.bashrc && source ~/.bashrc
-```
-
-Finally run the following command in a new terminal inside uclapi:
+Start the Docker containers:
 
 ```
-docker-compose up -d 
-```			
+cd uclapi
+docker-compose up -d
+```
+
+The frontend and API should now be running on port `8000` -- for example, you can see the UCL API homepage at <http://localhost:8000>.
+
+### Updating the cache
+
+On first run, you should update your local cache data (as detailed above, but _within_ the main UCL API Docker container).
+
+As previously mentioned, you'll need to be connected to the UCL network and have the database credentials to be able to populate the cache.
+
+This will take a while (potentially up to 30 minutes).
+
+```
+docker exec -it uclapi_uclapi_1 /bin/bash
+cd web/uclapi/backend/uclapi
+. venv/bin/activate
+python3.7 manage.py create_lock
+python3.7 manage.py update_gencache
+python3.7 manage.py feed_occupeye_cache
+deactivate
+exit
+```
 
 ## Documentation
 As well as the user-facing documentation we also now ship our own internal Documentation
