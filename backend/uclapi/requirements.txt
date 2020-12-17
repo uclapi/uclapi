@@ -46,7 +46,7 @@ redis==3.5.3
 requests==2.25.0
 requests-file==1.5.1
 requests-futures==1.0.0
-setproctitle==1.1.10
+setproctitle==1.2.1
 six==1.15.0
 tldextract==2.2.3
 tqdm==4.54.1
