@@ -3,10 +3,11 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
   python: `
-  url = "https://uclapi.com/oauth/authorise/?client_id=123&state=1"
+  url = "${Constants.DOMAIN}/oauth/authorise/?client_id=123&state=1"
 
   '''
     in a desktop app, script, or for testing
@@ -40,16 +41,16 @@ const codeExamples = {
 
   shell: `
   # linux
-  xdg-open "https://uclapi.com/oauth/authorise/?client_id=123.456&state=1"
+  xdg-open "${Constants.DOMAIN}/oauth/authorise/?client_id=123.456&state=1"
   
   # WSL
-  cmd.exe /c start "https://uclapi.com/oauth/authorise/?client_id=123^&state=1"
+  cmd.exe /c start "${Constants.DOMAIN}/oauth/authorise/?client_id=123^&state=1"
 
   # note that you will also need some way to receive the callback
   `,
 
   javascript: `
-  const url = "https://uclapi.com/oauth/authorise/?client_id=123.456&state=1"
+  const url = "${Constants.DOMAIN}/oauth/authorise/?client_id=123.456&state=1"
 
   /* in-browser */
   window.location.href = url
@@ -83,7 +84,7 @@ const Authorise = ({ activeLanguage }) => (
     >
       <h1 id="oauth/authorise">Authorise</h1>
       <p>
-        Endpoint: <code>https://uclapi.com/oauth/authorise</code>
+        Endpoint: <code>{Constants.DOMAIN}/oauth/authorise</code>
       </p>
 
       <Table

@@ -47,7 +47,8 @@
           "^fetch\\(\"",
           "^token=",
           "^[ \n]*<svg",
-          "^<a href="
+          "^<a href=",
+          "^/(dashboard|oauth|resources|search|timetable|workspaces|roombookings)/[a-z]+"
         ]
       }
     ],

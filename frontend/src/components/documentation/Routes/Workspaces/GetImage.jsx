@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
     python: `import requests
@@ -12,15 +13,15 @@ params = {
   "image_format": "base64"
 }
 
-r = requests.get("https://uclapi.com/workspaces/images/map", params=params)
+r = requests.get("${Constants.DOMAIN}/workspaces/images/map", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/workspaces/images/map \\
+  shell: `curl -G ${Constants.DOMAIN}/workspaces/images/map \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d image_id=79 \
 -d image_format=base64`,
 
-  javascript: `fetch("https://uclapi.com/workspaces/images/map?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&image_id=46&image_format=base64",
+  javascript: `fetch("${Constants.DOMAIN}/workspaces/images/map?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&image_id=46&image_format=base64",
 {
     method: "GET",
 })
@@ -53,7 +54,7 @@ const WorkspacesGetImage = ({ activeLanguage }) => {
       >
         <h1 id="workspaces/images/map">Get Map Image</h1>
         <p>
-            Endpoint: <code>https://uclapi.com/workspaces/images/map</code>
+            Endpoint: <code>{Constants.DOMAIN}/workspaces/images/map</code>
         </p>
         <p>
           This endpoint returns the image specified

@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
   python: `import requests
@@ -12,15 +13,15 @@ params = {
   "return_states": "true"
 }
 
-r = requests.get("https://uclapi.com/workspaces/sensors", params=params)
+r = requests.get("${Constants.DOMAIN}/workspaces/sensors", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/workspaces/sensors \\
+  shell: `curl -G ${Constants.DOMAIN}/workspaces/sensors \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \\
 -d survey_id=46 \
 -d return_states=true`,
 
-  javascript: `fetch("https://uclapi.com/workspaces/sensors?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=46&return_states=true",
+  javascript: `fetch("${Constants.DOMAIN}/workspaces/sensors?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=46&return_states=true",
 {
     method: "GET",
 })
@@ -86,7 +87,7 @@ const WorkspacesGetSensors = ({ activeLanguage }) => {
       >
         <h1 id="workspaces/sensors">Get Sensors by Survey</h1>
         <p>
-          Endpoint: <code>https://uclapi.com/workspaces/sensors</code>
+          Endpoint: <code>{Constants.DOMAIN}/workspaces/sensors</code>
         </p>
         <p>
           This endpoint provides a list of every sensor

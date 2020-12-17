@@ -2,6 +2,7 @@ import React from 'react'
 import Cell from './../../Cell.jsx'
 import Table from './../../Table.jsx'
 import Topic from './../../Topic'
+import Constants from '../../../../lib/Constants'
 
 const codeExamples = {
   python: `import requests
@@ -10,13 +11,13 @@ params = {
   "service": "roombookings",
 }
 
-r = requests.get("https://uclapi.com/dashboard/api/analytics/methods/", params=params)
+r = requests.get("${Constants.DOMAIN}/dashboard/api/analytics/methods/", params=params)
 print(r.json())`,
 
-  shell: `curl -G https://uclapi.com/dashboard/api/analytics/methods/ \
+  shell: `curl -G ${Constants.DOMAIN}/dashboard/api/analytics/methods/ \
   -d service=roombookings`,
 
-  javascript: `fetch("https://uclapi.com/dashboard/api/analytics/methods/?service=roombookings")
+  javascript: `fetch("${Constants.DOMAIN}/dashboard/api/analytics/methods/?service=roombookings")
 .then((response) => {
   return response.json()
 })
@@ -58,7 +59,7 @@ export default class MostPopularMethod extends React.Component {
           <h1 id="dashboard/api/analytics/methods">Methods by Popularity</h1>
           <p>
             Endpoint:&nbsp;
-            <code>https://uclapi.com/dashboard/api/analytics/methods</code>
+            <code>{Constants.DOMAIN}/dashboard/api/analytics/methods</code>
           </p>
 
           <Table
