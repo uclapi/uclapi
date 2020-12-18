@@ -31,7 +31,7 @@ jsonpickle==1.4.1
 kombu==4.6.11
 lxml==4.6.2
 Markupsafe==1.1.1
-mock==4.0.2
+mock==4.0.3
 model-mommy==2.0.0
 pbr==5.5.1
 pycodestyle==2.6.0
