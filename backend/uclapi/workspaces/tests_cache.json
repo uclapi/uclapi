@@ -1,0 +1,1486 @@
+{
+  "https://cloud.occupeye.com/OccupEye/UCL/api/SurveyMaxMessageTime/99991": "2020-11-12T22:45:10",
+  "https://cloud.occupeye.com/OccupEye/UCL/api/SurveyMaxMessageTime/99992": "2021-11-12T22:45:10",
+  "https://cloud.occupeye.com/OccupEye/UCL/api/images/99991?max_width=1000&max_height=1000": {
+    "image": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+    "content_type": "image/png"
+  },
+  "https://cloud.occupeye.com/OccupEye/UCL/api/Surveys/": [
+    {
+      "SurveyID": 99991,
+      "Active": true,
+      "Disabled": false,
+      "Name": "Test Way",
+      "StartDate": "2019-07-06",
+      "EndDate": "2100-12-31",
+      "StartTime": "08:00",
+      "EndTime": "20:00",
+      "WorkWeek": "Monday,Tuesday,Wednesday,Thursday,Friday",
+      "Description1": "Department",
+      "Description2": "Directorate",
+      "Description3": "Team",
+      "CompanyID": 2,
+      "UTCData": false,
+      "TimeZoneID": null,
+      "reportResolution": null,
+      "IgnoreHolidays": false,
+      "resolution": 600
+    },
+    {
+      "SurveyID": 99992,
+      "Active": true,
+      "Disabled": false,
+      "Name": "Central House LG05",
+      "StartDate": "2019-07-06",
+      "EndDate": "2100-12-31",
+      "StartTime": "08:00",
+      "EndTime": "20:00",
+      "WorkWeek": "Monday,Tuesday,Wednesday,Thursday,Friday",
+      "Description1": "Department",
+      "Description2": "Directorate",
+      "Description3": "Team",
+      "CompanyID": 2,
+      "UTCData": false,
+      "TimeZoneID": null,
+      "reportResolution": null,
+      "IgnoreHolidays": false,
+      "resolution": 600
+    },
+    {
+      "SurveyID": 99993,
+      "Active": true,
+      "Disabled": false,
+      "Name": "Test Way",
+      "StartDate": "1970-07-06",
+      "EndDate": "1970-12-31",
+      "StartTime": "08:00",
+      "EndTime": "20:00",
+      "WorkWeek": "Monday,Tuesday,Wednesday,Thursday,Friday",
+      "Description1": "Department",
+      "Description2": "Directorate",
+      "Description3": "Team",
+      "CompanyID": 2,
+      "UTCData": false,
+      "TimeZoneID": null,
+      "reportResolution": null,
+      "IgnoreHolidays": false,
+      "resolution": 600
+    }
+  ],
+  "https://cloud.occupeye.com/OccupEye/UCL/api/Maps/?surveyid=99991": [
+    {
+      "MapID": 66661,
+      "SurveyID": 99991,
+      "MapName": "Test Map",
+      "FileName": "file_name.png",
+      "VMinX": 1234.0,
+      "VMinY": 4321.0,
+      "VMaxX": 123456.0,
+      "VMaxY": 654321.0,
+      "ImageID": 33331,
+      "SensorSize": null,
+      "DisplayOrder": 1,
+      "ViewBox": "1234 4321 123456 654321",
+      "Origin": null
+    }
+  ],
+  "https://cloud.occupeye.com/OccupEye/UCL/api/Maps/?surveyid=99992": [
+    {
+      "MapID": 66662,
+      "SurveyID": 99992,
+      "MapName": "Test Map 2",
+      "FileName": "file_name.png",
+      "VMinX": 1234.0,
+      "VMinY": 4321.0,
+      "VMaxX": 123456.0,
+      "VMaxY": 654321.0,
+      "ImageID": 33331,
+      "SensorSize": null,
+      "DisplayOrder": 1,
+      "ViewBox": "1234 4321 123456 654321",
+      "Origin": null
+    }
+  ],
+  "https://cloud.occupeye.com/OccupEye/UCL/api/SurveyDevices?surveyid=99991": [
+    {
+      "SurveyDeviceID": 1,
+      "SurveyID": 99991,
+      "HardwareID": 22221,
+      "SensorID": 55551,
+      "HostAddress": 520,
+      "PIRAddress": 1,
+      "DeviceType": "Desk",
+      "Location": "Test location",
+      "Description1": "Reading Area",
+      "Description2": "",
+      "Description3": "",
+      "RoomID": 1,
+      "ShareID": null,
+      "AssociatedSensorID": null,
+      "ShareHardwareID": null,
+      "RoomName": "T01",
+      "Floor": -1,
+      "RoomType": "Open Plan",
+      "Building": "Test",
+      "RoomDescription": "Description",
+      "Flag": false
+    },
+    {
+      "SurveyDeviceID": 2,
+      "SurveyID": 99991,
+      "HardwareID": 22222,
+      "SensorID": 55552,
+      "HostAddress": 520,
+      "PIRAddress": 2,
+      "DeviceType": "Desk",
+      "Location": "",
+      "Description1": "Reading Area",
+      "Description2": "",
+      "Description3": "",
+      "RoomID": 1,
+      "ShareID": null,
+      "AssociatedSensorID": null,
+      "ShareHardwareID": null,
+      "RoomName": "T01",
+      "Floor": -1,
+      "RoomType": "Open Plan",
+      "Building": "Test",
+      "RoomDescription": "",
+      "Flag": false
+    }
+  ],
+  "https://cloud.occupeye.com/OccupEye/UCL/api/SurveyDevices?surveyid=99992": [
+    {
+      "SurveyDeviceID": 1,
+      "SurveyID": 99992,
+      "HardwareID": 22223,
+      "SensorID": 55553,
+      "HostAddress": 520,
+      "PIRAddress": 1,
+      "DeviceType": "Desk",
+      "Location": "Test location",
+      "Description1": "Reading Area",
+      "Description2": "",
+      "Description3": "",
+      "RoomID": 1,
+      "ShareID": null,
+      "AssociatedSensorID": null,
+      "ShareHardwareID": null,
+      "RoomName": "T01",
+      "Floor": -1,
+      "RoomType": "Open Plan",
+      "Building": "Test",
+      "RoomDescription": "Description",
+      "Flag": false
+    },
+    {
+      "SurveyDeviceID": 2,
+      "SurveyID": 99992,
+      "HardwareID": 22224,
+      "SensorID": 55554,
+      "HostAddress": 520,
+      "PIRAddress": 2,
+      "DeviceType": "Desk",
+      "Location": "",
+      "Description1": "Reading Area",
+      "Description2": "",
+      "Description3": "",
+      "RoomID": 1,
+      "ShareID": null,
+      "AssociatedSensorID": null,
+      "ShareHardwareID": null,
+      "RoomName": "T01",
+      "Floor": -1,
+      "RoomType": "Open Plan",
+      "Building": "Test",
+      "RoomDescription": "",
+      "Flag": false
+    }
+  ],
+  "https://cloud.occupeye.com/OccupEye/UCL/api/SurveySensorsLatest/99991": [
+    {
+      "HardwareID": 22221,
+      "RequiresCleaning": false,
+      "LastCleanedTime": "2020-04-18T11:34:34+01:00",
+      "SensorID": 55551,
+      "HostAddress": 520,
+      "PIRAddress": 1,
+      "LastTriggerType": "Absent",
+      "LastTriggerTime": "2020-04-18T11:33:34+01:00",
+      "BatVoltStart": 2.80,
+      "BatVoltStartDate": "2017-12-02",
+      "SensorEventID": 283090941,
+      "Channel": 14,
+      "MessageID": 172,
+      "BatVolts": 1.9,
+      "SysVolts": 3.3,
+      "TxPower": 0,
+      "RSSI": 230,
+      "RxStatus": 33248,
+      "MessageTime": "2020-05-05T10:21:17+01:00",
+      "TriggerTime": "2020-05-05T10:21:17+01:00",
+      "TriggerType": "Message",
+      "TriggerTypeID": 6,
+      "SensorTypeID": 0
+    },
+    {
+      "HardwareID": 22222,
+      "RequiresCleaning": true,
+      "LastCleanedTime": "2020-08-12T15:15:55+01:00",
+      "SensorID": 55552,
+      "HostAddress": 520,
+      "PIRAddress": 2,
+      "LastTriggerType": "Absent",
+      "LastTriggerTime": "2020-11-03T12:41:10+00:00",
+      "BatVoltStart": 2.90,
+      "BatVoltStartDate": "2017-12-02",
+      "SensorEventID": 446156325,
+      "Channel": 14,
+      "MessageID": 4897,
+      "BatVolts": 1.8,
+      "SysVolts": 3.2,
+      "TxPower": -2,
+      "RSSI": 261,
+      "RxStatus": 33248,
+      "MessageTime": "2020-11-12T21:55:50+00:00",
+      "TriggerTime": "2020-11-12T21:55:50+00:00",
+      "TriggerType": "Message",
+      "TriggerTypeID": 6,
+      "SensorTypeID": 0
+    }
+  ],
+  "https://cloud.occupeye.com/OccupEye/UCL/api/Maps/66661?origin=tl": {
+    "MapItemViewModels": [
+      {
+        "MapItemID": 1,
+        "MapID": 66661,
+        "HardwareID": "22221",
+        "HardwareID_i": 22221,
+        "ItemType": "Sensor",
+        "X": 23236.0,
+        "Y": 7493.0,
+        "XValue": 24857.0,
+        "YValue": 37359.0
+      },
+      {
+        "MapItemID": 2,
+        "MapID": 66661,
+        "HardwareID": "22222",
+        "HardwareID_i": 22222,
+        "ItemType": "Sensor",
+        "X": 23236.0,
+        "Y": 6493.0,
+        "XValue": 24857.0,
+        "YValue": 38359.0
+      }
+    ],
+    "MapID": 66662,
+    "SurveyID": 4,
+    "MapName": "Test Map",
+    "FileName": "file_name.png",
+    "VMinX": 1234.0,
+    "VMinY": 4321.0,
+    "VMaxX": 123456.0,
+    "VMaxY": 654321.0,
+    "ImageID": 33331,
+    "ImageURL": "/OccupEye/UCL/api/images/99991?max_width=1000&max_height=1000",
+    "SensorSize": null,
+    "DisplayOrder": 1,
+    "ViewBox": "0 0 41176 20031",
+    "Origin": "tl"
+  },
+  "https://cloud.occupeye.com/OccupEye/UCL/api/Maps/66662?origin=tl": {
+    "MapItemViewModels": [
+      {
+        "MapItemID": 1,
+        "MapID": 66662,
+        "HardwareID": "22223",
+        "HardwareID_i": 22223,
+        "ItemType": "Sensor",
+        "X": 23236.0,
+        "Y": 7493.0,
+        "XValue": 24857.0,
+        "YValue": 37359.0
+      },
+      {
+        "MapItemID": 2,
+        "MapID": 66662,
+        "HardwareID": "22224",
+        "HardwareID_i": 22224,
+        "ItemType": "Sensor",
+        "X": 23236.0,
+        "Y": 6493.0,
+        "XValue": 24857.0,
+        "YValue": 38359.0
+      }
+    ],
+    "MapID": 66662,
+    "SurveyID": 4,
+    "MapName": "Test Map",
+    "FileName": "file_name.png",
+    "VMinX": 1234.0,
+    "VMinY": 4321.0,
+    "VMaxX": 123456.0,
+    "VMaxY": 654321.0,
+    "ImageID": 33331,
+    "ImageURL": "/OccupEye/UCL/api/images/99991?max_width=1000&max_height=1000",
+    "SensorSize": null,
+    "DisplayOrder": 1,
+    "ViewBox": "0 0 41176 20031",
+    "Origin": "tl"
+  },
+  "https://cloud.occupeye.com/OccupEye/UCL/api/Query?startdate=2020-01-01&enddate=2020-01-01&SurveyID=99991&QueryType=ByDateTime&StartTime=00%3A00&EndTime=24%3A00&GroupBy[]=TriggerDate&GroupBy[]=TimeSlot&": [
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "00:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "16:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "21:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 1,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "01:30:00",
+      "CountOcc": 1,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "23:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "09:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "04:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "11:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "06:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "14:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 5,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "18:20:00",
+      "CountOcc": 5,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "14:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "15:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "08:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "01:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "15:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "10:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "10:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "12:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "17:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "10:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "23:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "00:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "12:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "17:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "11:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "05:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "13:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "11:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "16:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "12:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 1,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "19:50:00",
+      "CountOcc": 1,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "07:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "22:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "09:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "17:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "03:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "05:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "15:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 3,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "18:10:00",
+      "CountOcc": 3,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "09:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "03:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 1,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "19:20:00",
+      "CountOcc": 1,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "00:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "23:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "13:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 4,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "18:50:00",
+      "CountOcc": 4,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "13:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "04:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "04:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "22:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "00:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "01:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "23:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "15:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "20:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "06:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "17:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "07:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "08:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 1,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "18:40:00",
+      "CountOcc": 1,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "04:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "02:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "05:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "06:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "01:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "21:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "08:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "21:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 1,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "20:20:00",
+      "CountOcc": 1,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 2,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "02:30:00",
+      "CountOcc": 2,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "06:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "05:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "11:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "03:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "08:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "00:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "13:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "15:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "22:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 1,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "20:30:00",
+      "CountOcc": 1,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "02:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "00:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "12:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "10:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "11:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "17:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "12:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "17:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "23:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "11:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "09:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "13:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "15:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "16:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "14:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "07:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "16:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 2,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "14:50:00",
+      "CountOcc": 2,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "09:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 1,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "19:10:00",
+      "CountOcc": 1,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "22:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "10:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "14:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 1,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "19:00:00",
+      "CountOcc": 1,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "16:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "06:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "12:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "10:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "08:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 1,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "20:00:00",
+      "CountOcc": 1,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "21:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "05:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "21:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "07:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "06:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "02:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 3,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "20:40:00",
+      "CountOcc": 3,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "02:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "16:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "05:30:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "21:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "18:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "07:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 1,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "19:30:00",
+      "CountOcc": 1,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "07:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "03:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "04:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "02:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "01:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 1,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "20:10:00",
+      "CountOcc": 1,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "22:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "03:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "13:00:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 1,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "19:40:00",
+      "CountOcc": 1,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "03:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "23:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "01:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "09:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "22:50:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "08:40:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "14:10:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 1,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "18:30:00",
+      "CountOcc": 1,
+      "CountTotal": 12
+    },
+    {
+      "SpacesOcc": 0,
+      "SpacesTotal": 12,
+      "TriggerDate": "2020-01-01",
+      "TimeSlot": "04:20:00",
+      "CountOcc": 0,
+      "CountTotal": 12
+    }
+  ]
+}
