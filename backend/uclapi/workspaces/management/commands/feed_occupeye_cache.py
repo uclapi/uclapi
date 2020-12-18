@@ -1,3 +1,6 @@
+import sys
+import traceback
+
 from cachetclient.v1 import enums
 from django.core.management.base import BaseCommand
 
@@ -52,8 +55,6 @@ class Command(BaseCommand):
                 except Exception as cachet_error:
                     print(f"Unexpected: Failed to create cachet incident. " f"Reason: {repr(cachet_error)}")
             else:
-                import sys
-                import traceback
                 exc_info = sys.exc_info()
                 traceback.print_exception(*exc_info)
                 print("Could not find appropriate incident in Cachet!")
