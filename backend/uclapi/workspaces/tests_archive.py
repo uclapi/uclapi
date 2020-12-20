@@ -7,6 +7,7 @@ from django.test import TestCase
 from freezegun import freeze_time
 
 from .models import Surveys, Historical, Sensors, SensorReplacements, SurveyChanges
+from .occupeye.api import OccupEyeApi
 from .occupeye.archive import OccupEyeArchive
 from .occupeye.endpoint import TestEndpoint
 
@@ -165,3 +166,69 @@ class OccupEyeArchiveEdgeTestCase(TestCase):
         Historical.objects.all().delete()
         SensorReplacements.objects.all().delete()
         SurveyChanges.objects.all().delete()
+
+
+@freeze_time("2020-02-01")
+class OccupEyeArchiveApiTestCase(TestCase):
+
+    @patch("workspaces.occupeye.archive.FIRST_OCCUPEYE_INSTALLATION",
+           datetime.strptime("2020-01-01T00:00:00+0000", "%Y-%m-%dT%H:%M:%S%z"))
+    @patch("workspaces.occupeye.archive.MAX_TIME_DELTA", timedelta(days=7))
+    def setUp(self):
+        with open(os.path.join(__location__, "tests_archive_cache.json"), encoding="utf-8") as f:
+            self.archive = OccupEyeArchive(endpoint=TestEndpoint(json.load(f)))
+        self.archive.reset()
+        self.archive.update()
+        self.api = OccupEyeApi()
+
+    def test_get_historical_sensor(self):
+        start_time = datetime.strptime("2020-01-15T13:00", "%Y-%m-%dT%H:%M")
+        end_time = datetime.strptime("2020-01-15T14:00", "%Y-%m-%dT%H:%M")
+        with_delta = self.api.get_historical_sensor(72, 20664001, start_time, end_time)
+        self.assertDictEqual(with_delta, {'2020-01-15T13:10:00': 1, '2020-01-15T13:20:00': 0, '2020-01-15T13:50:00': 1,
+                                          '2020-01-15T14:00:00': 0})
+
+        without_delta = self.api.get_historical_sensor(72, 20664001, start_time, end_time, delta=False)
+        self.assertDictEqual(without_delta,
+                             {'2020-01-15T13:00:00': -1, '2020-01-15T13:10:00': 1, '2020-01-15T13:20:00': 0,
+                              '2020-01-15T13:30:00': 0, '2020-01-15T13:40:00': 0, '2020-01-15T13:50:00': 1,
+                              '2020-01-15T14:00:00': 0})
+
+    def test_get_historical_survey_sensors(self):
+        sensors = self.api.get_historical_survey_sensors(72)
+        self.assertListEqual(sensors,
+                             [20664008, 20664006, 20664003, 20664004, 20664002, 20664010, 20664001, 20664005, 20664009,
+                              20664007])
+
+    def test_get_historical_survey(self):
+        start_time = datetime.strptime("2020-01-10T00:00", "%Y-%m-%dT%H:%M")
+        end_time = datetime.strptime("2020-01-12T00:00", "%Y-%m-%dT%H:%M")
+        surveys = self.api.get_historical_survey(72, start_time, end_time)
+        self.assertDictEqual(surveys, {20664008: {}, 20664006: {}, 20664003: {}, 20664004: {},
+                                       20664002: {'2020-01-10T00:30:00': 0}, 20664010: {},
+                                       20664001: {'2020-01-10T21:40:00': 1, '2020-01-10T21:50:00': 0}, 20664005: {},
+                                       20664009: {}, 20664007: {}})
+
+    def test_get_historical_list_sensors(self):
+        sensors = self.api.get_historical_list_sensors(72)
+        self.assertDictEqual(sensors,
+                             {"survey_id": 72, "name": "Bedford Way LG16", "start": datetime(2019, 7, 6, 8, 0),
+                              "end": datetime(2030, 12, 31, 20, 0), "active": True,
+                              "sensors": [{"sensor_id": 20664008, "hardware_id": 664008, "survey_device_id": 14767},
+                                          {"sensor_id": 20664006, "hardware_id": 664006, "survey_device_id": 14765},
+                                          {"sensor_id": 20664003, "hardware_id": 664003, "survey_device_id": 14762},
+                                          {"sensor_id": 20664004, "hardware_id": 664004, "survey_device_id": 14763},
+                                          {"sensor_id": 20664002, "hardware_id": 664002, "survey_device_id": 14761},
+                                          {"sensor_id": 20664010, "hardware_id": 664010, "survey_device_id": 14769},
+                                          {"sensor_id": 20664001, "hardware_id": 664001, "survey_device_id": 14760},
+                                          {"sensor_id": 20664005, "hardware_id": 664005, "survey_device_id": 14764},
+                                          {"sensor_id": 20664009, "hardware_id": 664009, "survey_device_id": 14768},
+                                          {"sensor_id": 20664007, "hardware_id": 664007, "survey_device_id": 14766}],
+                              "last_updated": datetime(2020, 2, 1, 0, 0)})
+
+    def test_get_historical_list_surveys(self):
+        surveys = self.api.get_historical_list_surveys()
+        self.assertEqual(len(surveys), 1)
+        self.assertDictEqual(surveys[0],
+                             {"survey_id": 72, "name": "Bedford Way LG16", "start": datetime(2019, 7, 6, 8, 0),
+                              "end": datetime(2030, 12, 31, 20, 0), "active": True})

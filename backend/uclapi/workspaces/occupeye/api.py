@@ -376,6 +376,9 @@ class OccupEyeApi:
         return sensors
 
     def get_historical_survey(self, survey_id, start_time, end_time, delta=True):
+        """
+        Gets historical data for all sensors in a single survey location
+        """
         states = {}
         for sensor_id in self.get_historical_survey_sensors(survey_id):
             states[sensor_id] = self.get_historical_sensor(survey_id, sensor_id, start_time, end_time, delta=delta)
