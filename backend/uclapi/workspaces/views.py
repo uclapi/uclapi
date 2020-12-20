@@ -363,7 +363,7 @@ def request_too_expensive(surveys: int, start: datetime, end: datetime, delta: b
         total_samples /= (10 * 24)
 
     if total_samples > OccupEyeConstants.MAX_SURVEY_REQUESTS:
-        return f"Too expensive, estimated {round(total_samples)} > {OccupEyeConstants.MAX_SURVEY_REQUESTS}"
+        return f"Too expensive, estimated {round(total_samples):,} > {OccupEyeConstants.MAX_SURVEY_REQUESTS:,}"
 
     return None
 
@@ -386,7 +386,7 @@ def get_historical_sensor(request, *args, **kwargs):
         response.status_code = 400
         return response
 
-    end_date_time = request.GET.get("end_date_time", datetime.now().isoformat())
+    end_date_time = request.GET.get("end", datetime.now().isoformat())
     delta = request.GET.get("delta", "0")
     try:
         start_date_time = isoparse(start_date_time)
@@ -441,7 +441,7 @@ def get_historical_survey(request, *args, **kwargs):
         response.status_code = 400
         return response
 
-    end_date_time = request.GET.get("end_date_time", datetime.now().isoformat())
+    end_date_time = request.GET.get("end", datetime.now().isoformat())
     delta = request.GET.get("delta", "0")
     try:
         start_date_time = isoparse(start_date_time)

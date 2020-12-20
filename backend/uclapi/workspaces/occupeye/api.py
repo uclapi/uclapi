@@ -355,7 +355,10 @@ class OccupEyeApi:
 
             objs = {obj.datetime: obj.state for obj in objs}
 
-            state = -1
+            first_obj = Historical.objects.filter(survey_id=survey_id, sensor_id=sensor_id,
+                                                  datetime__lte=start_time).order_by('-datetime').first()
+
+            state = -1 if first_obj is None else first_obj.state
             while start_time <= end_time:
                 if start_time in objs:
                     state = objs[start_time]

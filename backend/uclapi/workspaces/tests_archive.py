@@ -190,7 +190,7 @@ class OccupEyeArchiveApiTestCase(TestCase):
 
         without_delta = self.api.get_historical_sensor(72, 20664001, start_time, end_time, delta=False)
         self.assertDictEqual(without_delta,
-                             {'2020-01-15T13:00:00': -1, '2020-01-15T13:10:00': 1, '2020-01-15T13:20:00': 0,
+                             {'2020-01-15T13:00:00': 0, '2020-01-15T13:10:00': 1, '2020-01-15T13:20:00': 0,
                               '2020-01-15T13:30:00': 0, '2020-01-15T13:40:00': 0, '2020-01-15T13:50:00': 1,
                               '2020-01-15T14:00:00': 0})
 

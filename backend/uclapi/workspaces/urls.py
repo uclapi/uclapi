@@ -13,6 +13,5 @@ urlpatterns = [
     url(r"^historical/sensor$", views.get_historical_sensor),
     url(r"^historical/survey$", views.get_historical_survey),
     url(r"^historical/list/sensors$", views.get_historical_list_sensors),
-    url(r"^historical/list/surveys$", views.get_historical_list_surveys),
-    url(r"^historical/takeout", views.get_historical_survey)
+    url(r"^historical/list/surveys$", views.get_historical_list_surveys)
 ]
