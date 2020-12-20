@@ -51,7 +51,7 @@ class OccupEyeConstants:
 
     # Cad-Cap Endpoints
     URL_MAPS_BY_SURVEY = URL_BASE_DEPLOYMENT + "/api/Maps/?surveyid={}"
-    URL_SURVEYS = URL_BASE_DEPLOYMENT + "/api/Surveys/"
+    URL_SURVEYS = URL_BASE_DEPLOYMENT + "/api/Surveys"
     URL_SURVEYS_ALL = URL_SURVEYS + "?active_only=false"
     URL_SURVEY_DEVICES = URL_BASE_DEPLOYMENT + "/api/SurveyDevices?surveyid={}"
 

@@ -10,7 +10,7 @@ from common.cachet import (
     get_incident_name,
     update_incident,
 )
-from workspaces.occupeye.archive import OccupeyeArchive
+from workspaces.occupeye.archive import OccupEyeArchive
 from workspaces.occupeye.endpoint import TestEndpoint
 
 
@@ -25,9 +25,9 @@ class Command(BaseCommand):
             print("Running OccupEye Full Archive Operation")
             print("[+] Feeding Archive")
             if options['test']:
-                archive = OccupeyeArchive(endpoint=TestEndpoint({}))
+                archive = OccupEyeArchive(endpoint=TestEndpoint({}))
             else:
-                archive = OccupeyeArchive()
+                archive = OccupEyeArchive()
             archive.reset()
             archive.update()
             print("[+] Done!")

@@ -10,7 +10,7 @@ FIRST_OCCUPEYE_INSTALLATION = datetime.strptime("2017-01-01T00:00:00+0000", "%Y-
 MAX_TIME_DELTA = timedelta(days=28)
 
 
-class OccupeyeArchive:
+class OccupEyeArchive:
     def __init__(self, endpoint: Endpoint = None):
         if endpoint is None:
             endpoint = OccupeyeEndpoint()
@@ -116,12 +116,12 @@ class OccupeyeArchive:
                 time = datetime.strptime(sensor["TriggerDate"], "%Y-%m-%d")
                 time = time.replace(tzinfo=timezone.utc)
                 SensorReplacements.objects.create(sensor_id=sensor["SensorID"],
-                                                  old_survey_id=survey.survey_id,
+                                                  old_survey_id=validate["survey_id"],
                                                   old_hardware_id=validate['hardware_id'],
                                                   old_survey_device_id=validate['survey_device_id'],
                                                   new_hardware_id=sensor["HardwareID"],
                                                   new_survey_device_id=sensor["SurveyDeviceID"],
-                                                  new_survey_id=sensor["SurveyID"],
+                                                  new_survey_id=survey.survey_id,
                                                   datetime=time)
 
                 obj.hardware_id = sensor["HardwareID"]

@@ -10,7 +10,7 @@ from common.cachet import (
     get_incident_name,
     update_incident,
 )
-from workspaces.occupeye.archive import OccupeyeArchive
+from workspaces.occupeye.archive import OccupEyeArchive
 from workspaces.occupeye.endpoint import TestEndpoint
 
 
@@ -25,9 +25,9 @@ class Command(BaseCommand):
             print("Running OccupEye Archive Operation")
             print("[+] Feeding Archive")
             if options['test']:
-                archive = OccupeyeArchive(endpoint=TestEndpoint({}))
+                archive = OccupEyeArchive(endpoint=TestEndpoint({}))
             else:
-                archive = OccupeyeArchive()
+                archive = OccupEyeArchive()
             archive.update()
             print("[+] Done!")
             incident_name = get_incident_name("Occupeye")
@@ -55,7 +55,6 @@ class Command(BaseCommand):
                 except Exception as cachet_error:
                     print(f"Unexpected: Failed to create cachet incident. " f"Reason: {repr(cachet_error)}")
             else:
-
                 exc_info = sys.exc_info()
                 traceback.print_exception(*exc_info)
                 print("Could not find appropriate incident in Cachet!")

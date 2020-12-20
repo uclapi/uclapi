@@ -5,7 +5,7 @@
     "image": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
     "content_type": "image/png"
   },
-  "https://cloud.occupeye.com/OccupEye/UCL/api/Surveys/": [
+  "https://cloud.occupeye.com/OccupEye/UCL/api/Surveys": [
     {
       "SurveyID": 99991,
       "Active": true,
