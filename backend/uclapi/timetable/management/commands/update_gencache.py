@@ -3,10 +3,12 @@ import time
 from datetime import datetime
 from multiprocessing import Pool
 
+import django
 import pymsteams
 import redis
 from cachetclient.v1 import enums
 from django import db
+from django.apps import apps
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
@@ -44,9 +46,8 @@ from timetable.models import (
 
 # Nasty hack to ensure we can initialise models in worker processes
 # Courtesy of: https://stackoverflow.com/a/39996838
-# if not apps.ready and not settings.configured:
-#     django.setup()
-
+if not apps.ready and not settings.configured:
+    django.setup()
 
 """
     Table format
@@ -149,6 +150,7 @@ def cache_table_process(index, destination_table_index, options):
 
         def columns(cursor):
             return {cd[0]: i for i, cd in enumerate(cursor.description)}
+
         cols = columns(oracle_cursor)
 
         if options['unattended']:

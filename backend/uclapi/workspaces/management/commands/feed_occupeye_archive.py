@@ -1,3 +1,6 @@
+import sys
+import traceback
+
 from cachetclient.v1 import enums
 from django.core.management.base import BaseCommand
 
@@ -30,7 +33,7 @@ class Command(BaseCommand):
             incident_name = get_incident_name("Occupeye")
             if incident_name:
                 try:
-                    update_incident("Occupeye Full Archive succeeded", incident_name, enums.INCIDENT_FIXED)
+                    update_incident("Occupeye Archive succeeded", incident_name, enums.INCIDENT_FIXED)
                 except CachetException as cachet_error:
                     print(f"Failed to create fixed cachet incident. " f"Reason: {repr(cachet_error)}")
                 except Exception as cachet_error:
@@ -52,8 +55,7 @@ class Command(BaseCommand):
                 except Exception as cachet_error:
                     print(f"Unexpected: Failed to create cachet incident. " f"Reason: {repr(cachet_error)}")
             else:
-                import sys
-                import traceback
+
                 exc_info = sys.exc_info()
                 traceback.print_exception(*exc_info)
                 print("Could not find appropriate incident in Cachet!")
