@@ -1,21 +1,16 @@
 import json
-
 from collections import OrderedDict
 from distutils.util import strtobool
 
 import redis
-
 from django.conf import settings
 
 from .constants import OccupEyeConstants
 from .exceptions import BadOccupEyeRequest, OccupEyeOtherSensorState
-from .utils import (
-    is_sensor_occupied,
-    survey_ids_to_surveys
-)
+from .utils import is_sensor_occupied, survey_ids_to_surveys
 
 
-class OccupEyeApi():
+class OccupEyeApi:
     """
     Python API for the Cad-Capture OccupEye backend.
     Data is cached as much as possible in Redis for performance.
@@ -24,11 +19,7 @@ class OccupEyeApi():
     """
 
     def __init__(self):
-        self._redis = redis.Redis(
-            host=settings.REDIS_UCLAPI_HOST,
-            charset="utf-8",
-            decode_responses=True
-        )
+        self._redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
         self._const = OccupEyeConstants()
 
     def get_surveys(self, survey_filter):
@@ -41,14 +32,12 @@ class OccupEyeApi():
         survey_ids = self._redis.lrange(
             self._const.SURVEYS_LIST_KEY,
             0,
-            self._redis.llen(self._const.SURVEYS_LIST_KEY) - 1
+            self._redis.llen(self._const.SURVEYS_LIST_KEY) - 1,
         )
 
         surveys = []
         for survey_id in survey_ids:
-            survey_data = self._redis.hgetall(
-                self._const.SURVEY_DATA_KEY.format(survey_id)
-            )
+            survey_data = self._redis.hgetall(self._const.SURVEY_DATA_KEY.format(survey_id))
             survey = {
                 "id": int(survey_data["id"]),
                 "name": survey_data["name"],
@@ -59,49 +48,38 @@ class OccupEyeApi():
                 "location": {
                     "coordinates": {
                         "lat": survey_data["lat"],
-                        "lng": survey_data["long"]
-                        },
+                        "lng": survey_data["long"],
+                    },
                     "address": [
                         survey_data["address1"],
                         survey_data["address2"],
                         survey_data["address3"],
-                        survey_data["address4"]
-                        ]
-                    }
-                }
+                        survey_data["address4"],
+                    ],
+                },
+            }
             # If we want to filter out staff surveys and this is a staff
             # one then we skip over it.
             if (
-                survey_filter == "student" and survey["staff_survey"] or
-                survey_filter == "staff" and not survey["staff_survey"]
+                survey_filter == "student"
+                and survey["staff_survey"]
+                or survey_filter == "staff"
+                and not survey["staff_survey"]
             ):
                 continue
 
-            survey_maps_list_key = self._const.SURVEY_MAPS_LIST_KEY.format(
-                survey_id
-            )
-            survey_map_count = self._redis.llen(
-                survey_maps_list_key
-            ) - 1
-            survey_maps_ids_list = self._redis.lrange(
-                survey_maps_list_key,
-                0,
-                survey_map_count
-            )
+            survey_maps_list_key = self._const.SURVEY_MAPS_LIST_KEY.format(survey_id)
+            survey_map_count = self._redis.llen(survey_maps_list_key) - 1
+            survey_maps_ids_list = self._redis.lrange(survey_maps_list_key, 0, survey_map_count)
 
             survey_maps = []
             for survey_map_id in survey_maps_ids_list:
-                survey_map = self._redis.hgetall(
-                    self._const.SURVEY_MAP_DATA_KEY.format(
-                        survey_id,
-                        survey_map_id
-                    )
-                )
+                survey_map = self._redis.hgetall(self._const.SURVEY_MAP_DATA_KEY.format(survey_id, survey_map_id))
                 survey_maps.append(
                     {
-                       "id": int(survey_map["id"]),
-                       "name": survey_map["name"],
-                       "image_id": int(survey_map["image_id"])
+                        "id": int(survey_map["id"]),
+                        "name": survey_map["name"],
+                        "image_id": int(survey_map["image_id"]),
                     }
                 )
             survey["maps"] = survey_maps
@@ -117,32 +95,16 @@ class OccupEyeApi():
         if not image_id.isdigit():
             raise BadOccupEyeRequest
 
-        b64_key = self._const.IMAGE_BASE64_KEY.format(
-            image_id
-        )
+        b64_key = self._const.IMAGE_BASE64_KEY.format(image_id)
         if not self._redis.exists(b64_key):
             raise BadOccupEyeRequest
 
-        content_type_key = self._const.IMAGE_CONTENT_TYPE_KEY.format(
-            image_id
-        )
+        content_type_key = self._const.IMAGE_CONTENT_TYPE_KEY.format(image_id)
 
         image_b64 = self._redis.get(b64_key)
         content_type = self._redis.get(content_type_key)
 
         return (image_b64, content_type)
-
-    def get_survey_sensor_max_timestamp(self, survey_id):
-        """
-        Retrieves the max sensor timestamp from cache.
-        """
-        max_timestamp_key = self._const.SURVEY_MAX_TIMESTAMP_KEY.format(
-            survey_id
-        )
-        if self._redis.exists(max_timestamp_key):
-            return self._redis.get(max_timestamp_key)
-        else:
-            raise BadOccupEyeRequest
 
     def get_survey_sensors(self, survey_id):
         """
@@ -155,11 +117,7 @@ class OccupEyeApi():
                 raise BadOccupEyeRequest
 
         maps_key = self._const.SURVEY_MAPS_LIST_KEY.format(survey_id)
-        maps = self._redis.lrange(
-            maps_key,
-            0,
-            self._redis.llen(maps_key) - 1
-        )
+        maps = self._redis.lrange(maps_key, 0, self._redis.llen(maps_key) - 1)
 
         survey_data_key = self._const.SURVEY_DATA_KEY.format(survey_id)
         survey_data = self._redis.hgetall(survey_data_key)
@@ -167,18 +125,12 @@ class OccupEyeApi():
         data = {
             "maps": [],
             "survey_id": survey_data["id"],
-            "survey_name": survey_data["name"]
+            "survey_name": survey_data["name"],
         }
 
-        all_survey_sensors_key = (
-            self._const.SURVEY_SENSORS_LIST_KEY
-        ).format(survey_id)
+        all_survey_sensors_key = (self._const.SURVEY_SENSORS_LIST_KEY).format(survey_id)
 
-        survey_sensors_ids = self._redis.lrange(
-            all_survey_sensors_key,
-            0,
-            self._redis.llen(all_survey_sensors_key)
-        )
+        survey_sensors_ids = self._redis.lrange(all_survey_sensors_key, 0, self._redis.llen(all_survey_sensors_key))
 
         pipeline = self._redis.pipeline()
 
@@ -186,37 +138,29 @@ class OccupEyeApi():
         # in the survey with no regard for map
         survey_sensors_data = dict()
         for sensor_id in survey_sensors_ids:
-            sensor_data_key = (
-                self._const.SURVEY_SENSOR_DATA_KEY
-            ).format(survey_id, sensor_id)
+            sensor_data_key = (self._const.SURVEY_SENSOR_DATA_KEY).format(survey_id, sensor_id)
             pipeline.hgetall(sensor_data_key)
 
         for sensor_data in pipeline.execute():
             survey_sensors_data[sensor_data["hardware_id"]] = sensor_data
 
         for map_id in maps:
-            map_sensors_key = (
-                self._const.SURVEY_MAP_SENSORS_LIST_KEY
-            ).format(survey_id, map_id)
-            sensor_hw_ids = self._redis.lrange(
-                map_sensors_key,
-                0,
-                self._redis.llen(map_sensors_key) - 1
-            )
+            map_sensors_key = (self._const.SURVEY_MAP_SENSORS_LIST_KEY).format(survey_id, map_id)
+            sensor_hw_ids = self._redis.lrange(map_sensors_key, 0, self._redis.llen(map_sensors_key) - 1)
 
             sensors = OrderedDict()
 
             # Get sensor properties requests into a pipeline
             # Whilst at it, grab the :data from survey_sensors_data
             for sensor_id in sensor_hw_ids:
-                sensor_properties_key = (
-                    self._const.SURVEY_MAP_SENSOR_PROPERTIES_KEY
-                ).format(survey_id, map_id, sensor_id)
+                sensor_properties_key = (self._const.SURVEY_MAP_SENSOR_PROPERTIES_KEY).format(
+                    survey_id, map_id, sensor_id
+                )
                 pipeline.hgetall(sensor_properties_key)
 
             # Now execute that pipeline
             for result in pipeline.execute():
-                hw_id = result['hardware_id']
+                hw_id = result["hardware_id"]
                 if hw_id in survey_sensors_data:
                     sensors[hw_id] = {**result, **survey_sensors_data[hw_id]}
                 else:
@@ -224,39 +168,28 @@ class OccupEyeApi():
 
             # Now do the same thing but for the sensor states
             for sensor_id in sensor_hw_ids:
-                sensor_status_key = (
-                    self._const.SURVEY_SENSOR_STATUS_KEY
-                ).format(survey_id, sensor_id)
+                sensor_status_key = (self._const.SURVEY_SENSOR_STATUS_KEY).format(survey_id, sensor_id)
                 pipeline.hgetall(sensor_status_key)
 
             for result in pipeline.execute():
                 if result:
-                    hw_id = result['hardware_id']
-                    sensors[hw_id][
-                        "last_trigger_timestamp"
-                    ] = result["last_trigger_timestamp"]
-                    sensors[hw_id][
-                        "last_trigger_type"
-                    ] = result["last_trigger_type"]
+                    hw_id = result["hardware_id"]
+                    sensors[hw_id]["last_trigger_timestamp"] = result["last_trigger_timestamp"]
+                    sensors[hw_id]["last_trigger_type"] = result["last_trigger_type"]
                     try:
                         occupied = is_sensor_occupied(
                             result["last_trigger_type"],
-                            result["last_trigger_timestamp"]
+                            result["last_trigger_timestamp"],
                         )
                     except OccupEyeOtherSensorState:
                         occupied = False
                     sensors[hw_id]["occupied"] = occupied
 
-            map_data_key = self._const.SURVEY_MAP_DATA_KEY.format(
-                survey_id,
-                map_id
-            )
+            map_data_key = self._const.SURVEY_MAP_DATA_KEY.format(survey_id, map_id)
             map_data = self._redis.hgetall(map_data_key)
             map_data["sensors"] = sensors
             data["maps"].append(map_data)
-        max_timestamp_key = (
-            self._const.SURVEY_MAX_TIMESTAMP_KEY
-        ).format(survey_id)
+        max_timestamp_key = (self._const.SURVEY_MAX_TIMESTAMP_KEY).format(survey_id)
         data["most_recent_timestamp"] = self._redis.get(max_timestamp_key)
 
         return data
@@ -276,9 +209,7 @@ class OccupEyeApi():
         if not survey_id.isdigit():
             raise BadOccupEyeRequest
 
-        max_timestamp_key = (
-            self._const.SURVEY_MAX_TIMESTAMP_KEY
-        ).format(survey_id)
+        max_timestamp_key = (self._const.SURVEY_MAX_TIMESTAMP_KEY).format(survey_id)
 
         # It's either cached, or it does not exist
         max_timestamp_cached = self._redis.get(max_timestamp_key)
@@ -287,17 +218,8 @@ class OccupEyeApi():
         else:
             raise BadOccupEyeRequest
 
-    def _get_survey_sensors_data_worker(
-        self,
-        survey_id,
-        survey_name,
-        shared_dict
-    ):
-        survey_data = {
-            "id": survey_id,
-            "name": survey_name,
-            "maps": []
-        }
+    def _get_survey_sensors_data_worker(self, survey_id, survey_name, shared_dict):
+        survey_data = {"id": survey_id, "name": survey_name, "maps": []}
         sensors = self.get_survey_sensors(survey_id)
         for survey_map in sensors["maps"]:
             map_data = {
@@ -305,7 +227,7 @@ class OccupEyeApi():
                 "name": survey_map["name"],
                 "sensors_absent": 0,
                 "sensors_occupied": 0,
-                "sensors_other": 0
+                "sensors_other": 0,
             }
             for _, sensor in survey_map["sensors"].items():
                 # We only care about sensors with a trigger event.
@@ -315,10 +237,7 @@ class OccupEyeApi():
                     continue
 
                 try:
-                    sensor_occupied = is_sensor_occupied(
-                        sensor["last_trigger_type"],
-                        sensor["last_trigger_timestamp"]
-                    )
+                    sensor_occupied = is_sensor_occupied(sensor["last_trigger_type"], sensor["last_trigger_timestamp"])
                     if sensor_occupied:
                         map_data["sensors_occupied"] += 1
                     else:
@@ -336,10 +255,7 @@ class OccupEyeApi():
         Gets a summary of every survey, map and the sensor counts within them.
         """
         surveys_data = self.get_surveys(survey_filter)
-        filtered_surveys = survey_ids_to_surveys(
-            surveys_data,
-            survey_ids
-        )
+        filtered_surveys = survey_ids_to_surveys(surveys_data, survey_ids)
 
         # Check whether every survey was requested
         if len(filtered_surveys) == len(surveys_data):
@@ -348,23 +264,11 @@ class OccupEyeApi():
             # of Survey IDs is the same length as the total surveys
             # available.
             if survey_filter == "all":
-                data = json.loads(
-                    self._redis.get(
-                        self._const.SUMMARY_CACHE_ALL_SURVEYS
-                    )
-                )
+                data = json.loads(self._redis.get(self._const.SUMMARY_CACHE_ALL_SURVEYS))
             elif survey_filter == "student":
-                data = json.loads(
-                    self._redis.get(
-                        self._const.SUMMARY_CACHE_ALL_STUDENT_SURVEYS
-                    )
-                )
+                data = json.loads(self._redis.get(self._const.SUMMARY_CACHE_ALL_STUDENT_SURVEYS))
             elif survey_filter == "staff":
-                data = json.loads(
-                    self._redis.get(
-                        self._const.SUMMARY_CACHE_ALL_STAFF_SURVEYS
-                    )
-                )
+                data = json.loads(self._redis.get(self._const.SUMMARY_CACHE_ALL_STAFF_SURVEYS))
             else:
                 raise BadOccupEyeRequest
             return data
@@ -375,42 +279,26 @@ class OccupEyeApi():
         summary_list = []
         for survey in filtered_surveys:
             survey_id = int(survey["id"])
-            cache_key = self._const.SUMMARY_CACHE_SURVEY.format(
-                survey_id
-            )
-            survey_data = json.loads(
-                self._redis.get(cache_key)
-            )
+            cache_key = self._const.SUMMARY_CACHE_SURVEY.format(survey_id)
+            survey_data = json.loads(self._redis.get(cache_key))
             summary_list.extend(survey_data)
 
         return summary_list
 
-    def get_historical_time_usage_data(
-        self,
-        survey_ids,
-        day_count,
-        survey_filter
-    ):
+    def get_historical_time_usage_data(self, survey_ids, day_count, survey_filter):
         surveys_data = self.get_surveys(survey_filter)
 
-        filtered_surveys = survey_ids_to_surveys(
-            surveys_data,
-            survey_ids
-        )
+        filtered_surveys = survey_ids_to_surveys(surveys_data, survey_ids)
 
         data = []
 
         for survey in filtered_surveys:
-            timeaverage_key = (
-                self._const.TIMEAVERAGE_KEY
-            ).format(survey["id"], day_count)
-            averages = json.loads(
-                self._redis.get(timeaverage_key)
-            )
+            timeaverage_key = (self._const.TIMEAVERAGE_KEY).format(survey["id"], day_count)
+            averages = json.loads(self._redis.get(timeaverage_key))
             survey_data = {
                 "survey_id": survey["id"],
                 "name": survey["name"],
-                "averages": averages
+                "averages": averages,
             }
             data.append(survey_data)
 
@@ -421,45 +309,21 @@ class OccupEyeApi():
         Gets information needed by the Image Builder to create a
         .SVG file showing the state of every library sensor
         """
-        map_vmax_x_key = (
-            self._const.SURVEY_MAP_VMAX_X_KEY
-        ).format(
-            survey_id,
-            map_id
-        )
-        map_vmax_y_key = (
-            self._const.SURVEY_MAP_VMAX_Y_KEY
-        ).format(
-            survey_id,
-            map_id
-        )
-        map_viewbox = (
-            self._const.SURVEY_MAP_VIEWBOX_KEY
-        ).format(
-            survey_id,
-            map_id
-        )
+        map_vmax_x_key = (self._const.SURVEY_MAP_VMAX_X_KEY).format(survey_id, map_id)
+        map_vmax_y_key = (self._const.SURVEY_MAP_VMAX_Y_KEY).format(survey_id, map_id)
+        map_viewbox = (self._const.SURVEY_MAP_VIEWBOX_KEY).format(survey_id, map_id)
         map_vmax_x = self._redis.get(map_vmax_x_key)
         map_vmax_y = self._redis.get(map_vmax_y_key)
         map_viewbox = self._redis.get(map_viewbox)
 
-        data = {
-            "VMaxX": map_vmax_x,
-            "VMaxY": map_vmax_y,
-            "ViewBox": map_viewbox
-        }
+        data = {"VMaxX": map_vmax_x, "VMaxY": map_vmax_y, "ViewBox": map_viewbox}
 
         return data
 
     def check_survey_exists(self, survey_id):
-        survey_data_key = self._const.SURVEY_DATA_KEY.format(
-            survey_id
-        )
+        survey_data_key = self._const.SURVEY_DATA_KEY.format(survey_id)
         return self._redis.exists(survey_data_key)
 
     def check_map_exists(self, survey_id, map_id):
-        map_data_key = self._const.SURVEY_MAP_DATA_KEY.format(
-            survey_id,
-            map_id
-        )
+        map_data_key = self._const.SURVEY_MAP_DATA_KEY.format(survey_id, map_id)
         return self._redis.exists(map_data_key)
