@@ -152,13 +152,30 @@ def shibcallback(request):
         response.status_code = 400
         return response
 
+    try:
+        student_data = get_student_by_upi(
+            employee_id
+        )
+        http_department = student_data.department
+        http_given_name = student_data.given_name
+        http_display_name = student_data.display_name
+
+    except IndexError:
+        http_department = ''
+        http_given_name = ''
+        http_display_name = ''
+
     # TODO: Ask UCL what on earth are they doing by missing out headers, and
     # remind them we need to to be informed of these types of changes.
     # TODO: log to sentry that fields were missing...
-    department = request.META.get('HTTP_DEPARTMENT', '')
-    given_name = request.META.get('HTTP_GIVENNAME', '')
-    display_name = request.META.get('HTTP_DISPLAYNAME', '')
-    groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
+    department = request.META.get(
+        'HTTP_DEPARTMENT', http_department)
+    given_name = request.META.get(
+        'HTTP_GIVENNAME', http_given_name)
+    display_name = request.META.get(
+        'HTTP_DISPLAYNAME', http_display_name)
+    groups = request.META.get(
+        'HTTP_UCLINTRANETGROUPS', '')
 
     # TODO: Find a way to block access to alumni (do we need this?) without
     # blocking access to new students too.
