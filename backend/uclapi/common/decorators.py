@@ -49,7 +49,7 @@ def how_many_seconds_until_midnight():
 def log_api_call(request, token, token_type):
     """This functions handles logging of api calls."""
     service = request.path.split("/")[1]
-    method = request.path.split("/")[2]
+    method = "/".join(request.path.split("/")[2:])
 
     headers = request.META
     version_headers = {}
