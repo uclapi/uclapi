@@ -20,7 +20,7 @@ gunicorn==20.0.4
 greenlet==0.4.17
 hiredis==1.1.0
 jinjasql==0.1.8
-jsonpickle==1.4.1
+jsonpickle==1.4.2
 lxml==4.6.2
 pycodestyle==2.6.0
 psycopg2-binary==2.8.6
@@ -29,9 +29,9 @@ pymsteams==0.1.14
 pytz==2020.4
 raven==6.10.0
 redis==3.5.3
-requests==2.25.0
+requests==2.25.1
 requests-futures==1.0.0
-Sphinx==3.3.1
+Sphinx==3.4.0
 tqdm==4.54.1
-validators==0.18.1
+validators==0.18.2
 git+git://github.com/uclapi/django-webpack-loader@master#egg=django-webpack-loader
