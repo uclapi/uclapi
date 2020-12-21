@@ -41,7 +41,7 @@ class Command(BaseCommand):
             else:
                 print("No incident present in Cachet!")
         except Exception as occupeye_error:
-            incident_name = get_incident_name("Occupeye")
+            incident_name = get_incident_name("Occupeye-Archive")
             if incident_name:
                 try:
                     create_incident(

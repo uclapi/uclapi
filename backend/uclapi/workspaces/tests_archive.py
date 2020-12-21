@@ -67,14 +67,10 @@ class OccupEyeArchiveTestCase(TestCase):
 
         del sensor_replacement["id"]
         del sensor_replacement["datetime"]
-        self.assertDictEqual(sensor_replacement, {"new_active": True,
-                                                  "new_end_datetime": datetime(2030, 12, 31, 20, 0),
-                                                  "new_name": "Bedford Way LG16",
-                                                  "new_start_datetime": datetime(2019, 7, 6, 8, 0),
-                                                  "old_active": None,
-                                                  "old_end_datetime": None,
-                                                  "old_name": None,
-                                                  "old_start_datetime": None,
+        self.assertDictEqual(sensor_replacement, {"active": True,
+                                                  "end_datetime": datetime(2030, 12, 31, 20, 0),
+                                                  "name": "Bedford Way LG16",
+                                                  "start_datetime": datetime(2019, 7, 6, 8, 0),
                                                   "survey_id": 72})
 
     def test_historical_start(self):
@@ -127,12 +123,9 @@ class OccupEyeArchiveEdgeTestCase(TestCase):
 
         del sensor_replacement["id"]
         self.assertDictEqual(sensor_replacement, {"datetime": datetime(2020, 1, 2, 0, 0),
-                                                  "new_hardware_id": 109004,
-                                                  "new_survey_device_id": 1039,
-                                                  "new_survey_id": 10,
-                                                  "old_hardware_id": 109006,
-                                                  "old_survey_device_id": 1039,
-                                                  "old_survey_id": 10,
+                                                  "hardware_id": 109006,
+                                                  "survey_device_id": 1039,
+                                                  "survey_id": 10,
                                                   "sensor_id": 10629006})
 
     def test_survey_change(self):
@@ -144,20 +137,16 @@ class OccupEyeArchiveEdgeTestCase(TestCase):
             with open(os.path.join(__location__, "tests_archive_edge_survey_cache.json"), encoding="utf-8") as f:
                 self.run_update(json.load(f), reset=False)
 
-        survey_change = SurveyChanges.objects.all().values()
+        survey_change = SurveyChanges.objects.all().order_by("datetime").values()
         self.assertEqual(len(survey_change), 2)
         sensor_replacement = survey_change[1]
 
         del sensor_replacement["id"]
         del sensor_replacement["datetime"]
-        self.assertDictEqual(sensor_replacement, {"new_active": True,
-                                                  "new_end_datetime": datetime(2050, 1, 1, 15, 0),
-                                                  "new_name": "Replacement Room 2",
-                                                  "new_start_datetime": datetime(2010, 1, 1, 9, 0),
-                                                  "old_active": True,
-                                                  "old_end_datetime": datetime(2030, 1, 1, 15, 0),
-                                                  "old_name": "Replacement Room",
-                                                  "old_start_datetime": datetime(2010, 1, 1, 9, 0),
+        self.assertDictEqual(sensor_replacement, {"active": True,
+                                                  "end_datetime": datetime(2050, 1, 1, 15, 0),
+                                                  "name": "Replacement Room 2",
+                                                  "start_datetime": datetime(2010, 1, 1, 9, 0),
                                                   "survey_id": 10})
 
     def tearDown(self):

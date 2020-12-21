@@ -1,10 +1,11 @@
 import json
 from collections import OrderedDict
-from datetime import timedelta
+from datetime import timedelta, datetime
 from distutils.util import strtobool
 
 import redis
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 
 from workspaces.models import Historical, Sensors, Surveys
 from .constants import OccupEyeConstants
@@ -330,7 +331,11 @@ class OccupEyeApi:
         map_data_key = self._const.SURVEY_MAP_DATA_KEY.format(survey_id, map_id)
         return self._redis.exists(map_data_key)
 
-    def round_10_minutes(self, dt):
+    @staticmethod
+    def floor_10_minutes(dt: datetime) -> datetime:
+        """
+        Round down to the nearest 10 minute interval
+        """
         return dt - timedelta(minutes=dt.minute % 10,
                               seconds=dt.second,
                               microseconds=dt.microsecond)
@@ -339,31 +344,34 @@ class OccupEyeApi:
         """
         Gets historical data for a single sensor in a single survey location
         """
-        if Sensors.objects.filter(survey_id=survey_id, sensor_id=sensor_id).first() is None:
+        if not Sensors.objects.filter(survey_id=survey_id, sensor_id=sensor_id).exists():
             return None
 
         objs = Historical.objects.filter(survey_id=survey_id, sensor_id=sensor_id,
                                          datetime__range=(start_time, end_time)).order_by('datetime')
-        states = {}
 
+        # If returning the delta (exactly what is stored in the database), convert each timestamp to an ISO-format
+        # dictionary
         if delta:
-            for obj in objs:
-                states[obj.datetime.isoformat()] = obj.state
-        else:
-            start_time = self.round_10_minutes(start_time)
-            end_time = self.round_10_minutes(end_time)
+            return {obj.datetime.isoformat(): obj.state for obj in objs}
 
-            objs = {obj.datetime: obj.state for obj in objs}
+        # Else generate all possible times (10 minute intervals) between deltas and populate them with the previous
+        # value
+        states = {}
+        start_time = self.floor_10_minutes(start_time)
+        end_time = self.floor_10_minutes(end_time)
 
-            first_obj = Historical.objects.filter(survey_id=survey_id, sensor_id=sensor_id,
-                                                  datetime__lte=start_time).order_by('-datetime').first()
+        objs = {obj.datetime: obj.state for obj in objs}
 
-            state = -1 if first_obj is None else first_obj.state
-            while start_time <= end_time:
-                if start_time in objs:
-                    state = objs[start_time]
-                states[start_time.isoformat()] = state
-                start_time += timedelta(minutes=10)
+        first_obj = Historical.objects.filter(survey_id=survey_id, sensor_id=sensor_id,
+                                              datetime__lte=start_time).order_by('-datetime').values('state').first()
+
+        state = -1 if first_obj is None else first_obj["state"]
+        while start_time <= end_time:
+            if start_time in objs:
+                state = objs[start_time]
+            states[start_time.isoformat()] = state
+            start_time += timedelta(minutes=10)
 
         return states
 
@@ -392,8 +400,10 @@ class OccupEyeApi:
         """
         Gets sensors and sensor data associated with a single survey location
         """
-        survey = Surveys.objects.filter(survey_id=survey_id).first()
-        if survey is None:
+
+        try:
+            survey = Surveys.objects.get(survey_id=survey_id)
+        except ObjectDoesNotExist:
             return None
 
         objs = Sensors.objects.filter(survey_id=survey_id)
@@ -408,8 +418,8 @@ class OccupEyeApi:
 
     def get_historical_list_surveys(self):
         """
-       Gets all survey data
-       """
+        Gets all survey data
+        """
         objs = Surveys.objects.all()
         surveys = []
         for obj in objs:
