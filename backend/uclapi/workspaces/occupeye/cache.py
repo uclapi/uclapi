@@ -1,46 +1,25 @@
 import json
-
-from base64 import b64encode
 from datetime import datetime, timedelta
 from distutils.util import strtobool
 
 import redis
-import requests
-
-from common.helpers import LOCAL_TIMEZONE
-
 from django.conf import settings
 
+from common.helpers import LOCAL_TIMEZONE
 from .api import OccupEyeApi
 from .constants import OccupEyeConstants
+from .endpoint import OccupeyeEndpoint, Endpoint
 from .exceptions import OccupEyeOtherSensorState
-from .token import get_bearer_token
-from .utils import (
-    authenticated_request,
-    is_sensor_occupied
-)
+from .utils import is_sensor_occupied
 
 
-class OccupeyeCache():
-    def __init__(self):
-        self._redis = redis.Redis(
-            host=settings.REDIS_UCLAPI_HOST,
-            charset="utf-8",
-            decode_responses=True
-        )
+class OccupeyeCache:
+    def __init__(self, endpoint: Endpoint = None):
+        if endpoint is None:
+            endpoint = OccupeyeEndpoint()
+        self._redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
         self._const = OccupEyeConstants()
-
-        access_token = self._redis.get(
-            self._const.ACCESS_TOKEN_KEY
-        )
-        access_token_expiry = self._redis.get(
-            self._const.ACCESS_TOKEN_EXPIRY_KEY
-        )
-        self.bearer_token = get_bearer_token(
-            access_token,
-            access_token_expiry,
-            self._const
-        )
+        self._endpoint = endpoint
 
     def cache_maps_for_survey(self, survey_id):
         """
@@ -49,39 +28,23 @@ class OccupeyeCache():
         will cache data about those maps in Redis so that it
         can be quickly retrieved later.
         """
-        survey_maps_list_key = (
-            self._const.SURVEY_MAPS_LIST_KEY
-        ).format(survey_id)
-        survey_maps_data = authenticated_request(
-            self._const.URL_MAPS_BY_SURVEY.format(survey_id),
-            self.bearer_token
-        )
+        survey_maps_list_key = (self._const.SURVEY_MAPS_LIST_KEY).format(survey_id)
+        survey_maps_data = self._endpoint.request(self._const.URL_MAPS_BY_SURVEY.format(survey_id))
         pipeline = self._redis.pipeline()
 
-        self.delete_maps(
-            pipeline,
-            survey_id,
-            survey_maps_list_key,
-            survey_maps_data
-        )
+        self.delete_maps(pipeline, survey_id, survey_maps_list_key, survey_maps_data)
 
         for survey_map in survey_maps_data:
-            survey_map_id = self._const.SURVEY_MAP_DATA_KEY.format(
-                survey_id,
-                str(survey_map["MapID"])
-            )
+            survey_map_id = self._const.SURVEY_MAP_DATA_KEY.format(survey_id, str(survey_map["MapID"]))
             pipeline.hmset(
                 survey_map_id,
                 {
                     "id": survey_map["MapID"],
                     "name": survey_map["MapName"],
-                    "image_id": survey_map["ImageID"]
-                }
+                    "image_id": survey_map["ImageID"],
+                },
             )
-            pipeline.rpush(
-                survey_maps_list_key,
-                survey_map["MapID"]
-            )
+            pipeline.rpush(survey_maps_list_key, survey_map["MapID"])
 
         pipeline.execute()
 
@@ -92,38 +55,26 @@ class OccupeyeCache():
         helper function above to tie all maps to surveys.
         """
         pipeline = self._redis.pipeline()
-        surveys_data = authenticated_request(
-            self._const.URL_SURVEYS,
-            self.bearer_token
-        )
+        surveys_data = self._endpoint.request(self._const.URL_SURVEYS)
         self.delete_surveys(pipeline, surveys_data)
         for survey in surveys_data:
             # Check whether the survey has been discontinued. If so, we skip
             # over it and refuse to cache it as it is now irrelevant.
             if "EndDate" in survey:
-                end_date = datetime.strptime(
-                    survey["EndDate"],
-                    "%Y-%m-%d"
-                ).date()
+                end_date = datetime.strptime(survey["EndDate"], "%Y-%m-%d").date()
                 if datetime.now().date() > end_date:
                     continue
 
             survey_id = survey["SurveyID"]
-            survey_key = self._const.SURVEY_DATA_KEY.format(
-                str(survey_id)
-            )
+            survey_key = self._const.SURVEY_DATA_KEY.format(str(survey_id))
             # We check if the Survey's ID is in our list of staff survey
             # constants. If so, we mark it as such so we can filter them
             # out for students by default.
-            staff_survey = str(
-                int(survey["SurveyID"]) in self._const.STAFF_SURVEY_IDS
-            )
+            staff_survey = str(int(survey["SurveyID"]) in self._const.STAFF_SURVEY_IDS)
             if survey["Name"] in self._const.SURVEY_LOCATIONS:
                 location_data = self._const.SURVEY_LOCATIONS[survey["Name"]]
             else:
-                location_data = {
-                    "lat": "", "long": "", "address": ["", "", "", ""]
-                }
+                location_data = {"lat": "", "long": "", "address": ["", "", "", ""]}
             pipeline.hmset(
                 survey_key,
                 {
@@ -138,13 +89,10 @@ class OccupeyeCache():
                     "address1": location_data["address"][0],
                     "address2": location_data["address"][1],
                     "address3": location_data["address"][2],
-                    "address4": location_data["address"][3]
-                }
+                    "address4": location_data["address"][3],
+                },
             )
-            pipeline.lpush(
-                self._const.SURVEYS_LIST_KEY,
-                str(survey_id)
-            )
+            pipeline.lpush(self._const.SURVEYS_LIST_KEY, str(survey_id))
             self.cache_maps_for_survey(survey_id)
 
         pipeline.execute()
@@ -154,28 +102,10 @@ class OccupeyeCache():
         Downloads map images from the API and stores their
         base64 representation and associated data type in Redis.
         """
-        headers = {
-            "Authorization": self.bearer_token
-        }
-        url = self._const.URL_IMAGE.format(image_id)
-        response = requests.get(
-            url=url,
-            headers=headers,
-            stream=True
-        )
-        content_type = response.headers['Content-Type']
-
-        raw_image = response.content
-        image_b64 = b64encode(raw_image)
+        image, content_type = self._endpoint.image(image_id)
         pipeline = self._redis.pipeline()
-        pipeline.set(
-            self._const.IMAGE_BASE64_KEY.format(image_id),
-            image_b64
-        )
-        pipeline.set(
-            self._const.IMAGE_CONTENT_TYPE_KEY.format(image_id),
-            content_type
-        )
+        pipeline.set(self._const.IMAGE_BASE64_KEY.format(image_id), image)
+        pipeline.set(self._const.IMAGE_CONTENT_TYPE_KEY.format(image_id), content_type)
         pipeline.execute()
 
     def cache_survey_sensors_max_timestamp(self, survey_id):
@@ -186,23 +116,8 @@ class OccupeyeCache():
         This is especially important given how much data we
         cache.
         """
-        headers = {
-            "Authorization": self.get_bearer_token(self._const)
-        }
-        url = self._const.URL_SURVEY_MAX_TIMESTAMP.format(
-            survey_id
-        )
-        r = requests.get(
-            url=url,
-            headers=headers
-        )
-        max_sensor_timestamp = r.text.replace('"', '')
-        self._redis.set(
-            self._const.SURVEY_MAX_TIMESTAMP_KEY.format(
-                survey_id
-            ),
-            max_sensor_timestamp
-        )
+        max_sensor_timestamp = self._endpoint.request_fragment(self._const.URL_SURVEY_MAX_TIMESTAMP.format(survey_id))
+        self._redis.set(self._const.SURVEY_MAX_TIMESTAMP_KEY.format(survey_id), max_sensor_timestamp)
 
     def cache_survey_sensor_data(self, survey_id):
         """
@@ -214,88 +129,57 @@ class OccupeyeCache():
         does not create any lists of sensors (we just cache data
         about each one by ID)
         """
-        all_sensors_data = authenticated_request(
-            self._const.URL_SURVEY_DEVICES.format(
-                survey_id
-            ),
-            self.bearer_token
-        )
+        all_sensors_data = self._endpoint.request(self._const.URL_SURVEY_DEVICES.format(survey_id))
         pipeline = self._redis.pipeline()
-        survey_sensors_list_key = (
-            self._const.SURVEY_SENSORS_LIST_KEY
-        ).format(survey_id)
-        self.delete_sensors(
-            pipeline,
-            survey_id,
-            survey_sensors_list_key,
-            all_sensors_data
-        )
+        survey_sensors_list_key = self._const.SURVEY_SENSORS_LIST_KEY.format(survey_id)
+        self.delete_sensors(pipeline, survey_id, survey_sensors_list_key, all_sensors_data)
 
         for sensor_data in all_sensors_data:
             hardware_id = sensor_data["HardwareID"]
-            sensor_data_key = (
-                self._const.SURVEY_SENSOR_DATA_KEY
-            ).format(
-                survey_id,
-                hardware_id
-            )
+            sensor_data_key = (self._const.SURVEY_SENSOR_DATA_KEY).format(survey_id, hardware_id)
 
             pipeline.delete(sensor_data_key)
-            pipeline.hmset(sensor_data_key, {
-                "survey_id": sensor_data["SurveyID"],
-                "hardware_id": sensor_data["HardwareID"],
-                "survey_device_id": sensor_data["SurveyDeviceID"],
-                "host_address": str(sensor_data["HostAddress"]),
-                "pir_address": str(sensor_data["PIRAddress"]),
-                "device_type": str(sensor_data["DeviceType"]),
-                "location": str(sensor_data["Location"]),
-                "description_1": str(sensor_data["Description1"]),
-                "description_2": str(sensor_data["Description2"]),
-                "description_3": str(sensor_data["Description3"]),
-                "room_id": sensor_data["RoomID"],
-                "room_name": str(sensor_data["RoomName"]),
-                "share_id": str(sensor_data["ShareID"]),
-                "floor": str(sensor_data["Floor"]),
-                "room_type": str(sensor_data["RoomType"]),
-                "building_name": str(sensor_data["Building"]),
-                "room_description": str(sensor_data["RoomDescription"])
-            })
-
-            pipeline.rpush(
-                survey_sensors_list_key,
-                hardware_id
+            pipeline.hmset(
+                sensor_data_key,
+                {
+                    "survey_id": sensor_data["SurveyID"],
+                    "hardware_id": sensor_data["HardwareID"],
+                    "survey_device_id": sensor_data["SurveyDeviceID"],
+                    "host_address": str(sensor_data["HostAddress"]),
+                    "pir_address": str(sensor_data["PIRAddress"]),
+                    "device_type": str(sensor_data["DeviceType"]),
+                    "location": str(sensor_data["Location"]),
+                    "description_1": str(sensor_data["Description1"]),
+                    "description_2": str(sensor_data["Description2"]),
+                    "description_3": str(sensor_data["Description3"]),
+                    "room_id": sensor_data["RoomID"],
+                    "room_name": str(sensor_data["RoomName"]),
+                    "share_id": str(sensor_data["ShareID"]),
+                    "floor": str(sensor_data["Floor"]),
+                    "room_type": str(sensor_data["RoomType"]),
+                    "building_name": str(sensor_data["Building"]),
+                    "room_description": str(sensor_data["RoomDescription"]),
+                },
             )
+
+            pipeline.rpush(survey_sensors_list_key, hardware_id)
         pipeline.execute()
 
     def cache_all_survey_sensor_states(self, survey_id):
         """
         Caches all sensors in a survey, including their latest states
         """
-        all_sensors_data = authenticated_request(
-            self._const.URL_SURVEY_DEVICES_LATEST.format(
-                survey_id
-            ),
-            self.bearer_token
-        )
+        all_sensors_data = self._endpoint.request(self._const.URL_SURVEY_DEVICES_LATEST.format(survey_id))
         if not isinstance(all_sensors_data, list):
-            print(
-                "[-] Survey {} has bad sensor data, ignoring...".format(
-                    survey_id
-                )
-            )
+            print("[-] Survey {} has bad sensor data, ignoring...".format(survey_id))
             return
         pipeline = self._redis.pipeline()
         for sensor_data in all_sensors_data:
             hardware_id = sensor_data["HardwareID"]
-            sensor_status_key = (
-                self._const.SURVEY_SENSOR_STATUS_KEY
-            ).format(survey_id, hardware_id)
+            sensor_status_key = self._const.SURVEY_SENSOR_STATUS_KEY.format(survey_id, hardware_id)
 
             try:
-                occupied_state = is_sensor_occupied(
-                    sensor_data["LastTriggerType"],
-                    sensor_data["LastTriggerTime"]
-                )
+                occupied_state = is_sensor_occupied(sensor_data["LastTriggerType"], sensor_data["LastTriggerTime"])
             except OccupEyeOtherSensorState:
                 # This is a rare case, so just set it to False.
                 # Easier than expecting our clients to deal with null
@@ -304,7 +188,7 @@ class OccupeyeCache():
                 "occupied": str(occupied_state),
                 "hardware_id": str(sensor_data["HardwareID"]),
                 "last_trigger_type": str(sensor_data["LastTriggerType"]),
-                "last_trigger_timestamp": str(sensor_data["LastTriggerTime"])
+                "last_trigger_timestamp": str(sensor_data["LastTriggerTime"]),
             }
             pipeline.hmset(sensor_status_key, sensor_status)
 
@@ -316,15 +200,10 @@ class OccupeyeCache():
         Map ID requested.
         """
         url = self._const.URL_MAPS.format(map_id)
-        all_map_sensors_data = authenticated_request(
-            url,
-            self.bearer_token
-        )
+        all_map_sensors_data = self._endpoint.request(url)
 
         pipeline = self._redis.pipeline()
-        map_sensors_list_key = (
-            self._const.SURVEY_MAP_SENSORS_LIST_KEY
-        ).format(survey_id, map_id)
+        map_sensors_list_key = (self._const.SURVEY_MAP_SENSORS_LIST_KEY).format(survey_id, map_id)
 
         pipeline.delete(map_sensors_list_key)
 
@@ -333,49 +212,23 @@ class OccupeyeCache():
         # implement mapping functionality
         for map_sensor_data in all_map_sensors_data["MapItemViewModels"]:
             hardware_id = map_sensor_data["HardwareID"]
-            pipeline.rpush(
-                map_sensors_list_key,
-                hardware_id
+            pipeline.rpush(map_sensors_list_key, hardware_id)
+            properties_key = self._const.SURVEY_MAP_SENSOR_PROPERTIES_KEY.format(survey_id, map_id, hardware_id)
+            pipeline.hmset(
+                properties_key,
+                {
+                    "hardware_id": map_sensor_data["HardwareID"],
+                    "x_pos": map_sensor_data["X"],
+                    "y_pos": map_sensor_data["Y"],
+                },
             )
-            properties_key = (
-                self._const.SURVEY_MAP_SENSOR_PROPERTIES_KEY
-            ).format(
-                survey_id,
-                map_id,
-                hardware_id
-            )
-            pipeline.hmset(properties_key, {
-                "hardware_id": map_sensor_data["HardwareID"],
-                "x_pos": map_sensor_data["X"],
-                "y_pos": map_sensor_data["Y"]
-            })
 
-        map_vmax_x_key = self._const.SURVEY_MAP_VMAX_X_KEY.format(
-            survey_id,
-            map_id
-        )
-        map_vmax_y_key = self._const.SURVEY_MAP_VMAX_Y_KEY.format(
-            survey_id,
-            map_id
-        )
-        map_viewbox_key = (
-            self._const.SURVEY_MAP_VIEWBOX_KEY
-        ).format(
-            survey_id,
-            map_id
-        )
-        pipeline.set(
-            map_vmax_x_key,
-            all_map_sensors_data["VMaxX"]
-        )
-        pipeline.set(
-            map_vmax_y_key,
-            all_map_sensors_data["VMaxY"]
-        )
-        pipeline.set(
-            map_viewbox_key,
-            all_map_sensors_data["ViewBox"]
-        )
+        map_vmax_x_key = self._const.SURVEY_MAP_VMAX_X_KEY.format(survey_id, map_id)
+        map_vmax_y_key = self._const.SURVEY_MAP_VMAX_Y_KEY.format(survey_id, map_id)
+        map_viewbox_key = self._const.SURVEY_MAP_VIEWBOX_KEY.format(survey_id, map_id)
+        pipeline.set(map_vmax_x_key, all_map_sensors_data["VMaxX"])
+        pipeline.set(map_vmax_y_key, all_map_sensors_data["VMaxY"])
+        pipeline.set(map_viewbox_key, all_map_sensors_data["ViewBox"])
 
         pipeline.execute()
 
@@ -392,16 +245,9 @@ class OccupeyeCache():
 
         end_date = datetime.now() - timedelta(days=1)
         start_date = end_date - timedelta(days=day_count - 1)
-        url = self._const.URL_QUERY.format(
-            start_date.strftime("%Y-%m-%d"),
-            end_date.strftime("%Y-%m-%d"),
-            survey_id
-        )
+        url = self._const.URL_QUERY.format(start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"), survey_id)
 
-        response = authenticated_request(
-            url,
-            self.bearer_token
-        )
+        response = self._endpoint.request(url)
 
         slots = {}
 
@@ -416,10 +262,7 @@ class OccupeyeCache():
                     slots[result["TimeSlot"]]["CountOcc"] += result["CountOcc"]
                 slots[result["TimeSlot"]]["Results"] += 1
             else:
-                slot_data = {
-                    "CountTotal": result["CountTotal"],
-                    "Results": 1
-                }
+                slot_data = {"CountTotal": result["CountTotal"], "Results": 1}
                 if result["CountOcc"] is None:
                     slot_data["CountOcc"] = 0
                 else:
@@ -433,17 +276,12 @@ class OccupeyeCache():
             data[key] = {
                 "sensors_absent": value["CountTotal"] - average,
                 "sensors_occupied": average,
-                "sensors_total": value["CountTotal"]
+                "sensors_total": value["CountTotal"],
             }
 
-        average_key = (
-            self._const.TIMEAVERAGE_KEY
-        ).format(survey_id, day_count)
+        average_key = self._const.TIMEAVERAGE_KEY.format(survey_id, day_count)
 
-        self._redis.set(
-            average_key,
-            json.dumps(data, sort_keys=True)
-        )
+        self._redis.set(average_key, json.dumps(data, sort_keys=True))
 
     def cache_common_summaries(self):
         """
@@ -455,27 +293,23 @@ class OccupeyeCache():
         survey_ids = self._redis.lrange(
             self._const.SURVEYS_LIST_KEY,
             0,
-            self._redis.llen(self._const.SURVEYS_LIST_KEY)
+            self._redis.llen(self._const.SURVEYS_LIST_KEY),
         )
         surveys = []
         api = OccupEyeApi()
         for survey_id in survey_ids:
-            survey_redis_data = self._redis.hgetall(
-                self._const.SURVEY_DATA_KEY.format(survey_id)
-            )
+            survey_redis_data = self._redis.hgetall(self._const.SURVEY_DATA_KEY.format(survey_id))
             survey_data = {
                 "id": int(survey_id),
                 "name": survey_redis_data["name"],
                 "maps": [],
-                "staff_survey": strtobool(
-                    str(survey_redis_data["staff_survey"])
-                ),
+                "staff_survey": strtobool(str(survey_redis_data["staff_survey"])),
                 "sensors_absent": 0,
                 "sensors_occupied": 0,
-                "sensors_other": 0
+                "sensors_other": 0,
             }
 
-            '''
+            """
             Begin Hotfix
 
             Cache data for the survey as a whole. This is to fix a bug in
@@ -483,30 +317,20 @@ class OccupeyeCache():
             returns every sensor in a survey. For longevity, once this code
             is removed, the map data should update the survey_data totals
             instead.
-            '''
+            """
             all_sensors = self._redis.lrange(
                 self._const.SURVEY_SENSORS_LIST_KEY.format(survey_id),
                 0,
-                self._redis.llen(
-                    self._const.SURVEY_SENSORS_LIST_KEY.format(survey_id)
-                )
+                self._redis.llen(self._const.SURVEY_SENSORS_LIST_KEY.format(survey_id)),
             )
             for sensor_hw_id in all_sensors:
-                sensor_map = self._redis.hgetall(
-                    self._const.SURVEY_SENSOR_STATUS_KEY.format(
-                        survey_id,
-                        sensor_hw_id
-                    )
-                )
-                if (
-                    "last_trigger_type" not in sensor_map or
-                    "last_trigger_timestamp" not in sensor_map
-                ):
+                sensor_map = self._redis.hgetall(self._const.SURVEY_SENSOR_STATUS_KEY.format(survey_id, sensor_hw_id))
+                if "last_trigger_type" not in sensor_map or "last_trigger_timestamp" not in sensor_map:
                     continue
                 try:
                     occupied = is_sensor_occupied(
                         sensor_map["last_trigger_type"],
-                        sensor_map["last_trigger_timestamp"]
+                        sensor_map["last_trigger_timestamp"],
                     )
                     if occupied:
                         survey_data["sensors_occupied"] += 1
@@ -515,9 +339,9 @@ class OccupeyeCache():
                 except OccupEyeOtherSensorState:
                     survey_data["sensors_other"] += 1
 
-            '''
+            """
             End of Hotfix
-            '''
+            """
 
             sensors = api.get_survey_sensors(survey_id)
             for survey_map in sensors["maps"]:
@@ -526,14 +350,14 @@ class OccupeyeCache():
                     "name": survey_map["name"],
                     "sensors_absent": 0,
                     "sensors_occupied": 0,
-                    "sensors_other": 0
+                    "sensors_other": 0,
                 }
                 for hw_id, sensor in survey_map["sensors"].items():
                     if "last_trigger_type" in sensor:
                         try:
                             occupied = is_sensor_occupied(
                                 sensor["last_trigger_type"],
-                                sensor["last_trigger_timestamp"]
+                                sensor["last_trigger_timestamp"],
                             )
                             if occupied:
                                 map_data["sensors_occupied"] += 1
@@ -547,26 +371,19 @@ class OccupeyeCache():
                 # Cache inside a list to match the outer format
                 self._redis.set(
                     self._const.SUMMARY_CACHE_SURVEY.format(survey_id),
-                    json.dumps(
-                        [
-                            {**survey_data}
-                        ]
-                    )
+                    json.dumps([{**survey_data}]),
                 )
             surveys.append(survey_data)
 
         # Now we have summary information for every survey
-        self._redis.set(
-            self._const.SUMMARY_CACHE_ALL_SURVEYS,
-            json.dumps(surveys)
-        )
+        self._redis.set(self._const.SUMMARY_CACHE_ALL_SURVEYS, json.dumps(surveys))
         self._redis.set(
             self._const.SUMMARY_CACHE_ALL_STAFF_SURVEYS,
-            json.dumps([s for s in surveys if s['staff_survey']])
+            json.dumps([s for s in surveys if s["staff_survey"]]),
         )
         self._redis.set(
             self._const.SUMMARY_CACHE_ALL_STUDENT_SURVEYS,
-            json.dumps([s for s in surveys if not s['staff_survey']])
+            json.dumps([s for s in surveys if not s["staff_survey"]]),
         )
 
     def feed_cache(self, full):
@@ -582,11 +399,7 @@ class OccupeyeCache():
         if full:
             self.cache_survey_data()
 
-        survey_ids = self._redis.lrange(
-            "occupeye:surveys",
-            0,
-            self._redis.llen("occupeye:surveys") - 1
-        )
+        survey_ids = self._redis.lrange("occupeye:surveys", 0, self._redis.llen("occupeye:surveys") - 1)
         # Cache all the latest surveys
         print("[+] Surveys")
         for survey_id in survey_ids:
@@ -597,127 +410,76 @@ class OccupeyeCache():
                 # Cache the data for every sensor in the survey
                 self.cache_survey_sensor_data(survey_id)
 
-                survey_maps_key = (
-                    self._const.SURVEY_MAPS_LIST_KEY
-                ).format(survey_id)
-                survey_map_ids = self._redis.lrange(
-                    survey_maps_key,
-                    0,
-                    self._redis.llen(survey_maps_key) - 1
-                )
+                survey_maps_key = (self._const.SURVEY_MAPS_LIST_KEY).format(survey_id)
+                survey_map_ids = self._redis.lrange(survey_maps_key, 0, self._redis.llen(survey_maps_key) - 1)
                 # Cache data for every map within every survey
                 for survey_map_id in survey_map_ids:
-                    survey_map = self._redis.hgetall(
-                        self._const.SURVEY_MAP_DATA_KEY.format(
-                            survey_id,
-                            survey_map_id
-                        )
-                    )
+                    survey_map = self._redis.hgetall(self._const.SURVEY_MAP_DATA_KEY.format(survey_id, survey_map_id))
                     # Cache the base64 representation of the raw
                     # image for the survey
                     image_id = int(survey_map["image_id"])
                     self.cache_image(image_id)
                     # Cache a list of every sensor in every map
-                    self.cache_sensors_for_map(
-                        survey_id,
-                        survey_map_id
-                    )
+                    self.cache_sensors_for_map(survey_id, survey_map_id)
                 # Cache all the historical data for the last x days
                 for day_count in self._const.VALID_HISTORICAL_DATA_DAYS:
-                    self.cache_historical_time_usage_data(
-                        survey_id,
-                        day_count
-                    )
+                    self.cache_historical_time_usage_data(survey_id, day_count)
 
             self.cache_all_survey_sensor_states(survey_id)
+            self.cache_survey_sensors_max_timestamp(survey_id)
         print("[+] Summaries")
         self.cache_common_summaries()
 
         print("[+] Setting Last-Modified key")
         last_modified_key = "http:headers:Last-Modified:Workspaces"
 
-        current_timestamp = datetime.now(LOCAL_TIMEZONE).isoformat(
-            timespec='seconds'
-        )
+        current_timestamp = datetime.now(LOCAL_TIMEZONE).isoformat(timespec="seconds")
         self._redis.set(last_modified_key, current_timestamp)
 
         print("[+] Done")
 
-    def delete_maps(
-        self, pipeline, survey_id,
-        survey_maps_list_key, survey_maps_data
-    ):
+    def delete_maps(self, pipeline, survey_id, survey_maps_list_key, survey_maps_data):
         """Delete maps that no longer exist in a survey"""
-        redis_survey_maps_set = set(self._redis.lrange(
-            survey_maps_list_key,
-            0,
-            self._redis.llen(survey_maps_list_key)
-        ))
-        api_survey_maps_id_set = set(
-            [str(survey_map["MapID"]) for survey_map in survey_maps_data]
+        redis_survey_maps_set = set(
+            self._redis.lrange(survey_maps_list_key, 0, self._redis.llen(survey_maps_list_key))
         )
+        api_survey_maps_id_set = set([str(survey_map["MapID"]) for survey_map in survey_maps_data])
         maps_to_delete = redis_survey_maps_set - api_survey_maps_id_set
 
         pipeline.delete(survey_maps_list_key)
         for map_id in maps_to_delete:
-            pipeline.delete(
-                self._const.SURVEY_MAP_DATA_KEY.format(survey_id, map_id)
-            )
-            pipeline.delete(
-                self._const.SURVEY_MAP_VMAX_X_KEY.format(survey_id, map_id)
-            )
-            pipeline.delete(
-                self._const.SURVEY_MAP_VMAX_Y_KEY.format(survey_id, map_id)
-            )
-            pipeline.delete(
-                self._const.SURVEY_MAP_VIEWBOX_KEY.format(survey_id, map_id)
-            )
-            survey_maps_sensors_key = (
-                self._const.SURVEY_MAP_SENSORS_LIST_KEY.format(
-                    survey_id,
-                    map_id
-                )
-            )
+            pipeline.delete(self._const.SURVEY_MAP_DATA_KEY.format(survey_id, map_id))
+            pipeline.delete(self._const.SURVEY_MAP_VMAX_X_KEY.format(survey_id, map_id))
+            pipeline.delete(self._const.SURVEY_MAP_VMAX_Y_KEY.format(survey_id, map_id))
+            pipeline.delete(self._const.SURVEY_MAP_VIEWBOX_KEY.format(survey_id, map_id))
+            survey_maps_sensors_key = self._const.SURVEY_MAP_SENSORS_LIST_KEY.format(survey_id, map_id)
             survey_maps_sensors_list = self._redis.lrange(
-                survey_maps_sensors_key,
-                0,
-                self._redis.llen(survey_maps_sensors_key)
+                survey_maps_sensors_key, 0, self._redis.llen(survey_maps_sensors_key)
             )
             for sensor_id in survey_maps_sensors_list:
-                pipeline.delete(
-                    self._const.SURVEY_MAP_SENSOR_PROPERTIES_KEY.format(
-                        survey_id,
-                        map_id,
-                        sensor_id
-                    )
-                )
-            image_id = self._redis.hgetall(
-                self._const.SURVEY_MAP_DATA_KEY.format(survey_id, map_id)
-            )['image_id']
+                pipeline.delete(self._const.SURVEY_MAP_SENSOR_PROPERTIES_KEY.format(survey_id, map_id, sensor_id))
+            image_id = self._redis.hgetall(self._const.SURVEY_MAP_DATA_KEY.format(survey_id, map_id))["image_id"]
             self.delete_image(pipeline, image_id)
 
             pipeline.delete(survey_maps_sensors_key)
 
     def delete_surveys(self, pipeline, surveys_data):
         """Delete surveys that no longer exist"""
-        redis_survey_set = set(self._redis.lrange(
-            self._const.SURVEYS_LIST_KEY,
-            0,
-            self._redis.llen(self._const.SURVEYS_LIST_KEY)
-        ))
-        api_survey_id_set = set(
-            [str(survey["SurveyID"]) for survey in surveys_data]
+        redis_survey_set = set(
+            self._redis.lrange(
+                self._const.SURVEYS_LIST_KEY,
+                0,
+                self._redis.llen(self._const.SURVEYS_LIST_KEY),
+            )
         )
+        api_survey_id_set = set([str(survey["SurveyID"]) for survey in surveys_data])
         surveys_to_delete = redis_survey_set - api_survey_id_set
 
         for survey in surveys_data:
             # Check whether the survey has been discontinued.
             # If so, we refuse to cache it as it is now irrelevant.
             if "EndDate" in survey:
-                end_date = datetime.strptime(
-                    survey["EndDate"],
-                    "%Y-%m-%d"
-                ).date()
+                end_date = datetime.strptime(survey["EndDate"], "%Y-%m-%d").date()
                 if datetime.now().date() > end_date:
                     surveys_to_delete.add(str(survey["SurveyID"]))
 
@@ -725,53 +487,29 @@ class OccupeyeCache():
         for survey_id in surveys_to_delete:
             pipeline.delete(self._const.SURVEY_DATA_KEY.format(survey_id))
             pipeline.delete(self._const.SUMMARY_CACHE_SURVEY.format(survey_id))
-            pipeline.delete(
-                self._const.SURVEY_MAX_TIMESTAMP_KEY.format(survey_id)
-            )
+            pipeline.delete(self._const.SURVEY_MAX_TIMESTAMP_KEY.format(survey_id))
 
-            survey_maps_list_key = self._const.SURVEY_MAPS_LIST_KEY.format(
-                survey_id
-            )
+            survey_maps_list_key = self._const.SURVEY_MAPS_LIST_KEY.format(survey_id)
             self.delete_maps(pipeline, survey_id, survey_maps_list_key, [])
 
-            survey_sensors_list_key = (
-                self._const.SURVEY_SENSORS_LIST_KEY.format(survey_id)
-            )
-            self.delete_sensors(
-                pipeline,
-                survey_id,
-                survey_sensors_list_key,
-                []
-            )
+            survey_sensors_list_key = self._const.SURVEY_SENSORS_LIST_KEY.format(survey_id)
+            self.delete_sensors(pipeline, survey_id, survey_sensors_list_key, [])
 
-    def delete_sensors(
-        self, pipeline, survey_id,
-        survey_sensors_list_key, all_sensors_data
-    ):
+    def delete_sensors(self, pipeline, survey_id, survey_sensors_list_key, all_sensors_data):
         """Delete sensors that no longer exist in a survey"""
-        redis_survey_sensors_set = set(self._redis.lrange(
-            survey_sensors_list_key,
-            0,
-            self._redis.llen(survey_sensors_list_key)
-        ))
+        redis_survey_sensors_set = set(
+            self._redis.lrange(survey_sensors_list_key, 0, self._redis.llen(survey_sensors_list_key))
+        )
         api_survey_sensors_id_set = set(
             [str(survey_sensor["HardwareID"]) for survey_sensor in all_sensors_data]  # noqa
         )
-        sensors_to_delete = (
-            redis_survey_sensors_set - api_survey_sensors_id_set
-        )
+        sensors_to_delete = redis_survey_sensors_set - api_survey_sensors_id_set
         pipeline.delete(survey_sensors_list_key)
         for sensor_id in sensors_to_delete:
-            pipeline.delete(
-                self._const.SURVEY_SENSOR_DATA_KEY.format(survey_id, sensor_id)
-            )
-            pipeline.delete(
-                self._const.SURVEY_SENSOR_STATUS_KEY.format(
-                    survey_id, sensor_id
-                )
-            )
+            pipeline.delete(self._const.SURVEY_SENSOR_DATA_KEY.format(survey_id, sensor_id))
+            pipeline.delete(self._const.SURVEY_SENSOR_STATUS_KEY.format(survey_id, sensor_id))
 
     def delete_image(self, pipeline, image_id):
-        "Deletes images that no longer are used by the API"""
+        "Deletes images that no longer are used by the API" ""
         pipeline.delete(self._const.IMAGE_BASE64_KEY.format(image_id))
         pipeline.delete(self._const.IMAGE_CONTENT_TYPE_KEY.format(image_id))
