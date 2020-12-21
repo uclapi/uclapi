@@ -29,7 +29,7 @@ pymsteams==0.1.14
 pytz==2020.4
 raven==6.10.0
 redis==3.5.3
-requests==2.25.0
+requests==2.25.1
 requests-futures==1.0.0
 Sphinx==3.3.1
 tqdm==4.54.1
