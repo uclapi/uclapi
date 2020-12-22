@@ -45,7 +45,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "axios": "^0.20.0",
-    "dayjs": "^1.9.1",
+    "dayjs": "^1.9.7",
     "include-media": "^1.4.9",
     "js-cookie": "^2.2.1",
     "prop-types": "^15.7.2",
