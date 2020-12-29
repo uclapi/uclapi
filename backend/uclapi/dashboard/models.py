@@ -20,10 +20,16 @@ class User(models.Model):
     email = models.CharField(max_length=100)
     full_name = models.CharField(max_length=1000)
     given_name = models.CharField(max_length=100)
+    sn = models.CharField(max_length=100, default='')
     cn = models.CharField(max_length=100, unique=True)
     department = models.CharField(max_length=1000)
     employee_id = models.CharField(max_length=100, unique=True)
     raw_intranet_groups = models.CharField(max_length=2000)
+    affiliation = models.CharField(max_length=2000, default='')
+    unscoped_affiliation = models.CharField(max_length=2000, default='')
+    # Ideally we'd mandate mail to be unique in the database but as we already have rows in the table, we won't know
+    # what value to put in the existing rows during the migration.
+    mail = models.CharField(max_length=100, default='')
     agreement = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
     dev_quota = models.IntegerField(default=10000)
