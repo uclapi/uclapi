@@ -514,7 +514,11 @@ class ViewsTestCase(TestCase):
             HTTP_GIVENNAME='Test New Name',
             HTTP_DISPLAYNAME='Test User',
             HTTP_EMPLOYEEID='xxxtest01',
-            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all',
+            HTTP_MAIL='test.name.01@ucl.ac.uk',
+            HTTP_SN='Second Name',
+            HTTP_AFFILIATION='test@ucl.ac.uk',
+            HTTP_UNSCOPED_AFFILIATION='test'
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.client.session['user_id'], test_user_.id)
@@ -560,7 +564,8 @@ class ViewsTestCase(TestCase):
             },
             HTTP_EPPN='testxxx@ucl.ac.uk',
             HTTP_CN='testxxx',
-            # NOTE: missing HTTP_DEPARTMENT, HTTP_GIVENNAME, HTTP_DISPLAYNAME
+            # NOTE: missing HTTP_DEPARTMENT, HTTP_GIVENNAME, HTTP_DISPLAYNAME,
+            # HTTP_MAIL, HTTP_SN, HTTP_AFFILIATION and HTTP_UNSCOPED_AFFILIATION
             HTTP_EMPLOYEEID='xxxtest01',
             HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
         )
@@ -583,6 +588,22 @@ class ViewsTestCase(TestCase):
             test_user_.full_name,
             "Test User"
         )
+        self.assertEqual(
+            test_user_.mail,
+            "test.name.01@ucl.ac.uk"
+        )
+        self.assertEqual(
+            test_user_.sn,
+            "Second Name"
+        )
+        self.assertEqual(
+            test_user_.affiliation,
+            "test@ucl.ac.uk"
+        )
+        self.assertEqual(
+            test_user_.unscoped_affiliation,
+            "test"
+        )
 
         # Now let's test when critical fields are missing
         response = self.client.get(
@@ -596,7 +617,11 @@ class ViewsTestCase(TestCase):
             HTTP_DEPARTMENT='Dept of Tests',
             HTTP_GIVENNAME='Test New Name',
             HTTP_DISPLAYNAME='Test User',
-            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all',
+            HTTP_MAIL='test.name.01@ucl.ac.uk',
+            HTTP_SN='Second Name',
+            HTTP_AFFILIATION='test@ucl.ac.uk',
+            HTTP_UNSCOPED_AFFILIATION='test'
         )
         self.assertEqual(response.status_code, 400)
 
@@ -611,7 +636,11 @@ class ViewsTestCase(TestCase):
             HTTP_GIVENNAME='Test New Name',
             HTTP_DISPLAYNAME='Test User',
             HTTP_EMPLOYEEID='xxxtest01',
-            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all',
+            HTTP_MAIL='test.name.01@ucl.ac.uk',
+            HTTP_SN='Second Name',
+            HTTP_AFFILIATION='test@ucl.ac.uk',
+            HTTP_UNSCOPED_AFFILIATION='test'
         )
         self.assertEqual(response.status_code, 400)
 
@@ -626,7 +655,11 @@ class ViewsTestCase(TestCase):
             HTTP_DEPARTMENT='Dept of Tests',
             HTTP_GIVENNAME='Test New Name',
             HTTP_DISPLAYNAME='Test User',
-            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all',
+            HTTP_MAIL='test.name.01@ucl.ac.uk',
+            HTTP_SN='Second Name',
+            HTTP_AFFILIATION='test@ucl.ac.uk',
+            HTTP_UNSCOPED_AFFILIATION='test'
         )
         self.assertEqual(response.status_code, 400)
 

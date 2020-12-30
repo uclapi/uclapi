@@ -159,6 +159,10 @@ def shibcallback(request):
     given_name = request.META.get('HTTP_GIVENNAME', '')
     display_name = request.META.get('HTTP_DISPLAYNAME', '')
     groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
+    mail = request.META.get('HTTP_MAIL', '')
+    affiliation = request.META.get('HTTP_AFFILIATION', '')
+    unscoped_affiliation = request.META.get('HTTP_UNSCOPED_AFFILIATION', '')
+    sn = request.META.get('HTTP_SN', '')
 
     # TODO: Find a way to block access to alumni (do we need this?) without
     # blocking access to new students too.
@@ -180,7 +184,11 @@ def shibcallback(request):
             department=department,
             cn=cn,
             raw_intranet_groups=groups,
-            employee_id=employee_id
+            employee_id=employee_id,
+            mail=mail,
+            affiliation=affiliation,
+            unscoped_affiliation=unscoped_affiliation,
+            sn=sn
         )
 
         user.save()
@@ -196,6 +204,14 @@ def shibcallback(request):
             user.department = department
         if groups:
             user.raw_intranet_groups = groups
+        if mail:
+            user.mail = mail
+        if affiliation:
+            user.affiliation = affiliation
+        if unscoped_affiliation:
+            user.unscoped_affiliation = unscoped_affiliation
+        if sn:
+            user.sn = sn
         user.save()
 
     # Log the user into the system using their User ID
