@@ -488,12 +488,6 @@ class ViewsTestCase(TestCase):
             name="An App",
             callback_url="www.somecallbackurl.com/callback"
         )
-        test_user_ = User.objects.create(
-            email="testxxx@ucl.ac.uk",
-            cn="testxxx",
-            given_name="Test User",
-            employee_id='xxxtest01'
-        )
 
         signer = signing.TimestampSigner()
         # Generate a random state for testing
@@ -503,6 +497,41 @@ class ViewsTestCase(TestCase):
         data = app_.client_id + state
         signed_data = signer.sign(data)
 
+        response = self.client.get(
+            '/oauth/shibcallback',
+            {
+                'appdata': signed_data
+            },
+            HTTP_EPPN='testxxx@ucl.ac.uk',
+            HTTP_CN='cn',
+            HTTP_DEPARTMENT='department',
+            HTTP_GIVENNAME='givenname',
+            HTTP_DISPLAYNAME='displayname',
+            HTTP_EMPLOYEEID='employeeid',
+            HTTP_UCLINTRANETGROUPS='uclintranetgroups',
+            HTTP_MAIL='mail',
+            HTTP_SN='sn',
+            HTTP_AFFILIATION='affiliation',
+            HTTP_UNSCOPED_AFFILIATION='unscoped_affiliation'
+        )
+        # Load the new test user from DB
+        test_user_ = User.objects.get(email='testxxx@ucl.ac.uk')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.client.session['user_id'], test_user_.id)
+        # Test that all fields were filled in correctly.
+        self.assertEqual(test_user_.email, "testxxx@ucl.ac.uk")
+        self.assertEqual(test_user_.cn, "cn")
+        self.assertEqual(test_user_.employee_id, "employeeid")
+        self.assertEqual(test_user_.raw_intranet_groups, "uclintranetgroups")
+        self.assertEqual(test_user_.department, "department")
+        self.assertEqual(test_user_.given_name, "givenname")
+        self.assertEqual(test_user_.full_name, "displayname")
+        self.assertEqual(test_user_.mail, "mail")
+        self.assertEqual(test_user_.sn, "sn")
+        self.assertEqual(test_user_.affiliation, "affiliation")
+        self.assertEqual(test_user_.unscoped_affiliation, "unscoped_affiliation")
+
+        # Now update all the values.
         response = self.client.get(
             '/oauth/shibcallback',
             {
@@ -520,8 +549,22 @@ class ViewsTestCase(TestCase):
             HTTP_AFFILIATION='test@ucl.ac.uk',
             HTTP_UNSCOPED_AFFILIATION='test'
         )
+        # Reload the test user from DB
+        test_user_ = User.objects.get(id=test_user_.id)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.client.session['user_id'], test_user_.id)
+        # Test that all fields were updated correctly.
+        self.assertEqual(test_user_.email, "testxxx@ucl.ac.uk")
+        self.assertEqual(test_user_.cn, "testxxx")
+        self.assertEqual(test_user_.employee_id, "xxxtest01")
+        self.assertEqual(test_user_.raw_intranet_groups, "ucl-all;ucl-tests-all")
+        self.assertEqual(test_user_.department, "Dept of Tests")
+        self.assertEqual(test_user_.given_name, "Test New Name")
+        self.assertEqual(test_user_.full_name, "Test User")
+        self.assertEqual(test_user_.mail, "test.name.01@ucl.ac.uk")
+        self.assertEqual(test_user_.sn, "Second Name")
+        self.assertEqual(test_user_.affiliation, "test@ucl.ac.uk")
+        self.assertEqual(test_user_.unscoped_affiliation, "test")
 
         initial_data = json.loads(response.context['initial_data'])
         self.assertEqual(
@@ -547,8 +590,6 @@ class ViewsTestCase(TestCase):
             }
         )
 
-        # Reload the test user from DB
-        test_user_ = User.objects.get(id=test_user_.id)
 
         self.assertEqual(
             test_user_.given_name,
