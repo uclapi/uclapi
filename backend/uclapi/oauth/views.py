@@ -18,7 +18,8 @@ from dashboard.models import App, User
 
 from .app_helpers import (
     generate_random_verification_code,
-    get_student_by_upi
+    get_student_by_upi,
+    validate_shibboleth_callback
 )
 from .models import OAuthToken
 from .scoping import Scopes
@@ -133,94 +134,16 @@ def shibcallback(request):
     # string sent via Shibboleth
     app = App.objects.get(client_id=client_id)
 
-    # Sometimes UCL doesn't give us the expected headers.
-    # If a critical header is missing we error out.
-    # If non-critical headers are missing we simply put a placeholder string.
-    try:
-        eppn = request.META['HTTP_EPPN']
-        # We don't really use cn but because it's unique in the DB we can't
-        # really put a place holder value.
-        cn = request.META['HTTP_CN']
-        # (aka UPI), also unique in the DB
-        employee_id = request.META['HTTP_EMPLOYEEID']
-    except KeyError:
+    validation_result = validate_shibboleth_callback(request)
+    if isinstance(validation_result, str):
         response = PrettyJsonResponse({
             "ok": False,
-            "error": (f"UCL has sent incomplete headers. If the issues persist "
-                      f"please contact the UCL API Team to rectify this. "
-                      f"The missing fields are (space delimited): "
-                      f"{'eppn ' if request.META.get('HTTP_EPPN', None) else ''}"
-                      f"{'cn ' if request.META.get('HTTP_CN', None) else ''}"
-                      f"{'employeeid' if request.META.get('HTTP_EMPLOYEEID', None) else ''}")
+            "error": validation_result
         })
         response.status_code = 400
         return response
-
-    # TODO: Ask UCL what on earth are they doing by missing out headers, and
-    # remind them we need to to be informed of these types of changes.
-    # TODO: log to sentry that fields were missing...
-    department = request.META.get('HTTP_DEPARTMENT', '')
-    given_name = request.META.get('HTTP_GIVENNAME', '')
-    display_name = request.META.get('HTTP_DISPLAYNAME', '')
-    groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
-    mail = request.META.get('HTTP_MAIL', '')
-    affiliation = request.META.get('HTTP_AFFILIATION', '')
-    unscoped_affiliation = request.META.get('HTTP_UNSCOPED_AFFILIATION', '')
-    sn = request.META.get('HTTP_SN', '')
-
-    # TODO: Find a way to block access to alumni (do we need this?) without
-    # blocking access to new students too.
-    if not groups and (department == "Shibtests" or eppn == SHIB_TEST_USER):
-        groups = "shibtests"
-
-    # If a user has never used the API before then we need to sign them up
-    try:
-        user = User.objects.get(employee_id=employee_id)
-    except User.DoesNotExist:
-        # create a new user
-        try:
-            user = User.objects.create( email=eppn, full_name=display_name, given_name=given_name, department=department,
-                cn=cn, raw_intranet_groups=groups, employee_id=employee_id, mail=mail, affiliation=affiliation,
-                unscoped_affiliation=unscoped_affiliation, sn=sn
-            )
-        except IntegrityError:
-            response = PrettyJsonResponse({
-                "ok": False,
-                "error": ("UCL has sent incorrect headers causing an integrity violation. If the issues persist"
-                        "please contact the UCL API Team to rectify this.")
-            })
-            response.status_code = 400
-            return response
     else:
-        # User exists already, so update the values if new ones are non-empty.
-        user.email = eppn
-        user.cn = cn
-        if display_name:
-            user.full_name = display_name
-        if given_name:
-            user.given_name = given_name
-        if department:
-            user.department = department
-        if groups:
-            user.raw_intranet_groups = groups
-        if mail:
-            user.mail = mail
-        if affiliation:
-            user.affiliation = affiliation
-        if unscoped_affiliation:
-            user.unscoped_affiliation = unscoped_affiliation
-        if sn:
-            user.sn = sn
-        try:
-            user.save()
-        except IntegrityError:
-            response = PrettyJsonResponse({
-                "ok": False,
-                "error": ("UCL has sent incorrect headers causing an integrity violation. If the issues persist"
-                        "please contact the UCL API Team to rectify this.")
-            })
-            response.status_code = 400
-            return response
+        user = validation_result
 
     # Log the user into the system using their User ID
     request.session["user_id"] = user.id
