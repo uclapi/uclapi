@@ -502,12 +502,12 @@ class ViewsTestCase(TestCase):
             {
                 'appdata': signed_data
             },
-            HTTP_EPPN='testxxx@ucl.ac.uk',
+            HTTP_EPPN='eppn',
             HTTP_CN='cn',
             HTTP_DEPARTMENT='department',
             HTTP_GIVENNAME='givenname',
             HTTP_DISPLAYNAME='displayname',
-            HTTP_EMPLOYEEID='employeeid',
+            HTTP_EMPLOYEEID='xxxtest01',
             HTTP_UCLINTRANETGROUPS='uclintranetgroups',
             HTTP_MAIL='mail',
             HTTP_SN='sn',
@@ -515,13 +515,13 @@ class ViewsTestCase(TestCase):
             HTTP_UNSCOPED_AFFILIATION='unscoped_affiliation'
         )
         # Load the new test user from DB
-        test_user_ = User.objects.get(email='testxxx@ucl.ac.uk')
+        test_user_ = User.objects.get(employee_id='xxxtest01')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.client.session['user_id'], test_user_.id)
         # Test that all fields were filled in correctly.
-        self.assertEqual(test_user_.email, "testxxx@ucl.ac.uk")
+        self.assertEqual(test_user_.email, "eppn")
         self.assertEqual(test_user_.cn, "cn")
-        self.assertEqual(test_user_.employee_id, "employeeid")
+        self.assertEqual(test_user_.employee_id, "xxxtest01")
         self.assertEqual(test_user_.raw_intranet_groups, "uclintranetgroups")
         self.assertEqual(test_user_.department, "department")
         self.assertEqual(test_user_.given_name, "givenname")

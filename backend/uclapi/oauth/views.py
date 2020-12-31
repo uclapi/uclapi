@@ -136,7 +136,6 @@ def shibcallback(request):
     # If a critical header is missing we error out.
     # If non-critical headers are missing we simply put a placeholder string.
     try:
-        # This is used to find the correct user
         eppn = request.META['HTTP_EPPN']
         # We don't really use cn but because it's unique in the DB we can't
         # really put a place holder value.
@@ -171,10 +170,7 @@ def shibcallback(request):
 
     # If a user has never used the API before then we need to sign them up
     try:
-        # TODO: Handle MultipleObjectsReturned exception.
-        # email field isn't unique at database level (on our side).
-        # Alternatively, switch to employee_id (which is unique).
-        user = User.objects.get(email=eppn)
+        user = User.objects.get(employee_id=employee_id)
     except User.DoesNotExist:
         # create a new user
         user = User(
@@ -194,8 +190,8 @@ def shibcallback(request):
         user.save()
     else:
         # User exists already, so update the values if new ones are non-empty.
-        user = User.objects.get(email=eppn)
-        user.employee_id = employee_id
+        user = User.objects.get(employee_id=employee_id)
+        user.email = eppn
         user.cn = cn
         if display_name:
             user.full_name = display_name
