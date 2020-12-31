@@ -173,7 +173,7 @@ def shibcallback(request):
         user = User.objects.get(employee_id=employee_id)
     except User.DoesNotExist:
         # create a new user
-        user = User(
+        user = User.objects.create(
             email=eppn,
             full_name=display_name,
             given_name=given_name,
@@ -186,8 +186,6 @@ def shibcallback(request):
             unscoped_affiliation=unscoped_affiliation,
             sn=sn
         )
-
-        user.save()
     else:
         # User exists already, so update the values if new ones are non-empty.
         user = User.objects.get(employee_id=employee_id)
