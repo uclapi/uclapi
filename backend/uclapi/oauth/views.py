@@ -188,7 +188,6 @@ def shibcallback(request):
         )
     else:
         # User exists already, so update the values if new ones are non-empty.
-        user = User.objects.get(employee_id=employee_id)
         user.email = eppn
         user.cn = cn
         if display_name:
