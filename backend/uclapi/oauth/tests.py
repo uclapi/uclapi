@@ -5,6 +5,7 @@ import string
 import unittest.mock
 
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db import transaction
 from django.test import Client, TestCase
 from rest_framework.test import APIRequestFactory
 from django.core import signing
@@ -475,6 +476,60 @@ class ViewsTestCase(TestCase):
              "If the issues persist please contact the UCL API "
              "Team to rectify this.")
         )
+
+    def test_invalid_shibcallback_real_account(self):
+        """Tests that we gracefully handle invalid Shibboleth headers"""
+        dev_user_ = User.objects.create(
+            email="testdev@ucl.ac.uk",
+            cn="test",
+            given_name="Test Dev",
+            employee_id='testdev01'
+        )
+        app_ = App.objects.create(
+            user=dev_user_,
+            name="An App",
+            callback_url="www.somecallbackurl.com/callback"
+        )
+        test_user = User.objects.create(
+            email="testuser@ucl.ac.uk",
+            cn="cn",
+            given_name="Test Dev",
+            employee_id='testuser01'
+        )
+
+        signer = signing.TimestampSigner()
+        # Generate a random state for testing
+        state = ''.join(
+            random.choices(string.ascii_letters + string.digits, k=32)
+        )
+        data = app_.client_id + state
+        signed_data = signer.sign(data)
+        # Creation of new user should fail as cn has to be unique!
+        # The "with" hack is needed when purposefully causing DB integrity
+        # violations. @see: https://stackoverflow.com/a/23326971
+        with transaction.atomic():
+            response = self.client.get(
+                '/oauth/shibcallback',
+                {
+                    'appdata': signed_data
+                },
+                HTTP_EPPN='eppn',
+                HTTP_CN='cn',
+                HTTP_EMPLOYEEID='newUser',
+            )
+            self.assertEqual(response.status_code, 400)
+            # This update should fail as cn should be unique
+        with transaction.atomic():
+            response = self.client.get(
+                '/oauth/shibcallback',
+                {
+                    'appdata': signed_data
+                },
+                HTTP_EPPN='eppn',
+                HTTP_CN='test',
+                HTTP_EMPLOYEEID='testuser01',
+            )
+            self.assertEqual(response.status_code, 400)
 
     def test_valid_shibcallback_real_account(self):
         dev_user_ = User.objects.create(

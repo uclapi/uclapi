@@ -5,6 +5,7 @@ import redis
 from django.core import signing
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.signing import TimestampSigner
+from django.db.utils import IntegrityError
 from django.shortcuts import redirect, render
 from django.utils.http import quote
 from django.views.decorators.csrf import (
@@ -173,19 +174,19 @@ def shibcallback(request):
         user = User.objects.get(employee_id=employee_id)
     except User.DoesNotExist:
         # create a new user
-        user = User.objects.create(
-            email=eppn,
-            full_name=display_name,
-            given_name=given_name,
-            department=department,
-            cn=cn,
-            raw_intranet_groups=groups,
-            employee_id=employee_id,
-            mail=mail,
-            affiliation=affiliation,
-            unscoped_affiliation=unscoped_affiliation,
-            sn=sn
-        )
+        try:
+            user = User.objects.create( email=eppn, full_name=display_name, given_name=given_name, department=department,
+                cn=cn, raw_intranet_groups=groups, employee_id=employee_id, mail=mail, affiliation=affiliation,
+                unscoped_affiliation=unscoped_affiliation, sn=sn
+            )
+        except IntegrityError:
+            response = PrettyJsonResponse({
+                "ok": False,
+                "error": ("UCL has sent incorrect headers causing an integrity violation. If the issues persist"
+                        "please contact the UCL API Team to rectify this.")
+            })
+            response.status_code = 400
+            return response
     else:
         # User exists already, so update the values if new ones are non-empty.
         user.email = eppn
@@ -206,7 +207,16 @@ def shibcallback(request):
             user.unscoped_affiliation = unscoped_affiliation
         if sn:
             user.sn = sn
-        user.save()
+        try:
+            user.save()
+        except IntegrityError:
+            response = PrettyJsonResponse({
+                "ok": False,
+                "error": ("UCL has sent incorrect headers causing an integrity violation. If the issues persist"
+                        "please contact the UCL API Team to rectify this.")
+            })
+            response.status_code = 400
+            return response
 
     # Log the user into the system using their User ID
     request.session["user_id"] = user.id
