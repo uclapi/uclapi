@@ -146,8 +146,12 @@ def shibcallback(request):
     except KeyError:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": ("UCL has sent incomplete headers. If the issues persist"
-                      "please contact the UCL API Team to rectify this.")
+            "error": (f"UCL has sent incomplete headers. If the issues persist "
+                      f"please contact the UCL API Team to rectify this. "
+                      f"The missing fields are (space delimited): "
+                      f"{'eppn ' if request.META.get('HTTP_EPPN', None) else ''}"
+                      f"{'cn ' if request.META.get('HTTP_CN', None) else ''}"
+                      f"{'employeeid' if request.META.get('HTTP_EMPLOYEEID', None) else ''}")
         })
         response.status_code = 400
         return response
