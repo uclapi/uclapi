@@ -9,6 +9,7 @@ from django.db import transaction
 from django.test import Client, TestCase
 from rest_framework.test import APIRequestFactory
 from django.core import signing
+from parameterized import parameterized
 
 from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse
@@ -477,7 +478,12 @@ class ViewsTestCase(TestCase):
              "Team to rectify this.")
         )
 
-    def test_invalid_shibcallback_real_account(self):
+    @parameterized.expand([
+       ('/oauth/shibcallback'),
+       ('/dashboard/user/login.callback'),
+       ('/settings/user/login.callback')
+    ])
+    def test_invalid_shibcallback_real_account(self, url):
         """Tests that we gracefully handle invalid Shibboleth headers"""
         dev_user_ = User.objects.create(
             email="testdev@ucl.ac.uk",
@@ -509,7 +515,7 @@ class ViewsTestCase(TestCase):
         # violations. @see: https://stackoverflow.com/a/23326971
         with transaction.atomic():
             response = self.client.get(
-                '/oauth/shibcallback',
+                url,
                 {
                     'appdata': signed_data
                 },
@@ -521,7 +527,7 @@ class ViewsTestCase(TestCase):
             # This update should fail as cn should be unique
         with transaction.atomic():
             response = self.client.get(
-                '/oauth/shibcallback',
+                url,
                 {
                     'appdata': signed_data
                 },
@@ -531,7 +537,12 @@ class ViewsTestCase(TestCase):
             )
             self.assertEqual(response.status_code, 400)
 
-    def test_valid_shibcallback_real_account(self):
+    @parameterized.expand([
+       ('/oauth/shibcallback', 200, True),
+       ('/dashboard/user/login.callback', 302, False),
+       ('/settings/user/login.callback', 302, False)
+    ])
+    def test_valid_shibcallback_real_account(self, url, expected_code, initial_data_exists):
         dev_user_ = User.objects.create(
             email="testdev@ucl.ac.uk",
             cn="test",
@@ -553,7 +564,7 @@ class ViewsTestCase(TestCase):
         signed_data = signer.sign(data)
 
         response = self.client.get(
-            '/oauth/shibcallback',
+            url,
             {
                 'appdata': signed_data
             },
@@ -571,7 +582,7 @@ class ViewsTestCase(TestCase):
         )
         # Load the new test user from DB
         test_user_ = User.objects.get(employee_id='xxxtest01')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, expected_code)
         self.assertEqual(self.client.session['user_id'], test_user_.id)
         # Test that all fields were filled in correctly.
         self.assertEqual(test_user_.email, "eppn")
@@ -588,7 +599,7 @@ class ViewsTestCase(TestCase):
 
         # Now update all the values.
         response = self.client.get(
-            '/oauth/shibcallback',
+            url,
             {
                 'appdata': signed_data
             },
@@ -606,7 +617,7 @@ class ViewsTestCase(TestCase):
         )
         # Reload the test user from DB
         test_user_ = User.objects.get(id=test_user_.id)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, expected_code)
         self.assertEqual(self.client.session['user_id'], test_user_.id)
         # Test that all fields were updated correctly.
         self.assertEqual(test_user_.email, "testxxx@ucl.ac.uk")
@@ -621,40 +632,35 @@ class ViewsTestCase(TestCase):
         self.assertEqual(test_user_.affiliation, "test@ucl.ac.uk")
         self.assertEqual(test_user_.unscoped_affiliation, "test")
 
-        initial_data = json.loads(response.context['initial_data'])
-        self.assertEqual(
-            initial_data['app_name'],
-            app_.name
-        )
-        self.assertEqual(
-            initial_data['client_id'],
-            app_.client_id
-        )
-        self.assertEqual(
-            initial_data['state'],
-            state
-        )
-        self.assertDictEqual(
-            initial_data['user'],
-            {
-                "full_name": "Test User",
-                "cn": "testxxx",
-                "email": "testxxx@ucl.ac.uk",
-                "department": "Dept of Tests",
-                "upi": "xxxtest01"
-            }
-        )
-
-
-        self.assertEqual(
-            test_user_.given_name,
-            "Test New Name"
-        )
+        if initial_data_exists:
+            initial_data = json.loads(response.context['initial_data'])
+            self.assertEqual(
+                initial_data['app_name'],
+                app_.name
+            )
+            self.assertEqual(
+                initial_data['client_id'],
+                app_.client_id
+            )
+            self.assertEqual(
+                initial_data['state'],
+                state
+            )
+            self.assertDictEqual(
+                initial_data['user'],
+                {
+                    "full_name": "Test User",
+                    "cn": "testxxx",
+                    "email": "testxxx@ucl.ac.uk",
+                    "department": "Dept of Tests",
+                    "upi": "xxxtest01"
+                }
+            )
 
         # Now lets test for when UCL doesn't give us department the department,
         # givenname and displayname.
         response = self.client.get(
-            '/oauth/shibcallback',
+            url,
             {
                 'appdata': signed_data
             },
@@ -665,7 +671,7 @@ class ViewsTestCase(TestCase):
             HTTP_EMPLOYEEID='xxxtest01',
             HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, expected_code)
 
         # Reload the test user from DB
         test_user_ = User.objects.get(id=test_user_.id)
@@ -703,7 +709,7 @@ class ViewsTestCase(TestCase):
 
         # Now let's test when critical fields are missing
         response = self.client.get(
-            '/oauth/shibcallback',
+            url,
             {
                 'appdata': signed_data
             },
@@ -722,7 +728,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
         response = self.client.get(
-            '/oauth/shibcallback',
+            url,
             {
                 'appdata': signed_data
             },
@@ -741,7 +747,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
         response = self.client.get(
-            '/oauth/shibcallback',
+            url,
             {
                 'appdata': signed_data
             },

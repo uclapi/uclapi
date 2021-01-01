@@ -1,12 +1,12 @@
 import os
 from distutils.util import strtobool
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.http import quote
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from uclapi.settings import FAIR_USE_POLICY
+from oauth.app_helpers import validate_shibboleth_callback
 
 from .app_helpers import get_articles, get_temp_token
 from .models import User
@@ -17,39 +17,16 @@ from .tasks import add_user_to_mailing_list_task
 def shibboleth_callback(request):
     # should auth user login or signup
     # then redirect to dashboard homepage
-
-    # Sometimes UCL doesn't give us the expected headers.
-    # If a critical header is missing we error out.
-    # If non-critical headers are missing we simply put a placeholder string.
-    try:
-        # This is used to find the correct user
-        eppn = request.META['HTTP_EPPN']
-        # We don't really use cn but because it's unique in the DB we can't
-        # really put a place holder value.
-        cn = request.META['HTTP_CN']
-        # (aka UPI), also unique in the DB
-        employee_id = request.META['HTTP_EMPLOYEEID']
-    except KeyError:
-        response = HttpResponse(
-            (
-
-                "Error 400 - Bad Request. <br>"
-                "UCL has sent incomplete headers. If the issues persist please"
-                "contact the UCL API Team to rectify this."
-            )
-        )
+    validation_result = validate_shibboleth_callback(request)
+    if isinstance(validation_result, str):
+        response = HttpResponse("Error 400 - Bad Request. <br>" + validation_result)
         response.status_code = 400
         return response
 
-    # TODO: Ask UCL what on earth are they doing by missing out headers, and
-    # remind them we need to to be informed of these types of changes.
-    # TODO: log to sentry that fields were missing...
-    department = request.META.get('HTTP_DEPARTMENT', '')
-    given_name = request.META.get('HTTP_GIVENNAME', '')
-    display_name = request.META.get('HTTP_DISPLAYNAME', '')
-    groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
+    user = validation_result
 
-    # We first check whether the user is a member of any UCL Intranet Groups.
+    groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
+    # Check whether the user is a member of any UCL Intranet Groups.
     # This is a quick litmus test to determine whether they should have
     # access to the dashboard.
     # We deny access to test accounts and alumni, neither of which have
@@ -64,41 +41,8 @@ def shibboleth_callback(request):
         response.status_code = 403
         return response
 
-    try:
-        # TODO: Handle MultipleObjectsReturned exception.
-        # email field isn't unique at database level (on our side).
-        # Alternatively, switch to employee_id (which is unique).
-        user = User.objects.get(email=eppn)
-    except ObjectDoesNotExist:
-        # create a new user
-        new_user = User(
-            email=eppn,
-            full_name=display_name,
-            given_name=given_name,
-            department=department,
-            cn=cn,
-            raw_intranet_groups=groups,
-            employee_id=employee_id
-        )
-
-        new_user.save()
-        add_user_to_mailing_list_task.delay(new_user.email, new_user.full_name)
-
-        request.session["user_id"] = new_user.id
-    else:
-        # User exists already, so update the values if new ones are non-empty.
-        request.session["user_id"] = user.id
-        user.employee_id = employee_id
-        if display_name:
-            user.full_name = display_name
-        if given_name:
-            user.given_name = given_name
-        if department:
-            user.department = department
-        if groups:
-            user.raw_intranet_groups = groups
-        user.save()
-
+    request.session["user_id"] = user.id
+    add_user_to_mailing_list_task.delay(user.email, user.full_name)
     return redirect(dashboard)
 
 
