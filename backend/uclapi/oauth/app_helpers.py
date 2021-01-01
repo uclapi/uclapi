@@ -8,6 +8,7 @@ import dashboard.models
 from timetable.models import Lock, StudentsA, StudentsB
 from uclapi.settings import SHIB_TEST_USER
 
+
 def generate_user_token():
     key = hexlify(os.urandom(30)).decode()
     dashes_key = '-'.join(textwrap.wrap(key, 15))
@@ -25,8 +26,8 @@ def generate_random_verification_code():
 def get_student_by_upi(upi):
     """Returns a StudentA or StudentB object by UPI"""
     students = StudentsA \
-               if Lock.objects.all()[0].a \
-               else StudentsB
+        if Lock.objects.all()[0].a \
+        else StudentsB
 
     # Assume the current Set ID due to caching
     upi_upper = upi.upper()
@@ -37,11 +38,15 @@ def get_student_by_upi(upi):
 
 
 def validate_shibboleth_callback(request):
-    """Validates user attributes returned from Shibboleth
+    """Validates user attributes returned from Shibboleth.
+
     Sometimes UCL doesn't give us the expected headers. If a critical header is
     missing we return a string with the error. If non-critical headers are
     missing we simply put a placeholder string. If all critical headers are
     present we return the User.
+
+    If the user doesn't exist in our database we create a new user. If the user
+    already exists, we update fields that are are present in the response.
 
     :param request: HTTP request.
     :type request: rest_framework.request.Request
@@ -49,6 +54,8 @@ def validate_shibboleth_callback(request):
     :rtype: dashboard.models.User or str
     """
     try:
+        # Assumed to be non-empty/unique in many parts of UCL API.
+        # i.e. grep -nr '\.email' --include \*.py
         eppn = request.META['HTTP_EPPN']
         # We don't really use cn but because it's unique in the DB we can't
         # really put a place holder value.
@@ -65,8 +72,6 @@ def validate_shibboleth_callback(request):
             f"{'employeeid' if request.META.get('HTTP_EMPLOYEEID', None) else ''}"
         )
 
-    # TODO: Ask UCL what on earth are they doing by missing out headers, and
-    # remind them we need to to be informed of these types of changes.
     # TODO: log to sentry that fields were missing...
     department = request.META.get('HTTP_DEPARTMENT', '')
     given_name = request.META.get('HTTP_GIVENNAME', '')
@@ -77,8 +82,6 @@ def validate_shibboleth_callback(request):
     unscoped_affiliation = request.META.get('HTTP_UNSCOPED_AFFILIATION', '')
     sn = request.META.get('HTTP_SN', '')
 
-    # TODO: Find a way to block access to alumni (do we need this?) without
-    # blocking access to new students too.
     if not groups and (department == "Shibtests" or eppn == SHIB_TEST_USER):
         groups = "shibtests"
 
