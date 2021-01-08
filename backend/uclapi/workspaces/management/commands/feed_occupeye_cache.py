@@ -1,6 +1,3 @@
-import sys
-import traceback
-
 from cachetclient.v1 import enums
 from django.core.management.base import BaseCommand
 
@@ -19,6 +16,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument("--test", action='store_true')
+        parser.add_argument("--mini", action='store_true')
 
     def handle(self, *args, **options):
         try:
@@ -28,7 +26,7 @@ class Command(BaseCommand):
                 cache = OccupeyeCache(endpoint=TestEndpoint({}))
             else:
                 cache = OccupeyeCache()
-            cache.feed_cache(full=True)
+            cache.feed_cache(full=(not options['mini']))
             print("Done!")
             incident_name = get_incident_name("Occupeye")
             if incident_name:
@@ -55,6 +53,4 @@ class Command(BaseCommand):
                 except Exception as cachet_error:
                     print(f"Unexpected: Failed to create cachet incident. " f"Reason: {repr(cachet_error)}")
             else:
-                exc_info = sys.exc_info()
-                traceback.print_exception(*exc_info)
                 print("Could not find appropriate incident in Cachet!")

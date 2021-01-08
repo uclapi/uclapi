@@ -375,16 +375,12 @@ class OccupEyeApi:
 
         return states
 
-    def get_historical_survey_sensors(self, survey_id):
+    @staticmethod
+    def get_historical_survey_sensors(survey_id):
         """
         Gets sensors associated with a single survey location
         """
-        objs = Sensors.objects.filter(survey_id=survey_id)
-        sensors = []
-        for obj in objs:
-            sensors.append(obj.sensor_id)
-
-        return sensors
+        return list(Sensors.objects.filter(survey_id=survey_id).values_list('sensor_id', flat=True))
 
     def get_historical_survey(self, survey_id, start_time, end_time, delta=True):
         """
@@ -396,7 +392,8 @@ class OccupEyeApi:
 
         return states
 
-    def get_historical_list_sensors(self, survey_id):
+    @staticmethod
+    def get_historical_list_sensors(survey_id):
         """
         Gets sensors and sensor data associated with a single survey location
         """
@@ -416,7 +413,8 @@ class OccupEyeApi:
                 "end": survey.end_datetime, "active": survey.active, "sensors": sensors,
                 "last_updated": survey.last_updated}
 
-    def get_historical_list_surveys(self):
+    @staticmethod
+    def get_historical_list_surveys():
         """
         Gets all survey data
         """

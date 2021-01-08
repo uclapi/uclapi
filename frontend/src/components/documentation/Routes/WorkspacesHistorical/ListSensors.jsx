@@ -12,14 +12,14 @@ params = {
   "survey_id": 72
 }
 
-r = requests.get("${Constants.DOMAIN}/workspaces/historical/list/sensors", params=params)
+r = requests.get("${Constants.DOMAIN}/workspaces/historical/sensors", params=params)
 print(r.json())`,
 
-  shell: `curl -G ${Constants.DOMAIN}/workspaces/historical/list/sensors \\
+  shell: `curl -G ${Constants.DOMAIN}/workspaces/historical/sensors \\
 -d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \
 -d survey_id=72` ,
 
-  javascript: `fetch("${Constants.DOMAIN}/workspaces/historical/list/sensors?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=72",
+  javascript: `fetch("${Constants.DOMAIN}/workspaces/historical/sensors?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=72",
 {
     method: "GET",
 })
@@ -67,9 +67,9 @@ const WorkspacesHistoricalListSurveys = ({activeLanguage}) => {
         activeLanguage={activeLanguage}
         codeExamples={codeExamples}
       >
-        <h1 id="workspaces/historical/list/sensors">List Sensors</h1>
+        <h1 id="workspaces/historical/sensors">List Sensors</h1>
         <p>
-          Endpoint: <code>{Constants.DOMAIN}/workspaces/historical/list/sensors</code>
+          Endpoint: <code>{Constants.DOMAIN}/workspaces/historical/sensors</code>
         </p>
         <p>
           This endpoint lists all sensors in a survey location, this includes inactive sensors (unlike get

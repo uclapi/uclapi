@@ -1,6 +1,11 @@
 from datetime import datetime, timedelta, timezone
 from typing import List
 
+import redis
+from django.core.exceptions import ObjectDoesNotExist
+
+from common.helpers import LOCAL_TIMEZONE
+from uclapi import settings
 from workspaces.models import Surveys, Historical, Sensors, SensorReplacements, SurveyChanges
 from .constants import OccupEyeConstants
 from .endpoint import OccupeyeEndpoint, Endpoint
@@ -14,6 +19,7 @@ class OccupEyeArchive:
         if endpoint is None:
             endpoint = OccupeyeEndpoint()
         self._const = OccupEyeConstants()
+        self._redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
         self._endpoint = endpoint
 
     def reset(self):
@@ -25,11 +31,27 @@ class OccupEyeArchive:
         dt = datetime.strptime(dict[f"{prefix}Date"] + "t" + dict[f"{prefix}Time"], "%Y-%m-%dt%H:%M")
         return dt.replace(tzinfo=None)
 
-    def refresh_sensors(self):
+    def refresh_surveys(self):
         new_updates, delta_updates = 0, 0
         all_surveys = self._endpoint.request(self._const.URL_SURVEYS_ALL)
         for survey in all_surveys:
-            if not Surveys.objects.filter(survey_id=survey["SurveyID"]).exists():
+            try:
+                validate = Surveys.objects.get(survey_id=survey["SurveyID"])
+                if survey["Name"] != validate.name or self.extract_sensor_date(survey, "Start") != \
+                        validate.start_datetime or self.extract_sensor_date(survey, "End") != validate.end_datetime \
+                        or survey["Active"] != validate.active:
+                    delta_updates += 1
+                    SurveyChanges.objects.create(survey=validate, name=survey["Name"],
+                                                 start_datetime=self.extract_sensor_date(survey, "Start"),
+                                                 end_datetime=self.extract_sensor_date(survey, "End"),
+                                                 active=survey["Active"])
+
+                    validate.name = survey["Name"]
+                    validate.start_datetime = self.extract_sensor_date(survey, "Start")
+                    validate.end_datetime = self.extract_sensor_date(survey, "End")
+                    validate.active = survey["Active"]
+                    validate.save()
+            except ObjectDoesNotExist:
                 new_updates += 1
                 start_datetime = self.extract_sensor_date(survey, "Start")
                 end_datetime = self.extract_sensor_date(survey, "End")
@@ -39,22 +61,6 @@ class OccupEyeArchive:
                 SurveyChanges.objects.create(survey=new_survey, name=survey["Name"],
                                              start_datetime=start_datetime, end_datetime=end_datetime,
                                              active=survey["Active"])
-
-            validate = Surveys.objects.get(survey_id=survey["SurveyID"])
-            if survey["Name"] != validate.name or self.extract_sensor_date(survey, "Start") != \
-                    validate.start_datetime or self.extract_sensor_date(survey, "End") != validate.end_datetime \
-                    or survey["Active"] != validate.active:
-                delta_updates += 1
-                SurveyChanges.objects.create(survey=validate, name=survey["Name"],
-                                             start_datetime=self.extract_sensor_date(survey, "Start"),
-                                             end_datetime=self.extract_sensor_date(survey, "End"),
-                                             active=survey["Active"])
-
-                validate.name = survey["Name"]
-                validate.start_datetime = self.extract_sensor_date(survey, "Start")
-                validate.end_datetime = self.extract_sensor_date(survey, "End")
-                validate.active = survey["Active"]
-                validate.save()
 
         print(f"[+] Added {new_updates} new surveys, updated {delta_updates} surveys")
 
@@ -79,7 +85,7 @@ class OccupEyeArchive:
         Get all sensors, this is more efficient than using a filter every time as each sensor is verified every
         24 hours.
         """
-        self.refresh_sensors()
+        self.refresh_surveys()
         current_sensors = list(Sensors.objects.all().values())
         # Convert the list of dictionaries to a dictionary with the sensor_id as the key
         current_sensors = {str(obj["sensor_id"]) + "-" + str(obj["survey_id"]):
@@ -204,3 +210,8 @@ class OccupEyeArchive:
 
             survey.last_updated = end_time
             survey.save()
+        print("[+] Setting Last-Modified key")
+        last_modified_key = "http:headers:Last-Modified:Workspaces-Historical"
+
+        current_timestamp = datetime.now(LOCAL_TIMEZONE).isoformat(timespec="seconds")
+        self._redis.set(last_modified_key, current_timestamp)

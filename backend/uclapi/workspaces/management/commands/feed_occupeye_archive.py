@@ -19,6 +19,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument("--test", action='store_true')
+        parser.add_argument("--full", action='store_true')
 
     def handle(self, *args, **options):
         try:
@@ -28,6 +29,8 @@ class Command(BaseCommand):
                 archive = OccupEyeArchive(endpoint=TestEndpoint({}))
             else:
                 archive = OccupEyeArchive()
+            if options['full']:
+                archive.reset()
             archive.update()
             print("[+] Done!")
             incident_name = get_incident_name("Occupeye")

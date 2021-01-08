@@ -75,12 +75,14 @@ class Surveys(models.Model):
         _DATABASE = "default"
 
 
-# Stores the current value at survey change, for example if active changed from false to true on 2020-01-01
-# then active = true and datetime = 2020-01-01 would be stored. Unlike Sensor Replacements, survey changes happen
-# frequently
+# Stores the current value at survey change, for example if active changed from false to true on 2020-01-01 10:20:00
+# then active = true and datetime = 2020-01-01 10:20:00 would be stored. Unlike Sensor Replacements, survey
+# changes happen frequently
 class SurveyChanges(models.Model):
     survey = models.ForeignKey(to=Surveys, on_delete=models.CASCADE)
     name = models.TextField()
+    # Start and end datetime provided by OccupEye, in theory after the end datetime the survey will become inactive
+    # however it is common for an administrator to extend them
     start_datetime = models.DateTimeField()
     end_datetime = models.DateTimeField()
     active = models.BooleanField()

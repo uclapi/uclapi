@@ -369,7 +369,7 @@ def request_too_expensive(surveys: int, start: datetime, end: datetime, delta: b
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces")
+@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces-Historical")
 def get_historical_sensor(request, *args, **kwargs):
     api = OccupEyeApi()
 
@@ -425,7 +425,7 @@ def get_historical_sensor(request, *args, **kwargs):
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces")
+@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces-Historical")
 def get_historical_survey(request, *args, **kwargs):
     api = OccupEyeApi()
 
@@ -481,7 +481,7 @@ def get_historical_survey(request, *args, **kwargs):
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces")
+@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces-Historical")
 def get_historical_list_sensors(request, *args, **kwargs):
     api = OccupEyeApi()
 
@@ -501,7 +501,7 @@ def get_historical_list_sensors(request, *args, **kwargs):
 
 
 @api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces")
+@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces-Historical")
 def get_historical_list_surveys(request, *args, **kwargs):
     api = OccupEyeApi()
 
