@@ -1,5 +1,5 @@
 autopep8==1.5.4
-boto3==1.16.40
+boto3==1.16.51
 cachet-client==3.1.1
 celery==5.0.2
 ciso8601==2.1.3
