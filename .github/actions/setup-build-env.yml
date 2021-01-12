@@ -1,0 +1,53 @@
+runs:
+  using: "composite"
+  services:
+    redis:
+      image: redis
+      ports:
+        - 6379:6379
+
+    postgres:
+      image: postgres
+      ports:
+        - 5432:5432
+  steps:
+    # assumes code has already been checked out
+
+    - name: setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+
+    - name: setup nodejs
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    
+    - name: setup dependencies
+      run: sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
+    
+    - name: setup oracle
+      run: |
+        sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip && \
+        sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip && \
+        sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip && \
+        sudo unzip instantclient-sdk-linux.x64-12.2.0.1.0.zip && \
+        cd instantclient_12_2 && \
+        sudo ln -s libclntsh.so.12.1 libclntsh.so && \
+        sudo ln -s libocci.so.12.1 libocci.so && \
+        export ORACLE_HOME=$(pwd) && \
+        export DYLD_LIBRARY_PATH=DYLD_LIBRARY_PATH:$ORACLE_HOME && \
+        export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME && \
+
+    - name: install python dependencies
+      run: |
+        cd ./../backend/uclapi && \
+        "(sed '/cx.*/d' ./backend/uclapi/requirements.txt | sed -e 's/^\\-e //') | xargs -n 1 pip3 install" && \
+        pip3 install codecov && \
+        pip3 install $(cat requirements.txt | grep "cx-Oracle")
+    
+    - name: install js dependencies
+      run: |
+        cp webpack-stats.sample.json ./static/webpack-stats.json && \
+        cd ../../frontend/ && \
+        npm ci
