@@ -11,7 +11,6 @@ import {
 import React from 'react'
 import ReactDOM from 'react-dom'
 import 'Styles/documentation.scss'
-// import DocumentationComponent from '../components/documentation'
 import { NavBar } from "../components/layout/Items.jsx"
 import SwaggerUI from "swagger-ui-react"
 import "swagger-ui-react/swagger-ui.css"
