@@ -6,6 +6,7 @@ runs:
     # assumes code has already been checked out    
     - name: setup dependencies
       run: sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
+      shell: bash
     
     - name: setup oracle
       run: |
@@ -19,6 +20,7 @@ runs:
         export ORACLE_HOME=$(pwd) && \
         export DYLD_LIBRARY_PATH=DYLD_LIBRARY_PATH:$ORACLE_HOME && \
         export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME && \
+      shell: bash
 
     - name: install python dependencies
       run: |
@@ -26,9 +28,11 @@ runs:
         "(sed '/cx.*/d' ./backend/uclapi/requirements.txt | sed -e 's/^\\-e //') | xargs -n 1 pip3 install" && \
         pip3 install codecov && \
         pip3 install $(cat requirements.txt | grep "cx-Oracle")
+      shell: bash
     
     - name: install js dependencies
       run: |
         cp webpack-stats.sample.json ./static/webpack-stats.json && \
         cd ../../frontend/ && \
         npm ci
+      shell: bash
