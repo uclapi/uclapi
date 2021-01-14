@@ -1,6 +1,7 @@
 name: CI/CD
 
-on: [push]
+on:
+  push
 
 jobs:
   build:
@@ -32,11 +33,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     env:
-      AWS_S3_STATICS=True
-      AWS_S3_STATICS_CREDENTIALS_ENABLED=False
-      AWS_S3_BUCKET_NAME=uclapi-static-staging
-      AWS_S3_BUCKET_PATH=static/
-      AWS_S3_REGION=eu-west-2
+      AWS_S3_STATICS: True
+      AWS_S3_STATICS_CREDENTIALS_ENABLED: False
+      AWS_S3_BUCKET_NAME: uclapi-static-staging
+      AWS_S3_BUCKET_PATH: static/
+      AWS_S3_REGION: eu-west-2
     steps:
       - name: checkout code
         uses: actions/checkout@v2
