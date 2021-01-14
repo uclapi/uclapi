@@ -25,14 +25,15 @@ runs:
 
     - name: install python dependencies
       run: |
-        "(sed '/cx.*/d' ./backend/uclapi/requirements.txt | sed -e 's/^\\-e //') | xargs -n 1 pip3 install" && \
+        cd ./backend/uclapi && \
+        (sed '/cx.*/d' requirements.txt | sed -e 's/^\\-e //') | xargs -n 1 pip3 install && \
         pip3 install codecov && \
-        pip3 install $(cat ./backend/uclapi/requirements.txt | grep "cx-Oracle")
+        pip3 install $(cat requirements.txt | grep "cx-Oracle")
       shell: bash
     
     - name: install js dependencies
       run: |
-        cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
-        cd ./frontend/ && \
+        cp ./webpack-stats.sample.json ./static/webpack-stats.json && \
+        cd ../../frontend/ && \
         npm ci
       shell: bash
