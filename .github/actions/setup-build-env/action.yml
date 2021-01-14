@@ -33,7 +33,7 @@ runs:
     
     - name: install js dependencies
       run: |
-        cp ./webpack-stats.sample.json ./static/webpack-stats.json && \
-        cd ../../frontend/ && \
+        cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
+        cd ./frontend/ && \
         npm ci
       shell: bash
