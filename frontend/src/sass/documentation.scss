@@ -38,6 +38,22 @@ p {
   line-height: 26px;
 }
 
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input {
+  color: $text-color;
+  font-family: 'Source Sans Pro', 'Roboto', sans-serif;
+}
+
+input::placeholder {
+  color: $text-color;
+}
+
 a {
   color: $text-color;
   text-decoration: underline dotted;

@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import 'Styles/documentation.scss'
 import { NavBar } from "../components/layout/Items.jsx"
 import SwaggerUI from "swagger-ui-react"
 import "Styles/common/uclapi.scss"
 import "Styles/navbar.scss"
+import "Styles/documentation.scss"
 import "swagger-ui-react/swagger-ui.css"
 
 const Documentation = () => (
