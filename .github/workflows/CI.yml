@@ -34,11 +34,13 @@ jobs:
         uses: ./.github/actions/setup-build-env
 
       - name: build frontend
-        run: npm run build
+        run: |
+          cd ./frontend && \
+          npm run build
       
       - name: run migrations
         run: |
-          cd ../backend/uclapi && \
+          cd ./backend/uclapi && \
           python ./manage.py migrate
 
       - name: run our tests and check test coverage
