@@ -1,4 +1,3 @@
-import '../../lib/ErrorReporting'
 import {
   cyan,
   grey,
@@ -10,9 +9,12 @@ import {
   StylesProvider,
 } from '@material-ui/core/styles'
 import React from 'react'
+import ReactDOM from 'react-dom'
 import 'Styles/documentation.scss'
-import DocumentationComponent from '../../components/documentation'
-
+// import DocumentationComponent from '../components/documentation'
+import { NavBar } from "../components/layout/Items.jsx"
+import SwaggerUI from "swagger-ui-react"
+import "swagger-ui-react/swagger-ui.css"
 const {
   500: cyan500,
 } = cyan
@@ -50,9 +52,13 @@ const muiTheme = createMuiTheme({
 const Documentation = () => (
   <StylesProvider injectFirst>
     <MuiThemeProvider theme={muiTheme}>
-      <DocumentationComponent />
+      <NavBar isScroll={false} />
+      <SwaggerUI url="https://cdn.jsdelivr.net/gh/uclapi/uclapi-openapi/uclapi.json" />
     </MuiThemeProvider>
   </StylesProvider>
 )
 
-export default Documentation
+ReactDOM.render(
+  <Documentation />,
+  document.querySelector(`.app`)
+)
