@@ -9,6 +9,7 @@ runs:
       shell: bash
     
     - name: setup oracle
+      shell: bash
       run: |
         sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip && \
         sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip && \
@@ -19,8 +20,8 @@ runs:
         sudo ln -s libocci.so.12.1 libocci.so && \
         export ORACLE_HOME=$(pwd) && \
         export DYLD_LIBRARY_PATH=DYLD_LIBRARY_PATH:$ORACLE_HOME && \
-        export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME && \
-      shell: bash
+        export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME
+      
 
     - name: install python dependencies
       run: |
