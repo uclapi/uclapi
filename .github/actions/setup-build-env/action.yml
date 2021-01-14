@@ -3,18 +3,7 @@ description: Setup the UCL API build environment
 runs:
   using: composite
   steps:
-    # assumes code has already been checked out
-
-    - name: setup python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.7'
-
-    - name: setup nodejs
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-    
+    # assumes code has already been checked out    
     - name: setup dependencies
       run: sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
     
