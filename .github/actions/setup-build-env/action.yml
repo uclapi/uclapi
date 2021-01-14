@@ -1,15 +1,7 @@
+name: setup build env
+description: Setup the UCL API build environment
 runs:
-  using: "composite"
-  services:
-    redis:
-      image: redis
-      ports:
-        - 6379:6379
-
-    postgres:
-      image: postgres
-      ports:
-        - 5432:5432
+  using: composite
   steps:
     # assumes code has already been checked out
 

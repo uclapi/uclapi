@@ -7,6 +7,15 @@ jobs:
   build:
     name: build and test
     runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+      postgres:
+        image: postgres
+        ports:
+          - 5432:5432
     steps:
       - name: checkout code
         uses: actions/checkout@v2
