@@ -33,6 +33,7 @@ jobs:
     name: build and test backend
     runs-on: ubuntu-latest
     environment: Staging
+    needs: build-frontend
     services:
       redis:
         image: redis

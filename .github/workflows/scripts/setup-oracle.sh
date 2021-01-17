@@ -14,7 +14,7 @@ trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 # echo an error message before exiting
 trap 'echo "\"${last_command}\" command filed with exit code $?."' EXIT
 
-apt-get update
+apt-get update && \
 apt-get install -y libaio1 unzip wget build-essential libpq-dev libpq5 sed git locales liblz4-1
 
 # export ORACLE_VERSION=12_2
