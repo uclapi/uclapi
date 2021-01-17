@@ -5,7 +5,9 @@ runs:
   steps:
     # assumes code has already been checked out    
     - name: setup dependencies
-      run: apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
+      run: |
+        apt-get update && \
+        apt-get install -y libaio1 unzip wget build-essential libpq-dev libpq5
       shell: bash
     
     - name: setup oracle
