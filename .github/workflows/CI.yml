@@ -32,7 +32,6 @@ jobs:
   build-backend:
     name: build and test backend
     runs-on: ubuntu-latest
-    container: ubuntu:20.04 # necessary because of https://github.community/t/services-name-resolution-error/16716/4
     environment: Staging
     services:
       redis:
@@ -51,6 +50,8 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          - 5432:5432
     steps:
       - name: setup python
         uses: actions/setup-python@v2
