@@ -4,8 +4,32 @@ on:
   push
 
 jobs:
-  build:
-    name: build and test
+  build-frontend:
+    name: build and test frontend
+    runs-on: ubuntu-latest
+    environment: Staging
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+
+      - name: setup nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: setup frontend dependencies
+        run: |
+          cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
+          cd ./frontend/ && \
+          npm ci
+
+      - name: build frontend
+        run: |
+          cd ./frontend && \
+          npm run build
+
+  build-backend:
+    name: build and test backend
     runs-on: ubuntu-latest
     container: ubuntu:20.04 # necessary because of https://github.community/t/services-name-resolution-error/16716/4
     environment: Staging
@@ -32,11 +56,6 @@ jobs:
         with:
           python-version: '3.7'
 
-      - name: setup nodejs
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-
       - name: checkout code
         uses: actions/checkout@v2
 
@@ -50,17 +69,6 @@ jobs:
           pip install codecov && \
           pip install -r requirements.txt
 #          pip install $(cat requirements.txt | grep "cx-Oracle")
-      
-      - name: setup frontend dependencies
-        run: |
-          ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
-          cd ./frontend/ && \
-          npm ci
-
-      - name: build frontend
-        run: |
-          cd ./frontend && \
-          npm run build
       
       - name: run migrations
         env: # Or as an environment variable
