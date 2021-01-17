@@ -20,6 +20,7 @@ wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.
   export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME && \
   cd .. && \
 cd ./backend/uclapi && \
+  python -m pip install --upgrade pip && \
   (sed '/cx.*/d' requirements.txt | sed -e 's/^\\-e //') | xargs -n 1 pip install && \
   pip install codecov && \
   pip install $(cat requirements.txt | grep "cx-Oracle") && \
