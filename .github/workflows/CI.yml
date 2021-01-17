@@ -40,17 +40,16 @@ jobs:
       - name: checkout code
         uses: actions/checkout@v2
 
-      - name: setup oracle
-        run: ./.github/workflows/scripts/setup-oracle.sh
+      # - name: setup oracle
+      #   run: ./.github/workflows/scripts/setup-oracle.sh
 
       - name: setup python dependencies
         run: |
-          cd ./backend/uclapi && \
           python -m pip install --upgrade pip && \
-          which pip && which pip3 && \
+          cd ./backend/uclapi && \
           pip install codecov && \
-          pip install -r requirements.txt && \
-          pip install $(cat requirements.txt | grep "cx-Oracle")
+          pip install -r requirements.txt
+#          pip install $(cat requirements.txt | grep "cx-Oracle")
       
       - name: setup frontend dependencies
         run: |
