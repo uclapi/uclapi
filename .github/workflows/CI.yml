@@ -36,15 +36,15 @@ jobs:
     needs: build-frontend
     env:
       DB_UCLAPI_HOST: localhost
-      DB_UCLAPI_USERNAME: uclapi
       DB_UCLAPI_PASSWORD: supersecure
+      DB_UCLAPI_USERNAME: uclapi
       OCCUPEYE_BASE_URL: ${{ secrets.OCCUPEYE_BASE_URL }}
       OCCUPEYE_DEPLOYMENT_ID: ${{ secrets.OCCUPEYE_DEPLOYMENT_ID }}
       OCCUPEYE_DEPLOYMENT_NAME: ${{ secrets.OCCUPEYE_DEPLOYMENT_NAME }}
       OCCUPEYE_PASSWORD: ${{ secrets.OCCUPEYE_PASSWORD }}
       OCCUPEYE_THREAD_LIMIT: ${{ secrets.OCCUPEYE_THREAD_LIMIT }}
       OCCUPEYE_USERNAME: ${{ secrets.OCCUPEYE_USERNAME }}
-      REDIS_UCLAPI_HOST: ${{ secrets.REDIS_UCLAPI_HOST }}
+      REDIS_UCLAPI_HOST: localhost
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       SHIB_TEST_USER: ${{ secrets.SHIB_TEST_USER }}
       UCLAPI_PRODUCTION: False
@@ -57,6 +57,8 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          - 6379:6379
       postgres:
         image: postgres
         env:
