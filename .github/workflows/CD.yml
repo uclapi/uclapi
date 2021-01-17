@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  deploy:
+  deploy-staging:
     name: deploy to staging
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
