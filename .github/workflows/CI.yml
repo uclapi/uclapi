@@ -7,6 +7,7 @@ jobs:
   build:
     name: build and test
     runs-on: ubuntu-latest
+    environment: Staging
     services:
       redis:
         image: redis
@@ -39,6 +40,8 @@ jobs:
           npm run build
       
       - name: run migrations
+        env: # Or as an environment variable
+          UCLAPI_PRODUCTION: ${{ secrets.UCLAPI_PRODUCTION }}
         run: |
           cd ./backend/uclapi && \
           python ./manage.py migrate
@@ -53,12 +56,7 @@ jobs:
     name: deploy to staging
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
-    env:
-      AWS_S3_STATICS: True
-      AWS_S3_STATICS_CREDENTIALS_ENABLED: False
-      AWS_S3_BUCKET_NAME: uclapi-static-staging
-      AWS_S3_BUCKET_PATH: static/
-      AWS_S3_REGION: eu-west-2
+    environment: Staging
     steps:
       - name: setup python
         uses: actions/setup-python@v2
@@ -80,11 +78,22 @@ jobs:
         run: npm run build
 
       - name: unencrypt secrets
+        env:
+          encrypted_7e23b3ba1922_iv: ${{ secrets.encrypted_7e23b3ba1922_iv }}
+          encrypted_7e23b3ba1922_key: ${{ secrets.encrypted_7e23b3ba1922_key }}
         run: |
           openssl aes-256-cbc -K $encrypted_7e23b3ba1922_key -iv $encrypted_7e23b3ba1922_iv -in keys.tar.enc -out keys.tar -d && \
           tar xvf keys.tar
 
       - name: deploy static assets
+        env:
+          AWS_S3_STATICS: True
+          AWS_S3_STATICS_CREDENTIALS_ENABLED: False
+          AWS_S3_BUCKET_NAME: uclapi-static-staging
+          AWS_S3_BUCKET_PATH: static/
+          AWS_S3_REGION: eu-west-2
+          STAGING_BASTION: ${{ secrets.STAGING_BASTION }}
+          STAGING_CRON: ${{ secrets.STAGING_CRON }}
         run: |
           cd ../backend/uclapi && \
           ./manage.py collectstatic --noinput && \
