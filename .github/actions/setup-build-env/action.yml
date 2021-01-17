@@ -5,19 +5,19 @@ runs:
   steps:
     # assumes code has already been checked out    
     - name: setup dependencies
-      run: sudo apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
+      run: apt-get install libaio1 unzip wget build-essential libpq-dev libpq5
       shell: bash
     
     - name: setup oracle
       shell: bash
       run: |
-        sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip && \
-        sudo wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip && \
-        sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip && \
-        sudo unzip instantclient-sdk-linux.x64-12.2.0.1.0.zip && \
+        wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip && \
+        wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip && \
+        unzip instantclient-basic-linux.x64-12.2.0.1.0.zip && \
+        unzip instantclient-sdk-linux.x64-12.2.0.1.0.zip && \
         cd instantclient_12_2 && \
-        sudo ln -s libclntsh.so.12.1 libclntsh.so && \
-        sudo ln -s libocci.so.12.1 libocci.so && \
+        ln -s libclntsh.so.12.1 libclntsh.so && \
+        ln -s libocci.so.12.1 libocci.so && \
         export ORACLE_HOME=$(pwd) && \
         export DYLD_LIBRARY_PATH=DYLD_LIBRARY_PATH:$ORACLE_HOME && \
         export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME
