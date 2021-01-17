@@ -46,9 +46,10 @@ jobs:
       - name: setup python dependencies
         run: |
           cd ./backend/uclapi && \
+          python -m pip install --upgrade pip && \
           which pip && which pip3 && \
-          pip install -r requirements.txt && \
           pip install codecov && \
+          pip install -r requirements.txt && \
           pip install $(cat requirements.txt | grep "cx-Oracle")
       
       - name: setup frontend dependencies

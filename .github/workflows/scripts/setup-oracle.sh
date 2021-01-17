@@ -6,16 +6,29 @@
 #   - running on Ubuntu
 #   - is root
 
+# exit when any command fails
+set -e
+
+# keep track of the last executed command
+trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
+# echo an error message before exiting
+trap 'echo "\"${last_command}\" command filed with exit code $?."' EXIT
+
+apt-get update
+apt-get install -y libaio1 unzip wget build-essential libpq-dev libpq5
+
 ORACLE_VERSION=12_2
 ORACLE_SO_VERSION=12.1
+ORACLE_INSTANTCLIENT_BASIC_URL=https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
+ORACLE_INSTANTCLIENT_SDK_URL=https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
 
 mkdir /opt/oracle
 
 wget -O instantclient.zip "$ORACLE_INSTANTCLIENT_BASIC_URL"
 wget -O instantclientsdk.zip "$ORACLE_INSTANTCLIENT_SDK_URL"
 
-sudo unzip -d/opt/oracle instantclient.zip
-sudo unzip -d/opt/oracle instantclientsdk.zip
+unzip -d/opt/oracle instantclient.zip
+unzip -d/opt/oracle instantclientsdk.zip
 
 export ORACLE_HOME=/opt/oracle/instantclient_$ORACLE_VERSION
 
