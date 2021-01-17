@@ -41,11 +41,17 @@ jobs:
       
       - name: run migrations
         env: # Or as an environment variable
-          UCLAPI_PRODUCTION: False
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          UCLAPI_RUNNING_ON_AWS_ELB: False
+          OCCUPEYE_BASE_URL: ${{ secrets.OCCUPEYE_BASE_URL }}
+          OCCUPEYE_DEPLOYMENT_ID: ${{ secrets.OCCUPEYE_DEPLOYMENT_ID }}
+          OCCUPEYE_DEPLOYMENT_NAME: ${{ secrets.OCCUPEYE_DEPLOYMENT_NAME }}
+          OCCUPEYE_PASSWORD: ${{ secrets.OCCUPEYE_PASSWORD }}
+          OCCUPEYE_THREAD_LIMIT: ${{ secrets.OCCUPEYE_THREAD_LIMIT }}
+          OCCUPEYE_USERNAME: ${{ secrets.OCCUPEYE_USERNAME }}
           REDIS_UCLAPI_HOST: ${{ secrets.REDIS_UCLAPI_HOST }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
           SHIB_TEST_USER: ${{ secrets.SHIB_TEST_USER }}
+          UCLAPI_PRODUCTION: False
+          UCLAPI_RUNNING_ON_AWS_ELB: False
         run: |
           cd ./backend/uclapi && \
           python ./manage.py migrate
