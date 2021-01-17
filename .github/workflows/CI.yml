@@ -64,6 +64,7 @@ jobs:
           SHIB_TEST_USER: ${{ secrets.SHIB_TEST_USER }}
           UCLAPI_PRODUCTION: False
           UCLAPI_RUNNING_ON_AWS_ELB: False
+          DB_UCLAPI_HOST: postgres
           DB_UCLAPI_PASSWORD: supersecure
         run: |
           cd ./backend/uclapi && \
