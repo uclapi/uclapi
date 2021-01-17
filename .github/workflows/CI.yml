@@ -45,6 +45,7 @@ jobs:
       postgres:
         image: postgres
         env:
+          POSTGRES_USER: uclapi
           POSTGRES_PASSWORD: supersecure
         options: >-
           --health-cmd pg_isready
@@ -76,7 +77,9 @@ jobs:
       - name: run migrations
         env: # Or as an environment variable
           DB_UCLAPI_HOST: localhost
+          DB_UCLAPI_USERNAME: uclapi
           DB_UCLAPI_PASSWORD: supersecure
+          DB_UCLAPI_PORT: 5432
           OCCUPEYE_BASE_URL: ${{ secrets.OCCUPEYE_BASE_URL }}
           OCCUPEYE_DEPLOYMENT_ID: ${{ secrets.OCCUPEYE_DEPLOYMENT_ID }}
           OCCUPEYE_DEPLOYMENT_NAME: ${{ secrets.OCCUPEYE_DEPLOYMENT_NAME }}
