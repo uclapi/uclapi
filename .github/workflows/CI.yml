@@ -7,7 +7,6 @@ jobs:
   build-frontend:
     name: build and test frontend
     runs-on: ubuntu-latest
-    environment: Staging
     steps:
       - name: checkout code
         uses: actions/checkout@v2
@@ -27,6 +26,8 @@ jobs:
         run: |
           cd ./frontend && \
           npm run build
+
+      # TODO: write frontend tests
 
   build-backend:
     name: build and test backend
