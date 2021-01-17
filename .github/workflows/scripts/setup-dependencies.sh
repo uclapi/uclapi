@@ -16,9 +16,8 @@ wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.
   ln -s libclntsh.so.12.1 libclntsh.so && \
   ln -s libocci.so.12.1 libocci.so && \
   export ORACLE_HOME=$(pwd) && \
-  export DYLD_LIBRARY_PATH=DYLD_LIBRARY_PATH:$ORACLE_HOME && \
-  export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME && \
-  ldconfig /usr/local/lib && \
+  export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$ORACLE_HOME && \
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME && \
   cd .. && \
 cd ./backend/uclapi && \
   python -m pip install --upgrade pip && \
