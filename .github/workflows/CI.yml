@@ -40,8 +40,8 @@ jobs:
       - name: checkout code
         uses: actions/checkout@v2
 
-      - name: setup build environment
-        uses: ./.github/actions/setup-build-env
+      - name: setup dependencies
+        run: ./.github/workflows/scripts/setup-dependencies.sh
 
       - name: build frontend
         run: |
