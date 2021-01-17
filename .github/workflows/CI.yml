@@ -40,8 +40,8 @@ jobs:
       - name: checkout code
         uses: actions/checkout@v2
 
-      # - name: setup oracle
-      #   run: ./.github/workflows/scripts/setup-oracle.sh
+      - name: setup oracle
+        run: ./.github/workflows/scripts/setup-oracle.sh
 
       - name: setup python dependencies
         run: |
