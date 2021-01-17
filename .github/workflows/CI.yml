@@ -4,36 +4,10 @@ on:
   push
 
 jobs:
-  build-frontend:
-    name: build and test frontend
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout code
-        uses: actions/checkout@v2
-
-      - name: setup nodejs
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-
-      - name: setup frontend dependencies
-        run: |
-          cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
-          cd ./frontend/ && \
-          npm ci
-
-      - name: build frontend
-        run: |
-          cd ./frontend && \
-          npm run build
-
-      # TODO: write frontend tests
-
-  build-backend:
-    name: build and test backend
+  build:
+    name: build and test
     runs-on: ubuntu-latest
     environment: Staging
-    needs: build-frontend
     env:
       DB_UCLAPI_HOST: localhost
       DB_UCLAPI_PASSWORD: supersecure
@@ -49,6 +23,7 @@ jobs:
       SHIB_TEST_USER: ${{ secrets.SHIB_TEST_USER }}
       UCLAPI_PRODUCTION: False
       UCLAPI_RUNNING_ON_AWS_ELB: False
+      WHITELISTED_CALLBACK_URLS: ${{ secrets.WHITELISTED_CALLBACK_URLS }}
     services:
       redis:
         image: redis
@@ -77,6 +52,11 @@ jobs:
         with:
           python-version: '3.7'
 
+      - name: setup nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
       - name: checkout code
         uses: actions/checkout@v2
 
@@ -90,12 +70,23 @@ jobs:
           pip install codecov && \
           pip install -r requirements.txt && \
           pip install $(cat requirements.txt | grep "cx-Oracle")
+
+      - name: setup frontend dependencies
+        run: |
+          cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
+          cd ./frontend/ && \
+          npm ci
       
       - name: run migrations
         
         run: |
           cd ./backend/uclapi && \
           python ./manage.py migrate
+
+      - name: build frontend
+        run: |
+          cd ./frontend && \
+          npm run build
 
       - name: run our tests and check test coverage
         run: |
