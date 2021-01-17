@@ -22,8 +22,14 @@ runs:
         export DYLD_LIBRARY_PATH=DYLD_LIBRARY_PATH:$ORACLE_HOME && \
         export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$ORACLE_HOME
       
+    - uses: actions/cache@v2
+      id: python-cache
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
 
     - name: install python dependencies
+      if: steps.cache.outputs.python-cache-hit != 'true'
       run: |
         cd ./backend/uclapi && \
         (sed '/cx.*/d' requirements.txt | sed -e 's/^\\-e //') | xargs -n 1 pip3 install && \
