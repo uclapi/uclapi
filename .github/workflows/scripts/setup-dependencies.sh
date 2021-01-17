@@ -6,6 +6,9 @@
 #   - running on Ubuntu
 #   - is root
 
+ls && \
+cd ../../../ && \
+ls && \
 apt-get update && \
   apt-get install -y libaio1 unzip wget build-essential libpq-dev libpq5 && \
 wget https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip && \

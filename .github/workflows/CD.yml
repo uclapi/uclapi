@@ -26,9 +26,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: setup dependencies
-        run: |
-          chmod +x ./.github/workflows/scripts/setup-dependencies.sh && \
-          ./.github/workflows/scripts/setup-dependencies.sh
+        run: ./.github/workflows/scripts/setup-dependencies.sh
 
       - name: build frontend
         run: npm run build
