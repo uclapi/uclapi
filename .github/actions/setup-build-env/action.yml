@@ -26,6 +26,7 @@ runs:
 
     - name: install python dependencies
       run: |
+        ls && \
         cd ./backend/uclapi && \
         (sed '/cx.*/d' requirements.txt | sed -e 's/^\\-e //') | xargs -n 1 pip3 install && \
         pip3 install codecov && \
