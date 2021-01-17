@@ -70,12 +70,12 @@ jobs:
           python -m pip install --upgrade pip && \
           cd ./backend/uclapi && \
           pip install codecov && \
-          pip install -r requirements.txt
-#          pip install $(cat requirements.txt | grep "cx-Oracle")
+          pip install -r requirements.txt && \
+          pip install $(cat requirements.txt | grep "cx-Oracle")
       
       - name: run migrations
         env: # Or as an environment variable
-          DB_UCLAPI_HOST: postgres
+          DB_UCLAPI_HOST: localhost
           DB_UCLAPI_PASSWORD: supersecure
           OCCUPEYE_BASE_URL: ${{ secrets.OCCUPEYE_BASE_URL }}
           OCCUPEYE_DEPLOYMENT_ID: ${{ secrets.OCCUPEYE_DEPLOYMENT_ID }}

@@ -17,40 +17,40 @@ trap 'echo "\"${last_command}\" command filed with exit code $?."' EXIT
 sudo apt-get update && \
 sudo apt-get install -y libaio1 unzip wget build-essential libpq-dev libpq5 sed git locales liblz4-1
 
-# export ORACLE_VERSION=12_2
-# export ORACLE_SO_VERSION=12.1
-# export ORACLE_INSTANTCLIENT_BASIC_URL=https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
-# export ORACLE_INSTANTCLIENT_SDK_URL=https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
-# export ORACLE_INSTALL_DIR=/opt/oracle
-# export ORACLE_HOME=${ORACLE_INSTALL_DIR}/instantclient_${ORACLE_VERSION}
+export ORACLE_VERSION=12_2
+export ORACLE_SO_VERSION=12.1
+export ORACLE_INSTANTCLIENT_BASIC_URL=https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
+export ORACLE_INSTANTCLIENT_SDK_URL=https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
+export ORACLE_INSTALL_DIR=/opt/oracle
+export ORACLE_HOME=${ORACLE_INSTALL_DIR}/instantclient_${ORACLE_VERSION}
 
-# mkdir -p /opt/oracle
+sudo mkdir -p /opt/oracle
 
-# wget -O instantclient.zip "$ORACLE_INSTANTCLIENT_BASIC_URL"
-# wget -O instantclientsdk.zip "$ORACLE_INSTANTCLIENT_SDK_URL"
+wget -O instantclient.zip "$ORACLE_INSTANTCLIENT_BASIC_URL"
+wget -O instantclientsdk.zip "$ORACLE_INSTANTCLIENT_SDK_URL"
 
-# unzip -d/opt/oracle instantclient.zip
-# unzip -d/opt/oracle instantclientsdk.zip
+sudo unzip -d/opt/oracle instantclient.zip
+sudo unzip -d/opt/oracle instantclientsdk.zip
 
-# export ORACLE_HOME=/opt/oracle/instantclient_$ORACLE_VERSION
+export ORACLE_HOME=/opt/oracle/instantclient_$ORACLE_VERSION
 
-# pushd $ORACLE_HOME
+pushd $ORACLE_HOME
 
-# ln -s libclntsh.so.$ORACLE_SO_VERSION libclntsh.so
-# ln -s libocci.so.$ORACLE_SO_VERSION libocci.so
-# ln -s libclntshcore.so.$ORACLE_SO_VERSION libclntshcore.so
+sudo ln -s libclntsh.so.$ORACLE_SO_VERSION libclntsh.so
+sudo ln -s libocci.so.$ORACLE_SO_VERSION libocci.so
+sudo ln -s libclntshcore.so.$ORACLE_SO_VERSION libclntshcore.so
 
-# export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME
-# ldconfig
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME
+sudo ldconfig
 
-# # Add ORACLE_HOME to /etc/environment
-# grep -q -F "ORACLE_HOME=/opt/oracle/instantclient_$ORACLE_VERSION" /etc/environment || echo "ORACLE_HOME=/opt/oracle/instantclient_$ORACLE_VERSION" >> /etc/environment
+# Add ORACLE_HOME to /etc/environment
+# grep -q -F "ORACLE_HOME=/opt/oracle/instantclient_$ORACLE_VERSION" /etc/environment || sudo bash -c 'echo "ORACLE_HOME=/opt/oracle/instantclient_$ORACLE_VERSION"' >> /etc/environment
 
 # # Add ld path to /etc/ld.so.conf.d
-# echo "/opt/oracle/instantclient_$ORACLE_VERSION" > /etc/ld.so.conf.d/oracle.conf
-# ldconfig
+# sudo echo "/opt/oracle/instantclient_$ORACLE_VERSION" > /etc/ld.so.conf.d/oracle.conf
+# sudo ldconfig
 
-# popd
+popd
 
 # ORACLE_INSTANTCLIENT_BASIC_URL=https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-basic-linux.x64-12.2.0.1.0.zip
 # ORACLE_INSTANTCLIENT_SDK_URL=https://s3.eu-west-2.amazonaws.com/uclapi-static/instantclient-sdk-linux.x64-12.2.0.1.0.zip
