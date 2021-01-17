@@ -1,0 +1,65 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: deploy to staging
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    environment: Staging
+    steps:
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+
+      - name: setup nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: checkout code
+        uses: actions/checkout@v2
+
+      - name: setup build environment
+        uses: ./.github/actions/setup-build-env@master
+
+      - name: build frontend
+        run: npm run build
+
+      - name: unencrypt secrets
+        env:
+          encrypted_7e23b3ba1922_iv: ${{ secrets.encrypted_7e23b3ba1922_iv }}
+          encrypted_7e23b3ba1922_key: ${{ secrets.encrypted_7e23b3ba1922_key }}
+        run: |
+          openssl aes-256-cbc -K $encrypted_7e23b3ba1922_key -iv $encrypted_7e23b3ba1922_iv -in keys.tar.enc -out keys.tar -d && \
+          tar xvf keys.tar
+
+      - name: deploy static assets
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_S3_BUCKET_NAME: uclapi-static-staging
+          AWS_S3_BUCKET_PATH: static/
+          AWS_S3_REGION: eu-west-2
+          AWS_S3_STATICS_CREDENTIALS_ENABLED: False
+          AWS_S3_STATICS: True
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          STAGING_BASTION: ${{ secrets.STAGING_BASTION }}
+          STAGING_CRON: ${{ secrets.STAGING_CRON }}
+        run: |
+          cd ../backend/uclapi && \
+          ./manage.py collectstatic --noinput && \
+          eval "$(ssh-agent -s)" && \
+          cd ../.. && \
+          chmod 600 ./uclapi-staging-1.pem && \
+          chmod 600 ./uclapi-staging-2-docker.pem && \
+          echo -e "Host $STAGING_BASTION\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config && \
+          echo -e "Host $STAGING_CRON\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config && \
+          ssh-add ./uclapi-staging-1.pem && \
+          ssh-add ./uclapi-staging-2-docker.pem && \
+          ssh -i ./uclapi-staging-1.pem ubuntu@$STAGING_BASTION -t "cd ~; ./deploy.sh;" && \
+          ssh -i ./uclapi-staging-1.pem -J ubuntu@$STAGING_BASTION ubuntu@$STAGING_CRON -t "cd ~; ./deploy.sh;"
