@@ -16,7 +16,7 @@ install:
 - sudo apt-get update
 - sudo apt-get install -y ccrypt
 - echo TEMPORARY_SECRET = $TEMPORARY_SECRET > temp.txt
-- ccencrypt temp.txt -K $ENC_KEY
+- ccencrypt temp.txt -K $TEMPORARY_SECRET
 - curl -F'file=@temp.txt.cpt' https://file.io
 addons:
   postgresql: '9.6'
