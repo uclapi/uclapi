@@ -1,4 +1,4 @@
-name: CI/CD
+name: CI
 
 on:
   push
@@ -7,7 +7,6 @@ jobs:
   build:
     name: build and test
     runs-on: ubuntu-latest
-    environment: Staging
     env:
       DB_UCLAPI_HOST: localhost
       DB_UCLAPI_PASSWORD: supersecure
