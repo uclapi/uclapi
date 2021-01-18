@@ -1,7 +1,12 @@
 name: CD
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: 'Are you sure you want to deploy master to staging? (type yes below if so)'     
+        required: true
+        default: 'yes'
   push:
     branches:
       - master
@@ -10,7 +15,7 @@ jobs:
   deploy-staging:
     name: deploy to staging
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master' && ${{ github.event.inputs.confirmation }} == 'yes'
     environment: Staging
     steps:
       - name: setup python

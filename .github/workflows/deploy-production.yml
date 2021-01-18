@@ -12,7 +12,7 @@ jobs:
   deploy-production:
     name: deploy to production
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.name }} == 'yes'
+    if: ${{ github.event.inputs.confirmation }} == 'yes'
     steps:
       - name: do something
         run: echo "TODO"
