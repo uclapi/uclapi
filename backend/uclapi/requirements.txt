@@ -15,7 +15,7 @@ django-postgrespool2==1.0.1
 eventlet==0.30.0
 freezegun==1.0.0
 flake8==3.8.4
-gevent==20.9.0
+gevent==21.1.1
 gunicorn==20.0.4
 greenlet==0.4.17
 hiredis==1.1.0
