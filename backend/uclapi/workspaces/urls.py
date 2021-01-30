@@ -10,8 +10,7 @@ urlpatterns = [
     path(r"sensors/summary", views.get_survey_sensors_summary),
     path(r"sensors/averages/time", views.get_averages_time),
     path(r"sensors", views.get_survey_sensors),
-    path(r"historical/sensors", views.get_historical_list_sensors),
-    path(r"historical/sensor", views.get_historical_sensor),
-    path(r"historical/surveys", views.get_historical_list_surveys),
-    path(r"historical/survey", views.get_historical_survey)
+    path(r"historical/surveys", views.SurveysList.as_view()),
+    path(r"historical/sensors", views.SensorsList.as_view()),
+    path(r"historical/data", views.HistoricalList.as_view()),
 ]

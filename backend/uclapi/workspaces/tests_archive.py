@@ -3,9 +3,10 @@ import os
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
-from django.test import TestCase
+from django.test import TestCase, Client
 from freezegun import freeze_time
 
+from dashboard.models import App, User
 from .models import Surveys, Historical, Sensors, SensorReplacements, SurveyChanges
 from .occupeye.api import OccupEyeApi
 from .occupeye.archive import OccupEyeArchive
@@ -45,16 +46,16 @@ class OccupEyeArchiveTestCase(TestCase):
                               "last_updated": datetime(2020, 2, 1, 0, 0), "name": "Bedford Way LG16",
                               "start_datetime": datetime(2019, 7, 6, 8, 0), "survey_id": 72})
         sensors = Sensors.objects.filter(survey_id=72).values()
-        exp_sensors = [{"sensor_id": 20664008, "survey_id": 72, "hardware_id": 664008, "survey_device_id": 14767},
-                       {"sensor_id": 20664006, "survey_id": 72, "hardware_id": 664006, "survey_device_id": 14765},
+        exp_sensors = [{"sensor_id": 20664001, "survey_id": 72, "hardware_id": 664001, "survey_device_id": 14760},
+                       {"sensor_id": 20664002, "survey_id": 72, "hardware_id": 664002, "survey_device_id": 14761},
                        {"sensor_id": 20664003, "survey_id": 72, "hardware_id": 664003, "survey_device_id": 14762},
                        {"sensor_id": 20664004, "survey_id": 72, "hardware_id": 664004, "survey_device_id": 14763},
-                       {"sensor_id": 20664002, "survey_id": 72, "hardware_id": 664002, "survey_device_id": 14761},
-                       {"sensor_id": 20664010, "survey_id": 72, "hardware_id": 664010, "survey_device_id": 14769},
-                       {"sensor_id": 20664001, "survey_id": 72, "hardware_id": 664001, "survey_device_id": 14760},
                        {"sensor_id": 20664005, "survey_id": 72, "hardware_id": 664005, "survey_device_id": 14764},
+                       {"sensor_id": 20664006, "survey_id": 72, "hardware_id": 664006, "survey_device_id": 14765},
+                       {"sensor_id": 20664007, "survey_id": 72, "hardware_id": 664007, "survey_device_id": 14766},
+                       {"sensor_id": 20664008, "survey_id": 72, "hardware_id": 664008, "survey_device_id": 14767},
                        {"sensor_id": 20664009, "survey_id": 72, "hardware_id": 664009, "survey_device_id": 14768},
-                       {"sensor_id": 20664007, "survey_id": 72, "hardware_id": 664007, "survey_device_id": 14766}]
+                       {"sensor_id": 20664010, "survey_id": 72, "hardware_id": 664010, "survey_device_id": 14769}]
         for sensor, exp_sensor in zip(sensors, exp_sensors):
             del sensor["id"]
             self.assertDictEqual(sensor, exp_sensor)
@@ -158,7 +159,7 @@ class OccupEyeArchiveEdgeTestCase(TestCase):
 
 
 @freeze_time("2020-02-01")
-class OccupEyeArchiveApiTestCase(TestCase):
+class OccupEyeArchiveViewsTestCase(TestCase):
 
     @patch("workspaces.occupeye.archive.FIRST_OCCUPEYE_INSTALLATION",
            datetime.strptime("2020-01-01T00:00:00+0000", "%Y-%m-%dT%H:%M:%S%z"))
@@ -169,55 +170,101 @@ class OccupEyeArchiveApiTestCase(TestCase):
         self.archive.reset()
         self.archive.update()
         self.api = OccupEyeApi()
+        self.client = Client()
+
+        try:
+            user = User.objects.get(email="develop@ucl.ac.uk")
+        except User.DoesNotExist:
+            user = User(
+                email="develop@ucl.ac.uk",
+                full_name="UCL API Developer",
+                given_name="UCL API",
+                department="Dept of API Development",
+                cn="develop",
+                raw_intranet_groups="ucl-all;ucl-ug;schsci-all",
+                employee_id="uclapi1"
+            )
+            user.save()
+
+        try:
+            app = App.objects.get(user=user, name="Local OAuth Test")
+        except App.DoesNotExist:
+            app = App(
+                user=user,
+                name="Local OAuth Test",
+                api_token="uclapi-4286bc18b235d86-ab0998cc3a47a9b-07b6dfe234a04bf-97407a655b33ae8",
+                client_id="1105308584328350.9460393713696551",
+                client_secret="251e9f9553bb3b86829c18bf795844d977dedf569b24a70e4d4e753958fcc2f3",
+                callback_url="http://localhost:8002/uclapi/callback"
+            )
+            app.save()
 
     def test_get_historical_sensor(self):
         start_time = datetime.strptime("2020-01-15T13:00", "%Y-%m-%dT%H:%M")
         end_time = datetime.strptime("2020-01-15T14:00", "%Y-%m-%dT%H:%M")
-        with_delta = self.api.get_historical_sensor(72, 20664001, start_time, end_time)
-        self.assertDictEqual(with_delta, {'2020-01-15T13:10:00': 1, '2020-01-15T13:20:00': 0, '2020-01-15T13:50:00': 1,
-                                          '2020-01-15T14:00:00': 0})
 
-        without_delta = self.api.get_historical_sensor(72, 20664001, start_time, end_time, delta=False)
-        self.assertDictEqual(without_delta,
-                             {'2020-01-15T13:00:00': 0, '2020-01-15T13:10:00': 1, '2020-01-15T13:20:00': 0,
-                              '2020-01-15T13:30:00': 0, '2020-01-15T13:40:00': 0, '2020-01-15T13:50:00': 1,
-                              '2020-01-15T14:00:00': 0})
+        response = self.client.get("/workspaces/historical/data",
+                                   {"token": "uclapi-4286bc18b235d86-ab0998cc3a47a9b-07b6dfe234a04bf-97407a655b33ae8",
+                                    "survey_id": 72,
+                                    "sensor_id": 20664001,
+                                    "datetime__gte": start_time.isoformat(),
+                                    "datetime__lte": end_time.isoformat()})
+        self.assertEqual(response.status_code, 200)
+        self.assertListEqual(json.loads(response.content)["data"]["results"],
+                             [{"survey_id": 72, "sensor_id": 20664001, "datetime": "2020-01-15T13:10:00", "state": 1},
+                              {"survey_id": 72, "sensor_id": 20664001, "datetime": "2020-01-15T13:20:00", "state": 0},
+                              {"survey_id": 72, "sensor_id": 20664001, "datetime": "2020-01-15T13:50:00", "state": 1},
+                              {"survey_id": 72, "sensor_id": 20664001, "datetime": "2020-01-15T14:00:00", "state": 0}])
 
     def test_get_historical_survey_sensors(self):
-        sensors = self.api.get_historical_survey_sensors(72)
-        self.assertListEqual(sensors,
-                             [20664008, 20664006, 20664003, 20664004, 20664002, 20664010, 20664001, 20664005, 20664009,
-                              20664007])
+        response = self.client.get("/workspaces/historical/sensors",
+                                   {"token": "uclapi-4286bc18b235d86-ab0998cc3a47a9b-07b6dfe234a04bf-97407a655b33ae8",
+                                    "survey_id": 72})
+        self.assertEqual(response.status_code, 200)
+        self.assertListEqual(json.loads(response.content)["sensors"]["results"],
+                             [{"survey_id": 72, "sensor_id": 20664001, "hardware_id": 664001,
+                               "survey_device_id": 14760},
+                              {"survey_id": 72, "sensor_id": 20664002, "hardware_id": 664002,
+                               "survey_device_id": 14761},
+                              {"survey_id": 72, "sensor_id": 20664003, "hardware_id": 664003,
+                               "survey_device_id": 14762},
+                              {"survey_id": 72, "sensor_id": 20664004, "hardware_id": 664004,
+                               "survey_device_id": 14763},
+                              {"survey_id": 72, "sensor_id": 20664005, "hardware_id": 664005,
+                               "survey_device_id": 14764},
+                              {"survey_id": 72, "sensor_id": 20664006, "hardware_id": 664006,
+                               "survey_device_id": 14765},
+                              {"survey_id": 72, "sensor_id": 20664007, "hardware_id": 664007,
+                               "survey_device_id": 14766},
+                              {"survey_id": 72, "sensor_id": 20664008, "hardware_id": 664008,
+                               "survey_device_id": 14767},
+                              {"survey_id": 72, "sensor_id": 20664009, "hardware_id": 664009,
+                               "survey_device_id": 14768},
+                              {"survey_id": 72, "sensor_id": 20664010, "hardware_id": 664010,
+                               "survey_device_id": 14769}])
 
     def test_get_historical_survey(self):
         start_time = datetime.strptime("2020-01-10T00:00", "%Y-%m-%dT%H:%M")
         end_time = datetime.strptime("2020-01-12T00:00", "%Y-%m-%dT%H:%M")
-        surveys = self.api.get_historical_survey(72, start_time, end_time)
-        self.assertDictEqual(surveys, {20664008: {}, 20664006: {}, 20664003: {}, 20664004: {},
-                                       20664002: {'2020-01-10T00:30:00': 0}, 20664010: {},
-                                       20664001: {'2020-01-10T21:40:00': 1, '2020-01-10T21:50:00': 0}, 20664005: {},
-                                       20664009: {}, 20664007: {}})
 
-    def test_get_historical_list_sensors(self):
-        sensors = self.api.get_historical_list_sensors(72)
-        self.assertDictEqual(sensors,
-                             {"survey_id": 72, "name": "Bedford Way LG16", "start": datetime(2019, 7, 6, 8, 0),
-                              "end": datetime(2030, 12, 31, 20, 0), "active": True,
-                              "sensors": [{"sensor_id": 20664008, "hardware_id": 664008, "survey_device_id": 14767},
-                                          {"sensor_id": 20664006, "hardware_id": 664006, "survey_device_id": 14765},
-                                          {"sensor_id": 20664003, "hardware_id": 664003, "survey_device_id": 14762},
-                                          {"sensor_id": 20664004, "hardware_id": 664004, "survey_device_id": 14763},
-                                          {"sensor_id": 20664002, "hardware_id": 664002, "survey_device_id": 14761},
-                                          {"sensor_id": 20664010, "hardware_id": 664010, "survey_device_id": 14769},
-                                          {"sensor_id": 20664001, "hardware_id": 664001, "survey_device_id": 14760},
-                                          {"sensor_id": 20664005, "hardware_id": 664005, "survey_device_id": 14764},
-                                          {"sensor_id": 20664009, "hardware_id": 664009, "survey_device_id": 14768},
-                                          {"sensor_id": 20664007, "hardware_id": 664007, "survey_device_id": 14766}],
-                              "last_updated": datetime(2020, 2, 1, 0, 0)})
+        response = self.client.get("/workspaces/historical/data",
+                                   {"token": "uclapi-4286bc18b235d86-ab0998cc3a47a9b-07b6dfe234a04bf-97407a655b33ae8",
+                                    "survey_id": 72,
+                                    "datetime__gte": start_time.isoformat(),
+                                    "datetime__lte": end_time.isoformat()})
+        self.assertEqual(response.status_code, 200)
+        self.assertListEqual(json.loads(response.content)["data"]["results"],
+                             [{"survey_id": 72, "sensor_id": 20664001, "datetime": "2020-01-10T21:40:00", "state": 1},
+                              {"survey_id": 72, "sensor_id": 20664001, "datetime": "2020-01-10T21:50:00", "state": 0},
+                              {"survey_id": 72, "sensor_id": 20664002, "datetime": "2020-01-10T00:30:00", "state": 0}])
 
     def test_get_historical_list_surveys(self):
-        surveys = self.api.get_historical_list_surveys()
+        response = self.client.get("/workspaces/historical/surveys",
+                                   {"token": "uclapi-4286bc18b235d86-ab0998cc3a47a9b-07b6dfe234a04bf-97407a655b33ae8"})
+        self.assertEqual(response.status_code, 200)
+        surveys = json.loads(response.content)["surveys"]["results"]
         self.assertEqual(len(surveys), 1)
         self.assertDictEqual(surveys[0],
-                             {"survey_id": 72, "name": "Bedford Way LG16", "start": datetime(2019, 7, 6, 8, 0),
-                              "end": datetime(2030, 12, 31, 20, 0), "active": True})
+                             {"survey_id": 72, "name": "Bedford Way LG16", "start_datetime": "2019-07-06T08:00:00",
+                              "end_datetime": "2030-12-31T20:00:00", "active": True,
+                              "last_updated": "2020-02-01T00:00:00"})

@@ -1,13 +1,10 @@
 import json
 from collections import OrderedDict
-from datetime import timedelta, datetime
 from distutils.util import strtobool
 
 import redis
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
 
-from workspaces.models import Historical, Sensors, Surveys
 from .constants import OccupEyeConstants
 from .exceptions import BadOccupEyeRequest, OccupEyeOtherSensorState
 from .utils import is_sensor_occupied, survey_ids_to_surveys
@@ -330,98 +327,3 @@ class OccupEyeApi:
     def check_map_exists(self, survey_id, map_id):
         map_data_key = self._const.SURVEY_MAP_DATA_KEY.format(survey_id, map_id)
         return self._redis.exists(map_data_key)
-
-    @staticmethod
-    def floor_10_minutes(dt: datetime) -> datetime:
-        """
-        Round down to the nearest 10 minute interval
-        """
-        return dt - timedelta(minutes=dt.minute % 10,
-                              seconds=dt.second,
-                              microseconds=dt.microsecond)
-
-    def get_historical_sensor(self, survey_id, sensor_id, start_time, end_time, delta=True):
-        """
-        Gets historical data for a single sensor in a single survey location
-        """
-        if not Sensors.objects.filter(survey_id=survey_id, sensor_id=sensor_id).exists():
-            return None
-
-        objs = Historical.objects.filter(survey_id=survey_id, sensor_id=sensor_id,
-                                         datetime__range=(start_time, end_time)).order_by('datetime')
-
-        # If returning the delta (exactly what is stored in the database), convert each timestamp to an ISO-format
-        # dictionary
-        if delta:
-            return {obj.datetime.isoformat(): obj.state for obj in objs}
-
-        # Else generate all possible times (10 minute intervals) between deltas and populate them with the previous
-        # value
-        states = {}
-        start_time = self.floor_10_minutes(start_time)
-        end_time = self.floor_10_minutes(end_time)
-
-        objs = {obj.datetime: obj.state for obj in objs}
-
-        first_obj = Historical.objects.filter(survey_id=survey_id, sensor_id=sensor_id,
-                                              datetime__lte=start_time).order_by('-datetime').values('state').first()
-
-        state = -1 if first_obj is None else first_obj["state"]
-        while start_time <= end_time:
-            if start_time in objs:
-                state = objs[start_time]
-            states[start_time.isoformat()] = state
-            start_time += timedelta(minutes=10)
-
-        return states
-
-    @staticmethod
-    def get_historical_survey_sensors(survey_id):
-        """
-        Gets sensors associated with a single survey location
-        """
-        return list(Sensors.objects.filter(survey_id=survey_id).values_list('sensor_id', flat=True))
-
-    def get_historical_survey(self, survey_id, start_time, end_time, delta=True):
-        """
-        Gets historical data for all sensors in a single survey location
-        """
-        states = {}
-        for sensor_id in self.get_historical_survey_sensors(survey_id):
-            states[sensor_id] = self.get_historical_sensor(survey_id, sensor_id, start_time, end_time, delta=delta)
-
-        return states
-
-    @staticmethod
-    def get_historical_list_sensors(survey_id):
-        """
-        Gets sensors and sensor data associated with a single survey location
-        """
-
-        try:
-            survey = Surveys.objects.get(survey_id=survey_id)
-        except ObjectDoesNotExist:
-            return None
-
-        objs = Sensors.objects.filter(survey_id=survey_id)
-        sensors = []
-        for obj in objs:
-            sensors.append({"sensor_id": obj.sensor_id, "hardware_id": obj.hardware_id,
-                            "survey_device_id": obj.survey_device_id})
-
-        return {"survey_id": survey.survey_id, "name": survey.name, "start": survey.start_datetime,
-                "end": survey.end_datetime, "active": survey.active, "sensors": sensors,
-                "last_updated": survey.last_updated}
-
-    @staticmethod
-    def get_historical_list_surveys():
-        """
-        Gets all survey data
-        """
-        objs = Surveys.objects.all()
-        surveys = []
-        for obj in objs:
-            surveys.append({"survey_id": obj.survey_id, "name": obj.name, "start": obj.start_datetime,
-                            "end": obj.end_datetime, "active": obj.active})
-
-        return surveys

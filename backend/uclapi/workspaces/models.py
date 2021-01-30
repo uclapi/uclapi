@@ -20,6 +20,7 @@ class Sensors(models.Model):
         constraints = [
             models.UniqueConstraint(fields=["sensor_id", "survey_id"], name="sensors_composite_primary_key")
         ]
+        ordering = ["survey_id", "sensor_id"]
 
 
 # Stores the previous values at sensor replacement, for example if hardware_id changed from 1 to 2 on 2020-01-01
@@ -58,6 +59,7 @@ class Historical(models.Model):
             models.UniqueConstraint(fields=["sensor_id", "survey_id", "datetime"],
                                     name="historical_composite_primary_key")
         ]
+        ordering = ["survey_id", "sensor_id", "datetime"]
 
 
 class Surveys(models.Model):
@@ -73,6 +75,7 @@ class Surveys(models.Model):
 
     class Meta:
         _DATABASE = "default"
+        ordering = ["survey_id"]
 
 
 # Stores the current value at survey change, for example if active changed from false to true on 2020-01-01 10:20:00

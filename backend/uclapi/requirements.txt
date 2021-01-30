@@ -16,6 +16,7 @@ django-mock-queries==2.1.5
 django-storages==1.10.1
 djangorestframework==3.11.2
 django-postgrespool2==1.0.1
+django-filter==2.4.0
 docutils==0.16
 eventlet==0.28.1
 gevent==20.9.0

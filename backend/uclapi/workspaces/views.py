@@ -1,19 +1,19 @@
 import re
 from base64 import b64decode
-from datetime import datetime
-from distutils.util import strtobool
 
-from dateutil.parser import isoparse
+from django.utils.decorators import method_decorator
+from rest_framework import generics
 from rest_framework.decorators import api_view
 
 from common.decorators import uclapi_protected_endpoint
-from common.helpers import PrettyJsonResponse as JsonResponse
+from common.helpers import PrettyJsonResponse as JsonResponse, pretty_response
 from common.helpers import RateLimitHttpResponse as HttpResponse
 from .image_builder import ImageBuilder
-# from .occupeye import BadOccupEyeRequest, OccupEyeApi
+from .models import Sensors, Historical, Surveys
 from .occupeye.api import OccupEyeApi
 from .occupeye.constants import OccupEyeConstants
 from .occupeye.exceptions import BadOccupEyeRequest
+from .serializers import SensorsSerializer, HistoricalSerializer, SurveysSerializer
 
 
 @api_view(["GET"])
@@ -28,7 +28,7 @@ def get_surveys(request, *args, **kwargs):
             {
                 "ok": False,
                 "error": "The survey filter you provided is invalid. Valid survey filters are: "
-                + str(consts.VALID_SURVEY_FILTERS),
+                         + str(consts.VALID_SURVEY_FILTERS),
             },
             custom_header_data=kwargs,
         )
@@ -150,7 +150,7 @@ def get_survey_sensors_summary(request, *args, **kwargs):
             {
                 "ok": False,
                 "error": "The survey filter you provided is invalid. Valid survey filters are: "
-                + str(consts.VALID_SURVEY_FILTERS),
+                         + str(consts.VALID_SURVEY_FILTERS),
             },
             custom_header_data=kwargs,
         )
@@ -189,7 +189,7 @@ def get_averages_time(request, *args, **kwargs):
             {
                 "ok": False,
                 "error": "The survey filter you provided is invalid. Valid survey filters are: "
-                + str(consts.VALID_SURVEY_FILTERS),
+                         + str(consts.VALID_SURVEY_FILTERS),
             },
             custom_header_data=kwargs,
         )
@@ -215,7 +215,7 @@ def get_averages_time(request, *args, **kwargs):
             {
                 "ok": False,
                 "error": "You did not specify an integer number of days of historical days. Valid options are: "
-                + str(consts.VALID_HISTORICAL_DATA_DAYS),
+                         + str(consts.VALID_HISTORICAL_DATA_DAYS),
             },
             custom_header_data=kwargs,
         )
@@ -229,7 +229,7 @@ def get_averages_time(request, *args, **kwargs):
             {
                 "ok": False,
                 "error": "You did not specify a valid number of days of historical days. Valid options are: "
-                + str(consts.VALID_HISTORICAL_DATA_DAYS),
+                         + str(consts.VALID_HISTORICAL_DATA_DAYS),
             },
             custom_header_data=kwargs,
         )
@@ -356,154 +356,33 @@ def get_live_map(request, *args, **kwargs):
     return response
 
 
-def request_too_expensive(surveys: int, start: datetime, end: datetime, delta: bool):
-    samples = (end - start).total_seconds() / 60 / 10
-    total_samples = surveys * samples
-    if delta:
-        total_samples /= (10 * 24)
+class SurveysList(generics.ListAPIView):
+    queryset = Surveys.objects.all()
+    serializer_class = SurveysSerializer
+    filterset_fields = {"survey_id": ["exact"], "active": ["exact"]}
 
-    if total_samples > OccupEyeConstants.MAX_SURVEY_REQUESTS:
-        return f"Too expensive, estimated {round(total_samples):,} > {OccupEyeConstants.MAX_SURVEY_REQUESTS:,}"
-
-    return None
+    @method_decorator(uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces-Historical"))
+    def list(self, request, *args, **kwargs):
+        return pretty_response(super().list(request, *args, **kwargs), custom_header_data=kwargs)
 
 
-@api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces-Historical")
-def get_historical_sensor(request, *args, **kwargs):
-    api = OccupEyeApi()
+class SensorsList(generics.ListAPIView):
+    queryset = Sensors.objects.all()
+    serializer_class = SensorsSerializer
+    filterset_fields = {"survey_id": ["exact"], "sensor_id": ["exact"]}
 
-    try:
-        survey_id = int(request.GET["survey_id"])
-        sensor_id = int(request.GET["sensor_id"])
-        start_date_time = request.GET["start"]
-    except KeyError:
-        response = JsonResponse(
-            {
-                "ok": False,
-                "error": "You must provide a Survey ID, Sensor ID, and Start Datetime.",
-            }, custom_header_data=kwargs)
-        response.status_code = 400
-        return response
-
-    end_date_time = request.GET.get("end", datetime.now().isoformat())
-    delta = request.GET.get("delta", "0")
-    try:
-        start_date_time = isoparse(start_date_time)
-        end_date_time = isoparse(end_date_time)
-    except ValueError:
-        response = JsonResponse({
-            "ok": False,
-            "error": "Invalid start/end datetime",
-        }, custom_header_data=kwargs)
-        response.status_code = 400
-        return response
-
-    try:
-        delta = bool(strtobool(delta))
-    except ValueError:
-        response = JsonResponse({
-            "ok": False,
-            "error": "Invalid delta: true values are y, yes, t, true, on and 1; false values are n, no, f, false, off "
-                     "and 0.",
-        }, custom_header_data=kwargs)
-        response.status_code = 400
-        return response
-
-    if request_too_expensive(1, start_date_time, end_date_time, delta) is not None:
-        response = JsonResponse({
-            "ok": False,
-            "error": request_too_expensive(1, start_date_time, end_date_time, delta),
-        }, custom_header_data=kwargs)
-        response.status_code = 400
-        return response
-
-    response_data = {"ok": True,
-                     "historical": api.get_historical_sensor(survey_id, sensor_id, start_date_time, end_date_time,
-                                                             delta=delta)}
-    return JsonResponse(response_data, custom_header_data=kwargs)
+    @method_decorator(uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces-Historical"))
+    def list(self, request, *args, **kwargs):
+        return pretty_response(super().list(request, *args, **kwargs), custom_header_data=kwargs)
 
 
-@api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces-Historical")
-def get_historical_survey(request, *args, **kwargs):
-    api = OccupEyeApi()
+class HistoricalList(generics.ListAPIView):
+    queryset = Historical.objects.all()
+    serializer_class = HistoricalSerializer
+    filterset_fields = {"survey_id": ["exact"], "sensor_id": ["exact"],
+                        "datetime": ["gte", "lte", "exact", "gt", "lt"]}
 
-    try:
-        survey_id = int(request.GET["survey_id"])
-        start_date_time = request.GET["start"]
-    except KeyError:
-        response = JsonResponse(
-            {
-                "ok": False,
-                "error": "You must provide a Survey ID, and Start Datetime.",
-            }, custom_header_data=kwargs)
-        response.status_code = 400
-        return response
-
-    end_date_time = request.GET.get("end", datetime.now().isoformat())
-    delta = request.GET.get("delta", "0")
-    try:
-        start_date_time = isoparse(start_date_time)
-        end_date_time = isoparse(end_date_time)
-    except ValueError:
-        response = JsonResponse({
-            "ok": False,
-            "error": "Invalid start/end datetime",
-        }, custom_header_data=kwargs)
-        response.status_code = 400
-        return response
-
-    try:
-        delta = bool(strtobool(delta))
-    except ValueError:
-        response = JsonResponse({
-            "ok": False,
-            "error": "Invalid delta: true values are y, yes, t, true, on and 1; false values are n, no, f, false, off "
-                     "and 0.",
-        }, custom_header_data=kwargs)
-        response.status_code = 400
-        return response
-
-    if request_too_expensive(len(api.get_historical_survey_sensors(survey_id)), start_date_time, end_date_time,
-                             delta) is not None:
-        response = JsonResponse({
-            "ok": False,
-            "error": request_too_expensive(len(api.get_historical_survey_sensors(survey_id)), start_date_time,
-                                           end_date_time, delta),
-        }, custom_header_data=kwargs)
-        response.status_code = 400
-        return response
-
-    response_data = {"ok": True,
-                     "historical": api.get_historical_survey(survey_id, start_date_time, end_date_time, delta=delta)}
-    return JsonResponse(response_data, custom_header_data=kwargs)
-
-
-@api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces-Historical")
-def get_historical_list_sensors(request, *args, **kwargs):
-    api = OccupEyeApi()
-
-    try:
-        survey_id = int(request.GET["survey_id"])
-    except KeyError:
-        response = JsonResponse(
-            {
-                "ok": False,
-                "error": "You must provide a Survey ID.",
-            }, custom_header_data=kwargs)
-        response.status_code = 400
-        return response
-
-    response_data = {"ok": True, "historical": api.get_historical_list_sensors(survey_id)}
-    return JsonResponse(response_data, custom_header_data=kwargs)
-
-
-@api_view(["GET"])
-@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces-Historical")
-def get_historical_list_surveys(request, *args, **kwargs):
-    api = OccupEyeApi()
-
-    response_data = {"ok": True, "historical": api.get_historical_list_surveys()}
-    return JsonResponse(response_data, custom_header_data=kwargs)
+    @method_decorator(uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces-Historical"))
+    def list(self, request, *args, **kwargs):
+        self.pagination_class.page_size = 10000
+        return pretty_response(super().list(request, *args, **kwargs), custom_header_data=kwargs)
