@@ -1,3 +1,4 @@
+import '../lib/ErrorReporting'
 import {
   cyan,
   grey,

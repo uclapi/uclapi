@@ -44,6 +44,8 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
+    "@sentry/react": "^6.0.3",
+    "@sentry/tracing": "^6.0.3",
     "axios": "^0.20.0",
     "dayjs": "^1.9.1",
     "include-media": "^1.4.9",

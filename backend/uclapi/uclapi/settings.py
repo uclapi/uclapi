@@ -154,9 +154,16 @@ DATABASE_POOL_ARGS = {
 
 DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
 
-RAVEN_CONFIG = {
-    'dsn': os.environ.get("SENTRY_DSN"),
-}
+if os.environ.get('SENTRY_DSN'):
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=os.environ.get('SENTRY_DSN'),
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=0.01,
+        send_default_pii=True
+    )
 
 
 # Password validation

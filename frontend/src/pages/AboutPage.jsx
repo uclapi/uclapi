@@ -1,3 +1,5 @@
+import '../lib/ErrorReporting'
+
 // Team descriptions
 import { current, previous } from 'Layout/data/team_members.jsx'
 // Common Components
@@ -79,7 +81,7 @@ class AboutPage extends React.Component {
           >
             <TextView text={`About Us`} heading={1} align={`center`} />
             <TextView text={
-              `UCL API is a student led project, founded by Wilhelm Klopp,` + 
+              `UCL API is a student led project, founded by Wilhelm Klopp,` +
               `that opens up the massive amount of data collected by UCL. ` +
               `This allows UCL alumni and staff to develop apps with UCL data.`
               }
