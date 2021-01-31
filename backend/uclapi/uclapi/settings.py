@@ -69,7 +69,6 @@ INSTALLED_APPS = [
     'oauth',
     'timetable',
     'common',
-    'raven.contrib.django.raven_compat',
     'corsheaders',
     'workspaces',
     'webpack_loader'
