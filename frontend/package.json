@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "dayjs": "^1.9.1",
     "include-media": "^1.4.9",
     "js-cookie": "^2.2.1",
@@ -71,7 +71,7 @@
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-react": "^7.12.10",
     "@babel/runtime": "^7.11.2",
-    "@typescript-eslint/parser": "^4.10.0",
+    "@typescript-eslint/parser": "^4.14.2",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-transform-imports": "^2.0.0",
