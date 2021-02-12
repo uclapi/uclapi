@@ -479,9 +479,9 @@ class ViewsTestCase(TestCase):
         )
 
     @parameterized.expand([
-       ('/oauth/shibcallback'),
-       ('/dashboard/user/login.callback'),
-       ('/settings/user/login.callback')
+        ('/oauth/shibcallback'),
+        ('/dashboard/user/login.callback'),
+        ('/settings/user/login.callback')
     ])
     def test_invalid_shibcallback_real_account(self, url):
         """Tests that we gracefully handle invalid Shibboleth headers"""
@@ -520,11 +520,11 @@ class ViewsTestCase(TestCase):
                     'appdata': signed_data
                 },
                 HTTP_EPPN='eppn',
-                HTTP_CN='cn',
+                HTTP_CN=test_user.cn,
                 HTTP_EMPLOYEEID='newUser',
             )
             self.assertEqual(response.status_code, 400)
-            # This update should fail as cn should be unique
+        # This update should fail as cn should be unique
         with transaction.atomic():
             response = self.client.get(
                 url,
@@ -532,15 +532,15 @@ class ViewsTestCase(TestCase):
                     'appdata': signed_data
                 },
                 HTTP_EPPN='eppn',
-                HTTP_CN='test',
-                HTTP_EMPLOYEEID='testuser01',
+                HTTP_CN=dev_user_.cn,
+                HTTP_EMPLOYEEID=test_user.employee_id,
             )
             self.assertEqual(response.status_code, 400)
 
     @parameterized.expand([
-       ('/oauth/shibcallback', 200, True),
-       ('/dashboard/user/login.callback', 302, False),
-       ('/settings/user/login.callback', 302, False)
+        ('/oauth/shibcallback', 200, True),
+        ('/dashboard/user/login.callback', 302, False),
+        ('/settings/user/login.callback', 302, False)
     ])
     def test_valid_shibcallback_real_account(self, url, expected_code, initial_data_exists):
         dev_user_ = User.objects.create(
