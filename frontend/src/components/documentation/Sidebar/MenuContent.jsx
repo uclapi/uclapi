@@ -146,19 +146,15 @@ const menuContents = {
   "Workspaces Historical": [
     {
       text: `List Surveys`,
-      href: `#workspaces/historical/list/surveys`,
+      href: `#workspaces/historical/surveys`,
     },
     {
       text: `List Sensors`,
-      href: `#workspaces/historical/list/sensors`,
+      href: `#workspaces/historical/sensors`,
     },
     {
-      text: `Get Sensor`,
-      href: `#workspaces/historical/sensor`,
-    },
-    {
-      text: `Get Survey`,
-      href: `#workspaces/historical/survey`,
+      text: `List Data`,
+      href: `#workspaces/historical/data`,
     },
   ],
   Analytics: [

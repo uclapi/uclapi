@@ -8,18 +8,16 @@ const codeExamples = {
   python: `import requests
 
 params = {
-  "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
-  "survey_id": 72
+  "token": "uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
 }
 
 r = requests.get("${Constants.DOMAIN}/workspaces/historical/sensors", params=params)
 print(r.json())`,
 
   shell: `curl -G ${Constants.DOMAIN}/workspaces/historical/sensors \\
--d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb \
--d survey_id=72` ,
+-d token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb` ,
 
-  javascript: `fetch("${Constants.DOMAIN}/workspaces/historical/sensors?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb&survey_id=72",
+  javascript: `fetch("${Constants.DOMAIN}/workspaces/historical/sensors?token=uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb",
 {
     method: "GET",
 })
@@ -32,26 +30,26 @@ print(r.json())`,
 }
 
 const response = `{
-  "ok": true,
-  "historical": {
-    "survey_id": 72,
-    "name": " Bedford Way LG16",
-    "start": "2019-07-06T08:00:00",
-    "end": "2030-12-31T20:00:00",
-    "active": true,
-    "sensors": [
+  "okay": true,
+  "sensors": {
+    "next": "${Constants.DOMAIN}/workspaces/historical/sensors?page=2",
+    "previous": null,
+    "count": 17936,
+    "results": [
       {
-        "sensor_id": 20664008,
-        "hardware_id": 664008,
-        "survey_device_id": 14767
+        "survey_id": 4,
+        "sensor_id": 20520001,
+        "hardware_id": 520001,
+        "survey_device_id": 1
       },
       {
-        "sensor_id": 20664005,
-        "hardware_id": 664005,
-        "survey_device_id": 14764
+        "survey_id": 4,
+        "sensor_id": 20520002,
+        "hardware_id": 520002,
+        "survey_device_id": 2
       }, ...
-  ],
-  "last_updated": "2020-12-16T00:00:00"
+    ]
+  }
 }`
 
 const responseCodeExample = {
@@ -73,7 +71,7 @@ const WorkspacesHistoricalListSurveys = ({activeLanguage}) => {
         </p>
         <p>
           This endpoint lists all sensors in a survey location, this includes inactive sensors (unlike get
-          sensors from workspaces).
+          sensors from workspaces). Conforms to StandardResultsSetPagination from Django REST.
         </p>
         <Table
           name="Query Parameters"
@@ -85,10 +83,22 @@ const WorkspacesHistoricalListSurveys = ({activeLanguage}) => {
             description="Authentication token."
           />
           <Cell
+            name="page"
+            requirement="optional"
+            example="2"
+            description="Page of pagination results, see url in next field."
+          />
+          <Cell
             name="survey_id"
-            requirement="required"
+            requirement="optional"
             example="72"
             description="The ID of the survey/library."
+          />
+          <Cell
+            name="sensor_id"
+            requirement="optional"
+            example="20520002"
+            description="The ID of a single sensor."
           />
         </Table>
       </Topic>
@@ -99,7 +109,7 @@ const WorkspacesHistoricalListSurveys = ({activeLanguage}) => {
       >
         <h2>Response</h2>
         <p>
-          This endpoint will return a list of every survey location.
+          This endpoint will return a list of every sensor.
         </p>
         <Table
           name="Response"
@@ -107,62 +117,26 @@ const WorkspacesHistoricalListSurveys = ({activeLanguage}) => {
           <Cell
             name="survey_id"
             extra="integer"
-            example={`72`}
+            example={`4`}
             description="The id of the survey location."
           />
           <Cell
-            name="name"
-            extra="string"
-            example={`Bedford Way LG16`}
-            description="The name of the survey location."
-          />
-          <Cell
-            name="start"
-            extra="string[ISO 8601]"
-            example={`2019-07-06T08:00:00`}
-            description="The start datetime of the survey location."
-          />
-          <Cell
-            name="end"
-            extra="string[ISO 8601]"
-            example={`2030-12-31T20:00:00`}
-            description="The estimated end datetime of the survey location."
-          />
-          <Cell
-            name="active"
-            extra="boolean"
-            example={`true`}
-            description="If the survey location is currently active (collecting new data)."
-          />
-          <Cell
-            name="sensors"
-            extra="list"
-            example={`[{"sensor_id": 20664008 ...}, {}, ...]`}
-            description="List of sensors in the survey location."
-          />
-          <Cell
-            name="sensors[n][sensor_id]"
+            name="sensor_id"
             extra="integer"
-            example={`20664008`}
-            description="Sensor id (this is the id for requesting sensor data)."
+            example={`20520001`}
+            description="The id of the sensor."
           />
           <Cell
-            name="sensors[n][hardware_id]"
+            name="hardware_id"
             extra="integer"
-            example={`664008`}
-            description="Hardware id."
+            example={`520001`}
+            description="The hardware id of the sensor."
           />
           <Cell
-            name="sensors[n][survey_device_id]"
+            name="survey_device_id"
             extra="integer"
-            example={`14767`}
-            description="Survey device id."
-          />
-          <Cell
-            name="last_updated"
-            extra="string[ISO 8601]"
-            example={`"2020-12-16T00:00:00"`}
-            description="Last time data recieved for this survey location (refreshes daily)."
+            example={`1`}
+            description="The survey device id of the sensor."
           />
         </Table>
       </Topic>

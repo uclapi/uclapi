@@ -40,10 +40,9 @@ import MostPopularMethod from "./Routes/Analytics/MostPopularMethod.jsx"
 import UsersPerApp from "./Routes/Analytics/UsersPerApp.jsx"
 import UsersPerAppPerDept from "./Routes/Analytics/UsersPerAppPerDept.jsx"
 import {
-  WorkspacesHistoricalGetSensor,
   WorkspacesHistoricalListSensors,
-  WorkspacesHistoricalGetSurvey,
   WorkspacesHistoricalListSurveys,
+  WorkspacesHistoricalList,
 } from "./Routes/WorkspacesHistorical"
 
 const DocumentationComponent = () => (
@@ -125,8 +124,7 @@ const DocumentationComponent = () => (
       />
       <WorkspacesHistoricalListSurveys key={`WorkspacesHistoricalListSurveys`}/>
       <WorkspacesHistoricalListSensors key={`WorkspacesHistoricalListSensors`}/>
-      <WorkspacesHistoricalGetSensor key={`WorkspacesHistoricalSensor`}/>
-      <WorkspacesHistoricalGetSurvey key={`WorkspacesHistoricalSurvey`}/>
+      <WorkspacesHistoricalList key={`WorkspacesHistoricalList`}/>
 
       <SectionHeader
         link="analytics"

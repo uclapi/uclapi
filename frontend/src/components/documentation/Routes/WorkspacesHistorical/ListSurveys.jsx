@@ -31,15 +31,29 @@ print(r.json())`,
 
 const response = `{
   "ok": true,
-  "historical": [
-     {
-      "survey_id": 72,
-      "name": " Bedford Way LG16",
-      "start": "2019-07-06T08:00:00",
-      "end": "2030-12-31T20:00:00",
-      "active": true
-    }, ...
-  ]
+  "surveys": {
+    "next": null,
+    "previous": null,
+    "count": 71,
+    "results": [
+      {
+        "survey_id": 4,
+        "name": "Ophthamology Library old",
+        "start_datetime": "2017-09-25T09:00:00",
+        "end_datetime": "2020-12-25T17:00:00",
+        "active": false,
+        "last_updated": "2020-12-21T00:00:00"
+      },
+      {
+        "survey_id": 6,
+        "name": "UCL Anatomy Hub ",
+        "start_datetime": "2017-09-24T08:00:00",
+        "end_datetime": "2030-12-31T20:00:00",
+        "active": true,
+        "last_updated": "2020-12-21T00:00:00"
+      }, ...
+    ]
+  }
 }`
 
 const responseCodeExample = {
@@ -61,7 +75,7 @@ const WorkspacesHistoricalListSurveys = ({activeLanguage}) => {
         </p>
         <p>
           This endpoint lists all historical survey locations, this includes inactive survey locations (unlike get
-          survey from workspaces).
+          survey from workspaces). Conforms to StandardResultsSetPagination from Django REST.
         </p>
         <Table
           name="Query Parameters"
@@ -71,6 +85,24 @@ const WorkspacesHistoricalListSurveys = ({activeLanguage}) => {
             requirement="required"
             example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
             description="Authentication token."
+          />
+          <Cell
+            name="page"
+            requirement="optional"
+            example="2"
+            description="Page of pagination results, see url in next field."
+          />
+          <Cell
+            name="survey_id"
+            requirement="optional"
+            example="37"
+            description="Survey ID."
+          />
+          <Cell
+            name="active"
+            requirement="optional"
+            example="true"
+            description="If a survey location is active (true) or not (false)."
           />
         </Table>
       </Topic>
@@ -87,12 +119,6 @@ const WorkspacesHistoricalListSurveys = ({activeLanguage}) => {
           name="Response"
         >
           <Cell
-            name="workspaces"
-            extra="list"
-            example={`[{"survey_id": ...}, {}]`}
-            description="The survey locations."
-          />
-          <Cell
             name="survey_id"
             extra="integer"
             example={`72`}
@@ -105,13 +131,13 @@ const WorkspacesHistoricalListSurveys = ({activeLanguage}) => {
             description="The name of the survey location."
           />
           <Cell
-            name="start"
+            name="start_datetime"
             extra="string[ISO 8601]"
             example={`2019-07-06T08:00:00`}
             description="The start datetime of the survey location."
           />
           <Cell
-            name="end"
+            name="end_datetime"
             extra="string[ISO 8601]"
             example={`2030-12-31T20:00:00`}
             description="The estimated end datetime of the survey location."
@@ -121,6 +147,12 @@ const WorkspacesHistoricalListSurveys = ({activeLanguage}) => {
             extra="boolean"
             example={`true`}
             description="If the survey location is currently active (collecting new data)."
+          />
+          <Cell
+            name="last_updated"
+            extra="string[ISO 8601]"
+            example={`2020-01-02T02:00:00`}
+            description="The last time the survey location was updated."
           />
         </Table>
       </Topic>
