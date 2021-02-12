@@ -29,6 +29,9 @@ class User(models.Model):
     unscoped_affiliation = models.CharField(max_length=2000, default='')
     # Ideally we'd mandate mail to be unique in the database but as we already have rows in the table, we won't know
     # what value to put in the existing rows during the migration.
+    # Note email and mail are very similar... Here's the difference (AFAICT):
+    # email: eppn@ucl.ac.uk
+    # mail: given_name.sn.$year_of_enrollment@ucl.ac.uk
     mail = models.CharField(max_length=100, default='')
     agreement = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
