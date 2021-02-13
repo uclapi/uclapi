@@ -11,8 +11,10 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-import requests
+import re
 from distutils.util import strtobool
+
+import requests
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -156,12 +158,34 @@ DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
 if os.environ.get('SENTRY_DSN'):
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
+    from sentry_sdk.integrations.redis import RedisIntegration
+
+    def remove_token(event, _):
+        scrubbers_keys = ['token', 'client_secret', 'X-RateLimit-Remaining', 'X-RateLimit-Limit',
+                          'X-RateLimit-Retry-After']
+        # Regexes: tokens, client id, client secret
+        scrubbers_regex = [re.compile(r"(?<=uclapi-)(.*?)(?=&|$|')"), re.compile(r"\d{16}.\d{16}"),
+                           re.compile(r"[a-f0-9]{64}")]
+        event = recursive_explore(event, scrubbers_keys, scrubbers_regex)
+        return event
+
+    def recursive_explore(var, keys, regex):
+        if isinstance(var, list):
+            return [recursive_explore(v, keys, regex) for v in var]
+        if isinstance(var, dict):
+            return {k: recursive_explore(v, keys, regex) for k, v in var.items() if k not in keys}
+        print(var)
+        for reg in regex:
+            if reg.search(str(var)):
+                var = reg.sub('REDACTED', str(var), 0)
+        return var
 
     sentry_sdk.init(
         dsn=os.environ.get('SENTRY_DSN'),
-        integrations=[DjangoIntegration()],
+        integrations=[DjangoIntegration(), RedisIntegration()],
         traces_sample_rate=0.01,
-        send_default_pii=True
+        send_default_pii=False,
+        before_send=remove_token
     )
 
 
