@@ -101,7 +101,7 @@ class Command(BaseCommand):
             r = requests.get(estates_url, params=params)
 
             searchObj = re.search(
-                r'.*"http:\/\/streetmap.co.uk\/loc\/(.*),(.*)".*',
+                r'.*"http:\/\/streetmap\.co\.uk\/loc\/(.*),(.*)".*',
                 r.text
             )
             if site_id == "440":
