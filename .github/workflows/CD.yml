@@ -33,6 +33,11 @@ jobs:
 
       - name: setup oracle
         run: ./.github/workflows/scripts/setup-oracle.sh
+      
+      - name: turnstyle
+        uses: softprops/turnstyle@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: build frontend
         run: npm run build
