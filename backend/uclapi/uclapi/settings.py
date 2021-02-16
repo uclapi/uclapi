@@ -269,7 +269,7 @@ if strtobool(os.environ.get("AWS_S3_STATICS", "False")):
     # If credentials are enabled, collectstatic can do uploads
     if strtobool(os.environ["AWS_S3_STATICS_CREDENTIALS_ENABLED"]):
         AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
-        AWS_SECRET_ACCESS_KEY = os.environ["AWS_ACCESS_SECRET"]
+        AWS_SECRET_ACCESS_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
         AWS_S3_OBJECT_PARAMETERS = {
             'CacheControl': 'max-age=86400',
         }
