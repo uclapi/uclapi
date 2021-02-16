@@ -270,12 +270,14 @@ if strtobool(os.environ.get("AWS_S3_STATICS", "False")):
     if strtobool(os.environ["AWS_S3_STATICS_CREDENTIALS_ENABLED"]):
         AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
         AWS_SECRET_ACCESS_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
-        AWS_S3_OBJECT_PARAMETERS = {
-            'CacheControl': 'max-age=86400',
-        }
-        AWS_S3_ENCRYPTION = False
-    else:
-        AWS_QUERYSTRING_AUTH = False
+
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+
+    # As the bucket is public we do not need to add authentication to the
+    # urls fetching the static files
+    AWS_QUERYSTRING_AUTH = False
 
     # Since we are hosting on AWS, we should set the Static URL to it
     STATIC_URL = "{}/{}".format(
