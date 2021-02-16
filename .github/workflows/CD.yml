@@ -70,7 +70,7 @@ jobs:
           AWS_S3_BUCKET_NAME: uclapi-static-staging
           AWS_S3_BUCKET_PATH: static/
           AWS_S3_REGION: eu-west-2
-          AWS_S3_STATICS_CREDENTIALS_ENABLED: False
+          AWS_S3_STATICS_CREDENTIALS_ENABLED: True
           AWS_S3_STATICS: True
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           FORBIDDEN_CALLBACK_URLS: ${{ secrets.FORBIDDEN_CALLBACK_URLS }}
