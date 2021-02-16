@@ -27,11 +27,23 @@ jobs:
       - name: setup oracle
         run: ./.github/workflows/scripts/setup-oracle.sh
       
-      - name: build frontend
+      - name: setup python dependencies
+        run: |
+          python -m pip install --upgrade pip && \
+          cd ./backend/uclapi && \
+          pip install codecov && \
+          pip install -r requirements.txt && \
+          pip install $(cat requirements.txt | grep "cx-Oracle")
+
+      - name: setup frontend dependencies
         run: |
           cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
           cd ./frontend/ && \
-          npm ci && \
+          npm ci
+      
+      - name: build frontend
+        run: |
+          cd ./frontend/ && \
           npm run build
 
       - name: wait on other checks
@@ -77,7 +89,7 @@ jobs:
           UCLAPI_RUNNING_ON_AWS_ELB: False
           WHITELISTED_CALLBACK_URLS: ${{ secrets.WHITELISTED_CALLBACK_URLS }}
         run: |
-          cd ../backend/uclapi && \
+          cd ./backend/uclapi && \
           ./manage.py collectstatic --noinput && \
           eval "$(ssh-agent -s)" && \
           cd ../.. && \
