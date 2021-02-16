@@ -94,7 +94,7 @@ jobs:
           cd ../.. && \
           chmod 600 ./uclapi-staging-1.pem && \
           chmod 600 ./uclapi-staging-2-docker.pem && \
-          mkdir -p ~/.ssh/config && \
+          mkdir -p ~/.ssh && touch ~/.ssh/config && \
           echo -e "Host $STAGING_BASTION\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config && \
           echo -e "Host $STAGING_CRON\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config && \
           ssh-add ./uclapi-staging-1.pem && \
