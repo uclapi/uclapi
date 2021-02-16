@@ -29,7 +29,9 @@ jobs:
       
       - name: build frontend
         run: |
-          cd ./frontend && \
+          cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
+          cd ./frontend/ && \
+          npm ci && \
           npm run build
 
       - name: wait on other checks
