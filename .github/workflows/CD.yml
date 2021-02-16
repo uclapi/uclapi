@@ -26,22 +26,22 @@ jobs:
 
       - name: setup oracle
         run: ./.github/workflows/scripts/setup-oracle.sh
+      
+      - name: build frontend
+        run: |
+          cd ./frontend && \
+          npm run build
 
       - name: wait on other checks
         uses: lewagon/wait-on-check-action@v0.2
         with:
           ref: ${{ github.ref }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          allowed-conclusions: success,skipped
-          wait-interval: 600
 
       - name: turnstyle
         uses: softprops/turnstyle@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: build frontend
-        run: npm run build
 
       - name: unencrypt secrets
         env:
