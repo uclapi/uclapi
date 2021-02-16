@@ -19,7 +19,7 @@ const {
   AWS_S3_BUCKET_PATH,
 } = process.env
 
-const publicPath = AWS_S3_STATICS === `True`
+const publicPath = AWS_S3_STATICS === `true`
   ? `https://${AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${AWS_S3_BUCKET_PATH}`
   : `/static/`
 
