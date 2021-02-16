@@ -203,9 +203,9 @@ fair_use_policy_path = os.path.join(
 with open(fair_use_policy_path, 'r', encoding='utf-8') as fp:
     FAIR_USE_POLICY = list(fp)
 
-REDIS_UCLAPI_HOST = os.environ["REDIS_UCLAPI_HOST"]
+REDIS_UCLAPI_HOST = os.environ.get("REDIS_UCLAPI_HOST", "")
 
-SHIB_TEST_USER = os.environ["SHIB_TEST_USER"]
+SHIB_TEST_USER = os.environ.get("SHIB_TEST_USER", "")
 
 # Celery Settings
 CELERY_BROKER_URL = 'redis://' + REDIS_UCLAPI_HOST
