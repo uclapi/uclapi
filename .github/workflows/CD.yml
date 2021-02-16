@@ -3,14 +3,12 @@ name: CD
 on:
   pull_request:
     types: [closed]
-    branches:
-      - master
 
 jobs:
   deploy-staging:
     name: deploy to staging
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' && github.event.pull_request.merged == true
+    if: github.event.pull_request.base.ref == 'refs/heads/master' && github.event.pull_request.merged == true
     environment: Staging
     steps:
       - name: setup python
