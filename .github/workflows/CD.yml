@@ -41,6 +41,10 @@ jobs:
           npm ci
       
       - name: build frontend
+        env:
+          AWS_S3_BUCKET_NAME: uclapi-static-staging
+          AWS_S3_BUCKET_PATH: static/
+          AWS_S3_STATICS: True
         run: |
           cd ./frontend/ && \
           npm run build
