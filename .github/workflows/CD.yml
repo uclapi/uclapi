@@ -11,36 +11,51 @@ jobs:
     if: github.event.pull_request.base.ref == 'master' && github.event.pull_request.merged == true
     environment: Staging
     steps:
-      - name: setup python
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.7'
+      
+      - name: Cache Python
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
-      - name: setup nodejs
+      - name: Setup NodeJS
         uses: actions/setup-node@v2
         with:
           node-version: '14'
+      
+      - name: Cache NodeJS
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-      - name: checkout code
-        uses: actions/checkout@v2
-
-      - name: setup oracle
+      - name: Install Oracle Instant Client
         run: ./.github/workflows/scripts/setup-oracle.sh
       
-      - name: setup python dependencies
+      - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip && \
           cd ./backend/uclapi && \
-          pip install -r requirements.txt && \
-          pip install $(cat requirements.txt | grep "cx-Oracle")
+          pip install -r requirements.txt
 
-      - name: setup frontend dependencies
+      - name: Install frontend dependencies
         run: |
           cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
           cd ./frontend/ && \
           npm ci
       
-      - name: build frontend
+      - name: Build frontend
         env:
           AWS_S3_BUCKET_NAME: uclapi-static-staging
           AWS_S3_BUCKET_PATH: static/
@@ -49,18 +64,18 @@ jobs:
           cd ./frontend/ && \
           npm run build
 
-      - name: wait on other checks
+      - name: Wait for checks
         uses: lewagon/wait-on-check-action@v0.2
         with:
           ref: ${{ github.ref }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: turnstyle
+      - name: Turnstyle
         uses: softprops/turnstyle@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: unencrypt secrets
+      - name: Decrypt secrets
         env:
           encrypted_7e23b3ba1922_iv: ${{ secrets.encrypted_7e23b3ba1922_iv }}
           encrypted_7e23b3ba1922_key: ${{ secrets.encrypted_7e23b3ba1922_key }}
@@ -68,7 +83,7 @@ jobs:
           openssl aes-256-cbc -K $encrypted_7e23b3ba1922_key -iv $encrypted_7e23b3ba1922_iv -in keys.tar.enc -out keys.tar -d && \
           tar xvf keys.tar
 
-      - name: deploy static assets
+      - name: Collect statics to S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_S3_BUCKET_NAME: uclapi-static-staging
@@ -86,16 +101,19 @@ jobs:
           OCCUPEYE_USERNAME: ${{ secrets.OCCUPEYE_USERNAME }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           SHIB_TEST_USER: ${{ secrets.SHIB_TEST_USER }}
-          STAGING_BASTION: ${{ secrets.STAGING_BASTION }}
-          STAGING_CRON: ${{ secrets.STAGING_CRON }}
-          UCLAPI_PRODUCTION: False
+          UCLAPI_PRODUCTION: True
           UCLAPI_RUNNING_ON_AWS_ELB: False
           WHITELISTED_CALLBACK_URLS: ${{ secrets.WHITELISTED_CALLBACK_URLS }}
         run: |
           cd ./backend/uclapi && \
-          ./manage.py collectstatic --noinput && \
+          ./manage.py collectstatic --noinput
+      
+      - name: Deploy to staging
+        env: 
+          STAGING_BASTION: ${{ secrets.STAGING_BASTION }}
+          STAGING_CRON: ${{ secrets.STAGING_CRON }}
+        run: |
           eval "$(ssh-agent -s)" && \
-          cd ../.. && \
           chmod 600 ./uclapi-staging-1.pem && \
           chmod 600 ./uclapi-staging-2-docker.pem && \
           mkdir -p ~/.ssh && touch ~/.ssh/config && \
