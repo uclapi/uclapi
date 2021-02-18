@@ -83,7 +83,7 @@ jobs:
           openssl aes-256-cbc -K $encrypted_7e23b3ba1922_key -iv $encrypted_7e23b3ba1922_iv -in keys.tar.enc -out keys.tar -d && \
           tar xvf keys.tar
 
-      - name: Collect static to S3
+      - name: Collect statics to S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_S3_BUCKET_NAME: uclapi-static-staging
