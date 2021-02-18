@@ -11,7 +11,7 @@ jobs:
     if: github.event.pull_request.base.ref == 'master' && github.event.pull_request.merged == true
     environment: Staging
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Setup Python
@@ -49,13 +49,13 @@ jobs:
           cd ./backend/uclapi && \
           pip install -r requirements.txt
 
-      - name: Install Frontend Dependencies
+      - name: Install frontend dependencies
         run: |
           cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
           cd ./frontend/ && \
           npm ci
       
-      - name: Build Frontend
+      - name: Build frontend
         env:
           AWS_S3_BUCKET_NAME: uclapi-static-staging
           AWS_S3_BUCKET_PATH: static/
@@ -64,7 +64,7 @@ jobs:
           cd ./frontend/ && \
           npm run build
 
-      - name: Wait for CI
+      - name: Wait for checks
         uses: lewagon/wait-on-check-action@v0.2
         with:
           ref: ${{ github.ref }}
@@ -75,7 +75,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Decrypt Secrets
+      - name: Decrypt secrets
         env:
           encrypted_7e23b3ba1922_iv: ${{ secrets.encrypted_7e23b3ba1922_iv }}
           encrypted_7e23b3ba1922_key: ${{ secrets.encrypted_7e23b3ba1922_key }}
@@ -83,7 +83,7 @@ jobs:
           openssl aes-256-cbc -K $encrypted_7e23b3ba1922_key -iv $encrypted_7e23b3ba1922_iv -in keys.tar.enc -out keys.tar -d && \
           tar xvf keys.tar
 
-      - name: Collect Static to S3
+      - name: Collect static to S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_S3_BUCKET_NAME: uclapi-static-staging
@@ -108,7 +108,7 @@ jobs:
           cd ./backend/uclapi && \
           ./manage.py collectstatic --noinput
       
-      - name: Deploy to Staging
+      - name: Deploy to staging
         env: 
           STAGING_BASTION: ${{ secrets.STAGING_BASTION }}
           STAGING_CRON: ${{ secrets.STAGING_CRON }}
