@@ -19,14 +19,9 @@ const {
   AWS_S3_BUCKET_PATH,
 } = process.env
 
-const publicPath = AWS_S3_STATICS === `True`
+const publicPath = AWS_S3_STATICS === `true`
   ? `https://${AWS_S3_BUCKET_NAME}.s3.amazonaws.com/${AWS_S3_BUCKET_PATH}`
   : `/static/`
-
-const envKeys = Object.keys(process.env).reduce((prev, next) => {
-  prev[`process.env.${next}`] = JSON.stringify(process.env[next])
-  return prev
-}, {})
 
 module.exports = {
   mode: `production`,
@@ -45,9 +40,9 @@ module.exports = {
     },
   },
   plugins: [
-    new webpack.DefinePlugin(envKeys),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(`production`),
+      'process.env.SENTRY_DSN_REACT': JSON.stringify(process.env.SENTRY_DSN_REACT),
     }),
     new BundleTracker({
       filename: `../backend/uclapi/static/webpack-stats.json`,

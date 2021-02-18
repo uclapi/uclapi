@@ -1,0 +1,18 @@
+name: deploy to production
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: "Are you sure you want to deploy the current master branch to production? (type yes below if so)"
+        required: true
+        default: no
+
+jobs:
+  deploy-production:
+    name: deploy to production
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.confirmation }} == 'yes'
+    steps:
+      - name: do something
+        run: echo "TODO"
