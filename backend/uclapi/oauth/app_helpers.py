@@ -65,9 +65,9 @@ def validate_shibboleth_callback(request):
             f"UCL has sent incomplete headers. If the issues persist "
             f"please contact the UCL API Team to rectify this. "
             f"The missing fields are (space delimited): "
-            f"{'eppn ' if request.META.get('HTTP_EPPN', None) else ''}"
-            f"{'cn ' if request.META.get('HTTP_CN', None) else ''}"
-            f"{'employeeid' if request.META.get('HTTP_EMPLOYEEID', None) else ''}"
+            f"{'eppn ' if not request.META.get('HTTP_EPPN', None) else ''}"
+            f"{'cn ' if not request.META.get('HTTP_CN', None) else ''}"
+            f"{'employeeid' if not request.META.get('HTTP_EMPLOYEEID', None) else ''}"
         )
 
     # TODO: log to sentry that fields were missing...
