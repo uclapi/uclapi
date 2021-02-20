@@ -17,12 +17,13 @@ from dashboard.models import App, User
 
 from .app_helpers import (
     generate_random_verification_code,
-    get_student_by_upi
+    get_student_by_upi,
+    validate_shibboleth_callback
 )
 from .models import OAuthToken
 from .scoping import Scopes
 
-from uclapi.settings import REDIS_UCLAPI_HOST, SHIB_TEST_USER
+from uclapi.settings import REDIS_UCLAPI_HOST
 from common.decorators import uclapi_protected_endpoint, get_var
 from common.helpers import PrettyJsonResponse
 
@@ -132,71 +133,16 @@ def shibcallback(request):
     # string sent via Shibboleth
     app = App.objects.get(client_id=client_id)
 
-    # Sometimes UCL doesn't give us the expected headers.
-    # If a critical header is missing we error out.
-    # If non-critical headers are missing we simply put a placeholder string.
-    try:
-        # This is used to find the correct user
-        eppn = request.META['HTTP_EPPN']
-        # We don't really use cn but because it's unique in the DB we can't
-        # really put a place holder value.
-        cn = request.META['HTTP_CN']
-        # (aka UPI), also unique in the DB
-        employee_id = request.META['HTTP_EMPLOYEEID']
-    except KeyError:
+    validation_result = validate_shibboleth_callback(request)
+    if isinstance(validation_result, str):
         response = PrettyJsonResponse({
             "ok": False,
-            "error": ("UCL has sent incomplete headers. If the issues persist"
-                      "please contact the UCL API Team to rectify this.")
+            "error": validation_result
         })
         response.status_code = 400
         return response
-
-    # TODO: Ask UCL what on earth are they doing by missing out headers, and
-    # remind them we need to to be informed of these types of changes.
-    # TODO: log to sentry that fields were missing...
-    department = request.META.get('HTTP_DEPARTMENT', '')
-    given_name = request.META.get('HTTP_GIVENNAME', '')
-    display_name = request.META.get('HTTP_DISPLAYNAME', '')
-    groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
-
-    # TODO: Find a way to block access to alumni (do we need this?) without
-    # blocking access to new students too.
-    if not groups and (department == "Shibtests" or eppn == SHIB_TEST_USER):
-        groups = "shibtests"
-
-    # If a user has never used the API before then we need to sign them up
-    try:
-        # TODO: Handle MultipleObjectsReturned exception.
-        # email field isn't unique at database level (on our side).
-        # Alternatively, switch to employee_id (which is unique).
-        user = User.objects.get(email=eppn)
-    except User.DoesNotExist:
-        # create a new user
-        user = User(
-            email=eppn,
-            full_name=display_name,
-            given_name=given_name,
-            department=department,
-            cn=cn,
-            raw_intranet_groups=groups,
-            employee_id=employee_id
-        )
-
-        user.save()
     else:
-        # User exists already, so update the values if new ones are non-empty.
-        user = User.objects.get(email=eppn)
-        user.employee_id = employee_id
-        if display_name:
-            user.full_name = display_name
-        if given_name:
-            user.given_name = given_name
-        if department:
-            user.department = department
-        if groups:
-            user.raw_intranet_groups = groups
-        user.save()
+        user = validation_result
 
     # Log the user into the system using their User ID
     request.session["user_id"] = user.id
@@ -634,69 +580,17 @@ def settings_shibboleth_callback(request):
     # should auth user login or signup
     # then redirect to my apps homepage
 
-    # Sometimes UCL doesn't give us the expected headers.
-    # If a critical header is missing we error out.
-    # If non-critical headers are missing we simply put a placeholder string.
-    try:
-        # This is used to find the correct user
-        eppn = request.META['HTTP_EPPN']
-        # We don't really use cn but because it's unique in the DB we can't
-        # really put a place holder value.
-        cn = request.META['HTTP_CN']
-        # (aka UPI), also unique in the DB
-        employee_id = request.META['HTTP_EMPLOYEEID']
-    except KeyError:
+    validation_result = validate_shibboleth_callback(request)
+    if isinstance(validation_result, str):
         response = PrettyJsonResponse({
             "ok": False,
-            "error": ("UCL has sent incomplete headers. If the issues persist"
-                      "please contact the UCL API Team to rectify this.")
+            "error": validation_result
         })
         response.status_code = 400
         return response
-
-    # TODO: Ask UCL what on earth are they doing by missing out headers, and
-    # remind them we need to to be informed of these types of changes.
-    # TODO: log to sentry that fields were missing...
-    department = request.META.get('HTTP_DEPARTMENT', '')
-    given_name = request.META.get('HTTP_GIVENNAME', '')
-    display_name = request.META.get('HTTP_DISPLAYNAME', '')
-    groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
-
-    try:
-        user = User.objects.get(email=eppn)
-        # TODO: Handle MultipleObjectsReturned exception.
-        # email field isn't unique at database level (on our side).
-        # Alternatively, switch to employee_id (which is unique).
-    except User.DoesNotExist:
-        # create a new user
-        new_user = User(
-            email=eppn,
-            full_name=display_name,
-            given_name=given_name,
-            department=department,
-            cn=cn,
-            raw_intranet_groups=groups,
-            employee_id=employee_id
-        )
-
-        new_user.save()
-
-        request.session["user_id"] = new_user.id
     else:
-        # User exists already, so update the values if new ones are non-empty.
-        request.session["user_id"] = user.id
-        user.employee_id = employee_id
-        if display_name:
-            user.full_name = display_name
-        if given_name:
-            user.given_name = given_name
-        if department:
-            user.department = department
-        if groups:
-            user.raw_intranet_groups = groups
-        user.save()
-
-    return redirect(settings)
+        request.session["user_id"] = validation_result.id
+        return redirect(settings)
 
 
 @ensure_csrf_cookie
