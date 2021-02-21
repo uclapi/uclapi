@@ -5,9 +5,11 @@ import string
 import unittest.mock
 
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db import transaction
 from django.test import Client, TestCase
 from rest_framework.test import APIRequestFactory
 from django.core import signing
+from parameterized import parameterized
 
 from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse
@@ -476,7 +478,13 @@ class ViewsTestCase(TestCase):
              "Team to rectify this.")
         )
 
-    def test_valid_shibcallback_real_account(self):
+    @parameterized.expand([
+        ('/oauth/shibcallback'),
+        ('/dashboard/user/login.callback'),
+        ('/settings/user/login.callback')
+    ])
+    def test_invalid_shibcallback_real_account(self, url):
+        """Tests that we gracefully handle invalid Shibboleth headers"""
         dev_user_ = User.objects.create(
             email="testdev@ucl.ac.uk",
             cn="test",
@@ -488,11 +496,63 @@ class ViewsTestCase(TestCase):
             name="An App",
             callback_url="www.somecallbackurl.com/callback"
         )
-        test_user_ = User.objects.create(
-            email="testxxx@ucl.ac.uk",
-            cn="testxxx",
-            given_name="Test User",
-            employee_id='xxxtest01'
+        test_user = User.objects.create(
+            email="testuser@ucl.ac.uk",
+            cn="cn",
+            given_name="Test Dev",
+            employee_id='testuser01'
+        )
+
+        signer = signing.TimestampSigner()
+        # Generate a random state for testing
+        state = ''.join(
+            random.choices(string.ascii_letters + string.digits, k=32)
+        )
+        data = app_.client_id + state
+        signed_data = signer.sign(data)
+        # Creation of new user should fail as cn has to be unique!
+        # The "with" hack is needed when purposefully causing DB integrity
+        # violations. @see: https://stackoverflow.com/a/23326971
+        with transaction.atomic():
+            response = self.client.get(
+                url,
+                {
+                    'appdata': signed_data
+                },
+                HTTP_EPPN='eppn',
+                HTTP_CN=test_user.cn,
+                HTTP_EMPLOYEEID='newUser',
+            )
+            self.assertEqual(response.status_code, 400)
+        # This update should fail as cn should be unique
+        with transaction.atomic():
+            response = self.client.get(
+                url,
+                {
+                    'appdata': signed_data
+                },
+                HTTP_EPPN='eppn',
+                HTTP_CN=dev_user_.cn,
+                HTTP_EMPLOYEEID=test_user.employee_id,
+            )
+            self.assertEqual(response.status_code, 400)
+
+    @parameterized.expand([
+        ('/oauth/shibcallback', 200, True),
+        ('/dashboard/user/login.callback', 302, False),
+        ('/settings/user/login.callback', 302, False)
+    ])
+    def test_valid_shibcallback_real_account(self, url, expected_code, initial_data_exists):
+        dev_user_ = User.objects.create(
+            email="testdev@ucl.ac.uk",
+            cn="test",
+            given_name="Test Dev",
+            employee_id='testdev01'
+        )
+        app_ = App.objects.create(
+            user=dev_user_,
+            name="An App",
+            callback_url="www.somecallbackurl.com/callback"
         )
 
         signer = signing.TimestampSigner()
@@ -504,7 +564,42 @@ class ViewsTestCase(TestCase):
         signed_data = signer.sign(data)
 
         response = self.client.get(
-            '/oauth/shibcallback',
+            url,
+            {
+                'appdata': signed_data
+            },
+            HTTP_EPPN='eppn',
+            HTTP_CN='cn',
+            HTTP_DEPARTMENT='department',
+            HTTP_GIVENNAME='givenname',
+            HTTP_DISPLAYNAME='displayname',
+            HTTP_EMPLOYEEID='xxxtest01',
+            HTTP_UCLINTRANETGROUPS='uclintranetgroups',
+            HTTP_MAIL='mail',
+            HTTP_SN='sn',
+            HTTP_AFFILIATION='affiliation',
+            HTTP_UNSCOPED_AFFILIATION='unscoped_affiliation'
+        )
+        # Load the new test user from DB
+        test_user_ = User.objects.get(employee_id='xxxtest01')
+        self.assertEqual(response.status_code, expected_code)
+        self.assertEqual(self.client.session['user_id'], test_user_.id)
+        # Test that all fields were filled in correctly.
+        self.assertEqual(test_user_.email, "eppn")
+        self.assertEqual(test_user_.cn, "cn")
+        self.assertEqual(test_user_.employee_id, "xxxtest01")
+        self.assertEqual(test_user_.raw_intranet_groups, "uclintranetgroups")
+        self.assertEqual(test_user_.department, "department")
+        self.assertEqual(test_user_.given_name, "givenname")
+        self.assertEqual(test_user_.full_name, "displayname")
+        self.assertEqual(test_user_.mail, "mail")
+        self.assertEqual(test_user_.sn, "sn")
+        self.assertEqual(test_user_.affiliation, "affiliation")
+        self.assertEqual(test_user_.unscoped_affiliation, "unscoped_affiliation")
+
+        # Now update all the values.
+        response = self.client.get(
+            url,
             {
                 'appdata': signed_data
             },
@@ -514,57 +609,69 @@ class ViewsTestCase(TestCase):
             HTTP_GIVENNAME='Test New Name',
             HTTP_DISPLAYNAME='Test User',
             HTTP_EMPLOYEEID='xxxtest01',
-            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all',
+            HTTP_MAIL='test.name.01@ucl.ac.uk',
+            HTTP_SN='Second Name',
+            HTTP_AFFILIATION='test@ucl.ac.uk',
+            HTTP_UNSCOPED_AFFILIATION='test'
         )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(self.client.session['user_id'], test_user_.id)
-
-        initial_data = json.loads(response.context['initial_data'])
-        self.assertEqual(
-            initial_data['app_name'],
-            app_.name
-        )
-        self.assertEqual(
-            initial_data['client_id'],
-            app_.client_id
-        )
-        self.assertEqual(
-            initial_data['state'],
-            state
-        )
-        self.assertDictEqual(
-            initial_data['user'],
-            {
-                "full_name": "Test User",
-                "cn": "testxxx",
-                "email": "testxxx@ucl.ac.uk",
-                "department": "Dept of Tests",
-                "upi": "xxxtest01"
-            }
-        )
-
         # Reload the test user from DB
         test_user_ = User.objects.get(id=test_user_.id)
+        self.assertEqual(response.status_code, expected_code)
+        self.assertEqual(self.client.session['user_id'], test_user_.id)
+        # Test that all fields were updated correctly.
+        self.assertEqual(test_user_.email, "testxxx@ucl.ac.uk")
+        self.assertEqual(test_user_.cn, "testxxx")
+        self.assertEqual(test_user_.employee_id, "xxxtest01")
+        self.assertEqual(test_user_.raw_intranet_groups, "ucl-all;ucl-tests-all")
+        self.assertEqual(test_user_.department, "Dept of Tests")
+        self.assertEqual(test_user_.given_name, "Test New Name")
+        self.assertEqual(test_user_.full_name, "Test User")
+        self.assertEqual(test_user_.mail, "test.name.01@ucl.ac.uk")
+        self.assertEqual(test_user_.sn, "Second Name")
+        self.assertEqual(test_user_.affiliation, "test@ucl.ac.uk")
+        self.assertEqual(test_user_.unscoped_affiliation, "test")
 
-        self.assertEqual(
-            test_user_.given_name,
-            "Test New Name"
-        )
+        if initial_data_exists:
+            initial_data = json.loads(response.context['initial_data'])
+            self.assertEqual(
+                initial_data['app_name'],
+                app_.name
+            )
+            self.assertEqual(
+                initial_data['client_id'],
+                app_.client_id
+            )
+            self.assertEqual(
+                initial_data['state'],
+                state
+            )
+            self.assertDictEqual(
+                initial_data['user'],
+                {
+                    "full_name": "Test User",
+                    "cn": "testxxx",
+                    "email": "testxxx@ucl.ac.uk",
+                    "department": "Dept of Tests",
+                    "upi": "xxxtest01"
+                }
+            )
 
         # Now lets test for when UCL doesn't give us department the department,
         # givenname and displayname.
         response = self.client.get(
-            '/oauth/shibcallback',
+            url,
             {
                 'appdata': signed_data
             },
             HTTP_EPPN='testxxx@ucl.ac.uk',
             HTTP_CN='testxxx',
-            # NOTE: missing HTTP_DEPARTMENT, HTTP_GIVENNAME, HTTP_DISPLAYNAME
+            # NOTE: missing HTTP_DEPARTMENT, HTTP_GIVENNAME, HTTP_DISPLAYNAME,
+            # HTTP_MAIL, HTTP_SN, HTTP_AFFILIATION and HTTP_UNSCOPED_AFFILIATION
             HTTP_EMPLOYEEID='xxxtest01',
             HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, expected_code)
 
         # Reload the test user from DB
         test_user_ = User.objects.get(id=test_user_.id)
@@ -583,10 +690,26 @@ class ViewsTestCase(TestCase):
             test_user_.full_name,
             "Test User"
         )
+        self.assertEqual(
+            test_user_.mail,
+            "test.name.01@ucl.ac.uk"
+        )
+        self.assertEqual(
+            test_user_.sn,
+            "Second Name"
+        )
+        self.assertEqual(
+            test_user_.affiliation,
+            "test@ucl.ac.uk"
+        )
+        self.assertEqual(
+            test_user_.unscoped_affiliation,
+            "test"
+        )
 
         # Now let's test when critical fields are missing
         response = self.client.get(
-            '/oauth/shibcallback',
+            url,
             {
                 'appdata': signed_data
             },
@@ -596,12 +719,16 @@ class ViewsTestCase(TestCase):
             HTTP_DEPARTMENT='Dept of Tests',
             HTTP_GIVENNAME='Test New Name',
             HTTP_DISPLAYNAME='Test User',
-            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all',
+            HTTP_MAIL='test.name.01@ucl.ac.uk',
+            HTTP_SN='Second Name',
+            HTTP_AFFILIATION='test@ucl.ac.uk',
+            HTTP_UNSCOPED_AFFILIATION='test'
         )
         self.assertEqual(response.status_code, 400)
 
         response = self.client.get(
-            '/oauth/shibcallback',
+            url,
             {
                 'appdata': signed_data
             },
@@ -611,12 +738,16 @@ class ViewsTestCase(TestCase):
             HTTP_GIVENNAME='Test New Name',
             HTTP_DISPLAYNAME='Test User',
             HTTP_EMPLOYEEID='xxxtest01',
-            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all',
+            HTTP_MAIL='test.name.01@ucl.ac.uk',
+            HTTP_SN='Second Name',
+            HTTP_AFFILIATION='test@ucl.ac.uk',
+            HTTP_UNSCOPED_AFFILIATION='test'
         )
         self.assertEqual(response.status_code, 400)
 
         response = self.client.get(
-            '/oauth/shibcallback',
+            url,
             {
                 'appdata': signed_data
             },
@@ -626,7 +757,11 @@ class ViewsTestCase(TestCase):
             HTTP_DEPARTMENT='Dept of Tests',
             HTTP_GIVENNAME='Test New Name',
             HTTP_DISPLAYNAME='Test User',
-            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
+            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all',
+            HTTP_MAIL='test.name.01@ucl.ac.uk',
+            HTTP_SN='Second Name',
+            HTTP_AFFILIATION='test@ucl.ac.uk',
+            HTTP_UNSCOPED_AFFILIATION='test'
         )
         self.assertEqual(response.status_code, 400)
 
