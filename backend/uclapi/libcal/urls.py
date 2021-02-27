@@ -10,4 +10,5 @@ urlpatterns = [
     path('space/category', views.get_category),
     path('space/item', views.get_item),
     path('space/nickname', views.get_nickname),
+    path('space/utilization', views.get_utilization),
 ]
