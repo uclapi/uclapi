@@ -62,3 +62,16 @@ class LibCalCategoryGETSerializer(LibCalIdListSerializer):
             'Note: Setting this value also sets the details value to true.'
         )
     )
+
+
+class LibCalItemGETSerializer(LibCalIdListSerializer):
+    """Serializer for the /1.1/space/item endpoint"""
+    availability = serializers.RegexField(
+        # TODO: Update regex when we reach the year 10000
+        regex='(^next$)|(^[0-9]{4}-[0-9]{2}-[0-9]{2}(,[0-9]{4}-[0-9]{2}-[0-9]{2})?$)',
+        required=False,
+        help_text=(
+            'Either a single date, or a comma separated list of 2 dates (a start and end date).' \
+            'The keyword "next" can be used to return availability for the next date that this item is available.'
+        )
+    )
