@@ -10,6 +10,13 @@ LibCal may parse HTTP GET parameters. Doing this without proxying UCL API may
 not work, as LibCal would likely reject the request before even processing the
 HTTP GET parameters due to the attacker not having a valid token.
 
+NOTE: Not all parameters passed as GET parameters to UCL API are passed as GET
+parameters to LibCal. Some LibCal endpoints accept an id or a list of ids as
+part of the URL path. For these endpoints we establish an "ids" field in the
+serializer. views._libcal_request_forwarder() will then correctly put the "ids"
+field in the path, and make sure it isn't accidentally included as part of the
+GET parameters.
+
 Each serializer specifies a whitelist of GET parameters and valid values based
 on the LibCal documentation.
 """
@@ -22,4 +29,13 @@ class LibCalLocationGETSerializer(serializers.Serializer):
         max_value=1,
         required=False,
         help_text='Flag to indicate you want additional details such as terms and conditions.'
+    )
+
+
+class LibCalFormGETSerializer(serializers.Serializer):
+    """Serializer for the /1.1/space/form endpoint"""
+    ids = serializers.RegexField(
+        r'^\d+(,\d+)*$',
+        required=True,  # Default, but stated for clarity.
+        help_text='A form id or a list of form ids to retrieve.'
     )
