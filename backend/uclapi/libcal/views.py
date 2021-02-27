@@ -110,9 +110,19 @@ def _libcal_request_forwarder(
         uclapi_response.status_code = 500
         return uclapi_response
     else:
+        try:
+            data = libcal_response.json()
+        except json.JSONDecodeError:
+            uclapi_response = JsonResponse({
+                "ok": False,
+                "error": "LibCal endpoint did not return a JSON response."
+            }, custom_header_data=kwargs)
+            uclapi_response.status_code = 500
+            return uclapi_response
+
         uclapi_response = JsonResponse({
             "ok": False,
-            "error": libcal_response.json()["error"] if "error" in libcal_response.json() else libcal_response.json()
+            "error": data["error"] if "error" in data else data
         }, custom_header_data=kwargs)
         return uclapi_response
 

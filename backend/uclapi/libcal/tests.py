@@ -111,6 +111,9 @@ class LibCalRequestForwarderTestCase(APITestCase):
         }
         cls.r.set("libcal:token", cls.token)
 
+    def setUp(self):
+        self.r.set("libcal:token", self.token)
+
     @classmethod
     def tearDownClass(cls):
         cls.r.delete("libcal:token")
@@ -138,6 +141,25 @@ class LibCalRequestForwarderTestCase(APITestCase):
             'https://library-calendars.ucl.ac.uk/1.1/space/locations',
             request_headers=self.headers,
             status_code=401)
+        response = self.client.get('/libcal/space/locations', {'token': self.app.api_token})
+        self.assertEqual(response.status_code, 500)
+        self.assertJSONEqual(response.content.decode("utf-8"), expected_json)
+
+    def test_non_json_response(self, m):
+        """Tests that we correctly handle non-JSON non-200 response.
+
+        Note that we only check if the response is JSON for non-200 responses.
+        We assume the response is JSON if it is a 200 (would be VERY surprising if it wasn't...)"""
+        expected_json = {
+            "ok": False,
+            "error": "LibCal endpoint did not return a JSON response."
+        }
+        m.register_uri(
+            'GET',
+            'https://library-calendars.ucl.ac.uk/1.1/space/locations',
+            request_headers=self.headers,
+            text='Lot of non-JSON text!',
+            status_code=404)
         response = self.client.get('/libcal/space/locations', {'token': self.app.api_token})
         self.assertEqual(response.status_code, 500)
         self.assertJSONEqual(response.content.decode("utf-8"), expected_json)
