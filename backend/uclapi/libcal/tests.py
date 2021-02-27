@@ -11,6 +11,8 @@ import redis
 
 from dashboard.models import App, User
 from uclapi.settings import REDIS_UCLAPI_HOST
+from oauth.models import OAuthScope, OAuthToken
+from oauth.scoping import Scopes
 
 
 def all_params(testcase_func, param_num, param):
@@ -165,8 +167,8 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
 
     @classmethod
     def tearDownClass(cls):
-        super().tearDownClass()
         cls.r.delete("libcal:token")
+        super().tearDownClass()
 
     @parameterized.expand([('locations'), ('form?ids=1'), ('question?ids=1'), ('categories?ids=1'), ('category?ids=1'),
                            ('item?ids=1'), ('nickname?ids=1'), ('utilization?ids=1'), ('seat?ids=1'), ('seats?ids=1'),
@@ -440,3 +442,190 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
         for id in valid_ids:
             response = self.client.get(f'/libcal/space/{endpoint}', {'ids': id, 'token': self.app.api_token})
             self.assertEqual(response.status_code, 400)
+
+
+@requests_mock.Mocker()
+@mock.patch.dict(os.environ, {"LIBCAL_BASE_URL": "https://library-calendars.ucl.ac.uk"})
+class LibcalPersonalReadEndpointsTestCase(APITestCase):
+    """Tests for LibCal endpoints that display personal data."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # create User, App, and OAuth it
+        cls.user = User.objects.create(email='zc@ucl.ac.uk', cn="test", employee_id=7357, mail='f.l.2021@ucl.ac.uk')
+        cls.app_dev = User.objects.create(cn="test2", employee_id=1122)
+        cls.app: App = App.objects.create(user=cls.app_dev, name="An App")
+        cls.oauth_scope = OAuthScope.objects.create(scope_number=Scopes().add_scope(0, 'libcal_read'))
+        cls.oauth_token = OAuthToken.objects.create(
+            app=cls.app,
+            user=cls.user,
+            scope=cls.oauth_scope
+        )
+        cls.libcal_token: str = "random-token"
+        cls.headers: dict = {
+            "Authorization": f"Bearer {cls.libcal_token}"
+        }
+        cls.r: redis.Redis = redis.Redis(
+            host=REDIS_UCLAPI_HOST,
+            charset="utf-8",
+            decode_responses=True
+        )
+        cls.r.set("libcal:token", cls.libcal_token)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.r.delete("libcal:token")
+        super().tearDownClass()
+
+    def setUp(self):
+        # Some tests change this value during testing.
+        self.oauth_token.scope.scope_number = Scopes().add_scope(0, 'libcal_read')
+        self.oauth_token.scope.save()
+        self.user.mail = 'f.l.2021@ucl.ac.uk'
+        self.user.email = 'zc@ucl.ac.uk'
+        self.user.save()
+
+    def test_non_personal_token_rejected(self, m):
+        """Tests that we reject a non-personal data token"""
+        response = self.client.get(
+            '/libcal/space/personal_bookings',
+            {'token': self.app.api_token, 'client_secret': self.app.client_secret}
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_lack_of_client_secret_rejected(self, m):
+        """Tests that we reject an OAuth token presented without a client secret"""
+        response = self.client.get('/libcal/space/personal_bookings', {'token': self.oauth_token.token})
+        self.assertEqual(response.status_code, 400)
+
+    def test_wrong_scope_rejected(self, m):
+        """Tests that we reject an OAuth token presented with the wrong scope"""
+        # NOTE: '' will be converted to no scope by add_scope().
+        for scope in ['', 'timetable', 'student_number']:
+            self.oauth_token.scope.scope_number = Scopes().add_scope(0, scope)
+            self.oauth_token.scope.save()
+            response = self.client.get(
+                '/libcal/space/personal_bookings',
+                {'token': self.oauth_token.token, 'client_secret': self.app.client_secret}
+            )
+            self.assertEqual(response.status_code, 400)
+
+    def test_lack_of_email_caught(self, m):
+        """Tests that we error out when the email is empty"""
+        self.user.mail = ''
+        self.user.email = ''
+        self.user.save()
+        response = self.client.get(
+            '/libcal/space/personal_bookings',
+            {'token': self.oauth_token.token, 'client_secret': self.app.client_secret}
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_bookings_list(self, m):
+        """Test that a valid call to the personal_bookings endpoint results in a 200 response."""
+        json = {'key': 'value'}
+        m.register_uri(
+            'GET',
+            f'https://library-calendars.ucl.ac.uk/1.1/space/bookings?email={self.user.mail}',
+            request_headers=self.headers,
+            complete_qs=True,  # Need this to catch if token is sent in!
+            json=json)
+        response = self.client.get(
+            '/libcal/space/personal_bookings',
+            {'token': self.oauth_token.token, 'client_secret': self.app.client_secret}
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_bookings_fallback(self, m):
+        """Tests that we fallback to eppn if mail is empty."""
+        self.user.mail = ''
+        self.user.save()
+        json = {'key': 'value'}
+        m.register_uri(
+            'GET',
+            f'https://library-calendars.ucl.ac.uk/1.1/space/bookings?email={self.user.email}',
+            request_headers=self.headers,
+            complete_qs=True,  # Need this to catch if token is sent in!
+            json=json)
+        response = self.client.get(
+            '/libcal/space/personal_bookings',
+            {'token': self.oauth_token.token, 'client_secret': self.app.client_secret}
+        )
+        self.assertEqual(response.status_code, 200)
+
+    @parameterized.expand([
+        ('eid', 123),
+        ('eid', '12,345'),
+        ('seat_id', 123),
+        ('seat_id', '12,345'),
+        ('cid', 123),
+        ('cid', '12,345'),
+        ('lid', 123),
+        ('date', '2021-01-01'),
+        ('limit', 1),
+        ('limit', 500),
+        ('formAnswers', 0),
+        ('formAnswers', 1)
+    ], name_func=all_params_except_libcal_endpoint)
+    def test_serializer_valid_input(self, m, key, value):
+        json = {'key': 'value'}
+        m.register_uri(
+            'GET',
+            f'https://library-calendars.ucl.ac.uk/1.1/space/bookings?email={self.user.mail}&{key}={value}',
+            request_headers=self.headers,
+            complete_qs=True,  # Need this to catch if token is sent in!
+            json=json)
+        response = self.client.get(
+            '/libcal/space/personal_bookings',
+            {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, key: value}
+        )
+        self.assertEqual(response.status_code, 200)
+
+    @parameterized.expand([
+        ('eid', ';DROP table;--'),
+        ('eid', '-4'),
+        ('eid', '23.5'),
+        ('eid', '47,,4'),
+        ('eid', ','),
+        ('eid', '1,2.3'),
+        ('eid', '8,'),
+        ('seat_id', ';DROP table;--'),
+        ('seat_id', '-4'),
+        ('seat_id', '23.5'),
+        ('seat_id', '47,,4'),
+        ('seat_id', ','),
+        ('seat_id', '1,2.3'),
+        ('seat_id', '8,'),
+        ('cid', ';DROP table;--'),
+        ('cid', '-4'),
+        ('cid', '23.5'),
+        ('cid', '47,,4'),
+        ('cid', ','),
+        ('cid', '1,2.3'),
+        ('cid', '8,'),
+        ('lid', ';DROP table;--'),
+        ('lid', '-4'),
+        ('lid', '23.5'),
+        ('lid', '47,,4'),
+        ('lid', ','),
+        ('lid', '1,2.3'),
+        ('lid', '8,'),
+        ('date', ';DROP table;--'),
+        ('date', '2021'),
+        ('date', '2021-01'),
+        ('date', '2021-01-01T:00:00:00'),
+        ('date', '2021-01-01T:00:00:00+00:00'),
+        ('limit', 0),
+        ('limit', 501),
+        ('limit', ';DROP table;--'),
+        ('formAnswers', ';DROP table;--'),
+        ('formAnswers', 0.5),
+        ('formAnswers', -1)
+    ])
+    def test_serializer_invalid_input(self, m, key, value):
+        response = self.client.get(
+            '/libcal/space/personal_bookings',
+            {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, key: value}
+        )
+        self.assertEqual(response.status_code, 400)
