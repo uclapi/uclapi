@@ -13,4 +13,5 @@ urlpatterns = [
     path('space/utilization', views.get_utilization),
     path('space/seat', views.get_seat),
     path('space/seats', views.get_seats),
+    path('space/zone', views.get_zone),
 ]

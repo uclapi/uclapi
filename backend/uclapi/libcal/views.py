@@ -14,6 +14,7 @@ from uclapi.settings import REDIS_UCLAPI_HOST
 
 from .serializers import (
     LibCalLocationGETSerializer,
+    LibCalIdSerializer,
     LibCalIdListSerializer,
     LibCalCategoryGETSerializer,
     LibCalItemGETSerializer,
@@ -230,5 +231,19 @@ def get_seats(request, *args, **kwargs):
         request,
         LibCalSeatsGETSerializer(data=request.query_params),
         'seats',
+        **kwargs
+    )
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key=None)
+def get_zone(request, *args, **kwargs):
+    """Returns a zone."""
+    # TODO: note in docs an invalid ID will have different key/values!!
+    return _libcal_request_forwarder(
+        "/api/1.1/space/zone",
+        request,
+        LibCalIdSerializer(data=request.query_params),
+        'zone',
         **kwargs
     )
