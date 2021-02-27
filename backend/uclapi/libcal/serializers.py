@@ -169,3 +169,43 @@ class LibCalSeatsGETSerializer(LibCalIdSerializer):
         required=False,
         help_text='For results pagination, this sets how many results per page to retrieve.'
     )
+
+
+class LibCalBookingsGETSerializer(serializers.Serializer):
+    """Serializer for the /1.1/space/bookings endpoint"""
+    eid = serializers.RegexField(
+        regex=r'^\d+(,\d+)*$',
+        required=False,
+        help_text='Pass an item id or list of item ids here to only show bookings for those spaces.'
+    )
+    seat_id = serializers.RegexField(
+        regex=r'^\d+(,\d+)*$',
+        required=False,
+        help_text='Pass a seat id or list of seat ids here to only show bookings for those seats.'
+    )
+    cid = serializers.RegexField(
+        regex=r'^\d+(,\d+)*$',
+        required=False,
+        help_text='Pass a category id or list of category ids here to only show bookings for those categories.'
+    )
+    lid = serializers.IntegerField(
+        min_value=0,
+        required=False,
+        help_text='Pass a location id here to only show bookings for that location.'
+    )
+    date = serializers.DateField(
+        required=False,
+        help_text='The date to retrieve bookings. Dates in the past are ignored.'
+    )
+    days = serializers.IntegerField(
+        min_value=0,
+        max_value=365,
+        required=False,
+        help_text='The number of days into the future to retrieve bookings from, starting from [date] parameter.'
+    )
+    limit = serializers.IntegerField(
+        min_value=1,
+        max_value=500,
+        required=False,
+        help_text='How many bookings to return, max value is 500.'
+    )

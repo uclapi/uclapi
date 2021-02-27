@@ -170,7 +170,7 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
 
     @parameterized.expand([('locations'), ('form?ids=1'), ('question?ids=1'), ('categories?ids=1'), ('category?ids=1'),
                            ('item?ids=1'), ('nickname?ids=1'), ('utilization?ids=1'), ('seat?ids=1'), ('seats?ids=1'),
-                           ('zone?ids=1'), ('zones?ids=1')])
+                           ('zone?ids=1'), ('zones?ids=1'), ('bookings')])
     def test_token_is_checked(self, m, uclapi_endpoint):
         """Tests that we check for a valid UCL API token"""
         # NOTE: token isn't sent in!
@@ -201,7 +201,17 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
         ('seats', 'api/1.1/space/seats/1', 'availability', '2021-01-01'),
         ('seats', 'api/1.1/space/seats/1', 'availability', '2021-01-01,2021-01-02'),
         ('seats', 'api/1.1/space/seats/1', 'pageIndex', 123),
-        ('seats', 'api/1.1/space/seats/1', 'pageSize', 99)
+        ('seats', 'api/1.1/space/seats/1', 'pageSize', 99),
+        ('bookings', '1.1/space/bookings', 'eid', 123),
+        ('bookings', '1.1/space/bookings', 'eid', '12,345'),
+        ('bookings', '1.1/space/bookings', 'seat_id', 123),
+        ('bookings', '1.1/space/bookings', 'seat_id', '12,345'),
+        ('bookings', '1.1/space/bookings', 'cid', 123),
+        ('bookings', '1.1/space/bookings', 'cid', '12,345'),
+        ('bookings', '1.1/space/bookings', 'lid', 123),
+        ('bookings', '1.1/space/bookings', 'date', '2021-01-01'),
+        ('bookings', '1.1/space/bookings', 'limit', 1),
+        ('bookings', '1.1/space/bookings', 'limit', 500)
     ], name_func=all_params_except_libcal_endpoint)
     def test_serializer_valid_input(self, m, uclapi_endpoint, libcal_endpoint, key, value):
         """Tests that GET parameters are validated"""
@@ -288,7 +298,43 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
         ('seats', 'pageSize', 0.5),
         ('seats', 'pageSize', 0),
         ('seats', 'pageSize', 101),
-        ('seats', 'pageSize', ';DROP table;--')
+        ('seats', 'pageSize', ';DROP table;--'),
+        ('bookings', 'eid', ';DROP table;--'),
+        ('bookings', 'eid', '-4'),
+        ('bookings', 'eid', '23.5'),
+        ('bookings', 'eid', '47,,4'),
+        ('bookings', 'eid', ','),
+        ('bookings', 'eid', '1,2.3'),
+        ('bookings', 'eid', '8,'),
+        ('bookings', 'seat_id', ';DROP table;--'),
+        ('bookings', 'seat_id', '-4'),
+        ('bookings', 'seat_id', '23.5'),
+        ('bookings', 'seat_id', '47,,4'),
+        ('bookings', 'seat_id', ','),
+        ('bookings', 'seat_id', '1,2.3'),
+        ('bookings', 'seat_id', '8,'),
+        ('bookings', 'cid', ';DROP table;--'),
+        ('bookings', 'cid', '-4'),
+        ('bookings', 'cid', '23.5'),
+        ('bookings', 'cid', '47,,4'),
+        ('bookings', 'cid', ','),
+        ('bookings', 'cid', '1,2.3'),
+        ('bookings', 'cid', '8,'),
+        ('bookings', 'lid', ';DROP table;--'),
+        ('bookings', 'lid', '-4'),
+        ('bookings', 'lid', '23.5'),
+        ('bookings', 'lid', '47,,4'),
+        ('bookings', 'lid', ','),
+        ('bookings', 'lid', '1,2.3'),
+        ('bookings', 'lid', '8,'),
+        ('bookings', 'date', ';DROP table;--'),
+        ('bookings', 'date', '2021'),
+        ('bookings', 'date', '2021-01'),
+        ('bookings', 'date', '2021-01-01T:00:00:00'),
+        ('bookings', 'date', '2021-01-01T:00:00:00+00:00'),
+        ('bookings', 'limit', 0),
+        ('bookings', 'limit', 501),
+        ('bookings', 'limit', ';DROP table;--')
     ], name_func=all_params)
     def test_serializer_invalid_input(self, m, uclapi_endpoint, key, value):
         """Tests that invalid GET parameters are caught"""
