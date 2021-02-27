@@ -7,4 +7,5 @@ urlpatterns = [
     path('space/form', views.get_form),
     path('space/question', views.get_question),
     path('space/categories', views.get_categories),
+    path('space/category', views.get_category),
 ]

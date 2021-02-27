@@ -39,3 +39,26 @@ class LibCalIdListSerializer(serializers.Serializer):
         required=True,  # Default, but stated for clarity.
         help_text='A form id or a list of form ids to retrieve.'
     )
+
+
+class LibCalCategoryGETSerializer(LibCalIdListSerializer):
+    """Serializer for the /1.1/space/category endpoint"""
+    details = serializers.IntegerField(
+        min_value=0,
+        max_value=1,
+        required=False,
+        help_text=(
+            'Flag to indicate you want additional details such as terms and conditions.'
+            'Note: This should only be used for systems that do not contain thousands of spaces.'
+        )
+    )
+    availability = serializers.RegexField(
+        # TODO: Update regex when we reach the year 10000
+        regex='(^next$)|(^[0-9]{4}-[0-9]{2}-[0-9]{2}(,[0-9]{4}-[0-9]{2}-[0-9]{2})?$)',
+        required=False,
+        help_text=(
+            'Either a single date, or a comma separated list of 2 dates (a start and end date).' \
+            'The keyword "next" can be used to return availability for the next date that this item is available.' \
+            'Note: Setting this value also sets the details value to true.'
+        )
+    )

@@ -12,7 +12,7 @@ from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse
 from uclapi.settings import REDIS_UCLAPI_HOST
 
-from .serializers import LibCalLocationGETSerializer, LibCalIdListSerializer
+from .serializers import LibCalLocationGETSerializer, LibCalIdListSerializer, LibCalCategoryGETSerializer
 
 
 def _libcal_request_forwarder(url: str, request: Request, serializer: Serializer, key: str, **kwargs) -> JsonResponse:
@@ -136,6 +136,20 @@ def get_categories(request, *args, **kwargs):
         "/1.1/space/categories",
         request,
         LibCalIdListSerializer(data=request.query_params),
+        'categories',
+        **kwargs
+    )
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key=None)
+def get_category(request, *args, **kwargs):
+    """Returns a category or a list of categories"""
+    # TODO: note in docs an invalid ID will have different key/values!!
+    return _libcal_request_forwarder(
+        "/1.1/space/category",
+        request,
+        LibCalCategoryGETSerializer(data=request.query_params),
         'categories',
         **kwargs
     )
