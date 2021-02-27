@@ -16,5 +16,6 @@ urlpatterns = [
     path('space/zone', views.get_zone),
     path('space/zones', views.get_zones),
     path('space/bookings', views.get_bookings),
-    path('space/personal_bookings', views.get_personal_bookings)
+    path('space/personal_bookings', views.get_personal_bookings),
+    path('space/reserve', views.reserve)
 ]

@@ -14,7 +14,7 @@ This set of API proxies the LibCal API, used to book rooms and seats for both in
 Currently we only support the read-only endpoints but it is intended to also present endpoints that allow creating and
 cancelling bookings.
 
-To allow read access to personal data, a new OAuth scope is introduced - ``libcal_read``.
+To allow read and write access to personal data, two new OAuth scope are introduced - ``libcal_read`` and ``libcal_write``.
 
 The design is quite simple, we simply proxy the requests from the client to LibCal, and give the results back from
 LibCal back to the client.
@@ -26,8 +26,8 @@ command every 30 mins, to minimise the chances of us not having a token at any m
 Bookings made via the web UI use ``User.mail`` as the email address and is also the unique identifier used to show/create
 bookings, however this was only stored in our DB recently when ``12a5a9896c96c4a268815cf39d3798bbb417ea47`` was merged.
 Seeming as the ``User`` model is only updated when the user goes through the Shibboleth workflow, this presented a
-problem as ``User.mail`` would likely be empty. Fortunately, one can get around this problem by noticing that as a new
-scope is required for accessing personal LibCal data, the user would have to go through the Shibboleth process to
+problem as ``User.mail`` would likely be empty. Fortunately, one can get around this problem by noticing that as new
+scopes are required for accessing personal LibCal data, the user would have to go through the Shibboleth process to
 approve the app's request for the new scope, at which point ``User.mail`` would be updated.
 
 views.py
