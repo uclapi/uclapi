@@ -1,3 +1,4 @@
+import json
 import os
 from typing import Optional
 
@@ -21,7 +22,8 @@ from .serializers import (
     LibCalNicknameGETSerializer,
     LibCalUtilizationGETSerializer,
     LibCalSeatGETSerializer,
-    LibCalSeatsGETSerializer
+    LibCalSeatsGETSerializer,
+    LibCalBookingsGETSerializer
 )
 
 
@@ -261,3 +263,25 @@ def get_zones(request, *args, **kwargs):
         'zones',
         **kwargs
     )
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key=None)
+def get_bookings(request, *args, **kwargs):
+    """Returns bookings based on parameters (if any) given."""
+    serializer = LibCalBookingsGETSerializer(data=request.query_params)
+    booking_response = _libcal_request_forwarder("/1.1/space/bookings", request, serializer, 'data', **kwargs)
+    data = json.loads(booking_response.content.decode('utf-8'))
+    if "data" in data:
+        data["bookings"] = data.pop("data")
+        if isinstance(data["bookings"], list):
+            for booking in data["bookings"]:
+                # Strip personal data from response
+                booking.pop('email', None)
+                booking.pop('firstName', None)
+                booking.pop('lastName', None)
+                booking.pop('bookId', None)
+                booking.pop('check_in_code', None)
+    uclapi_response = JsonResponse(data, custom_header_data=kwargs)
+    uclapi_response.status_code = booking_response.status_code
+    return uclapi_response
