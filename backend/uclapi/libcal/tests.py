@@ -170,7 +170,7 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
 
     @parameterized.expand([('locations'), ('form?ids=1'), ('question?ids=1'), ('categories?ids=1'), ('category?ids=1'),
                            ('item?ids=1'), ('nickname?ids=1'), ('utilization?ids=1'), ('seat?ids=1'), ('seats?ids=1'),
-                           ('zone?ids=1')])
+                           ('zone?ids=1'), ('zones?ids=1')])
     def test_token_is_checked(self, m, uclapi_endpoint):
         """Tests that we check for a valid UCL API token"""
         # NOTE: token isn't sent in!
@@ -308,7 +308,8 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
         ("utilization", "api/1.1/space/utilization", 'data'),
         ("seat", "api/1.1/space/seat", 'seat'),
         ("seats", "api/1.1/space/seats", 'seats'),
-        ("zone", "api/1.1/space/zone", 'zone')
+        ("zone", "api/1.1/space/zone", 'zone'),
+        ("zones", "api/1.1/space/zones", 'zones')
     ])
     def test_valid_id(self, m, uclapi_endpoint, libcal_endpoint, key):
         """Tests that a valid id is forwarded to LibCal.
@@ -374,7 +375,7 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
             self.assertJSONEqual(response.content.decode('utf8'), {"ok": True, key: json})
 
     @parameterized.expand([('form'), ('question'), ('categories'), ('category'), ('item'), ('nickname'),
-                           ('utilization'), ('seat'), ('seats'), ('zone')])
+                           ('utilization'), ('seat'), ('seats'), ('zone'), ('zones')])
     def test_invalid_id_list(self, m, endpoint):
         """Tests that invalid format of ID(s) is not proxied and is caught by us."""
         valid_ids: list[str] = ["hello", "-4", "23.5", "47,,4", ",", "1,2.3", "8,"]
@@ -382,7 +383,7 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
             response = self.client.get(f'/libcal/space/{endpoint}', {'ids': id, 'token': self.app.api_token})
             self.assertEqual(response.status_code, 400)
 
-    @parameterized.expand([('utilization'), ('seat'), ('seats'), ('zone')])
+    @parameterized.expand([('utilization'), ('seat'), ('seats'), ('zone'), ('zones')])
     def test_id_list_returns_404(self, m, endpoint):
         """Tests that a valid list of IDs is not proxied and is caught by us.
 
