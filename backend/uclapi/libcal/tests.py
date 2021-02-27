@@ -3,9 +3,9 @@ from unittest import mock
 from urllib import parse
 
 from django.core.management import call_command
-from django.test import SimpleTestCase, TestCase
 from parameterized import parameterized
-from rest_framework.test import APIClient
+
+from rest_framework.test import APISimpleTestCase, APITestCase, APIClient
 import requests_mock
 import redis
 
@@ -36,7 +36,7 @@ def all_params_except_libcal_endpoint(testcase_func, param_num, param):
         "LIBCAL_CLIENT_SECRET": "secret"
     }
 )
-class LibCalManagementCommandTestCase(SimpleTestCase):
+class LibCalManagementCommandTestCase(APISimpleTestCase):
     """Tests for the LibCal refresh_libcal_token management command."""
 
     @classmethod
@@ -86,7 +86,8 @@ class LibCalManagementCommandTestCase(SimpleTestCase):
 
 
 @requests_mock.Mocker()
-class LibCalRequestForwarderTestCase(TestCase):
+@mock.patch.dict(os.environ, {"LIBCAL_BASE_URL": "https://library-calendars.ucl.ac.uk"})
+class LibCalRequestForwarderTestCase(APITestCase):
     """Tests specific functionality of the _libcal_request_forwarder() function"""
 
     @classmethod
@@ -139,7 +140,8 @@ class LibCalRequestForwarderTestCase(TestCase):
 
 
 @requests_mock.Mocker()
-class LibcalNonPersonalEndpointsTestCase(TestCase):
+@mock.patch.dict(os.environ, {"LIBCAL_BASE_URL": "https://library-calendars.ucl.ac.uk"})
+class LibcalNonPersonalEndpointsTestCase(APITestCase):
     """Tests for LibCal endpoints that don't display personal data."""
 
     @classmethod
@@ -166,7 +168,7 @@ class LibcalNonPersonalEndpointsTestCase(TestCase):
         super().tearDownClass()
         cls.r.delete("libcal:token")
 
-    @parameterized.expand([('locations')])
+    @parameterized.expand([('locations'), ('form?ids=1')])
     def test_token_is_checked(self, m, uclapi_endpoint):
         """Tests that we check for a valid UCL API token"""
         # NOTE: token isn't sent in!
@@ -201,6 +203,27 @@ class LibcalNonPersonalEndpointsTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
     @parameterized.expand([
+        ('form', '1.1/space/form', 'forms')
+    ])
+    def test_valid_id(self, m, uclapi_endpoint, libcal_endpoint, key):
+        """Tests that a valid id is forwarded to LibCal.
+
+        This is primarily a test of the regex in urls.py
+        """
+        valid_ids: list[str] = ["0", "40", "040", "1234567890"]
+        json = {"data": "Doesn't matter for this test"}
+        for id in valid_ids:
+            m.register_uri(
+                'GET',
+                f'https://library-calendars.ucl.ac.uk/{libcal_endpoint}/{id}',
+                request_headers=self.headers,
+                json=json)
+            response = self.client.get(f'/libcal/space/{uclapi_endpoint}', {'ids': id, 'token': self.app.api_token})
+            self.assertEqual(response.status_code, 200)
+            # https://stackoverflow.com/a/28399670
+            self.assertJSONEqual(response.content.decode('utf8'), {"ok": True, key: json})
+
+    @parameterized.expand([
         ('locations', '1.1/space/locations', 'admin_only', 1)
     ], name_func=all_params_except_libcal_endpoint)
     def test_serializer_blacklisted_input(self, m, uclapi_endpoint, libcal_endpoint, key, value):
@@ -214,3 +237,29 @@ class LibcalNonPersonalEndpointsTestCase(TestCase):
             json=json)
         response = self.client.get(f'/libcal/space/{uclapi_endpoint}', {key: value, 'token': self.app.api_token})
         self.assertEqual(response.status_code, 200)
+
+    @parameterized.expand([
+        ('form', '1.1/space/form', 'forms')
+    ])
+    def test_valid_id_list(self, m, uclapi_endpoint, libcal_endpoint, key):
+        """Tests that a valid id or a list of valid ids is forwarded to LibCal."""
+        valid_ids: list[str] = ["1", "1,2", "12,345"]
+        json = {"data": "Doesn't matter for this test"}
+        for id in valid_ids:
+            m.register_uri(
+                'GET',
+                f'https://library-calendars.ucl.ac.uk/{libcal_endpoint}/{id}',
+                request_headers=self.headers,
+                json=json)
+            response = self.client.get(f'/libcal/space/{uclapi_endpoint}', {'ids': id, 'token': self.app.api_token})
+            self.assertEqual(response.status_code, 200)
+            # https://stackoverflow.com/a/28399670
+            self.assertJSONEqual(response.content.decode('utf8'), {"ok": True, key: json})
+
+    @parameterized.expand([('form')])
+    def test_invalid_id_list(self, m, endpoint):
+        """Tests that invalid format of ID(s) is not proxied and is caught by us."""
+        valid_ids: list[str] = ["hello", "-4", "23.5", "47,,4", ",", "1,2.3", "8,"]
+        for id in valid_ids:
+            response = self.client.get(f'/libcal/space/{endpoint}', {'ids': id, 'token': self.app.api_token})
+            self.assertEqual(response.status_code, 400)
