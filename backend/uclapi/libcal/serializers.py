@@ -75,3 +75,8 @@ class LibCalItemGETSerializer(LibCalIdListSerializer):
             'The keyword "next" can be used to return availability for the next date that this item is available.'
         )
     )
+
+
+class LibCalNicknameGETSerializer(LibCalIdListSerializer):
+    """Serializer for the /1.1/space/nickname endpoint"""
+    date = serializers.DateField(required=False)

@@ -16,7 +16,8 @@ from .serializers import (
     LibCalLocationGETSerializer,
     LibCalIdListSerializer,
     LibCalCategoryGETSerializer,
-    LibCalItemGETSerializer
+    LibCalItemGETSerializer,
+    LibCalNicknameGETSerializer
 )
 
 
@@ -170,5 +171,19 @@ def get_item(request, *args, **kwargs):
         request,
         LibCalItemGETSerializer(data=request.query_params),
         'items',
+        **kwargs
+    )
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key=None)
+def get_nickname(request, *args, **kwargs):
+    """Returns the nicknames of a category or a list of categories"""
+    # TODO: note in docs an invalid ID will have different key/values!!
+    return _libcal_request_forwarder(
+        "/1.1/space/nickname",
+        request,
+        LibCalNicknameGETSerializer(data=request.query_params),
+        'nicknames',
         **kwargs
     )
