@@ -448,7 +448,7 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
 
 @requests_mock.Mocker()
 @mock.patch.dict(os.environ, {"LIBCAL_BASE_URL": "https://library-calendars.ucl.ac.uk"})
-class LibcalPersonalReadEndpointsTestCase(APITestCase):
+class LibcalPersonalEndpointsTestCase(APITestCase):
     """Tests for LibCal endpoints that display personal data."""
 
     @classmethod
@@ -491,45 +491,59 @@ class LibcalPersonalReadEndpointsTestCase(APITestCase):
         self.user.email = 'zc@ucl.ac.uk'
         self.user.save()
 
-    @parameterized.expand([('personal_bookings', 'GET'), ('reserve', 'POST')])
-    def test_non_personal_token_rejected(self, m, endpoint, method):
+    @parameterized.expand([
+        ('personal_bookings', 'GET', ''),
+        ('reserve', 'POST', ''),
+        ('cancel', 'POST', 'cs_qQpoVMHk')
+    ])
+    def test_non_personal_token_rejected(self, m, endpoint, method, bookIds):
         """Tests that we reject a non-personal data token"""
         if method == 'GET':
             response = self.client.get(
                 f'/libcal/space/{endpoint}',
-                {'token': self.app.api_token, 'client_secret': self.app.client_secret}
+                {'token': self.app.api_token, 'client_secret': self.app.client_secret, 'ids': bookIds}
             )
         else:
             response = self.client.post(
                 f'/libcal/space/{endpoint}',
-                {'token': self.app.api_token, 'client_secret': self.app.client_secret}
+                {'token': self.app.api_token, 'client_secret': self.app.client_secret, 'ids': bookIds}
             )
         self.assertEqual(response.status_code, 400)
 
-    @parameterized.expand([('personal_bookings', 'libcal_read', 'GET'), ('reserve', 'libcal_write', 'POST')])
-    def test_lack_of_client_secret_rejected(self, m, endpoint, scope, method):
+    @parameterized.expand([
+        ('personal_bookings', 'libcal_read', 'GET', ''),
+        ('reserve', 'libcal_write', 'POST', ''),
+        ('cancel', 'libcal_write', 'POST', 'cs_qQpoVMHk')
+    ])
+    def test_lack_of_client_secret_rejected(self, m, endpoint, scope, method, bookIds):
         """Tests that we reject an read OAuth token presented without a client secret"""
         self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, scope)
         self.oauth_token.scope.save()
         if method == 'GET':
-            response = self.client.get(f'/libcal/space/{endpoint}', {'token': self.oauth_token.token})
+            response = self.client.get(
+                f'/libcal/space/{endpoint}', {'token': self.oauth_token.token, 'ids': bookIds})
         else:
-            response = self.client.post(f'/libcal/space/{endpoint}', {'token': self.oauth_token.token})
+            response = self.client.post(
+                f'/libcal/space/{endpoint}', {'token': self.oauth_token.token, 'ids': bookIds})
         self.assertEqual(response.status_code, 400)
 
-    @parameterized.expand([('personal_bookings', 'libcal_read', 'GET'), ('reserve', 'libcal_write', 'POST')])
-    def test_wrong_scope_rejected(self, m, endpoint, correct_scope, method):
+    @parameterized.expand([
+        ('personal_bookings', 'libcal_read', 'GET', ''),
+        ('reserve', 'libcal_write', 'POST', ''),
+        ('cancel', 'libcal_write', 'POST', 'cs_qQpoVMHk')
+    ])
+    def test_wrong_scope_rejected(self, m, endpoint, correct_scope, method, bookIds):
         """Tests that we reject an OAuth token presented with the wrong scope"""
         # NOTE: scope is currently '' (0)
         if method == 'GET':
             response = self.client.get(
                 f'/libcal/space/{endpoint}',
-                {'token': self.oauth_token.token, 'client_secret': self.app.client_secret}
+                {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, 'ids': bookIds}
             )
         else:
             response = self.client.post(
                 f'/libcal/space/{endpoint}',
-                {'token': self.oauth_token.token, 'client_secret': self.app.client_secret}
+                {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, 'ids': bookIds}
             )
         self.assertEqual(response.status_code, 400)
 
@@ -541,12 +555,12 @@ class LibcalPersonalReadEndpointsTestCase(APITestCase):
             if method == 'GET':
                 response = self.client.get(
                     f'/libcal/space/{endpoint}',
-                    {'token': self.oauth_token.token, 'client_secret': self.app.client_secret}
+                    {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, 'ids': bookIds}
                 )
             else:
                 response = self.client.post(
                     f'/libcal/space/{endpoint}',
-                    {'token': self.oauth_token.token, 'client_secret': self.app.client_secret}
+                    {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, 'ids': bookIds}
                 )
             self.assertEqual(response.status_code, 400)
 
@@ -825,3 +839,111 @@ class LibcalPersonalReadEndpointsTestCase(APITestCase):
             payload, format='json'
         )
         self.assertEqual(response.status_code, 200)
+
+    @parameterized.expand(['cs_qQpoVMHk', 'cs_qQpoVMHk,cs_qQpoRH20'])
+    def test_valid_cancel(self, m, bookIds):
+        """Tests that a valid id or a list of valid ids is cancelled by LibCal."""
+        self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, 'libcal_write')
+        self.oauth_token.scope.save()
+        bookings = []
+        cancelled = []
+        for bookId in bookIds.split(','):
+            bookings.append({'email': self.user.mail, 'bookId': bookId})
+            cancelled.append({'booking_id': bookId, 'cancelled': True})
+
+        m.register_uri(
+            'GET',
+            f'https://library-calendars.ucl.ac.uk/1.1/space/booking/{bookIds}',
+            request_headers=self.headers,
+            json=bookings)
+        m.register_uri(
+            'POST',
+            f'https://library-calendars.ucl.ac.uk/1.1/space/cancel/{bookIds}',
+            request_headers=self.headers,
+            json=cancelled)
+        response = self.client.post(
+            f'/libcal/space/cancel?ids={bookIds}&token={self.oauth_token.token}&client_secret={self.app.client_secret}'
+        )
+        self.assertEqual(response.status_code, 200)
+        # https://stackoverflow.com/a/28399670
+        self.assertJSONEqual(response.content.decode('utf8'), {"ok": True, 'bookings': cancelled})
+
+    @parameterized.expand(['cs_qQpoVMHk', 'cs_qQpoVMHk,cs_qQpoRH20'])
+    def test_cancel_ignore_invalid_id(self, m, bookIds):
+        """Tests that only valid bookings belonging to the user are deleted."""
+        valid_booking = 'cs_qQpoVMHk'
+        self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, 'libcal_write')
+        self.oauth_token.scope.save()
+        bookings = [{'email': self.user.mail, 'bookId': valid_booking}]
+        cancelled = []
+        for bookId in bookIds.split(','):
+            if bookId == valid_booking:
+                cancelled.append({'booking_id': bookId, 'cancelled': True})
+
+        m.register_uri(
+            'GET',
+            f'https://library-calendars.ucl.ac.uk/1.1/space/booking/{bookIds}',
+            request_headers=self.headers,
+            json=bookings)
+        m.register_uri(
+            'POST',
+            f'https://library-calendars.ucl.ac.uk/1.1/space/cancel/{valid_booking}',
+            request_headers=self.headers,
+            json=cancelled)
+        response = self.client.post(
+            f'/libcal/space/cancel?ids={bookIds}&token={self.oauth_token.token}&client_secret={self.app.client_secret}'
+        )
+        self.assertEqual(response.status_code, 200)
+        # https://stackoverflow.com/a/28399670
+        self.assertJSONEqual(response.content.decode('utf8'), {"ok": True, 'bookings': cancelled})
+
+    @parameterized.expand(['cs_qQpoVMHk', 'cs_qQpoVMHk,cs_qQpoRH20'])
+    def test_valid_cancel_only_eppn(self, m, bookIds):
+        """Tests that it is possible to cancel bookings with an empty mail but with a valid eppn."""
+        self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, 'libcal_write')
+        self.oauth_token.scope.save()
+        self.user.mail = ''
+        self.user.save()
+        bookings = []
+        cancelled = []
+        for bookId in bookIds.split(','):
+            bookings.append({'email': self.user.email, 'bookId': bookId})
+            cancelled.append({'booking_id': bookId, 'cancelled': True})
+
+        m.register_uri(
+            'GET',
+            f'https://library-calendars.ucl.ac.uk/1.1/space/booking/{bookIds}',
+            request_headers=self.headers,
+            json=bookings)
+        m.register_uri(
+            'POST',
+            f'https://library-calendars.ucl.ac.uk/1.1/space/cancel/{bookIds}',
+            request_headers=self.headers,
+            json=cancelled)
+        response = self.client.post(
+            f'/libcal/space/cancel?ids={bookIds}&token={self.oauth_token.token}&client_secret={self.app.client_secret}'
+        )
+        self.assertEqual(response.status_code, 200)
+        # https://stackoverflow.com/a/28399670
+        self.assertJSONEqual(response.content.decode('utf8'), {"ok": True, 'bookings': cancelled})
+
+    def test_valid_cancel_empty_email(self, m):
+        """Tests that we error out correctly when the user has no email address."""
+        self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, 'libcal_write')
+        self.oauth_token.scope.save()
+        self.user.mail = ''
+        self.user.email = ''
+        self.user.save()
+        bookId = 'cs_qQpoVMHk'
+        response = self.client.post(
+            f'/libcal/space/cancel?ids={bookId}&token={self.oauth_token.token}&client_secret={self.app.client_secret}'
+        )
+        self.assertEqual(response.status_code, 500)
+        # https://stackoverflow.com/a/28399670
+        self.assertJSONEqual(
+            response.content.decode('utf8'),
+            {
+                "ok": False,
+                'error': 'This booking cannot be cancelled as this user has no valid email address.'
+            }
+        )

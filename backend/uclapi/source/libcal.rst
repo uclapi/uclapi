@@ -11,9 +11,6 @@ Design
 -------------------------
 This set of API proxies the LibCal API, used to book rooms and seats for both individual and group use.
 
-Currently we only support the read-only endpoints but it is intended to also present endpoints that allow creating and
-cancelling bookings.
-
 To allow read and write access to personal data, two new OAuth scope are introduced - ``libcal_read`` and ``libcal_write``.
 
 The design is quite simple, we simply proxy the requests from the client to LibCal, and give the results back from

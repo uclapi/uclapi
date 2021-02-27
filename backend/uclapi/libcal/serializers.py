@@ -50,6 +50,15 @@ class LibCalIdListSerializer(serializers.Serializer):
     )
 
 
+class LibCalBookingIdListSerializer(serializers.Serializer):
+    """Serializer for endpoints accept a booking id or an booking id list as part of the path"""
+    ids = serializers.RegexField(
+        r'^\w+(,\w+)*$',
+        required=True,  # Default, but stated for clarity.
+        help_text='A booking id or a list of booking ids to cancel.'
+    )
+
+
 class LibCalCategoryGETSerializer(LibCalIdListSerializer):
     """Serializer for the /1.1/space/category endpoint"""
     details = serializers.IntegerField(
