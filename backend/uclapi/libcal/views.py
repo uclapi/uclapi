@@ -12,7 +12,7 @@ from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse
 from uclapi.settings import REDIS_UCLAPI_HOST
 
-from .serializers import LibCalLocationGETSerializer, LibCalFormGETSerializer
+from .serializers import LibCalLocationGETSerializer, LibCalIdListSerializer
 
 
 def _libcal_request_forwarder(url: str, request: Request, serializer: Serializer, key: str, **kwargs) -> JsonResponse:
@@ -108,7 +108,20 @@ def get_form(request, *args, **kwargs):
     return _libcal_request_forwarder(
         "/1.1/space/form",
         request,
-        LibCalFormGETSerializer(data=request.query_params),
+        LibCalIdListSerializer(data=request.query_params),
         'forms',
+        **kwargs
+    )
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key=None)
+def get_question(request, *args, **kwargs):
+    """Returns a question or a list of questions"""
+    return _libcal_request_forwarder(
+        "/1.1/space/question",
+        request,
+        LibCalIdListSerializer(data=request.query_params),
+        'questions',
         **kwargs
     )
