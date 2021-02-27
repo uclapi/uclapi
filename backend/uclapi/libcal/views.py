@@ -12,7 +12,12 @@ from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse
 from uclapi.settings import REDIS_UCLAPI_HOST
 
-from .serializers import LibCalLocationGETSerializer, LibCalIdListSerializer, LibCalCategoryGETSerializer
+from .serializers import (
+    LibCalLocationGETSerializer,
+    LibCalIdListSerializer,
+    LibCalCategoryGETSerializer,
+    LibCalItemGETSerializer
+)
 
 
 def _libcal_request_forwarder(url: str, request: Request, serializer: Serializer, key: str, **kwargs) -> JsonResponse:
@@ -151,5 +156,19 @@ def get_category(request, *args, **kwargs):
         request,
         LibCalCategoryGETSerializer(data=request.query_params),
         'categories',
+        **kwargs
+    )
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key=None)
+def get_item(request, *args, **kwargs):
+    """Returns a item or a list of items"""
+    # TODO: note in docs an invalid ID will have different key/values!!
+    return _libcal_request_forwarder(
+        "/1.1/space/item",
+        request,
+        LibCalItemGETSerializer(data=request.query_params),
+        'items',
         **kwargs
     )
