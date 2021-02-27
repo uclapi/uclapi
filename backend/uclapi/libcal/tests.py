@@ -1,8 +1,10 @@
+import json
 import os
 from unittest import mock
 from urllib import parse
 
 from django.core.management import call_command
+
 from parameterized import parameterized
 
 from rest_framework.test import APISimpleTestCase, APITestCase, APIClient
@@ -453,10 +455,13 @@ class LibcalPersonalReadEndpointsTestCase(APITestCase):
     def setUpClass(cls):
         super().setUpClass()
         # create User, App, and OAuth it
-        cls.user = User.objects.create(email='zc@ucl.ac.uk', cn="test", employee_id=7357, mail='f.l.2021@ucl.ac.uk')
+        cls.user = User.objects.create(
+            email='zc@ucl.ac.uk', cn="test", employee_id=7357, mail='f.l.2021@ucl.ac.uk', given_name='John', sn='Doe'
+        )
         cls.app_dev = User.objects.create(cn="test2", employee_id=1122)
         cls.app: App = App.objects.create(user=cls.app_dev, name="An App")
-        cls.oauth_scope = OAuthScope.objects.create(scope_number=Scopes().add_scope(0, 'libcal_read'))
+        cls.scopes_class = Scopes()
+        cls.oauth_scope = OAuthScope.objects.create(scope_number=0)
         cls.oauth_token = OAuthToken.objects.create(
             app=cls.app,
             user=cls.user,
@@ -480,35 +485,69 @@ class LibcalPersonalReadEndpointsTestCase(APITestCase):
 
     def setUp(self):
         # Some tests change this value during testing.
-        self.oauth_token.scope.scope_number = Scopes().add_scope(0, 'libcal_read')
+        self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, '')
         self.oauth_token.scope.save()
         self.user.mail = 'f.l.2021@ucl.ac.uk'
         self.user.email = 'zc@ucl.ac.uk'
         self.user.save()
 
-    def test_non_personal_token_rejected(self, m):
+    @parameterized.expand([('personal_bookings', 'GET'), ('reserve', 'POST')])
+    def test_non_personal_token_rejected(self, m, endpoint, method):
         """Tests that we reject a non-personal data token"""
-        response = self.client.get(
-            '/libcal/space/personal_bookings',
-            {'token': self.app.api_token, 'client_secret': self.app.client_secret}
-        )
-        self.assertEqual(response.status_code, 400)
-
-    def test_lack_of_client_secret_rejected(self, m):
-        """Tests that we reject an OAuth token presented without a client secret"""
-        response = self.client.get('/libcal/space/personal_bookings', {'token': self.oauth_token.token})
-        self.assertEqual(response.status_code, 400)
-
-    def test_wrong_scope_rejected(self, m):
-        """Tests that we reject an OAuth token presented with the wrong scope"""
-        # NOTE: '' will be converted to no scope by add_scope().
-        for scope in ['', 'timetable', 'student_number']:
-            self.oauth_token.scope.scope_number = Scopes().add_scope(0, scope)
-            self.oauth_token.scope.save()
+        if method == 'GET':
             response = self.client.get(
-                '/libcal/space/personal_bookings',
+                f'/libcal/space/{endpoint}',
+                {'token': self.app.api_token, 'client_secret': self.app.client_secret}
+            )
+        else:
+            response = self.client.post(
+                f'/libcal/space/{endpoint}',
+                {'token': self.app.api_token, 'client_secret': self.app.client_secret}
+            )
+        self.assertEqual(response.status_code, 400)
+
+    @parameterized.expand([('personal_bookings', 'libcal_read', 'GET'), ('reserve', 'libcal_write', 'POST')])
+    def test_lack_of_client_secret_rejected(self, m, endpoint, scope, method):
+        """Tests that we reject an read OAuth token presented without a client secret"""
+        self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, scope)
+        self.oauth_token.scope.save()
+        if method == 'GET':
+            response = self.client.get(f'/libcal/space/{endpoint}', {'token': self.oauth_token.token})
+        else:
+            response = self.client.post(f'/libcal/space/{endpoint}', {'token': self.oauth_token.token})
+        self.assertEqual(response.status_code, 400)
+
+    @parameterized.expand([('personal_bookings', 'libcal_read', 'GET'), ('reserve', 'libcal_write', 'POST')])
+    def test_wrong_scope_rejected(self, m, endpoint, correct_scope, method):
+        """Tests that we reject an OAuth token presented with the wrong scope"""
+        # NOTE: scope is currently '' (0)
+        if method == 'GET':
+            response = self.client.get(
+                f'/libcal/space/{endpoint}',
                 {'token': self.oauth_token.token, 'client_secret': self.app.client_secret}
             )
+        else:
+            response = self.client.post(
+                f'/libcal/space/{endpoint}',
+                {'token': self.oauth_token.token, 'client_secret': self.app.client_secret}
+            )
+        self.assertEqual(response.status_code, 400)
+
+        for scope in self.scopes_class.SCOPE_MAP:
+            if scope == correct_scope:
+                continue
+            self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, scope)
+            self.oauth_token.scope.save()
+            if method == 'GET':
+                response = self.client.get(
+                    f'/libcal/space/{endpoint}',
+                    {'token': self.oauth_token.token, 'client_secret': self.app.client_secret}
+                )
+            else:
+                response = self.client.post(
+                    f'/libcal/space/{endpoint}',
+                    {'token': self.oauth_token.token, 'client_secret': self.app.client_secret}
+                )
             self.assertEqual(response.status_code, 400)
 
     def test_lack_of_email_caught(self, m):
@@ -524,6 +563,8 @@ class LibcalPersonalReadEndpointsTestCase(APITestCase):
 
     def test_bookings_list(self, m):
         """Test that a valid call to the personal_bookings endpoint results in a 200 response."""
+        self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, 'libcal_read')
+        self.oauth_token.scope.save()
         json = {'key': 'value'}
         m.register_uri(
             'GET',
@@ -539,6 +580,8 @@ class LibcalPersonalReadEndpointsTestCase(APITestCase):
 
     def test_bookings_fallback(self, m):
         """Tests that we fallback to eppn if mail is empty."""
+        self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, 'libcal_read')
+        self.oauth_token.scope.save()
         self.user.mail = ''
         self.user.save()
         json = {'key': 'value'}
@@ -569,6 +612,8 @@ class LibcalPersonalReadEndpointsTestCase(APITestCase):
         ('formAnswers', 1)
     ], name_func=all_params_except_libcal_endpoint)
     def test_serializer_valid_input(self, m, key, value):
+        self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, 'libcal_read')
+        self.oauth_token.scope.save()
         json = {'key': 'value'}
         m.register_uri(
             'GET',
@@ -629,3 +674,154 @@ class LibcalPersonalReadEndpointsTestCase(APITestCase):
             {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, key: value}
         )
         self.assertEqual(response.status_code, 400)
+
+    def test_reserve(self, m):
+        """Test that the reserve endpoint accepts valid payloads."""
+        payload = {
+            "start": "2021-02-22T13:00:00",
+            "test": 1,
+            "bookings": [
+                {
+                    "id": 12102,
+                    "seat_id": 63610,
+                    "to": "2021-02-22T16:30:00"
+                }
+            ]
+        }
+
+        def match_request_payload(request):
+            data = json.loads(request.body.decode('utf8'))
+            payload['email'] = self.user.mail
+            payload['fname'] = self.user.given_name
+            payload['lname'] = self.user.sn
+            return data == payload
+
+        self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, 'libcal_write')
+        self.oauth_token.scope.save()
+        resp = {'key': 'value'}
+        m.register_uri(
+            'POST',
+            'https://library-calendars.ucl.ac.uk/1.1/space/reserve',
+            request_headers=self.headers,
+            additional_matcher=match_request_payload,  # TODO
+            complete_qs=True,  # Need this to catch if token is sent in!
+            json=resp)
+        response = self.client.post(
+            f'/libcal/space/reserve?token={self.oauth_token.token}&client_secret={self.app.client_secret}',
+            payload, format='json'
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_reserve_multiple_bookings(self, m):
+        payload = {
+            "start": "2021-02-22T13:00:00",
+            "test": 1,
+            "bookings": [
+                {
+                    "id": 12102,
+                    "seat_id": 63610,
+                    "to": "2021-02-22T16:30:00"
+                },
+                {
+                    "id": 12103,
+                    "seat_id": 63610,
+                    "to": "2021-02-22T16:30:00"
+                }
+            ]
+        }
+
+        def match_request_payload(request):
+            data = json.loads(request.body.decode('utf8'))
+            payload['email'] = self.user.mail
+            payload['fname'] = self.user.given_name
+            payload['lname'] = self.user.sn
+            return data == payload
+
+        self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, 'libcal_write')
+        self.oauth_token.scope.save()
+        resp = {'key': 'value'}
+        m.register_uri(
+            'POST',
+            'https://library-calendars.ucl.ac.uk/1.1/space/reserve',
+            request_headers=self.headers,
+            additional_matcher=match_request_payload,  # TODO
+            complete_qs=True,  # Need this to catch if token is sent in!
+            json=resp)
+        response = self.client.post(
+            f'/libcal/space/reserve?token={self.oauth_token.token}&client_secret={self.app.client_secret}',
+            payload, format='json'
+        )
+        self.assertEqual(response.status_code, 200)
+
+    @parameterized.expand([
+        ('2021-02-22T13:00:00+00:00', 1, 2, 3, ';DROP table;--'),
+        ('2021-02-22T13:00:00+00:00', 1, 2, 3, '2021-02-22'),
+        ('2021-02-22T13:00:00+00:00', 1, 2, -1, '2021-02-22T13:00:00+00:00'),
+        ('2021-02-22T13:00:00+00:00', 1, 2, ';DROP table;--', '2021-02-22T13:00:00+00:00'),
+        ('2021-02-22T13:00:00+00:00', 1, -1, 3, '2021-02-22T13:00:00+00:00'),
+        ('2021-02-22T13:00:00+00:00', 1, ';DROP table;--', 3, '2021-02-22T13:00:00+00:00'),
+        ('2021-02-22T13:00:00+00:00', -1, 2, 3, '2021-02-22T13:00:00+00:00'),
+        ('2021-02-22T13:00:00+00:00', 2, 2, 3, '2021-02-22T13:00:00+00:00'),
+        ('2021-02-22T13:00:00+00:00', ';DROP table;--', 2, 3, '2021-02-22T13:00:00+00:00'),
+        (';DROP table;--', 1, 2, 3, '2021-02-22T13:00:00+00:00'),
+        ('2021-02-22', 1, 2, 3, '2021-02-22T13:00:00+00:00')
+    ])
+    def test_post_serializer_invalid_input(self, m, start, test, id, seat_id, to):
+        """Test that the reserve POST serializer does not pass on invalid payloads."""
+        self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, 'libcal_write')
+        self.oauth_token.scope.save()
+        payload = {
+            "start": start,
+            "test": test,
+            "bookings": [
+                {
+                    "id": id,
+                    "seat_id": seat_id,
+                    "to": to
+                }
+            ]
+        }
+        response = self.client.post(
+            f'/libcal/space/reserve?token={self.oauth_token.token}&client_secret={self.app.client_secret}',
+            payload, format='json'
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_reserve_adminbooking_blacklisted(self, m):
+        """Tests that the adminbooking parameter is not sent to LibCal"""
+        payload = {
+            "start": "2021-02-22T13:00:00",
+            "test": 1,
+            "adminbooking": 1,
+            "bookings": [
+                {
+                    "id": 12102,
+                    "seat_id": 63610,
+                    "to": "2021-02-22T16:30:00"
+                }
+            ]
+        }
+
+        def match_request_payload(request):
+            data = json.loads(request.body.decode('utf8'))
+            payload['email'] = self.user.mail
+            payload['fname'] = self.user.given_name
+            payload['lname'] = self.user.sn
+            payload.pop("adminbooking", None)
+            return data == payload
+
+        self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, 'libcal_write')
+        self.oauth_token.scope.save()
+        resp = {'key': 'value'}
+        m.register_uri(
+            'POST',
+            'https://library-calendars.ucl.ac.uk/1.1/space/reserve',
+            request_headers=self.headers,
+            additional_matcher=match_request_payload,  # TODO
+            complete_qs=True,  # Need this to catch if token is sent in!
+            json=resp)
+        response = self.client.post(
+            f'/libcal/space/reserve?token={self.oauth_token.token}&client_secret={self.app.client_secret}',
+            payload, format='json'
+        )
+        self.assertEqual(response.status_code, 200)

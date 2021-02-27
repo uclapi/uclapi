@@ -226,3 +226,58 @@ class LibCalPersonalBookingsGETSerializer(LibCalBookingsGETSerializer):
             'endpoint to retrieve the details of the booking form questions.'
         )
     )
+
+
+class BookingSerializer(serializers.Serializer):
+    """Serializes a single booking for the /1.1/space/reserve endpoint"""
+    id = serializers.IntegerField(
+        min_value=0,
+        required=True,
+        help_text='Pass a location id here to only show bookings for that location.'
+    )
+    seat_id = serializers.IntegerField(
+        min_value=0,
+        required=False,
+        help_text='Pass a location id here to only show bookings for that location.'
+    )
+    to = serializers.DateTimeField(
+        required=True,
+        help_text='Booking end date/time in ISO8601 format.')
+
+
+class LibCalReservationPOSTSerializer(serializers.Serializer):
+    """Serializes bookings for the /1.1/space/reserve endpoint"""
+    start = serializers.DateTimeField(
+        required=True,
+        help_text='Booking start date/time in ISO8601 format.'
+    )
+    fname = serializers.CharField(
+        max_length=100,
+        required=True,
+        help_text='First name of person making the booking.'
+    )
+    lname = serializers.CharField(
+        max_length=100,
+        required=True,
+        help_text='Last name of person making the booking.'
+    )
+    test = serializers.IntegerField(
+        min_value=0,
+        max_value=1,
+        help_text=(
+            'A flag to indicate if this is a test booking. If this flag is set the system will process the booking'
+            'rules but not actually make the booking. This is a useful feature when developing an application that'
+            'makes use of the booking API.'
+        )
+    )
+    email = serializers.EmailField(
+        required=True,
+        help_text='Email address of person making the booking.'
+    )
+    nickname = serializers.CharField(
+        max_length=100,
+        required=False,
+        help_text='If your space has "Public Nicknames" enabled, then supply the Nickname field via this parameter'
+    )
+    # TODO: custom form question ids????? See LibCal API Docs.
+    bookings = BookingSerializer(many=True)

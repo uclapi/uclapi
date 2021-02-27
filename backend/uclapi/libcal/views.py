@@ -4,7 +4,9 @@ from typing import Optional
 
 import redis
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, parser_classes
+from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer
 from rest_framework.request import Request
 from rest_framework.serializers import Serializer
 import requests
@@ -24,7 +26,8 @@ from .serializers import (
     LibCalSeatGETSerializer,
     LibCalSeatsGETSerializer,
     LibCalBookingsGETSerializer,
-    LibCalPersonalBookingsGETSerializer
+    LibCalPersonalBookingsGETSerializer,
+    LibCalReservationPOSTSerializer
 )
 
 
@@ -62,7 +65,7 @@ def _libcal_request_forwarder(url: str, request: Request, serializer: Serializer
     if not serializer.is_valid():
         uclapi_response = JsonResponse({
             "ok": False,
-            "error": "Query parameters are invalid",
+            "error": f"{'Query parameters are' if request.method == 'GET' else 'Payload is'} invalid",
             **serializer.errors
         }, custom_header_data=kwargs)
         uclapi_response.status_code = 400
@@ -71,11 +74,20 @@ def _libcal_request_forwarder(url: str, request: Request, serializer: Serializer
     # NOTE: A serializer may set the "ids" field. This field, if set, is appended to the URL instead of sent as a GET
     # parameter.
     ids = str(serializer.validated_data.pop("ids", ""))
-    libcal_response: requests.Response = requests.get(
-        url=f'{os.environ["LIBCAL_BASE_URL"]}{url}{"/" + ids if ids else ""}',
-        headers=headers,
-        params=serializer.validated_data
-    )
+    if request.method == 'GET':
+        libcal_response: requests.Response = requests.get(
+            url=f'{os.environ["LIBCAL_BASE_URL"]}{url}{"/" + ids if ids else ""}',
+            headers=headers,
+            params=serializer.validated_data
+        )
+    else:  # Assume request.method == 'POST'
+        libcal_response: requests.Response = requests.post(
+            url=f'{os.environ["LIBCAL_BASE_URL"]}{url}{"/" + ids if ids else ""}',
+            headers=headers,
+            # /1.1/space/reserve expects JSON payload
+            data=JSONRenderer().render(serializer.validated_data)
+        )
+
     if libcal_response.status_code == 200:
         uclapi_response = JsonResponse({
             "ok": True,
@@ -300,6 +312,25 @@ def get_personal_bookings(request, *args, **kwargs):
         "/1.1/space/bookings",
         request,
         LibCalPersonalBookingsGETSerializer(data=params),
+        'bookings',
+        **kwargs
+    )
+
+
+@api_view(["POST"])
+@parser_classes([JSONParser])
+@uclapi_protected_endpoint(personal_data=True, required_scopes=['libcal_write'], last_modified_redis_key=None)
+def reserve(request, *args, **kwargs):
+    """Reserves a space/seat on behalf of a user. Requires OAuth permissions"""
+    user = kwargs['token'].user
+    # NOTE: serializer will catch if this is empty (default is '').
+    request.data["email"] = user.mail if user.mail else user.email
+    request.data["fname"] = user.given_name
+    request.data["lname"] = user.sn
+    return _libcal_request_forwarder(
+        "/1.1/space/reserve",
+        request,
+        LibCalReservationPOSTSerializer(data=request.data),
         'bookings',
         **kwargs
     )
