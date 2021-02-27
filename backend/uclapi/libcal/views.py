@@ -18,7 +18,8 @@ from .serializers import (
     LibCalCategoryGETSerializer,
     LibCalItemGETSerializer,
     LibCalNicknameGETSerializer,
-    LibCalUtilizationGETSerializer
+    LibCalUtilizationGETSerializer,
+    LibCalSeatGETSerializer
 )
 
 
@@ -200,5 +201,19 @@ def get_utilization(request, *args, **kwargs):
         request,
         LibCalUtilizationGETSerializer(data=request.query_params),
         'data',
+        **kwargs
+    )
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key=None)
+def get_seat(request, *args, **kwargs):
+    """Returns a seat."""
+    # TODO: note in docs an invalid ID will have different key/values!!
+    return _libcal_request_forwarder(
+        "/api/1.1/space/seat",
+        request,
+        LibCalSeatGETSerializer(data=request.query_params),
+        'seat',
         **kwargs
     )

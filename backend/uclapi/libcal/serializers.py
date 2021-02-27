@@ -103,3 +103,13 @@ class LibCalUtilizationGETSerializer(LibCalIdSerializer):
         required=False,
         help_text='Pass a zone id here to only show utilization for that zone.'
     )
+
+
+class LibCalSeatGETSerializer(LibCalIdSerializer):
+    """Serializer for the /api/1.1/space/seat endpoint"""
+    availability = serializers.RegexField(
+        # TODO: Update regex when we reach the year 10000
+        regex='^[0-9]{4}-[0-9]{2}-[0-9]{2}(,[0-9]{4}-[0-9]{2}-[0-9]{2})?$',
+        required=False,
+        help_text=('Either a single date, or a comma separated list of 2 dates (a start and end date).')
+    )
