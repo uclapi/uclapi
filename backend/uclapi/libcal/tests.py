@@ -168,7 +168,7 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
         super().tearDownClass()
         cls.r.delete("libcal:token")
 
-    @parameterized.expand([('locations'), ('form?ids=1'), ('question?ids=1'), ('categories?ids=1')])
+    @parameterized.expand([('locations'), ('form?ids=1'), ('question?ids=1'), ('categories?ids=1'), 'category?ids=1'])
     def test_token_is_checked(self, m, uclapi_endpoint):
         """Tests that we check for a valid UCL API token"""
         # NOTE: token isn't sent in!
@@ -177,7 +177,12 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
 
     @parameterized.expand([
         ('locations', '1.1/space/locations', 'details', 0),
-        ('locations', '1.1/space/locations', 'details', 1)
+        ('locations', '1.1/space/locations', 'details', 1),
+        ('category', '1.1/space/category/1', 'details', 0),
+        ('category', '1.1/space/category/1', 'details', 1),
+        ('category', '1.1/space/category/1', 'availability', 'next'),
+        ('category', '1.1/space/category/1', 'availability', '2021-01-01'),
+        ('category', '1.1/space/category/1', 'availability', '2021-01-01,2021-01-02')
     ], name_func=all_params_except_libcal_endpoint)
     def test_serializer_valid_input(self, m, uclapi_endpoint, libcal_endpoint, key, value):
         """Tests that GET parameters are validated"""
@@ -188,24 +193,42 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
             request_headers=self.headers,
             complete_qs=True,  # Need this to catch if token is sent in!
             json=json)
-        response = self.client.get(f'/libcal/space/{uclapi_endpoint}', {key: value, 'token': self.app.api_token})
+        response = self.client.get(
+            f'/libcal/space/{uclapi_endpoint}',
+            {'ids': 1, key: value, 'token': self.app.api_token}
+        )
         self.assertEqual(response.status_code, 200)
 
     @parameterized.expand([
         ('locations', 'details', 0.5),
         ('locations', 'details', -1),
         ('locations', 'details', 2),
-        ('locations', 'details', ';DROP table;--')
+        ('locations', 'details', ';DROP table;--'),
+        ('category', 'details', 0.5),
+        ('category', 'details', -1),
+        ('category', 'details', 2),
+        ('category', 'details', ';DROP table;--'),
+        ('category', 'availability', ';DROP table;--'),
+        ('category', 'availability', '1next1'),
+        ('category', 'availability', '2021'),
+        ('category', 'availability', '2021-01'),
+        ('category', 'availability', '2021-01-01,'),
+        ('category', 'availability', '2021-01-01T:00:00:00'),
+        ('category', 'availability', '2021-01-01T:00:00:00+00:00')
     ], name_func=all_params)
     def test_serializer_invalid_input(self, m, uclapi_endpoint, key, value):
         """Tests that invalid GET parameters are caught"""
-        response = self.client.get(f'/libcal/space/{uclapi_endpoint}', {key: value, 'token': self.app.api_token})
+        response = self.client.get(
+            f'/libcal/space/{uclapi_endpoint}',
+            {'ids': 1, key: value, 'token': self.app.api_token}
+        )
         self.assertEqual(response.status_code, 400)
 
     @parameterized.expand([
         ('form', '1.1/space/form', 'forms'),
         ("question", "1.1/space/question", 'questions'),
-        ("categories", "1.1/space/categories", 'categories')
+        ("categories", "1.1/space/categories", 'categories'),
+        ("category", "1.1/space/category", 'categories')
     ])
     def test_valid_id(self, m, uclapi_endpoint, libcal_endpoint, key):
         """Tests that a valid id is forwarded to LibCal.
@@ -250,7 +273,8 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
     @parameterized.expand([
         ('form', '1.1/space/form', 'forms'),
         ("question", "1.1/space/question", 'questions'),
-        ("categories", "1.1/space/categories", 'categories')
+        ("categories", "1.1/space/categories", 'categories'),
+        ("category", "1.1/space/category", 'categories')
     ])
     def test_valid_id_list(self, m, uclapi_endpoint, libcal_endpoint, key):
         """Tests that a valid id or a list of valid ids is forwarded to LibCal."""
@@ -267,7 +291,7 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
             # https://stackoverflow.com/a/28399670
             self.assertJSONEqual(response.content.decode('utf8'), {"ok": True, key: json})
 
-    @parameterized.expand([('form'), ('question'), ('categories')])
+    @parameterized.expand([('form'), ('question'), ('categories'), ('category')])
     def test_invalid_id_list(self, m, endpoint):
         """Tests that invalid format of ID(s) is not proxied and is caught by us."""
         valid_ids: list[str] = ["hello", "-4", "23.5", "47,,4", ",", "1,2.3", "8,"]
