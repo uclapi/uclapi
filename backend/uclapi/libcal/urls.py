@@ -12,4 +12,5 @@ urlpatterns = [
     path('space/nickname', views.get_nickname),
     path('space/utilization', views.get_utilization),
     path('space/seat', views.get_seat),
+    path('space/seats', views.get_seats),
 ]

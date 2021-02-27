@@ -113,3 +113,59 @@ class LibCalSeatGETSerializer(LibCalIdSerializer):
         required=False,
         help_text=('Either a single date, or a comma separated list of 2 dates (a start and end date).')
     )
+
+
+class LibCalSeatsGETSerializer(LibCalIdSerializer):
+    """Serializer for the /api/1.1/space/seats endpoint"""
+    spaceId = serializers.IntegerField(
+        min_value=0,
+        required=False,
+        help_text=(
+            'Pass a space id to only show details for this space.'
+            'If used with a seatId, the spaceId will be ignored.'
+        )
+    )
+    categoryId = serializers.IntegerField(
+        min_value=0,
+        required=False,
+        help_text=(
+            'Pass a category id to only show details for this category.'
+            'If used with a spaceId or seatId filtering, the categoryId will be ignored.'
+        )
+    )
+    seatId = serializers.IntegerField(
+        min_value=0,
+        required=False,
+        help_text='Pass a seat id here to only show details for this seat.'
+    )
+    zoneId = serializers.IntegerField(
+        min_value=0,
+        required=False,
+        help_text=(
+            'Pass a zone id here to only show details for this zone.'
+            'If used with a spaceId or seatId, the zoneId will be ignored.'
+        )
+    )
+    accessibleOnly = serializers.IntegerField(
+        min_value=0,
+        max_value=1,
+        required=False,
+        help_text='Pass an accessible only flag to only return accessible seats.'
+    )
+    availability = serializers.RegexField(
+        # TODO: Update regex when we reach the year 10000
+        regex='^[0-9]{4}-[0-9]{2}-[0-9]{2}(,[0-9]{4}-[0-9]{2}-[0-9]{2})?$',
+        required=False,
+        help_text='Either a single date, or a comma separated list of 2 dates (a start and end date).'
+    )
+    pageIndex = serializers.IntegerField(
+        min_value=0,
+        required=False,
+        help_text='For results pagination, this sets which page to receive (starting at 0 for the first page).'
+    )
+    pageSize = serializers.IntegerField(
+        min_value=1,
+        max_value=100,
+        required=False,
+        help_text='For results pagination, this sets how many results per page to retrieve.'
+    )
