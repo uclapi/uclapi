@@ -32,6 +32,15 @@ class LibCalLocationGETSerializer(serializers.Serializer):
     )
 
 
+class LibCalIdSerializer(serializers.Serializer):
+    """Serializer for endpoints accept a singular id"""
+    ids = serializers.IntegerField(
+        required=True,
+        min_value=0,
+        help_text='An id to retrieve'
+    )
+
+
 class LibCalIdListSerializer(serializers.Serializer):
     """Serializer for endpoints accept an id or an id list as part of the path"""
     ids = serializers.RegexField(
@@ -80,3 +89,17 @@ class LibCalItemGETSerializer(LibCalIdListSerializer):
 class LibCalNicknameGETSerializer(LibCalIdListSerializer):
     """Serializer for the /1.1/space/nickname endpoint"""
     date = serializers.DateField(required=False)
+
+
+class LibCalUtilizationGETSerializer(LibCalIdSerializer):
+    """Serializer for the /api/1.1/space/utilization endpoint"""
+    categoryId = serializers.IntegerField(
+        min_value=0,
+        required=False,
+        help_text='Pass a category id here to only show utilization for that category.'
+    )
+    zoneId = serializers.IntegerField(
+        min_value=0,
+        required=False,
+        help_text='Pass a zone id here to only show utilization for that zone.'
+    )

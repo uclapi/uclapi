@@ -17,7 +17,8 @@ from .serializers import (
     LibCalIdListSerializer,
     LibCalCategoryGETSerializer,
     LibCalItemGETSerializer,
-    LibCalNicknameGETSerializer
+    LibCalNicknameGETSerializer,
+    LibCalUtilizationGETSerializer
 )
 
 
@@ -63,7 +64,7 @@ def _libcal_request_forwarder(url: str, request: Request, serializer: Serializer
 
     # NOTE: A serializer may set the "ids" field. This field, if set, is appended to the URL instead of sent as a GET
     # parameter.
-    ids = serializer.validated_data.pop("ids", "")
+    ids = str(serializer.validated_data.pop("ids", ""))
     libcal_response: requests.Response = requests.get(
         url=f'{os.environ["LIBCAL_BASE_URL"]}{url}{"/" + ids if ids else ""}',
         headers=headers,
@@ -185,5 +186,19 @@ def get_nickname(request, *args, **kwargs):
         request,
         LibCalNicknameGETSerializer(data=request.query_params),
         'nicknames',
+        **kwargs
+    )
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key=None)
+def get_utilization(request, *args, **kwargs):
+    """Returns the utilization of a given location"""
+    # TODO: note in docs an invalid ID will have different key/values!!
+    return _libcal_request_forwarder(
+        "/api/1.1/space/utilization",
+        request,
+        LibCalUtilizationGETSerializer(data=request.query_params),
+        'data',
         **kwargs
     )
