@@ -247,3 +247,17 @@ def get_zone(request, *args, **kwargs):
         'zone',
         **kwargs
     )
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key=None)
+def get_zones(request, *args, **kwargs):
+    """Returns zones for a given location."""
+    # TODO: note in docs an invalid ID will have different key/values!!
+    return _libcal_request_forwarder(
+        "/api/1.1/space/zones",
+        request,
+        LibCalIdSerializer(data=request.query_params),
+        'zones',
+        **kwargs
+    )
