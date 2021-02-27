@@ -125,3 +125,17 @@ def get_question(request, *args, **kwargs):
         'questions',
         **kwargs
     )
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(personal_data=False, last_modified_redis_key=None)
+def get_categories(request, *args, **kwargs):
+    """Returns a list of categories given a location ID(s)"""
+    # TODO: note in docs an invalid ID will have different key/values!!
+    return _libcal_request_forwarder(
+        "/1.1/space/categories",
+        request,
+        LibCalIdListSerializer(data=request.query_params),
+        'categories',
+        **kwargs
+    )
