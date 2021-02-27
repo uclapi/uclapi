@@ -32,8 +32,8 @@ class LibCalLocationGETSerializer(serializers.Serializer):
     )
 
 
-class LibCalFormGETSerializer(serializers.Serializer):
-    """Serializer for the /1.1/space/form endpoint"""
+class LibCalIdListSerializer(serializers.Serializer):
+    """Serializer for endpoints accept an id or an id list as part of the path"""
     ids = serializers.RegexField(
         r'^\d+(,\d+)*$',
         required=True,  # Default, but stated for clarity.

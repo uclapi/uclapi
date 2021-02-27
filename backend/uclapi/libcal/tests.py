@@ -203,7 +203,8 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
         self.assertEqual(response.status_code, 400)
 
     @parameterized.expand([
-        ('form', '1.1/space/form', 'forms')
+        ('form', '1.1/space/form', 'forms'),
+        ("question", "1.1/space/question", 'questions')
     ])
     def test_valid_id(self, m, uclapi_endpoint, libcal_endpoint, key):
         """Tests that a valid id is forwarded to LibCal.
@@ -239,7 +240,8 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
 
     @parameterized.expand([
-        ('form', '1.1/space/form', 'forms')
+        ('form', '1.1/space/form', 'forms'),
+        ("question", "1.1/space/question", 'questions')
     ])
     def test_valid_id_list(self, m, uclapi_endpoint, libcal_endpoint, key):
         """Tests that a valid id or a list of valid ids is forwarded to LibCal."""
@@ -256,7 +258,7 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
             # https://stackoverflow.com/a/28399670
             self.assertJSONEqual(response.content.decode('utf8'), {"ok": True, key: json})
 
-    @parameterized.expand([('form')])
+    @parameterized.expand([('form'), ('question')])
     def test_invalid_id_list(self, m, endpoint):
         """Tests that invalid format of ID(s) is not proxied and is caught by us."""
         valid_ids: list[str] = ["hello", "-4", "23.5", "47,,4", ",", "1,2.3", "8,"]
