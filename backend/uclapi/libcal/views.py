@@ -23,7 +23,8 @@ from .serializers import (
     LibCalUtilizationGETSerializer,
     LibCalSeatGETSerializer,
     LibCalSeatsGETSerializer,
-    LibCalBookingsGETSerializer
+    LibCalBookingsGETSerializer,
+    LibCalPersonalBookingsGETSerializer
 )
 
 
@@ -285,3 +286,20 @@ def get_bookings(request, *args, **kwargs):
     uclapi_response = JsonResponse(data, custom_header_data=kwargs)
     uclapi_response.status_code = booking_response.status_code
     return uclapi_response
+
+
+@api_view(["GET"])
+@uclapi_protected_endpoint(personal_data=True, required_scopes=['libcal_read'], last_modified_redis_key=None)
+def get_personal_bookings(request, *args, **kwargs):
+    """Returns personal bookings for a user. Requires OAuth permissions"""
+    user = kwargs['token'].user
+    params = request.query_params.copy()
+    # NOTE: serializer will catch if this is empty (default is '').
+    params["email"] = user.mail if user.mail else user.email
+    return _libcal_request_forwarder(
+        "/1.1/space/bookings",
+        request,
+        LibCalPersonalBookingsGETSerializer(data=params),
+        'bookings',
+        **kwargs
+    )

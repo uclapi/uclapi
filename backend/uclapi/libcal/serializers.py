@@ -209,3 +209,20 @@ class LibCalBookingsGETSerializer(serializers.Serializer):
         required=False,
         help_text='How many bookings to return, max value is 500.'
     )
+
+
+class LibCalPersonalBookingsGETSerializer(LibCalBookingsGETSerializer):
+    """Serializer for the /1.1/space/bookings endpoint (that shows personal bookings)."""
+    email = serializers.EmailField(
+        required=True,  # Default, but stated for clarity.
+        help_text='Pass an email address to only show bookings made by that patron.'
+    )
+    formAnswers = serializers.IntegerField(
+        min_value=0,
+        max_value=1,
+        required=False,
+        help_text=(
+            'Flag to indicate if you want custom form answers to be returned. You can hit the /equipment/question'
+            'endpoint to retrieve the details of the booking form questions.'
+        )
+    )

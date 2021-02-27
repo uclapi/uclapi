@@ -19,6 +19,7 @@ class Scopes:
     SCOPE_MAP = {
         "timetable": (1, "Personal Timetable"),
         "student_number": (2, "Student Number"),
+        "libcal_read": (3, " Read LibCal Bookings"),
     }
 
     def __init__(self, scope_map=None):
