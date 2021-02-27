@@ -168,7 +168,7 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
         super().tearDownClass()
         cls.r.delete("libcal:token")
 
-    @parameterized.expand([('locations'), ('form?ids=1')])
+    @parameterized.expand([('locations'), ('form?ids=1'), ('question?ids=1'), ('categories?ids=1')])
     def test_token_is_checked(self, m, uclapi_endpoint):
         """Tests that we check for a valid UCL API token"""
         # NOTE: token isn't sent in!
@@ -204,7 +204,8 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
 
     @parameterized.expand([
         ('form', '1.1/space/form', 'forms'),
-        ("question", "1.1/space/question", 'questions')
+        ("question", "1.1/space/question", 'questions'),
+        ("categories", "1.1/space/categories", 'categories')
     ])
     def test_valid_id(self, m, uclapi_endpoint, libcal_endpoint, key):
         """Tests that a valid id is forwarded to LibCal.
@@ -225,7 +226,8 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
             self.assertJSONEqual(response.content.decode('utf8'), {"ok": True, key: json})
 
     @parameterized.expand([
-        ('locations', '1.1/space/locations', 'admin_only', 1)
+        ('locations', '1.1/space/locations', 'admin_only', 1),
+        ('categories', '1.1/space/categories/1', 'admin_only', 1)
     ], name_func=all_params_except_libcal_endpoint)
     def test_serializer_blacklisted_input(self, m, uclapi_endpoint, libcal_endpoint, key, value):
         """Tests that blacklisted GET parameters are not sent to LibCal"""
@@ -236,12 +238,19 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
             request_headers=self.headers,
             complete_qs=True,  # Need this to catch if token or blacklisted input is sent in!
             json=json)
-        response = self.client.get(f'/libcal/space/{uclapi_endpoint}', {key: value, 'token': self.app.api_token})
+
+        response = self.client.get(
+            f'/libcal/space/{uclapi_endpoint}',
+            # Note all endpoints need ids set, but some do. No harm in setting it for all endpoints.
+            # Can't simply add it into the parameterized tuple as the client will strip query params present.
+            {'ids': 1, key: value, 'token': self.app.api_token}
+        )
         self.assertEqual(response.status_code, 200)
 
     @parameterized.expand([
         ('form', '1.1/space/form', 'forms'),
-        ("question", "1.1/space/question", 'questions')
+        ("question", "1.1/space/question", 'questions'),
+        ("categories", "1.1/space/categories", 'categories')
     ])
     def test_valid_id_list(self, m, uclapi_endpoint, libcal_endpoint, key):
         """Tests that a valid id or a list of valid ids is forwarded to LibCal."""
@@ -258,7 +267,7 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
             # https://stackoverflow.com/a/28399670
             self.assertJSONEqual(response.content.decode('utf8'), {"ok": True, key: json})
 
-    @parameterized.expand([('form'), ('question')])
+    @parameterized.expand([('form'), ('question'), ('categories')])
     def test_invalid_id_list(self, m, endpoint):
         """Tests that invalid format of ID(s) is not proxied and is caught by us."""
         valid_ids: list[str] = ["hello", "-4", "23.5", "47,,4", ",", "1,2.3", "8,"]
