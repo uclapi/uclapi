@@ -27,11 +27,14 @@ from .serializers import (
     LibCalSeatsGETSerializer,
     LibCalBookingsGETSerializer,
     LibCalPersonalBookingsGETSerializer,
-    LibCalReservationPOSTSerializer
+    LibCalReservationPOSTSerializer,
+    LibCalBookingIdListSerializer
 )
 
 
-def _libcal_request_forwarder(url: str, request: Request, serializer: Serializer, key: str, **kwargs) -> JsonResponse:
+def _libcal_request_forwarder(
+    url: str, request: Request, serializer: Serializer, key: str, method: str = 'GET', **kwargs
+) -> JsonResponse:
     """
     Forwards a request to LibCal for a given URL.
 
@@ -40,6 +43,7 @@ def _libcal_request_forwarder(url: str, request: Request, serializer: Serializer
 
     :param url: The URL path to send a request to (e.g. /space/locations)
     :param request: The client's request
+    :param method: Method to use for the request.
     :param key: The key that holds the LibCal JSON response (if the response is HTTP 200).
     :return: A JSON Response.
 
@@ -74,7 +78,7 @@ def _libcal_request_forwarder(url: str, request: Request, serializer: Serializer
     # NOTE: A serializer may set the "ids" field. This field, if set, is appended to the URL instead of sent as a GET
     # parameter.
     ids = str(serializer.validated_data.pop("ids", ""))
-    if request.method == 'GET':
+    if method == 'GET':
         libcal_response: requests.Response = requests.get(
             url=f'{os.environ["LIBCAL_BASE_URL"]}{url}{"/" + ids if ids else ""}',
             headers=headers,
@@ -332,5 +336,62 @@ def reserve(request, *args, **kwargs):
         request,
         LibCalReservationPOSTSerializer(data=request.data),
         'bookings',
+        'POST',
+        **kwargs
+    )
+
+
+@api_view(["POST"])
+@uclapi_protected_endpoint(personal_data=True, required_scopes=['libcal_write'], last_modified_redis_key=None)
+def cancel(request, *args, **kwargs):
+    """Cancels a booking on behalf of a user."""
+    # The /1.1/space/cancel endpoint simply accepts a booking ID(s) as a way of cancelling.
+    # This format of the ID seems to be r"^cs_\w{8}$" thus allowing an attacker to cancel arbitrary bookings by process
+    # of enumeration.
+    # We add an additional level of security by checking the personal OAuth token, to check that the app cancelling a
+    # booking has permission to delete the booking associated with the user.
+    user = kwargs['token'].user
+    email = user.mail if user.mail else user.email
+    if not email:
+        uclapi_response = JsonResponse({
+            "ok": False,
+            "error": "This booking cannot be cancelled as this user has no valid email address."
+        }, custom_header_data=kwargs)
+        uclapi_response.status_code = 500
+        return uclapi_response
+
+    booking_response = _libcal_request_forwarder(
+        "/1.1/space/booking",
+        request,
+        LibCalBookingIdListSerializer(data=request.query_params),
+        'data',
+        **kwargs
+    )
+    data = json.loads(booking_response.content.decode('utf-8'))
+    if "data" not in data:
+        # An error occured with this request, forward to user.
+        return booking_response
+    else:
+        # Only send the booking IDs to LibCal that correspond to the user
+        legit_bids = ''
+        for booking in data["data"]:
+            if booking["email"] == email:
+                legit_bids += booking["bookId"] + ','
+        if legit_bids:
+            legit_bids = legit_bids[:-1]  # Remove last ','
+        else:
+            uclapi_response = JsonResponse({
+                "ok": False,
+                "error": "No bookings were found to be deleted"
+            }, custom_header_data=kwargs)
+            uclapi_response.status_code = 400
+            return uclapi_response
+
+    return _libcal_request_forwarder(
+        "/1.1/space/cancel",
+        request,
+        LibCalBookingIdListSerializer(data={'ids': legit_bids}),
+        'bookings',
+        'POST',
         **kwargs
     )
