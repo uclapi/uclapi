@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    env:
+      DB_UCLAPI_HOST: localhost
+      DB_UCLAPI_PASSWORD: supersecure
+      DB_UCLAPI_USERNAME: uclapi
+      FORBIDDEN_CALLBACK_URLS: ${{ secrets.FORBIDDEN_CALLBACK_URLS }}
+      OCCUPEYE_BASE_URL: ${{ secrets.OCCUPEYE_BASE_URL }}
+      OCCUPEYE_DEPLOYMENT_ID: ${{ secrets.OCCUPEYE_DEPLOYMENT_ID }}
+      OCCUPEYE_DEPLOYMENT_NAME: ${{ secrets.OCCUPEYE_DEPLOYMENT_NAME }}
+      OCCUPEYE_PASSWORD: ${{ secrets.OCCUPEYE_PASSWORD }}
+      OCCUPEYE_THREAD_LIMIT: ${{ secrets.OCCUPEYE_THREAD_LIMIT }}
+      OCCUPEYE_USERNAME: ${{ secrets.OCCUPEYE_USERNAME }}
+      REDIS_UCLAPI_HOST: localhost
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      SHIB_TEST_USER: ${{ secrets.SHIB_TEST_USER }}
+      UCLAPI_PRODUCTION: False
+      UCLAPI_RUNNING_ON_AWS_ELB: False
+      WHITELISTED_CALLBACK_URLS: ${{ secrets.WHITELISTED_CALLBACK_URLS }}
+    services:
+      Redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+      Postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: uclapi
+          POSTGRES_PASSWORD: supersecure
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      
+      - name: Cache Python
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      
+      - name: Cache NodeJS
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install Oracle Instant Client
+        run: ./.github/workflows/scripts/setup-oracle.sh
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip && \
+          cd ./backend/uclapi && \
+          pip install codecov && \
+          pip install -r requirements.txt
+
+      - name: Install frontend dependencies
+        run: |
+          cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
+          cd ./frontend/ && \
+          npm ci
+      
+      - name: Run migrations
+        run: |
+          cd ./backend/uclapi && \
+          python ./manage.py migrate
+
+      - name: Build frontend
+        run: |
+          cd ./frontend && \
+          npm run build
+
+      - name: Run tests
+        run: |
+          cd ./backend/uclapi && \
+          coverage run --source='.' --omit='*migrations*' manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner' --settings=uclapi.settings_mocked
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          fail_ci_if_error: true

@@ -1,0 +1,125 @@
+name: CD
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  deploy-staging:
+    name: deploy to staging
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.base.ref == 'master' && github.event.pull_request.merged == true
+    environment: Staging
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      
+      - name: Cache Python
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      
+      - name: Cache NodeJS
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install Oracle Instant Client
+        run: ./.github/workflows/scripts/setup-oracle.sh
+      
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip && \
+          cd ./backend/uclapi && \
+          pip install -r requirements.txt
+
+      - name: Install frontend dependencies
+        run: |
+          cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
+          cd ./frontend/ && \
+          npm ci
+      
+      - name: Build frontend
+        env:
+          AWS_S3_BUCKET_NAME: uclapi-static-staging
+          AWS_S3_BUCKET_PATH: static/
+          AWS_S3_STATICS: True
+        run: |
+          cd ./frontend/ && \
+          npm run build
+
+      - name: Wait for checks
+        uses: lewagon/wait-on-check-action@v0.2
+        with:
+          ref: ${{ github.ref }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Turnstyle
+        uses: softprops/turnstyle@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Decrypt secrets
+        env:
+          encrypted_7e23b3ba1922_iv: ${{ secrets.encrypted_7e23b3ba1922_iv }}
+          encrypted_7e23b3ba1922_key: ${{ secrets.encrypted_7e23b3ba1922_key }}
+        run: |
+          openssl aes-256-cbc -K $encrypted_7e23b3ba1922_key -iv $encrypted_7e23b3ba1922_iv -in keys.tar.enc -out keys.tar -d && \
+          tar xvf keys.tar
+
+      - name: Collect statics to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_S3_BUCKET_NAME: uclapi-static-staging
+          AWS_S3_BUCKET_PATH: static/
+          AWS_S3_REGION: eu-west-2
+          AWS_S3_STATICS_CREDENTIALS_ENABLED: True
+          AWS_S3_STATICS: True
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          FORBIDDEN_CALLBACK_URLS: ${{ secrets.FORBIDDEN_CALLBACK_URLS }}
+          OCCUPEYE_BASE_URL: ${{ secrets.OCCUPEYE_BASE_URL }}
+          OCCUPEYE_DEPLOYMENT_ID: ${{ secrets.OCCUPEYE_DEPLOYMENT_ID }}
+          OCCUPEYE_DEPLOYMENT_NAME: ${{ secrets.OCCUPEYE_DEPLOYMENT_NAME }}
+          OCCUPEYE_PASSWORD: ${{ secrets.OCCUPEYE_PASSWORD }}
+          OCCUPEYE_THREAD_LIMIT: ${{ secrets.OCCUPEYE_THREAD_LIMIT }}
+          OCCUPEYE_USERNAME: ${{ secrets.OCCUPEYE_USERNAME }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          SHIB_TEST_USER: ${{ secrets.SHIB_TEST_USER }}
+          UCLAPI_PRODUCTION: True
+          UCLAPI_RUNNING_ON_AWS_ELB: False
+          WHITELISTED_CALLBACK_URLS: ${{ secrets.WHITELISTED_CALLBACK_URLS }}
+        run: |
+          cd ./backend/uclapi && \
+          ./manage.py collectstatic --noinput
+      
+      - name: Deploy to staging
+        env: 
+          STAGING_BASTION: ${{ secrets.STAGING_BASTION }}
+          STAGING_CRON: ${{ secrets.STAGING_CRON }}
+        run: |
+          eval "$(ssh-agent -s)" && \
+          chmod 600 ./uclapi-staging-1.pem && \
+          chmod 600 ./uclapi-staging-2-docker.pem && \
+          mkdir -p ~/.ssh && touch ~/.ssh/config && \
+          echo -e "Host $STAGING_BASTION\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config && \
+          echo -e "Host $STAGING_CRON\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config && \
+          ssh-add ./uclapi-staging-1.pem && \
+          ssh-add ./uclapi-staging-2-docker.pem && \
+          ssh -i ./uclapi-staging-1.pem ubuntu@$STAGING_BASTION -t "cd ~; ./deploy.sh;" && \
+          ssh -i ./uclapi-staging-1.pem -J ubuntu@$STAGING_BASTION ubuntu@$STAGING_CRON -t "cd ~; ./deploy.sh;"
