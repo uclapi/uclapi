@@ -28,7 +28,7 @@ CUSTOM_HEADERS = [
 
 class PrettyJsonResponse(JsonResponse):
     def __init__(self, data, custom_header_data=None):
-        # Calls JsonResponse"s constructure and requests 4 line indenting
+        # Calls JsonResponse's constructor and requests 4 line indenting
         super().__init__(data, json_dumps_params={"indent": 4})
 
         # Adds custom headers from a passed view kwargs
@@ -39,6 +39,13 @@ class PrettyJsonResponse(JsonResponse):
 
 
 def pretty_response(response, custom_header_data=None):
+    """
+    Identical to PrettyJsonResponse, only instead of extending the class, edits the response directly,
+    this is for use with the django rest framework.
+    @param response: The response, most commonly the result of a django-rest view
+    @param custom_header_data: Custom header data to add, most commonly the kwargs
+    @return: The response with the header data added
+    """
     if custom_header_data:
         for header in CUSTOM_HEADERS:
             if header in custom_header_data:

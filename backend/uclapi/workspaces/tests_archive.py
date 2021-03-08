@@ -175,36 +175,21 @@ class OccupEyeArchiveViewsTestCase(TestCase):
         try:
             user = User.objects.get(email="develop@ucl.ac.uk")
         except User.DoesNotExist:
-            user = User(
-                email="develop@ucl.ac.uk",
-                full_name="UCL API Developer",
-                given_name="UCL API",
-                department="Dept of API Development",
-                cn="develop",
-                raw_intranet_groups="ucl-all;ucl-ug;schsci-all",
-                employee_id="uclapi1"
-            )
+            user = User()
             user.save()
 
         try:
-            app = App.objects.get(user=user, name="Local OAuth Test")
+            self.app = App.objects.get(user=user, name="Local OAuth Test")
         except App.DoesNotExist:
-            app = App(
-                user=user,
-                name="Local OAuth Test",
-                api_token="uclapi-4286bc18b235d86-ab0998cc3a47a9b-07b6dfe234a04bf-97407a655b33ae8",
-                client_id="1105308584328350.9460393713696551",
-                client_secret="251e9f9553bb3b86829c18bf795844d977dedf569b24a70e4d4e753958fcc2f3",
-                callback_url="http://localhost:8002/uclapi/callback"
-            )
-            app.save()
+            self.app = App(user=user)
+            self.app.save()
 
     def test_get_historical_sensor(self):
         start_time = datetime.strptime("2020-01-15T13:00", "%Y-%m-%dT%H:%M")
         end_time = datetime.strptime("2020-01-15T14:00", "%Y-%m-%dT%H:%M")
 
         response = self.client.get("/workspaces/historical/data",
-                                   {"token": "uclapi-4286bc18b235d86-ab0998cc3a47a9b-07b6dfe234a04bf-97407a655b33ae8",
+                                   {"token": self.app.api_token,
                                     "survey_id": 72,
                                     "sensor_id": 20664001,
                                     "datetime__gte": start_time.isoformat(),
@@ -218,7 +203,7 @@ class OccupEyeArchiveViewsTestCase(TestCase):
 
     def test_get_historical_survey_sensors(self):
         response = self.client.get("/workspaces/historical/sensors",
-                                   {"token": "uclapi-4286bc18b235d86-ab0998cc3a47a9b-07b6dfe234a04bf-97407a655b33ae8",
+                                   {"token": self.app.api_token,
                                     "survey_id": 72})
         self.assertEqual(response.status_code, 200)
         self.assertListEqual(json.loads(response.content)["sensors"]["results"],
@@ -248,7 +233,7 @@ class OccupEyeArchiveViewsTestCase(TestCase):
         end_time = datetime.strptime("2020-01-12T00:00", "%Y-%m-%dT%H:%M")
 
         response = self.client.get("/workspaces/historical/data",
-                                   {"token": "uclapi-4286bc18b235d86-ab0998cc3a47a9b-07b6dfe234a04bf-97407a655b33ae8",
+                                   {"token": self.app.api_token,
                                     "survey_id": 72,
                                     "datetime__gte": start_time.isoformat(),
                                     "datetime__lte": end_time.isoformat()})
@@ -260,7 +245,7 @@ class OccupEyeArchiveViewsTestCase(TestCase):
 
     def test_get_historical_list_surveys(self):
         response = self.client.get("/workspaces/historical/surveys",
-                                   {"token": "uclapi-4286bc18b235d86-ab0998cc3a47a9b-07b6dfe234a04bf-97407a655b33ae8"})
+                                   {"token": self.app.api_token})
         self.assertEqual(response.status_code, 200)
         surveys = json.loads(response.content)["surveys"]["results"]
         self.assertEqual(len(surveys), 1)

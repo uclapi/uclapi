@@ -1,5 +1,6 @@
+import logging
 from datetime import datetime, timedelta, timezone
-from typing import List
+from typing import List, Tuple
 
 import redis
 from django.core.exceptions import ObjectDoesNotExist
@@ -22,12 +23,14 @@ class OccupEyeArchive:
         self._redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
         self._endpoint = endpoint
 
-    def reset(self):
+    @staticmethod
+    def reset():
         Surveys.objects.all().delete()
         Sensors.objects.all().delete()
         Historical.objects.all().delete()
 
-    def extract_sensor_date(self, dict, prefix):
+    @staticmethod
+    def extract_sensor_date(dict, prefix):
         dt = datetime.strptime(dict[f"{prefix}Date"] + "t" + dict[f"{prefix}Time"], "%Y-%m-%dt%H:%M")
         return dt.replace(tzinfo=None)
 
@@ -62,21 +65,20 @@ class OccupEyeArchive:
                                              start_datetime=start_datetime, end_datetime=end_datetime,
                                              active=survey["Active"])
 
-        print(f"[+] Added {new_updates} new surveys, updated {delta_updates} surveys")
+        logging.info(f"[+] Added {new_updates} new surveys, updated {delta_updates} surveys")
 
     @staticmethod
-    def time_steps(start: datetime, end: datetime) -> List[datetime]:
+    def time_steps(start: datetime, end: datetime) -> List[Tuple[datetime, datetime]]:
         """
         Generates all datetime steps between a start and end datetime with a maximum change
-        of MAX_TIME_DELTA
+        of MAX_TIME_DELTA with no overlap, for example:
+            [(2020-01-01, 2020-01-07), (2020-01-08, 2020-01-15)]
         """
         steps = []
         while start < end:
             steps.append(start)
-            start = start + MAX_TIME_DELTA
-            if start > end:
-                start = end
-            steps[-1] = (steps[-1], start)
+            start += MAX_TIME_DELTA
+            steps[-1] = (steps[-1], min(start, end))
             start += timedelta(days=1)
         return steps
 
@@ -110,11 +112,11 @@ class OccupEyeArchive:
         if sensor["HardwareID"] != validate["hardware_id"] or \
                 sensor["SurveyDeviceID"] != validate["survey_device_id"] or \
                 survey.survey_id != validate["survey_id"]:
-            print("\n      [+] Sensor does not match historical records")
+            logging.info("\n      [+] Sensor does not match historical records")
             if survey.survey_id == validate["survey_id"]:
-                print("      [+] Sensor in same location")
-                print(f"      [+] Updating {validate['hardware_id']} -> {sensor['HardwareID']}")
-                print(f"      [+] Updating {validate['survey_device_id']} -> {sensor['SurveyDeviceID']}")
+                logging.info("      [+] Sensor in same location")
+                logging.info(f"      [+] Updating {validate['hardware_id']} -> {sensor['HardwareID']}")
+                logging.info(f"      [+] Updating {validate['survey_device_id']} -> {sensor['SurveyDeviceID']}")
                 obj = Sensors.objects.get(sensor_id=sensor["SensorID"])
 
                 time = datetime.strptime(sensor["TriggerDate"], "%Y-%m-%d")
@@ -132,8 +134,8 @@ class OccupEyeArchive:
                     "hardware_id": sensor["HardwareID"], "survey_device_id": sensor["SurveyDeviceID"],
                     "survey_id": survey.survey_id, "last_value": -1}
             else:
-                print(f"      [+] Sensor in different location "
-                      f"{validate['survey_id']} -> {survey.survey_id}")
+                logging.info(f"      [+] Sensor in different location "
+                             f"{validate['survey_id']} -> {survey.survey_id}")
                 Sensors.objects.create(sensor_id=sensor["SensorID"], hardware_id=sensor["HardwareID"],
                                        survey_device_id=sensor["SurveyDeviceID"],
                                        survey_id=survey.survey_id)
@@ -141,19 +143,19 @@ class OccupEyeArchive:
                     "hardware_id": sensor["HardwareID"], "survey_device_id": sensor["SurveyDeviceID"],
                     "survey_id": survey.survey_id, "last_value": -1}
 
-            print(f"   [+] Continuing {start_date} to {end_date} ", end="")
+            logging.info(f"   [+] Continuing {start_date} to {end_date} ", end="")
 
     def update(self):
         self.current_sensors = self.get_current_sensors()
 
-        end_time = datetime.now().replace(microsecond=0, second=0, minute=0, hour=0)
+        end_datetime = datetime.now().replace(microsecond=0, second=0, minute=0, hour=0)
         for survey in Surveys.objects.all():
-            print(f"[+] Updating {survey.survey_id} from {survey.last_updated} to {end_time}")
-            for step in self.time_steps(survey.last_updated, end_time):
+            logging.info(f"[+] Updating {survey.survey_id} from {survey.last_updated} to {end_datetime}")
+            for step in self.time_steps(survey.last_updated, end_datetime):
                 start_date = step[0].strftime("%Y-%m-%d")
                 end_date = step[1].strftime("%Y-%m-%d")
 
-                print(f"   [+] Requesting {start_date} to {end_date} ", end="")
+                logging.info(f"   [+] Requesting {start_date} to {end_date} ", end="")
                 updates = 0
                 sensors = self._endpoint.request(
                     self._const.URL_ARCHIVE.format(start_date, end_date, survey.survey_id))
@@ -178,16 +180,16 @@ class OccupEyeArchive:
                 batch_objects = []
 
                 for sensor in sensors:
-                    cs_key = str(sensor["SensorID"]) + f"-{survey.survey_id}"
+                    cs_key = str(sensor["SensorID"]) + "-" + str(survey.survey_id)
                     if cs_key in self.current_sensors:
                         self.validate_sensor(sensor, survey, start_date, end_date)
                     else:
                         Sensors.objects.create(sensor_id=sensor["SensorID"], hardware_id=sensor["HardwareID"],
                                                survey_device_id=sensor["SurveyDeviceID"],
                                                survey_id=survey.survey_id)
-                        self.current_sensors[str(sensor["SensorID"]) + "-" + str(survey.survey_id)] = {
-                            "hardware_id": sensor["HardwareID"], "survey_device_id": sensor["SurveyDeviceID"],
-                            "survey_id": survey.survey_id, "last_value": -1}
+                        self.current_sensors[cs_key] = {"hardware_id": sensor["HardwareID"],
+                                                        "survey_device_id": sensor["SurveyDeviceID"],
+                                                        "survey_id": survey.survey_id, "last_value": -1}
 
                     for key, value in sensor.items():
                         if key.startswith("t"):
@@ -196,21 +198,21 @@ class OccupEyeArchive:
                                 value = -1
                             if value != self.current_sensors[cs_key]["last_value"]:
                                 updates += 1
-                                time = datetime.strptime(sensor["TriggerDate"] + key, "%Y-%m-%dt%H%M")
-                                time = time.replace(tzinfo=timezone.utc)
+                                value_datetime = datetime.strptime(sensor["TriggerDate"] + key, "%Y-%m-%dt%H%M")
+                                value_datetime = value_datetime.replace(tzinfo=timezone.utc)
                                 batch_objects.append(
                                     Historical(sensor_id=sensor["SensorID"], survey_id=survey.survey_id,
-                                               datetime=time, state=value))
+                                               datetime=value_datetime, state=value))
                                 self.current_sensors[cs_key]["last_value"] = value
 
                 # Ideally ignore conflicts would be false but depending on exactly when the archive is run or
                 # if the previous run crashed some conflicts may exist.
                 Historical.objects.bulk_create(batch_objects, batch_size=65536, ignore_conflicts=True)
-                print(f"{updates} updates")
+                logging.info(f"{updates} updates")
 
-            survey.last_updated = end_time
+            survey.last_updated = end_datetime
             survey.save()
-        print("[+] Setting Last-Modified key")
+        logging.info("[+] Setting Last-Modified key")
         last_modified_key = "http:headers:Last-Modified:Workspaces-Historical"
 
         current_timestamp = datetime.now(LOCAL_TIMEZONE).isoformat(timespec="seconds")
