@@ -110,7 +110,7 @@ jobs:
       - name: Run tests
         run: |
           cd ./backend/uclapi && \
-          coverage run --source='.' --omit='*migrations*' manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner' --settings=uclapi.settings_mocked
+          coverage run --source='.' --omit='*migrations*' manage.py test --settings=uclapi.settings_mocked
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
