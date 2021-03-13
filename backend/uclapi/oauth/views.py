@@ -488,7 +488,6 @@ def token(request):
 )
 def userdata(request, *args, **kwargs):
     token = kwargs['token']
-    print("Checking student status")
     try:
         get_student_by_upi(
             token.user.employee_id
