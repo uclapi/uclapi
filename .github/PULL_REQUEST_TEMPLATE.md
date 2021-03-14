@@ -1,5 +1,5 @@
 ## What does this PR do?
-For example: Changes the way we retrieve bookings
+For example: Changes the way we retrieve bookings.
 
 ## ✅ Pull Request checklist
 
@@ -10,7 +10,7 @@ For example: Changes the way we retrieve bookings
 ## 🚨 Is this a breaking change for API clients?
 Yes/No
 
-## 🚀 Deploy notes
+## :squirrel: Deploy notes
 For example: Need to run migrations as part of deployment
 
 ## Anything else
