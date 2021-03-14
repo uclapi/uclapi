@@ -51,7 +51,7 @@
     "prop-types": "^15.7.2",
     "qs": "^6.9.4",
     "rc-collapse": "^2.0.1",
-    "react": "^16.13.1",
+    "react": "^16.14.0",
     "react-autosuggest": "^10.0.2",
     "react-dom": "^16.13.1",
     "react-icons": "^3.11.0",
