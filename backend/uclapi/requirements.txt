@@ -9,7 +9,7 @@ deepdiff==5.0.2
 django-cors-headers==3.6.0
 django-dotenv==1.4.2
 django-mock-queries==2.1.5
-django-storages==1.11
+django-storages==1.11.1
 djangorestframework==3.12.2
 django-postgrespool2==1.0.1
 eventlet==0.30.0
