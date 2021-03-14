@@ -12,7 +12,7 @@ django-mock-queries==2.1.5
 django-storages==1.11.1
 djangorestframework==3.12.2
 django-postgrespool2==1.0.1
-eventlet==0.30.0
+eventlet==0.30.2
 freezegun==1.1.0
 flake8==3.8.4
 gevent==21.1.2
@@ -33,6 +33,6 @@ redis==3.5.3
 requests==2.25.1
 requests-futures==1.0.0
 Sphinx==3.4.0
-tqdm==4.57.0
+tqdm==4.59.0
 validators==0.18.2
 git+git://github.com/uclapi/django-webpack-loader@master#egg=django-webpack-loader
