@@ -18,4 +18,4 @@ class SensorsSerializer(serializers.ModelSerializer):
 class HistoricalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Historical
-        fields = ["survey_id", "sensor_id", "datetime", "state"]
+        fields = ["sensor_id", "datetime", "state"]

@@ -30,7 +30,7 @@ location. There is currently only one sensor replacement.
 
 Finally the historical data is stored within workspaces_historical. This is stored as deltas (only the datetime of
 the change of state is saved, with the in-between values interpolated). The API provides updates on a 10 minute
-frequency hwoever only around 1/20 of these values are stored.
+frequency however only around 1/20 of these values are stored.
 
 Tests
 -----

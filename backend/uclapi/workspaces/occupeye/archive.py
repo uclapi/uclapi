@@ -165,6 +165,9 @@ class OccupEyeArchive:
                 unique_sensors = {}
                 for key, sensor in enumerate(sensors):
                     unique_key = str(sensor["SensorID"]) + ":" + sensor["TriggerDate"]
+                    # We take the sum of HardwareID and SurveyDeviceID as there is a single instance where the
+                    # SurveyDeviceID changes but not the HardwareID. OccupEye does not mention this at all
+                    # so we are really not sure why it happens.
                     unique_value = sensor["HardwareID"] + sensor["SurveyDeviceID"]
                     if unique_key in unique_sensors:
                         if unique_value > unique_sensors[unique_key][1]:

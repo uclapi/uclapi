@@ -4,6 +4,9 @@ from base64 import b64decode
 from django.utils.decorators import method_decorator
 from rest_framework import generics
 from rest_framework.decorators import api_view
+from rest_framework.exceptions import ParseError
+from rest_framework.pagination import CursorPagination
+from rest_framework.response import Response
 
 from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse, pretty_response
@@ -376,13 +379,29 @@ class SensorsList(generics.ListAPIView):
         return pretty_response(super().list(request, *args, **kwargs), custom_header_data=kwargs)
 
 
+class HistoricalListCursorPagination(CursorPagination):
+    ordering = "datetime"
+
+    def get_paginated_response(self, data, **kwargs):
+        return Response({
+            "okay": True,
+            'workspaces': {
+                "next": self.get_next_link(),
+                "previous": self.get_previous_link(),
+                "results": data
+            }
+        })
+
+
 class HistoricalList(generics.ListAPIView):
-    queryset = Historical.objects.all()
+    queryset = Historical.objects.all().order_by("datetime")
     serializer_class = HistoricalSerializer
+    pagination_class = HistoricalListCursorPagination
     filterset_fields = {"survey_id": ["exact"], "sensor_id": ["exact"],
                         "datetime": ["gte", "lte", "exact", "gt", "lt"]}
 
     @method_decorator(uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces-Historical"))
     def list(self, request, *args, **kwargs):
-        self.pagination_class.page_size = 10000
+        if self.request.query_params.get("survey_id", None) is None:
+            raise ParseError("Survey_id is a required field")
         return pretty_response(super().list(request, *args, **kwargs), custom_header_data=kwargs)

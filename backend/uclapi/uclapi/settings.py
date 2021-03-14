@@ -162,6 +162,7 @@ RAVEN_CONFIG = {
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_PAGINATION_CLASS': 'common.pagination.CustomPagination',
+    'EXCEPTION_HANDLER': 'common.exception_handler.custom_exception_handler',
     'PAGE_SIZE': 1000
 }
 
