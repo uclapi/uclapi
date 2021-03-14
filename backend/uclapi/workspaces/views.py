@@ -385,7 +385,7 @@ class HistoricalListCursorPagination(CursorPagination):
     def get_paginated_response(self, data, **kwargs):
         return Response({
             "okay": True,
-            'workspaces': {
+            "data": {
                 "next": self.get_next_link(),
                 "previous": self.get_previous_link(),
                 "results": data

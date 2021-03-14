@@ -196,10 +196,10 @@ class OccupEyeArchiveViewsTestCase(TestCase):
                                     "datetime__lte": end_time.isoformat()})
         self.assertEqual(response.status_code, 200)
         self.assertListEqual(json.loads(response.content)["data"]["results"],
-                             [{"survey_id": 72, "sensor_id": 20664001, "datetime": "2020-01-15T13:10:00", "state": 1},
-                              {"survey_id": 72, "sensor_id": 20664001, "datetime": "2020-01-15T13:20:00", "state": 0},
-                              {"survey_id": 72, "sensor_id": 20664001, "datetime": "2020-01-15T13:50:00", "state": 1},
-                              {"survey_id": 72, "sensor_id": 20664001, "datetime": "2020-01-15T14:00:00", "state": 0}])
+                             [{"sensor_id": 20664001, "datetime": "2020-01-15T13:10:00", "state": 1},
+                              {"sensor_id": 20664001, "datetime": "2020-01-15T13:20:00", "state": 0},
+                              {"sensor_id": 20664001, "datetime": "2020-01-15T13:50:00", "state": 1},
+                              {"sensor_id": 20664001, "datetime": "2020-01-15T14:00:00", "state": 0}])
 
     def test_get_historical_survey_sensors(self):
         response = self.client.get("/workspaces/historical/sensors",
@@ -239,9 +239,9 @@ class OccupEyeArchiveViewsTestCase(TestCase):
                                     "datetime__lte": end_time.isoformat()})
         self.assertEqual(response.status_code, 200)
         self.assertListEqual(json.loads(response.content)["data"]["results"],
-                             [{"survey_id": 72, "sensor_id": 20664001, "datetime": "2020-01-10T21:40:00", "state": 1},
-                              {"survey_id": 72, "sensor_id": 20664001, "datetime": "2020-01-10T21:50:00", "state": 0},
-                              {"survey_id": 72, "sensor_id": 20664002, "datetime": "2020-01-10T00:30:00", "state": 0}])
+                             [{"sensor_id": 20664002, "datetime": "2020-01-10T00:30:00", "state": 0},
+                              {"sensor_id": 20664001, "datetime": "2020-01-10T21:40:00", "state": 1},
+                              {"sensor_id": 20664001, "datetime": "2020-01-10T21:50:00", "state": 0}])
 
     def test_get_historical_list_surveys(self):
         response = self.client.get("/workspaces/historical/surveys",
