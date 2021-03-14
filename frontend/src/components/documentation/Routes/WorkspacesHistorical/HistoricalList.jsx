@@ -42,16 +42,13 @@ const response = `{
   "data": {
     "next": null,
     "previous": null,
-    "count": 2,
     "results": [
       {
-        "survey_id": 72,
         "sensor_id": 20664009,
         "datetime": "2020-01-16T14:20:00",
         "state": 1
       },
       {
-        "survey_id": 72,
         "sensor_id": 20664009,
         "datetime": "2020-01-16T14:50:00",
         "state": 0
@@ -78,11 +75,11 @@ const WorkspacesHistoricalList = ({activeLanguage}) => {
           Endpoint: <code>{Constants.DOMAIN}/workspaces/historical/data</code>
         </p>
         <p>
-          This endpoint provides historical sensor readings for all sensors in all survey locations. Commonly you will
-          want to restrict this to a single survey location with survey_id or even a single sensor with sensor_id. To
-          specify a start time datetime__gte (datetime greater than or equal to) and for an end time datetime__lte
-          (datetime less than or equal to) can be used. The deltas (changes) of a sensor will be returned.
-          Conforms to StandardResultsSetPagination from Django REST.
+          This endpoint provides historical sensor readings for all sensors in all survey locations. This must be
+          restricted to a single survey location with survey_id and can be optionally restricited to a single sensor
+          with sensor_id. To specify a start time datetime__gte (datetime greater than or equal to) and for an end
+          time datetime__lte (datetime less than or equal to) can be used. The deltas (changes) of a sensor will be
+          returned. Conforms to CursorPagination from Django REST.
         </p>
         <p>
           States: 1 = occupied, 0 = absent, -1 = unknown
@@ -98,14 +95,14 @@ const WorkspacesHistoricalList = ({activeLanguage}) => {
             description="Authentication token."
           />
           <Cell
-            name="page"
+            name="cursor"
             requirement="optional"
-            example="2"
-            description="Page of pagination results, see url in next field."
+            example="null"
+            description="Cursor to fetch the next or previous page of results."
           />
           <Cell
             name="survey_id"
-            requirement="optional"
+            requirement="required"
             example="72"
             description="The ID of the survey/library."
           />
@@ -159,12 +156,6 @@ const WorkspacesHistoricalList = ({activeLanguage}) => {
         <Table
           name="Response"
         >
-          <Cell
-            name="survey_id"
-            extra="integer"
-            example={`4`}
-            description="The id of the survey location."
-          />
           <Cell
             name="sensor_id"
             extra="integer"
