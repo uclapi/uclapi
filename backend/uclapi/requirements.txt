@@ -23,7 +23,7 @@ jinjasql==0.1.8
 jsonpickle==1.4.2
 lxml==4.6.2
 parameterized==0.8.1
-pycodestyle==2.6.0
+pycodestyle==2.7.0
 psycopg2-binary==2.8.6
 python-dateutil==2.8.1
 pymsteams==0.1.14
