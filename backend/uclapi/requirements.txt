@@ -14,7 +14,7 @@ djangorestframework==3.12.2
 django-postgrespool2==2.0.1
 eventlet==0.30.2
 freezegun==1.1.0
-flake8==3.8.4
+flake8==3.9.0
 gevent==21.1.2
 gunicorn==20.0.4
 greenlet==1.0.0
@@ -23,7 +23,7 @@ jinjasql==0.1.8
 jsonpickle==1.4.2
 lxml==4.6.2
 parameterized==0.8.1
-pycodestyle==2.6.0
+pycodestyle==2.7.0
 psycopg2-binary==2.8.6
 python-dateutil==2.8.1
 pymsteams==0.1.14
