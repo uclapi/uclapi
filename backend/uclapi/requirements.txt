@@ -20,7 +20,7 @@ gunicorn==20.0.4
 greenlet==1.0.0
 hiredis==1.1.0
 jinjasql==0.1.8
-jsonpickle==1.4.2
+jsonpickle==1.5.2
 lxml==4.6.2
 parameterized==0.7.4
 pycodestyle==2.6.0
