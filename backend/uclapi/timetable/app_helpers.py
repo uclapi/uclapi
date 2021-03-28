@@ -236,8 +236,6 @@ def _get_timetable_events(full_modules):
     """
     Gets a dictionary of timetabled events for a list of Module objects
     """
-    if not _week_map:
-        _map_weeks()
 
     timetable = get_cache("timetable")
 
@@ -377,9 +375,6 @@ def _get_timetable_events(full_modules):
 
 
 def _get_timetable_events_module_list(module_list):
-    if not _week_map:
-        _map_weeks()
-
     modules = get_cache("module")
     cminstances = get_cache("cminstances")
 
@@ -426,12 +421,22 @@ def _map_weeks():
 def _get_real_dates(weekid: int, weekday: int) -> List[str]:
     if not _week_map:
         _map_weeks()
-    return [
-        (_week_num_date_map[startdate] + datetime.timedelta(
-            days=weekday - 1
-        )).strftime("%Y-%m-%d")
-        for startdate in _week_map[weekid]
-    ]
+        
+    try:
+        return [
+            (_week_num_date_map[startdate] + datetime.timedelta(
+                days=weekday - 1
+            )).strftime("%Y-%m-%d")
+            for startdate in _week_map[weekid]
+        ]
+    except KeyError as e:
+        _map_weeks()
+        return [
+            (_week_num_date_map[startdate] + datetime.timedelta(
+                days=weekday - 1
+            )).strftime("%Y-%m-%d")
+            for startdate in _week_map[weekid]
+        ]
 
 
 def _get_session_type_str(session_type):
