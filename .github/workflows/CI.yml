@@ -100,7 +100,7 @@ jobs:
       - name: Run migrations
         run: |
           cd ./backend/uclapi && \
-          python ./manage.py migrate
+          python ./manage.py migrate --settings=uclapi.settings_mocked
 
       - name: Build frontend
         run: |
