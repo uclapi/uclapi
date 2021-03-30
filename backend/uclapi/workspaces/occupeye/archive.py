@@ -143,7 +143,7 @@ class OccupEyeArchive:
                     "hardware_id": sensor["HardwareID"], "survey_device_id": sensor["SurveyDeviceID"],
                     "survey_id": survey.survey_id, "last_value": -1}
 
-            logging.info(f"   [+] Continuing {start_date} to {end_date} ", end="")
+            logging.info(f"   [+] Continuing {start_date} to {end_date} ")
 
     def update(self):
         self.current_sensors = self.get_current_sensors()
@@ -155,7 +155,7 @@ class OccupEyeArchive:
                 start_date = step[0].strftime("%Y-%m-%d")
                 end_date = step[1].strftime("%Y-%m-%d")
 
-                logging.info(f"   [+] Requesting {start_date} to {end_date} ", end="")
+                logging.info(f"   [+] Requesting {start_date} to {end_date} ")
                 updates = 0
                 sensors = self._endpoint.request(
                     self._const.URL_ARCHIVE.format(start_date, end_date, survey.survey_id))

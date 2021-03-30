@@ -43,7 +43,7 @@ class Command(BaseCommand):
             if incident_name:
                 try:
                     create_incident(
-                        occupeye_error,
+                        str(occupeye_error),
                         incident_name,
                         enums.INCIDENT_INVESTIGATING,
                         enums.COMPONENT_STATUS_MAJOR_OUTAGE,

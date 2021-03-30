@@ -1,3 +1,4 @@
+import logging
 import sys
 import traceback
 
@@ -23,8 +24,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            print("Running OccupEye Archive Operation")
-            print("[+] Feeding Archive")
+            logging.basicConfig(level=logging.INFO)
+            logging.info("Running OccupEye Archive Operation")
+            logging.info("[+] Feeding Archive")
             if options['test']:
                 archive = OccupEyeArchive(endpoint=TestEndpoint({}))
             else:
@@ -32,32 +34,33 @@ class Command(BaseCommand):
             if options['full']:
                 archive.reset()
             archive.update()
-            print("[+] Done!")
+            logging.info("[+] Done!")
             incident_name = get_incident_name("Occupeye")
             if incident_name:
                 try:
                     update_incident("Occupeye Archive succeeded", incident_name, enums.INCIDENT_FIXED)
                 except CachetException as cachet_error:
-                    print(f"Failed to create fixed cachet incident. " f"Reason: {repr(cachet_error)}")
+                    logging.error(f"Failed to create fixed cachet incident. " f"Reason: {repr(cachet_error)}")
                 except Exception as cachet_error:
-                    print(f"Unexpected: Failed to create fixed cachet " f"incident. " f"Reason: {repr(cachet_error)}")
+                    logging.error(
+                        f"Unexpected: Failed to create fixed cachet " f"incident. " f"Reason: {repr(cachet_error)}")
             else:
-                print("No incident present in Cachet!")
+                logging.error("No incident present in Cachet!")
         except Exception as occupeye_error:
             incident_name = get_incident_name("Occupeye-Archive")
             if incident_name:
                 try:
                     create_incident(
-                        occupeye_error,
+                        str(occupeye_error),
                         incident_name,
                         enums.INCIDENT_INVESTIGATING,
                         enums.COMPONENT_STATUS_MAJOR_OUTAGE,
                     )
                 except CachetException as cachet_error:
-                    print(f"Failed to create cachet incident. " f"Reason: {repr(cachet_error)}")
+                    logging.error(f"Failed to create cachet incident. " f"Reason: {repr(cachet_error)}")
                 except Exception as cachet_error:
-                    print(f"Unexpected: Failed to create cachet incident. " f"Reason: {repr(cachet_error)}")
+                    logging.error(f"Unexpected: Failed to create cachet incident. " f"Reason: {repr(cachet_error)}")
             else:
                 exc_info = sys.exc_info()
                 traceback.print_exception(*exc_info)
-                print("Could not find appropriate incident in Cachet!")
+                logging.error("Could not find appropriate incident in Cachet!")

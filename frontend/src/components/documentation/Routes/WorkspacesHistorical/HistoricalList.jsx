@@ -94,12 +94,14 @@ const WorkspacesHistoricalList = ({activeLanguage}) => {
             example="uclapi-5d58c3c4e6bf9c-c2910ad3b6e054-7ef60f44f1c14f-a05147bfd17fdb"
             description="Authentication token."
           />
+          {/* eslint-disable no-secrets/no-secrets */}
           <Cell
             name="cursor"
             requirement="optional"
-            example="null"
+            example="bz0xJnA9MjAyMC0wMS0xNysxMiUzQTQwJTNBMDA%3D"
             description="Cursor to fetch the next or previous page of results."
           />
+          {/* eslint-enable no-secrets/no-secrets */}
           <Cell
             name="survey_id"
             requirement="required"
