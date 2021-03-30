@@ -16,10 +16,10 @@ jobs:
       DB_UCLAPI_HOST: localhost
       DB_UCLAPI_PASSWORD: supersecure
       DB_UCLAPI_USERNAME: uclapi
-      FORBIDDEN_CALLBACK_URLS: ${{ secrets.FORBIDDEN_CALLBACK_URLS }}
-      OCCUPEYE_BASE_URL: ${{ secrets.OCCUPEYE_BASE_URL }}
+      FORBIDDEN_CALLBACK_URLS: uclapi.com;staging.ninja
+      OCCUPEYE_BASE_URL: https://cloud.occupeye.com/OccupEye
       OCCUPEYE_DEPLOYMENT_ID: ${{ secrets.OCCUPEYE_DEPLOYMENT_ID }}
-      OCCUPEYE_DEPLOYMENT_NAME: ${{ secrets.OCCUPEYE_DEPLOYMENT_NAME }}
+      OCCUPEYE_DEPLOYMENT_NAME: UCL
       OCCUPEYE_PASSWORD: ${{ secrets.OCCUPEYE_PASSWORD }}
       OCCUPEYE_THREAD_LIMIT: ${{ secrets.OCCUPEYE_THREAD_LIMIT }}
       OCCUPEYE_USERNAME: ${{ secrets.OCCUPEYE_USERNAME }}
@@ -100,7 +100,7 @@ jobs:
       - name: Run migrations
         run: |
           cd ./backend/uclapi && \
-          python ./manage.py migrate
+          python ./manage.py migrate --settings=uclapi.settings_mocked
 
       - name: Build frontend
         run: |
