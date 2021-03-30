@@ -16,7 +16,7 @@ jobs:
       DB_UCLAPI_HOST: localhost
       DB_UCLAPI_PASSWORD: supersecure
       DB_UCLAPI_USERNAME: uclapi
-      FORBIDDEN_CALLBACK_URLS: ${{ secrets.FORBIDDEN_CALLBACK_URLS }}
+      FORBIDDEN_CALLBACK_URLS: uclapi.com;staging.ninja
       OCCUPEYE_BASE_URL: https://cloud.occupeye.com/OccupEye
       OCCUPEYE_DEPLOYMENT_ID: ${{ secrets.OCCUPEYE_DEPLOYMENT_ID }}
       OCCUPEYE_DEPLOYMENT_NAME: UCL
