@@ -17,7 +17,7 @@ jobs:
       DB_UCLAPI_PASSWORD: supersecure
       DB_UCLAPI_USERNAME: uclapi
       FORBIDDEN_CALLBACK_URLS: ${{ secrets.FORBIDDEN_CALLBACK_URLS }}
-      OCCUPEYE_BASE_URL: ${{ secrets.OCCUPEYE_BASE_URL }}
+      OCCUPEYE_BASE_URL: https://cloud.occupeye.com/OccupEye
       OCCUPEYE_DEPLOYMENT_ID: ${{ secrets.OCCUPEYE_DEPLOYMENT_ID }}
       OCCUPEYE_DEPLOYMENT_NAME: ${{ secrets.OCCUPEYE_DEPLOYMENT_NAME }}
       OCCUPEYE_PASSWORD: ${{ secrets.OCCUPEYE_PASSWORD }}
