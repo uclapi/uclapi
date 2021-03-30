@@ -24,6 +24,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", get_random_secret_key())
+if SECRET_KEY == "" or SECRET_KEY is None:
+    SECRET_KEY = get_random_secret_key()
+
 CACHET_TOKEN = os.environ.get("CACHET_TOKEN")
 CACHET_URL = os.environ.get("CACHET_URL")
 # SECURITY WARNING: don't run with debug turned on in production!
