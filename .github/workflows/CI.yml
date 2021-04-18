@@ -18,17 +18,11 @@ jobs:
       DB_UCLAPI_USERNAME: uclapi
       FORBIDDEN_CALLBACK_URLS: uclapi.com;staging.ninja
       OCCUPEYE_BASE_URL: https://cloud.occupeye.com/OccupEye
-      OCCUPEYE_DEPLOYMENT_ID: ${{ secrets.OCCUPEYE_DEPLOYMENT_ID }}
       OCCUPEYE_DEPLOYMENT_NAME: UCL
-      OCCUPEYE_PASSWORD: ${{ secrets.OCCUPEYE_PASSWORD }}
-      OCCUPEYE_THREAD_LIMIT: ${{ secrets.OCCUPEYE_THREAD_LIMIT }}
-      OCCUPEYE_USERNAME: ${{ secrets.OCCUPEYE_USERNAME }}
       REDIS_UCLAPI_HOST: localhost
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      SHIB_TEST_USER: ${{ secrets.SHIB_TEST_USER }}
       UCLAPI_PRODUCTION: False
       UCLAPI_RUNNING_ON_AWS_ELB: False
-      WHITELISTED_CALLBACK_URLS: ${{ secrets.WHITELISTED_CALLBACK_URLS }}
+      WHITELISTED_CALLBACK_URLS: https://live-roombookings.uclapi.com/webhook/;https://hackathon.uclapi.com/callback
     services:
       Redis:
         image: redis
