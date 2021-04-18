@@ -17,7 +17,9 @@
     "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js --progress --colors",
     "pre-commit": "lint-staged",
     "profile": "cross-env NODE_ENV=production webpack --config webpack.prod.js --progress --colors --profile --json > stats.json",
-    "start": "cross-env NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors"
+    "start": "cross-env NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors",
+    "test": "jest",
+    "test-generate": "jest --updateSnapshot"
   },
   "husky": {
     "hooks": {
@@ -41,6 +43,31 @@
       "babelify",
       "envify"
     ]
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "jsx"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "bower_components",
+      "shared"
+    ],
+    "modulePaths": [
+      "/shared/vendor/modules"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/test/__mocks__/fileMock.js",
+      "\\.(css|scss)$": "<rootDir>/test/__mocks__/styleMock.js",
+      "^Images(.*)$": "<rootDir>/src/images$1",
+      "^Layout(.*)$": "<rootDir>/src/components/layout$1",
+      "^Dashboard(.*)$": "<rootDir>/src/components/dashboard$1",
+      "^Styles(.*)$": "<rootDir>/src/sass$1"
+    },
+    "transform": {
+      "\\.[jt]sx?$": "babel-jest"
+    }
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
@@ -73,6 +100,7 @@
     "@babel/runtime": "^7.11.2",
     "@typescript-eslint/parser": "^4.10.0",
     "babel-eslint": "^10.1.0",
+    "babel-jest": "^26.6.3",
     "babel-loader": "^8.1.0",
     "babel-plugin-transform-imports": "^2.0.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
@@ -84,6 +112,7 @@
     "eslint-import-resolver-webpack": "^0.13.0",
     "eslint-plugin-disable": "^2.0.1",
     "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.3.5",
     "eslint-plugin-json-format": "^2.0.1",
     "eslint-plugin-no-secrets": "^0.6.8",
     "eslint-plugin-node": "^11.1.0",
@@ -93,10 +122,13 @@
     "eslint-plugin-sonarjs": "^0.5.0",
     "file-loader": "^6.2.0",
     "husky": "^4.3.0",
+    "jest": "^26.6.3",
     "lint-staged": "^10.5.3",
     "mini-css-extract-plugin": "^0.11.2",
     "node-sass": "^4.14.1",
+    "npm-check-updates": "^11.4.1",
     "optimize-css-assets-webpack-plugin": "^5.0.4",
+    "react-test-renderer": "^17.0.2",
     "sass-loader": "^10.1.0",
     "style-loader": "^1.2.1",
     "stylelint": "^13.8.0",
