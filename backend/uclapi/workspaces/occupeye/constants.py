@@ -15,7 +15,7 @@ class OccupEyeConstants:
     # Environment Variables
     DEPLOYMENT_ID = os.getenv("OCCUPEYE_DEPLOYMENT_ID", "UCL")
     DEPLOYMENT_NAME = os.getenv("OCCUPEYE_DEPLOYMENT_NAME", "UCL")
-    BASE_URL = os.getenv("OCCUPEYE_BASE_URL", "https://cloud.occupeye.com/OccupEye/")
+    BASE_URL = os.getenv("OCCUPEYE_BASE_URL", "https://cloud.occupeye.com/OccupEye")
     USERNAME = os.getenv("OCCUPEYE_USERNAME", None)
     PASSWORD = os.getenv("OCCUPEYE_PASSWORD", None)
 
