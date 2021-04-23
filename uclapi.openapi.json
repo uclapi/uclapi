@@ -42,7 +42,7 @@
       "client_secret" : {
         "name" : "client_secret",
         "in" : "query",
-        "description" : "Client secret of the authenticating app",
+        "description" : "Client secret of the authenticating app.",
         "required" : true,
         "schema" : {
           "type" : "string"
@@ -87,7 +87,7 @@
       "classification" : {
         "name" : "classification",
         "in" : "query",
-        "description" : "The room type ID",
+        "description" : "The room type ID.",
         "required" : false,
         "schema" : {
           "type" : "string"
@@ -189,44 +189,53 @@
         "properties" : {
           "ok" : {
             "type" : "boolean",
-            "example" : "true"
+            "example" : "true",
+            "description": "Returns if the query was successful."
           },
           "email" : {
             "type" : "string",
-            "example" : "xxxxxxx@ucl.ac.uk"
+            "example" : "xxxxxxx@ucl.ac.uk",
+            "description": "Email address for the given user."
           },
           "full_name" : {
             "type" : "string",
-            "example" : "John Doe"
+            "example" : "John Doe",
+            "description": "Full name of the user. Can be an empty string."
           },
           "department" : {
             "type" : "string",
-            "example" : "Dept of Computer Science"
+            "example" : "Dept of Computer Science",
+            "description": "Department the user belongs to. Can be an empty string."
           },
           "cn" : {
             "type" : "string",
-            "example" : "xxxxxxx"
+            "example" : "xxxxxxx",
+            "description": "UCL username of the given user."
           },
           "given_name" : {
             "type" : "string",
-            "example" : "John"
+            "example" : "John",
+            "description": "Given first name of the user. Can be an empty string."
           },
           "upi" : {
             "type" : "string",
-            "example" : "jdoe12"
+            "example" : "jdoe12",
+            "description": "Unique Person Identifier."
           },
           "scope_number" : {
             "type" : "number",
-            "example" : 0
+            "example" : 0,
+            "description": "Scopes the application has access to on behalf of the user."
           },
           "is_student" : {
             "type" : "boolean",
-            "example" : true
+            "example" : true,
+            "description": "Whether the user is a student in this academic year."
           },
           "ucl_groups": {
             "type": "string",
             "example": "ucl-all;ucl-ug",
-            "description": "A semi-colon delimited string of all UCL intranet groups that the user belongs to"
+            "description": "A semi-colon delimited string of all UCL intranet groups that the user belongs to."
         }
         }
       },
@@ -240,36 +249,44 @@
           },
           "start_time" : {
             "type" : "string",
-            "example" : "2016-09-02T09:00:00+00:00"
+            "example" : "2016-09-02T09:00:00+00:00",
+            "description": "Start time of the event."
           },
           "end_time" : {
             "type" : "string",
-            "example" : "2016-09-02T10:00:00+00:00"
+            "example" : "2016-09-02T10:00:00+00:00",
+            "description": "End time of the event."
           },
           "duration" : {
             "type" : "integer",
             "format" : "int64",
-            "example" : 60
+            "example" : 60,
+            "description": "Duration of the event in minutes."
           },
           "session_type" : {
             "type" : "string",
-            "example" : "L"
+            "example" : "L",
+            "description": "ID of the type of session, e.g. L = Lecture, PBL = Problem Based Learning. These come from UCL's internal database, and are provided in case a new session type that we are not aware of is in the timetable. See session_type_str below."
           },
           "session_type_str" : {
             "type" : "string",
-            "example" : "Lecture"
+            "example" : "Lecture",
+            "description": "Type of event such as Lecture, Problem Based Learning, Practical, etc. If the session_type has not been recognised by us then this will have the value Unknown."
           },
           "session_group" : {
             "type" : "string",
-            "example" : ""
+            "example" : "",
+            "description": "Used for lab groups, or other types of small group activity that does not involve the whole cohort. When the whole cohort is invited (e.g. lectures) this value is a blank string. In the personal timetable endpoint only the labs / group sessions assigned to the user with the OAuth token provided will be returned. For example, if the user is in LAB A then Labs B onwards will not be returned."
           },
           "session_title" : {
             "type" : "string",
-            "example" : "Computational Complexity A"
+            "example" : "Computational Complexity A",
+            "description": "The title of the event."
           },
           "contact" : {
             "type" : "string",
-            "example" : "Prof Robin Hirsch"
+            "example" : "Prof Robin Hirsch",
+            "description": "The name associated with the individual room booking. This is the most likely candidate for the person taking the session or lecture. This name is also the most human-readable. Apps should display this value as the lecturer for any given booking, and only use the lecturer information given in the module{lecturer{}} dictionary to reference the course lead or owner."
           }
         }
       },
@@ -280,19 +297,23 @@
           },
           "module_id" : {
             "type" : "string",
-            "example" : "COMP3004"
+            "example" : "COMP3004",
+            "description": "Module ID."
           },
           "name" : {
             "type" : "string",
-            "example" : "Computational Complexity"
+            "example" : "Computational Complexity",
+            "description": "Module name."
           },
           "department_id" : {
             "type" : "string",
-            "example" : "COMPS_ENG"
+            "example" : "COMPS_ENG",
+            "description": "Department code that this module comes under."
           },
           "department_name" : {
             "type" : "string",
-            "example" : "Computer Science"
+            "example" : "Computer Science",
+            "description": "Human readable department name that owns the module."
           }
         }
       },
@@ -310,11 +331,13 @@
         "properties" : {
           "module_id" : {
             "type" : "string",
-            "example" : "COMP3004"
+            "example" : "COMP3004",
+            "description": "Module ID."
           },
           "name" : {
             "type" : "string",
-            "example" : "Computational Complexity"
+            "example" : "Computational Complexity",
+            "description": "Module name."
           },
           "instances" : {
             "type" : "array",
@@ -328,11 +351,13 @@
         "properties" : {
           "full_module_id" : {
             "type" : "string",
-            "example" : "MATH--82-A7P-T2"
+            "example" : "MATH--82-A7P-T2",
+            "description": "The module code concatenated with the instance data. This instance data is defined by the UCL Academic Model Project, and it is expanded out within this section."
           },
           "class_size" : {
             "type" : "number",
-            "example" : 12
+            "example" : 12,
+            "description": "The maximum number of students in the module permitted in that instance. In this example, twelve undergraduates are permitted to take this module in their third year, but ninety postgraduates may take the module."
           },
           "delivery" : {
             "$ref" : "#/components/schemas/delivery"
@@ -342,7 +367,8 @@
           },
           "instance_code" : {
             "type" : "string",
-            "example" : "A7P-T2"
+            "example" : "A7P-T2",
+            "description": "A code that, when combined with a module code, forms the 'full_module_id' field above. This data is used to calculate the delivery and periods information that is also provided via JSON. Concatenating the module_id, a hyphen and the instance_code forms the full_module_id field."
           }
         }
       },
@@ -350,15 +376,18 @@
         "properties" : {
           "fheq_level" : {
             "type" : "number",
-            "example" : 7
+            "example" : 7,
+            "description": "The level the course is taught at, and whether it is an undergraduate (true) or postgraduate (false) course."
           },
           "is_undergraduate" : {
             "type" : "boolean",
-            "example" : true
+            "example" : true,
+            "description": "Whether the course instance is for undergraduate (true) students or postgraduate (false) students."
           },
           "student_type" : {
             "type" : "string",
-            "example" : "Campus-based, numeric mark scheme"
+            "example" : "Campus-based, numeric mark scheme",
+            "description": "The type of student and assessment pattern available for that course. There are five options: 'Campus-based, numeric mark scheme', 'Campus-based, non-numeric mark scheme', 'Distance learner, numeric mark scheme', 'Distance learner, non-numeric mark scheme' and 'MBBS Resit'."
           }
         }
       },
@@ -369,11 +398,13 @@
           },
           "year_long" : {
             "type" : "boolean",
-            "example" : false
+            "example" : false,
+            "description": "Whether the course is timetabled to last for an entire academic year."
           },
           "lsr" : {
             "type" : "boolean",
-            "example" : false
+            "example" : false,
+            "description": "Whether the module is timetabled during the Late Summer Resit period. This is used internally by Examinations to timetable Late Summer Assessments (LSAs)."
           },
           "summer_school" : {
             "$ref" : "#/components/schemas/summer_school"
@@ -384,23 +415,28 @@
         "properties" : {
           "term_1" : {
             "type" : "boolean",
-            "example" : false
+            "example" : false,
+            "description": "Whether the course is taught during Term 1."
           },
           "term_2" : {
             "type" : "boolean",
-            "example" : true
+            "example" : true,
+            "description": "Whether the course is taught during Term 2."
           },
           "term_3" : {
             "type" : "boolean",
-            "example" : false
+            "example" : false,
+            "description": "Whether the course is taught during Term 3."
           },
           "term_1_next_year" : {
             "type" : "boolean",
-            "example" : false
+            "example" : false,
+            "description": "Whether the course is taught during Term 1 of the following academic year. This is used by admissions to calculate the end dates for non-standard programmes, and therefore is rare."
           },
           "summer" : {
             "type" : "boolean",
-            "example" : false
+            "example" : false,
+            "description": "Whether the course timetabled during the summer holidays. This can happen in some Postgraduate and Medicine teaching arrangements, but is rare. Note that this is NOT the same as the UCL Summer School."
           }
         }
       },
@@ -408,18 +444,21 @@
         "properties" : {
           "is_summer_school" : {
             "type" : "boolean",
-            "example" : false
+            "example" : false,
+            "description": "Whether the module is taught as part of the UCL Summer School (true) or standard academic teaching (false)."
           },
           "sessions" : {
             "type" : "object",
             "properties" : {
               "session_1" : {
                 "type" : "boolean",
-                "example" : false
+                "example" : false,
+                "description": "Whether the module is taught in the first summer school session of this academic year's summer. This will be false for all standard academic modules."
               },
               "session_2" : {
                 "type" : "boolean",
-                "example" : false
+                "example" : false,
+                "description": "Whether the module is taught in the second summer school session of this academic year's summer. This will be false for all standard academic modules."
               }
             }
           }
@@ -429,19 +468,23 @@
         "properties" : {
           "name" : {
             "type" : "string",
-            "example" : "HUNTER, Anthony (Prof)"
+            "example" : "HUNTER, Anthony (Prof)",
+            "description": "Name of lecturer"
           },
           "department_name" : {
             "type" : "string",
-            "example" : "Computer Science"
+            "example" : "Computer Science",
+            "description": "Human readable department name that owns the module."
           },
           "department_id" : {
             "type" : "string",
-            "example" : "COMPS_ENG"
+            "example" : "COMPS_ENG",
+            "description": "Department code that this module comes under."
           },
           "email" : {
             "type" : "string",
-            "example" : "ucachun@ucl.ac.yk"
+            "example" : "ucachun@ucl.ac.yk",
+            "description": "Email address for lecturer"
           }
         }
       },
@@ -449,7 +492,8 @@
         "properties" : {
           "name" : {
             "type" : "string",
-            "example" : "Roberts Building 421"
+            "example" : "Roberts Building 421",
+            "description": "Room name of the timetable event."
           },
           "address" : {
             "type" : "array",
@@ -458,31 +502,37 @@
             "items" : {
               "type" : "string"
             },
-            "example" : [ "Torrington Place", "London", "WC1E 7JE" ]
+            "example" : [ "Torrington Place", "London", "WC1E 7JE" ],
+            "description": "Address represented as an array."
           },
           "site_name" : {
             "type" : "string",
-            "example" : "Roberts Building"
+            "example" : "Roberts Building",
+            "description": "Name of the site / building where the event is happening."
           },
           "type" : {
             "type" : "string",
-            "example" : "CB"
+            "example" : "CB",
+            "description": "Type of the room eg., Centrally Bookable (CB) or Departmentally Bookable (DB)."
           },
           "capacity" : {
             "type" : "integer",
             "format" : "int64",
-            "example" : 94
+            "example" : 94,
+            "description": "Capacity of the room (e.g. how many seats are in a lecture theatre, or how many can be sat at tables in a flat space)."
           },
           "coordinates" : {
             "type" : "object",
             "properties" : {
               "lat" : {
                 "type" : "number",
-                "example" : null
+                "example" : null,
+                "description": "Latitude of location"
               },
               "lng" : {
                 "type" : "number",
-                "example" : null
+                "example" : null,
+                "description": "Longitude of location"
               }
             }
           }
@@ -492,11 +542,13 @@
         "properties" : {
           "department_id" : {
             "type" : "string",
-            "example" : "COMPS_ENG"
+            "example" : "COMPS_ENG",
+            "description": "Department code."
           },
           "name" : {
             "type" : "string",
-            "example" : "Computer Science"
+            "example" : "Computer Science",
+            "description": "Human readable department name."
           }
         }
       },
@@ -504,15 +556,18 @@
         "properties" : {
           "course_name" : {
             "type" : "string",
-            "example" : "MRes Computational Statistics and Machine Learning"
+            "example" : "MRes Computational Statistics and Machine Learning",
+            "description": "The human readable name for the module."
           },
           "course_id" : {
             "type" : "string",
-            "example" : "TMRCOMSSML01"
+            "example" : "TMRCOMSSML01",
+            "description": "The module code."
           },
           "years" : {
             "type" : "number",
-            "example" : 1
+            "example" : 1,
+            "description": "Length of the course given in years."
           }
         }
       },
@@ -520,35 +575,43 @@
         "properties" : {
           "roomname" : {
             "type" : "string",
-            "example" : "Wilkins Building (Main Building) Portico"
+            "example" : "Wilkins Building (Main Building) Portico",
+            "description": "The name of the room. It often includes the name of the site (building) as well."
           },
           "roomid" : {
             "type" : "string",
-            "example" : "Z4"
+            "example" : "Z4",
+            "description": "The room ID (not to be confused with the roomname)."
           },
           "siteid" : {
             "type" : "string",
-            "example" : "005"
+            "example" : "005",
+            "description": "Every room is inside a site (building). All sites have IDs."
           },
           "sitename" : {
             "type" : "string",
-            "example" : "Main Building"
+            "example" : "Main Building",
+            "description": "Every site (building) has a name. In some cases this is contained in the roomname as well."
           },
           "capacity" : {
             "type" : "string",
-            "example" : 50
+            "example" : 50,
+            "description": "Every room has a set capacity of how many people can fit inside it. When supplied, all rooms with the given capacity or greater will be returned."
           },
           "classification" : {
             "type" : "string",
-            "example" : "SS"
+            "example" : "SS",
+            "description": "The room type ID."
           },
           "classification_name" : {
             "type" : "string",
-            "example" : "Social Space"
+            "example" : "Social Space",
+            "description": "A human-readable version of the room type. AN = Anechoic Chamber, CI = Clinic Room, CF = Catering Facilities CFE = Cafe, CL = Cloakroom, CR = Classroom, ER = Equipment Room, IN = Installation, LA = Laboratory, LB = Library, LT = Lecture Theatre, MR = Meeting Room, OF = Office, PC1 = Public Cluster, PC2 = Public Cluster - Tutorial, PC3 = Public Cluster - Students, RC = Reverberation Chamber, SS = Social Space, STU = Studio, TH = Theatre. If the room type is unknown, this value will be set to 'Unknown Room Type'."
           },
           "automated" : {
             "type" : "string",
-            "example" : "N"
+            "example" : "N",
+            "description": "Whether bookings in this room will be confirmed automatically. A stands for automated, and N for not automated. P represents that the confirmation will be automatic, but only under certain circumstances."
           },
           "location" : {
             "type" : "object",
@@ -560,18 +623,21 @@
                 "items" : {
                   "type" : "string"
                 },
-                "example" : [ "Gower Street", "London", "WC1E 6BT" ]
+                "example" : [ "Gower Street", "London", "WC1E 6BT" ],
+                "description": "Address represented as an array."
               },
               "coordinates" : {
                 "type" : "object",
                 "properties" : {
                   "lat" : {
                     "type" : "number",
-                    "example" : "51.524699"
+                    "example" : "51.524699",
+                    "description": "Latitude of location"
                   },
                   "lng" : {
                     "type" : "number",
-                    "example" : "-0.13366"
+                    "example" : "-0.13366",
+                    "description": "Longitude of location"
                   }
                 }
               }
@@ -583,43 +649,53 @@
         "properties" : {
           "slotid" : {
             "type" : "number",
-            "example" : 998503
+            "example" : 998503,
+            "description": "Slot ID."
           },
           "end_time" : {
             "type" : "string",
-            "example" : "2016-09-02T18:00:00+00:00"
+            "example" : "2016-09-02T18:00:00+00:00",
+            "description": "End time of the event."
           },
           "description" : {
             "type" : "string",
-            "example" : "split weeks to assist rooming 29.06"
+            "example" : "split weeks to assist rooming 29.06",
+            "description": "Describes what the booking is. Could contain a module code (for example WIBRG005) or just the type of activity (for example Lecture)."
           },
           "roomname" : {
             "type" : "string",
-            "example" : "Torrington (1-19) 433"
+            "example" : "Torrington (1-19) 433",
+            "description": "The name of the room. It often includes the name of the site (building) as well."
           },
           "siteid" : {
             "type" : "number",
-            "example" : 86.0
+            "example" : 86.0,
+            "description": "Every room is inside a site (building). All sites have IDs."
           },
           "contact" : {
             "type" : "string",
-            "example" : "Ms Leah Markwick"
+            "example" : "Ms Leah Markwick",
+            "description": "The name of the person who made the booking. Substrings of the contact name can be used: Queries for Mark will include Mark Herbster. Sometimes, a society or student group may be the contact for a booking."
           },
           "weeknumber" : {
             "type" : "number",
-            "example" : 1
+            "example" : 1,
+            "description": "Timetabled week number."
           },
           "roomid" : {
             "type" : "number",
-            "example" : "433"
+            "example" : "433",
+            "description": "The room ID (not to be confused with the roomname)."
           },
           "start_time" : {
             "type" : "string",
-            "example" : "2016-09-02T09:00:00+00:00"
+            "example" : "2016-09-02T09:00:00+00:00",
+            "description": "Start time of the event."
           },
           "phone" : {
             "type" : "string",
-            "example" : "45699"
+            "example" : "45699",
+            "description": "Phone extension."
           }
         }
       },
@@ -627,15 +703,18 @@
         "properties" : {
           "type" : {
             "type" : "string",
-            "example" : "FFF"
+            "example" : "FFF",
+            "description": "The type of equipment. Either Fixed Equipment (FE) or Fixed Feature (FF)."
           },
           "description" : {
             "type" : "string",
-            "example" : "Managed PC"
+            "example" : "Managed PC",
+            "description": "What the piece of equipment actually is."
           },
           "units" : {
             "type" : "number",
-            "example" : 1
+            "example" : 1,
+            "description": "The number of times this piece of equipment exists in the room."
           }
         }
       },
@@ -643,19 +722,23 @@
         "properties" : {
           "name" : {
             "type" : "string",
-            "example" : "Jane Doe"
+            "example" : "Jane Doe",
+            "description": "The name of the person."
           },
           "status" : {
             "type" : "string",
-            "example" : "Student"
+            "example" : "Student",
+            "description": "Since only staff are returned through this API, this should always be Staff."
           },
           "department" : {
             "type" : "string",
-            "example" : "Depet of Med Phys & Biomedical Eng"
+            "example" : "Depet of Med Phys & Biomedical Eng",
+            "description": "The department the member of staff works under."
           },
           "email" : {
             "type" : "string",
-            "example" : "jane.doe.17@ucl.ac.uk"
+            "example" : "jane.doe.17@ucl.ac.uk",
+            "description": "The email of the person."
           }
         }
       },
@@ -663,48 +746,58 @@
         "properties" : {
           "room_status" : {
             "type" : "string",
-            "example" : "Room available all day. For accurate Library opening times, please check the Library Opening Hours website http://www.ucl.ac.uk/library/opening"
+            "example" : "Room available all day. For accurate Library opening times, please check the Library Opening Hours website http://www.ucl.ac.uk/library/opening",
+            "description": "Some information about the room."
           },
           "total_seats" : {
             "type" : "string",
-            "example" : "35"
+            "example" : "35",
+            "description": "Total number of computers available in the room."
           },
           "location" : {
             "type" : "object",
             "properties" : {
               "latitude" : {
                 "type" : "string",
-                "example" : "51.523481"
+                "example" : "51.523481",
+                "description": "Latitude of the location of the site."
               },
               "room_id" : {
                 "type" : "string",
-                "example" : "C14"
+                "example" : "C14",
+                "description": "Room ID."
               },
               "postcode" : {
                 "type" : "string",
-                "example" : "WC1E 6BT"
+                "example" : "WC1E 6BT",
+                "description": "Postcode of the location of the room."
               },
               "address" : {
                 "type" : "string",
-                "example" : "Malet Place, Gower Street"
+                "example" : "Malet Place, Gower Street",
+                "description": "Address of the room"
               },
               "room_name" : {
                 "type" : "string",
-                "example" : "Ground-Ground floor - Public"
+                "example" : "Ground-Ground floor - Public",
+                "description": "Name of the room."
               },
               "building_name" : {
                 "type" : "string",
-                "example" : "DMS Watson Science Library"
+                "example" : "DMS Watson Science Library",
+                "description": "Name of the building."
               },
               "longitude" : {
                 "type" : "string",
-                "example" : "-0.132571"
+                "example" : "-0.132571",
+                "description": "Longitude of the location of the site."
               }
             }
           },
           "free_seats" : {
             "type" : "string",
-            "example" : "28"
+            "example" : "28",
+            "description": "Number of free seats in the room."
           }
         }
       },
@@ -712,30 +805,37 @@
         "properties" : {
           "id" : {
             "type" : "number",
-            "example" : 46
+            "example" : 46,
+            "description": "The library survey's ID. This is used later to identify individual libraries."
           },
           "name" : {
             "type" : "string",
-            "example" : "UCL Institute of Education Library"
+            "example" : "UCL Institute of Education Library",
+            "description": "The human-readable name of the library."
           },
           "active" : {
             "type" : "boolean",
-            "example" : true
+            "example" : true,
+            "description": "Whether the survey is active and working."
           },
           "start_time" : {
             "type" : "string",
-            "example" : "09:00"
+            "example" : "09:00",
+            "description": "Standard UCL opening time supplied by the backend. This field should NOT be trusted as information on when a particular library is open. This is usually set to 09:00."
           },
           "end_time" : {
             "type" : "string",
-            "example" : "17:00"
+            "example" : "17:00",
+            "description": "Standard UCL closing time supplied by the backend. This field should NOT be trusted as information on when a particular library closes. This is usually set to 17:00."
           },
           "staff_survey" : {
             "type" : "number",
-            "example" : 0
+            "example" : 0,
+            "description": "Whether the survey represents a staff workspace (`true`) or a student work or study space (`false`). This is useful in apps where you set the `survey_filter` parameter to `all` and wish to do filtering of student and staff workspaces in your app or API as opposed to leaving the filtering to UCL API. By default, as `survey_filter` is set to `student` unless you specify otherwise, all workspaces will have this parameter set to `false`."
           },
           "maps" : {
             "type" : "array",
+            "description": "List of maps corresponding to regions within the library's survey.",
             "items" : {
               "$ref" : "#/components/schemas/map"
             }
@@ -745,14 +845,17 @@
             "properties" : {
               "coordinates" : {
                 "type" : "object",
+                "description": "Object containing a latitude and longitude.",
                 "properties" : {
                   "lat" : {
                     "type" : "string",
-                    "example" : "51.522897"
+                    "example" : "51.522897",
+                    "description": "Latitude of the survey location."
                   },
                   "lng" : {
                     "type" : "string",
-                    "example" : "-0.127864"
+                    "example" : "-0.127864",
+                    "description": "Longitude of the survey location."
                   }
                 }
               },
@@ -761,7 +864,8 @@
                 "items" : {
                   "type" : "string"
                 },
-                "example" : [ "Newsam Library and Archives", "20 Bedford Way", "London", "WC1H 0AL" ]
+                "example" : [ "Newsam Library and Archives", "20 Bedford Way", "London", "WC1H 0AL" ],
+                "description": "List containing address lines for the survey location."
               }
             }
           }
@@ -771,15 +875,18 @@
         "properties" : {
           "id" : {
             "type" : "number",
-            "example" : 114
+            "example" : 114,
+            "description": "The map's ID."
           },
           "name" : {
             "type" : "string",
-            "example" : "Level 4"
+            "example" : "Level 4",
+            "description": "The name of the mapped section of the library's survey, such as a level, room or wing."
           },
           "image_id" : {
             "type" : "number",
-            "example" : 123
+            "example" : 123,
+            "description": "The ID of the map's image. This can be used to download a CAD drawing of the map."
           }
         }
       },
@@ -787,15 +894,18 @@
         "properties" : {
           "id" : {
             "type" : "string",
-            "example" : "73"
+            "example" : "73",
+            "description": "The map's ID."
           },
           "name" : {
             "type" : "string",
-            "example" : "Level 3"
+            "example" : "Level 3",
+            "description": "The name of the mapped section of the library's survey, such as a level, room or wing."
           },
           "image_id" : {
             "type" : "string",
-            "example" : "79"
+            "example" : "79",
+            "description": "The ID of the map's image. This can be used to download a CAD drawing of the map."
           },
           "sensors" : {
             "type" : "object",
@@ -809,91 +919,112 @@
         "properties" : {
           "description_2" : {
             "type" : "string",
-            "example" : ""
+            "example" : "",
+            "description": "Description 2."
           },
           "floor" : {
             "type" : "string",
-            "example" : "False"
+            "example" : "False",
+            "description": "Whether the device is on the floor"
           },
           "y_pos" : {
             "type" : "string",
-            "example" : "14893.0"
+            "example" : "14893.0",
+            "description": "The Y coordinate position of the sensor on the map."
           },
           "description_3" : {
             "type" : "string",
-            "example" : ""
+            "example" : "",
+            "description": "Description 3."
           },
           "device_type" : {
             "type" : "string",
-            "example" : "Desk"
+            "example" : "Desk",
+            "description": "Type of seat. Usually this is Desk."
           },
           "host_address" : {
             "type" : "string",
-            "example" : "584"
+            "example" : "584",
+            "description": "Address of host."
           },
           "building_name" : {
             "type" : "string",
-            "example" : "IOE (20 B-Way)"
+            "example" : "IOE (20 B-Way)",
+            "description": "A short but human-readable name of the building that the sensor is in."
           },
           "room_description" : {
             "type" : "string",
-            "example" : ""
+            "example" : "",
+            "description": "A short but human-readable name of the room that the sensor is in."
           },
           "last_trigger_type" : {
             "type" : "string",
-            "example" : "Occupied"
+            "example" : "Occupied",
+            "description": "The last event the sensor recorded. Possible known values are Absent and Occupied, but this is not guaranteed. NB: only returned when return_states=true."
           },
           "survey_id" : {
             "type" : "string",
-            "example" : "46"
+            "example" : "46",
+            "description": "The ID of the library/survey that was requested in the query parameter."
           },
           "room_type" : {
             "type" : "string",
-            "example" : "Open Plan"
+            "example" : "Open Plan",
+            "description": "The type of the room."
           },
           "room_name" : {
             "type" : "string",
-            "example" : "324"
+            "example" : "324",
+            "description": "The name of the room."
           },
           "room_id" : {
             "type" : "string",
-            "example" : "291"
+            "example" : "291",
+            "description": "The ID of the room."
           },
           "location" : {
             "type" : "string",
-            "example" : ""
+            "example" : "",
+            "description": "The location of this sensor."
           },
           "survey_device_id" : {
             "type" : "string",
-            "example" : "8420"
+            "example" : "8420",
+            "description": "The ID of this survey device."
           },
           "share_id" : {
             "type" : "string",
-            "example" : "None"
+            "example" : "None",
+            "description": "The Share ID."
           },
           "x_pos" : {
             "type" : "string",
-            "example" : "32432.0"
+            "example" : "32432.0",
+            "description": "The X coordinate position of the sensor on the map."
           },
           "description_1" : {
             "type" : "string",
-            "example" : ""
+            "example" : "Description 1."
           },
           "hardware_id" : {
             "type" : "string",
-            "example" : "584001"
+            "example" : "584001",
+            "description": "A unique ID for the sensor."
           },
           "pir_address" : {
             "type" : "string",
-            "example" : "1"
+            "example" : "1",
+            "description": "PIR address."
           },
           "last_trigger_timestamp" : {
             "type" : "string",
-            "example" : "2018-02-15T22:42:28+00:00"
+            "example" : "2018-02-15T22:42:28+00:00",
+            "description": "The last time that this sensor's update value was recorded. NB: only returned when return_states=true."
           },
           "occupied" : {
             "type" : "boolean",
-            "example" : true
+            "example" : true,
+            "description": "Whether the seat is occupied or not. This takes into account UCL's thirty minute rule, so it's possible that the seat could have been marked as absent a few minutes ago, but this value is still set to true, as UCL allows students to leave their seat unattended for up to thirty minutes at a time (e.g. to use the bathroom or get food). Integrations that provide live seating information to students should use this value so as to have parity with the UCL Library seating policy and the UCL Library website. NB: only returned when return_states=true."
           }
         }
       },
@@ -901,11 +1032,13 @@
         "properties" : {
           "survey_id" : {
             "type" : "number",
-            "example" : 46
+            "example" : 46,
+            "description": "The ID of the library/survey that was requested in the query parameter."
           },
           "name" : {
             "type" : "string",
-            "example" : "UCL Institute of Education Library"
+            "example" : "UCL Institute of Education Library",
+            "description": "Name of survey location."
           },
           "averages" : {
             "type" : "object",
@@ -919,15 +1052,18 @@
         "properties" : {
           "sensors_absent" : {
             "type" : "number",
-            "example" : 291
+            "example" : 291,
+            "description": "The average number of free seats at time t."
           },
           "sensors_total" : {
             "type" : "number",
-            "example" : 324
+            "example" : 324,
+            "description": "The total number of used seats at time t."
           },
           "sensors_occupied" : {
             "type" : "number",
-            "example" : 33
+            "example" : 33,
+            "description": "The average number of used seats at time t."
           }
         }
       },
@@ -935,23 +1071,28 @@
         "properties" : {
           "sensors_absent" : {
             "type" : "number",
-            "example" : 47
+            "example" : 47,
+            "description": "Number of free seats in that section of the library."
           },
           "sensors_total" : {
             "type" : "number",
-            "example" : 50
+            "example" : 50,
+            "description": "The total number of used seats at time t."
           },
           "sensors_occupied" : {
             "type" : "number",
-            "example" : 3
+            "example" : 3,
+            "description": "Number of taken / occupied seats in that section of the library."
           },
           "name" : {
             "type" : "string",
-            "example" : "Open Area"
+            "example" : "Open Area",
+            "description": "The name of the survey (library)."
           },
           "id" : {
             "type" : "string",
-            "example" : "72"
+            "example" : "72",
+            "description": "ID of the library region (map)."
           }
         }
       },
@@ -959,23 +1100,28 @@
         "properties" : {
           "name" : {
             "type" : "string",
-            "example" : "Teaching Rooms"
+            "example" : "Teaching Rooms",
+            "description": "Name of the library region (map)."
           },
           "id" : {
             "type" : "string",
-            "example" : "73"
+            "example" : "73",
+            "description": "ID of the library region (map)."
           },
           "sensors_absent" : {
             "type" : "number",
-            "example" : 72
+            "example" : 72,
+            "description": "Number of free seats in that section of the library."
           },
           "sensors_total" : {
             "type" : "number",
-            "example" : 80
+            "example" : 80,
+            "description": "The total number of used seats at time t."
           },
           "sensors_occupied" : {
             "type" : "number",
-            "example" : 3
+            "example" : 3,
+            "description": "Number of taken / occupied seats in that section of the library."
           },
           "maps" : {
             "type" : "array",
