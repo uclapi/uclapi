@@ -6,7 +6,7 @@ dotenv.config({
 const webpack = require(`webpack`)
 const path = require(`path`)
 const TerserPlugin = require(`terser-webpack-plugin`)
-const OptimizeCSSAssetsPlugin = require(`optimize-css-assets-webpack-plugin`)
+const CssMinimizerPlugin = require(`css-minimizer-webpack-plugin`)
 const BundleTracker = require(`webpack-bundle-tracker`)
 
 const os = require(`os`)
@@ -121,5 +121,5 @@ if (os.platform() == `linux` && os.release().indexOf(`Microsoft`) != -1) {
   )
 }
 module.exports.optimization.minimizer.push(
-  new OptimizeCSSAssetsPlugin({})
+  new CssMinimizerPlugin()
 )
