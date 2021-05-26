@@ -102,6 +102,56 @@
           "type" : "string"
         }
       },
+      "datetime__gte": {
+        "name" : "datetime__gte",
+        "in" : "query",
+        "description" : "Filter result datetimes to be greater than or equal to this datetime.",
+        "required" : false,
+        "example": "2020-01-16T14:00:00",
+        "schema" : {
+          "type" : "string"
+        }
+      },
+      "datetime__lte": {
+        "name" : "datetime__lte",
+        "in" : "query",
+        "description" : "Filter result datetimes to be less than or equal to this datetime.",
+        "required" : false,
+        "example": "2020-01-16T15:00:00",
+        "schema" : {
+          "type" : "string"
+        }
+      },
+      "datetime__exact": {
+        "name" : "datetime__exact",
+        "in" : "query",
+        "description" : "Filter result datetimes to be equal to this datetime.",
+        "required" : false,
+        "example": "2020-01-16T14:50:00",
+        "schema" : {
+          "type" : "string"
+        }
+      },
+      "datetime__gt": {
+        "name" : "datetime__gt",
+        "in" : "query",
+        "description" : "Filter result datetimes to be greater than this datetime.",
+        "required" : false,
+        "example": "2020-01-16T14:00:00",
+        "schema" : {
+          "type" : "string"
+        }
+      },
+      "datetime__lt": {
+        "name" : "datetime__lt",
+        "in" : "query",
+        "description" : "Filter result datetimes to be less than this datetime.",
+        "required" : false,
+        "example": "2020-01-16T15:00:00",
+        "schema" : {
+          "type" : "string"
+        }
+      },
       "start_datetime" : {
         "name" : "start_datetime",
         "in" : "query",
@@ -181,6 +231,46 @@
         "required" : false,
         "schema" : {
           "type" : "string"
+        }
+      },
+      "sensor_id" : {
+        "name" : "sensor_id",
+        "in" : "query",
+        "description" : "The ID of a sensor.",
+        "required" : true,
+        "example": "20520001",
+        "schema" : {
+          "type" : "number"
+        }
+      },
+      "cursor" : {
+        "name" : "cursor",
+        "in" : "query",
+        "description" : "Cursor from which to fetch the next or previous page of results.",
+        "required" : false,
+        "example": "bz0xJnA9MjAyMC0wMS0xNysxMiUzQTQwJTNBMDA%3D",
+        "schema" : {
+          "type" : "string"
+        }
+      },
+      "page" : {
+        "name" : "page",
+        "in" : "query",
+        "description" : "Page of pagination results (see URL in `next` field).",
+        "required" : false,
+        "example": "2",
+        "schema" : {
+          "type" : "integer"
+        }
+      },
+      "active" : {
+        "name" : "active",
+        "in" : "query",
+        "description" : "If a survey location is active (true) or not (false).",
+        "required" : false,
+        "example": true,
+        "schema" : {
+          "type" : "boolean"
         }
       }
     },
@@ -1028,7 +1118,7 @@
           }
         }
       },
-      "historical_survey" : {
+      "sensor_average_survey" : {
         "properties" : {
           "survey_id" : {
             "type" : "number",
@@ -1045,6 +1135,83 @@
             "additionalProperties" : {
               "$ref" : "#/components/schemas/average"
             }
+          }
+        }
+      },
+      "historical_survey_data" : {
+        "properties" : {
+          "sensor_id" : {
+            "type" : "integer",
+            "example" : 20520001,
+            "description": "The ID of the sensor."
+          },
+          "datetime" : {
+            "type" : "string",
+            "example" : "2020-01-16T14:20:00",
+            "description": "The datetime of the sensor changing state."
+          },
+          "averages" : {
+            "type" : "integer",
+            "example": 1,
+            "description": "The state of the sensor (1=occupied; 0=absent; -1=unknown)"
+          }
+        }
+      },
+      "historical_sensor" : {
+        "properties" : {
+          "survey_id" : {
+            "type" : "integer",
+            "example" : 4,
+            "description": "The ID of the survey location."
+          },
+          "sensor_id" : {
+            "type" : "integer",
+            "example" : 20520001,
+            "description": "The ID of the sensor."
+          },
+          "hardware_id" : {
+            "type" : "integer",
+            "example" : 520001,
+            "description": "The hardware ID of the sensor."
+          },
+          "survey_device_id" : {
+            "type" : "integer",
+            "example": 1,
+            "description": "The survey device ID of the sensor."
+          }
+        }
+      },
+      "historical_survey" : {
+        "properties" : {
+          "survey_id" : {
+            "type" : "integer",
+            "example" : 4,
+            "description": "The ID of the survey location."
+          },
+          "name": {
+            "type": "string",
+            "example": "Bedford Way LG16",
+            "description": "The name of the survey location"
+          },
+          "start_datetime" : {
+            "type" : "string",
+            "example" : "2019-07-06T08:00:00",
+            "description": "The start datetime of the survey location."
+          },
+          "end_datetime" : {
+            "type" : "string",
+            "example" : "2030-12-31T20:00:00",
+            "description": "The end datetime of the survey location."
+          },
+          "active" : {
+            "type" : "boolean",
+            "example": true,
+            "description": "If the survey location is currently active (i.e., collecting new data)."
+          },
+          "last_updated" : {
+            "type" : "string",
+            "example": "2020-01-02T02:00:00",
+            "description": "The last time this survey location was updated."
           }
         }
       },
@@ -3003,7 +3170,7 @@
                     "surveys" : {
                       "type" : "array",
                       "items" : {
-                        "$ref" : "#/components/schemas/historical_survey"
+                        "$ref" : "#/components/schemas/sensor_average_survey"
                       }
                     }
                   }
@@ -3470,6 +3637,285 @@
                       "ok" : false,
                       "error" : "Either the IDs you sent were not integers, or they do not exist."
                     }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspaces/historical/data" : {
+      "get" : {
+        "summary" : "List Historical Data",
+        "description": "This endpoint provides historical sensor readings for all sensors in all survey locations. This must be restricted to a single survey location with survey_id and can be optionally restricted to a single sensor with sensor_id.\n\nTo specify a start time datetime__gte (datetime greater than or equal to) and for an end time datetime__lte (datetime less than or equal to) can be used. The deltas (changes) of a sensor will be returned.\n\nConforms to CursorPagination from Django REST.\n\nThis endpoint will return a dictionary of every sensor reading in the time range.",
+        "tags" : [ "Workspaces" ],
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/cursor"
+        }, {
+          "$ref" : "#/components/parameters/survey_id"
+        }, {
+          "$ref" : "#/components/parameters/sensor_id"
+        }, {
+          "$ref" : "#/components/parameters/datetime__gte"
+        }, {
+          "$ref" : "#/components/parameters/datetime__lte"
+        }, {
+          "$ref" : "#/components/parameters/datetime__exact"
+        }, {
+          "$ref" : "#/components/parameters/datetime__gt"
+        }, {
+          "$ref" : "#/components/parameters/datetime__lt"
+        } ],
+        "security" : [ {
+          "OAuthSecurity" : [ ],
+          "OAuthToken" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "ok" : {
+                      "type" : "boolean"
+                    },
+                    "data" : {
+                      "type" : "object",
+                      "properties": {
+                        "next": {
+                          "type": "string",
+                          "example": null
+                        },
+                        "previous": {
+                          "type": "string",
+                          "example": null
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/historical_survey_data"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Request error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                },
+                "examples" : {
+                  "1" : {
+                    "$ref" : "#/components/examples/ErrorNoToken"
+                  },
+                  "2" : {
+                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  },
+                  "3" : {
+                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  },
+                  "4" : {
+                    "$ref" : "#/components/examples/ErrorThrottling"
+                  },
+                  "5" : {
+                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  },
+                  "6" : {
+                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  },
+                  "7" : {
+                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspaces/historical/sensors" : {
+      "get" : {
+        "summary" : "List Historical Sensors",
+        "description": "This endpoint lists all sensors in a survey location, this includes inactive sensors (unlike get sensors from workspaces).\n\nConforms to StandardResultsSetPagination from Django REST.\n\nThis endpoint will return a list of every sensor.",
+        "tags" : [ "Workspaces" ],
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/page"
+        }, {
+          "$ref" : "#/components/parameters/survey_id"
+        }, {
+          "$ref" : "#/components/parameters/sensor_id"
+        } ],
+        "security" : [ {
+          "OAuthSecurity" : [ ],
+          "OAuthToken" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "ok" : {
+                      "type" : "boolean"
+                    },
+                    "data" : {
+                      "type" : "object",
+                      "properties": {
+                        "next": {
+                          "type": "string",
+                          "example": "https://uclapi.com/workspaces/historical/sensors?page=2"
+                        },
+                        "previous": {
+                          "type": "string",
+                          "example": null
+                        },
+                        "count": {
+                          "type": "integer",
+                          "example": 17936
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/historical_sensor"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Request error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                },
+                "examples" : {
+                  "1" : {
+                    "$ref" : "#/components/examples/ErrorNoToken"
+                  },
+                  "2" : {
+                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  },
+                  "3" : {
+                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  },
+                  "4" : {
+                    "$ref" : "#/components/examples/ErrorThrottling"
+                  },
+                  "5" : {
+                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  },
+                  "6" : {
+                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  },
+                  "7" : {
+                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workspaces/historical/surveys" : {
+      "get" : {
+        "summary" : "List Historical Surveys",
+        "description": "This endpoint lists all historical survey locations, this includes inactive survey locations (unlike get survey from workspaces).\n\nConforms to StandardResultsSetPagination from Django REST.",
+        "tags" : [ "Workspaces" ],
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/page"
+        }, {
+          "$ref" : "#/components/parameters/survey_id"
+        }, {
+          "$ref" : "#/components/parameters/active"
+        } ],
+        "security" : [ {
+          "OAuthSecurity" : [ ],
+          "OAuthToken" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "ok" : {
+                      "type" : "boolean"
+                    },
+                    "surveys" : {
+                      "type" : "object",
+                      "properties": {
+                        "next": {
+                          "type": "string",
+                          "example": "https://uclapi.com/workspaces/historical/sensors?page=2"
+                        },
+                        "previous": {
+                          "type": "string",
+                          "example": null
+                        },
+                        "count": {
+                          "type": "integer",
+                          "example": 17936
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/historical_survey"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Request error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                },
+                "examples" : {
+                  "1" : {
+                    "$ref" : "#/components/examples/ErrorNoToken"
+                  },
+                  "2" : {
+                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  },
+                  "3" : {
+                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  },
+                  "4" : {
+                    "$ref" : "#/components/examples/ErrorThrottling"
+                  },
+                  "5" : {
+                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  },
+                  "6" : {
+                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  },
+                  "7" : {
+                    "$ref" : "#/components/examples/ErrorInactiveToken"
                   }
                 }
               }
