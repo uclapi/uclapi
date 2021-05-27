@@ -28,15 +28,9 @@ module.exports = {
   optimization: {
     minimize: true,
     minimizer: [],  // This list is built below as per platform requirements
+    moduleIds: `deterministic`,
     splitChunks: {
-      name: false,
-      cacheGroups: {
-        vendors: {
-          chunks: `all`,
-          name: `vendors`,
-          test: /[\\/]node_modules[\\/]/,
-        },
-      },
+      chunks: `all`,
     },
   },
   plugins: [
@@ -47,7 +41,6 @@ module.exports = {
     new BundleTracker({
       filename: `../backend/uclapi/static/webpack-stats.json`,
     }),
-    new webpack.HashedModuleIdsPlugin(),
   ],
   module: {
     rules: [
@@ -61,9 +54,9 @@ module.exports = {
       {
         test: /\.scss|css$/,
         use: [
-          { loader: `style-loader` },
-          { loader: `css-loader` },
-          { loader: `sass-loader` },
+          {loader: `style-loader`},
+          {loader: `css-loader`},
+          {loader: `sass-loader`},
         ],
       },
       {
@@ -106,20 +99,15 @@ module.exports = {
 // https://stackoverflow.com/a/44356310/5297057
 if (os.platform() == `linux` && os.release().indexOf(`Microsoft`) != -1) {
   module.exports.optimization.minimizer.push(
-    new TerserPlugin({
-      cache: true,
-      sourceMap: true,
-    })
+    new TerserPlugin({}),
   )
 } else {
   module.exports.optimization.minimizer.push(
     new TerserPlugin({
-      cache: true,
-      sourceMap: true,
       parallel: true,
-    })
+    }),
   )
 }
 module.exports.optimization.minimizer.push(
-  new OptimizeCSSAssetsPlugin({})
+  new OptimizeCSSAssetsPlugin({}),
 )
