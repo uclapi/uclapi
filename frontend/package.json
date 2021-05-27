@@ -14,10 +14,10 @@
   "author": "UCL API",
   "scripts": {
     "analyse": "npx webpack-bundle-analyzer stats.json",
-    "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js --progress --colors",
+    "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js --progress",
     "pre-commit": "lint-staged",
-    "profile": "cross-env NODE_ENV=production webpack --config webpack.prod.js --progress --colors --profile --json > stats.json",
-    "start": "cross-env NODE_ENV=development webpack --config webpack.dev.js --watch --progress --colors",
+    "profile": "cross-env NODE_ENV=production webpack --config webpack.prod.js --progress --profile --json > stats.json",
+    "start": "cross-env NODE_ENV=development webpack --config webpack.dev.js --watch --progress",
     "test": "jest",
     "test-generate": "jest --updateSnapshot"
   },
