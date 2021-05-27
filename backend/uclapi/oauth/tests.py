@@ -7,7 +7,8 @@ import unittest.mock
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import transaction
 from django.test import Client, TestCase
-from rest_framework.test import APIRequestFactory
+from django_mock_queries.query import MockModel, MockSet
+from rest_framework.test import APIRequestFactory, APITestCase
 from django.core import signing
 from parameterized import parameterized
 
@@ -1189,3 +1190,78 @@ class DeleteAToken(TestCase):
                 "token for this user, so no action was taken."
             )
         )
+
+
+class OAuthUserDataTestCase(APITestCase):
+    """Tests the /oauth/user/data endpoint"""
+    fake_student = MockSet(
+        MockModel(
+            qtype2='UPI'
+        )
+    )
+    studenta_objects = unittest.mock.patch(
+        'timetable.models.StudentsA.objects',
+        fake_student
+    )
+    fake_locks = MockSet(
+        MockModel(
+            a=True,
+            b=False
+        )
+    )
+    lock_objects = unittest.mock.patch(
+        'timetable.models.Lock.objects',
+        fake_locks
+    )
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = User.objects.create(
+            cn="cn",
+            department="Dept of UCL API",
+            email="cryptic@ucl.ac.uk",
+            full_name="First Last",
+            given_name="First",
+            employee_id="upi",
+            raw_intranet_groups="group-all",
+            sn="Last",
+            mail="fname.lname.yr.20@ucl.ac.uk"
+        )
+        cls.dev = User.objects.create(email="test@ucl.ac.uk", cn="test", given_name="Test Test")
+        cls.app = App.objects.create(user=cls.dev, name="An App")
+        cls.oauth_scope = OAuthScope.objects.create()
+        cls.oauth_token = OAuthToken.objects.create(app=cls.app, user=cls.user, scope=cls.oauth_scope)
+
+    def setUp(self):
+        self.expected_user_data = {
+            "ok": True,
+            "cn": "cn",
+            "department": "Dept of UCL API",
+            "email": "cryptic@ucl.ac.uk",
+            "full_name": "First Last",
+            "given_name": "First",
+            "upi": "upi",
+            "scope_number": 0,
+            "ucl_groups": ["group-all"],
+            "sn": "Last",
+            "mail": "fname.lname.yr.20@ucl.ac.uk"
+        }
+
+    def test_userdata_non_student(self):
+        """Tests that userdata is correctly returned for a non-student"""
+        response = self.client.get(
+            '/oauth/user/data', {'token': self.oauth_token.token, 'client_secret': self.app.client_secret})
+        self.assertEqual(response.status_code, 200)
+        self.expected_user_data['is_student'] = False
+        self.assertJSONEqual(response.content.decode('utf-8'), self.expected_user_data)
+
+    @studenta_objects
+    @lock_objects
+    def test_userdata_student(self):
+        """Tests that userdata is correctly returned for a student"""
+        response = self.client.get(
+            '/oauth/user/data', {'token': self.oauth_token.token, 'client_secret': self.app.client_secret})
+        self.assertEqual(response.status_code, 200)
+        self.expected_user_data['is_student'] = True
+        self.assertJSONEqual(response.content.decode('utf-8'), self.expected_user_data)
