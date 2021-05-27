@@ -365,7 +365,7 @@ exports[`Components Dashboard App 1`] = `
     className="rc-collapse-item"
   >
     <div
-      aria-expanded="false"
+      aria-expanded={false}
       className="rc-collapse-header"
       onClick={[Function]}
       onKeyPress={[Function]}
