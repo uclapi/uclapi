@@ -1,6 +1,5 @@
 import Warning from 'Layout/Warning.jsx'
 import React from 'react'
-import ReactDOM from 'react-dom'
 
 const InternalServerErrorPage = () => (
   <Warning
@@ -9,7 +8,4 @@ const InternalServerErrorPage = () => (
   />
 )
 
-ReactDOM.render(
-  <InternalServerErrorPage />,
-  document.querySelector(`.app`)
-)
+export default InternalServerErrorPage
