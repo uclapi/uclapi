@@ -112,6 +112,11 @@ jobs:
           cd ./backend/uclapi && \
           coverage run --source='.' --omit='*migrations*' manage.py test --testrunner 'uclapi.custom_test_runner.NoDbTestRunner' --settings=uclapi.settings_mocked
 
+      - name: Run frontend tests
+        run: |
+          cd ./frontend && \
+          npm test
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
