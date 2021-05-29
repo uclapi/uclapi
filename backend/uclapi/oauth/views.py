@@ -488,7 +488,6 @@ def token(request):
 )
 def userdata(request, *args, **kwargs):
     token = kwargs['token']
-    print("Checking student status")
     try:
         get_student_by_upi(
             token.user.employee_id
@@ -507,7 +506,9 @@ def userdata(request, *args, **kwargs):
         "upi": token.user.employee_id,
         "scope_number": token.scope.scope_number,
         "is_student": is_student,
-        "ucl_groups": token.user.raw_intranet_groups.split(';')
+        "ucl_groups": token.user.raw_intranet_groups.split(';'),
+        "sn": token.user.sn,
+        "mail": token.user.mail
     }
 
     return PrettyJsonResponse(
