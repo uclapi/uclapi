@@ -1,6 +1,5 @@
 import Warning from 'Layout/Warning.jsx'
 import React from 'react'
-import ReactDOM from 'react-dom'
 
 const NotFoundPage = () => (
   <Warning
@@ -9,7 +8,4 @@ const NotFoundPage = () => (
   />
 )
 
-ReactDOM.render(
-  <NotFoundPage />,
-  document.querySelector(`.app`)
-)
+export default NotFoundPage
