@@ -1,3 +1,4 @@
+import logging
 from abc import ABC, abstractmethod
 from base64 import b64encode
 from collections import defaultdict
@@ -61,16 +62,16 @@ class TestEndpoint(Endpoint):
         self._results = defaultdict(dict, responses)
 
     def request(self, url: str):
-        print("Requesting: %s" % url)
+        logging.info("Requesting: %s" % url)
         return self._results[url]
 
     def request_fragment(self, url: str):
-        print("Requesting fragment: %s" % url)
+        logging.info("Requesting fragment: %s" % url)
         return self._results[url]
 
     def image(self, image_id: int):
         url = self._const.URL_IMAGE.format(image_id)
-        print("Requesting image: %s" % url)
+        logging.info("Requesting image: %s" % url)
         entry = self._results[url]
         if "image" not in entry or "content_type" not in entry:
             return "", ""

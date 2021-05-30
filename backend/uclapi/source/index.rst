@@ -18,6 +18,7 @@ Welcome to UCL API's documentation!
    Search <searchEndpoint>
    timetable
    workspaces
+   workspaces-historical
 
 
 
