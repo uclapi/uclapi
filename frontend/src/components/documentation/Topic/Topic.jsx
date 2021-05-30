@@ -3,10 +3,10 @@
 import { Code } from 'Layout/Items.jsx'
 import React from 'react'
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter'
-import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars'
-import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript'
-import py from 'react-syntax-highlighter/dist/esm/languages/hljs/python'
-import sh from 'react-syntax-highlighter/dist/esm/languages/hljs/shell'
+import html from 'react-syntax-highlighter/dist/cjs/languages/hljs/htmlbars'
+import js from 'react-syntax-highlighter/dist/cjs/languages/hljs/javascript'
+import py from 'react-syntax-highlighter/dist/cjs/languages/hljs/python'
+import sh from 'react-syntax-highlighter/dist/cjs/languages/hljs/shell'
 import './Topic.scss'
 
 SyntaxHighlighter.registerLanguage(`javascript`, js)
@@ -46,7 +46,7 @@ const Topic = ({
     )
       ? `response`
       : `raw-examples`
-  
+
   return (
     <div className="row">
       <div className="col text header">

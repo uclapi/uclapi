@@ -1,16 +1,28 @@
 version: 2
+
 updates:
-- package-ecosystem: pip
+- package-ecosystem: "pip"
   directory: "/backend/uclapi"
   schedule:
-    interval: daily
+    interval: "weekly"
+    day: "monday"
     time: "08:00"
-    timezone: Europe/London
-  open-pull-requests-limit: 10
-- package-ecosystem: npm
+    timezone: "Europe/London"
+  open-pull-requests-limit: 5
+  reviewers:
+    - "uclapi/ucl-api-team"
+  allow: 
+    - dependency-type: "direct"
+    
+- package-ecosystem: "npm"
   directory: "/frontend"
   schedule:
-    interval: daily
+    interval: "weekly"
+    day: "monday"
     time: "08:00"
-    timezone: Europe/London
-  open-pull-requests-limit: 10
+    timezone: "Europe/London"
+  open-pull-requests-limit: 5
+  reviewers:
+    - "uclapi/ucl-api-team"
+  allow: 
+    - dependency-type: "direct"

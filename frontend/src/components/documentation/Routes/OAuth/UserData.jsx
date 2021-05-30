@@ -137,6 +137,24 @@ const UserData = ({ activeLanguage }) => (
           example="true"
           description="Whether the user is a student in this academic year."
         />
+        <Cell
+          name="ucl_groups"
+          extra="string"
+          example="ucl-all;ucl-ug;"
+          description="A semi-colon delimited string of all UCL intranet groups that the user belongs to"
+        />
+        <Cell
+          name="sn"
+          extra="string"
+          example="Mrkvicka"
+          description="Given second name/surname of the user. Can be an empty string."
+        />
+        <Cell
+          name="mail"
+          extra="string"
+          example="martin.mrkvicka.20@ucl.ac.uk"
+          description="Alternative (pretty format) E-mail for the given user."
+        />
       </Table>
     </Topic>
 

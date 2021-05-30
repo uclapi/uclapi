@@ -2,7 +2,6 @@ import '../lib/ErrorReporting'
 
 import Warning from 'Layout/Warning.jsx'
 import React from 'react'
-import ReactDOM from 'react-dom'
 
 const WarningPage = () => (
   <Warning
@@ -11,7 +10,4 @@ const WarningPage = () => (
   />
 )
 
-ReactDOM.render(
-  <WarningPage />,
-  document.querySelector(`.app`)
-)
+export default WarningPage

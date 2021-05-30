@@ -10,11 +10,10 @@ import {
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import { Footer, NavBar } from 'Layout/Items.jsx'
 import React, { useState , useEffect } from 'react'
-import ReactDOM from 'react-dom'
 
-import LogInLayout from '../components/appsettings/LogInLayout.jsx'
-import SettingsLayout from '../components/appsettings/SettingsLayout.jsx'
-import Api from '../lib/Api'
+import LogInLayout from '../../components/appsettings/LogInLayout.jsx'
+import SettingsLayout from '../../components/appsettings/SettingsLayout.jsx'
+import Api from '../../lib/Api'
 
 const {
   500: cyan500,
@@ -94,7 +93,4 @@ const AppSettings = () => {
   }
 }
 
-ReactDOM.render(
-  <AppSettings />,
-  document.querySelector(`.app`)
-)
+export default AppSettings

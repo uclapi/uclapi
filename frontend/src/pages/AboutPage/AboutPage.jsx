@@ -9,7 +9,6 @@ import {
 } from 'Layout/Items.jsx'
 import PropTypes from 'prop-types'
 import React from 'react'
-import ReactDOM from 'react-dom'
 import 'Styles/common/uclapi.scss'
 import 'Styles/navbar.scss'
 
@@ -126,7 +125,6 @@ class AboutPage extends React.Component {
   }
 }
 
-ReactDOM.render(
-  <AboutPage />,
-  document.querySelector(`.app`)
-)
+
+
+export default AboutPage
