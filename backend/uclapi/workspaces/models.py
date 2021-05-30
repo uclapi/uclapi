@@ -4,6 +4,7 @@ Models for Workspaces app
 from datetime import datetime
 
 from django.db import models
+from django.db.models import Index
 
 
 class Sensors(models.Model):
@@ -60,6 +61,10 @@ class Historical(models.Model):
                                     name="historical_composite_primary_key")
         ]
         ordering = ["survey_id", "sensor_id", "datetime"]
+        indexes = [
+            Index(fields=["survey_id", "datetime"]),
+            Index(fields=["survey_id", "sensor_id", "datetime"])
+        ]
 
 
 class Surveys(models.Model):
