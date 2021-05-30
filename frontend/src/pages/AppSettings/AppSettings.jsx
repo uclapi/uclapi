@@ -1,4 +1,4 @@
-import '../lib/ErrorReporting'
+import '../../lib/ErrorReporting'
 import 'Styles/common/uclapi.scss'
 import 'Styles/navbar.scss'
 

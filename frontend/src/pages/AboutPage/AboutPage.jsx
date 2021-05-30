@@ -1,4 +1,4 @@
-import '../lib/ErrorReporting'
+import '../../lib/ErrorReporting'
 
 // Team descriptions
 import { current, previous } from 'Layout/data/team_members.jsx'
