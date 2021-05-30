@@ -1,7 +1,7 @@
 import * as RequestGenerator from 'Layout/data/RequestGenerator.jsx'
 import React, { useCallback, useState } from 'react'
 import SyntaxHighlighter from 'react-syntax-highlighter'
-import { androidstudio } from 'react-syntax-highlighter/dist/esm/styles/hljs'
+import { androidstudio } from 'react-syntax-highlighter/dist/cjs/styles/hljs'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 
 
