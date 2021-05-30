@@ -10,6 +10,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME
 pushd /web/uclapi/backend/uclapi
 . venv/bin/activate
 ./manage.py feed_occupeye_cache
+./manage.py feed_occupeye_archive --mini
 
 echo "OccupEye caching operation done"
 echo
