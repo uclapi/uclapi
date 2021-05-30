@@ -222,7 +222,7 @@ class OccupEyeCacheTestCase(TestCase):
         call_command("feed_occupeye_cache", "--test")
 
     def test_commands_mini(self):
-        call_command("feed_occupeye_cache_mini", "--test")
+        call_command("feed_occupeye_cache", "--mini", "--test")
 
 
 class OccupEyeApiTestCase(TestCase):
@@ -601,7 +601,7 @@ class OccupEyeApiTestCase(TestCase):
         )
 
     def test_get_historical_time_usage_data(self):
-        historical = self.api.get_historical_time_usage_data("9991", 1, "student")
+        historical = self.api.get_time_averages("9991", 1, "student")
         self.assert_nested(
             historical,
             [

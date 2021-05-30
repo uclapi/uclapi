@@ -1,16 +1,21 @@
 import re
 from base64 import b64decode
 
+from django.utils.decorators import method_decorator
+from rest_framework import generics
 from rest_framework.decorators import api_view
+from rest_framework.exceptions import ParseError
 
 from common.decorators import uclapi_protected_endpoint
-from common.helpers import PrettyJsonResponse as JsonResponse
+from common.helpers import PrettyJsonResponse as JsonResponse, pretty_response
 from common.helpers import RateLimitHttpResponse as HttpResponse
 from .image_builder import ImageBuilder
-# from .occupeye import BadOccupEyeRequest, OccupEyeApi
+from .models import Sensors, Historical, Surveys
 from .occupeye.api import OccupEyeApi
 from .occupeye.constants import OccupEyeConstants
 from .occupeye.exceptions import BadOccupEyeRequest
+from .pagination import HistoricalListCursorPagination
+from .serializers import SensorsSerializer, HistoricalSerializer, SurveysSerializer
 
 
 @api_view(["GET"])
@@ -25,7 +30,7 @@ def get_surveys(request, *args, **kwargs):
             {
                 "ok": False,
                 "error": "The survey filter you provided is invalid. Valid survey filters are: "
-                + str(consts.VALID_SURVEY_FILTERS),
+                         + str(consts.VALID_SURVEY_FILTERS),
             },
             custom_header_data=kwargs,
         )
@@ -147,7 +152,7 @@ def get_survey_sensors_summary(request, *args, **kwargs):
             {
                 "ok": False,
                 "error": "The survey filter you provided is invalid. Valid survey filters are: "
-                + str(consts.VALID_SURVEY_FILTERS),
+                         + str(consts.VALID_SURVEY_FILTERS),
             },
             custom_header_data=kwargs,
         )
@@ -175,7 +180,7 @@ def get_survey_sensors_summary(request, *args, **kwargs):
 
 @api_view(["GET"])
 @uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces")
-def get_historical_time_data(request, *args, **kwargs):
+def get_averages_time(request, *args, **kwargs):
     api = OccupEyeApi()
     consts = OccupEyeConstants()
 
@@ -186,7 +191,7 @@ def get_historical_time_data(request, *args, **kwargs):
             {
                 "ok": False,
                 "error": "The survey filter you provided is invalid. Valid survey filters are: "
-                + str(consts.VALID_SURVEY_FILTERS),
+                         + str(consts.VALID_SURVEY_FILTERS),
             },
             custom_header_data=kwargs,
         )
@@ -212,7 +217,7 @@ def get_historical_time_data(request, *args, **kwargs):
             {
                 "ok": False,
                 "error": "You did not specify an integer number of days of historical days. Valid options are: "
-                + str(consts.VALID_HISTORICAL_DATA_DAYS),
+                         + str(consts.VALID_HISTORICAL_DATA_DAYS),
             },
             custom_header_data=kwargs,
         )
@@ -226,7 +231,7 @@ def get_historical_time_data(request, *args, **kwargs):
             {
                 "ok": False,
                 "error": "You did not specify a valid number of days of historical days. Valid options are: "
-                + str(consts.VALID_HISTORICAL_DATA_DAYS),
+                         + str(consts.VALID_HISTORICAL_DATA_DAYS),
             },
             custom_header_data=kwargs,
         )
@@ -234,7 +239,7 @@ def get_historical_time_data(request, *args, **kwargs):
         return response
 
     try:
-        data = api.get_historical_time_usage_data(survey_ids, day_count, survey_filter)
+        data = api.get_time_averages(survey_ids, day_count, survey_filter)
     except BadOccupEyeRequest:
         response = JsonResponse(
             {
@@ -351,3 +356,37 @@ def get_live_map(request, *args, **kwargs):
     response["Content-Length"] = len(map_svg)
 
     return response
+
+
+class SurveysList(generics.ListAPIView):
+    queryset = Surveys.objects.all()
+    serializer_class = SurveysSerializer
+    filterset_fields = {"survey_id": ["exact"], "active": ["exact"]}
+
+    @method_decorator(uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces-Historical"))
+    def list(self, request, *args, **kwargs):
+        return pretty_response(super().list(request, *args, **kwargs), custom_header_data=kwargs)
+
+
+class SensorsList(generics.ListAPIView):
+    queryset = Sensors.objects.all()
+    serializer_class = SensorsSerializer
+    filterset_fields = {"survey_id": ["exact"], "sensor_id": ["exact"]}
+
+    @method_decorator(uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces-Historical"))
+    def list(self, request, *args, **kwargs):
+        return pretty_response(super().list(request, *args, **kwargs), custom_header_data=kwargs)
+
+
+class HistoricalList(generics.ListAPIView):
+    queryset = Historical.objects.all().order_by("datetime")
+    serializer_class = HistoricalSerializer
+    pagination_class = HistoricalListCursorPagination
+    filterset_fields = {"survey_id": ["exact"], "sensor_id": ["exact"],
+                        "datetime": ["gte", "lte", "exact", "gt", "lt"]}
+
+    @method_decorator(uclapi_protected_endpoint(personal_data=False, last_modified_redis_key="Workspaces-Historical"))
+    def list(self, request, *args, **kwargs):
+        if self.request.query_params.get("survey_id", None) is None:
+            raise ParseError("survey_id is a required field")
+        return pretty_response(super().list(request, *args, **kwargs), custom_header_data=kwargs)
