@@ -13,11 +13,11 @@ class OccupEyeConstants:
     """
 
     # Environment Variables
-    DEPLOYMENT_ID = os.environ["OCCUPEYE_DEPLOYMENT_ID"]
-    DEPLOYMENT_NAME = os.environ["OCCUPEYE_DEPLOYMENT_NAME"]
-    BASE_URL = os.environ["OCCUPEYE_BASE_URL"]
-    USERNAME = os.environ["OCCUPEYE_USERNAME"]
-    PASSWORD = os.environ["OCCUPEYE_PASSWORD"]
+    DEPLOYMENT_ID = os.getenv("OCCUPEYE_DEPLOYMENT_ID", "UCL")
+    DEPLOYMENT_NAME = os.getenv("OCCUPEYE_DEPLOYMENT_NAME", "UCL")
+    BASE_URL = os.getenv("OCCUPEYE_BASE_URL", "https://cloud.occupeye.com/OccupEye")
+    USERNAME = os.getenv("OCCUPEYE_USERNAME", None)
+    PASSWORD = os.getenv("OCCUPEYE_PASSWORD", None)
 
     # Redis Keys
     ACCESS_TOKEN_KEY = "occupeye:access_token"

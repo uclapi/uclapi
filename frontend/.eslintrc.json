@@ -1,7 +1,8 @@
 {
   "env": {
     "node": true,
-    "browser": true
+    "browser": true,
+    "jest/globals": true
   },
   "extends": [
     "eslint:recommended",
@@ -31,7 +32,7 @@
     "max-len": [
       "warn",
       {
-        "code": 119,
+        "code": 120,
         "ignoreComments": true,
         "ignoreTrailingComments": true,
         "ignoreUrls": true,
@@ -110,7 +111,8 @@
     "json-format",
     "sonarjs",
     "disable",
-    "react-hooks"
+    "react-hooks",
+    "jest"
   ],
   "parser": "babel-eslint",
   "parserOptions": {
