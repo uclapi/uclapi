@@ -1,3 +1,5 @@
+import '../../lib/ErrorReporting'
+
 import Warning from 'Layout/Warning.jsx'
 import React from 'react'
 

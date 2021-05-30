@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import re
 from distutils.util import strtobool
 from django.core.management.utils import get_random_secret_key
 
@@ -74,7 +75,6 @@ INSTALLED_APPS = [
     'oauth',
     'timetable',
     'common',
-    'raven.contrib.django.raven_compat',
     'corsheaders',
     'workspaces',
     'webpack_loader'
@@ -159,9 +159,38 @@ DATABASE_POOL_ARGS = {
 
 DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
 
-RAVEN_CONFIG = {
-    'dsn': os.environ.get("SENTRY_DSN"),
-}
+if os.environ.get('SENTRY_DSN'):
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+    from sentry_sdk.integrations.redis import RedisIntegration
+
+    def remove_token(event, _):
+        scrubbers_keys = ['token', 'client_secret', 'X-RateLimit-Remaining', 'X-RateLimit-Limit',
+                          'X-RateLimit-Retry-After']
+        # Regexes: tokens, client id, client secret
+        scrubbers_regex = [re.compile(r"(?<=uclapi-)(.*?)(?=&|$|')"), re.compile(r"\d{16}.\d{16}"),
+                           re.compile(r"[a-f0-9]{64}")]
+        event = recursive_explore(event, scrubbers_keys, scrubbers_regex)
+        return event
+
+    def recursive_explore(var, keys, regex):
+        if isinstance(var, list):
+            return [recursive_explore(v, keys, regex) for v in var]
+        if isinstance(var, dict):
+            return {k: recursive_explore(v, keys, regex) for k, v in var.items() if k not in keys}
+        print(var)
+        for reg in regex:
+            if reg.search(str(var)):
+                var = reg.sub('REDACTED', str(var), 0)
+        return var
+
+    sentry_sdk.init(
+        dsn=os.environ.get('SENTRY_DSN'),
+        integrations=[DjangoIntegration(), RedisIntegration()],
+        traces_sample_rate=0.01,
+        send_default_pii=False,
+        before_send=remove_token
+    )
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),

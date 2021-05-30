@@ -1,3 +1,5 @@
+import '../../lib/ErrorReporting'
+
 // Team descriptions
 import { current, previous } from 'Layout/data/team_members.jsx'
 // Common Components
