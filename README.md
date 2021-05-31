@@ -404,4 +404,3 @@ which aims to help developers contribute to our code. To make it simply run ```m
 while in the backend directory. You can then navigate to the build directory and open up
 index.html in your favourite browser to view the documentation. It can also be built in pdf, latex
 and a few other formats.
- 
