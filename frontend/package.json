@@ -65,6 +65,7 @@
       "^Dashboard(.*)$": "<rootDir>/src/components/dashboard$1",
       "^Styles(.*)$": "<rootDir>/src/sass$1"
     },
+    "testEnvironment": "jsdom",
     "transform": {
       "\\.[jt]sx?$": "babel-jest"
     }
