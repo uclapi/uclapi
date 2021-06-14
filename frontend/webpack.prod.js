@@ -41,6 +41,9 @@ module.exports = {
     new BundleTracker({
       filename: `../backend/uclapi/static/webpack-stats.json`,
     }),
+    new webpack.ProvidePlugin({
+      Buffer: [`buffer`, `Buffer`], // For swagger-ui-react
+    }),
   ],
   module: {
     rules: [
