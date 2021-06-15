@@ -132,7 +132,7 @@
     "node-sass": "^6.0.0",
     "npm-check-updates": "^11.4.1",
     "react-test-renderer": "^17.0.2",
-    "sass-loader": "^11.0.1",
+    "sass-loader": "^12.1.0",
     "style-loader": "^2.0.0",
     "stylelint": "^13.12.0",
     "stylelint-config-sass-guidelines": "^8.0.0",
