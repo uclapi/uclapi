@@ -1,3 +1,4 @@
+import '../../lib/ErrorReporting'
 import {
   cyan,
   grey,
@@ -9,9 +10,8 @@ import {
   StylesProvider,
 } from '@material-ui/core/styles'
 import React from 'react'
-import ReactDOM from 'react-dom'
 import 'Styles/documentation.scss'
-import DocumentationComponent from '../components/documentation'
+import DocumentationComponent from '../../components/documentation'
 
 const {
   500: cyan500,
@@ -55,7 +55,4 @@ const Documentation = () => (
   </StylesProvider>
 )
 
-ReactDOM.render(
-  <Documentation />,
-  document.querySelector(`.app`)
-)
+export default Documentation

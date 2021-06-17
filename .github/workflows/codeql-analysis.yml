@@ -25,6 +25,7 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.pull_request.labels.*.names, 'dependencies') }}
 
     strategy:
       fail-fast: false

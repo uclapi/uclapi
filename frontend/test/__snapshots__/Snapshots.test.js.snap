@@ -1,0 +1,1611 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Components Appsettings LogInLayout 1`] = `
+<div
+  className="log-in-layout"
+>
+  <div
+    className="container"
+  >
+    <h1>
+      Sign in to manage app settings
+    </h1>
+    <a
+      href="https://www.uclapi.com"
+    >
+      <button
+        className="MuiButtonBase-root MuiButton-root MuiButton-text"
+        disabled={false}
+        label="Log in"
+        onBlur={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        tabIndex={0}
+        type="button"
+      >
+        <span
+          className="MuiButton-label"
+        />
+      </button>
+    </a>
+  </div>
+</div>
+`;
+
+exports[`Components Appsettings SettingsLayout 1`] = `
+<div
+  className="container splash-parallax vertical-padding undefined"
+  style={
+    Object {
+      "height": "fit-content",
+      "minHeight": "100vh",
+    }
+  }
+>
+  <div
+    className="no-vertical-align"
+  >
+    <div
+      className="row undefined"
+      style={
+        Object {
+          "justifyContent": "center",
+          "marginLeft": "auto",
+          "marginRight": "auto",
+          "marginTop": "50px",
+          "width": "90%",
+        }
+      }
+    >
+      <h1
+        style={
+          Object {
+            "margin": "20px 0",
+            "marginLeft": 0,
+            "textAlign": "left",
+          }
+        }
+      >
+        Account
+      </h1>
+      <div
+        className="column "
+        style={
+          Object {
+            "margin": 0,
+            "padding": 0,
+            "width": "100%",
+          }
+        }
+      >
+        <div
+          className="uclapi-card uclapi-card-default uclapi-card-shadow"
+          style={
+            Object {
+              "padding": 0,
+            }
+          }
+        >
+          <div
+            className="container transparent undefined"
+            style={Object {}}
+          >
+            <div
+              className="no-vertical-align"
+            >
+              <div
+                className="row undefined"
+                style={
+                  Object {
+                    "justifyContent": "center",
+                    "marginLeft": "auto",
+                    "marginRight": "auto",
+                    "width": "100%",
+                  }
+                }
+              >
+                <div
+                  className="column-always-inline "
+                  style={
+                    Object {
+                      "margin": 0,
+                      "padding": 0,
+                      "width": "60%",
+                    }
+                  }
+                >
+                  <div
+                    className="uclapi-card uclapi-card-transparent"
+                    style={
+                      Object {
+                        "padding": "30px",
+                      }
+                    }
+                  >
+                    <h2
+                      style={
+                        Object {
+                          "marginBottom": 0,
+                          "marginLeft": 0,
+                          "textAlign": "left",
+                        }
+                      }
+                    >
+                      
+                    </h2>
+                    <h4
+                      style={
+                        Object {
+                          "marginBottom": 0,
+                          "marginLeft": 0,
+                          "textAlign": "left",
+                        }
+                      }
+                    >
+                      
+                    </h4>
+                  </div>
+                </div>
+                <div
+                  className="column-always-inline "
+                  style={
+                    Object {
+                      "margin": 0,
+                      "padding": 0,
+                      "width": "40%",
+                    }
+                  }
+                >
+                  <div
+                    className="uclapi-card uclapi-card-transparent"
+                    style={
+                      Object {
+                        "padding": "30px",
+                      }
+                    }
+                  >
+                    <a
+                      className="uclapi-button default-transition background-color-transition alternate-button "
+                      href="/logout"
+                      style={
+                        Object {
+                          "cursor": "pointer",
+                          "float": "right",
+                          "width": "fit-content",
+                        }
+                      }
+                    >
+                      Logout
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h1
+        style={
+          Object {
+            "margin": "20px 0",
+            "marginLeft": 0,
+            "textAlign": "left",
+          }
+        }
+      >
+        Permissions
+      </h1>
+      <div
+        className="column "
+        style={
+          Object {
+            "margin": 0,
+            "padding": 0,
+            "width": "100%",
+          }
+        }
+      >
+        <div
+          className="uclapi-card uclapi-card-default uclapi-card-shadow"
+          style={
+            Object {
+              "padding": 0,
+            }
+          }
+        >
+          <div
+            className="container transparent undefined"
+            style={Object {}}
+          >
+            <div
+              className="no-vertical-align"
+            >
+              <div
+                className="row undefined"
+                style={
+                  Object {
+                    "justifyContent": "center",
+                    "marginLeft": "auto",
+                    "marginRight": "auto",
+                    "paddingBottom": 20,
+                    "paddingTop": 20,
+                    "width": "100%",
+                  }
+                }
+              >
+                <div
+                  className="column default"
+                  style={
+                    Object {
+                      "width": "50%",
+                    }
+                  }
+                >
+                  <div
+                    className="image-view"
+                    style={
+                      Object {
+                        "height": "405px",
+                        "marginLeft": "auto",
+                        "marginRight": "auto",
+                        "width": "367px",
+                      }
+                    }
+                  >
+                    <img
+                      alt="ucl asssitant screen shot"
+                      height="405px"
+                      src="test-file-stub"
+                      style={Object {}}
+                      width="367px"
+                    />
+                  </div>
+                </div>
+                <div
+                  className="column "
+                  style={
+                    Object {
+                      "flexDirection": "column",
+                      "width": "50%",
+                    }
+                  }
+                >
+                  <h2
+                    style={
+                      Object {
+                        "textAlign": "left",
+                      }
+                    }
+                  >
+                    No authorised apps yet. Try UCL Assistant?
+                  </h2>
+                  <h5
+                    style={
+                      Object {
+                        "textAlign": "left",
+                      }
+                    }
+                  >
+                    UCL Assistant is a productivity app for students and staff at UCL. It has been designed by students to be as reliable and user friendly as possible.
+                  </h5>
+                  <h5
+                    style={
+                      Object {
+                        "textAlign": "left",
+                      }
+                    }
+                  >
+                    The app has many different features but one of our favourites is the ability to view your timetable in a weekly view. The app highlights your current commitments to save you time as you rush about University. Check it out below!
+                  </h5>
+                  <a
+                    className="uclapi-button default-transition background-color-transition alternate-button "
+                    href="/marketplace/uclassistant"
+                    style={
+                      Object {
+                        "marginLeft": "auto",
+                        "marginRight": "auto",
+                        "width": "fit-content",
+                      }
+                    }
+                  >
+                    Download
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Components Dashboard AccordionIcon 1`] = `
+<div
+  className="accordion-icon"
+>
+  <svg
+    fill="none"
+    height="1em"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    style={
+      Object {
+        "color": undefined,
+      }
+    }
+    viewBox="0 0 24 24"
+    width="1em"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <polyline
+      points="6 9 12 15 18 9"
+    />
+  </svg>
+</div>
+`;
+
+exports[`Components Dashboard App 1`] = `
+<div
+  className="rc-collapse"
+  role={null}
+>
+  <div
+    className="rc-collapse-item"
+  >
+    <div
+      aria-expanded={false}
+      className="rc-collapse-header"
+      onClick={[Function]}
+      onKeyPress={[Function]}
+      role="button"
+      tabIndex={0}
+    >
+      <div
+        className="accordion-icon"
+      >
+        <svg
+          fill="none"
+          height="1em"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          style={
+            Object {
+              "color": undefined,
+            }
+          }
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <polyline
+            points="9 18 15 12 9 6"
+          />
+        </svg>
+      </div>
+      sample-project
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Components Dashboard Navbar 1`] = `
+<div
+  className="navbar centered"
+>
+  <img
+    src="test-file-stub"
+  />
+  <div
+    className="logo-text"
+  >
+    <div>
+      UCL API
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Components Documentation Cell 1`] = `
+<div
+  className="row cell"
+>
+  <div
+    className="col4 attribute"
+  >
+    <p />
+    <p />
+    <p
+      className="extra"
+    />
+  </div>
+  <div
+    className="col8"
+  >
+    <p />
+    <code />
+  </div>
+</div>
+`;
+
+exports[`Components Documentation GetInvolved GetInvolved 1`] = `
+<div
+  className="row"
+>
+  <div
+    className="col text header"
+  >
+    <h1
+      id="get-involved"
+    >
+      Get Involved
+    </h1>
+    <p>
+      The full API including front-end, documentation and the back-end is all open sourced at 
+      <a
+        href="https://github.com/uclapi/uclapi"
+      >
+        github.com/uclapi/uclapi
+      </a>
+      .
+    </p>
+    <p>
+      Any and all contributions are welcome! If you spot a typo or error, feel free to fix it and submit a pull request 😃
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Components Documentation LanguageTabs 1`] = `
+<div>
+  <div
+    className="main"
+    style={
+      Object {
+        "padding": "50px",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`Components Documentation Meta Welcome 1`] = `
+<div
+  className="row"
+>
+  <div
+    className="col text header"
+  >
+    <h1
+      id="welcome"
+    >
+      Welcome
+    </h1>
+    <p>
+      Yay, you made it! 🎉
+    </p>
+    <p>
+      Welcome to the documentation for UCL’s brand new open API. Each service is listed below with examples in three different programming languages (Shell script using cURL, Python and JavaScript) to help you get going as quickly as possible.
+    </p>
+    <p>
+      The API will be made up of several services, each of which will be separately explained. Every service will be documented here with important information, tips and examples.
+    </p>
+    <h2
+      id="get-api-key"
+    >
+      Get Your API Key
+    </h2>
+    <p>
+      Before you can use the API you should head to the API Dashboard and sign up using your UCL user account. Once logged into the dashboard simply name your app and you’ll be given a key that you can use to access all the services. Simple!
+    </p>
+    <h2
+      id="rate-limits"
+    >
+      API Rate Limits
+    </h2>
+    <p>
+      Rate limiting of the API is primarily on a per-user basis. The limit is calculated against the user, across all their access tokens.
+    </p>
+    <p>
+      The limit is 10,000 requests per day and resets every day at midnight, London time.
+    </p>
+    <p>
+      When a request is throttled, the response returned by the server has HTTP Status Code “429 Too Many Requests”. It includes a Retry-After header with the number of seconds the client is throttled for.
+    </p>
+    <p>
+      If you would like your rate limit to be increased, contact us at 
+      <a
+        href="mailto:isd.apiteam@ucl.ac.uk"
+      >
+        isd.apiteam@ucl.ac.uk
+      </a>
+    </p>
+    <h2
+      id="expiry-times"
+    >
+      API Data Freshness
+    </h2>
+    <p>
+      Much of the data available from the API is served from cache. Bookings and Timetable data are updated every twenty minutes from UCL, and we update the 
+      <a
+        href="#workspaces"
+      >
+        Library Study Spaces (Workspaces) API
+      </a>
+       every two minutes. The 
+      <code>
+        Last-Modified
+      </code>
+       header will provide the time that the most recent caching operation completed in 
+      <a
+        href="https://stackoverflow.com/a/21121453"
+      >
+        RFC 2616
+      </a>
+       format. Endpoints that do not rely on cached data will return the current timestamp in this field instead.
+    </p>
+    <p>
+      This allows your application to judge whether the data is stale, or might need refreshing. For example, if a booking is added to the database and the data you are using is more than twenty minutes old, it may be that the booking is not visible to you yet. Consider creating a fresh request in this case.
+    </p>
+    <p>
+      If you notice that the 
+      <code>
+        Last-Modified
+      </code>
+       timestamp you see is unreasonably old, please 
+      <a
+        href="mailto:isd.apiteam@ucl.ac.uk"
+      >
+        get in contact with us
+      </a>
+       ASAP to report this as it may indicate very stale data and an issue at our end.
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Components Documentation Routes Analytics MostPopularMethod 1`] = `<component />`;
+
+exports[`Components Documentation Routes Analytics MostPopularService 1`] = `<component />`;
+
+exports[`Components Documentation Routes Analytics RemainingQuota 1`] = `<component />`;
+
+exports[`Components Documentation Routes Analytics TotalNumRequests 1`] = `<component />`;
+
+exports[`Components Documentation Routes Analytics UsersPerApp 1`] = `<component />`;
+
+exports[`Components Documentation Routes Analytics UsersPerAppPerDept 1`] = `<component />`;
+
+exports[`Components Documentation Routes OAuth Authorise 1`] = `<component />`;
+
+exports[`Components Documentation Routes OAuth OAuthIntro 1`] = `<component />`;
+
+exports[`Components Documentation Routes OAuth StudentNumber 1`] = `<component />`;
+
+exports[`Components Documentation Routes OAuth Token 1`] = `<component />`;
+
+exports[`Components Documentation Routes OAuth UserData 1`] = `<component />`;
+
+exports[`Components Documentation Routes Resources DesktopAvaliability 1`] = `<component />`;
+
+exports[`Components Documentation Routes RoomBookings GetBookings 1`] = `<component />`;
+
+exports[`Components Documentation Routes RoomBookings GetEquipment 1`] = `<component />`;
+
+exports[`Components Documentation Routes RoomBookings GetFreeRooms 1`] = `<component />`;
+
+exports[`Components Documentation Routes RoomBookings GetRooms 1`] = `<component />`;
+
+exports[`Components Documentation Routes RoomBookings Webhooks 1`] = `<component />`;
+
+exports[`Components Documentation Routes Search GetPeople 1`] = `<component />`;
+
+exports[`Components Documentation Routes Timetable GetDataCourses 1`] = `<component />`;
+
+exports[`Components Documentation Routes Timetable GetDataCoursesModule 1`] = `<component />`;
+
+exports[`Components Documentation Routes Timetable GetDataDepartments 1`] = `<component />`;
+
+exports[`Components Documentation Routes Timetable GetDataModules 1`] = `<component />`;
+
+exports[`Components Documentation Routes Timetable GetPersonalTimetable 1`] = `<component />`;
+
+exports[`Components Documentation Routes Timetable GetTimetableByModules 1`] = `<component />`;
+
+exports[`Components Documentation Routes Workspaces GetImage 1`] = `<component />`;
+
+exports[`Components Documentation Routes Workspaces GetLastSensorUpdate 1`] = `<component />`;
+
+exports[`Components Documentation Routes Workspaces GetLiveImage 1`] = `<component />`;
+
+exports[`Components Documentation Routes Workspaces GetSensorHistoricalTimeData 1`] = `<component />`;
+
+exports[`Components Documentation Routes Workspaces GetSensorSummary 1`] = `<component />`;
+
+exports[`Components Documentation Routes Workspaces GetSensors 1`] = `<component />`;
+
+exports[`Components Documentation Routes Workspaces GetSurveys 1`] = `<component />`;
+
+exports[`Components Documentation SectionHeader 1`] = `
+<div
+  className="row"
+>
+  <div
+    className="col text header"
+  >
+    <h1
+      className="section-header"
+      id=""
+    >
+      
+    </h1>
+  </div>
+</div>
+`;
+
+exports[`Components Documentation Sidebar MenuContent 1`] = `
+<div
+  className="MuiList-root MuiList-padding"
+>
+  <div
+    aria-disabled={false}
+    className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+    onBlur={[Function]}
+    onClick={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    role="button"
+    tabIndex={0}
+  >
+    <div
+      className="MuiListItemText-root"
+    >
+      <span
+        className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+      >
+        Meta
+      </span>
+    </div>
+    <img
+      src="test-file-stub"
+    />
+  </div>
+  <div
+    aria-disabled={false}
+    className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+    onBlur={[Function]}
+    onClick={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    role="button"
+    tabIndex={0}
+  >
+    <div
+      className="MuiListItemText-root"
+    >
+      <span
+        className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+      >
+        OAuth
+      </span>
+    </div>
+    <img
+      src="test-file-stub"
+    />
+  </div>
+  <div
+    aria-disabled={false}
+    className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+    onBlur={[Function]}
+    onClick={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    role="button"
+    tabIndex={0}
+  >
+    <div
+      className="MuiListItemText-root"
+    >
+      <span
+        className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+      >
+        Room Bookings
+      </span>
+    </div>
+    <img
+      src="test-file-stub"
+    />
+  </div>
+  <div
+    aria-disabled={false}
+    className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+    onBlur={[Function]}
+    onClick={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    role="button"
+    tabIndex={0}
+  >
+    <div
+      className="MuiListItemText-root"
+    >
+      <span
+        className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+      >
+        Search
+      </span>
+    </div>
+    <img
+      src="test-file-stub"
+    />
+  </div>
+  <div
+    aria-disabled={false}
+    className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+    onBlur={[Function]}
+    onClick={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    role="button"
+    tabIndex={0}
+  >
+    <div
+      className="MuiListItemText-root"
+    >
+      <span
+        className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+      >
+        Timetable
+      </span>
+    </div>
+    <img
+      src="test-file-stub"
+    />
+  </div>
+  <div
+    aria-disabled={false}
+    className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+    onBlur={[Function]}
+    onClick={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    role="button"
+    tabIndex={0}
+  >
+    <div
+      className="MuiListItemText-root"
+    >
+      <span
+        className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+      >
+        Resources
+      </span>
+    </div>
+    <img
+      src="test-file-stub"
+    />
+  </div>
+  <div
+    aria-disabled={false}
+    className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+    onBlur={[Function]}
+    onClick={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    role="button"
+    tabIndex={0}
+  >
+    <div
+      className="MuiListItemText-root"
+    >
+      <span
+        className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+      >
+        Workspaces
+      </span>
+    </div>
+    <img
+      src="test-file-stub"
+    />
+  </div>
+  <div
+    aria-disabled={false}
+    className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+    onBlur={[Function]}
+    onClick={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    role="button"
+    tabIndex={0}
+  >
+    <div
+      className="MuiListItemText-root"
+    >
+      <span
+        className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+      >
+        Workspaces Historical
+      </span>
+    </div>
+    <img
+      src="test-file-stub"
+    />
+  </div>
+  <div
+    aria-disabled={false}
+    className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+    onBlur={[Function]}
+    onClick={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    role="button"
+    tabIndex={0}
+  >
+    <div
+      className="MuiListItemText-root"
+    >
+      <span
+        className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+      >
+        Analytics
+      </span>
+    </div>
+    <img
+      src="test-file-stub"
+    />
+  </div>
+  <a
+    aria-disabled={false}
+    className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+    href="#get-involved"
+    onBlur={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    tabIndex={0}
+  >
+    <div
+      className="MuiListItemText-root"
+    >
+      <span
+        className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+      >
+        Get Involved
+      </span>
+    </div>
+  </a>
+  <hr
+    className="MuiDivider-root"
+  />
+  <li
+    className="MuiListSubheader-root MuiListSubheader-sticky MuiListSubheader-gutters"
+  >
+    Links
+  </li>
+  <a
+    aria-disabled={false}
+    className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+    href="https://github.com/uclapi"
+    onBlur={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    tabIndex={0}
+  >
+    <div
+      className="MuiListItemText-root"
+    >
+      <span
+        className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+      >
+        GitHub
+      </span>
+    </div>
+  </a>
+  <a
+    aria-disabled={false}
+    className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+    href="https://facebook.com/uclapi"
+    onBlur={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    tabIndex={0}
+  >
+    <div
+      className="MuiListItemText-root"
+    >
+      <span
+        className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+      >
+        Facebook
+      </span>
+    </div>
+  </a>
+  <a
+    aria-disabled={false}
+    className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+    href="https://twitter.com/uclapi"
+    onBlur={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    tabIndex={0}
+  >
+    <div
+      className="MuiListItemText-root"
+    >
+      <span
+        className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+      >
+        Twitter
+      </span>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`Components Documentation Sidebar Section 1`] = `
+<div
+  aria-disabled={false}
+  className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+  onBlur={[Function]}
+  onClick={[Function]}
+  onDragLeave={[Function]}
+  onFocus={[Function]}
+  onKeyDown={[Function]}
+  onKeyUp={[Function]}
+  onMouseDown={[Function]}
+  onMouseLeave={[Function]}
+  onMouseUp={[Function]}
+  onTouchEnd={[Function]}
+  onTouchMove={[Function]}
+  onTouchStart={[Function]}
+  role="button"
+  tabIndex={0}
+>
+  <div
+    className="MuiListItemText-root"
+  >
+    <span
+      className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+    >
+      
+    </span>
+  </div>
+  <img
+    src="test-file-stub"
+  />
+  <span
+    className="MuiTouchRipple-root"
+  />
+</div>
+`;
+
+exports[`Components Documentation Sidebar Sidebar 1`] = `
+Array [
+  <div
+    className="default"
+  >
+    <div
+      className="MuiDrawer-root MuiDrawer-docked"
+    >
+      <div
+        className="MuiPaper-root MuiDrawer-paper MuiDrawer-paperAnchorLeft MuiDrawer-paperAnchorDockedLeft MuiPaper-elevation0"
+      >
+        <div
+          className="menu-container"
+        >
+          <div
+            className="MuiList-root MuiList-padding"
+          >
+            <div
+              aria-disabled={false}
+              className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              <div
+                className="MuiListItemText-root"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Meta
+                </span>
+              </div>
+              <img
+                src="test-file-stub"
+              />
+            </div>
+            <div
+              aria-disabled={false}
+              className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              <div
+                className="MuiListItemText-root"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  OAuth
+                </span>
+              </div>
+              <img
+                src="test-file-stub"
+              />
+            </div>
+            <div
+              aria-disabled={false}
+              className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              <div
+                className="MuiListItemText-root"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Room Bookings
+                </span>
+              </div>
+              <img
+                src="test-file-stub"
+              />
+            </div>
+            <div
+              aria-disabled={false}
+              className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              <div
+                className="MuiListItemText-root"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Search
+                </span>
+              </div>
+              <img
+                src="test-file-stub"
+              />
+            </div>
+            <div
+              aria-disabled={false}
+              className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              <div
+                className="MuiListItemText-root"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Timetable
+                </span>
+              </div>
+              <img
+                src="test-file-stub"
+              />
+            </div>
+            <div
+              aria-disabled={false}
+              className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              <div
+                className="MuiListItemText-root"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Resources
+                </span>
+              </div>
+              <img
+                src="test-file-stub"
+              />
+            </div>
+            <div
+              aria-disabled={false}
+              className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              <div
+                className="MuiListItemText-root"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Workspaces
+                </span>
+              </div>
+              <img
+                src="test-file-stub"
+              />
+            </div>
+            <div
+              aria-disabled={false}
+              className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              <div
+                className="MuiListItemText-root"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Workspaces Historical
+                </span>
+              </div>
+              <img
+                src="test-file-stub"
+              />
+            </div>
+            <div
+              aria-disabled={false}
+              className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              <div
+                className="MuiListItemText-root"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Analytics
+                </span>
+              </div>
+              <img
+                src="test-file-stub"
+              />
+            </div>
+            <a
+              aria-disabled={false}
+              className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+              href="#get-involved"
+              onBlur={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              tabIndex={0}
+            >
+              <div
+                className="MuiListItemText-root"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Get Involved
+                </span>
+              </div>
+            </a>
+            <hr
+              className="MuiDivider-root"
+            />
+            <li
+              className="MuiListSubheader-root MuiListSubheader-sticky MuiListSubheader-gutters"
+            >
+              Links
+            </li>
+            <a
+              aria-disabled={false}
+              className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+              href="https://github.com/uclapi"
+              onBlur={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              tabIndex={0}
+            >
+              <div
+                className="MuiListItemText-root"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  GitHub
+                </span>
+              </div>
+            </a>
+            <a
+              aria-disabled={false}
+              className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+              href="https://facebook.com/uclapi"
+              onBlur={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              tabIndex={0}
+            >
+              <div
+                className="MuiListItemText-root"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Facebook
+                </span>
+              </div>
+            </a>
+            <a
+              aria-disabled={false}
+              className="MuiButtonBase-root MuiListItem-root MuiListItem-gutters MuiListItem-button"
+              href="https://twitter.com/uclapi"
+              onBlur={[Function]}
+              onDragLeave={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onMouseUp={[Function]}
+              onTouchEnd={[Function]}
+              onTouchMove={[Function]}
+              onTouchStart={[Function]}
+              tabIndex={0}
+            >
+              <div
+                className="MuiListItemText-root"
+              >
+                <span
+                  className="MuiTypography-root MuiListItemText-primary MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Twitter
+                </span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>,
+  <div
+    className="mobile tablet"
+  >
+    <div
+      className="uclapi-button default-transition background-color-transition default-button hamburger-button"
+      onClick={[Function]}
+      style={
+        Object {
+          "width": "fit-content",
+        }
+      }
+    >
+      <svg
+        fill="none"
+        height="1em"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        style={
+          Object {
+            "color": undefined,
+          }
+        }
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect
+          height="18"
+          rx="2"
+          ry="2"
+          width="18"
+          x="3"
+          y="3"
+        />
+        <line
+          x1="9"
+          x2="9"
+          y1="3"
+          y2="21"
+        />
+      </svg>
+    </div>
+  </div>,
+]
+`;
+
+exports[`Components Documentation Table 1`] = `
+<div
+  className="table"
+>
+  <h1 />
+</div>
+`;
+
+exports[`Components Documentation Topic Topic 1`] = `
+<div
+  className="row"
+>
+  <div
+    className="col text header"
+  >
+    <div
+      className="react-tabs"
+      data-tabs={true}
+      onClick={[Function]}
+      onKeyDown={[Function]}
+    >
+      <ul
+        className="react-tabs__tab-list"
+        role="tablist"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Pages 404 NotFoundPage 1`] = `<component />`;
+
+exports[`Pages 505 InternalServerErrorPage 1`] = `<component />`;
+
+exports[`Pages AboutPage AboutPage 1`] = `<component />`;
+
+exports[`Pages AppSettings AppSettings 1`] = `<component />`;
+
+exports[`Pages Authorise Authorise 1`] = `<component />`;
+
+exports[`Pages Dashboard Dashboard 1`] = `<component />`;
+
+exports[`Pages Documentation Documentation 1`] = `<component />`;
+
+exports[`Pages Home HomePage 1`] = `<component />`;
+
+exports[`Pages Marketplace Marketplace 1`] = `<component />`;
+
+exports[`Pages Warning Warning 1`] = `<component />`;

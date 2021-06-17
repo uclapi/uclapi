@@ -61,10 +61,10 @@ class OccupEyeApi:
             # If we want to filter out staff surveys and this is a staff
             # one then we skip over it.
             if (
-                survey_filter == "student"
-                and survey["staff_survey"]
-                or survey_filter == "staff"
-                and not survey["staff_survey"]
+                    survey_filter == "student"
+                    and survey["staff_survey"]
+                    or survey_filter == "staff"
+                    and not survey["staff_survey"]
             ):
                 continue
 
@@ -285,7 +285,7 @@ class OccupEyeApi:
 
         return summary_list
 
-    def get_historical_time_usage_data(self, survey_ids, day_count, survey_filter):
+    def get_time_averages(self, survey_ids, day_count, survey_filter):
         surveys_data = self.get_surveys(survey_filter)
 
         filtered_surveys = survey_ids_to_surveys(surveys_data, survey_ids)

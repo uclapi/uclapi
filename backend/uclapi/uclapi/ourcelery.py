@@ -2,10 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 import celery
 import os
-import raven
 
-from raven.contrib.celery import register_signal as raven_register_signal, \
-    register_logger_signal as raven_register_logger_signal
 
 from common.helpers import read_dotenv
 
@@ -17,9 +14,15 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'uclapi.settings')
 class Celery(celery.Celery):
     def on_configure(self):
         if os.environ.get("SENTRY_DSN") is not None:
-            client = raven.Client(os.environ.get("SENTRY_DSN"))
-            raven_register_logger_signal(client)
-            raven_register_signal(client)
+            import sentry_sdk
+            from sentry_sdk.integrations.django import DjangoIntegration
+
+            sentry_sdk.init(
+                dsn=os.environ.get("SENTRY_DSN"),
+                integrations=[DjangoIntegration()],
+                traces_sample_rate=0.01,
+                send_default_pii=True
+            )
 
 
 app = Celery('uclapi')

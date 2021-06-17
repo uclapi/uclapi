@@ -143,6 +143,20 @@ const menuContents = {
       href: `#workspaces/images/map/live`,
     },
   ],
+  "Workspaces Historical": [
+    {
+      text: `List Surveys`,
+      href: `#workspaces/historical/surveys`,
+    },
+    {
+      text: `List Sensors`,
+      href: `#workspaces/historical/sensors`,
+    },
+    {
+      text: `List Data`,
+      href: `#workspaces/historical/data`,
+    },
+  ],
   Analytics: [
     {
       text: `Get Number of Requests`,
@@ -189,7 +203,7 @@ const MenuComponent = () => (
           Array.isArray(sectionContent) ? (
             <Section sectionTitle={sectionTitle} key={sectionTitle}>
               {
-                sectionContent.map(({ text, href }) => (
+                sectionContent.map(({text, href}) => (
                   <ListItem
                     button
                     component="a"
@@ -200,27 +214,27 @@ const MenuComponent = () => (
                       boxSizing: `border-box`,
                     }}
                   >
-                    <ListItemText primary={text} />
+                    <ListItemText primary={text}/>
                   </ListItem>
                 ))
               }
             </Section>
           ) : (
-              <ListItem
-                button
-                component="a"
-                href={sectionContent.href}
-                key={sectionContent.href}
-              >
-                <ListItemText
-                  primary={sectionContent.text}
-                />
-              </ListItem>
-            )
+            <ListItem
+              button
+              component="a"
+              href={sectionContent.href}
+              key={sectionContent.href}
+            >
+              <ListItemText
+                primary={sectionContent.text}
+              />
+            </ListItem>
+          ),
         )
     }
 
-    <Divider />
+    <Divider/>
 
     <ListSubheader>Links</ListSubheader>
     {

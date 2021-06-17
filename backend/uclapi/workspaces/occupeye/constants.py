@@ -13,11 +13,11 @@ class OccupEyeConstants:
     """
 
     # Environment Variables
-    DEPLOYMENT_ID = os.environ["OCCUPEYE_DEPLOYMENT_ID"]
-    DEPLOYMENT_NAME = os.environ["OCCUPEYE_DEPLOYMENT_NAME"]
-    BASE_URL = os.environ["OCCUPEYE_BASE_URL"]
-    USERNAME = os.environ["OCCUPEYE_USERNAME"]
-    PASSWORD = os.environ["OCCUPEYE_PASSWORD"]
+    DEPLOYMENT_ID = os.getenv("OCCUPEYE_DEPLOYMENT_ID", "UCL")
+    DEPLOYMENT_NAME = os.getenv("OCCUPEYE_DEPLOYMENT_NAME", "UCL")
+    BASE_URL = os.getenv("OCCUPEYE_BASE_URL", "https://cloud.occupeye.com/OccupEye")
+    USERNAME = os.getenv("OCCUPEYE_USERNAME", None)
+    PASSWORD = os.getenv("OCCUPEYE_PASSWORD", None)
 
     # Redis Keys
     ACCESS_TOKEN_KEY = "occupeye:access_token"
@@ -51,7 +51,8 @@ class OccupEyeConstants:
 
     # Cad-Cap Endpoints
     URL_MAPS_BY_SURVEY = URL_BASE_DEPLOYMENT + "/api/Maps/?surveyid={}"
-    URL_SURVEYS = URL_BASE_DEPLOYMENT + "/api/Surveys/"
+    URL_SURVEYS = URL_BASE_DEPLOYMENT + "/api/Surveys"
+    URL_SURVEYS_ALL = URL_SURVEYS + "?active_only=false"
     URL_SURVEY_DEVICES = URL_BASE_DEPLOYMENT + "/api/SurveyDevices?surveyid={}"
 
     URL_SURVEY_DEVICES_LATEST = URL_BASE_DEPLOYMENT + "/api/SurveySensorsLatest/{}"
@@ -74,8 +75,17 @@ class OccupEyeConstants:
         "GroupBy[]=TimeSlot&"
     )
 
+    URL_ARCHIVE = URL_BASE_DEPLOYMENT + "/api/Query?"\
+                                        "StartDate={}&StartTime=00%3A00&"\
+                                        "EndDate={}&EndTime=00%3A00&"\
+                                        "SurveyID={}&QueryType=SensorActivity"
+
     # Valid historical time periods
     VALID_HISTORICAL_DATA_DAYS = [1, 7, 30]
+
+    # Max cost for a historical request
+    # a single sensor running in one year will generate 52,000 entries
+    MAX_SURVEY_REQUESTS = 2500000
 
     # Set a filter for surveys designed for staff only
     STAFF_SURVEY_IDS = [88]

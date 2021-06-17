@@ -11,18 +11,23 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-import requests
+import re
 from distutils.util import strtobool
+from django.core.management.utils import get_random_secret_key
+
+import requests
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", get_random_secret_key())
+if SECRET_KEY == "" or SECRET_KEY is None:
+    SECRET_KEY = get_random_secret_key()
+
 CACHET_TOKEN = os.environ.get("CACHET_TOKEN")
 CACHET_URL = os.environ.get("CACHET_URL")
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -63,13 +68,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
     'dashboard',
     'marketplace',
     'roombookings',
     'oauth',
     'timetable',
     'common',
-    'raven.contrib.django.raven_compat',
     'corsheaders',
     'workspaces',
     'webpack_loader'
@@ -154,10 +159,45 @@ DATABASE_POOL_ARGS = {
 
 DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
 
-RAVEN_CONFIG = {
-    'dsn': os.environ.get("SENTRY_DSN"),
-}
+if os.environ.get('SENTRY_DSN'):
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+    from sentry_sdk.integrations.redis import RedisIntegration
 
+    def remove_token(event, _):
+        scrubbers_keys = ['token', 'client_secret', 'X-RateLimit-Remaining', 'X-RateLimit-Limit',
+                          'X-RateLimit-Retry-After']
+        # Regexes: tokens, client id, client secret
+        scrubbers_regex = [re.compile(r"(?<=uclapi-)(.*?)(?=&|$|')"), re.compile(r"\d{16}.\d{16}"),
+                           re.compile(r"[a-f0-9]{64}")]
+        event = recursive_explore(event, scrubbers_keys, scrubbers_regex)
+        return event
+
+    def recursive_explore(var, keys, regex):
+        if isinstance(var, list):
+            return [recursive_explore(v, keys, regex) for v in var]
+        if isinstance(var, dict):
+            return {k: recursive_explore(v, keys, regex) for k, v in var.items() if k not in keys}
+        print(var)
+        for reg in regex:
+            if reg.search(str(var)):
+                var = reg.sub('REDACTED', str(var), 0)
+        return var
+
+    sentry_sdk.init(
+        dsn=os.environ.get('SENTRY_DSN'),
+        integrations=[DjangoIntegration(), RedisIntegration()],
+        traces_sample_rate=0.01,
+        send_default_pii=False,
+        before_send=remove_token
+    )
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_PAGINATION_CLASS': 'common.pagination.CustomPagination',
+    'EXCEPTION_HANDLER': 'common.exception_handler.custom_exception_handler',
+    'PAGE_SIZE': 1000
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -176,7 +216,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',  # noqa
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
