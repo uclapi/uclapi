@@ -8,5 +8,7 @@ from django_mock_queries.mocks import monkey_patch_test_db
 
 from uclapi.settings import *
 
+# https://stackoverflow.com/a/7004517
+TEST_RUNNER = 'uclapi.custom_test_runner.NoDbTestRunner'
 
 monkey_patch_test_db()
