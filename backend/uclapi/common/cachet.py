@@ -77,7 +77,7 @@ def create_incident(error_message: str, component_name: str,
     """
 
     cachet_client = cachetclient.Client(endpoint=settings.CACHET_URL,
-                                        api_token=settings.CACHET_TOKENl,
+                                        api_token=settings.CACHET_TOKEN,
                                         version="1")
 
     target_comp = _get_component(cachet_client, component_name)
