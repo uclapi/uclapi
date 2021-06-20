@@ -19,6 +19,7 @@ Welcome to UCL API's documentation!
    timetable
    workspaces
    workspaces-historical
+   openapi
 
 
 
