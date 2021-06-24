@@ -1,5 +1,6 @@
 const path = require(`path`)
 const BundleTracker = require(`webpack-bundle-tracker`)
+const webpack = require(`webpack`)
 
 const entryPointsPathPrefix = `./src/pages`
 
@@ -13,6 +14,9 @@ module.exports = {
   plugins: [
     new BundleTracker({
       filename: `../backend/uclapi/static/webpack-stats.json`,
+    }),
+    new webpack.ProvidePlugin({
+      Buffer: [`buffer`, `Buffer`], // For swagger-ui-react
     }),
   ],
   module: {

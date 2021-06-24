@@ -38,6 +38,26 @@ p {
   line-height: 26px;
 }
 
+li {
+  list-style-type: initial;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input {
+  color: $text-color;
+  font-family: 'Source Sans Pro', 'Roboto', sans-serif;
+}
+
+input::placeholder {
+  color: $text-color;
+}
+
 a {
   color: $text-color;
   text-decoration: underline dotted;
@@ -45,261 +65,4 @@ a {
   &:hover {
     color: darken($text-color, 20%);
   }
-}
-
-.col {
-  flex: 1;
-  max-width: 100%;
-}
-
-.warning {
-  background-color: #c97a7e;
-  border-radius: 8px;
-  color: black;
-  font-size: 14px;
-  line-height: 26px;
-  padding: 10px;
-}
-
-.text {
-  padding: 20px;
-}
-
-.tab {
-  margin-left: 256px;
-  position: fixed;
-  top: 60px;
-  width: calc(100% - 256px);
-
-  h1 {
-    margin-bottom: 0;
-  }
-}
-
-.main {
-  box-sizing: border-box;
-  margin-top: 60px;
-  overflow-x: hidden;
-  padding-bottom: 2rem;
-
-  @include media(">phone") {
-    margin-left: 256px;
-  }
-
-  @include media("<=phone") {
-    padding-top: 3rem;
-  }
-
-  h1,
-  h2 {
-    margin-top: -80px;
-    padding-top: 80px;
-    position: relative; // not static, so z-index has an effect
-    z-index: -1;
-  }
-
-  .col.text {
-    > p:first-of-type {
-      margin-top: 0;
-    }
-
-    > p:last-of-type {
-      margin-bottom: 0;
-    }
-  }
-}
-
-p > code {
-  font-family: 'Source Code Pro', monospace;
-  font-size: 0.85em;
-  padding: 0.2rem 0.4rem;
-  background-color: #f0f0fa;
-  color: black;
-}
-
-.table {
-  margin-top: 1rem;
-  font-size: 14px;
-
-  h1 {
-    border-bottom: 1px solid #e1e8ed;
-    color: #939da3;
-    font-size: 12px;
-    font-weight: 500;
-    margin: 0;
-    padding-bottom: 10px;
-    padding-top: 0;
-    text-transform: uppercase;
-  }
-
-  .cell {
-    border-bottom: 1px solid #f0f4f7;
-    padding-bottom: 8px;
-    padding-top: 8px;
-
-    .col,
-    .col8,
-    .col4 {
-      padding: 10px;
-    }
-
-    p {
-      font-size: 14px;
-      line-height: 21px;
-      margin: 0;
-    }
-
-    .attribute {
-      text-align: right;
-
-      p {
-        margin-bottom: 2px;
-      }
-    }
-
-    .required {
-      color: #ffae54;
-      font-size: 10px;
-      text-transform: uppercase;
-    }
-
-    .optional {
-      color: #939da3;
-      font-size: 10px;
-    }
-
-    .extra {
-      color: #939da3;
-    }
-
-    code {
-      font-size: 10px;
-    }
-  }
-}
-
-.section-header {
-  border-bottom: 1px solid #e4e4e4;
-  font-size: 36px;
-  font-weight: 600;
-  margin-bottom: 0;
-  padding-bottom: 20px;
-  padding-top: 20px;
-}
-
-.sidebar-logo {
-  vertical-align: middle;
-
-  img {
-    margin-bottom: -5px;
-    margin-right: 10px;
-    width: 30px;
-  }
-}
-
-/** Code View styling **/
-
-pre {
-  margin: 0;
-}
-
-.react-tabs {
-  margin-top: 30px;
-
-  ul {
-    padding-left: 0;
-  }
-}
-
-/* stylelint-disable-next-line selector-class-pattern */
-.react-tabs__tab-panel {
-  display: flex;
-  width: 100%;
-
-  .inner-tab {
-    width: 100%;
-
-    > pre {
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-
-      > code {
-        display: block;
-        margin: 0.5rem;
-      }
-    }
-  }
-}
-
-/* stylelint-disable-next-line selector-class-pattern */
-.react-tabs__tab-list {
-  display: flex;
-  width: 100%;
-  margin-bottom: 0;
-
-  li {
-    color: $color-white;
-    cursor: pointer;
-    display: inline-block;
-    float: left;
-    list-style-type: none;
-    margin: 0;
-    padding: 10px 2%;
-    text-align: left;
-    transition-duration: 200ms;
-    transition-property: background-color;
-    transition-timing-function: linear;
-    width: 96%;
-  }
-}
-
-.unselected-tab {
-  background-color: $primary-highlight-color;
-}
-
-.selected-tab {
-  background-color: $primary-color;
-}
-
-/* stylelint-disable-next-line selector-class-pattern */
-.react-tabs__tab-list li:hover {
-  background-color: $primary-color;
-}
-
-@media screen and (max-width: 700px) {
-  /* stylelint-disable-next-line selector-class-pattern */
-  .react-tabs__tab-list li {
-    text-align: left;
-  }
-
-  input {
-    padding: 20px 2%;
-    width: 96%;
-  }
-
-  .arrow {
-    display: none;
-  }
-}
-
-/** Buttons **/
-
-.default-button {
-  background-color: $color-grey-dark;
-  color: $color-white;
-}
-
-.default-button:hover { background-color: $color-grey-mid; }
-
-.row {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.col4 {
-  flex: 4;
-}
-
-.col8 {
-  flex: 8;
 }
