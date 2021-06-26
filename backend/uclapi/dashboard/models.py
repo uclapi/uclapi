@@ -158,8 +158,8 @@ class WebhookTriggerHistory(models.Model):
         on_delete=models.CASCADE
     )
     payload = models.CharField(max_length=10000000)
-    success = models.BooleanField(blank=True, null=True)  # not sure what to do with exising rows, so make it nullable?
-    status_code = models.IntegerField(blank=True, null=True)  # idem
+    success = models.BooleanField(null=True)  # not sure what to do with exising rows, so make it nullable?
+    status_code = models.IntegerField(null=True)  # idem
 
     timestamp = models.DateTimeField(auto_now_add=True, editable=False)
 
