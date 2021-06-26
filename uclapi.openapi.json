@@ -280,14 +280,58 @@
         "schema": {
           "type": "boolean"
         }
+      },
+      "details": {
+        "name": "details",
+        "in": "query",
+        "description": "Flag to indicate you want additional details such as terms and conditions.",
+        "required": false,
+        "example": 1,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "ids": {
+        "name": "ids",
+        "in": "query",
+        "description": "Comma delimited list of LibCal location IDs",
+        "required": true,
+        "example": "702,703",
+        "schema": {
+          "type": "string"
+        }
       }
     },
-    "schemas": {
-      "user_data": {
+    "schemas" : {
+      "libcal_location": {
         "properties": {
-          "ok": {
-            "type": "boolean",
-            "example": "true",
+          "lid": {
+            "type": "integer",
+            "example": 702,
+            "description": "ID for the LibCal location in question"
+          },
+          "name": {
+            "type": "string",
+            "example": "Bartlett Library",
+            "description": "Name of the LibCal location in question"
+          },
+          "public": {
+            "type": "integer",
+            "example": 1,
+            "description": "1 if the location is publicly-bookable, 0 if it is not"
+          },
+          "terms": {
+            "type": "string",
+            "example": "<strong>You must bring your UCL ID and a copy of the confirmation email to gain access to the space.</strong>",
+            "description": "Additional details about the location, such as terms & conditions. May include HTML."
+          }
+        }
+      },
+      "user_data" : {
+        "properties" : {
+          "ok" : {
+            "type" : "boolean",
+            "example" : "true",
             "description": "Returns if the query was successful."
           },
           "email": {
@@ -4493,6 +4537,121 @@
                 "examples": {
                   "1": {
                     "$ref": "#/components/examples/ErrorNoToken"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/libcal/space/locations": {
+      "get": {
+        "summary": "Gets all LibCal locations",
+        "tags": [ "LibCal" ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/details"
+          }
+        ],
+        "security": [{
+          "OAuthSecurity": [],
+          "OAuthToken": []
+        }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/libcal_location"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Request error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                },
+                "examples" : {
+                  "1" : {
+                    "$ref" : "#/components/examples/ErrorNoToken"
+                  },
+                  "2" : {
+                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  },
+                  "3" : {
+                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  },
+                  "4" : {
+                    "$ref" : "#/components/examples/ErrorThrottling"
+                  },
+                  "5" : {
+                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  },
+                  "6" : {
+                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  },
+                  "7" : {
+                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  },
+                  "8" : {
+                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  },
+                  "9" : {
+                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/libcal/space/categories":{
+      "get": {
+        "summary": "Returns the categories of spaces available in the given location(s)",
+        "tags": [ "LibCal" ],
+        "security" : [ {
+          "OAuthSecurity" : [ "personal_timetable" ],
+          "OAuthToken" : [ ]
+        } ],
+        "parameters": [
+          {
+            "$ref":"#/components/parameters/ids"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+
+                      }
+                    }
                   }
                 }
               }
