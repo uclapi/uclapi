@@ -11,7 +11,6 @@ from django.db.models import Q
 
 
 class Command(BaseCommand):
-
     help = 'Diff roombooking result sets and notify relevant webhooks'
 
     def add_arguments(self, parser):
@@ -59,14 +58,14 @@ class Command(BaseCommand):
         num_bookings_added = 0
         num_bookings_removed = 0
         if "iterable_item_added" in ddiff:
-                num_bookings_added = len(
-                    ddiff["iterable_item_added"].values()
-                )
+            num_bookings_added = len(
+                ddiff["iterable_item_added"].values()
+            )
 
         if "iterable_item_removed" in ddiff:
-                num_bookings_removed = len(
-                    ddiff["iterable_item_removed"].values()
-                )
+            num_bookings_removed = len(
+                ddiff["iterable_item_removed"].values()
+            )
 
         self.stdout.write(
             "{} bookings added\n{} bookings removed.".format(
@@ -135,18 +134,16 @@ class Command(BaseCommand):
             webhooks_to_enact[idx]["payload"] = payload
 
             if payload["content"] != {} and webhook["url"] != "":
-                unsent_requests.append(
-                    session.post(
-                        webhook["url"], json=payload,
-                        headers={
-                            "User-Agent": "uclapi-bot/1"
-                        }
-                    )
-                )
-        self.stdout.write(
-            "Triggering {} webhooks.".format(len(unsent_requests))
-        )
-        if("debug" in options):
+                # not exactly sure what unsent_requests is meant to do except for debug logging
+                post_result = session.post(webhook["url"], json=payload, headers={"User-Agent": "uclapi-bot/1"})
+                unsent_requests.append(post_result)
+
+                # instead, we'll put the whole response back into the webhook object
+                webhooks_to_enact[idx]["response"] = post_result
+
+        self.stdout.write("Triggering {} webhooks.".format(len(unsent_requests)))
+
+        if "debug" in options:
             for i in unsent_requests:
                 self.stdout.write(
                     'response status {0}'.format(i.result().status_code)
@@ -155,12 +152,23 @@ class Command(BaseCommand):
         for webhook in webhooks_to_enact:
             if webhook["payload"]["content"] != {}:
                 webhook_in_db = webhook["webhook_in_db"]
+
+                webhook_success = False
+                status_code = -1
+                if "response" in webhook:
+                    status_code = webhook["response"].result().status_code
+                    if status_code not in range(400, 600):
+                        webhook_in_db.last_success = timezone.now()
+                        webhook_success = True
+
                 webhook_in_db.last_fired = timezone.now()
                 webhook_in_db.save()
 
                 new_webhook_history_entry = WebhookTriggerHistory(
                     webhook=webhook_in_db,
-                    payload=webhook["payload"]
+                    payload=webhook["payload"],
+                    success=webhook_success,
+                    status_code=status_code
                 )
                 new_webhook_history_entry.save()
 
