@@ -60,6 +60,7 @@ jobs:
           AWS_S3_BUCKET_NAME: uclapi-static-staging
           AWS_S3_BUCKET_PATH: static/
           AWS_S3_STATICS: True
+          SENTRY_DSN_REACT: ${{ secrets.SENTRY_DSN_REACT }}
         run: |
           cd ./frontend/ && \
           npm run build
