@@ -2086,23 +2086,31 @@
         "description": "Illegal input for operation."
       }
     },
-    "securitySchemes": {
-      "OAuthToken": {
-        "type": "apiKey",
-        "description": "This API requires you to pass your OAuth2 token as a query parameter called 'token'. Use the /authorize and /oauth/token endpoints to authorize a user and get this token.",
-        "name": "token",
-        "in": "query"
+    "securitySchemes" : {
+      "ApiToken": {
+        "type" : "apiKey",
+        "description" : "This API requires you to pass your API key as a query parameter called 'token'.",
+        "name" : "token",
+        "in" : "query"
       },
-      "OAuthSecurity": {
-        "type": "oauth2",
-        "description": "This API uses OAuth2 with the implicit grant flow. [More info](https://uclapi.com/docs#OAuthSecurity)",
-        "flows": {
-          "authorizationCode": {
-            "authorizationUrl": "/authorise",
-            "tokenUrl": "/token",
-            "scopes": {
-              "personal_timetable": "read user's timetable",
-              "student_number": "read user's student number"
+      "OAuthToken" : {
+        "type" : "apiKey",
+        "description" : "This API requires you to pass your OAuth2 token as a query parameter called 'token'. Use the /authorize and /oauth/token endpoints to authorize a user and get this token.",
+        "name" : "token",
+        "in" : "query"
+      },
+      "OAuthSecurity" : {
+        "type" : "oauth2",
+        "description" : "This API uses OAuth2 with the implicit grant flow. [More info](https://uclapi.com/docs#OAuthSecurity)",
+        "flows" : {
+          "authorizationCode" : {
+            "authorizationUrl" : "/authorise",
+            "tokenUrl" : "/token",
+            "scopes" : {
+              "personal_timetable" : "read user's timetable",
+              "student_number" : "read user's student number",
+              "libcal_read": "read user's LibCal bookings",
+              "libcal_write": "reserve/cancel user's LibCal bookings"
             }
           }
         }
@@ -5069,8 +5077,7 @@
           }
         ],
         "security": [{
-          "OAuthSecurity": [],
-          "OAuthToken": []
+         "ApiToken": []
         }],
         "responses": {
           "200": {
@@ -5144,8 +5151,7 @@
         "summary": "Returns the categories of spaces available in the given location(s)",
         "tags": [ "LibCal" ],
         "security" : [ {
-          "OAuthSecurity" : [ "personal_timetable" ],
-          "OAuthToken" : [ ]
+          "ApiToken": []
         } ],
         "parameters": [
           {
@@ -5245,8 +5251,7 @@
           }
         ],
         "security": [{
-          "OAuthSecurity": [],
-          "OAuthToken": []
+          "ApiToken": []
         }],
         "responses": {
           "200": {
@@ -5338,8 +5343,7 @@
           }
         ],
         "security": [{
-          "OAuthSecurity": [],
-          "OAuthToken": []
+          "ApiToken": []
         }],
         "responses": {
           "200": {
@@ -5418,8 +5422,7 @@
           }
         ],
         "security": [{
-          "OAuthSecurity": [],
-          "OAuthToken": []
+          "ApiToken": []
         }],
         "responses": {
           "200": {
@@ -5501,8 +5504,7 @@
           }
         ],
         "security": [{
-          "OAuthSecurity": [],
-          "OAuthToken": []
+          "ApiToken": []
         }],
         "responses": {
           "200": {
@@ -5611,8 +5613,7 @@
           }
         ],
         "security": [{
-          "OAuthSecurity": [],
-          "OAuthToken": []
+          "ApiToken": []
         }],
         "responses": {
           "200": {
@@ -5731,8 +5732,7 @@
           }
         ],
         "security": [{
-          "OAuthSecurity": [],
-          "OAuthToken": []
+          "ApiToken": []
         }],
         "responses": {
           "200": {
@@ -5879,8 +5879,7 @@
           { "$ref": "#/components/parameters/libcal_page_size" }
         ],
         "security": [{
-          "OAuthSecurity": [],
-          "OAuthToken": []
+          "ApiToken": []
         }],
         "responses": {
           "200": {
@@ -5962,8 +5961,7 @@
           }
         ],
         "security": [{
-          "OAuthSecurity": [],
-          "OAuthToken": []
+          "ApiToken": []
         }],
         "responses": {
           "200": {
@@ -6039,8 +6037,7 @@
           }
         ],
         "security": [{
-          "OAuthSecurity": [],
-          "OAuthToken": []
+          "ApiToken": []
         }],
         "responses": {
           "200": {
@@ -6131,8 +6128,7 @@
           }
         ],
         "security": [{
-          "OAuthSecurity": [],
-          "OAuthToken": []
+          "ApiToken": []
         }],
         "responses": {
           "200": {
@@ -6291,8 +6287,7 @@
           }
         ],
         "security": [{
-          "OAuthSecurity": [],
-          "OAuthToken": []
+          "ApiToken": []
         }],
         "responses": {
           "200": {
