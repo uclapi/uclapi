@@ -157,7 +157,7 @@ class Command(BaseCommand):
                 status_code = -1
                 if "response" in webhook:
                     status_code = webhook["response"].result().status_code
-                    if status_code not in range(400, 600):
+                    if status_code < 400:
                         webhook_in_db.last_success = timezone.now()
                         webhook_success = True
 
