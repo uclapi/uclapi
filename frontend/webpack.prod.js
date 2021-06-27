@@ -36,6 +36,7 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(`production`),
+      'process.env.SENTRY_DSN_ENV': JSON.stringify(process.env.SENTRY_DSN_ENV),
       'process.env.SENTRY_DSN_REACT': JSON.stringify(process.env.SENTRY_DSN_REACT),
     }),
     new BundleTracker({
