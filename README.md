@@ -314,6 +314,33 @@ We're an amazing project, so obviously we have tests :sparkles:
 Make sure you have the requirements installed in your virtual environment (and you have activated it) , `cd` into `backend/uclapi` and then run :  
 `python manage.py test --settings=uclapi.settings_mocked`
 
+## Commit Message
+
+Please follow the commit message format found in `.github/.gitmessage`, we recommend you set this as your commit message template with `git config commit.template ./.github/.gitmessage`. Please use the following format (summary is the first line and is limited to 50 characters, ):
+```
+Summary format:
+     area subarea: message (all lowercase)
+Summary examples:
+     backend search: add new search function
+  or backend workspaces: add historical endpoint
+  or frontend pages: fix 404 page location
+  or github actions: refactor CI
+
+Use the following verbs:
+  add = Create a capability e.g. feature, test, dependency.
+  drop = Delete a capability e.g. feature, test, dependency.
+  fix = Fix an issue e.g. bug, typo, accident, misstatement.
+  bump = Increase the version of something e.g. a dependency.
+  make = Change the build process, or tools, or infrastructure.
+  start = Begin doing something; e.g. enable a toggle, feature flag, etc.
+  stop = End doing something; e.g. disable a toggle, feature flag, etc.
+  optimize = A change that MUST be just about performance, e.g. speed up code.
+  document = A change that MUST be only in the documentation, e.g. help files.
+  refactor = A change that MUST be just refactoring.
+  reformat = A change that MUST be just format, e.g. indent line, trim space, etc.
+  rephrase = A change that MUST be just textual, e.g. edit a comment, doc, etc.
+```
+
 ## Linting
 
 We have a pre-commit hook set up that runs [eslint](https://eslint.org/) on all staged JS files, [stylelint](https://github.com/stylelint/stylelint) on all staged scss files, and [autopep8](https://github.com/hhatto/autopep8) & [flake8](http://flake8.pycqa.org/en/latest/) on all staged Python files. This automatically fixes style issues and stops the commit if there are any obvious problems (e.g. failure to define variable).
