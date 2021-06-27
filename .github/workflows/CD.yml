@@ -61,6 +61,7 @@ jobs:
           AWS_S3_BUCKET_PATH: static/
           AWS_S3_STATICS: True
           SENTRY_DSN_REACT: ${{ secrets.SENTRY_DSN_REACT }}
+          SENTRY_DSN_ENV: staging
         run: |
           cd ./frontend/ && \
           npm run build
