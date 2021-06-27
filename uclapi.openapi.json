@@ -314,7 +314,7 @@
       "libcal_category_id": {
         "name": "categoryId",
         "in": "query",
-        "description": "If specified, will only return utilisation for that category",
+        "description": "If specified, will only return data for that category",
         "required": false,
         "example": "3334",
         "schema": {
@@ -361,6 +361,16 @@
           "type": "string"
         }
       },
+      "libcal_space_id": {
+        "name": "spaceId",
+        "in": "query",
+        "description": "If specified, only return data for this space",
+        "required": false,
+        "example": "1791",
+        "schema": {
+          "type": "string"
+        }
+      },
       "libcal_space_ids": {
         "name": "ids",
         "in": "query",
@@ -374,7 +384,7 @@
       "libcal_zone_id": {
         "name": "zoneId",
         "in": "query",
-        "description": "If specified, will only return utilisation for that zone",
+        "description": "If specified, will only return data for that zone",
         "required": false,
         "example": "87",
         "schema": {
@@ -386,22 +396,82 @@
         "in": "query",
         "description": "A single LibCal seat ID",
         "required": true,
-        "example": ""
+        "example": "54435",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "libcal_accessible_only": {
+        "name": "accessibleOnly",
+        "in": "query",
+        "description": "Return only acessible seats (i.e. seats with height-adjustable furniture).",
+        "required": false,
+        "example": false,
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "libcal_page_index": {
+        "name": "pageIndex",
+        "in": "query",
+        "description": "For pagination purposes, this specifies the page to be retrieved. Starts at 0 for the first page.",
+        "required": false,
+        "example": 0,
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "libcal_page_size": {
+        "name": "pageSize",
+        "in": "query",
+        "description": "For pagination purposes, this specifies the number of results per page. Must be >= 1 and <= 100. The default is 20.",
+        "required": false,
+        "example": 10,
+        "schema": {
+          "type": "integer"
+        }
       }
     },
     "schemas" : {
+      "libcal_seat_booking": {
+        "properties": {
+          "eid": { "$ref": "#/components/schemas/libcal_space_id" },
+          "cid": { "$ref": "#/components/schemas/libcal_category_id" },
+          "lid": { "$ref": "#/components/schemas/libcal_location_id" },
+          "fromDate": { "$ref": "#/components/schemas/libcal_booking_start" },
+          "toDate": { "$ref": "#/components/schemas/libcal_booking_end" },
+          "created": { "$ref": "#/components/schemas/libcal_booking_created" },
+          "status": {
+            "type": "string",
+            "description": "Status of this LibCal booking",
+            "example": "Confirmed"
+          },
+          "location_name": { "$ref":"#/components/schemas/libcal_location_name" },
+          "category_name": { "$ref": "#/components/schemas/libcal_category_name" },
+          "item_name": { "$ref": "#/components/schemas/libcal_space_name" },
+          "seat_id": { "$ref": "#/components/schemas/libcal_seat_id" },
+          "seat_name": { "$ref": "#/components/schemas/libcal_seat_name" }
+        }
+      },
+      "libcal_location_id": {
+        "type": "integer",
+        "description": "LibCal Location ID",
+        "example": 700
+      },
+      "libcal_seat_id": {
+        "type": "integer",
+        "description": "LibCal seat ID",
+        "example": 54435
+      },
+      "libcal_seat_name": {
+        "type": "string",
+        "description": "Name of the LibCal seat",
+        "example": "367 - Donaldson Reading Room (Law)"
+      },
       "libcal_seat": {
         "properties": {
-          "id": {
-            "type": "integer",
-            "description": "LibCal seat ID",
-            "example": 54435
-          },
-          "name": {
-            "type": "string",
-            "description": "Name of the LibCal seat",
-            "example": "367 - Donaldson Reading Room (Law)"
-          },
+          "id": { "$ref": "#/components/schemas/libcal_seat_id" },
+          "name": { "$ref": "#/components/schemas/libcal_seat_name" },
           "description": {
             "type": "string",
             "description": "Description provided for the LibCal seat. May contain HTML",
@@ -438,6 +508,12 @@
         "type": "string",
         "description": "Name of the LibCal zone",
         "example": "Fourth Floor North"
+      },
+      "libcal_zone": {
+        "properties": {
+          "id": { "$ref": "#/components/schemas/libcal_zone_id" },
+          "name": { "$ref": "#/components/schemas/libcal_zone_name" }
+        }
       },
       "libcal_utilisation_seat_summary": {
         "properties": {
@@ -477,6 +553,21 @@
           }
         }
       },
+      "libcal_booking_start": {
+        "type": "string",
+        "example": "2021-01-14T09:00:00+00:00",
+        "description": "Timestamp (in ISO 8601 format) at which this LibCal booking starts"
+      },
+      "libcal_booking_end": {
+        "type": "string",
+        "example": "2021-01-14T09:00:00+00:00",
+        "description": "Timestamp (in ISO 8601 format) at which this LibCal booking ends"
+      },
+      "libcal_booking_created": {
+        "type": "string",
+        "example": "2021-01-12T09:00:00+00:00",
+        "description": "Timestamp (in ISO 8601 format) denoting when this LibCal booking was created"
+      },
       "libcal_booking": {
         "properties": {
           "nickname": {
@@ -484,21 +575,9 @@
             "description": "Nickname assigned to this LibCal booking",
             "example": "LAWS0339: Internet Law and Policy Seminar Group G"
           },
-          "start": {
-            "type": "string",
-            "example": "2021-01-14T09:00:00+00:00",
-            "description": "Timestamp (in ISO 8601 format) at which this LibCal booking starts"
-          },
-          "end": {
-            "type": "string",
-            "example": "2021-01-14T09:00:00+00:00",
-            "description": "Timestamp (in ISO 8601 format) at which this LibCal booking ends"
-          },
-          "created": {
-            "type": "string",
-            "example": "2021-01-12T09:00:00+00:00",
-            "description": "Timestamp (in ISO 8601 format) denoting when this LibCal booking was created"
-          },
+          "start": { "$ref": "#/components/schemas/libcal_booking_start" },
+          "end": { "$ref": "#/components/schemas/libcal_booking_end" },
+          "created": { "$ref": "#/components/schemas/libcal_booking_created" },
           "booking_id": {
             "type": "string",
             "example": "_L4oMxm",
@@ -516,7 +595,7 @@
         "example": "Study Room 1",
         "description": "Name of this LibCal space"
       },
-      "libcal_space": {
+      "libcal_space_base": {
         "properties": {
           "id": { "$ref": "#/components/schemas/libcal_space_id" },
           "name": { "$ref": "#/components/schemas/libcal_space_name" },
@@ -539,22 +618,22 @@
             "type": "integer",
             "example": 14,
             "description": "ID of the form associated with this LibCal space"
-          },
-          "availability": {
-            "type": "array",
-            "items": {
-              "properties": {
-                "from": {
-                  "type": "string",
-                  "example": "2021-01-14T09:00:00+00:00",
-                  "description": "Timestamp (in ISO 8601 format) from which this LibCal space is available to be booked"
-                },
-                "to": {
-                  "type": "string",
-                  "example": "2021-01-14T10:00:00+00:00",
-                  "description": "Timestamp (in ISO 8601 format) to which this LibCal space is available to be booked"
-                }
-              }
+          }
+        }
+      },
+      "libcal_space_availability": {
+        "type": "array",
+        "items": {
+          "properties": {
+            "from": {
+              "type": "string",
+              "example": "2021-01-14T09:00:00+00:00",
+              "description": "Timestamp (in ISO 8601 format) from which this LibCal space is available to be booked"
+            },
+            "to": {
+              "type": "string",
+              "example": "2021-01-14T10:00:00+00:00",
+              "description": "Timestamp (in ISO 8601 format) to which this LibCal space is available to be booked"
             }
           }
         }
@@ -632,6 +711,11 @@
           "public": { "$ref": "#/components/schemas/libcal_category_public" }
         }
       },
+      "libcal_location_name": {
+        "type": "string",
+        "example": "Bartlett Library",
+        "description": "Name of the LibCal location in question"
+      },
       "libcal_location_base": {
         "properties": {
           "lid": {
@@ -639,11 +723,7 @@
             "example": 702,
             "description": "ID for the LibCal location in question"
           },
-          "name": {
-            "type": "string",
-            "example": "Bartlett Library",
-            "description": "Name of the LibCal location in question"
-          }
+          "name": { "$ref": "#/components/schemas/libcal_location_name" }
         }
       },
       "libcal_location": {
@@ -5348,13 +5428,31 @@
                       "type": "array",
                       "items": {
                         "allOf": [
-                          {"$ref": "#/components/schemas/libcal_space"}
+                          { "$ref": "#/components/schemas/libcal_space_base" }
                         ],
                         "properties": {
                           "error": {
                             "type": "string",
                             "description": "Will be returned if there is an error retrieving the given LibCal space, e.g. if the space ID provided is invalid",
                             "example": "invalid item id"
+                          },
+                          "isBookableAsWhole": {
+                            "type": "boolean",
+                            "description": "Whether the entire LibCal zone can be booked as a whole",
+                            "example": false
+                          },
+                          "isAccessible": {
+                            "type": "boolean",
+                            "description": "Whether the furniture in the space is height-adjustable and hence accessible by the differently-abled",
+                            "example": true
+                          },
+                          "isPowered": {
+                            "type": "boolean",
+                            "description": "Whether a power socket is available at the space",
+                            "example": true
+                          },
+                          "zoneId": {
+                            "$ref": "#/components/schemas/libcal_zone_id"
                           }
                         }
                       }
@@ -5567,13 +5665,12 @@
                         "zones": {
                           "type": "array",
                           "items": {
+                            "allOf": [
+                              {
+                                "$ref": "#/components/schemas/libcal_zone"
+                              }
+                            ],
                             "properties": {
-                                "id": {
-                                "$ref": "#/components/schemas/libcal_zone_id"
-                              },
-                              "name": {
-                                "$ref": "#/components/schemas/libcal_zone_name"
-                              },
                               "spaces": {
                                 "type": "array",
                                 "items": {
@@ -5672,9 +5769,23 @@
         "summary": "Get all LibCal seats in a given location",
         "tags": [ "LibCal" ],
         "parameters": [
+          { "$ref": "#/components/parameters/libcal_location_id" },
+          { "$ref": "#/components/parameters/libcal_space_id" },
+          { "$ref": "#/components/parameters/libcal_category_id" },
           {
-            "$ref": "#/components/parameters/libcal_location_id"
-          }
+            "name": "seatId",
+            "in": "query",
+            "description": "Show only the seat with this ID. If this is specified, spaceId, categoryId, and zoneId will be ignored.",
+            "required": false,
+            "example": "54435",
+            "schema": {
+              "type": "string"
+            }
+          },
+          { "$ref": "#/components/parameters/libcal_accessible_only" },
+          { "$ref": "#/components/parameters/libcal_availability" },
+          { "$ref": "#/components/parameters/libcal_page_index" },
+          { "$ref": "#/components/parameters/libcal_page_size" }
         ],
         "security": [{
           "OAuthSecurity": [],
@@ -5776,6 +5887,359 @@
                     },
                     "seat": {
                       "$ref": "#/components/schemas/libcal_seat"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Request error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                },
+                "examples" : {
+                  "1" : {
+                    "$ref" : "#/components/examples/ErrorNoToken"
+                  },
+                  "2" : {
+                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  },
+                  "3" : {
+                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  },
+                  "4" : {
+                    "$ref" : "#/components/examples/ErrorThrottling"
+                  },
+                  "5" : {
+                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  },
+                  "6" : {
+                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  },
+                  "7" : {
+                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  },
+                  "8" : {
+                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  },
+                  "9" : {
+                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  },
+                  "10": {
+                    "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/libcal/space/zones": {
+      "get": {
+        "summary": "Get LibCal zones by location",
+        "tags": [ "LibCal" ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/libcal_location_id"
+          }
+        ],
+        "security": [{
+          "OAuthSecurity": [],
+          "OAuthToken": []
+        }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "zones": {
+                      "type": "array",
+                      "items": {
+                        "allOf": [
+                          {
+                            "$ref": "#/components/schemas/libcal_zone"
+                          }
+                        ],
+                        "properties": {
+                          "itemIds": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/libcal_space_id"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Request error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                },
+                "examples" : {
+                  "1" : {
+                    "$ref" : "#/components/examples/ErrorNoToken"
+                  },
+                  "2" : {
+                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  },
+                  "3" : {
+                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  },
+                  "4" : {
+                    "$ref" : "#/components/examples/ErrorThrottling"
+                  },
+                  "5" : {
+                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  },
+                  "6" : {
+                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  },
+                  "7" : {
+                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  },
+                  "8" : {
+                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  },
+                  "9" : {
+                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  },
+                  "10": {
+                    "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/libcal/space/zone": {
+      "get": {
+        "summary": "Get LibCal zone by ID",
+        "tags": [ "LibCal" ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/libcal_zone_id"
+          }
+        ],
+        "security": [{
+          "OAuthSecurity": [],
+          "OAuthToken": []
+        }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "Will be returned if there is an error retrieving the given LibCal space, e.g. if the space ID provided is invalid",
+                      "example": "Zone not found."
+                    },
+                    "zone": {
+                      "allOf": [
+                        { "$ref": "#/components/schemas/libcal_zone" }
+                      ],
+                      "properties": {
+                        "itemIds": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/libcal_space_id"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Request error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                },
+                "examples" : {
+                  "1" : {
+                    "$ref" : "#/components/examples/ErrorNoToken"
+                  },
+                  "2" : {
+                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  },
+                  "3" : {
+                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  },
+                  "4" : {
+                    "$ref" : "#/components/examples/ErrorThrottling"
+                  },
+                  "5" : {
+                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  },
+                  "6" : {
+                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  },
+                  "7" : {
+                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  },
+                  "8" : {
+                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  },
+                  "9" : {
+                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  },
+                  "10": {
+                    "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/libcal/space/bookings": {
+      "get": {
+        "summary": "Get all LibCal bookings",
+        "tags": [ "LibCal" ],
+        "parameters": [
+          {
+            "name": "eid",
+            "in": "query",
+            "description": "Comma delimited list of LibCal space IDs. If specified, will only show bookings for those spaces.",
+            "required": false,
+            "example": "469,470",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "seat_id",
+            "in": "query",
+            "description": "Comma delimited list of LibCal seat IDs. If specified, will only show bookings for those seats.",
+            "required": false,
+            "example": "54435,54436",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cid",
+            "in": "query",
+            "description": "Comma delimited list of LibCal category IDs. If specified, will only show bookings for those categories.",
+            "required": false,
+            "example": "3334",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lid",
+            "in": "query",
+            "description": "Comma delimited list of LibCal location IDs. If specified, will only show bookings for those locations.",
+            "required": false,
+            "example": "702,703",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "If specified, will only show bookings made with this email address",
+            "required": false,
+            "example": "isd_apiteam@ucl.ac.uk",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Date in YYYY-MM-DD format. If specified, will only show bookings made on this date. Dates in the past are ignored. Defaults to today's date.",
+            "required": false,
+            "example": "2021-06-01",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "description": "Number of days into the future to retrieve bookings from, starting from the data parameter. Defaults to zero. Must be >= 0 and <= 365.",
+            "required": false,
+            "example": 3,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of bookings to return. Defaults to 20. The maximum value is 500.",
+            "required": false,
+            "example": 10,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "formAnswer",
+            "in": "query",
+            "description": "Whether or not form answers should be returned. Defaults to false.",
+            "required": false,
+            "example": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [{
+          "OAuthSecurity": [],
+          "OAuthToken": []
+        }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "bookings": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/libcal_seat_booking"
+                      }
                     }
                   }
                 }
