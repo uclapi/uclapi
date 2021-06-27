@@ -430,9 +430,87 @@
         "schema": {
           "type": "integer"
         }
+      },
+      "libcal_booking_ids": {
+        "name": "id",
+        "in": "query",
+        "description": "A comma delimited list of LibCal booking IDs to cancel",
+        "required": true,
+        "example": "cs_loYG4wTz,ab_P1bn30Mn",
+        "schema": {
+          "type": "string"
+        }
       }
     },
     "schemas" : {
+      "libcal_cancel_booking": {
+
+      },
+      "libcal_reserve_request_booking": {
+        "description": "Specify seat_id if booking a seat, otherwise omit it",
+        "properties": {
+          "id": { "$ref": "#/components/schemas/libcal_space_id" },
+          "to": { "$ref": "#/components/schemas/libcal_booking_end" },
+          "seat_id": { "$ref": "#/components/schemas/libcal_seat_id" }
+        },
+        "required": [
+          "id",
+          "to"
+        ]
+      },
+      "libcal_reserve_request": {
+        "properties": {
+          "start": { "$ref": "#/components/schemas/libcal_booking_start" },
+          "test": {
+            "type": "integer",
+            "description": "Whether or not this is a test booking. If set, the system will process the booking but will not actually make it. This is useful during development.",
+            "example": 1
+          },
+          "nickname": {
+            "type": "string",
+            "description": "If the space to be booked has a nickname, then the nickname must be supplied here.",
+            "example": "Tutorial Group Y"
+          },
+          "bookings": {
+            "type": "array",
+            "items": {
+
+            }
+          }
+        },
+        "required": [
+          "start",
+          "test"
+        ]
+      },
+      "libcal_personal_seat_booking": {
+        "allOf": [
+          { "$ref": "#/components/schemas/libcal_seat_booking" }
+        ],
+        "properties": {
+          "bookId": { "$ref": "#/components/schemas/libcal_booking_id" },
+          "firstName": {
+            "type": "string",
+            "description": "First name of the user who booked this",
+            "example": "Jeremy"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last name of the user who booked this",
+            "example": "Bentham"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address of the user who booked this",
+            "example": "jeremy.bentham.00@ucl.ac.uk"
+          },
+          "check_in_code": {
+            "type": "string",
+            "description": "Email address of the user who booked this",
+            "example": "2A9"
+          }
+        }
+      },
       "libcal_seat_booking": {
         "properties": {
           "eid": { "$ref": "#/components/schemas/libcal_space_id" },
@@ -568,6 +646,11 @@
         "example": "2021-01-12T09:00:00+00:00",
         "description": "Timestamp (in ISO 8601 format) denoting when this LibCal booking was created"
       },
+      "libcal_booking_id": {
+        "type": "string",
+        "example": "_L4oMxm",
+        "description": "ID assigned to this LibCal booking"
+      },
       "libcal_booking": {
         "properties": {
           "nickname": {
@@ -578,11 +661,7 @@
           "start": { "$ref": "#/components/schemas/libcal_booking_start" },
           "end": { "$ref": "#/components/schemas/libcal_booking_end" },
           "created": { "$ref": "#/components/schemas/libcal_booking_created" },
-          "booking_id": {
-            "type": "string",
-            "example": "_L4oMxm",
-            "description": "ID assigned to this LibCal booking"
-          }
+          "booking_id": { "$ref": "#/components/schemas/libcal_booking_id" }
         }
       },
       "libcal_space_id": {
@@ -1985,6 +2064,18 @@
           "error": "Unable to refresh LibCal OAuth token"
         },
         "summary": "LibCal service unavailable"
+      },
+      "ErrorLibCalOAuth": {
+        "value": {
+          "ok": false,
+          "error": "Personal data requires OAuth."
+        }
+      },
+      "ErrorLibCalNoBookingsDeleted": {
+        "value": {
+          "ok": false,
+          "error": "No bookings were found and so no bookings were deleted"
+        }
       }
     },
     "responses": {
@@ -6169,16 +6260,6 @@
             }
           },
           {
-            "name": "email",
-            "in": "query",
-            "description": "If specified, will only show bookings made with this email address",
-            "required": false,
-            "example": "isd_apiteam@ucl.ac.uk",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "date",
             "in": "query",
             "description": "Date in YYYY-MM-DD format. If specified, will only show bookings made on this date. Dates in the past are ignored. Defaults to today's date.",
@@ -6206,16 +6287,6 @@
             "example": 10,
             "schema": {
               "type": "integer"
-            }
-          },
-          {
-            "name": "formAnswer",
-            "in": "query",
-            "description": "Whether or not form answers should be returned. Defaults to false.",
-            "required": false,
-            "example": true,
-            "schema": {
-              "type": "boolean"
             }
           }
         ],
@@ -6283,6 +6354,389 @@
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/libcal/space/personal_bookings": {
+      "get": {
+        "summary": "Get all LibCal bookings",
+        "tags": [ "LibCal" ],
+        "parameters": [
+          {
+            "$ref" : "#/components/parameters/client_secret"
+          },
+          {
+            "name": "eid",
+            "in": "query",
+            "description": "Comma delimited list of LibCal space IDs. If specified, will only show bookings for those spaces.",
+            "required": false,
+            "example": "469,470",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "seat_id",
+            "in": "query",
+            "description": "Comma delimited list of LibCal seat IDs. If specified, will only show bookings for those seats.",
+            "required": false,
+            "example": "54435,54436",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cid",
+            "in": "query",
+            "description": "Comma delimited list of LibCal category IDs. If specified, will only show bookings for those categories.",
+            "required": false,
+            "example": "3334",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lid",
+            "in": "query",
+            "description": "Comma delimited list of LibCal location IDs. If specified, will only show bookings for those locations.",
+            "required": false,
+            "example": "702,703",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "If specified, will only show bookings made with this email address",
+            "required": false,
+            "example": "isd_apiteam@ucl.ac.uk",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Date in YYYY-MM-DD format. If specified, will only show bookings made on this date. Dates in the past are ignored. Defaults to today's date.",
+            "required": false,
+            "example": "2021-06-01",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "description": "Number of days into the future to retrieve bookings from, starting from the data parameter. Defaults to zero. Must be >= 0 and <= 365.",
+            "required": false,
+            "example": 3,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of bookings to return. Defaults to 20. The maximum value is 500.",
+            "required": false,
+            "example": 10,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "formAnswers",
+            "in": "query",
+            "description": "Whether or not form answers should be returned. Defaults to false.",
+            "required": false,
+            "example": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "security": [{
+          "OAuthSecurity": [ "libcal_read" ],
+          "OAuthToken": []
+        }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "bookings": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/libcal_personal_seat_booking"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Request error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                },
+                "examples" : {
+                  "1" : {
+                    "$ref" : "#/components/examples/ErrorNoToken"
+                  },
+                  "2" : {
+                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  },
+                  "3" : {
+                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  },
+                  "4" : {
+                    "$ref" : "#/components/examples/ErrorThrottling"
+                  },
+                  "5" : {
+                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  },
+                  "6" : {
+                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  },
+                  "7" : {
+                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  },
+                  "8" : {
+                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  },
+                  "9" : {
+                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  },
+                  "10": {
+                    "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
+                  },
+                  "11": {
+                    "$ref": "#/components/examples/ErrorLibCalOAuth"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/libcal/space/reserve": {
+      "post": {
+        "summary": "Reserve a LibCal space/seat",
+        "tags": [ "LibCal" ],
+        "parameters": [],
+        "security": [{
+          "OAuthSecurity": [ "libcal_write" ],
+          "OAuthToken": []
+        }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/libcal_reserve_request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "error": {
+                      "description": "Will only be returned if there are errors",
+                      "properties": {
+                        "errors": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "description": "error messages",
+                            "example": "booking 0 'to' is not a valid ending slot"
+                          }
+                        }
+                      }
+                    },
+                    "bookings": {
+                      "properties": {
+                        "success": {
+                          "type": "string",
+                          "description": "Returns only if the test flag was supplied and the booking was successfully placed",
+                          "example": "this booking would have been successfully placed, but you supplied the test flag."
+                        },
+                        "booking_id": { "$ref": "#/components/schemas/libcal_booking_id" },
+                        "cost": {
+                          "type": "string",
+                          "description": "The cost of the LibCal booking. Should generally be 0.",
+                          "example": "0"
+                        }
+                      },
+                      "required": [
+                        "booking_id"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Request error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                },
+                "examples" : {
+                  "1" : {
+                    "$ref" : "#/components/examples/ErrorNoToken"
+                  },
+                  "2" : {
+                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  },
+                  "3" : {
+                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  },
+                  "4" : {
+                    "$ref" : "#/components/examples/ErrorThrottling"
+                  },
+                  "5" : {
+                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  },
+                  "6" : {
+                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  },
+                  "7" : {
+                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  },
+                  "8" : {
+                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  },
+                  "9" : {
+                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  },
+                  "10": {
+                    "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
+                  },
+                  "11": {
+                    "$ref": "#/components/examples/ErrorLibCalOAuth"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/libcal/space/cancel": {
+      "post": {
+        "summary": "Cancel a LibCal booking",
+        "tags": [ "LibCal" ],
+        "parameters": [
+          { "$ref":  "#/components/parameters/libcal_booking_ids" }
+        ],
+        "security": [{
+          "OAuthSecurity": [ "libcal_write" ],
+          "OAuthToken": []
+        }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "bookings": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "booking_id": {
+                            "$ref": "#/components/schemas/libcal_booking_id"
+                          },
+                          "cancelled": {
+                            "type": "boolean",
+                            "description": "Whether the LibCal booking was successfully cancelled",
+                            "example": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Request error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                },
+                "examples" : {
+                  "1" : {
+                    "$ref" : "#/components/examples/ErrorNoToken"
+                  },
+                  "2" : {
+                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  },
+                  "3" : {
+                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  },
+                  "4" : {
+                    "$ref" : "#/components/examples/ErrorThrottling"
+                  },
+                  "5" : {
+                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  },
+                  "6" : {
+                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  },
+                  "7" : {
+                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  },
+                  "8" : {
+                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  },
+                  "9" : {
+                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  },
+                  "10": {
+                    "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
+                  },
+                  "11": {
+                    "$ref": "#/components/examples/ErrorLibCalOAuth"
+                  },
+                  "12": {
+                    "$ref": "#/components/examples/ErrorLibCalNoBookingsDeleted"
                   }
                 }
               }
