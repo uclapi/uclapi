@@ -173,6 +173,7 @@ if os.environ.get('SENTRY_DSN'):
 
     sentry_sdk.init(
         dsn=os.environ.get('SENTRY_DSN'),
+        environment=os.environ.get('SENTRY_DSN_ENV', 'testing'),
         integrations=[DjangoIntegration(), RedisIntegration()],
         traces_sample_rate=0.01,
         send_default_pii=False,
