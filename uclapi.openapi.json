@@ -281,7 +281,7 @@
           "type": "boolean"
         }
       },
-      "details": {
+      "libcal_details": {
         "name": "details",
         "in": "query",
         "description": "Flag to indicate you want additional details such as terms and conditions.",
@@ -291,7 +291,7 @@
           "type": "integer"
         }
       },
-      "ids": {
+      "libcal_location_ids": {
         "name": "ids",
         "in": "query",
         "description": "Comma delimited list of LibCal location IDs",
@@ -300,10 +300,117 @@
         "schema": {
           "type": "string"
         }
+      },
+      "libcal_category_ids": {
+        "name": "ids",
+        "in": "query",
+        "description": "Comma delimited list of LibCal category IDs",
+        "required": true,
+        "example": "3334,3335",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "libcal_availability": {
+        "name": "availability",
+        "in": "query",
+        "description": "Either a single date or a comma delimited list of 2 dates (a start and end date). The keyword 'next' (alone) can also be used to return availability for the next date that this item is available. Setting this parameter also sets the details value to 1. Dates should be in YYYY-MM-DD format.",
+        "example": "2021-01-05",
+        "schema": {
+          "type": "string"
+        },
+        "required": false
+      },
+      "libcal_form_ids": {
+        "name": "ids",
+        "in": "query",
+        "description": "Comma delimited list of LibCal form IDs",
+        "required": true,
+        "example": "38,62",
+        "schema": {
+          "type": "string"
+        }
       }
     },
     "schemas" : {
-      "libcal_location": {
+      "libcal_form_field": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "example": "First Name",
+            "description": "Label for the field in the LibCal booking form"
+          },
+          "type": {
+            "type": "string",
+            "example": "string",
+            "description": "Field type for the field in the LibCal booking form. Examples of field types include 'string' and 'dropdown'."
+          },
+          "required": {
+            "type": "boolean",
+            "example": false,
+            "description": "Whether the field in the LibCal booking form is required (true) or optional (false)"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "Medicine"
+            },
+            "description": "Array of options that will be provided if the field type is dropdown"
+          }
+        }
+      },
+      "libcal_form_id": {
+        "type": "integer",
+        "example": 0,
+        "description": "LibCal booking form ID"
+      },
+      "libcal_form": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/libcal_form_id"
+          },
+          "name": {
+            "type": "string",
+            "example": "COVID Health Check",
+            "description": "Name of the LibCal booking form"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/libcal_form_field"
+            }
+          }
+        }
+      },
+      "libcal_category_base": {
+        "properties": {
+          "cid": {
+            "type": "integer",
+            "example": 3334,
+            "description": "LibCal category ID denoting a category assigned to a particular space"
+          },
+          "formid": { "$ref": "#/components/schemas/libcal_form_id" },
+          "public": {
+            "type": "integer",
+            "example": 0,
+            "description": "1 if the category of spaces is publicly-bookable, 0 if it is not"
+          }
+        }
+      },
+      "libcal_category": {
+        "allOf": [
+          { "$ref": "#/components/schemas/libcal_category_base" }
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Study Space",
+            "description": "Name of the category"
+          }
+        }
+      },
+      "libcal_location_base": {
         "properties": {
           "lid": {
             "type": "integer",
@@ -314,7 +421,14 @@
             "type": "string",
             "example": "Bartlett Library",
             "description": "Name of the LibCal location in question"
-          },
+          }
+        }
+      },
+      "libcal_location": {
+        "allOf": [
+          { "$ref": "#/components/schemas/libcal_location_base" }
+        ],
+        "properties": {
           "public": {
             "type": "integer",
             "example": 1,
@@ -4551,7 +4665,7 @@
         "tags": [ "LibCal" ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/details"
+            "$ref": "#/components/parameters/libcal_details"
           }
         ],
         "security": [{
@@ -4632,7 +4746,7 @@
         } ],
         "parameters": [
           {
-            "$ref":"#/components/parameters/ids"
+            "$ref": "#/components/parameters/libcal_location_ids"
           }
         ],
         "responses": {
@@ -4646,12 +4760,234 @@
                     "ok": {
                       "type": "boolean"
                     },
-                    "data": {
+                    "categories": {
                       "type": "array",
                       "items": {
-
+                        "allOf": [
+                          { "$ref": "#/components/schemas/libcal_location_base" }
+                        ],
+                        "properties": {
+                          "categories": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/libcal_category"
+                            }
+                          }
+                        }
                       }
                     }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Request error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                },
+                "examples" : {
+                  "1" : {
+                    "$ref" : "#/components/examples/ErrorNoToken"
+                  },
+                  "2" : {
+                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  },
+                  "3" : {
+                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  },
+                  "4" : {
+                    "$ref" : "#/components/examples/ErrorThrottling"
+                  },
+                  "5" : {
+                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  },
+                  "6" : {
+                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  },
+                  "7" : {
+                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  },
+                  "8" : {
+                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  },
+                  "9" : {
+                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/libcal/space/category": {
+      "get": {
+        "summary": "Get all spaces corresponding to the specified categories",
+        "tags": [ "LibCal" ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/libcal_category_ids"
+          },
+          {
+            "$ref": "#/components/parameters/libcal_details"
+          },
+          {
+            "$ref": "#/components/parameters/libcal_availability"
+          }
+        ],
+        "security": [{
+          "OAuthSecurity": [],
+          "OAuthToken": []
+        }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "categories": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "allOf": [
+                          { "$ref": "#/components/schemas/libcal_category_base" }
+                        ],
+                        "properties": {
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "integer",
+                              "description": "LibCal Space ID",
+                              "example": 11903
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Request error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                },
+                "examples" : {
+                  "1" : {
+                    "$ref" : "#/components/examples/ErrorNoToken"
+                  },
+                  "2" : {
+                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  },
+                  "3" : {
+                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  },
+                  "4" : {
+                    "$ref" : "#/components/examples/ErrorThrottling"
+                  },
+                  "5" : {
+                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  },
+                  "6" : {
+                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  },
+                  "7" : {
+                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  },
+                  "8" : {
+                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  },
+                  "9" : {
+                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/libcal/space/form": {
+      "get": {
+        "summary": "Get all fields corresponding to the given LibCal form ID(s)",
+        "tags": [ "LibCal" ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/libcal_form_ids"
+          }
+        ],
+        "security": [{
+          "OAuthSecurity": [],
+          "OAuthToken": []
+        }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "forms": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/libcal_form"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Request error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/error"
+                },
+                "examples" : {
+                  "1" : {
+                    "$ref" : "#/components/examples/ErrorNoToken"
+                  },
+                  "2" : {
+                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  },
+                  "3" : {
+                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  },
+                  "4" : {
+                    "$ref" : "#/components/examples/ErrorThrottling"
+                  },
+                  "5" : {
+                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  },
+                  "6" : {
+                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  },
+                  "7" : {
+                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  },
+                  "8" : {
+                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  },
+                  "9" : {
+                    "$ref" : "#/components/examples/ErrorRejectedScope"
                   }
                 }
               }
