@@ -72,7 +72,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.11.3",
-    "@sentry/react": "^6.7.1",
+    "@sentry/react": "^6.7.2",
     "@sentry/tracing": "^6.7.1",
     "axios": "^0.21.1",
     "dayjs": "^1.10.4",
