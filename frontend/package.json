@@ -104,7 +104,7 @@
     "@babel/runtime": "^7.14.6",
     "@typescript-eslint/parser": "^4.27.0",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^27.0.2",
+    "babel-jest": "^27.0.5",
     "babel-loader": "^8.2.2",
     "babel-plugin-transform-imports": "^2.0.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
