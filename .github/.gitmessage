@@ -1,0 +1,31 @@
+
+# Add summary above this line   50 CHAR LIMIT -> |
+
+
+# Body text above this line, as many lines as you like with wordwrap at
+#                                                           72 CHAR -> |
+
+
+# Summary format:
+#      area subarea: message (all lowercase)
+# Summary examples:
+#      backend search: add new search function
+#   or backend workspaces: add historical endpoint
+#   or frontend pages: fix 404 page location
+#   or github actions: refactor CI
+
+# Use the following verbs:
+#   add = Create a capability e.g. feature, test, dependency.
+#   drop = Delete a capability e.g. feature, test, dependency.
+#   fix = Fix an issue e.g. bug, typo, accident, misstatement.
+#   bump = Increase the version of something e.g. a dependency.
+#   make = Change the build process, or tools, or infrastructure.
+#   start = Begin doing something; e.g. enable a toggle, feature flag, etc.
+#   stop = End doing something; e.g. disable a toggle, feature flag, etc.
+#   optimize = A change that MUST be just about performance, e.g. speed up code.
+#   document = A change that MUST be only in the documentation, e.g. help files.
+#   refactor = A change that MUST be just refactoring.
+#   reformat = A change that MUST be just format, e.g. indent line, trim space, etc.
+#   rephrase = A change that MUST be just textual, e.g. edit a comment, doc, etc.
+
+# Comments (starting #) are ignored in a commit message
