@@ -13,7 +13,7 @@ django-storages==1.11.1
 djangorestframework==3.12.4
 django-postgrespool2==2.0.1
 django-filter==2.4.0
-eventlet==0.31.0
+eventlet==0.31.1
 freezegun==1.1.0
 flake8==3.9.2
 gevent==21.1.2
