@@ -129,7 +129,7 @@
     "husky": "^6.0.0",
     "jest": "^27.0.4",
     "lint-staged": "^11.0.0",
-    "mini-css-extract-plugin": "^1.5.0",
+    "mini-css-extract-plugin": "^2.1.0",
     "node-sass": "^6.0.0",
     "npm-check-updates": "^11.7.1",
     "react-test-renderer": "^17.0.2",
