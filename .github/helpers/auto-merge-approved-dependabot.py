@@ -14,7 +14,7 @@ def wrap_subprocess(cmd):
     if run_result.returncode != 0:
         print(run_result.stdout)
         print(run_result.stderr)
-        raise subprocess.CalledProcessError
+        raise subprocess.CalledProcessError(cmd, run_result.returncode)
 
     return run_result
 
