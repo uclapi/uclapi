@@ -13,7 +13,7 @@ jobs:
       with:
         python-version: 3.7
     - name: Run helper function
-      run: gh auth login --with-token < ${{secrets.PERSONAL_DEPENDABOT_GITHUB_TOKEN}} && 
+      run: gh auth login --with-token < echo ${{secrets.PERSONAL_DEPENDABOT_GITHUB_TOKEN}} && 
            python .github/helpers/auto-merge-approved-dependabot.py
       env:
         GITHUB_TOKEN: ${{secrets.PERSONAL_DEPENDABOT_GITHUB_TOKEN}}
