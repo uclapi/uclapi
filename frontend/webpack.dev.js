@@ -40,7 +40,7 @@ module.exports = {
         test: /\.(jpg|png|svg|jpeg)$/,
         use: [
           {
-            loader: `file-loader`,
+            loader: `url-loader`,
             options: {
               esModule: false,
             },
