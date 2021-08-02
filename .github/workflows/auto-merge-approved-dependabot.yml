@@ -3,7 +3,7 @@ name: Auto Merge Approved Dependabot
 on: workflow_dispatch
 
 jobs:
-  run:
+  Run:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -13,7 +13,8 @@ jobs:
       with:
         python-version: 3.7
     - name: Run helper function
-      run: echo ${{secrets.PERSONAL_DEPENDABOT_GITHUB_TOKEN}} | gh auth login --with-token && 
+      run: unset GITHUB_TOKEN &&
+           echo ${{secrets.PERSONAL_DEPENDABOT_GITHUB_TOKEN}} | gh auth login --with-token && 
            python .github/helpers/auto-merge-approved-dependabot.py
       env:
         GITHUB_TOKEN: ${{secrets.PERSONAL_DEPENDABOT_GITHUB_TOKEN}}
