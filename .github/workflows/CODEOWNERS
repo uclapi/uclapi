@@ -1,0 +1,5 @@
+# It is essential @greenfrogs is consulted for changes to
+# auto-merge-approved-dependabot or any change which uses
+# the github token secret.
+
+auto-merge-approved-dependabot.yml @greenfrogs
