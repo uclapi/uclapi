@@ -9,11 +9,19 @@ import json
 from time import sleep, time
 
 
+def wrap_subprocess(cmd):
+    run_result = subprocess.run(cmd, capture_output=True)
+    if run_result.returncode != 0:
+        print(run_result.stdout)
+        print(run_result.stderr)
+        raise subprocess.CalledProcessError
+
+    return run_result
+
+
 def request_authorised_dependabot():
-    prs = subprocess.run(
-        ['gh', 'pr', 'list', '--search', 'author:app/dependabot review:approved', '--json', 'number,title'],
-        capture_output=True,
-        check=True)
+    prs = wrap_subprocess(
+        ['gh', 'pr', 'list', '--search', 'author:app/dependabot review:approved', '--json', 'number,title'])
 
     prs_dict = json.loads(prs.stdout)
     prs_dict.sort(key=lambda x: x['number'])
@@ -21,11 +29,14 @@ def request_authorised_dependabot():
 
 
 def is_pr_behind(pr):
-    merge_state = subprocess.run(['gh', 'pr', 'view', str(pr), '--json', 'mergeStateStatus'],
-                                 capture_output=True,
-                                 check=True)
-    merge_state_dict = json.loads(merge_state.stdout)
-    return merge_state_dict['mergeStateStatus'] == 'BEHIND'
+    try:
+        merge_state = wrap_subprocess(['gh', 'pr', 'view', str(pr), '--json', 'mergeStateStatus'])
+        merge_state_dict = json.loads(merge_state.stdout)
+        return merge_state_dict['mergeStateStatus'] == 'BEHIND'
+    except subprocess.CalledProcessError as exception:
+        print(merge_state.stdout)
+        print(merge_state.stderr)
+        raise exception
 
 
 def pretty_time_delta(seconds):
@@ -51,11 +62,11 @@ while len(requests) > 0:
     number = requests[0]['number']
 
     # Ensure auto merge is enabled
-    auto_merge = subprocess.run(['gh', 'pr', 'merge', str(number), '--auto', '--squash'], check=True)
+    auto_merge = wrap_subprocess(['gh', 'pr', 'merge', str(number), '--auto', '--squash'])
 
     # Rebase with dependabot
     if is_pr_behind(number):
-        comment = subprocess.run(['gh', 'pr', 'comment', str(number), '-b', '@dependabot rebase'], check=True)
+        comment = wrap_subprocess(['gh', 'pr', 'comment', str(number), '-b', '@dependabot rebase'])
 
     start = time()
     sleep(ci_time)
