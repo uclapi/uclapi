@@ -6,7 +6,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  build:
+  run:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
