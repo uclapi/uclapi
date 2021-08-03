@@ -70,6 +70,7 @@ module.exports = {
             loader: `url-loader`,
             options: {
               esModule: false,
+              limit: true,
             },
           },
         ],
