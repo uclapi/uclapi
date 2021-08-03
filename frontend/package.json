@@ -89,7 +89,7 @@
     "react-pose": "^4.0.10",
     "react-responsive-carousel": "^3.2.20",
     "react-router-dom": "^5.2.0",
-    "react-syntax-highlighter": "^15.4.3",
+    "react-syntax-highlighter": "^15.4.4",
     "react-tabs": "^3.2.2",
     "whatwg-fetch": "^3.6.2",
     "swagger-ui-react": "^3.51.2"
