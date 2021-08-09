@@ -16,7 +16,7 @@ django-filter==2.4.0
 eventlet==0.31.1
 freezegun==1.1.0
 flake8==3.9.2
-gevent==21.1.2
+gevent==21.8.0
 gunicorn==20.1.0
 greenlet==1.1.1
 hiredis==2.0.0
