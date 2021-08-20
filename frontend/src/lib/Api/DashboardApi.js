@@ -33,7 +33,7 @@ class DashboardApi {
         if (error.response) {
           throw new Error(error.response.data.message)
         }
-        throw new Error(error)
+        throw new Error(error.message)
     })
     if(!ok){
       throw new Error(message)
