@@ -43,8 +43,31 @@ Our codebase consists out of multiple languages (JavaScript for front-end, Pytho
 We use [Hound CI](https://houndci.com) to automatically check PR's for style-guide violuations. Unless all faults detected are removed, HoundCI will mark the commit as failing to build.
 
 ### Git commit messages
-* Use present tense ("Improve description field" or "changing X to work with Y")
-* Try to limit the commit message to 50 characters or less. You can always use multiple lines.
+
+Please follow the commit message format found in `.github/.gitmessage`, we recommend you set this as your commit message template with `git config commit.template ./.github/.gitmessage`. Please use the following format (first line for a summary and limited to 50 characters):
+```
+Summary format:
+     area subarea: message (all lowercase)
+Summary examples:
+     backend search: add new search function
+  or backend workspaces: add historical endpoint
+  or frontend pages: fix 404 page location
+  or github actions: refactor CI
+
+Use the following verbs:
+  add = Create a capability e.g. feature, test, dependency.
+  drop = Delete a capability e.g. feature, test, dependency.
+  fix = Fix an issue e.g. bug, typo, accident, misstatement.
+  bump = Increase the version of something e.g. a dependency.
+  make = Change the build process, or tools, or infrastructure.
+  start = Begin doing something; e.g. enable a toggle, feature flag, etc.
+  stop = End doing something; e.g. disable a toggle, feature flag, etc.
+  optimize = A change that MUST be just about performance, e.g. speed up code.
+  document = A change that MUST be only in the documentation, e.g. help files.
+  refactor = A change that MUST be just refactoring.
+  reformat = A change that MUST be just format, e.g. indent line, trim space, etc.
+  rephrase = A change that MUST be just textual, e.g. edit a comment, doc, etc.
+```
 
 ## Closing remarks
 This document was inspired by [Atom's contribution guide](https://github.com/atom/atom/blob/master/CONTRIBUTING.md).
