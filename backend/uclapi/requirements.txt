@@ -6,7 +6,7 @@ ciso8601==2.2.0
 cx-Oracle==8.2.1
 Django==2.2.24
 deepdiff==5.5.0
-django-cors-headers==3.7.0
+django-cors-headers==3.8.0
 django-dotenv==1.4.2
 django-mock-queries==2.1.6
 django-storages==1.11.1
