@@ -29,6 +29,11 @@ class DashboardApi {
     const { data: { ok, message, ...values } } = await DashboardApi.post(`/webhook/edit/`, {
       app_id: appId,
       ...settings,
+    }).catch((error) => {
+        if (error.response) {
+          throw new Error(error.response.data.message)
+        }
+        throw new Error(error)
     })
     if(!ok){
       throw new Error(message)
