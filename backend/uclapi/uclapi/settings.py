@@ -150,6 +150,7 @@ if os.environ.get('SENTRY_DSN'):
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
     from sentry_sdk.integrations.redis import RedisIntegration
+     from sentry.integrations.logging import ignore_logger
 
     def remove_token(event, _):
         scrubbers_keys = ['token', 'client_secret', 'X-RateLimit-Remaining', 'X-RateLimit-Limit',
@@ -179,6 +180,8 @@ if os.environ.get('SENTRY_DSN'):
         send_default_pii=False,
         before_send=remove_token
     )
+    
+    ignore_logger('django.security.DisallowedHost')
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
