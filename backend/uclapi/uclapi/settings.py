@@ -150,7 +150,7 @@ if os.environ.get('SENTRY_DSN'):
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
     from sentry_sdk.integrations.redis import RedisIntegration
-    from sentry.integrations.logging import ignore_logger
+    from sentry_sdk.integrations.logging import ignore_logger
 
     def remove_token(event, _):
         scrubbers_keys = ['token', 'client_secret', 'X-RateLimit-Remaining', 'X-RateLimit-Limit',
