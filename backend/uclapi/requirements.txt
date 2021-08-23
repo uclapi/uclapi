@@ -1,12 +1,12 @@
 autopep8==1.5.7
-boto3==1.18.16
+boto3==1.18.21
 cachet-client==3.1.1
 celery==5.1.2
 ciso8601==2.2.0
 cx-Oracle==8.2.1
 Django==2.2.24
 deepdiff==5.5.0
-django-cors-headers==3.7.0
+django-cors-headers==3.8.0
 django-dotenv==1.4.2
 django-mock-queries==2.1.6
 django-storages==1.11.1
@@ -33,6 +33,6 @@ redis==3.5.3
 requests==2.26.0
 requests-futures==1.0.0
 Sphinx==4.1.2
-tqdm==4.62.0
+tqdm==4.62.1
 validators==0.18.2
 git+git://github.com/uclapi/django-webpack-loader@master#egg=django-webpack-loader
