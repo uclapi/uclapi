@@ -313,7 +313,8 @@
             "description": "Unique Person Identifier."
           },
           "scope_number" : {
-            "type" : "number",
+            "type" : "integer",
+            "format" : "int64",
             "example" : 0,
             "description": "Scopes the application has access to on behalf of the user."
           },
@@ -465,7 +466,7 @@
       "delivery" : {
         "properties" : {
           "fheq_level" : {
-            "type" : "number",
+            "type" : "integer",
             "example" : 7,
             "description": "The level the course is taught at, and whether it is an undergraduate (true) or postgraduate (false) course."
           },
@@ -573,7 +574,7 @@
           },
           "email" : {
             "type" : "string",
-            "example" : "ucachun@ucl.ac.yk",
+            "example" : "ucachun@ucl.ac.uk",
             "description": "Email address for lecturer"
           }
         }
@@ -607,7 +608,6 @@
           },
           "capacity" : {
             "type" : "integer",
-            "format" : "int64",
             "example" : 94,
             "description": "Capacity of the room (e.g. how many seats are in a lecture theatre, or how many can be sat at tables in a flat space)."
           },
@@ -615,13 +615,13 @@
             "type" : "object",
             "properties" : {
               "lat" : {
-                "type" : "number",
-                "example" : null,
+                "type" : "string",
+                "example" : "51.524699",
                 "description": "Latitude of location"
               },
               "lng" : {
-                "type" : "number",
-                "example" : null,
+                "type" : "string",
+                "example" : "-0.13366",
                 "description": "Longitude of location"
               }
             }
@@ -655,7 +655,7 @@
             "description": "The module code."
           },
           "years" : {
-            "type" : "number",
+            "type" : "integer",
             "example" : 1,
             "description": "Length of the course given in years."
           }
@@ -684,7 +684,7 @@
             "description": "Every site (building) has a name. In some cases this is contained in the roomname as well."
           },
           "capacity" : {
-            "type" : "string",
+            "type" : "integer",
             "example" : 50,
             "description": "Every room has a set capacity of how many people can fit inside it. When supplied, all rooms with the given capacity or greater will be returned."
           },
@@ -720,12 +720,12 @@
                 "type" : "object",
                 "properties" : {
                   "lat" : {
-                    "type" : "number",
+                    "type" : "string",
                     "example" : "51.524699",
                     "description": "Latitude of location"
                   },
                   "lng" : {
-                    "type" : "number",
+                    "type" : "string",
                     "example" : "-0.13366",
                     "description": "Longitude of location"
                   }
@@ -739,6 +739,7 @@
         "properties" : {
           "slotid" : {
             "type" : "number",
+            "format" : "int64",
             "example" : 998503,
             "description": "Slot ID."
           },
@@ -758,8 +759,8 @@
             "description": "The name of the room. It often includes the name of the site (building) as well."
           },
           "siteid" : {
-            "type" : "number",
-            "example" : 86.0,
+            "type" : "string",
+            "example" : "005",
             "description": "Every room is inside a site (building). All sites have IDs."
           },
           "contact" : {
@@ -773,8 +774,8 @@
             "description": "Timetabled week number."
           },
           "roomid" : {
-            "type" : "number",
-            "example" : "433",
+            "type" : "string",
+            "example" : "Z5",
             "description": "The room ID (not to be confused with the roomname)."
           },
           "start_time" : {
@@ -919,8 +920,8 @@
             "description": "Standard UCL closing time supplied by the backend. This field should NOT be trusted as information on when a particular library closes. This is usually set to 17:00."
           },
           "staff_survey" : {
-            "type" : "number",
-            "example" : 0,
+            "type" : "boolean",
+            "example" : true,
             "description": "Whether the survey represents a staff workspace (`true`) or a student work or study space (`false`). This is useful in apps where you set the `survey_filter` parameter to `all` and wish to do filtering of student and staff workspaces in your app or API as opposed to leaving the filtering to UCL API. By default, as `survey_filter` is set to `student` unless you specify otherwise, all workspaces will have this parameter set to `false`."
           },
           "maps" : {
@@ -974,7 +975,7 @@
             "description": "The name of the mapped section of the library's survey, such as a level, room or wing."
           },
           "image_id" : {
-            "type" : "number",
+            "type" : "integer",
             "example" : 123,
             "description": "The ID of the map's image. This can be used to download a CAD drawing of the map."
           }
@@ -983,8 +984,8 @@
       "map_with_sensors" : {
         "properties" : {
           "id" : {
-            "type" : "string",
-            "example" : "73",
+            "type" : "integer",
+            "example" : 73,
             "description": "The map's ID."
           },
           "name" : {
@@ -993,8 +994,8 @@
             "description": "The name of the mapped section of the library's survey, such as a level, room or wing."
           },
           "image_id" : {
-            "type" : "string",
-            "example" : "79",
+            "type" : "integer",
+            "example" : 79,
             "description": "The ID of the map's image. This can be used to download a CAD drawing of the map."
           },
           "sensors" : {
@@ -1121,7 +1122,7 @@
       "sensor_average_survey" : {
         "properties" : {
           "survey_id" : {
-            "type" : "number",
+            "type" : "integer",
             "example" : 46,
             "description": "The ID of the library/survey that was requested in the query parameter."
           },
@@ -1218,17 +1219,17 @@
       "average" : {
         "properties" : {
           "sensors_absent" : {
-            "type" : "number",
+            "type" : "integer",
             "example" : 291,
             "description": "The average number of free seats at time t."
           },
           "sensors_total" : {
-            "type" : "number",
+            "type" : "integer",
             "example" : 324,
             "description": "The total number of used seats at time t."
           },
           "sensors_occupied" : {
-            "type" : "number",
+            "type" : "integer",
             "example" : 33,
             "description": "The average number of used seats at time t."
           }
@@ -1237,17 +1238,17 @@
       "average_with_name_and_id" : {
         "properties" : {
           "sensors_absent" : {
-            "type" : "number",
+            "type" : "integer",
             "example" : 47,
             "description": "Number of free seats in that section of the library."
           },
           "sensors_total" : {
-            "type" : "number",
+            "type" : "integer",
             "example" : 50,
             "description": "The total number of used seats at time t."
           },
           "sensors_occupied" : {
-            "type" : "number",
+            "type" : "integer",
             "example" : 3,
             "description": "Number of taken / occupied seats in that section of the library."
           },
@@ -1257,8 +1258,8 @@
             "description": "The name of the survey (library)."
           },
           "id" : {
-            "type" : "string",
-            "example" : "72",
+            "type" : "integer",
+            "example" : 72,
             "description": "ID of the library region (map)."
           }
         }
@@ -1271,22 +1272,22 @@
             "description": "Name of the library region (map)."
           },
           "id" : {
-            "type" : "string",
-            "example" : "73",
+            "type" : "integer",
+            "example" : 73,
             "description": "ID of the library region (map)."
           },
           "sensors_absent" : {
-            "type" : "number",
+            "type" : "integer",
             "example" : 72,
             "description": "Number of free seats in that section of the library."
           },
           "sensors_total" : {
-            "type" : "number",
+            "type" : "integer",
             "example" : 80,
             "description": "The total number of used seats at time t."
           },
           "sensors_occupied" : {
-            "type" : "number",
+            "type" : "integer",
             "example" : 3,
             "description": "Number of taken / occupied seats in that section of the library."
           },
@@ -2134,7 +2135,7 @@
           "required" : true,
           "schema" : {
             "type" : "string",
-            "example" : 1
+            "example" : "9020633324528794.9923205739531139"
           }
         }, {
           "name" : "state",
@@ -2214,7 +2215,8 @@
           "description" : "Client ID of the authenticating app.",
           "required" : true,
           "schema" : {
-            "type" : "string"
+            "type" : "string",
+            "example": "9020633324528794.9923205739531139"
           }
         }, {
           "name" : "code",
@@ -2609,7 +2611,7 @@
                   "Invalid date/time" : {
                     "value" : {
                       "ok" : false,
-                      "error" : "date/time isn't formatted as suggested in the docs"
+                      "error" : "start_datetime/end_datetime isn't formatted as suggested in the docs"
                     }
                   },
                   "Invalid results_per_page" : {
@@ -2792,7 +2794,7 @@
                   "Invalid date/time" : {
                     "value" : {
                       "ok" : false,
-                      "error" : "date/time isn't formatted as suggested in the docs"
+                      "error" : "start_datetime/end_datetime isn't formatted as suggested in the docs"
                     }
                   }
                 }
@@ -4248,9 +4250,9 @@
   },
   "servers" : [ {
     "url" : "https://uclapi.com",
-    "description" : "Deployment server"
+    "description" : "Production Server"
   }, {
     "url" : "https://staging.ninja",
-    "description" : "Staging server"
+    "description" : "Staging Server"
   } ]
 }
