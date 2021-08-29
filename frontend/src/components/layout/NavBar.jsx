@@ -1,7 +1,7 @@
 // Imports
 import PropTypes from 'prop-types'
 import React from 'react'
-import posed from 'react-pose'
+import { motion } from 'framer-motion'
 import about from '../../images/navbar/about.svg'
 import dashboard from '../../images/navbar/dashboard.svg'
 import docs from '../../images/navbar/docs.svg'
@@ -46,14 +46,14 @@ const maxScreen = 1030
 const menuSize = 189
 const navbarHeight = 60
 
-const Toast = posed.div({
+const toast = {
   hidden: { top: `-` + navbarHeight + `px` },
   shown: { top: 0 },
-})
-const SlideDown = posed.div({
+}
+const slideDown = {
   shown: { height: menuSize + `px` },
   hidden: { height: 0 },
-})
+}
 
 class NavBar extends React.Component {
   static propTypes = {
@@ -152,9 +152,10 @@ class NavBar extends React.Component {
   render() {
     const { isVisible, isSmall, isMenuHidden } = this.state
     return <div className="navbar-extras">
-      <Toast
+      <motion.div
         className="navbarconsistent centered"
         pose={isVisible ? `shown` : `hidden`}
+        variants={toast}
       >
         <a href={`/`}>
           <img src={logo} />
@@ -183,16 +184,17 @@ class NavBar extends React.Component {
               </div>
             )}
         </div>
-      </Toast>
+      </motion.div>
       {isSmall ? (
-        <SlideDown
+        <motion.div
           className="link-titles-menu"
           pose={isMenuHidden ? `hidden` : `shown`}
+          variants={slideDown}
         >
           {links.map((s, key) => (
             <Link key={key} name={s.name} src={s.src} link={s.link} isSmall />
           ))}
-        </SlideDown>
+        </motion.div>
       ) : null}
     </div>
   }
