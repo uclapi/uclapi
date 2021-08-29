@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 import React from 'react'
-import posed from 'react-pose'
+import { motion } from 'framer-motion'
 
-const Bounce = posed.div({
+const variant = {
     up: { marginTop: `-8px` },
     middle: { marginTop: 0 },
     down: { marginTop: `8px` },
-})
+}
 
 class Link extends React.Component {
     constructor(props) {
@@ -35,6 +35,7 @@ class Link extends React.Component {
             }
         }, 450)
     }
+
     onMouseLeaveHandler() {
         window.clearInterval(this.mInterval)
 
@@ -43,6 +44,7 @@ class Link extends React.Component {
             animation: `middle`,
         })
     }
+
     bounce() {
         const { animation } = this.state
         const newAnimationState = (animation == `middle` || animation == `down`) ? `up` : `down`
@@ -71,9 +73,9 @@ padding: `10px 0 10px 0` }}
         } else {
             return (
                 <div className="link-to-page" onMouseEnter={this.onMouseEnterHandler} onMouseLeave={this.onMouseLeaveHandler} >
-                    <Bounce className="bounce-image" pose={animation}>
+                    <motion.div className="bounce-image" variants={variant}>
                         <img src={this.props.src} />
-                    </Bounce>
+                    </motion.div>
                     <a href={this.props.link}>
                         <h1>{this.props.name}</h1>
                     </a>

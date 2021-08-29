@@ -43,20 +43,6 @@ if os.environ.get("UCLAPI_DOMAIN"):
 
 UCLAPI_DOMAIN_CURRENT = os.environ.get("UCLAPI_DOMAIN")
 
-# If we are running under the AWS Elastic Load Balancer then enable internal
-# requests so that the ELB and Health Checks work
-if strtobool(os.environ.get("UCLAPI_RUNNING_ON_AWS_ELB")):
-    EC2_PRIVATE_IP = None
-    try:
-        EC2_PRIVATE_IP = requests.get(
-            "http://169.254.169.254/latest/meta-data/local-ipv4",
-            timeout=0.01
-        ).text
-    except requests.exceptions.RequestException:
-        pass
-
-    if EC2_PRIVATE_IP:
-        ALLOWED_HOSTS.append(EC2_PRIVATE_IP)
 
 # Application definition
 
@@ -81,6 +67,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'common.middleware.health_check_middleware.HealthCheckMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -163,6 +150,7 @@ if os.environ.get('SENTRY_DSN'):
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
     from sentry_sdk.integrations.redis import RedisIntegration
+    from sentry_sdk.integrations.logging import ignore_logger
 
     def remove_token(event, _):
         scrubbers_keys = ['token', 'client_secret', 'X-RateLimit-Remaining', 'X-RateLimit-Limit',
@@ -186,11 +174,13 @@ if os.environ.get('SENTRY_DSN'):
 
     sentry_sdk.init(
         dsn=os.environ.get('SENTRY_DSN'),
+        environment=os.environ.get('SENTRY_DSN_ENV', 'testing'),
         integrations=[DjangoIntegration(), RedisIntegration()],
         traces_sample_rate=0.01,
         send_default_pii=False,
         before_send=remove_token
     )
+    ignore_logger('django.security.DisallowedHost')
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),

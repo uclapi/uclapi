@@ -9,6 +9,9 @@ jobs:
     name: deploy to staging
     runs-on: ubuntu-latest
     if: github.event.pull_request.base.ref == 'master' && github.event.pull_request.merged == true
+    env:
+      FORBIDDEN_CALLBACK_URLS: uclapi.com;staging.ninja
+      WHITELISTED_CALLBACK_URLS: https://live-roombookings.uclapi.com/webhook/;https://hackathon.uclapi.com/callback
     environment: Staging
     steps:
       - name: Checkout code
@@ -60,6 +63,8 @@ jobs:
           AWS_S3_BUCKET_NAME: uclapi-static-staging
           AWS_S3_BUCKET_PATH: static/
           AWS_S3_STATICS: True
+          SENTRY_DSN_REACT: ${{ secrets.SENTRY_DSN_REACT }}
+          SENTRY_DSN_ENV: staging
         run: |
           cd ./frontend/ && \
           npm run build
@@ -77,8 +82,8 @@ jobs:
 
       - name: Decrypt secrets
         env:
-          encrypted_7e23b3ba1922_iv: ${{ secrets.encrypted_7e23b3ba1922_iv }}
-          encrypted_7e23b3ba1922_key: ${{ secrets.encrypted_7e23b3ba1922_key }}
+          encrypted_7e23b3ba1922_iv: ${{ secrets.ENCRYPTED_7E23B3BA1922_IV }}
+          encrypted_7e23b3ba1922_key: ${{ secrets.ENCRYPTED_7E23B3BA1922_KEY }}
         run: |
           openssl aes-256-cbc -K $encrypted_7e23b3ba1922_key -iv $encrypted_7e23b3ba1922_iv -in keys.tar.enc -out keys.tar -d && \
           tar xvf keys.tar
@@ -86,24 +91,14 @@ jobs:
       - name: Collect statics to S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_S3_BUCKET_NAME: uclapi-static-staging
           AWS_S3_BUCKET_PATH: static/
           AWS_S3_REGION: eu-west-2
           AWS_S3_STATICS_CREDENTIALS_ENABLED: True
           AWS_S3_STATICS: True
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          FORBIDDEN_CALLBACK_URLS: ${{ secrets.FORBIDDEN_CALLBACK_URLS }}
-          OCCUPEYE_BASE_URL: ${{ secrets.OCCUPEYE_BASE_URL }}
-          OCCUPEYE_DEPLOYMENT_ID: ${{ secrets.OCCUPEYE_DEPLOYMENT_ID }}
-          OCCUPEYE_DEPLOYMENT_NAME: ${{ secrets.OCCUPEYE_DEPLOYMENT_NAME }}
-          OCCUPEYE_PASSWORD: ${{ secrets.OCCUPEYE_PASSWORD }}
-          OCCUPEYE_THREAD_LIMIT: ${{ secrets.OCCUPEYE_THREAD_LIMIT }}
-          OCCUPEYE_USERNAME: ${{ secrets.OCCUPEYE_USERNAME }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          SHIB_TEST_USER: ${{ secrets.SHIB_TEST_USER }}
           UCLAPI_PRODUCTION: True
           UCLAPI_RUNNING_ON_AWS_ELB: False
-          WHITELISTED_CALLBACK_URLS: ${{ secrets.WHITELISTED_CALLBACK_URLS }}
         run: |
           cd ./backend/uclapi && \
           ./manage.py collectstatic --noinput
