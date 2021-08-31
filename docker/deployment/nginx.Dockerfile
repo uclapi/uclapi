@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 #################################
 #### Control versioning here ####
@@ -12,6 +12,9 @@ ARG ENVIRONMENT
 
 ENV NGINX_BUILD ${NGINX_BUILD}
 ENV ENVIRONMENT ${ENVIRONMENT}
+ENV VERSION ${VERSION}
+
+ENV DEBIAN_FRONTEND="noninteractive" TZ="Europe/London"
 
 #################################
 ######## Main Parameters ########
@@ -37,6 +40,15 @@ RUN apt-get update && \
                        gnupg && \
     apt-get clean
 
+# Installing Certbot
+RUN apt-get install -y python3 python3-dev libffi7 libffi-dev libssl-dev curl build-essential procps && \
+    curl -L 'https://bootstrap.pypa.io/get-pip.py' | python3 && \
+    pip install -U cffi certbot && \
+    apt-get remove --purge -y python3-dev build-essential libffi-dev libssl-dev && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Installing Nginx
 ENV NGINX_AWS_URL https://${AWS_BUCKET}.s3.amazonaws.com/nginx
 
@@ -52,11 +64,15 @@ RUN if [ "$NGINX_BUILD" = "latest" ]; \
     wget "${NGINX_AWS_URL}" -O - | tar zxvf - -C /usr/local/nginx/
 
 COPY ./nginx/nginx-conf/* /usr/local/nginx/conf/
+RUN mkdir /usr/local/nginx/conf/conf.d
+COPY ./nginx/nginx-conf/conf.d/* /usr/local/nginx/conf/conf.d/
 
 RUN if [ ${ENVIRONMENT} = "prod" ]; \
-    then sed -i -e 's/SERVER_NAME_HERE/uclapi\.com/' /usr/local/nginx/conf/nginx.conf; \
-    else sed -i -e 's/SERVER_NAME_HERE/staging\.ninja/' /usr/local/nginx/conf/nginx.conf; \
+    then sed -i -e 's/SERVER_NAME_HERE/uclapi\.com/' /usr/local/nginx/conf/conf.d/nginx.conf; \
+    else sed -i -e 's/SERVER_NAME_HERE/staging\.ninja/' /usr/local/nginx/conf/conf.d/nginx.conf; \
     fi
+
+run sed -i -e "s/VERSION_NUMBER_HERE/$VERSION/" /usr/local/nginx/conf/conf.d/nginx.conf; 
 
 # Set up the SWITCH respository to get Shibboleth SP 3
 RUN wget http://pkg.switch.ch/switchaai/SWITCHaai-swdistrib.asc && \
@@ -91,9 +107,9 @@ ARG POSTGRES_DATABASE
 ARG POSTGRES_USERNAME
 ARG POSTGRES_PASSWORD
 
-ENV POSTGRES_DATABASE $POSTGRES_DATABASE
-ENV POSTGRES_USERNAME $POSTGRES_USERNAME
-ENV POSTGRES_PASSWORD $POSTGRES_PASSWORD
+ENV POSTGRES_DATABASE ${POSTGRES_DATABASE}
+ENV POSTGRES_USERNAME ${POSTGRES_USERNAME}
+ENV POSTGRES_PASSWORD ${POSTGRES_PASSWORD}
 
 RUN echo -n "Setting up PostgreSQL Credentials with username: " && echo ${POSTGRES_USERNAME}
 
@@ -108,12 +124,11 @@ COPY ./nginx/supervisor-conf/shib.conf        /etc/supervisor/conf.d/
 COPY ./nginx/supervisor-conf/nginx.conf       /etc/supervisor/conf.d/
 
 RUN mkdir -p /var/run/shibboleth
+RUN mkdir -p /var/www/letsencrypt
 
 COPY ./nginx/run.sh ./run.sh
-RUN chmod +x ./run.sh
-
-RUN service supervisor stop; \
-    service supervisor start; \
-    supervisorctl restart all
+COPY ./nginx/util.sh ./util.sh
+COPY ./nginx/run-certbot.sh ./run-certbot.sh
+RUN chmod +x ./run.sh ./util.sh ./run-certbot.sh
 
 CMD ["bash", "run.sh"]

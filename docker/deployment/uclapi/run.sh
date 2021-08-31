@@ -8,9 +8,9 @@ while /bin/true; do
     fi
 
     # Now check each other service
-    ps aux | grep uclapi | grep -q -v grep
+    supervisorctl status uclapi | grep -q RUNNING
     UCLAPI_STATUS=$?
-    ps aux | grep celery | grep -q -v grep
+    supervisorctl status celery-uclapi | grep -q RUNNING
     CELERY_STATUS=$?
 
     if [ $UCLAPI_STATUS -ne 0 ]; then

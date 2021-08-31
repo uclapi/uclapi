@@ -30,6 +30,7 @@ services:
         POSTGRES_PASSWORD: ${SHIB_POSTGRES_PASSWORD}
         POSTGRES_DATABASE: ${SHIB_POSTGRES_DATABASE}
         NGINX_BUILD: latest
+        VERSION: ${UCLAPI_VERSION}
     depends_on:
       - shibpostgres
     ports:
