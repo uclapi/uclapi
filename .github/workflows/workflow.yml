@@ -277,7 +277,7 @@ jobs:
           SHIB_POSTGRES_PASSWORD: ${{ secrets.SHIB_POSTGRES_PASSWORD }}
           SHIB_POSTGRES_DATABASE: ${{ secrets.SHIB_POSTGRES_DATABASE }}
           ENVIRONMENT: staging
-          UCLAPI_VERSION: "${{ steps.version.outputs.content }}-${GITHUB_SHA}"
+          UCLAPI_VERSION: "${{ steps.version.outputs.content }}-${ github.sha }"
         run: |
           cd docker/deployment && \
           sed -i "s/:latest/:${{ steps.version.outputs.content }}-${GITHUB_SHA}/g" docker-compose-staging.yml && \

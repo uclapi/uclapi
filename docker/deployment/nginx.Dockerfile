@@ -12,7 +12,6 @@ ARG ENVIRONMENT
 
 ENV NGINX_BUILD ${NGINX_BUILD}
 ENV ENVIRONMENT ${ENVIRONMENT}
-ENV VERSION ${VERSION}
 
 ENV DEBIAN_FRONTEND="noninteractive" TZ="Europe/London"
 
@@ -72,8 +71,6 @@ RUN if [ ${ENVIRONMENT} = "prod" ]; \
     else sed -i -e 's/SERVER_NAME_HERE/staging\.ninja/' /usr/local/nginx/conf/conf.d/nginx.conf; \
     fi
 
-run sed -i -e "s/VERSION_NUMBER_HERE/$VERSION/" /usr/local/nginx/conf/conf.d/nginx.conf; 
-
 # Set up the SWITCH respository to get Shibboleth SP 3
 RUN wget http://pkg.switch.ch/switchaai/SWITCHaai-swdistrib.asc && \
     VERIFY_CHECKSUM=`shasum -a 256 SWITCHaai-swdistrib.asc | head -n1 | awk '{print $1;}'` && \
@@ -130,5 +127,8 @@ COPY ./nginx/run.sh ./run.sh
 COPY ./nginx/util.sh ./util.sh
 COPY ./nginx/run-certbot.sh ./run-certbot.sh
 RUN chmod +x ./run.sh ./util.sh ./run-certbot.sh
+
+ENV VERSION ${VERSION}
+RUN sed -i -e "s/VERSION_NUMBER_HERE/$VERSION/" /usr/local/nginx/conf/conf.d/certbot.conf
 
 CMD ["bash", "run.sh"]
