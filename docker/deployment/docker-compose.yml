@@ -33,6 +33,8 @@ services:
         VERSION: ${UCLAPI_VERSION}
     depends_on:
       - shibpostgres
+    volumes:
+      - ssl-keys:/etc/letsencrypt/live/
     ports:
       - "80:80"
       - "443:443"
@@ -46,3 +48,7 @@ services:
       - nginx-shib
     ports:
       - "9000:9000"
+
+volumes:
+  ssl-keys:
+    driver: local
