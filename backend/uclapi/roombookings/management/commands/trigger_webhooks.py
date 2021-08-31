@@ -153,21 +153,19 @@ class Command(BaseCommand):
             if webhook["payload"]["content"] != {}:
                 webhook_in_db = webhook["webhook_in_db"]
 
-                webhook_success = False
                 status_code = -1
                 if "response" in webhook:
                     status_code = webhook["response"].result().status_code
                     if status_code < 400:
                         webhook_in_db.last_success = timezone.now()
-                        webhook_success = True
 
-                webhook_in_db.last_fired = timezone.now()
-                webhook_in_db.save()
+                if webhook["url"] != "":
+                    webhook_in_db.last_fired = timezone.now()
+                    webhook_in_db.save()
 
                 new_webhook_history_entry = WebhookTriggerHistory(
                     webhook=webhook_in_db,
                     payload=webhook["payload"],
-                    success=webhook_success,
                     status_code=status_code
                 )
                 new_webhook_history_entry.save()
