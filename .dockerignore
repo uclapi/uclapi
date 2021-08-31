@@ -1,2 +1,4 @@
-**
-!backend/uclapi/requirements.txt
+.github/
+.git/
+.vscode/
+backend/uclapi/venv/
