@@ -1,11 +1,16 @@
 #!/bin/bash
+
 while /bin/true; do
+
     # Ensure Supervisor is alive first
     ps aux | grep supervisor | grep -q -v grep
     SUPERVISOR_STATUS=$?
     if [ $SUPERVISOR_STATUS -ne 0 ]; then
         service supervisor start
     fi
+
+    echo "Run certbot"
+    ./run-certbot.sh
 
     # Ensure Shibboleth is running
     service shibd status
