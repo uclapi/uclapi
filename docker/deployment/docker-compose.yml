@@ -1,0 +1,47 @@
+version: "3.7"  # Requires Docker 18.06.0+
+
+services:
+  shibpostgres:
+    image: localhost:5000/shibpostgres
+    build:
+      context: .
+      dockerfile: shibpostgres.Dockerfile
+    environment:
+      POSTGRES_USER: ${SHIB_POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${SHIB_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${SHIB_POSTGRES_DATABASE}
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        # Constrain the Shibboleth Postgres instance to live on the non-public facing Manager
+        constraints: [node.role == manager]
+
+  nginx-shib:
+    image: localhost:5000/nginx-shib
+    build:
+      context: .
+      dockerfile: nginx.Dockerfile
+      args:
+        POSTGRES_USERNAME: ${SHIB_POSTGRES_USERNAME}
+        POSTGRES_PASSWORD: ${SHIB_POSTGRES_PASSWORD}
+        POSTGRES_DATABASE: ${SHIB_POSTGRES_DATABASE}
+        NGINX_BUILD: latest
+    depends_on:
+      - shibpostgres
+    ports:
+      - "80:80"
+      - "443:443"
+
+  uclapi:
+    image: localhost:5000/uclapi
+    build:
+      context: ../../
+      dockerfile: docker/deployment/uclapi.Dockerfile
+    depends_on:
+      - nginx-shib
+    ports:
+      - "9000:9000"
