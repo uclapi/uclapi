@@ -1142,6 +1142,18 @@ class ApiApplicationsTestCase(TestCase):
             self.assertEqual(response.status_code, 400)
             self.assertEqual(content["message"], "Token is invalid")
 
+    def test_analytics_quota_non_existent_token_provided(self):
+        request = self.factory.get(
+            '/api/analytics/quota',
+            {
+                "token": "uclapi-user-nonexistenttoken"
+            }
+        )
+        response = quota_remaining(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(content["message"], "Token is invalid")
+
     def test_analytics_num_requests_good_app_token_flow(self):
         # Set up token
         user_ = User.objects.create(

@@ -481,12 +481,17 @@ def get_quota_remaining(token):
 
     if token.startswith('uclapi-user-'):
         Otoken = OAuthToken.objects.filter(token__exact=token).first()
+        if Otoken is None:
+            return None
 
         cache_key = "oauth:" + Otoken.user.email
         limit = Otoken.user.oauth_quota
 
     elif token.startswith('uclapi-'):
         app = App.objects.filter(api_token__exact=token).first()
+        if app is None:
+            return None
+
         cache_key = app.user.email
         limit = app.user.dev_quota
 
