@@ -144,3 +144,5 @@ yarn.lock
 # django-webpack-loader
 webpack-stats.json
 backend/uclapi/src
+
+docker/deployment/non-public/
