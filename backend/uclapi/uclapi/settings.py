@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'common',
     'corsheaders',
     'workspaces',
+    'django_celery_beat',
     'webpack_loader'
 ]
 
@@ -237,6 +238,7 @@ SHIB_TEST_USER = os.environ.get("SHIB_TEST_USER", "")
 
 # Celery Settings
 CELERY_BROKER_URL = 'redis://' + REDIS_UCLAPI_HOST
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_UCLAPI_HOST
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
