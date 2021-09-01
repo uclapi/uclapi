@@ -71,7 +71,7 @@ get_certificate() {
         letsencrypt_url=$STAGING_URL
         echo "Staging ..."
     else
-        letsencrypt_url=$STAGING_URL
+        letsencrypt_url=$PRODUCTION_URL
         echo "Production ..."
     fi
     
