@@ -10,6 +10,8 @@ services:
       POSTGRES_USER: ${SHIB_POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${SHIB_POSTGRES_PASSWORD}
       POSTGRES_DB: ${SHIB_POSTGRES_DATABASE}
+    volumes:
+      - shibpostgres-data:/var/lib/postgresql
     deploy:
       replicas: 1
       update_config:
@@ -49,4 +51,6 @@ services:
 
 volumes:
   letsencrypt-config:
+    driver: local
+  shibpostgres-data:
     driver: local
