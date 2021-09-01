@@ -900,10 +900,7 @@ class ApiApplicationsTestCase(TestCase):
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            content["message"],
-            "The requested callback URL does not start with 'https://'."
-        )
+        self.assertEqual(content["message"], "The requested callback URL is not valid.")
 
     def test_change_callback_url_https_not_valid(self):
         user_ = User.objects.create(
