@@ -103,10 +103,13 @@ def generate_app_client_secret():
 
 def is_url_unsafe(url):
     if not url.startswith("https://"):
-        if validators.url(url, public=False):
-            return NOT_PUBLIC
-        else:
+        if validators.url(url, public=True):
             return NOT_HTTPS
+        else:
+            if validators.url(url, public=False):
+                return NOT_PUBLIC
+            else:
+                return NOT_VALID
 
     if not validators.url(url, public=True):
         if validators.url(url, public=False):
