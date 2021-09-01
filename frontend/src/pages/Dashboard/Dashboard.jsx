@@ -223,23 +223,18 @@ class Dashboard extends React.Component {
   }
 
   saveOAuthCallback = async (index, value) => {
-    if (value.startsWith(`https://`) || value == ``) {
-      const { data } = this.state
+    const { data } = this.state
 
-      try {
-        await Api.dashboard.saveOAuthCallback(data.apps[index].id, value)
-        this.updateAppState(index, {
-          oauth: {
-            ...data.apps[index].oauth,
-            callback_url: value,
-          },
-        })
-      } catch (error) {
-        window.alert(error.message)
-      }
-       
-    } else {
-      window.alert(`Must start with https://`)
+    try {
+      await Api.dashboard.saveOAuthCallback(data.apps[index].id, value)
+      this.updateAppState(index, {
+        oauth: {
+          ...data.apps[index].oauth,
+          callback_url: value,
+        },
+      })
+    } catch (error) {
+      window.alert(error.message)
     }
   }
 
