@@ -65,6 +65,12 @@ def create_app(request):
             },
             "webhook": {
                 "verification_secret": new_app.webhook.verification_secret,
+            },
+            "analytics": {
+                "requests": 0,
+                "remaining_quota": User._meta.get_field('oauth_quota').get_default(),
+                "users": 0,
+                "users_per_dept": []
             }
         }
     })

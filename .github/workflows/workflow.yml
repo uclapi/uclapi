@@ -1,0 +1,397 @@
+name: Integration testing and deployment
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+env:
+  REGISTRY: "236848092535.dkr.ecr.eu-west-2.amazonaws.com"
+
+jobs:
+  build:
+    name: Build frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      
+      - name: Cache NodeJS
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install frontend dependencies
+        run: |
+          cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
+          cd ./frontend/ && \
+          npm ci
+      
+      - name: Get version
+        id: version
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./version
+
+      - name: Update version numbers
+        env:
+          UCLAPI_VERSION: "${{ steps.version.outputs.content }}-${{ github.sha }}"
+        run: |
+          sudo apt-get install jq -y
+          jq ".version=\"$UCLAPI_VERSION\"" ./frontend/package.json > /tmp/package.json
+          jq ".info.version=\"$UCLAPI_VERSION\"" ./uclapi.openapi.json > /tmp/uclapi.openapi.json
+          mv /tmp/package.json ./frontend/package.json
+          mv /tmp/uclapi.openapi.json ./uclapi.openapi.json
+
+      - name: Build frontend
+        env:
+          AWS_S3_BUCKET_NAME: uclapi-static-staging
+          AWS_S3_BUCKET_PATH: static/
+          AWS_S3_STATICS: True
+          SENTRY_DSN_REACT: ${{ secrets.SENTRY_DSN_REACT }}
+          SENTRY_DSN_ENV: staging
+        run: |
+          cd ./frontend && \
+          npm run build
+
+      - name: Upload frontend
+        uses: actions/upload-artifact@master
+        with:
+          name: frontend-build
+          path: ./backend/uclapi/static
+
+  test-backend:
+    name: Run backend tests
+    runs-on: ubuntu-latest
+    env:
+      DB_UCLAPI_HOST: localhost
+      DB_UCLAPI_PASSWORD: supersecure
+      DB_UCLAPI_USERNAME: uclapi
+      FORBIDDEN_CALLBACK_URLS: uclapi.com;staging.ninja
+      REDIS_UCLAPI_HOST: localhost
+      UCLAPI_PRODUCTION: False
+      UCLAPI_RUNNING_ON_AWS_ELB: False
+      WHITELISTED_CALLBACK_URLS: https://live-roombookings.uclapi.com/webhook/;https://hackathon.uclapi.com/callback
+    services:
+      Redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+      Postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: uclapi
+          POSTGRES_PASSWORD: supersecure
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      
+      - name: Cache Python
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+    
+      - name: Install Oracle Instant Client
+        run: ./.github/workflows/scripts/setup-oracle.sh
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip && \
+          cd ./backend/uclapi && \
+          pip install codecov && \
+          pip install -r requirements.txt
+
+      - name: Run migrations
+        run: |
+          cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
+          cd ./backend/uclapi && \
+          python ./manage.py migrate --settings=uclapi.settings_mocked
+      
+      - name: Run tests
+        run: |
+          cd ./backend/uclapi && \
+          coverage run --source='.' --omit='*migrations*' manage.py test --settings=uclapi.settings_mocked
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1.5.2
+        with:
+          fail_ci_if_error: true
+
+  test-frontend:
+    name: Run frontend tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      
+      - name: Cache NodeJS
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install frontend dependencies
+        run: |
+          cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
+          cd ./frontend/ && \
+          npm ci
+
+      - name: Run frontend tests
+        run: |
+          cd ./frontend && \
+          npm test
+
+      # TODO: add coverage to frontend
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v1.5.2
+      #   with:
+      #     fail_ci_if_error: true
+
+  collect-statics:
+    name: Collect statics
+    needs: 
+      - build
+      - test-backend
+      - test-frontend
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    environment: Staging
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+      
+      - name: Cache Python
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip && \
+          cd ./backend/uclapi && \
+          pip install -r requirements.txt
+
+      - name: Download frontend
+        uses: actions/download-artifact@v2
+        with:
+          name: frontend-build
+          path: ./backend/uclapi/static
+
+      - name: Collect statics to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_S3_BUCKET_NAME: uclapi-static-staging
+          AWS_S3_BUCKET_PATH: static/
+          AWS_S3_REGION: eu-west-2
+          AWS_S3_STATICS_CREDENTIALS_ENABLED: True
+          AWS_S3_STATICS: True
+          UCLAPI_PRODUCTION: True
+          UCLAPI_RUNNING_ON_AWS_ELB: False
+        run: |
+          cd ./backend/uclapi && \
+          ./manage.py collectstatic --noinput
+
+  build-containers:
+    name: Build containers
+    needs: 
+      - test-backend
+      - test-frontend
+    runs-on: ubuntu-latest
+    environment: Staging
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Get version
+        id: version
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./version
+
+      - name: Extract non-public secrets
+        env:
+          FILES: ${{ secrets.FILES }}
+          UCLAPI_VERSION: "${{ steps.version.outputs.content }}-${{ github.sha }}"
+        run: |
+          cd ./docker/deployment && \
+          mkdir -p non-public/staging && \
+          cd non-public/staging && \
+          echo "$FILES" | base64 --decode > compressed.zip && \
+          unzip -qq compressed.zip && \
+          rm compressed.zip && \
+          echo "UCLAPI_VERSION=$UCLAPI_VERSION" >> uclapi/uclapi.env
+
+      - name: Pull layers
+        run: |
+          cd docker/deployment && \
+          docker-compose -f docker-compose.yml -f docker-compose-staging.yml pull
+
+      - name: Build containers
+        env:
+          SHIB_POSTGRES_USERNAME: ${{ secrets.SHIB_POSTGRES_USERNAME }}
+          SHIB_POSTGRES_PASSWORD: ${{ secrets.SHIB_POSTGRES_PASSWORD }}
+          SHIB_POSTGRES_DATABASE: ${{ secrets.SHIB_POSTGRES_DATABASE }}
+          ENVIRONMENT: staging
+          UCLAPI_VERSION: "${{ steps.version.outputs.content }}-${{ github.sha }}"
+        run: |
+          cd docker/deployment && \
+          sed -i "s/:latest/:${{ steps.version.outputs.content }}-${GITHUB_SHA}/g" docker-compose-staging.yml && \
+          docker-compose -f docker-compose.yml -f docker-compose-staging.yml build --parallel
+
+      - name: Push containers
+        run: |
+          cd docker/deployment && \
+          docker-compose -f docker-compose.yml -f docker-compose-staging.yml push
+
+      - name: Create artifact
+        run: echo ${{ steps.version.outputs.content }}-${GITHUB_SHA} > container-id.txt
+
+      - name: Upload container id
+        uses: actions/upload-artifact@v2
+        with:
+          name: container-id.txt
+          path: container-id.txt
+    
+  deploy:
+    name: Deploy
+    needs: 
+      - collect-statics
+      - build-containers
+    runs-on: ubuntu-latest
+    environment: Staging
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get version
+        id: version
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./version
+
+      - name: Extract non-public secrets
+        env:
+          FILES: ${{ secrets.FILES }}
+        run: |
+          echo "$FILES" | base64 --decode > compressed.zip && \
+          unzip -qq compressed.zip && \
+          rm compressed.zip
+      
+      - name: Copy docker compose configuration
+        uses: appleboy/scp-action@v0.1.1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key_path: key.pem
+          source: "docker/deployment/docker-compose.yml,docker/deployment/docker-compose-staging.yml"
+          target: "~"
+          strip_components: 2
+      
+      - name: Docker compose up
+        uses: appleboy/ssh-action@v0.1.4
+        env:
+          SHIB_POSTGRES_USERNAME: ${{ secrets.SHIB_POSTGRES_USERNAME }}
+          SHIB_POSTGRES_PASSWORD: ${{ secrets.SHIB_POSTGRES_PASSWORD }}
+          SHIB_POSTGRES_DATABASE: ${{ secrets.SHIB_POSTGRES_DATABASE }}
+          ENVIRONMENT: staging
+          VERSION: ${{ steps.version.outputs.content }}
+          SHA: ${{ github.sha }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key_path: key.pem
+          envs: SHIB_POSTGRES_USERNAME,SHIB_POSTGRES_PASSWORD,SHIB_POSTGRES_DATABASE,ENVIRONMENT,REGISTRY,VERSION,SHA
+          script_stop: true
+          script: |
+            aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin $REGISTRY
+            docker-compose -f docker-compose.yml -f docker-compose-staging.yml config --no-interpolate > docker-compose-tmp.yml
+            sed -i "s/:latest/:$VERSION-$SHA/g" docker-compose-tmp.yml
+            cat docker-compose-tmp.yml | yq e '(.services[] | select(.depends_on | tag == "!!map")).depends_on |= (. | keys)' - > docker-compose-tmp-2.yml
+            export SHIB_POSTGRES_USERNAME=$SHIB_POSTGRES_USERNAME
+            export SHIB_POSTGRES_PASSWORD=$SHIB_POSTGRES_PASSWORD
+            export SHIB_POSTGRES_DATABASE=$SHIB_POSTGRES_DATABASE
+            envsubst < docker-compose-tmp-2.yml > docker-compose-tmp-3.yml
+            docker stack deploy -c docker-compose-tmp-3.yml --with-registry-auth uclapi
+            rm docker-compose-tmp.yml
+  
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1.1.6
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: staging
+          version: "${{ steps.version.outputs.content }}-${{ github.sha }}"
+
+  # smoke-test:
+  #   name: Smoke test
+  #   runs-on: ubuntu-latest
+  #   needs: deploy
+  #   if: github.ref == 'refs/heads/master'
+  #   steps:
+  #     - name: Check staging is up
+  #       run: |
+  #         curl -I https://staging.ninja
+
+

@@ -128,7 +128,7 @@ def get_bookings(request, *args, **kwargs):
     if not is_parsed:
         return PrettyJsonResponse({
             "ok": False,
-            "error": "date/time isn't formatted as suggested in the docs"
+            "error": "start_datetime/end_datetime isn't formatted as suggested in the docs"
         }, custom_header_data=kwargs)
 
     # filter the query dict
@@ -215,7 +215,7 @@ def get_free_rooms(request, *args, **kwargs):
     if not is_parsed:
         return PrettyJsonResponse({
             "ok": False,
-            "error": "date/time isn't formatted as suggested in the docs"
+            "error": "start_datetime/end_datetime isn't formatted as suggested in the docs"
         }, custom_header_data=kwargs)
 
     # Rounding down start date to start of day

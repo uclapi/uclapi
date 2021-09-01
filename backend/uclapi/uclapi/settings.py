@@ -172,14 +172,13 @@ if os.environ.get('SENTRY_DSN'):
                 var = reg.sub('REDACTED', str(var), 0)
         return var
 
-    sentry_sdk.init(
-        dsn=os.environ.get('SENTRY_DSN'),
-        environment=os.environ.get('SENTRY_DSN_ENV', 'testing'),
-        integrations=[DjangoIntegration(), RedisIntegration()],
-        traces_sample_rate=0.01,
-        send_default_pii=False,
-        before_send=remove_token
-    )
+    sentry_sdk.init(dsn=os.environ.get('SENTRY_DSN'),
+                    environment=os.environ.get('SENTRY_DSN_ENV', 'testing'),
+                    integrations=[DjangoIntegration(), RedisIntegration()],
+                    traces_sample_rate=0.01,
+                    send_default_pii=False,
+                    before_send=remove_token,
+                    release=os.environ.get('UCLAPI_VERSION', None))
     ignore_logger('django.security.DisallowedHost')
 
 REST_FRAMEWORK = {
