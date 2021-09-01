@@ -2,6 +2,8 @@ import datetime
 import json
 import unittest.mock
 from itertools import chain, repeat
+from concurrent.futures import Future
+from requests.models import Response
 
 import redis
 
@@ -12,7 +14,7 @@ from django.conf import settings
 from django_mock_queries.query import MockSet, MockModel
 
 from dashboard.app_helpers import get_temp_token
-from dashboard.models import App, User
+from dashboard.models import App, User, Webhook, WebhookTriggerHistory
 
 from .helpers import (
     _create_page_token,
@@ -113,17 +115,17 @@ class ParseDateTimeTestCase(SimpleTestCase):
 
         expected = [
             (datetime.datetime(2016, 2, 19, 0, 0, 0, 0),
-                datetime.datetime(2016, 2, 19, 23, 59, 59, 999999), True),
+             datetime.datetime(2016, 2, 19, 23, 59, 59, 999999), True),
             (datetime.datetime(2017, 3, 20, 0, 0, 0, 0),
-                datetime.datetime(2017, 3, 20, 23, 59, 59, 999999), True),
+             datetime.datetime(2017, 3, 20, 23, 59, 59, 999999), True),
             (datetime.datetime(2017, 12, 14, 0, 0, 0, 0),
-                datetime.datetime(2017, 12, 14, 23, 59, 59, 999999), True),
+             datetime.datetime(2017, 12, 14, 23, 59, 59, 999999), True),
             (datetime.datetime(2017, 10, 8, 0, 0, 0, 0),
-                datetime.datetime(2017, 10, 8, 23, 59, 59, 999999), True),
+             datetime.datetime(2017, 10, 8, 23, 59, 59, 999999), True),
             (datetime.datetime(2017, 1, 1, 0, 0, 0, 0),
-                datetime.datetime(2017, 1, 1, 23, 59, 59, 999999), True),
+             datetime.datetime(2017, 1, 1, 23, 59, 59, 999999), True),
             (datetime.datetime(2018, 1, 1, 0, 0, 0, 0),
-                datetime.datetime(2018, 1, 1, 23, 59, 59, 999999), True),
+             datetime.datetime(2018, 1, 1, 23, 59, 59, 999999), True),
             (-1, -1, False),
             (-1, -1, False),
             (-1, -1, False),
@@ -135,9 +137,9 @@ class ParseDateTimeTestCase(SimpleTestCase):
             (-1, -1, False),
             (-1, -1, False),
             (datetime.datetime(2017, 5, 16, 12, 34, 39),
-                datetime.datetime(2018, 5, 16, 12, 34, 39), True),
+             datetime.datetime(2018, 5, 16, 12, 34, 39), True),
             (datetime.datetime(2017, 12, 16, 10, 0, 0),
-                datetime.datetime(2018, 6, 16, 11, 0, 0), True)
+             datetime.datetime(2018, 6, 16, 11, 0, 0), True)
         ]
 
         for index, args in enumerate(arg_list):
@@ -154,6 +156,20 @@ class PrettyPrintJsonTestCase(SimpleTestCase):
 
 
 class ManagementCommandsTestCase(TestCase):
+    def setUp(self) -> None:
+        self.webhook_app_user = User.objects.create(cn="test", employee_id=7357)
+        self.webhook_app = App.objects.create(user=self.webhook_app_user, name="An app")
+        deepdiff_return_values = [{},  # test_trigger_webhooks_no_change
+                                  {'iterable_item_added': {1: "yep"}},  # test_trigger_webhooks_one_change_fail_no_call
+                                  {'iterable_item_added': {1: "yep"}}]  # test_trigger_webhooks_one_change_success
+        deepdiff_mock = unittest.mock.Mock()
+        deepdiff_mock.side_effect = deepdiff_return_values
+        self.deep_diff_mock = unittest.mock.patch('deepdiff.DeepDiff', new=deepdiff_mock)
+        self.deep_diff_mock.start()
+
+    def tearDown(self) -> None:
+        self.deep_diff_mock.stop()
+
     def test_create_lock(self):
         L = len(Lock.objects.all())
 
@@ -166,6 +182,71 @@ class ManagementCommandsTestCase(TestCase):
             len(Lock.objects.all()),
             1
         )
+
+    # noinspection PyPep8Naming
+    @unittest.mock.patch('roombookings.helpers._serialize_bookings')
+    def test_trigger_webhooks_no_change(self, patched__serialize_bookings):
+        patched__serialize_bookings.return_value = []
+        # patched_DeepDiff.return_value = {}
+
+        call_command('create_lock')
+        # self.deep_diff_mock.start()
+        call_command('trigger_webhooks')
+        # self.deep_diff_mock.stop()
+
+        self.assertEqual(0, WebhookTriggerHistory.objects.all().count())
+
+    # noinspection PyPep8Naming
+    @unittest.mock.patch('roombookings.helpers._serialize_bookings')
+    def test_trigger_webhooks_one_change_fail_no_call(self, patched__serialize_bookings):
+        patched__serialize_bookings.return_value = []  # not actually used, needed to avoid access to BookingA/B
+        # patched_DeepDiff.return_value = {'iterable_item_added': {1: "yep"}}
+
+        webhook = Webhook.objects.filter(app=self.webhook_app).first()
+        webhook.url = ""
+        webhook.save()
+        original_webhook_last_fired = webhook.last_fired
+        original_webhook_last_success = webhook.last_success
+
+        call_command('create_lock')
+        # self.deep_diff_mock.start()
+        call_command('trigger_webhooks')
+        # self.deep_diff_mock.stop()
+
+        webhook.refresh_from_db()
+
+        self.assertEqual(1, WebhookTriggerHistory.objects.all().count())
+        self.assertEqual(-1, WebhookTriggerHistory.objects.first().status_code)
+        self.assertEqual(original_webhook_last_fired, webhook.last_fired)  # no URL, not actually fired
+        self.assertEqual(original_webhook_last_success, webhook.last_success)
+
+    # noinspection PyPep8Naming
+    @unittest.mock.patch('requests_futures.sessions.FuturesSession.post')
+    @unittest.mock.patch('roombookings.helpers._serialize_bookings')
+    def test_trigger_webhooks_one_change_success(self, patched__serialize_bookings, patched_FuturesSession_post):
+        patched__serialize_bookings.return_value = []  # not actually used
+
+        result_object = Response()
+        post_response_object = Future()
+        result_object.status_code = 200
+        post_response_object.result = lambda: result_object
+        patched_FuturesSession_post.return_value = post_response_object
+
+        webhook = Webhook.objects.filter(app=self.webhook_app).first()
+        webhook.url = "http://localhost:65535"
+        webhook.save()
+        original_webhook_last_fired = webhook.last_fired
+        original_webhook_last_success = webhook.last_success
+
+        call_command('create_lock')
+        call_command('trigger_webhooks')
+
+        webhook.refresh_from_db()
+
+        self.assertEqual(1, WebhookTriggerHistory.objects.all().count())
+        self.assertEqual(200, WebhookTriggerHistory.objects.first().status_code)
+        self.assertNotEqual(original_webhook_last_fired, webhook.last_fired)
+        self.assertNotEqual(original_webhook_last_success, webhook.last_success)
 
 
 class DoesTokenExistTestCase(TestCase):
