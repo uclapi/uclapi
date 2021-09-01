@@ -128,7 +128,10 @@ COPY ./nginx/util.sh ./util.sh
 COPY ./nginx/run-certbot.sh ./run-certbot.sh
 RUN chmod +x ./run.sh ./util.sh ./run-certbot.sh
 
+ARG VERSION
 ENV VERSION ${VERSION}
-RUN sed -i -e "s/VERSION_NUMBER_HERE/$VERSION/" /usr/local/nginx/conf/conf.d/certbot.conf
+RUN echo -n "Injecting version number: " && echo ${VERSION}
+RUN sed -i -e "s/VERSION_NUMBER_HERE/${VERSION}/" /usr/local/nginx/conf/conf.d/certbot.conf
+RUN sed -i -e "s/VERSION_NUMBER_HERE/${VERSION}/" /usr/local/nginx/conf/conf.d/nginx.conf
 
 CMD ["bash", "run.sh"]

@@ -277,11 +277,11 @@ jobs:
           SHIB_POSTGRES_PASSWORD: ${{ secrets.SHIB_POSTGRES_PASSWORD }}
           SHIB_POSTGRES_DATABASE: ${{ secrets.SHIB_POSTGRES_DATABASE }}
           ENVIRONMENT: staging
-          UCLAPI_VERSION: "${{ steps.version.outputs.content }}-${ github.sha }"
+          UCLAPI_VERSION: "${{ steps.version.outputs.content }}-${{ github.sha }}"
         run: |
           cd docker/deployment && \
           sed -i "s/:latest/:${{ steps.version.outputs.content }}-${GITHUB_SHA}/g" docker-compose-staging.yml && \
-          docker-compose -f docker-compose.yml -f docker-compose-staging.yml build --build-arg SHIB_POSTGRES_USERNAME --build-arg SHIB_POSTGRES_PASSWORD --build-arg SHIB_POSTGRES_DATABASE --build-arg ENVIRONMENT --parallel
+          docker-compose -f docker-compose.yml -f docker-compose-staging.yml build --parallel
 
       - name: Push containers
         run: |
@@ -349,15 +349,15 @@ jobs:
           envs: SHIB_POSTGRES_USERNAME,SHIB_POSTGRES_PASSWORD,SHIB_POSTGRES_DATABASE,ENVIRONMENT,REGISTRY,VERSION,SHA
           script_stop: true
           script: |
-            aws ecr get-login-password --region eu-west-2 | sudo docker login --username AWS --password-stdin $REGISTRY
-            sudo docker-compose -f docker-compose.yml -f docker-compose-staging.yml config --no-interpolate > docker-compose-tmp.yml
+            aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin $REGISTRY
+            docker-compose -f docker-compose.yml -f docker-compose-staging.yml config --no-interpolate > docker-compose-tmp.yml
             sed -i "s/:latest/:$VERSION-$SHA/g" docker-compose-tmp.yml
             cat docker-compose-tmp.yml | yq e '(.services[] | select(.depends_on | tag == "!!map")).depends_on |= (. | keys)' - > docker-compose-tmp-2.yml
             export SHIB_POSTGRES_USERNAME=$SHIB_POSTGRES_USERNAME
             export SHIB_POSTGRES_PASSWORD=$SHIB_POSTGRES_PASSWORD
             export SHIB_POSTGRES_DATABASE=$SHIB_POSTGRES_DATABASE
             envsubst < docker-compose-tmp-2.yml > docker-compose-tmp-3.yml
-            sudo docker stack deploy -c docker-compose-tmp-3.yml --with-registry-auth uclapi
+            docker stack deploy -c docker-compose-tmp-3.yml --with-registry-auth uclapi
             rm docker-compose-tmp.yml
 
   smoke-test:
