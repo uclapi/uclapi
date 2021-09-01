@@ -1,7 +1,7 @@
 from common.helpers import PrettyJsonResponse
 from .models import App, User
 import requests
-from .app_helpers import generate_secret, is_url_unsafe
+from .app_helpers import NOT_HTTPS, NOT_VALID, URL_BLACKLISTED, generate_secret, is_url_unsafe
 
 
 def user_owns_app(user_id, app_id):
@@ -24,29 +24,17 @@ def verify_ownership(webhook_url, ownership_challenge, verification_secret):
     try:
         req = requests.post(webhook_url, json=payload, timeout=3)
         resp = req.json()
-    except (
-        ValueError,
-        requests.exceptions.Timeout,
-        requests.exceptions.ConnectionError
-    ):
+    except (ValueError, requests.exceptions.Timeout, requests.exceptions.ConnectionError):
         return False
     else:
         if "challenge" not in resp.keys():
             return False
-        return (
-            resp["challenge"] ==
-            ownership_challenge
-        )
+        return (resp["challenge"] == ownership_challenge)
 
 
 def edit_webhook(request):
     if request.method != "POST":
-        response = PrettyJsonResponse({
-            "ok": False,
-            "message": (
-                "Request is not of method POST"
-            )
-        })
+        response = PrettyJsonResponse({"ok": False, "message": ("Request is not of method POST")})
         response.status_code = 400
         return response
 
@@ -59,23 +47,17 @@ def edit_webhook(request):
         user_id = request.session["user_id"]
     except KeyError:
         response = PrettyJsonResponse({
-            "ok": False,
-            "message": (
-                "Request is missing parameters. Should have app_id"
-                ", url, siteid, roomid, contact"
-                " as well as a sessionid cookie"
-            )
+            "ok":
+            False,
+            "message": ("Request is missing parameters. Should have app_id"
+                        ", url, siteid, roomid, contact"
+                        " as well as a sessionid cookie")
         })
         response.status_code = 400
         return response
 
     if not user_owns_app(user_id, app_id):
-        response = PrettyJsonResponse({
-            "ok": False,
-            "message": (
-                "App does not exist or user is lacking permission."
-            )
-        })
+        response = PrettyJsonResponse({"ok": False, "message": ("App does not exist or user is lacking permission.")})
         response.status_code = 400
         return response
 
@@ -83,28 +65,18 @@ def edit_webhook(request):
     webhook = app.webhook
 
     if url != webhook.url:
-        if is_url_unsafe(url):
-            response = PrettyJsonResponse({
-                "ok": False,
-                "message": (
-                    "Invalid URL"
-                )
-            })
+        if is_url_unsafe(url) in [NOT_HTTPS, NOT_VALID, URL_BLACKLISTED]:
+            response = PrettyJsonResponse({"ok": False, "message": ("Invalid URL")})
             response.status_code = 400
             return response
 
-        if not verify_ownership(
-            url,
-            generate_secret(),
-            webhook.verification_secret
-        ):
+        if not verify_ownership(url, generate_secret(), webhook.verification_secret):
             response = PrettyJsonResponse({
-                "ok": False,
-                "message": (
-                    "Ownership of webhook can't be verified."
-                    "Make sure to follow the documentation: "
-                    "https://uclapi.com/docs#webhook/challenge-event"
-                )
+                "ok":
+                False,
+                "message": ("Ownership of webhook can't be verified."
+                            "Make sure to follow the documentation: "
+                            "https://uclapi.com/docs#webhook/challenge-event")
             })
             response.status_code = 400
             return response
@@ -130,12 +102,7 @@ def edit_webhook(request):
 
 def refresh_verification_secret(request):
     if request.method != "POST":
-        response = PrettyJsonResponse({
-            "ok": False,
-            "message": (
-                "Request is not of method POST"
-            )
-        })
+        response = PrettyJsonResponse({"ok": False, "message": ("Request is not of method POST")})
         response.status_code = 400
         return response
 
@@ -144,22 +111,16 @@ def refresh_verification_secret(request):
         user_id = request.session["user_id"]
     except KeyError:
         response = PrettyJsonResponse({
-            "ok": False,
-            "message": (
-                "Request is missing parameters. Should have app_id"
-                " as well as a sessionid cookie"
-            )
+            "ok":
+            False,
+            "message": ("Request is missing parameters. Should have app_id"
+                        " as well as a sessionid cookie")
         })
         response.status_code = 400
         return response
 
     if not user_owns_app(user_id, app_id):
-        response = PrettyJsonResponse({
-            "ok": False,
-            "message": (
-                "App does not exist or user is lacking permission."
-            )
-        })
+        response = PrettyJsonResponse({"ok": False, "message": ("App does not exist or user is lacking permission.")})
         response.status_code = 400
         return response
 
@@ -170,7 +131,4 @@ def refresh_verification_secret(request):
     webhook.verification_secret = new_secret
     webhook.save()
 
-    return PrettyJsonResponse({
-        "ok": True,
-        "new_secret": new_secret
-    })
+    return PrettyJsonResponse({"ok": True, "new_secret": new_secret})
