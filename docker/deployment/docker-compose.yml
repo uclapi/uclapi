@@ -44,8 +44,6 @@ services:
     build:
       context: ../../
       dockerfile: docker/deployment/uclapi.Dockerfile
-    depends_on:
-      - nginx-shib
     ports:
       - "9000:9000"
 
