@@ -37,6 +37,22 @@ jobs:
           cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
           cd ./frontend/ && \
           npm ci
+      
+      - name: Get version
+        id: version
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./version
+
+      - name: Update version numbers
+        env:
+          UCLAPI_VERSION: "${{ steps.version.outputs.content }}-${{ github.sha }}"
+        run: |
+          sudo apt-get install jq -y
+          jq ".version=\"$UCLAPI_VERSION\"" ./frontend/package.json > /tmp/package.json
+          jq ".info.version=\"$UCLAPI_VERSION\"" ./uclapi.openapi.json > /tmp/uclapi.openapi.json
+          mv /tmp/package.json ./frontend/package.json
+          mv /tmp/uclapi.openapi.json ./uclapi.openapi.json
 
       - name: Build frontend
         env:
@@ -254,17 +270,15 @@ jobs:
       - name: Extract non-public secrets
         env:
           FILES: ${{ secrets.FILES }}
+          UCLAPI_VERSION: "${{ steps.version.outputs.content }}-${{ github.sha }}"
         run: |
           cd ./docker/deployment && \
           mkdir -p non-public/staging && \
           cd non-public/staging && \
           echo "$FILES" | base64 --decode > compressed.zip && \
           unzip -qq compressed.zip && \
-          rm compressed.zip
-      
-      # - name: Cache docker layers
-      #   uses: satackey/action-docker-layer-caching@v0.0.11
-      #   continue-on-error: true
+          rm compressed.zip && \
+          echo "UCLAPI_VERSION=$UCLAPI_VERSION" >> uclapi/uclapi.env
 
       - name: Pull layers
         run: |
@@ -359,15 +373,25 @@ jobs:
             envsubst < docker-compose-tmp-2.yml > docker-compose-tmp-3.yml
             docker stack deploy -c docker-compose-tmp-3.yml --with-registry-auth uclapi
             rm docker-compose-tmp.yml
+  
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1.1.6
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: staging
+          version: "${{ steps.version.outputs.content }}-${{ github.sha }}"
 
-  smoke-test:
-    name: Smoke test
-    runs-on: ubuntu-latest
-    needs: deploy
-    if: github.ref == 'refs/heads/master'
-    steps:
-      - name: Check staging is up
-        run: |
-          curl -I https://staging.ninja
+  # smoke-test:
+  #   name: Smoke test
+  #   runs-on: ubuntu-latest
+  #   needs: deploy
+  #   if: github.ref == 'refs/heads/master'
+  #   steps:
+  #     - name: Check staging is up
+  #       run: |
+  #         curl -I https://staging.ninja
 
 
