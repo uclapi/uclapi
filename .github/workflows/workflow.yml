@@ -192,7 +192,7 @@ jobs:
       - test-backend
       - test-frontend
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     environment: Staging
     steps:
       - name: Checkout code
@@ -245,7 +245,7 @@ jobs:
       - test-frontend
     runs-on: ubuntu-latest
     environment: Staging
-    # if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -318,7 +318,7 @@ jobs:
       - build-containers
     runs-on: ubuntu-latest
     environment: Staging
-    # if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
