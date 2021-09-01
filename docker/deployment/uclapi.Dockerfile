@@ -80,7 +80,6 @@ RUN wget -nv -O instantclient.zip ${ORACLE_INSTANTCLIENT_BASIC_URL} && \
 # Install the Supervisor configuration files
 COPY ./docker/deployment/uclapi/supervisor-conf/supervisord.conf      /etc/supervisor/supervisord.conf
 COPY ./docker/deployment/uclapi/supervisor-conf/gunicorn-django.conf  /etc/supervisor/conf.d/
-COPY ./docker/deployment/uclapi/supervisor-conf/celery-uclapi.conf    /etc/supervisor/conf.d/
 
 # Install the run script
 COPY ./docker/deployment/uclapi/run.sh /web/run.sh
