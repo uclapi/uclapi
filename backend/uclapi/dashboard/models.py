@@ -138,6 +138,7 @@ class Webhook(models.Model):
     contact = models.CharField(max_length=4000, blank=True)
 
     last_fired = models.DateTimeField(blank=True, null=True)
+    last_success = models.DateTimeField(blank=True, null=True)
 
     verification_secret = models.CharField(
         max_length=100,
@@ -157,6 +158,7 @@ class WebhookTriggerHistory(models.Model):
         on_delete=models.CASCADE
     )
     payload = models.CharField(max_length=10000000)
+    status_code = models.IntegerField(null=False)
 
     timestamp = models.DateTimeField(auto_now_add=True, editable=False)
 
