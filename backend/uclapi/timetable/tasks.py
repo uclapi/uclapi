@@ -7,9 +7,6 @@ from datetime import datetime
 import redis
 from celery import shared_task, chord
 from django.conf import settings
-from django.db import connections
-from django import db
-import gc
 
 from common.helpers import LOCAL_TIMEZONE
 from timetable.models import (
