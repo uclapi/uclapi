@@ -10,7 +10,7 @@ while /bin/true; do
     fi
 
     echo "Run certbot"
-    ./run-certbot.sh
+    timeout 240 bash -c -- './run-certbot.sh'
 
     # Ensure Shibboleth is running
     service shibd status

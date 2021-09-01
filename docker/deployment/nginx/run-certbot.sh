@@ -13,9 +13,7 @@ while : ; do
     fi
 done
 
-
 exit_code=0
-set -x
 # Loop over every domain we can find
 for domain in $(parse_domains); do
     if is_renewal_required $domain; then
