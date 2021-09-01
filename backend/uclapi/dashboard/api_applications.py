@@ -251,7 +251,7 @@ def set_callback_url(request):
         response.status_code = 400
         return response
     url_not_safe_saved = is_url_unsafe(new_callback_url)
-    if url_not_safe_saved:
+    if url_not_safe_saved in [NOT_HTTPS, NOT_VALID, URL_BLACKLISTED]:
         if url_not_safe_saved == NOT_HTTPS:
             message = "The requested callback URL does not " \
                       "start with 'https://'."
