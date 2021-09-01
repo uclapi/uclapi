@@ -282,7 +282,7 @@ def update_gencache(skip_run_check):
 
     # print(dest_table_index)
     # waiting for tasks within a task may lead to deadlocks, use chord and callback
-    chord(cache_table_task.s(i, dest_table_index)
+    chord(cache_table_task_testing.s(i, dest_table_index)
           for i in range(len(tables)))(completion_callback.s(running_key,
                                                              start_time))
 
@@ -294,4 +294,3 @@ def update_gencache_celery(skip_run_check=False):
         update_gencache(skip_run_check)
     except Exception as gencache_exception:
         print(repr(gencache_exception))
-
