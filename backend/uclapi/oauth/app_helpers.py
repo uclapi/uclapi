@@ -1,5 +1,6 @@
 import os
 import textwrap
+import logging
 from binascii import hexlify
 
 from django.db.utils import IntegrityError
@@ -61,6 +62,7 @@ def validate_shibboleth_callback(request):
         # (aka UPI), also unique in the DB
         employee_id = request.META['HTTP_EMPLOYEEID']
     except KeyError:
+        logging.error("Login failed", extra=request.META)
         return (
             f"UCL has sent incomplete headers. If the issues persist "
             f"please contact the UCL API Team to rectify this. "
