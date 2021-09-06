@@ -2,6 +2,7 @@ autopep8==1.5.7
 boto3==1.18.31
 cachet-client==3.1.1
 celery==5.1.2
+django-celery-beat==2.2.1
 ciso8601==2.2.0
 cx-Oracle==8.2.1
 Django==2.2.24

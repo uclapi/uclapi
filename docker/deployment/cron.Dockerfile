@@ -78,11 +78,13 @@ RUN wget -nv -O instantclient.zip ${ORACLE_INSTANTCLIENT_BASIC_URL} && \
     ldconfig
 
 # Install the Supervisor configuration files
-COPY ./docker/deployment/uclapi/supervisor-conf/supervisord.conf      /etc/supervisor/supervisord.conf
-COPY ./docker/deployment/uclapi/supervisor-conf/gunicorn-django.conf  /etc/supervisor/conf.d/
+COPY ./docker/deployment/cron/supervisor-conf/supervisord.conf                      /etc/supervisor/supervisord.conf
+COPY ./docker/deployment/cron/supervisor-conf/celery-beat-uclapi.conf               /etc/supervisor/conf.d/
+COPY ./docker/deployment/cron/supervisor-conf/celery-worker-gencache-uclapi.conf    /etc/supervisor/conf.d/
+COPY ./docker/deployment/cron/supervisor-conf/celery-worker-uclapi.conf             /etc/supervisor/conf.d/
 
 # Install the run script
-COPY ./docker/deployment/uclapi/run.sh /web/run.sh
+COPY ./docker/deployment/cron/run.sh /web/run.sh
 RUN chmod +x /web/run.sh
 
 # Install UCL API
@@ -100,9 +102,6 @@ COPY ./docker/deployment/non-public/${ENVIRONMENT}/uclapi/uclapi.env /web/uclapi
 RUN service supervisor stop; \
     service supervisor start; \
     supervisorctl restart all
-
-# Gunicorn runs on Port 9000
-EXPOSE 9000
 
 # Put the UCL firewall rules into the hosts file then run the start script.
 # This is because any hosts file changes made during the build phase of the
