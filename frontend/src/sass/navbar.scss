@@ -71,38 +71,37 @@
 }
 
 .bounce-image {
-  display: inline-block;
   float: left;
-  height: 16px;
-  margin-right: 16px;
+  height: 1em;
   transition-duration: 0.15s;
   transition-property: margin-right;
   transition-timing-function: linear;
-  width: 16px;
+  width: 1em;
 }
 
 .link-to-page {
-  display: inline-block;
+  font-size: 1em;
   float: right;
-  height: 16px;
-  padding: 20px 5px 0;
+  height: 1em;
+  padding: 20px 15px 0 5px;
 
   img {
-    height: 16px;
+    height: 1em;
     margin: 0;
-    width: 16px;
+    width: 1em;
+    vertical-align: middle;
   }
 }
 
 .link-to-page h1 {
-  border: solid;
-  border-color: white;
-  border-width: 0 0 0 1px;
+  display: inline;
   color: white;
+  border: 0 solid white;
+  border-right-width: 1px;
   font-size: 1em;
   font-weight: normal;
   margin: 0;
-  padding: 0 20px;
+  padding: 0 5px 0 5px;
   text-shadow: unset;
   transition-duration: 0.2s;
   transition-property: border-width;
@@ -110,13 +109,8 @@
 }
 
 .link-to-page a {
-  display: inline-block;
   float: left;
   text-decoration: none;
-}
-
-.link-to-page h1:hover {
-  border-width: 0 0 0 5px;
 }
 
 .link-titles {

@@ -91,8 +91,8 @@ class HomePage extends React.Component {
             />
             <TextView
               text={
-                `UCL API is a student-built platform for student `+
-                `developers to improve the student experience of `+
+                `UCL API is a student-built platform for `+
+                `developers to improve the experience of `+
                 `everyone at UCL.`
               }
               heading={2}

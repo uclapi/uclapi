@@ -26,6 +26,11 @@ const links = [
     src: about,
   },
   {
+    name: `marketplace`,
+    link: `/marketplace`,
+    src: market,
+  },
+  {
     name: `documentation`,
     link: `/docs`,
     src: docs,
@@ -34,11 +39,6 @@ const links = [
     name: `dashboard`,
     link: `/dashboard`,
     src: dashboard,
-  },
-  {
-    name: `marketplace`,
-    link: `/marketplace`,
-    src: market,
   },
 ]
 
@@ -73,6 +73,7 @@ class NavBar extends React.Component {
       isMenuHidden: true,
     }
   }
+
   toggleMenu = () => {
     if (this.DEBUGGING) { console.log(`Menu button clicked...`) }
 
@@ -81,6 +82,7 @@ class NavBar extends React.Component {
       isMenuHidden: !isMenuHidden,
     })
   }
+
   handleClick = (event) => {
     if (this.DEBUGGING) {
       console.log(`Click event...`)
@@ -92,6 +94,7 @@ class NavBar extends React.Component {
       this.forceClose()
     }
   }
+
   forceClose = () => {
     const { isMenuHidden } = this.state
 
@@ -103,6 +106,7 @@ class NavBar extends React.Component {
       })
     }
   }
+
   updateDimensions = () => {
     if (window.innerWidth < maxScreen) {
       this.setState({
@@ -116,6 +120,7 @@ class NavBar extends React.Component {
       })
     }
   }
+
   componentDidMount() {
     const { isScroll } = this.props
     if (isScroll) { window.addEventListener(`scroll`, this.updateNavBar) }
@@ -127,11 +132,13 @@ class NavBar extends React.Component {
       isMenuHidden: true,
     })
   }
+
   componentWillUnmount() {
     const { isScroll } = this.props
     if (isScroll) { window.removeEventListener(`scroll`, this.updateNavBar) }
     window.removeEventListener(`click`, this.handleClick)
   }
+
   updateNavBar = () => {
     const scrollTop = window.scrollY
     const { isVisible } = this.state
@@ -154,7 +161,8 @@ class NavBar extends React.Component {
     return <div className="navbar-extras">
       <motion.div
         className="navbarconsistent centered"
-        pose={isVisible ? `shown` : `hidden`}
+        initial="hidden"
+        animate={isVisible ? `shown` : `hidden`}
         variants={toast}
       >
         <a href={`/`}>
@@ -188,10 +196,11 @@ class NavBar extends React.Component {
       {isSmall ? (
         <motion.div
           className="link-titles-menu"
-          pose={isMenuHidden ? `hidden` : `shown`}
+          initial="hidden"
+          animate={isMenuHidden ? `hidden` : `shown`}
           variants={slideDown}
         >
-          {links.map((s, key) => (
+          {[...links].reverse().map((s, key) => (
             <Link key={key} name={s.name} src={s.src} link={s.link} isSmall />
           ))}
         </motion.div>
