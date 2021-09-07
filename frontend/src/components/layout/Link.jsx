@@ -2,10 +2,12 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 
-const variant = {
-    up: { marginTop: `-8px` },
-    middle: { marginTop: 0 },
-    down: { marginTop: `8px` },
+const bounceTransition = {
+    y: {
+        type: `spring`,
+        stiffness: 100,
+        duration: 0.4,
+    },
 }
 
 class Link extends React.Component {
@@ -14,70 +16,50 @@ class Link extends React.Component {
 
         this.state = {
             hover: false,
-            animation: `middle`,
         }
-
-        this.mInterval = null
 
         this.onMouseEnterHandler = this.onMouseEnterHandler.bind(this)
         this.onMouseLeaveHandler = this.onMouseLeaveHandler.bind(this)
-        this.bounce = this.bounce.bind(this)
     }
 
     onMouseEnterHandler() {
         this.setState({
             hover: true,
         })
-
-        this.mInterval = window.setInterval(() => {
-            if (this.state.hover) {
-                this.bounce()
-            }
-        }, 450)
     }
 
     onMouseLeaveHandler() {
-        window.clearInterval(this.mInterval)
-
         this.setState({
             hover: false,
-            animation: `middle`,
-        })
-    }
-
-    bounce() {
-        const { animation } = this.state
-        const newAnimationState = (animation == `middle` || animation == `down`) ? `up` : `down`
-
-        this.setState({
-            animation: newAnimationState,
         })
     }
 
     render() {
-        const { animation } = this.state
+        const { hover } = this.state
+        const {src, link, name} = this.props
 
         if (this.props.isSmall) {
             return (
-                <a href={this.props.link}>
+                <a href={link}>
                     <div className="link-to-page"
                       style={{ borderBottom: `solid #ffffff29 2px`,
-padding: `10px 0 10px 0` }}
+                               padding: `10px 0 10px 0` }}
                       onMouseEnter={this.onMouseEnterHandler}
                       onMouseLeave={this.onMouseLeaveHandler}
                     >
-                        <h1 style={{ border: `none` }} >{this.props.name}</h1>
+                        <img style={{ paddingLeft: `5px`}} src={src} />
+                        <h1 style={{ border: `none`}} >{name}</h1>
                     </div>
                 </a>
             )
         } else {
             return (
                 <div className="link-to-page" onMouseEnter={this.onMouseEnterHandler} onMouseLeave={this.onMouseLeaveHandler} >
-                    <motion.div className="bounce-image" variants={variant}>
-                        <img src={this.props.src} />
+                    <motion.div className="bounce-image" transition={bounceTransition} animate={hover ? {y: [`0%`, `-50%`]} : {y: `0%`}}>
+                        <img src={src} />
                     </motion.div>
-                    <a href={this.props.link}>
-                        <h1>{this.props.name}</h1>
+                    <a href={link}>
+                        <h1>{name}</h1>
                     </a>
                 </div>
             )
