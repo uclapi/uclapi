@@ -1,0 +1,38 @@
+# Production overlay Docker Compose
+version: "3.7" 
+
+services:
+  shibpostgres:
+    image: 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-prod-shibpostgres:latest
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+      restart_policy:
+        condition: on-failure
+  nginx-shib:
+    image: 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-prod-nginx-shib:latest
+    build:
+      args:
+        ENVIRONMENT: prod
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+      restart_policy:
+        condition: on-failure.
+      placement:
+        # Constrain Nginx to run on the nodes ELB points to
+        constraints: [node.role == worker]
+
+  uclapi:
+    image: 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-prod-uclapi:latest
+    build:
+      args:
+        ENVIRONMENT: prod
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+      restart_policy:
+        condition: on-failure
