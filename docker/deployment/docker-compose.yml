@@ -40,11 +40,11 @@ services:
     ports:
       - "9000:9000"
 
-  cron:
-    image: localhost:5000/cron
-    build:
-      context: ../../
-      dockerfile: docker/deployment/cron.Dockerfile
+  # cron:
+  #   image: localhost:5000/cron
+  #   build:
+  #     context: ../../
+  #     dockerfile: docker/deployment/cron.Dockerfile
 
 volumes:
   letsencrypt-config:
