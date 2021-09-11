@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: ${SHIB_POSTGRES_PASSWORD}
       POSTGRES_DB: ${SHIB_POSTGRES_DATABASE}
     volumes:
-      - shibpostgres-data:/var/lib/postgresql
+      - shibpostgres_data:/var/lib/postgresql
 
   nginx-shib:
     image: localhost:5000/nginx-shib
@@ -27,7 +27,7 @@ services:
     depends_on:
       - shibpostgres
     volumes:
-      - letsencrypt-config:/etc/letsencrypt/
+      - letsencrypt_config:/etc/letsencrypt/
     ports:
       - "80:80"
       - "443:443"
@@ -47,7 +47,7 @@ services:
   #     dockerfile: docker/deployment/cron.Dockerfile
 
 volumes:
-  letsencrypt-config:
+  letsencrypt_config:
     driver: local
-  shibpostgres-data:
+  shibpostgres_data:
     driver: local
