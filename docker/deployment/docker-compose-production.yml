@@ -14,13 +14,13 @@ services:
     image: 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-prod-nginx-shib:latest
     build:
       args:
-        ENVIRONMENT: prod
+        ENVIRONMENT: production
     deploy:
       replicas: 2
       update_config:
         parallelism: 1
       restart_policy:
-        condition: on-failure.
+        condition: on-failure
       placement:
         # Constrain Nginx to run on the nodes ELB points to
         constraints: [node.role == worker]
@@ -29,7 +29,7 @@ services:
     image: 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-prod-uclapi:latest
     build:
       args:
-        ENVIRONMENT: prod
+        ENVIRONMENT: production
     deploy:
       replicas: 3
       update_config:

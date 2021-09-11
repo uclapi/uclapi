@@ -21,7 +21,7 @@ jobs:
           UCLAPI_VERSION: "${{ github.event.inputs.version }}"
         run: |
           sudo apt-get install jq -y
-          echo $UCLAPI_VERSION > version
+          echo -n $UCLAPI_VERSION > version
           jq ".version=\"$UCLAPI_VERSION\"" ./frontend/package.json > /tmp/package.json
           jq ".info.version=\"$UCLAPI_VERSION\"" ./uclapi.openapi.json > /tmp/uclapi.openapi.json
           mv /tmp/package.json ./frontend/package.json

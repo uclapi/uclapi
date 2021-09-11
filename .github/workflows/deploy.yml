@@ -11,6 +11,7 @@ jobs:
   build:
     name: Build frontend
     runs-on: ubuntu-latest
+    environment: Production
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -25,22 +26,6 @@ jobs:
           cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
           cd ./frontend/ && \
           npm ci
-      
-      - name: Get version
-        id: version
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: ./version
-
-      - name: Update version numbers
-        env:
-          UCLAPI_VERSION: "${{ steps.version.outputs.content }}"
-        run: |
-          sudo apt-get install jq -y
-          jq ".version=\"$UCLAPI_VERSION\"" ./frontend/package.json > /tmp/package.json
-          jq ".info.version=\"$UCLAPI_VERSION\"" ./uclapi.openapi.json > /tmp/uclapi.openapi.json
-          mv /tmp/package.json ./frontend/package.json
-          mv /tmp/uclapi.openapi.json ./uclapi.openapi.json
 
       - name: Build frontend
         env:
@@ -204,7 +189,7 @@ jobs:
       - test-backend
       - test-frontend
     runs-on: ubuntu-latest
-    environment: Staging
+    environment: Production
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

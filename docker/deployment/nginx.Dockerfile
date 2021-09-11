@@ -66,7 +66,7 @@ COPY ./nginx/nginx-conf/* /usr/local/nginx/conf/
 RUN mkdir /usr/local/nginx/conf/conf.d
 COPY ./nginx/nginx-conf/conf.d/* /usr/local/nginx/conf/conf.d/
 
-RUN if [ ${ENVIRONMENT} = "prod" ]; \
+RUN if [ ${ENVIRONMENT} = "production" ]; \
     then sed -i -e 's/SERVER_NAME_HERE/uclapi\.com/' /usr/local/nginx/conf/conf.d/nginx.conf; \
     else sed -i -e 's/SERVER_NAME_HERE/staging\.ninja/' /usr/local/nginx/conf/conf.d/nginx.conf; \
     fi
@@ -87,7 +87,7 @@ RUN mkdir -p /web/favicons && \
     cp -Rav uclapi-branding/favicons/* /web/favicons && \
     rm -rf uclapi-branding
 
-RUN if [ ${ENVIRONMENT} = "prod" ]; \
+RUN if [ ${ENVIRONMENT} = "production" ]; \
     then openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /web/internal-cert/key.pem \
 -out /web/internal-cert/cert.pem -subj "/C=GB/ST=London/L=London/O=DevOps/OU=Production/CN=uclapi.com"; \
     else openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /web/internal-cert/key.pem \
