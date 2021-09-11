@@ -172,7 +172,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_BUCKET_NAME: uclapi-static-staging
+          AWS_S3_BUCKET_NAME: uclapi-static
           AWS_S3_BUCKET_PATH: static/
           AWS_S3_REGION: eu-west-2
           AWS_S3_STATICS_CREDENTIALS_ENABLED: True
