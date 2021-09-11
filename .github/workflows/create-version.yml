@@ -1,0 +1,46 @@
+name: Create Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number'
+        required: true
+        default: '1.0.0'
+  
+jobs:
+  version:
+    name: Update version number
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Update version numbers
+        env:
+          UCLAPI_VERSION: "${{ github.event.release.tag_name }}"
+        run: |
+          sudo apt-get install jq -y
+          echo $UCLAPI_VERSION > version
+          jq ".version=\"$UCLAPI_VERSION\"" ./frontend/package.json > /tmp/package.json
+          jq ".info.version=\"$UCLAPI_VERSION\"" ./uclapi.openapi.json > /tmp/uclapi.openapi.json
+          mv /tmp/package.json ./frontend/package.json
+          mv /tmp/uclapi.openapi.json ./uclapi.openapi.json
+
+      - name: Create commits
+        env:
+          UCLAPI_VERSION: "${{ github.event.release.tag_name }}"
+        run: |
+          git config user.name 'Github Actions'
+          git config user.email 'actions@github.com'
+          git add -A
+          git commit -m "version: $UCLAPI_VERSION"
+          git tag -a "v$UCLAPI_VERSION" "$UCLAPI_VERSION"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          title: "Release v${{ github.event.release.tag_name }}"
+          delete-branch: true
+          branch: "releases/${{ github.event.release.tag_name }}"
+          

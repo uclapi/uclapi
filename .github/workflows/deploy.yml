@@ -8,36 +8,9 @@ env:
   REGISTRY: "236848092535.dkr.ecr.eu-west-2.amazonaws.com"
 
 jobs:
-  version:
-    name: Update version number
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.PERSONAL_DEPENDABOT_GITHUB_TOKEN }}
-
-      - name: Update version numbers
-        env:
-          UCLAPI_VERSION: "${{ github.event.release.tag_name }}"
-        run: |
-          sudo apt-get install jq -y
-          echo $UCLAPI_VERSION > version
-          jq ".version=\"$UCLAPI_VERSION\"" ./frontend/package.json > /tmp/package.json
-          jq ".info.version=\"$UCLAPI_VERSION\"" ./uclapi.openapi.json > /tmp/uclapi.openapi.json
-          mv /tmp/package.json ./frontend/package.json
-          mv /tmp/uclapi.openapi.json ./uclapi.openapi.json
-
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          branch: "master"
-          commit_message: "version ${{ github.event.release.tag_name }}"
-          push_options: "--force"
-
   build:
     name: Build frontend
     runs-on: ubuntu-latest
-    needs: version
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -89,7 +62,6 @@ jobs:
   test-backend:
     name: Run backend tests
     runs-on: ubuntu-latest
-    needs: version
     env:
       DB_UCLAPI_HOST: localhost
       DB_UCLAPI_PASSWORD: supersecure
@@ -154,7 +126,6 @@ jobs:
   test-frontend:
     name: Run frontend tests
     runs-on: ubuntu-latest
-    needs: version
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
