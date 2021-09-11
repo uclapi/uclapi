@@ -28,6 +28,7 @@ jobs:
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
+          branch: "master"
           commit_message: "version ${{ github.event.release.tag_name }}" 
 
   build:
