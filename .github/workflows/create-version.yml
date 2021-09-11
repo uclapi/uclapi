@@ -18,7 +18,7 @@ jobs:
 
       - name: Update version numbers
         env:
-          UCLAPI_VERSION: "${{ github.event.release.tag_name }}"
+          UCLAPI_VERSION: "${{ github.event.inputs.version }}"
         run: |
           sudo apt-get install jq -y
           echo $UCLAPI_VERSION > version
@@ -29,7 +29,7 @@ jobs:
 
       - name: Create commits
         env:
-          UCLAPI_VERSION: "${{ github.event.release.tag_name }}"
+          UCLAPI_VERSION: "${{ github.event.inputs.version }}"
         run: |
           git config user.name 'Github Actions'
           git config user.email 'actions@github.com'
@@ -40,7 +40,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
-          title: "Release v${{ github.event.release.tag_name }}"
+          title: "Release v${{ github.event.inputs.version }}"
           delete-branch: true
-          branch: "releases/${{ github.event.release.tag_name }}"
+          branch: "releases/${{ github.event.inputs.version }}"
           
