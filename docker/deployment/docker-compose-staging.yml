@@ -38,14 +38,14 @@ services:
       restart_policy:
         condition: on-failure
 
-  # cron:
-  #   image: 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-staging-cron:latest
-  #   build:
-  #     args:
-  #       ENVIRONMENT: staging
-  #   deploy:
-  #     replicas: 1
-  #     update_config:
-  #       parallelism: 1
-  #     restart_policy:
-  #       condition: on-failure
+  cron:
+     image: 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-staging-cron:latest
+     build:
+       args:
+         ENVIRONMENT: staging
+     deploy:
+       replicas: 1
+       update_config:
+         parallelism: 1
+       restart_policy:
+         condition: on-failure
