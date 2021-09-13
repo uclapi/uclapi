@@ -91,7 +91,7 @@
     "react-router-dom": "^5.2.1",
     "react-syntax-highlighter": "^15.4.4",
     "react-tabs": "^3.2.2",
-    "swagger-ui-react": "^3.52.0",
+    "swagger-ui-react": "^3.52.1",
     "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
