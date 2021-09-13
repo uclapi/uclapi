@@ -74,7 +74,7 @@
     "@material-ui/core": "^4.12.3",
     "@sentry/react": "^6.11.0",
     "@sentry/tracing": "^6.11.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "dayjs": "^1.10.6",
     "framer-motion": "^4.1.17",
     "include-media": "^1.4.10",
