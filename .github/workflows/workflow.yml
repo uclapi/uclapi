@@ -370,6 +370,8 @@ jobs:
             export SHIB_POSTGRES_USERNAME=$SHIB_POSTGRES_USERNAME
             export SHIB_POSTGRES_PASSWORD=$SHIB_POSTGRES_PASSWORD
             export SHIB_POSTGRES_DATABASE=$SHIB_POSTGRES_DATABASE
+            export CRON_MEMORY_KB=$(awk "BEGIN {print( ($(grep MemTotal /proc/meminfo | sed 's/[^0-9]*//g'))/2 )}")
+            export CRON_CPU_COUNT=$(awk "BEGIN {print( $(nproc --all)/2 )}")
             envsubst < docker-compose-tmp-2.yml > docker-compose-tmp-3.yml
             docker stack deploy -c docker-compose-tmp-3.yml --with-registry-auth uclapi
             rm docker-compose-tmp.yml
