@@ -49,3 +49,7 @@ services:
          parallelism: 1
        restart_policy:
          condition: on-failure
+       resources:
+         limits:
+           cpus: ${CRON_CPU_COUNT}
+           memory: ${CRON_MEMORY_KB}K
