@@ -75,7 +75,7 @@
     "@sentry/react": "^6.11.0",
     "@sentry/tracing": "^6.11.0",
     "axios": "^0.21.1",
-    "dayjs": "^1.10.6",
+    "dayjs": "^1.10.7",
     "framer-motion": "^4.1.17",
     "include-media": "^1.4.10",
     "js-cookie": "^3.0.0",
