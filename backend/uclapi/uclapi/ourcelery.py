@@ -4,7 +4,6 @@ import celery
 import os
 
 from common.helpers import read_dotenv
-from django_celery_beat.models import CrontabSchedule, PeriodicTask
 
 read_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
 
@@ -24,23 +23,26 @@ class Celery(celery.Celery):
                 send_default_pii=True
             )
 
+    @staticmethod
+    def on_after_finalize():
+        from django_celery_beat.models import CrontabSchedule, PeriodicTask
+        gencache_schedule, _ = CrontabSchedule.objects.get_or_create(minute='5,35', hour='*',
+                                                                     day_of_week='*', day_of_month='*',
+                                                                     month_of_year='*')
+
+        gencache_periodic_task = PeriodicTask.objects.filter(task='timetable.tasks.update_gencache_celery').first()
+        if gencache_periodic_task is None:
+            gencache_periodic_task = PeriodicTask(task='timetable.tasks.update_gencache_celery')
+        gencache_periodic_task.crontab = gencache_schedule
+        gencache_periodic_task.name = 'Update gencache'
+        gencache_periodic_task.save()
+
 
 app = Celery('uclapi')
 
 app.config_from_object('django.conf.settings', namespace='CELERY')
 
 app.autodiscover_tasks()
-
-
-gencache_schedule, _ = CrontabSchedule.objects.get_or_create(minute='5,35', hour='*',
-                                                             day_of_week='*', day_of_month='*', month_of_year='*')
-
-gencache_periodic_task = PeriodicTask.objects.filter(task='timetable.tasks.update_gencache_celery').first()
-if gencache_periodic_task is None:
-    gencache_periodic_task = PeriodicTask(task='timetable.tasks.update_gencache_celery')
-gencache_periodic_task.crontab = gencache_schedule
-gencache_periodic_task.name = 'Update gencache'
-gencache_periodic_task.save()
 
 
 @app.task(bind=True)
