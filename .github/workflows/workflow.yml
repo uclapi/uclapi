@@ -290,6 +290,8 @@ jobs:
           SHIB_POSTGRES_USERNAME: ${{ secrets.SHIB_POSTGRES_USERNAME }}
           SHIB_POSTGRES_PASSWORD: ${{ secrets.SHIB_POSTGRES_PASSWORD }}
           SHIB_POSTGRES_DATABASE: ${{ secrets.SHIB_POSTGRES_DATABASE }}
+          CRON_CPU_COUNT: 1
+          CRON_MEMORY_KB: 512000
           ENVIRONMENT: staging
           UCLAPI_VERSION: "${{ steps.version.outputs.content }}-${{ github.sha }}"
         run: |
