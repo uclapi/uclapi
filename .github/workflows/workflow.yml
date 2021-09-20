@@ -303,6 +303,9 @@ jobs:
           docker-compose -f docker-compose.yml -f docker-compose-staging.yml build --parallel
 
       - name: Push containers
+        env:
+          CRON_CPU_COUNT: 1
+          CRON_MEMORY_KB: 512000
         run: |
           cd docker/deployment && \
           docker-compose -f docker-compose.yml -f docker-compose-staging.yml push
@@ -378,8 +381,9 @@ jobs:
             export CRON_MEMORY_KB=$(awk "BEGIN {print( ($(grep MemTotal /proc/meminfo | sed 's/[^0-9]*//g'))/2 )}")
             export CRON_CPU_COUNT=$(awk "BEGIN {print( $(nproc --all)/2 )}")
             envsubst < docker-compose-tmp-2.yml > docker-compose-tmp-3.yml
-            docker stack deploy -c docker-compose-tmp-3.yml --with-registry-auth uclapi
-            rm docker-compose-tmp.yml
+            rm docker-compose-tmp.yml docker-compose-tmp-2.yml
+            mv -f docker-compose-tmp-3.yml docker-compose.yml
+            docker stack deploy -c docker-compose.yml --with-registry-auth uclapi
   
       - name: Create Sentry release
         uses: getsentry/action-release@v1.1.6
