@@ -381,7 +381,8 @@ jobs:
             export CRON_MEMORY_KB=$(awk "BEGIN {print( ($(grep MemTotal /proc/meminfo | sed 's/[^0-9]*//g'))/2 )}")
             export CRON_CPU_COUNT=$(awk "BEGIN {print( $(nproc --all)/2 )}")
             envsubst < docker-compose-tmp-2.yml > docker-compose-tmp-3.yml
-            rm docker-compose-tmp.yml docker-compose-tmp-2.yml
+            sed -i -E "s/cpus: ([0-9\\.]+)/cpus: '\\1'/" docker-compose-tmp-3.yml
+            rm docker-compose-tmp.yml docker-compose-tmp-2.yml docker-compose-staging.yml
             mv -f docker-compose-tmp-3.yml docker-compose.yml
             docker stack deploy -c docker-compose.yml --with-registry-auth uclapi
   
