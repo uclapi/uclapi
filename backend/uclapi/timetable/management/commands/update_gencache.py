@@ -1,3 +1,12 @@
+import django
+from django.apps import apps
+from django.conf import settings
+
+# Nasty hack to ensure we can initialise models in worker processes
+# Courtesy of: https://stackoverflow.com/a/39996838
+if not apps.ready and not settings.configured:
+    django.setup()
+
 import pymsteams
 
 from timetable.models import (
@@ -36,7 +45,6 @@ from cachetclient.v1 import enums
 
 import gc
 
-import django
 import redis
 
 import time
@@ -44,18 +52,11 @@ import time
 from datetime import datetime
 from multiprocessing import Pool
 
-from django.apps import apps
-from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db import connections
 from tqdm import tqdm
 from django import db
-
-# Nasty hack to ensure we can initialise models in worker processes
-# Courtesy of: https://stackoverflow.com/a/39996838
-if not apps.ready and not settings.configured:
-    django.setup()
 
 
 """
