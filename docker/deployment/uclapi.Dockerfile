@@ -75,6 +75,9 @@ RUN wget -nv -O instantclient.zip ${ORACLE_INSTANTCLIENT_BASIC_URL} && \
     ldconfig && \
     grep -q -F "ORACLE_HOME=${ORACLE_HOME}" /etc/environment || echo "ORACLE_HOME=${ORACLE_HOME}" >> /etc/environment && \
     echo "${ORACLE_HOME}" > /etc/ld.so.conf.d/oracle.conf && \
+    mkdir -p ${ORACLE_HOME}/network/admin/ && \
+    mv ./docker/deployment/oracle/* ${ORACLE_HOME}/network/admin/ && \
+    export TNS_ADMIN=${ORACLE_HOME}/network/admin/ && \
     ldconfig
 
 # Install the Supervisor configuration files
