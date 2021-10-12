@@ -57,7 +57,7 @@ RUN python3 get-pip.py
 
 # COPY Oracle deployment files
 RUN mkdir -p /home/oracle
-COPY ./docker/deployment/oracle/      /home/oracle
+COPY ./docker/deployment/non-public/${ENVIRONMENT}/oracle/      /home/oracle
 
 # Install Oracle. This does the following:
 # - Downloads and unzips the instant client
