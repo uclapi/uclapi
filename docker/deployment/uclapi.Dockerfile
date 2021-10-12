@@ -55,6 +55,10 @@ ENV LC_ALL en_GB.UTF-8
 ADD https://bootstrap.pypa.io/get-pip.py get-pip.py
 RUN python3 get-pip.py
 
+# COPY Oracle deployment files
+RUN mkdir -p /home/oracle
+COPY ./docker/deployment/oracle/      /home/oracle
+
 # Install Oracle. This does the following:
 # - Downloads and unzips the instant client
 # - Downloads and unzips the instant client SDK
@@ -76,7 +80,7 @@ RUN wget -nv -O instantclient.zip ${ORACLE_INSTANTCLIENT_BASIC_URL} && \
     grep -q -F "ORACLE_HOME=${ORACLE_HOME}" /etc/environment || echo "ORACLE_HOME=${ORACLE_HOME}" >> /etc/environment && \
     echo "${ORACLE_HOME}" > /etc/ld.so.conf.d/oracle.conf && \
     mkdir -p ${ORACLE_HOME}/network/admin/ && \
-    mv ./docker/deployment/oracle/* ${ORACLE_HOME}/network/admin/ && \
+    mv /home/oracle/* ${ORACLE_HOME}/network/admin/ && \
     export TNS_ADMIN=${ORACLE_HOME}/network/admin/ && \
     ldconfig
 
