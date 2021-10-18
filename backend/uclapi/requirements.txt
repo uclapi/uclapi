@@ -1,5 +1,5 @@
 autopep8==1.5.7
-boto3==1.18.31
+boto3==1.18.63
 cachet-client==3.1.1
 celery==5.1.2
 django-celery-beat==2.2.1
