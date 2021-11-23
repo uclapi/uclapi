@@ -10,6 +10,8 @@ from django.conf import settings
 from django.db import connections
 from django import db
 import gc
+import requests
+import os
 
 from common.helpers import LOCAL_TIMEZONE
 from timetable.models import (
@@ -264,6 +266,10 @@ def completion_callback(_, running_key, start_time):
 
 
 def update_gencache(skip_run_check):
+    try:
+        requests.get(os.environ.get("HEALTHCHECK_GENCACHE") + "/start", timeout=5)
+    except requests.exceptions.RequestException:
+        pass
     running_key = "cron:gencache:in_progress"
     redis_conn = redis.Redis(host=settings.REDIS_UCLAPI_HOST,
                              charset="utf-8",
@@ -285,6 +291,10 @@ def update_gencache(skip_run_check):
     chord(cache_table_task.s(i, dest_table_index)
           for i in range(len(tables)))(completion_callback.s(running_key,
                                                              start_time))
+    try:
+        requests.get(os.environ.get("HEALTHCHECK_GENCACHE"), timeout=5)
+    except requests.exceptions.RequestException:
+        pass
 
 
 # https://stackoverflow.com/questions/34830964/how-to-limit-the-maximum-number-of-running-celery-tasks-by-name

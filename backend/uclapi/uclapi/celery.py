@@ -31,7 +31,14 @@ app.autodiscover_tasks()
 
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
-    from celery.schedules import crontab
-    sender.add_periodic_task(crontab(minute='5,35'),
-                             'timetable.tasks.update_gencache_celery',
-                             name='Update gencache')
+    from django_celery_beat.models import CrontabSchedule, PeriodicTask
+    gencache_schedule, _ = CrontabSchedule.objects.get_or_create(minute='5,35', hour='*',
+                                                                 day_of_week='*', day_of_month='*',
+                                                                 month_of_year='*')
+
+    gencache_periodic_task = PeriodicTask.objects.filter(task='timetable.tasks.update_gencache_celery').first()
+    if gencache_periodic_task is None:
+        gencache_periodic_task = PeriodicTask(task='timetable.tasks.update_gencache_celery')
+    gencache_periodic_task.crontab = gencache_schedule
+    gencache_periodic_task.name = 'Update gencache'
+    gencache_periodic_task.save()
