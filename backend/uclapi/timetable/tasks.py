@@ -263,6 +263,10 @@ def completion_callback(_, running_key, start_time):
     # to be run again in the future.
     redis_conn.delete(running_key)
     print("All done.")
+    try:
+        requests.get(os.environ.get("HEALTHCHECK_GENCACHE"), timeout=5)
+    except requests.exceptions.RequestException:
+        pass
 
 
 def update_gencache(skip_run_check):
@@ -291,10 +295,6 @@ def update_gencache(skip_run_check):
     chord(cache_table_task.s(i, dest_table_index)
           for i in range(len(tables)))(completion_callback.s(running_key,
                                                              start_time))
-    try:
-        requests.get(os.environ.get("HEALTHCHECK_GENCACHE"), timeout=5)
-    except requests.exceptions.RequestException:
-        pass
 
 
 # https://stackoverflow.com/questions/34830964/how-to-limit-the-maximum-number-of-running-celery-tasks-by-name
