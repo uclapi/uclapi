@@ -1,11 +1,8 @@
 #!/bin/bash
 
 cd /web/uclapi/backend/uclapi || exit
-. venv/bin/activate
-pip3.7 install -r requirements.txt
-./manage.py migrate
-./manage.py migrate --database gencache
-deactivate
+python3 manage.py migrate
+python3 manage.py migrate --database gencache
 
 while /bin/true; do
     # Ensure Supervisor is alive first
