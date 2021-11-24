@@ -29,7 +29,7 @@ app.config_from_object('django.conf.settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 
-@app.on_after_configure.connect
+@app.on_after_finalize.connect
 def setup_periodic_tasks(sender, **kwargs):
     from django_celery_beat.models import CrontabSchedule, PeriodicTask
     gencache_schedule, _ = CrontabSchedule.objects.get_or_create(minute='5,35', hour='*',
