@@ -24,6 +24,7 @@ class Celery(celery.Celery):
                 send_default_pii=True
             )
 
+
 app = Celery('uclapi')
 app.config_from_object('django.conf.settings', namespace='CELERY')
 app.autodiscover_tasks()
@@ -42,3 +43,8 @@ def setup_periodic_tasks(sender, **kwargs):
     gencache_periodic_task.crontab = gencache_schedule
     gencache_periodic_task.name = 'Update gencache'
     gencache_periodic_task.save()
+
+
+@app.task()
+def ping_sample_task():
+    return True
