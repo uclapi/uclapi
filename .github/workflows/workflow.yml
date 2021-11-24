@@ -372,6 +372,7 @@ jobs:
           script_stop: true
           script: |
             aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin $REGISTRY
+            if ((`df -h /dev/root | awk '(NR > 1) {print substr($5, 1, length($5)-1)}'` < 5)); then docker system prune -f; fi
             docker-compose -f docker-compose.yml -f docker-compose-staging.yml config --no-interpolate > docker-compose-tmp.yml
             sed -i "s/:latest/:$VERSION-$SHA/g" docker-compose-tmp.yml
             cat docker-compose-tmp.yml | yq e '(.services[] | select(.depends_on | tag == "!!map")).depends_on |= (. | keys)' - > docker-compose-tmp-2.yml
