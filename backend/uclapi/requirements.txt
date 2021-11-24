@@ -4,7 +4,7 @@ cachet-client==3.1.1
 celery==5.1.2
 django-celery-beat==2.2.1
 ciso8601==2.2.0
-cx-Oracle==8.2.1
+cx-Oracle==8.3.0
 Django==2.2.24
 deepdiff==5.6.0
 django-cors-headers==3.10.0
