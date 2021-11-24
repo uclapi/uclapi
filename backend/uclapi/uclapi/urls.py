@@ -25,6 +25,7 @@ from dashboard.views import (
     error_500_view,
     custom_page_not_found
 )
+from common.views import ping_view
 from oauth.views import settings, settings_shibboleth_callback, logout
 from marketplace.views import marketplace
 
@@ -50,6 +51,7 @@ urlpatterns = [
     path('search/', include('search.urls')),
     path('resources/', include('resources.urls')),
     path('workspaces/', include('workspaces.urls')),
+    path('ping/', ping_view),
     path('', home),
     path('404/', custom_page_not_found),
     path('500/', error_500_view)
