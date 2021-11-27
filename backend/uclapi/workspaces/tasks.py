@@ -44,10 +44,9 @@ def feed_occupeye_cache(test=False, mini=False):
 
 @shared_task
 def day_cache():
-    feed_occupeye_cache.s(test=False, mini=True)()
+    feed_occupeye_cache.s(mini=True)()
 
 
 @shared_task
 def night_cache():
-    feed_occupeye_cache.s(test=False, mini=False)()
-    feed_occupeye_cache.s(test=False, mini=True)()
+    feed_occupeye_cache.s(mini=False)()
