@@ -24,14 +24,17 @@ class Celery(celery.Celery):
                 send_default_pii=True
             )
 
+
 app = Celery('uclapi')
 app.config_from_object('django.conf.settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 
-@app.on_after_configure.connect
+@app.on_after_finalize.connect
 def setup_periodic_tasks(sender, **kwargs):
     from django_celery_beat.models import CrontabSchedule, PeriodicTask
+
+    # Gencache at every 5th and 35th minute
     gencache_schedule, _ = CrontabSchedule.objects.get_or_create(minute='5,35', hour='*',
                                                                  day_of_week='*', day_of_month='*',
                                                                  month_of_year='*')
@@ -42,3 +45,29 @@ def setup_periodic_tasks(sender, **kwargs):
     gencache_periodic_task.crontab = gencache_schedule
     gencache_periodic_task.name = 'Update gencache'
     gencache_periodic_task.save()
+
+    # Day cache for occupeye every 2 minutes
+    day_cache_schedule, _ = CrontabSchedule.objects.get_or_create(minute='*/2', hour='*',
+                                                                  day_of_week='*', day_of_month='*',
+                                                                  month_of_year='*')
+    occupeye_day_periodic_task = PeriodicTask.objects.filter(task='workspaces.tasks.day_cache').first()
+    if occupeye_day_periodic_task is None:
+        occupeye_day_periodic_task = PeriodicTask(task='workspaces.tasks.day_cache')
+    occupeye_day_periodic_task.crontab = day_cache_schedule
+    occupeye_day_periodic_task.name = 'Occupeye day cache'
+    occupeye_day_periodic_task.save()
+
+    # Night cache for occupeye at 2AM every day
+    night_cache_schedule, _ = CrontabSchedule.objects.get_or_create(minute='0', hour='2',
+                                                                    day_of_week='*', day_of_month='*',
+                                                                    month_of_year='*')
+    occupeye_night_periodic_task = PeriodicTask.objects.filter(task='workspaces.tasks.night_cache').first()
+    if occupeye_night_periodic_task is None:
+        occupeye_night_periodic_task = PeriodicTask(task='workspaces.tasks.night_cache')
+    occupeye_night_periodic_task.crontab = night_cache_schedule
+    occupeye_night_periodic_task.name = 'Occupeye night cache'
+    occupeye_night_periodic_task.save()
+
+@app.task()
+def ping_sample_task():
+    return True
