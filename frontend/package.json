@@ -79,7 +79,7 @@
     "framer-motion": "^4.1.17",
     "include-media": "^1.4.10",
     "js-cookie": "^3.0.1",
-    "npm-check-updates": "^11.8.5",
+    "npm-check-updates": "^12.0.2",
     "prop-types": "^15.7.2",
     "qs": "^6.10.1",
     "rc-collapse": "^3.1.2",
