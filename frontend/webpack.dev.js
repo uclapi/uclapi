@@ -50,6 +50,17 @@ module.exports = {
       'Styles': path.resolve(__dirname, `./src/sass`),
     },
     extensions: [`.js`, `.json`, `.jsx`],
+    fallback: {
+      'fs': false,
+      'tls': false,
+      'net': false,
+      'path': false,
+      'zlib': false,
+      'http': false,
+      'https': false,
+      'stream': require.resolve(`stream-browserify`),
+      'crypto': false,
+    },
   },
   entry: {
     index: entryPointsPathPrefix + `/Home`,
