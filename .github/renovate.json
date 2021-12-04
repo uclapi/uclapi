@@ -2,6 +2,12 @@
   "extends": [
     "config:base"
   ],
+  "js": {
+    "managerBranchPrefix": "js-"
+  },
+  "python": {
+    "managerBranchPrefix": "python-"
+  },
   "packageRules": [
     {
       "matchPackagePatterns": [
