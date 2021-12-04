@@ -1,12 +1,48 @@
 {
   "extends": [
-    "config:base",
-    "group:all"
+    "config:base"
   ],
+  "prHourlyLimit": 4,
   "js": {
-    "managerBranchPrefix": "js-"
+    "groupName": "all minor dependencies",
+    "separateMajorMinor": false,
+    "groupSlug": "all",
+    "packageRules": [
+      {
+    "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "all javascript non-major dependencies",
+      "groupSlug": "all-js-minor-patch"
+      }
+    ],
+    "lockFileMaintenance": {
+      "enabled": false
+    },
   },
   "python": {
-    "managerBranchPrefix": "python-"
+   "groupName": "all minor dependencies",
+    "separateMajorMinor": false,
+    "groupSlug": "all",
+    "packageRules": [
+      {
+    "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "all python non-major dependencies",
+      "groupSlug": "all-py-minor-patch"
+      }
+    ],
+    "lockFileMaintenance": {
+      "enabled": false
+    },
   }
 }
