@@ -9,40 +9,40 @@
     "groupSlug": "all",
     "packageRules": [
       {
-    "matchPackagePatterns": [
-        "*"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "groupName": "all javascript non-major dependencies",
-      "groupSlug": "all-js-minor-patch"
+        "matchPackagePatterns": [
+          "*"
+        ],
+        "matchUpdateTypes": [
+          "minor",
+          "patch"
+        ],
+        "groupName": "all javascript non-major dependencies",
+        "groupSlug": "all-js-minor-patch"
       }
     ],
     "lockFileMaintenance": {
       "enabled": false
-    },
+    }
   },
   "python": {
-   "groupName": "all minor dependencies",
+    "groupName": "all minor dependencies",
     "separateMajorMinor": false,
     "groupSlug": "all",
     "packageRules": [
       {
-    "matchPackagePatterns": [
-        "*"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "groupName": "all python non-major dependencies",
-      "groupSlug": "all-py-minor-patch"
+        "matchPackagePatterns": [
+          "*"
+        ],
+        "matchUpdateTypes": [
+          "minor",
+          "patch"
+        ],
+        "groupName": "all python non-major dependencies",
+        "groupSlug": "all-py-minor-patch"
       }
     ],
     "lockFileMaintenance": {
       "enabled": false
-    },
+    }
   }
 }
