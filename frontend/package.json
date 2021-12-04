@@ -90,7 +90,7 @@
     "react-icons": "^4.3.1",
     "react-modal": "^3.14.3",
     "react-responsive-carousel": "^3.2.22",
-    "react-router-dom": "^5.3.0",
+    "react-router-dom": "^6.0.2",
     "react-syntax-highlighter": "^15.4.4",
     "react-tabs": "^3.2.2",
     "stream-browserify": "^3.0.0",
