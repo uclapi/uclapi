@@ -41,8 +41,6 @@ services:
   cron:
     image: 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-staging-cron:latest
     build:
-      context: ../../
-      dockerfile: docker/deployment/cron.Dockerfile
       args:
         ENVIRONMENT: staging
     deploy:
