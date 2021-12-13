@@ -22,7 +22,7 @@ gunicorn==20.1.0
 greenlet==1.1.2
 hiredis==2.0.0
 jinjasql==0.1.8
-lxml==4.6.4
+lxml==4.6.5
 parameterized==0.8.1
 pycodestyle==2.8.0
 psycopg2-binary==2.9.2
