@@ -33,7 +33,7 @@ sentry-sdk==1.5.0
 redis==4.0.2
 requests==2.26.0
 requests-futures==1.0.0
-Sphinx==4.3.1
+Sphinx==4.3.2
 tqdm==4.62.3
 validators==0.18.2
 git+git://github.com/uclapi/django-webpack-loader@master#egg=django-webpack-loader
