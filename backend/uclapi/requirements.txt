@@ -27,7 +27,7 @@ parameterized==0.8.1
 pycodestyle==2.8.0
 psycopg2-binary==2.9.2
 python-dateutil==2.8.2
-pymsteams==0.1.16
+pymsteams==0.2.1
 pytz==2021.3
 sentry-sdk==1.5.0
 redis==4.0.2
