@@ -5,32 +5,42 @@ export const endpoints = [
   {
     name: `/oauth`,
     description: `Let your users sign in with their UCL credentials`,
-    link: `/docs#oauth`,
+    link: `/docs#operations-tag-OAuth`,
   },
   {
     name: `/roombookings`,
     description: `Get details of all bookable rooms at UCL`,
-    link: `/docs#roombookings`,
+    link: `/docs#operations-tag-Room_Bookings`,
   },
   {
     name: `/search`,
     description: `Find people at UCL`,
-    link: `/docs#search`,
+    link: `/docs#operations-tag-Search`,
   },
   {
     name: `/timetable`,
     description: `Access personal and module timetables`,
-    link: `/docs#timetable`,
+    link: `/docs#operations-tag-Timetable`,
   },
   {
     name: `/resources`,
     description: `Find out how many UCL desktops are free`,
-    link: `/docs#resources`,
+    link: `/docs#operations-tag-Resources`,
   },
   {
     name: `/workspaces`,
     description: `See how busy the libraries are right now`,
-    link: `/docs#workspaces`,
+    link: `/docs#operations-tag-Workspaces`,
+  },
+  {
+    name: `/libcal`,
+    description: `Manage and make seat reservations on the library booking system`,
+    link: `/docs#operations-tag-LibCal`,
+  },
+  {
+    name: `/analytics`,
+    description: `View analytics and stats about your app or API service`,
+    link: `/docs#operations-tag-Analytics`,
   },
 ]
 
