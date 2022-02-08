@@ -41,6 +41,10 @@
       "description": "Fetch workspace availablility and maps throughout UCL"
     },
     {
+      "name": "LibCal",
+      "description": "Reserve seats on the library booking system"
+    },
+    {
       "name": "Analytics",
       "description": "View analytics and stats about your app or API services"
     }
@@ -443,9 +447,6 @@
       }
     },
     "schemas" : {
-      "libcal_cancel_booking": {
-
-      },
       "libcal_reserve_request_booking": {
         "description": "Specify seat_id if booking a seat, otherwise omit it",
         "properties": {
@@ -474,7 +475,7 @@
           "bookings": {
             "type": "array",
             "items": {
-
+              "$ref": "#/components/schemas/libcal_reserve_request_booking"
             }
           }
         },
@@ -573,7 +574,7 @@
           "status": {
             "type": "boolean",
             "description": "The current status of the seat",
-            "example": "Active"
+            "example": true
           }
         }
       },
@@ -6533,7 +6534,7 @@
     },
     "/libcal/space/reserve": {
       "post": {
-        "summary": "Reserve a LibCal space/seat",
+        "summary": "Reserve one or more LibCal spaces/seats",
         "tags": [ "LibCal" ],
         "parameters": [],
         "security": [{
@@ -6648,7 +6649,7 @@
     },
     "/libcal/space/cancel": {
       "post": {
-        "summary": "Cancel a LibCal booking",
+        "summary": "Cancel one or more LibCal bookings",
         "tags": [ "LibCal" ],
         "parameters": [
           { "$ref":  "#/components/parameters/libcal_booking_ids" }
