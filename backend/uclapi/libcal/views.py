@@ -392,7 +392,7 @@ def cancel(request, *args, **kwargs):
         else:
             uclapi_response = JsonResponse({
                 "ok": False,
-                "error": "No bookings were found to be deleted"
+                "error": "No bookings matched the IDs provided and so no bookings were deleted"
             }, custom_header_data=kwargs)
             uclapi_response.status_code = 400
             return uclapi_response
