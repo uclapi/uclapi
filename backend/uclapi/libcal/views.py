@@ -31,6 +31,8 @@ from .serializers import (
     LibCalBookingIdListSerializer
 )
 
+from .utils import cameliser, underscorer
+
 
 def _libcal_request_forwarder(
     url: str, request: Request, serializer: Serializer, key: str, method: str = 'GET', **kwargs
@@ -95,7 +97,7 @@ def _libcal_request_forwarder(
     if libcal_response.status_code == 200:
         uclapi_response = JsonResponse({
             "ok": True,
-            key: libcal_response.json()
+            key: underscorer(libcal_response.json())
         }, custom_header_data=kwargs)
         uclapi_response.status_code = libcal_response.status_code
         return uclapi_response
@@ -122,7 +124,7 @@ def _libcal_request_forwarder(
 
         uclapi_response = JsonResponse({
             "ok": False,
-            "error": data["error"] if "error" in data else data
+            "error": data["error"] if "error" in data else underscorer(data)
         }, custom_header_data=kwargs)
         return uclapi_response
 
@@ -134,7 +136,7 @@ def get_locations(request, *args, **kwargs):
     return _libcal_request_forwarder(
         "/1.1/space/locations",
         request,
-        LibCalLocationGETSerializer(data=request.query_params),
+        LibCalLocationGETSerializer(data=cameliser(request.query_params)),
         'locations',
         **kwargs
     )
@@ -147,7 +149,7 @@ def get_form(request, *args, **kwargs):
     return _libcal_request_forwarder(
         "/1.1/space/form",
         request,
-        LibCalIdListSerializer(data=request.query_params),
+        LibCalIdListSerializer(data=cameliser(request.query_params)),
         'forms',
         **kwargs
     )
@@ -160,7 +162,7 @@ def get_question(request, *args, **kwargs):
     return _libcal_request_forwarder(
         "/1.1/space/question",
         request,
-        LibCalIdListSerializer(data=request.query_params),
+        LibCalIdListSerializer(data=cameliser(request.query_params)),
         'questions',
         **kwargs
     )
@@ -174,7 +176,7 @@ def get_categories(request, *args, **kwargs):
     return _libcal_request_forwarder(
         "/1.1/space/categories",
         request,
-        LibCalIdListSerializer(data=request.query_params),
+        LibCalIdListSerializer(data=cameliser(request.query_params)),
         'categories',
         **kwargs
     )
@@ -188,7 +190,7 @@ def get_category(request, *args, **kwargs):
     return _libcal_request_forwarder(
         "/1.1/space/category",
         request,
-        LibCalCategoryGETSerializer(data=request.query_params),
+        LibCalCategoryGETSerializer(data=cameliser(request.query_params)),
         'categories',
         **kwargs
     )
@@ -202,7 +204,7 @@ def get_item(request, *args, **kwargs):
     return _libcal_request_forwarder(
         "/1.1/space/item",
         request,
-        LibCalItemGETSerializer(data=request.query_params),
+        LibCalItemGETSerializer(data=cameliser(request.query_params)),
         'items',
         **kwargs
     )
@@ -216,7 +218,7 @@ def get_nickname(request, *args, **kwargs):
     return _libcal_request_forwarder(
         "/1.1/space/nickname",
         request,
-        LibCalNicknameGETSerializer(data=request.query_params),
+        LibCalNicknameGETSerializer(data=cameliser(request.query_params)),
         'nicknames',
         **kwargs
     )
@@ -230,7 +232,7 @@ def get_utilization(request, *args, **kwargs):
     return _libcal_request_forwarder(
         "/api/1.1/space/utilization",
         request,
-        LibCalUtilizationGETSerializer(data=request.query_params),
+        LibCalUtilizationGETSerializer(data=cameliser(request.query_params)),
         'data',
         **kwargs
     )
@@ -244,7 +246,7 @@ def get_seat(request, *args, **kwargs):
     return _libcal_request_forwarder(
         "/api/1.1/space/seat",
         request,
-        LibCalSeatGETSerializer(data=request.query_params),
+        LibCalSeatGETSerializer(data=cameliser(request.query_params)),
         'seat',
         **kwargs
     )
@@ -258,7 +260,7 @@ def get_seats(request, *args, **kwargs):
     return _libcal_request_forwarder(
         "/api/1.1/space/seats",
         request,
-        LibCalSeatsGETSerializer(data=request.query_params),
+        LibCalSeatsGETSerializer(data=cameliser(request.query_params, special=False)),
         'seats',
         **kwargs
     )
@@ -272,7 +274,7 @@ def get_zone(request, *args, **kwargs):
     return _libcal_request_forwarder(
         "/api/1.1/space/zone",
         request,
-        LibCalIdSerializer(data=request.query_params),
+        LibCalIdSerializer(data=cameliser(request.query_params)),
         'zone',
         **kwargs
     )
@@ -286,7 +288,7 @@ def get_zones(request, *args, **kwargs):
     return _libcal_request_forwarder(
         "/api/1.1/space/zones",
         request,
-        LibCalIdSerializer(data=request.query_params),
+        LibCalIdSerializer(data=cameliser(request.query_params)),
         'zones',
         **kwargs
     )
@@ -296,8 +298,10 @@ def get_zones(request, *args, **kwargs):
 @uclapi_protected_endpoint(personal_data=False, last_modified_redis_key=None)
 def get_bookings(request, *args, **kwargs):
     """Returns bookings based on parameters (if any) given."""
-    serializer = LibCalBookingsGETSerializer(data=request.query_params)
-    booking_response = _libcal_request_forwarder("/1.1/space/bookings", request, serializer, 'data', **kwargs)
+    serializer = LibCalBookingsGETSerializer(
+        data=cameliser(request.query_params))
+    booking_response = _libcal_request_forwarder(
+        "/1.1/space/bookings", request, serializer, 'data', **kwargs)
     data = json.loads(booking_response.content.decode('utf-8'))
     if "data" in data:
         data["bookings"] = data.pop("data")
@@ -325,7 +329,7 @@ def get_personal_bookings(request, *args, **kwargs):
     return _libcal_request_forwarder(
         "/1.1/space/bookings",
         request,
-        LibCalPersonalBookingsGETSerializer(data=params),
+        LibCalPersonalBookingsGETSerializer(data=cameliser(params)),
         'bookings',
         **kwargs
     )
@@ -344,7 +348,7 @@ def reserve(request, *args, **kwargs):
     return _libcal_request_forwarder(
         "/1.1/space/reserve",
         request,
-        LibCalReservationPOSTSerializer(data=request.data),
+        LibCalReservationPOSTSerializer(data=cameliser(request.data)),
         'bookings',
         'POST',
         **kwargs
@@ -373,7 +377,7 @@ def cancel(request, *args, **kwargs):
     booking_response = _libcal_request_forwarder(
         "/1.1/space/booking",
         request,
-        LibCalBookingIdListSerializer(data=request.query_params),
+        LibCalBookingIdListSerializer(data=cameliser(request.query_params)),
         'data',
         **kwargs
     )
