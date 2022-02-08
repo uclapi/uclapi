@@ -15,6 +15,7 @@ from dashboard.models import App, User
 from uclapi.settings import REDIS_UCLAPI_HOST
 from oauth.models import OAuthScope, OAuthToken
 from oauth.scoping import Scopes
+from .utils import underscore
 
 
 def all_params(testcase_func, param_num, param):
@@ -250,7 +251,7 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
             json=json)
         response = self.client.get(
             f'/libcal/space/{uclapi_endpoint}',
-            {'ids': 1, key: value, 'token': self.app.api_token}
+            {'ids': 1, underscore(key): value, 'token': self.app.api_token}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -366,7 +367,7 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
         """Tests that invalid GET parameters are caught"""
         response = self.client.get(
             f'/libcal/space/{uclapi_endpoint}',
-            {'ids': 1, key: value, 'token': self.app.api_token}
+            {'ids': 1, underscore(key): value, 'token': self.app.api_token}
         )
         self.assertEqual(response.status_code, 400)
 
@@ -659,7 +660,7 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
             json=json)
         response = self.client.get(
             '/libcal/space/personal_bookings',
-            {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, key: value}
+            {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, underscore(key): value}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -707,7 +708,7 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
     def test_serializer_invalid_input(self, m, key, value):
         response = self.client.get(
             '/libcal/space/personal_bookings',
-            {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, key: value}
+            {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, underscore(key): value}
         )
         self.assertEqual(response.status_code, 400)
 
