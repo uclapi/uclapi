@@ -42,7 +42,7 @@
     },
     {
       "name": "LibCal",
-      "description": "Reserve seats on the library booking system"
+      "description": "Manage and make seat reservations on the library booking system"
     },
     {
       "name": "Analytics",
@@ -316,7 +316,7 @@
         }
       },
       "libcal_category_id": {
-        "name": "categoryId",
+        "name": "category_id",
         "in": "query",
         "description": "If specified, will only return data for that category",
         "required": false,
@@ -366,7 +366,7 @@
         }
       },
       "libcal_space_id": {
-        "name": "spaceId",
+        "name": "space_id",
         "in": "query",
         "description": "If specified, only return data for this space",
         "required": false,
@@ -386,7 +386,7 @@
         }
       },
       "libcal_zone_id": {
-        "name": "zoneId",
+        "name": "zone_id",
         "in": "query",
         "description": "If specified, will only return data for that zone",
         "required": false,
@@ -406,7 +406,7 @@
         }
       },
       "libcal_accessible_only": {
-        "name": "accessibleOnly",
+        "name": "accessible_only",
         "in": "query",
         "description": "Return only acessible seats (i.e. seats with height-adjustable furniture).",
         "required": false,
@@ -416,7 +416,7 @@
         }
       },
       "libcal_page_index": {
-        "name": "pageIndex",
+        "name": "page_index",
         "in": "query",
         "description": "For pagination purposes, this specifies the page to be retrieved. Starts at 0 for the first page.",
         "required": false,
@@ -426,7 +426,7 @@
         }
       },
       "libcal_page_size": {
-        "name": "pageSize",
+        "name": "page_size",
         "in": "query",
         "description": "For pagination purposes, this specifies the number of results per page. Must be >= 1 and <= 100. The default is 20.",
         "required": false,
@@ -489,13 +489,13 @@
           { "$ref": "#/components/schemas/libcal_seat_booking" }
         ],
         "properties": {
-          "bookId": { "$ref": "#/components/schemas/libcal_booking_id" },
-          "firstName": {
+          "book_id": { "$ref": "#/components/schemas/libcal_booking_id" },
+          "first_name": {
             "type": "string",
             "description": "First name of the user who booked this",
             "example": "Jeremy"
           },
-          "lastName": {
+          "last_name": {
             "type": "string",
             "description": "Last name of the user who booked this",
             "example": "Bentham"
@@ -517,8 +517,8 @@
           "eid": { "$ref": "#/components/schemas/libcal_space_id" },
           "cid": { "$ref": "#/components/schemas/libcal_category_id" },
           "lid": { "$ref": "#/components/schemas/libcal_location_id" },
-          "fromDate": { "$ref": "#/components/schemas/libcal_booking_start" },
-          "toDate": { "$ref": "#/components/schemas/libcal_booking_end" },
+          "from_date": { "$ref": "#/components/schemas/libcal_booking_start" },
+          "to_date": { "$ref": "#/components/schemas/libcal_booking_end" },
           "created": { "$ref": "#/components/schemas/libcal_booking_created" },
           "status": {
             "type": "string",
@@ -556,12 +556,12 @@
             "description": "Description provided for the LibCal seat. May contain HTML",
             "example": "<p>Donaldson Reading Room (Law)</p>"
           },
-          "isAccessible": {
+          "is_accessible": {
             "type": "boolean",
             "description": "Whether the seat is height-adjustable and hence accessible by the differently-abled",
             "example": true
           },
-          "isPowered": {
+          "is_powered": {
             "type": "boolean",
             "description": "Whether a power socket is available at the seat",
             "example": true
@@ -601,7 +601,7 @@
             "description": "Number of active LibCal bookings of seats",
             "example": 2
           },
-          "bookableCount": {
+          "bookable_count": {
             "type": "integer",
             "description": "Number of LibCal seats available to be booked",
             "example": 98
@@ -620,7 +620,7 @@
             "description": "Number of active LibCal bookings of spaces",
             "example": 2
           },
-          "bookableCount": {
+          "bookable_count": {
             "type": "integer",
             "description": "Number of LibCal spaces available to be booked",
             "example": 28
@@ -5530,22 +5530,22 @@
                             "description": "Will be returned if there is an error retrieving the given LibCal space, e.g. if the space ID provided is invalid",
                             "example": "invalid item id"
                           },
-                          "isBookableAsWhole": {
+                          "is_bookable_as_whole": {
                             "type": "boolean",
                             "description": "Whether the entire LibCal zone can be booked as a whole",
                             "example": false
                           },
-                          "isAccessible": {
+                          "is_accessible": {
                             "type": "boolean",
                             "description": "Whether the furniture in the space is height-adjustable and hence accessible by the differently-abled",
                             "example": true
                           },
-                          "isPowered": {
+                          "is_powered": {
                             "type": "boolean",
                             "description": "Whether a power socket is available at the space",
                             "example": true
                           },
-                          "zoneId": {
+                          "zone_id": {
                             "$ref": "#/components/schemas/libcal_zone_id"
                           }
                         }
@@ -5748,10 +5748,10 @@
                     },
                     "data": {
                       "properties": {
-                        "seatSummary": {
+                        "seat_summary": {
                           "$ref": "#/components/schemas/libcal_utilisation_seat_summary"
                         },
-                        "spaceSummary": {
+                        "space_summary": {
                           "$ref": "#/components/schemas/libcal_utilisation_space_summary"
                         },
                         "zones": {
@@ -5773,22 +5773,22 @@
                                     "name": {
                                       "$ref": "#/components/schemas/libcal_space_name"
                                     },
-                                    "bookableAsWhole": {
+                                    "bookable_as_whole": {
                                       "type": "boolean",
                                       "description": "Whether the entire LibCal zone can be booked as a whole",
                                       "example": false
                                     },
-                                    "currentOccupancy": {
+                                    "current_occupancy": {
                                       "type": "integer",
                                       "description": "Number of persons within the zone",
                                       "example": 15
                                     },
-                                    "currentCapacity": {
+                                    "current_capacity": {
                                       "type": "integer",
                                       "description": "Maximum number of people allowed within the zone at this period in time",
                                       "example": 20
                                     },
-                                    "maxCapacity": {
+                                    "max_capacity": {
                                       "type": "integer",
                                       "description": "Maximum number of people allowed within the zone at any time",
                                       "example": 50
@@ -5865,7 +5865,7 @@
           { "$ref": "#/components/parameters/libcal_space_id" },
           { "$ref": "#/components/parameters/libcal_category_id" },
           {
-            "name": "seatId",
+            "name": "seat_id",
             "in": "query",
             "description": "Show only the seat with this ID. If this is specified, spaceId, categoryId, and zoneId will be ignored.",
             "required": false,
@@ -6060,7 +6060,7 @@
                           }
                         ],
                         "properties": {
-                          "itemIds": {
+                          "item_ids": {
                             "type": "array",
                             "items": {
                               "$ref": "#/components/schemas/libcal_space_id"
@@ -6153,7 +6153,7 @@
                         { "$ref": "#/components/schemas/libcal_zone" }
                       ],
                       "properties": {
-                        "itemIds": {
+                        "item_ids": {
                           "type": "array",
                           "items": {
                             "$ref": "#/components/schemas/libcal_space_id"
@@ -6447,7 +6447,7 @@
             }
           },
           {
-            "name": "formAnswers",
+            "name": "form_answers",
             "in": "query",
             "description": "Whether or not form answers should be returned. Defaults to false.",
             "required": false,
