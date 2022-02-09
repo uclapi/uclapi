@@ -180,7 +180,7 @@ class HomePage extends React.Component {
               <TextView
                 text={
                   `We want the API to be able to support any idea, `+
-                  `no matter how big, that improves students lives. `+
+                  `no matter how big, that improves students' lives. `+
                   `We are always open to suggestions for new endpoints `+
                   `and functionality so we can enable a greater range `+
                   `of applications to be developed. We cannot wait to see ` +
