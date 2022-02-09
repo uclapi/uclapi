@@ -3,11 +3,10 @@ import os
 from unittest import mock
 from urllib import parse
 
-from django.core.management import call_command
-
 from parameterized import parameterized
 
 from rest_framework.test import APISimpleTestCase, APITestCase, APIClient
+from celery.exceptions import Ignore
 import requests_mock
 import redis
 
@@ -15,6 +14,7 @@ from dashboard.models import App, User
 from uclapi.settings import REDIS_UCLAPI_HOST
 from oauth.models import OAuthScope, OAuthToken
 from oauth.scoping import Scopes
+from .tasks import refresh_libcal_token
 from .utils import underscore
 
 
@@ -75,7 +75,7 @@ class LibCalManagementCommandTestCase(APISimpleTestCase):
             status_code=200,
             json=response
         )
-        call_command('refresh_libcal_token')
+        refresh_libcal_token()
         self.assertTrue(self.r.exists("libcal:token"))
         self.assertEqual(self.r.get("libcal:token"), token)
         self.assertEqual(self.r.delete("libcal:token"), 1)
@@ -87,7 +87,7 @@ class LibCalManagementCommandTestCase(APISimpleTestCase):
             f'{os.environ["LIBCAL_BASE_URL"]}/1.1/oauth/token',
             status_code=500
         )
-        self.assertRaises(SystemExit, call_command, 'refresh_libcal_token')  # Failure
+        self.assertRaises(Ignore, refresh_libcal_token)
 
 
 @requests_mock.Mocker()
