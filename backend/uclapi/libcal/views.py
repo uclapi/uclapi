@@ -309,9 +309,9 @@ def get_bookings(request, *args, **kwargs):
             for booking in data["bookings"]:
                 # Strip personal data from response
                 booking.pop('email', None)
-                booking.pop('firstName', None)
-                booking.pop('lastName', None)
-                booking.pop('bookId', None)
+                booking.pop('first_name', None)
+                booking.pop('last_name', None)
+                booking.pop('book_id', None)
                 booking.pop('check_in_code', None)
     uclapi_response = JsonResponse(data, custom_header_data=kwargs)
     uclapi_response.status_code = booking_response.status_code
@@ -390,7 +390,7 @@ def cancel(request, *args, **kwargs):
         legit_bids = ''
         for booking in data["data"]:
             if booking["email"] == email:
-                legit_bids += booking["bookId"] + ','
+                legit_bids += booking["book_id"] + ','
         if legit_bids:
             legit_bids = legit_bids[:-1]  # Remove last ','
         else:
