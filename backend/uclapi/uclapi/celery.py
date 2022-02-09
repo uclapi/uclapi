@@ -17,12 +17,10 @@ class Celery(celery.Celery):
             from sentry_sdk.integrations.django import DjangoIntegration
             from sentry_sdk.integrations.celery import CeleryIntegration
 
-            sentry_sdk.init(
-                dsn=os.environ.get("SENTRY_DSN"),
-                integrations=[DjangoIntegration(), CeleryIntegration()],
-                traces_sample_rate=0.01,
-                send_default_pii=True
-            )
+            sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN"),
+                            integrations=[DjangoIntegration(), CeleryIntegration()],
+                            traces_sample_rate=0.01,
+                            send_default_pii=True)
 
 
 app = Celery('uclapi')
@@ -67,6 +65,18 @@ def setup_periodic_tasks(sender, **kwargs):
     occupeye_night_periodic_task.crontab = night_cache_schedule
     occupeye_night_periodic_task.name = 'Occupeye night cache'
     occupeye_night_periodic_task.save()
+
+    # Update LibCal token every 30 minutes
+    libcal_token_schedule, _ = CrontabSchedule.objects.get_or_create(minute='*/30', hour='*',
+                                                                     day_of_week='*', day_of_month='*',
+                                                                     month_of_year='*')
+    libcal_token_task = PeriodicTask.objects.filter(task='libcal.tasks.refresh_libcal_token').first()
+    if libcal_token_task is None:
+        libcal_token_task = PeriodicTask(task='libcal.tasks.refresh_libcal_token')
+    libcal_token_task.crontab = libcal_token_schedule
+    libcal_token_task.name = 'LibCal token refresh'
+    libcal_token_task.save()
+
 
 @app.task()
 def ping_sample_task():
