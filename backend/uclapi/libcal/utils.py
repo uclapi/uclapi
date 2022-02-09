@@ -35,14 +35,14 @@ def underscorer(data):
         {'device_type': 'helloWorld'}
 
     """
-    if not isinstance(data, dict):
-        return data
-
-    new_data = {}
-    for k, v in data.items():
-        new_data[underscore(k) if isinstance(k, str) else k] = underscorer(
-            v) if isinstance(v, dict) else v
-    return new_data
+    if isinstance(data, dict):
+        new_data = {}
+        for k, v in data.items():
+            new_data[underscore(k) if isinstance(k, str) else k] = underscorer(v)
+        return new_data
+    elif isinstance(data, list):
+        return [underscorer(k) for k in data]
+    return data
 
 
 def camelise(word, uppercase_first_letter=False):
@@ -84,11 +84,12 @@ def cameliser(data, special=True):
         {'deviceType': 'hello_world'}
 
     """
-    if not isinstance(data, dict):
-        return data
-
-    new_data = {}
-    for k, v in data.items():
-        should_camel = isinstance(k, str) and (not special or k not in NO_CAMEL)
-        new_data[camelise(k) if should_camel else k] = cameliser(v) if isinstance(v, dict) else v
-    return new_data
+    if isinstance(data, dict):
+        new_data = {}
+        for k, v in data.items():
+            should_camel = isinstance(k, str) and (not special or k not in NO_CAMEL)
+            new_data[camelise(k) if should_camel else k] = cameliser(v)
+        return new_data
+    elif isinstance(data, list):
+        return [cameliser(k) for k in data]
+    return data

@@ -3,17 +3,16 @@ import os
 from unittest import mock
 from urllib import parse
 
-from parameterized import parameterized
-
-from rest_framework.test import APISimpleTestCase, APITestCase, APIClient
-from celery.exceptions import Ignore
-import requests_mock
 import redis
+import requests_mock
+from celery.exceptions import Ignore
+from parameterized import parameterized
+from rest_framework.test import APISimpleTestCase, APITestCase, APIClient
 
 from dashboard.models import App, User
-from uclapi.settings import REDIS_UCLAPI_HOST
 from oauth.models import OAuthScope, OAuthToken
 from oauth.scoping import Scopes
+from uclapi.settings import REDIS_UCLAPI_HOST
 from .tasks import refresh_libcal_token
 from .utils import underscore
 
@@ -254,6 +253,25 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
             {'ids': 1, underscore(key): value, 'token': self.app.api_token}
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_bookings_personal_information_stripped(self, m):
+        """Tests that personal information is stripped from the booking"""
+        json = [{'email': 'delete_me', 'firstName': 'delete_me', 'lastName': 'delete_me', 'bookId': 'delete_me',
+                 'check_in_code': 'delete_me', 'leaveMe': 'leave_me'}]
+        m.register_uri(
+            'GET',
+            f'https://library-calendars.ucl.ac.uk/1.1/space/bookings?eid=123',
+            request_headers=self.headers,
+            complete_qs=True,  # Need this to catch if token is sent in!
+            json=json)
+        response = self.client.get(
+            f'/libcal/space/bookings',
+            {'ids': 1, 'eid': 123, 'token': self.app.api_token}
+        )
+        self.assertEqual(response.status_code, 200)
+        for k, v in response.json()['bookings'][0].items():
+            self.assertEqual(k, 'leave_me')
+            self.assertEqual(v, 'leave_me')
 
     @parameterized.expand([
         ('locations', 'details', 0.5),
