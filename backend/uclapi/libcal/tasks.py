@@ -12,6 +12,12 @@ from uclapi.settings import REDIS_UCLAPI_HOST
 
 @shared_task
 def refresh_libcal_token():
+    if "HEALTHCHECK_LIBCAL" in os.environ:
+        try:
+            requests.get(os.environ.get("HEALTHCHECK_LIBCAL") + "/start", timeout=5)
+        except requests.exceptions.RequestException:
+            pass
+
     r: redis.Redis = redis.Redis(host=REDIS_UCLAPI_HOST,
                                  charset="utf-8",
                                  decode_responses=True)
@@ -29,3 +35,9 @@ def refresh_libcal_token():
     response_data: Dict[str, Union[str, int]] = json.loads(response.text)
 
     r.setex("libcal:token", response_data["expires_in"], value=response_data["access_token"])
+
+    if "HEALTHCHECK_LIBCAL" in os.environ:
+        try:
+            requests.get(os.environ.get("HEALTHCHECK_LIBCAL"), timeout=5)
+        except requests.exceptions.RequestException:
+            pass
