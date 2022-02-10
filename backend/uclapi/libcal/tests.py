@@ -256,8 +256,10 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
 
     def test_bookings_personal_information_stripped(self, m):
         """Tests that personal information is stripped from the booking"""
-        json = [{'email': 'delete_me', 'firstName': 'delete_me', 'lastName': 'delete_me', 'bookId': 'delete_me',
-                 'check_in_code': 'delete_me', 'leaveMe': 'leave_me'}]
+        allowed_fields = ['seat_name']
+        json = [{'email': 'delete_me', 'firstName': 'delete_me', 'lastName': 'delete_me',
+                 'bookId': 'delete_me', 'check_in_code': 'delete_me', 'seat_name': 'leave_me',
+                 'random_unknown_key': 'delete_me'}]
         m.register_uri(
             'GET',
             f'https://library-calendars.ucl.ac.uk/1.1/space/bookings?eid=123',
@@ -268,9 +270,13 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
             f'/libcal/space/bookings',
             {'ids': 1, 'eid': 123, 'token': self.app.api_token}
         )
-        self.assertEqual(response.status_code, 200)
+
+        # Make sure the number of fields in the returned booking that are not in allowed_fields is 0
+        for booking in response.json()['bookings']:
+            self.assertEqual(len([x for x in booking.keys() if x not in allowed_fields]), 0)
+
         for k, v in response.json()['bookings'][0].items():
-            self.assertEqual(k, 'leave_me')
+            self.assertEqual(k, 'seat_name')
             self.assertEqual(v, 'leave_me')
 
     @parameterized.expand([

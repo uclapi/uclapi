@@ -3,6 +3,22 @@ import re
 NO_CAMEL = ['seat_id']
 
 
+def whitelist_fields(data_dict, desired_fields):
+    """
+    Given a dict and a list of fields, returns the dict with only the provided fields, and nothing else.
+
+    Example::
+        >>> whitelist_fields({"email": "test@test.com", "booking_id": "abcdef"}, ["booking_id"])
+        {"booking_id": "abcdef"}
+
+    Use this to sanitise data returned by LibCal to prevent leaking sensitive data.
+    """
+    sanitised_dict = {}
+    for field in desired_fields:
+        if field in data_dict:
+            sanitised_dict[field] = data_dict[field]
+    return sanitised_dict
+
 def underscore(word):
     """
     Make an underscored, lowercase form from the expression in the string.
