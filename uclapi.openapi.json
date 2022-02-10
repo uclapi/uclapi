@@ -529,7 +529,8 @@
           "category_name": { "$ref": "#/components/schemas/libcal_category_name" },
           "item_name": { "$ref": "#/components/schemas/libcal_space_name" },
           "seat_id": { "$ref": "#/components/schemas/libcal_seat_id" },
-          "seat_name": { "$ref": "#/components/schemas/libcal_seat_name" }
+          "seat_name": { "$ref": "#/components/schemas/libcal_seat_name" },
+          "cancelled": { "$ref": "#/components/schemas/libcal_cancelled" }
         }
       },
       "libcal_location_id": {
@@ -546,6 +547,11 @@
         "type": "string",
         "description": "Name of the LibCal seat",
         "example": "367 - Donaldson Reading Room (Law)"
+      },
+      "libcal_cancelled": {
+        "type": "string",
+        "description": "Timestamp (in ISO 8601 format) at which this LibCal booking was cancelled, if applicable",
+        "example": "2021-01-14T09:00:00+00:00"
       },
       "libcal_seat": {
         "properties": {
