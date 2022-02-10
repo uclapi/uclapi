@@ -20,27 +20,6 @@ class DashboardApi {
     return token
   }
 
-  static regenVerificationSecret = async (appId) => {
-    const { data: { new_secret } } = await DashboardApi.post(`/webhook/refreshsecret/`, { app_id: appId })
-    return new_secret
-  }
-
-  static updateWebhookSettings = async (appId, settings) => {
-    const { data: { ok, message, ...values } } = await DashboardApi.post(`/webhook/edit/`, {
-      app_id: appId,
-      ...settings,
-    }).catch((error) => {
-        if (error.response) {
-          throw new Error(error.response.data.message)
-        }
-        throw new Error(error.message)
-    })
-    if(!ok){
-      throw new Error(message)
-    }
-    return values
-  }
-
   static addNewProject = async (name) => {
     const { data: { app } } = await DashboardApi.post(`/create/`, { name })
     return app

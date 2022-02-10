@@ -41,12 +41,6 @@ class Dashboard extends React.Component {
     const actions = {
       regenToken: this.regenToken,
       regenVerificationSecret: this.regenVerificationSecret,
-      webhook: {
-        saveURL: this.saveWebhookURL,
-        saveContact: this.saveWebhookContact,
-        saveSiteID: this.saveWebhookSiteID,
-        saveRoomID: this.saveWebhookRoomID,
-      },
       renameProject: this.renameProject,
       cancelEditTitle: this.cancelEditTitle,
       setScope: this.setScope,
@@ -294,66 +288,6 @@ class Dashboard extends React.Component {
     const { data } = this.state
     const token = await Api.dashboard.regenToken(data.apps[index].id)
     this.updateAppState(index, { token })
-  }
-
-  regenVerificationSecret = async (index) => {
-    const { data } = this.state
-    const secret = await Api.dashboard.regenVerificationSecret(
-      data.apps[index].id
-    )
-    this.updateAppState(index, { webhook: {
-      ...data.apps[index].webhook,
-      verification_secret: secret,
-    }})
-  }
-
-  saveWebhookURL = (index, value) => {
-    if (value.startsWith(`https://`)
-      || value.startsWith(`http://`)
-      || value == ``
-    ) {
-      this.updateWebhookSettings({ url: value }, index)
-    } else {
-      window.alert(`Must start with https:// or http://`)
-    }
-  }
-
-  saveWebhookContact = (index, value) => this.updateWebhookSettings(
-    { contact: value }, index
-  )
-  saveWebhookSiteID = (index, value) => this.updateWebhookSettings(
-    { siteid: value }, index
-  )
-  saveWebhookRoomID = (index, value) => this.updateWebhookSettings(
-    { roomid: value }, index
-  )
-
-  updateWebhookSettings = async (newValues, index) => {
-    const { data } = this.state
-
-    const app = data.apps[index]
-    const {
-      url,
-      siteid,
-      roomid,
-      contact,
-    } = {
-      ...app.webhook,
-      ...newValues,
-    }
-
-    try {
-      const result = await Api.dashboard.updateWebhookSettings(app.id, {
-        url,
-        siteid,
-        roomid,
-        contact,
-      })
-
-      this.updateAppState(index, { webhook: result })
-    } catch (error) {
-      window.alert(error.message)
-    }
   }
 }
 
