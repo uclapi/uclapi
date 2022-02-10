@@ -31,7 +31,7 @@ from .serializers import (
     LibCalBookingIdListSerializer
 )
 
-from .utils import cameliser, underscorer
+from .utils import cameliser, underscorer, whitelist_fields
 
 
 def _libcal_request_forwarder(
@@ -306,13 +306,11 @@ def get_bookings(request, *args, **kwargs):
     if "data" in data:
         data["bookings"] = data.pop("data")
         if isinstance(data["bookings"], list):
-            for booking in data["bookings"]:
-                # Strip personal data from response
-                booking.pop('email', None)
-                booking.pop('first_name', None)
-                booking.pop('last_name', None)
-                booking.pop('book_id', None)
-                booking.pop('check_in_code', None)
+            for i in range(len(data["bookings"])):
+                # Ensure we don't leak personal data, only allow the following fields
+                allowed_fields = ['eid', 'cid', 'lid', 'from_date', 'to_date', 'created', 'status',
+                                  'location_name', 'category_name', 'item_name', 'seat_id', 'seat_name', 'cancelled']
+                data['bookings'][i] = whitelist_fields(data['bookings'][i], allowed_fields)
     uclapi_response = JsonResponse(data, custom_header_data=kwargs)
     uclapi_response.status_code = booking_response.status_code
     return uclapi_response
