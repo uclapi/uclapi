@@ -945,6 +945,27 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
         self.assertJSONEqual(response.content.decode('utf8'), {"ok": True, 'bookings': cancelled})
 
     @parameterized.expand(['cs_qQpoVMHk', 'cs_qQpoVMHk,cs_qQpoRH20'])
+    def test_cancel_reject_other_user_booking(self, m, bookIds):
+        """Tests that only valid bookings belonging to the user are deleted."""
+        self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, 'libcal_write')
+        self.oauth_token.scope.save()
+        bookings = [{'email': 'not.this.user@example.com', 'bookId': 'cs_qQpoVMHk'}]
+
+        m.register_uri(
+            'GET',
+            f'https://library-calendars.ucl.ac.uk/1.1/space/booking/{bookIds}',
+            request_headers=self.headers,
+            json=bookings)
+        response = self.client.post(
+            f'/libcal/space/cancel?ids={bookIds}&token={self.oauth_token.token}&client_secret={self.app.client_secret}'
+        )
+        self.assertEqual(response.status_code, 400)
+        # https://stackoverflow.com/a/28399670
+        self.assertJSONEqual(response.content.decode('utf8'), {"ok": False,
+                                                               "error": "No bookings matched the IDs provided and "
+                                                                        "so no bookings were deleted"})
+
+    @parameterized.expand(['cs_qQpoVMHk', 'cs_qQpoVMHk,cs_qQpoRH20'])
     def test_valid_cancel_only_eppn(self, m, bookIds):
         """Tests that it is possible to cancel bookings with an empty mail but with a valid eppn."""
         self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, 'libcal_write')

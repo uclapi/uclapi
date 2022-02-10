@@ -1,6 +1,6 @@
 from unittest import TestCase
 from parameterized import parameterized
-from .utils import camelise, cameliser, underscore, underscorer
+from .utils import camelise, cameliser, underscore, underscorer, whitelist_fields
 
 CAMEL_TO_UNDERSCORE = (
     ("product", "product"),
@@ -40,6 +40,11 @@ class TestCameliser(TestCase):
         expected = {'htmlTidy': {'freeBsd': 1}, 'hTML': 2}
         self.assertDictEqual(expected, cameliser(input))
 
+    def test_nested_list(self):
+        data = {'html_tidy': [{'free_bsd': 1}, {'free_bsd': 2}], 'HTML': 2}
+        expected = {'htmlTidy': [{'freeBsd': 1}, {'freeBsd': 2}], 'hTML': 2}
+        self.assertDictEqual(expected, cameliser(data))
+
 
 class TestUnderscore(TestCase):
     @parameterized.expand(CAMEL_TO_UNDERSCORE + CAMEL_TO_UNDERSCORE_WITHOUT_REVERSE)
@@ -57,3 +62,19 @@ class TestUnderscorer(TestCase):
         input = {'htmlTidy': {'FreeBSD': 1}, 'html': 2}
         expected = {'html_tidy': {'free_bsd': 1}, 'html': 2}
         self.assertDictEqual(expected, underscorer(input))
+
+    def test_nested_list(self):
+        data = {'htmlTidy': [{'freeBsd': 1}, {'freeBsd': 2}], 'html': 2}
+        expected = {'html_tidy': [{'free_bsd': 1}, {'free_bsd': 2}], 'html': 2}
+        self.assertDictEqual(expected, underscorer(data))
+
+
+class TestWhitelist(TestCase):
+    def test_whitelist(self):
+        whitelist = ['booking_id', 'arbitrary_field_name', 'field_not_in_data']
+        data = {'booking_id': 1,
+                'arbitrary_field_name': 2,
+                'arbitrary_other_field_name': 3,
+                'super_sensitive_data': 4}
+        expected = {'booking_id': 1, 'arbitrary_field_name': 2}
+        self.assertDictEqual(expected, whitelist_fields(data, whitelist))
