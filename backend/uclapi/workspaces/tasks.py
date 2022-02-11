@@ -1,7 +1,9 @@
-from celery import shared_task
-import requests
 import os
 
+import requests
+from celery import shared_task
+
+from workspaces.occupeye.archive import OccupEyeArchive
 from workspaces.occupeye.cache import OccupeyeCache
 from workspaces.occupeye.endpoint import TestEndpoint
 
@@ -12,6 +14,16 @@ def feed_occupeye_cache(test=False, mini=False):
     print("[+] Feeding Cache")
     cache = OccupeyeCache(endpoint=TestEndpoint({})) if test else OccupeyeCache()
     cache.feed_cache(full=(not mini))
+
+
+@shared_task
+def feed_occupeye_archive(test=False, delete=False):
+    print("Running OccupEye Archive Operation")
+    print("[+] Fetching Archive")
+    archive = OccupEyeArchive(endpoint=TestEndpoint({})) if test else OccupEyeArchive()
+    if delete:
+        archive.reset()
+    archive.update()
 
 
 @shared_task
@@ -37,6 +49,7 @@ def night_cache():
         pass
 
     feed_occupeye_cache.s(mini=False)()
+    feed_occupeye_archive()
 
     try:
         requests.get(os.environ.get("HEALTHCHECK_OCCUPEYE_NIGHT"), timeout=5)

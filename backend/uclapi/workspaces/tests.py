@@ -4,7 +4,6 @@ from binascii import hexlify
 
 import redis
 from django.conf import settings
-from django.core.management import call_command
 from django.test import TestCase
 from freezegun import freeze_time
 
@@ -215,14 +214,6 @@ class OccupEyeCacheTestCase(TestCase):
 
         self.assertEqual(len(self.redis.keys(self._const.SURVEY_MAPS_LIST_KEY.format(99991))), 0)
         self.assertEqual(len(self.redis.keys(self._const.SURVEY_MAP_DATA_KEY.format(99991, 66661))), 0)
-
-    def test_commands(self):
-        # This is to verify if the command works, we cannot specifically test anything
-        # as the endpoint is only provided with an empty dictionary
-        call_command("feed_occupeye_cache", "--test")
-
-    def test_commands_mini(self):
-        call_command("feed_occupeye_cache", "--mini", "--test")
 
 
 class OccupEyeApiTestCase(TestCase):
