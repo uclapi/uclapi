@@ -8,7 +8,7 @@
       "email": "isd.apiteam@ucl.ac.uk",
       "url": "https://uclapi.com"
     },
-    "version": "1.0.3",
+    "version": "1.1.0",
     "termsOfService": "https://github.com/uclapi/uclapi/blob/master/backend/uclapi/uclapi/UCLAPIAcceptableUsePolicy.txt",
     "license": {
       "url": "https://github.com/uclapi/uclapi/blob/master/LICENSE",
@@ -446,13 +446,19 @@
         }
       }
     },
-    "schemas" : {
+    "schemas": {
       "libcal_reserve_request_booking": {
         "description": "Specify seat_id if booking a seat, otherwise omit it",
         "properties": {
-          "id": { "$ref": "#/components/schemas/libcal_space_id" },
-          "to": { "$ref": "#/components/schemas/libcal_booking_end" },
-          "seat_id": { "$ref": "#/components/schemas/libcal_seat_id" }
+          "id": {
+            "$ref": "#/components/schemas/libcal_space_id"
+          },
+          "to": {
+            "$ref": "#/components/schemas/libcal_booking_end"
+          },
+          "seat_id": {
+            "$ref": "#/components/schemas/libcal_seat_id"
+          }
         },
         "required": [
           "id",
@@ -461,7 +467,9 @@
       },
       "libcal_reserve_request": {
         "properties": {
-          "start": { "$ref": "#/components/schemas/libcal_booking_start" },
+          "start": {
+            "$ref": "#/components/schemas/libcal_booking_start"
+          },
           "test": {
             "type": "integer",
             "description": "Whether or not this is a test booking. If set, the system will process the booking but will not actually make it. This is useful during development.",
@@ -486,10 +494,14 @@
       },
       "libcal_personal_seat_booking": {
         "allOf": [
-          { "$ref": "#/components/schemas/libcal_seat_booking" }
+          {
+            "$ref": "#/components/schemas/libcal_seat_booking"
+          }
         ],
         "properties": {
-          "book_id": { "$ref": "#/components/schemas/libcal_booking_id" },
+          "book_id": {
+            "$ref": "#/components/schemas/libcal_booking_id"
+          },
           "first_name": {
             "type": "string",
             "description": "First name of the user who booked this",
@@ -514,23 +526,47 @@
       },
       "libcal_seat_booking": {
         "properties": {
-          "eid": { "$ref": "#/components/schemas/libcal_space_id" },
-          "cid": { "$ref": "#/components/schemas/libcal_category_id" },
-          "lid": { "$ref": "#/components/schemas/libcal_location_id" },
-          "from_date": { "$ref": "#/components/schemas/libcal_booking_start" },
-          "to_date": { "$ref": "#/components/schemas/libcal_booking_end" },
-          "created": { "$ref": "#/components/schemas/libcal_booking_created" },
+          "eid": {
+            "$ref": "#/components/schemas/libcal_space_id"
+          },
+          "cid": {
+            "$ref": "#/components/schemas/libcal_category_id"
+          },
+          "lid": {
+            "$ref": "#/components/schemas/libcal_location_id"
+          },
+          "from_date": {
+            "$ref": "#/components/schemas/libcal_booking_start"
+          },
+          "to_date": {
+            "$ref": "#/components/schemas/libcal_booking_end"
+          },
+          "created": {
+            "$ref": "#/components/schemas/libcal_booking_created"
+          },
           "status": {
             "type": "string",
             "description": "Status of this LibCal booking",
             "example": "Confirmed"
           },
-          "location_name": { "$ref":"#/components/schemas/libcal_location_name" },
-          "category_name": { "$ref": "#/components/schemas/libcal_category_name" },
-          "item_name": { "$ref": "#/components/schemas/libcal_space_name" },
-          "seat_id": { "$ref": "#/components/schemas/libcal_seat_id" },
-          "seat_name": { "$ref": "#/components/schemas/libcal_seat_name" },
-          "cancelled": { "$ref": "#/components/schemas/libcal_cancelled" }
+          "location_name": {
+            "$ref": "#/components/schemas/libcal_location_name"
+          },
+          "category_name": {
+            "$ref": "#/components/schemas/libcal_category_name"
+          },
+          "item_name": {
+            "$ref": "#/components/schemas/libcal_space_name"
+          },
+          "seat_id": {
+            "$ref": "#/components/schemas/libcal_seat_id"
+          },
+          "seat_name": {
+            "$ref": "#/components/schemas/libcal_seat_name"
+          },
+          "cancelled": {
+            "$ref": "#/components/schemas/libcal_cancelled"
+          }
         }
       },
       "libcal_location_id": {
@@ -555,8 +591,12 @@
       },
       "libcal_seat": {
         "properties": {
-          "id": { "$ref": "#/components/schemas/libcal_seat_id" },
-          "name": { "$ref": "#/components/schemas/libcal_seat_name" },
+          "id": {
+            "$ref": "#/components/schemas/libcal_seat_id"
+          },
+          "name": {
+            "$ref": "#/components/schemas/libcal_seat_name"
+          },
           "description": {
             "type": "string",
             "description": "Description provided for the LibCal seat. May contain HTML",
@@ -596,8 +636,12 @@
       },
       "libcal_zone": {
         "properties": {
-          "id": { "$ref": "#/components/schemas/libcal_zone_id" },
-          "name": { "$ref": "#/components/schemas/libcal_zone_name" }
+          "id": {
+            "$ref": "#/components/schemas/libcal_zone_id"
+          },
+          "name": {
+            "$ref": "#/components/schemas/libcal_zone_name"
+          }
         }
       },
       "libcal_utilisation_seat_summary": {
@@ -665,10 +709,18 @@
             "description": "Nickname assigned to this LibCal booking",
             "example": "LAWS0339: Internet Law and Policy Seminar Group G"
           },
-          "start": { "$ref": "#/components/schemas/libcal_booking_start" },
-          "end": { "$ref": "#/components/schemas/libcal_booking_end" },
-          "created": { "$ref": "#/components/schemas/libcal_booking_created" },
-          "booking_id": { "$ref": "#/components/schemas/libcal_booking_id" }
+          "start": {
+            "$ref": "#/components/schemas/libcal_booking_start"
+          },
+          "end": {
+            "$ref": "#/components/schemas/libcal_booking_end"
+          },
+          "created": {
+            "$ref": "#/components/schemas/libcal_booking_created"
+          },
+          "booking_id": {
+            "$ref": "#/components/schemas/libcal_booking_id"
+          }
         }
       },
       "libcal_space_id": {
@@ -683,8 +735,12 @@
       },
       "libcal_space_base": {
         "properties": {
-          "id": { "$ref": "#/components/schemas/libcal_space_id" },
-          "name": { "$ref": "#/components/schemas/libcal_space_name" },
+          "id": {
+            "$ref": "#/components/schemas/libcal_space_id"
+          },
+          "name": {
+            "$ref": "#/components/schemas/libcal_space_name"
+          },
           "description": {
             "type": "string",
             "example": "A place for quiet study",
@@ -791,10 +847,18 @@
       },
       "libcal_category": {
         "properties": {
-          "cid": { "$ref": "#/components/schemas/libcal_category_id" },
-          "formid": { "$ref": "#/components/schemas/libcal_form_id" },
-          "name": { "$ref": "#/components/schemas/libcal_category_name" },
-          "public": { "$ref": "#/components/schemas/libcal_category_public" }
+          "cid": {
+            "$ref": "#/components/schemas/libcal_category_id"
+          },
+          "formid": {
+            "$ref": "#/components/schemas/libcal_form_id"
+          },
+          "name": {
+            "$ref": "#/components/schemas/libcal_category_name"
+          },
+          "public": {
+            "$ref": "#/components/schemas/libcal_category_public"
+          }
         }
       },
       "libcal_location_name": {
@@ -809,12 +873,16 @@
             "example": 702,
             "description": "ID for the LibCal location in question"
           },
-          "name": { "$ref": "#/components/schemas/libcal_location_name" }
+          "name": {
+            "$ref": "#/components/schemas/libcal_location_name"
+          }
         }
       },
       "libcal_location": {
         "allOf": [
-          { "$ref": "#/components/schemas/libcal_location_base" }
+          {
+            "$ref": "#/components/schemas/libcal_location_base"
+          }
         ],
         "properties": {
           "public": {
@@ -829,11 +897,11 @@
           }
         }
       },
-      "user_data" : {
-        "properties" : {
-          "ok" : {
-            "type" : "boolean",
-            "example" : "true",
+      "user_data": {
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "example": "true",
             "description": "Returns if the query was successful."
           },
           "email": {
@@ -2063,7 +2131,7 @@
           "ok": false,
           "error": "Temporary token can only return one booking."
         },
-        "summary" : "Temporary token bookings limit"
+        "summary": "Temporary token bookings limit"
       },
       "ErrorLibCalOAuthTokenInvalid": {
         "value": {
@@ -2093,29 +2161,29 @@
         "description": "Illegal input for operation."
       }
     },
-    "securitySchemes" : {
+    "securitySchemes": {
       "ApiToken": {
-        "type" : "apiKey",
-        "description" : "This API requires you to pass your API key as a query parameter called 'token'.",
-        "name" : "token",
-        "in" : "query"
+        "type": "apiKey",
+        "description": "This API requires you to pass your API key as a query parameter called 'token'.",
+        "name": "token",
+        "in": "query"
       },
-      "OAuthToken" : {
-        "type" : "apiKey",
-        "description" : "This API requires you to pass your OAuth2 token as a query parameter called 'token'. Use the /authorize and /oauth/token endpoints to authorize a user and get this token.",
-        "name" : "token",
-        "in" : "query"
+      "OAuthToken": {
+        "type": "apiKey",
+        "description": "This API requires you to pass your OAuth2 token as a query parameter called 'token'. Use the /authorize and /oauth/token endpoints to authorize a user and get this token.",
+        "name": "token",
+        "in": "query"
       },
-      "OAuthSecurity" : {
-        "type" : "oauth2",
-        "description" : "This API uses OAuth2 with the implicit grant flow. [More info](https://uclapi.com/docs#OAuthSecurity)",
-        "flows" : {
-          "authorizationCode" : {
-            "authorizationUrl" : "/authorise",
-            "tokenUrl" : "/token",
-            "scopes" : {
-              "personal_timetable" : "read user's timetable",
-              "student_number" : "read user's student number",
+      "OAuthSecurity": {
+        "type": "oauth2",
+        "description": "This API uses OAuth2 with the implicit grant flow. [More info](https://uclapi.com/docs#OAuthSecurity)",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "/authorise",
+            "tokenUrl": "/token",
+            "scopes": {
+              "personal_timetable": "read user's timetable",
+              "student_number": "read user's student number",
               "libcal_read": "read user's LibCal bookings",
               "libcal_write": "reserve/cancel user's LibCal bookings"
             }
@@ -5077,15 +5145,19 @@
     "/libcal/space/locations": {
       "get": {
         "summary": "Gets all LibCal locations",
-        "tags": [ "LibCal" ],
+        "tags": [
+          "LibCal"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/libcal_details"
           }
         ],
-        "security": [{
-         "ApiToken": []
-        }],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -5108,40 +5180,40 @@
               }
             }
           },
-          "400" : {
-            "description" : "Request error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/error"
+          "400": {
+            "description": "Request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 },
-                "examples" : {
-                  "1" : {
-                    "$ref" : "#/components/examples/ErrorNoToken"
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorNoToken"
                   },
-                  "2" : {
-                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  "2": {
+                    "$ref": "#/components/examples/ErrorTokenNotExist"
                   },
-                  "3" : {
-                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  "3": {
+                    "$ref": "#/components/examples/ErrorInvalidToken"
                   },
-                  "4" : {
-                    "$ref" : "#/components/examples/ErrorThrottling"
+                  "4": {
+                    "$ref": "#/components/examples/ErrorThrottling"
                   },
-                  "5" : {
-                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  "5": {
+                    "$ref": "#/components/examples/ErrorNoClientSecret"
                   },
-                  "6" : {
-                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  "6": {
+                    "$ref": "#/components/examples/ErrorInvalidClientSecret"
                   },
-                  "7" : {
-                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  "7": {
+                    "$ref": "#/components/examples/ErrorInactiveToken"
                   },
-                  "8" : {
-                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  "8": {
+                    "$ref": "#/components/examples/ErrorPersonalData"
                   },
-                  "9" : {
-                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  "9": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
@@ -5153,13 +5225,17 @@
         }
       }
     },
-    "/libcal/space/categories":{
+    "/libcal/space/categories": {
       "get": {
         "summary": "Returns the categories of spaces available in the given location(s)",
-        "tags": [ "LibCal" ],
-        "security" : [ {
-          "ApiToken": []
-        } ],
+        "tags": [
+          "LibCal"
+        ],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/libcal_location_ids"
@@ -5180,7 +5256,9 @@
                       "type": "array",
                       "items": {
                         "allOf": [
-                          { "$ref": "#/components/schemas/libcal_location_base" }
+                          {
+                            "$ref": "#/components/schemas/libcal_location_base"
+                          }
                         ],
                         "properties": {
                           "categories": {
@@ -5197,40 +5275,40 @@
               }
             }
           },
-          "400" : {
-            "description" : "Request error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/error"
+          "400": {
+            "description": "Request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 },
-                "examples" : {
-                  "1" : {
-                    "$ref" : "#/components/examples/ErrorNoToken"
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorNoToken"
                   },
-                  "2" : {
-                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  "2": {
+                    "$ref": "#/components/examples/ErrorTokenNotExist"
                   },
-                  "3" : {
-                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  "3": {
+                    "$ref": "#/components/examples/ErrorInvalidToken"
                   },
-                  "4" : {
-                    "$ref" : "#/components/examples/ErrorThrottling"
+                  "4": {
+                    "$ref": "#/components/examples/ErrorThrottling"
                   },
-                  "5" : {
-                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  "5": {
+                    "$ref": "#/components/examples/ErrorNoClientSecret"
                   },
-                  "6" : {
-                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  "6": {
+                    "$ref": "#/components/examples/ErrorInvalidClientSecret"
                   },
-                  "7" : {
-                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  "7": {
+                    "$ref": "#/components/examples/ErrorInactiveToken"
                   },
-                  "8" : {
-                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  "8": {
+                    "$ref": "#/components/examples/ErrorPersonalData"
                   },
-                  "9" : {
-                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  "9": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
@@ -5245,7 +5323,9 @@
     "/libcal/space/category": {
       "get": {
         "summary": "Get all spaces corresponding to the specified categories",
-        "tags": [ "LibCal" ],
+        "tags": [
+          "LibCal"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/libcal_category_ids"
@@ -5257,9 +5337,11 @@
             "$ref": "#/components/parameters/libcal_availability"
           }
         ],
-        "security": [{
-          "ApiToken": []
-        }],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -5276,9 +5358,15 @@
                       "items": {
                         "type": "object",
                         "properties": {
-                          "cid": { "$ref": "#/components/schemas/libcal_category_id" },
-                          "formid": { "$ref": "#/components/schemas/libcal_form_id" },
-                          "public": { "$ref": "#/components/schemas/libcal_category_public" },
+                          "cid": {
+                            "$ref": "#/components/schemas/libcal_category_id"
+                          },
+                          "formid": {
+                            "$ref": "#/components/schemas/libcal_form_id"
+                          },
+                          "public": {
+                            "$ref": "#/components/schemas/libcal_category_public"
+                          },
                           "items": {
                             "type": "array",
                             "items": {
@@ -5295,40 +5383,40 @@
               }
             }
           },
-          "400" : {
-            "description" : "Request error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/error"
+          "400": {
+            "description": "Request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 },
-                "examples" : {
-                  "1" : {
-                    "$ref" : "#/components/examples/ErrorNoToken"
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorNoToken"
                   },
-                  "2" : {
-                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  "2": {
+                    "$ref": "#/components/examples/ErrorTokenNotExist"
                   },
-                  "3" : {
-                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  "3": {
+                    "$ref": "#/components/examples/ErrorInvalidToken"
                   },
-                  "4" : {
-                    "$ref" : "#/components/examples/ErrorThrottling"
+                  "4": {
+                    "$ref": "#/components/examples/ErrorThrottling"
                   },
-                  "5" : {
-                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  "5": {
+                    "$ref": "#/components/examples/ErrorNoClientSecret"
                   },
-                  "6" : {
-                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  "6": {
+                    "$ref": "#/components/examples/ErrorInvalidClientSecret"
                   },
-                  "7" : {
-                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  "7": {
+                    "$ref": "#/components/examples/ErrorInactiveToken"
                   },
-                  "8" : {
-                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  "8": {
+                    "$ref": "#/components/examples/ErrorPersonalData"
                   },
-                  "9" : {
-                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  "9": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
@@ -5343,15 +5431,19 @@
     "/libcal/space/form": {
       "get": {
         "summary": "Get all forms (including fields) corresponding to the given LibCal form ID(s)",
-        "tags": [ "LibCal" ],
+        "tags": [
+          "LibCal"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/libcal_form_ids"
           }
         ],
-        "security": [{
-          "ApiToken": []
-        }],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -5374,40 +5466,40 @@
               }
             }
           },
-          "400" : {
-            "description" : "Request error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/error"
+          "400": {
+            "description": "Request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 },
-                "examples" : {
-                  "1" : {
-                    "$ref" : "#/components/examples/ErrorNoToken"
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorNoToken"
                   },
-                  "2" : {
-                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  "2": {
+                    "$ref": "#/components/examples/ErrorTokenNotExist"
                   },
-                  "3" : {
-                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  "3": {
+                    "$ref": "#/components/examples/ErrorInvalidToken"
                   },
-                  "4" : {
-                    "$ref" : "#/components/examples/ErrorThrottling"
+                  "4": {
+                    "$ref": "#/components/examples/ErrorThrottling"
                   },
-                  "5" : {
-                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  "5": {
+                    "$ref": "#/components/examples/ErrorNoClientSecret"
                   },
-                  "6" : {
-                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  "6": {
+                    "$ref": "#/components/examples/ErrorInvalidClientSecret"
                   },
-                  "7" : {
-                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  "7": {
+                    "$ref": "#/components/examples/ErrorInactiveToken"
                   },
-                  "8" : {
-                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  "8": {
+                    "$ref": "#/components/examples/ErrorPersonalData"
                   },
-                  "9" : {
-                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  "9": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
@@ -5422,15 +5514,19 @@
     "/libcal/space/question": {
       "get": {
         "summary": "Get the questions corresponding to the given LibCal field/question ID(s)",
-        "tags": [ "LibCal" ],
+        "tags": [
+          "LibCal"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/libcal_field_ids"
           }
         ],
-        "security": [{
-          "ApiToken": []
-        }],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -5453,40 +5549,40 @@
               }
             }
           },
-          "400" : {
-            "description" : "Request error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/error"
+          "400": {
+            "description": "Request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 },
-                "examples" : {
-                  "1" : {
-                    "$ref" : "#/components/examples/ErrorNoToken"
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorNoToken"
                   },
-                  "2" : {
-                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  "2": {
+                    "$ref": "#/components/examples/ErrorTokenNotExist"
                   },
-                  "3" : {
-                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  "3": {
+                    "$ref": "#/components/examples/ErrorInvalidToken"
                   },
-                  "4" : {
-                    "$ref" : "#/components/examples/ErrorThrottling"
+                  "4": {
+                    "$ref": "#/components/examples/ErrorThrottling"
                   },
-                  "5" : {
-                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  "5": {
+                    "$ref": "#/components/examples/ErrorNoClientSecret"
                   },
-                  "6" : {
-                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  "6": {
+                    "$ref": "#/components/examples/ErrorInvalidClientSecret"
                   },
-                  "7" : {
-                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  "7": {
+                    "$ref": "#/components/examples/ErrorInactiveToken"
                   },
-                  "8" : {
-                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  "8": {
+                    "$ref": "#/components/examples/ErrorPersonalData"
                   },
-                  "9" : {
-                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  "9": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
@@ -5501,7 +5597,9 @@
     "/libcal/space/item": {
       "get": {
         "summary": "Get the spaces corresponding to the given LibCal space ID(s)",
-        "tags": [ "LibCal" ],
+        "tags": [
+          "LibCal"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/libcal_space_ids"
@@ -5510,9 +5608,11 @@
             "$ref": "#/components/parameters/libcal_availability"
           }
         ],
-        "security": [{
-          "ApiToken": []
-        }],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -5528,7 +5628,9 @@
                       "type": "array",
                       "items": {
                         "allOf": [
-                          { "$ref": "#/components/schemas/libcal_space_base" }
+                          {
+                            "$ref": "#/components/schemas/libcal_space_base"
+                          }
                         ],
                         "properties": {
                           "error": {
@@ -5562,40 +5664,40 @@
               }
             }
           },
-          "400" : {
-            "description" : "Request error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/error"
+          "400": {
+            "description": "Request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 },
-                "examples" : {
-                  "1" : {
-                    "$ref" : "#/components/examples/ErrorNoToken"
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorNoToken"
                   },
-                  "2" : {
-                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  "2": {
+                    "$ref": "#/components/examples/ErrorTokenNotExist"
                   },
-                  "3" : {
-                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  "3": {
+                    "$ref": "#/components/examples/ErrorInvalidToken"
                   },
-                  "4" : {
-                    "$ref" : "#/components/examples/ErrorThrottling"
+                  "4": {
+                    "$ref": "#/components/examples/ErrorThrottling"
                   },
-                  "5" : {
-                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  "5": {
+                    "$ref": "#/components/examples/ErrorNoClientSecret"
                   },
-                  "6" : {
-                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  "6": {
+                    "$ref": "#/components/examples/ErrorInvalidClientSecret"
                   },
-                  "7" : {
-                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  "7": {
+                    "$ref": "#/components/examples/ErrorInactiveToken"
                   },
-                  "8" : {
-                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  "8": {
+                    "$ref": "#/components/examples/ErrorPersonalData"
                   },
-                  "9" : {
-                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  "9": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
@@ -5610,7 +5712,9 @@
     "/libcal/space/nickname": {
       "get": {
         "summary": "Get the nicknames asssigned to certain LibCal bookings",
-        "tags": [ "LibCal" ],
+        "tags": [
+          "LibCal"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/libcal_category_ids"
@@ -5619,9 +5723,11 @@
             "$ref": "#/components/parameters/libcal_availability"
           }
         ],
-        "security": [{
-          "ApiToken": []
-        }],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -5677,40 +5783,40 @@
               }
             }
           },
-          "400" : {
-            "description" : "Request error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/error"
+          "400": {
+            "description": "Request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 },
-                "examples" : {
-                  "1" : {
-                    "$ref" : "#/components/examples/ErrorNoToken"
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorNoToken"
                   },
-                  "2" : {
-                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  "2": {
+                    "$ref": "#/components/examples/ErrorTokenNotExist"
                   },
-                  "3" : {
-                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  "3": {
+                    "$ref": "#/components/examples/ErrorInvalidToken"
                   },
-                  "4" : {
-                    "$ref" : "#/components/examples/ErrorThrottling"
+                  "4": {
+                    "$ref": "#/components/examples/ErrorThrottling"
                   },
-                  "5" : {
-                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  "5": {
+                    "$ref": "#/components/examples/ErrorNoClientSecret"
                   },
-                  "6" : {
-                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  "6": {
+                    "$ref": "#/components/examples/ErrorInvalidClientSecret"
                   },
-                  "7" : {
-                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  "7": {
+                    "$ref": "#/components/examples/ErrorInactiveToken"
                   },
-                  "8" : {
-                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  "8": {
+                    "$ref": "#/components/examples/ErrorPersonalData"
                   },
-                  "9" : {
-                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  "9": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
@@ -5726,7 +5832,9 @@
       "get": {
         "summary": "Get utilisation stats for a particular location",
         "description": "Optionally filter by categoryId and zoneId",
-        "tags": [ "LibCal" ],
+        "tags": [
+          "LibCal"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/libcal_location_id"
@@ -5738,9 +5846,11 @@
             "$ref": "#/components/parameters/libcal_zone_id"
           }
         ],
-        "security": [{
-          "ApiToken": []
-        }],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -5800,7 +5910,7 @@
                                       "example": 50
                                     }
                                   }
-                               }
+                                }
                               }
                             }
                           }
@@ -5817,40 +5927,40 @@
               }
             }
           },
-          "400" : {
-            "description" : "Request error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/error"
+          "400": {
+            "description": "Request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 },
-                "examples" : {
-                  "1" : {
-                    "$ref" : "#/components/examples/ErrorNoToken"
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorNoToken"
                   },
-                  "2" : {
-                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  "2": {
+                    "$ref": "#/components/examples/ErrorTokenNotExist"
                   },
-                  "3" : {
-                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  "3": {
+                    "$ref": "#/components/examples/ErrorInvalidToken"
                   },
-                  "4" : {
-                    "$ref" : "#/components/examples/ErrorThrottling"
+                  "4": {
+                    "$ref": "#/components/examples/ErrorThrottling"
                   },
-                  "5" : {
-                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  "5": {
+                    "$ref": "#/components/examples/ErrorNoClientSecret"
                   },
-                  "6" : {
-                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  "6": {
+                    "$ref": "#/components/examples/ErrorInvalidClientSecret"
                   },
-                  "7" : {
-                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  "7": {
+                    "$ref": "#/components/examples/ErrorInactiveToken"
                   },
-                  "8" : {
-                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  "8": {
+                    "$ref": "#/components/examples/ErrorPersonalData"
                   },
-                  "9" : {
-                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  "9": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
@@ -5865,11 +5975,19 @@
     "/libcal/space/seats": {
       "get": {
         "summary": "Get all LibCal seats in a given location",
-        "tags": [ "LibCal" ],
+        "tags": [
+          "LibCal"
+        ],
         "parameters": [
-          { "$ref": "#/components/parameters/libcal_location_id" },
-          { "$ref": "#/components/parameters/libcal_space_id" },
-          { "$ref": "#/components/parameters/libcal_category_id" },
+          {
+            "$ref": "#/components/parameters/libcal_location_id"
+          },
+          {
+            "$ref": "#/components/parameters/libcal_space_id"
+          },
+          {
+            "$ref": "#/components/parameters/libcal_category_id"
+          },
           {
             "name": "seat_id",
             "in": "query",
@@ -5880,14 +5998,24 @@
               "type": "string"
             }
           },
-          { "$ref": "#/components/parameters/libcal_accessible_only" },
-          { "$ref": "#/components/parameters/libcal_availability" },
-          { "$ref": "#/components/parameters/libcal_page_index" },
-          { "$ref": "#/components/parameters/libcal_page_size" }
+          {
+            "$ref": "#/components/parameters/libcal_accessible_only"
+          },
+          {
+            "$ref": "#/components/parameters/libcal_availability"
+          },
+          {
+            "$ref": "#/components/parameters/libcal_page_index"
+          },
+          {
+            "$ref": "#/components/parameters/libcal_page_size"
+          }
         ],
-        "security": [{
-          "ApiToken": []
-        }],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -5910,40 +6038,40 @@
               }
             }
           },
-          "400" : {
-            "description" : "Request error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/error"
+          "400": {
+            "description": "Request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 },
-                "examples" : {
-                  "1" : {
-                    "$ref" : "#/components/examples/ErrorNoToken"
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorNoToken"
                   },
-                  "2" : {
-                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  "2": {
+                    "$ref": "#/components/examples/ErrorTokenNotExist"
                   },
-                  "3" : {
-                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  "3": {
+                    "$ref": "#/components/examples/ErrorInvalidToken"
                   },
-                  "4" : {
-                    "$ref" : "#/components/examples/ErrorThrottling"
+                  "4": {
+                    "$ref": "#/components/examples/ErrorThrottling"
                   },
-                  "5" : {
-                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  "5": {
+                    "$ref": "#/components/examples/ErrorNoClientSecret"
                   },
-                  "6" : {
-                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  "6": {
+                    "$ref": "#/components/examples/ErrorInvalidClientSecret"
                   },
-                  "7" : {
-                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  "7": {
+                    "$ref": "#/components/examples/ErrorInactiveToken"
                   },
-                  "8" : {
-                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  "8": {
+                    "$ref": "#/components/examples/ErrorPersonalData"
                   },
-                  "9" : {
-                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  "9": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
@@ -5958,7 +6086,9 @@
     "/libcal/space/seat": {
       "get": {
         "summary": "Get LibCal seat by ID",
-        "tags": [ "LibCal" ],
+        "tags": [
+          "LibCal"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/libcal_category_ids"
@@ -5967,9 +6097,11 @@
             "$ref": "#/components/parameters/libcal_availability"
           }
         ],
-        "security": [{
-          "ApiToken": []
-        }],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -5989,40 +6121,40 @@
               }
             }
           },
-          "400" : {
-            "description" : "Request error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/error"
+          "400": {
+            "description": "Request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 },
-                "examples" : {
-                  "1" : {
-                    "$ref" : "#/components/examples/ErrorNoToken"
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorNoToken"
                   },
-                  "2" : {
-                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  "2": {
+                    "$ref": "#/components/examples/ErrorTokenNotExist"
                   },
-                  "3" : {
-                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  "3": {
+                    "$ref": "#/components/examples/ErrorInvalidToken"
                   },
-                  "4" : {
-                    "$ref" : "#/components/examples/ErrorThrottling"
+                  "4": {
+                    "$ref": "#/components/examples/ErrorThrottling"
                   },
-                  "5" : {
-                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  "5": {
+                    "$ref": "#/components/examples/ErrorNoClientSecret"
                   },
-                  "6" : {
-                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  "6": {
+                    "$ref": "#/components/examples/ErrorInvalidClientSecret"
                   },
-                  "7" : {
-                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  "7": {
+                    "$ref": "#/components/examples/ErrorInactiveToken"
                   },
-                  "8" : {
-                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  "8": {
+                    "$ref": "#/components/examples/ErrorPersonalData"
                   },
-                  "9" : {
-                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  "9": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
@@ -6037,15 +6169,19 @@
     "/libcal/space/zones": {
       "get": {
         "summary": "Get LibCal zones by location",
-        "tags": [ "LibCal" ],
+        "tags": [
+          "LibCal"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/libcal_location_id"
           }
         ],
-        "security": [{
-          "ApiToken": []
-        }],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -6080,40 +6216,40 @@
               }
             }
           },
-          "400" : {
-            "description" : "Request error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/error"
+          "400": {
+            "description": "Request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 },
-                "examples" : {
-                  "1" : {
-                    "$ref" : "#/components/examples/ErrorNoToken"
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorNoToken"
                   },
-                  "2" : {
-                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  "2": {
+                    "$ref": "#/components/examples/ErrorTokenNotExist"
                   },
-                  "3" : {
-                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  "3": {
+                    "$ref": "#/components/examples/ErrorInvalidToken"
                   },
-                  "4" : {
-                    "$ref" : "#/components/examples/ErrorThrottling"
+                  "4": {
+                    "$ref": "#/components/examples/ErrorThrottling"
                   },
-                  "5" : {
-                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  "5": {
+                    "$ref": "#/components/examples/ErrorNoClientSecret"
                   },
-                  "6" : {
-                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  "6": {
+                    "$ref": "#/components/examples/ErrorInvalidClientSecret"
                   },
-                  "7" : {
-                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  "7": {
+                    "$ref": "#/components/examples/ErrorInactiveToken"
                   },
-                  "8" : {
-                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  "8": {
+                    "$ref": "#/components/examples/ErrorPersonalData"
                   },
-                  "9" : {
-                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  "9": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
@@ -6128,15 +6264,19 @@
     "/libcal/space/zone": {
       "get": {
         "summary": "Get LibCal zone by ID",
-        "tags": [ "LibCal" ],
+        "tags": [
+          "LibCal"
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/libcal_zone_id"
           }
         ],
-        "security": [{
-          "ApiToken": []
-        }],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -6156,7 +6296,9 @@
                     },
                     "zone": {
                       "allOf": [
-                        { "$ref": "#/components/schemas/libcal_zone" }
+                        {
+                          "$ref": "#/components/schemas/libcal_zone"
+                        }
                       ],
                       "properties": {
                         "item_ids": {
@@ -6172,40 +6314,40 @@
               }
             }
           },
-          "400" : {
-            "description" : "Request error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/error"
+          "400": {
+            "description": "Request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 },
-                "examples" : {
-                  "1" : {
-                    "$ref" : "#/components/examples/ErrorNoToken"
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorNoToken"
                   },
-                  "2" : {
-                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  "2": {
+                    "$ref": "#/components/examples/ErrorTokenNotExist"
                   },
-                  "3" : {
-                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  "3": {
+                    "$ref": "#/components/examples/ErrorInvalidToken"
                   },
-                  "4" : {
-                    "$ref" : "#/components/examples/ErrorThrottling"
+                  "4": {
+                    "$ref": "#/components/examples/ErrorThrottling"
                   },
-                  "5" : {
-                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  "5": {
+                    "$ref": "#/components/examples/ErrorNoClientSecret"
                   },
-                  "6" : {
-                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  "6": {
+                    "$ref": "#/components/examples/ErrorInvalidClientSecret"
                   },
-                  "7" : {
-                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  "7": {
+                    "$ref": "#/components/examples/ErrorInactiveToken"
                   },
-                  "8" : {
-                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  "8": {
+                    "$ref": "#/components/examples/ErrorPersonalData"
                   },
-                  "9" : {
-                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  "9": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
@@ -6220,7 +6362,9 @@
     "/libcal/space/bookings": {
       "get": {
         "summary": "Get all LibCal bookings",
-        "tags": [ "LibCal" ],
+        "tags": [
+          "LibCal"
+        ],
         "parameters": [
           {
             "name": "eid",
@@ -6293,9 +6437,11 @@
             }
           }
         ],
-        "security": [{
-          "ApiToken": []
-        }],
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -6319,40 +6465,40 @@
               }
             }
           },
-          "400" : {
-            "description" : "Request error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/error"
+          "400": {
+            "description": "Request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 },
-                "examples" : {
-                  "1" : {
-                    "$ref" : "#/components/examples/ErrorNoToken"
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorNoToken"
                   },
-                  "2" : {
-                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  "2": {
+                    "$ref": "#/components/examples/ErrorTokenNotExist"
                   },
-                  "3" : {
-                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  "3": {
+                    "$ref": "#/components/examples/ErrorInvalidToken"
                   },
-                  "4" : {
-                    "$ref" : "#/components/examples/ErrorThrottling"
+                  "4": {
+                    "$ref": "#/components/examples/ErrorThrottling"
                   },
-                  "5" : {
-                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  "5": {
+                    "$ref": "#/components/examples/ErrorNoClientSecret"
                   },
-                  "6" : {
-                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  "6": {
+                    "$ref": "#/components/examples/ErrorInvalidClientSecret"
                   },
-                  "7" : {
-                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  "7": {
+                    "$ref": "#/components/examples/ErrorInactiveToken"
                   },
-                  "8" : {
-                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  "8": {
+                    "$ref": "#/components/examples/ErrorPersonalData"
                   },
-                  "9" : {
-                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  "9": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
@@ -6367,10 +6513,12 @@
     "/libcal/space/personal_bookings": {
       "get": {
         "summary": "Get all LibCal bookings",
-        "tags": [ "LibCal" ],
+        "tags": [
+          "LibCal"
+        ],
         "parameters": [
           {
-            "$ref" : "#/components/parameters/client_secret"
+            "$ref": "#/components/parameters/client_secret"
           },
           {
             "name": "eid",
@@ -6463,10 +6611,14 @@
             }
           }
         ],
-        "security": [{
-          "OAuthSecurity": [ "libcal_read" ],
-          "OAuthToken": []
-        }],
+        "security": [
+          {
+            "OAuthSecurity": [
+              "libcal_read"
+            ],
+            "OAuthToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -6490,40 +6642,40 @@
               }
             }
           },
-          "400" : {
-            "description" : "Request error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/error"
+          "400": {
+            "description": "Request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 },
-                "examples" : {
-                  "1" : {
-                    "$ref" : "#/components/examples/ErrorNoToken"
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorNoToken"
                   },
-                  "2" : {
-                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  "2": {
+                    "$ref": "#/components/examples/ErrorTokenNotExist"
                   },
-                  "3" : {
-                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  "3": {
+                    "$ref": "#/components/examples/ErrorInvalidToken"
                   },
-                  "4" : {
-                    "$ref" : "#/components/examples/ErrorThrottling"
+                  "4": {
+                    "$ref": "#/components/examples/ErrorThrottling"
                   },
-                  "5" : {
-                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  "5": {
+                    "$ref": "#/components/examples/ErrorNoClientSecret"
                   },
-                  "6" : {
-                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  "6": {
+                    "$ref": "#/components/examples/ErrorInvalidClientSecret"
                   },
-                  "7" : {
-                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  "7": {
+                    "$ref": "#/components/examples/ErrorInactiveToken"
                   },
-                  "8" : {
-                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  "8": {
+                    "$ref": "#/components/examples/ErrorPersonalData"
                   },
-                  "9" : {
-                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  "9": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
@@ -6541,12 +6693,18 @@
     "/libcal/space/reserve": {
       "post": {
         "summary": "Reserve one or more LibCal spaces/seats",
-        "tags": [ "LibCal" ],
+        "tags": [
+          "LibCal"
+        ],
         "parameters": [],
-        "security": [{
-          "OAuthSecurity": [ "libcal_write" ],
-          "OAuthToken": []
-        }],
+        "security": [
+          {
+            "OAuthSecurity": [
+              "libcal_write"
+            ],
+            "OAuthToken": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -6589,7 +6747,9 @@
                           "description": "Returns only if the test flag was supplied and the booking was successfully placed",
                           "example": "this booking would have been successfully placed, but you supplied the test flag."
                         },
-                        "booking_id": { "$ref": "#/components/schemas/libcal_booking_id" },
+                        "booking_id": {
+                          "$ref": "#/components/schemas/libcal_booking_id"
+                        },
                         "cost": {
                           "type": "string",
                           "description": "The cost of the LibCal booking. Should generally be 0.",
@@ -6605,40 +6765,40 @@
               }
             }
           },
-          "400" : {
-            "description" : "Request error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/error"
+          "400": {
+            "description": "Request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 },
-                "examples" : {
-                  "1" : {
-                    "$ref" : "#/components/examples/ErrorNoToken"
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorNoToken"
                   },
-                  "2" : {
-                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  "2": {
+                    "$ref": "#/components/examples/ErrorTokenNotExist"
                   },
-                  "3" : {
-                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  "3": {
+                    "$ref": "#/components/examples/ErrorInvalidToken"
                   },
-                  "4" : {
-                    "$ref" : "#/components/examples/ErrorThrottling"
+                  "4": {
+                    "$ref": "#/components/examples/ErrorThrottling"
                   },
-                  "5" : {
-                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  "5": {
+                    "$ref": "#/components/examples/ErrorNoClientSecret"
                   },
-                  "6" : {
-                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  "6": {
+                    "$ref": "#/components/examples/ErrorInvalidClientSecret"
                   },
-                  "7" : {
-                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  "7": {
+                    "$ref": "#/components/examples/ErrorInactiveToken"
                   },
-                  "8" : {
-                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  "8": {
+                    "$ref": "#/components/examples/ErrorPersonalData"
                   },
-                  "9" : {
-                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  "9": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
@@ -6656,14 +6816,22 @@
     "/libcal/space/cancel": {
       "post": {
         "summary": "Cancel one or more LibCal bookings",
-        "tags": [ "LibCal" ],
-        "parameters": [
-          { "$ref":  "#/components/parameters/libcal_booking_ids" }
+        "tags": [
+          "LibCal"
         ],
-        "security": [{
-          "OAuthSecurity": [ "libcal_write" ],
-          "OAuthToken": []
-        }],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/libcal_booking_ids"
+          }
+        ],
+        "security": [
+          {
+            "OAuthSecurity": [
+              "libcal_write"
+            ],
+            "OAuthToken": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -6696,40 +6864,40 @@
               }
             }
           },
-          "400" : {
-            "description" : "Request error",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/error"
+          "400": {
+            "description": "Request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 },
-                "examples" : {
-                  "1" : {
-                    "$ref" : "#/components/examples/ErrorNoToken"
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorNoToken"
                   },
-                  "2" : {
-                    "$ref" : "#/components/examples/ErrorTokenNotExist"
+                  "2": {
+                    "$ref": "#/components/examples/ErrorTokenNotExist"
                   },
-                  "3" : {
-                    "$ref" : "#/components/examples/ErrorInvalidToken"
+                  "3": {
+                    "$ref": "#/components/examples/ErrorInvalidToken"
                   },
-                  "4" : {
-                    "$ref" : "#/components/examples/ErrorThrottling"
+                  "4": {
+                    "$ref": "#/components/examples/ErrorThrottling"
                   },
-                  "5" : {
-                    "$ref" : "#/components/examples/ErrorNoClientSecret"
+                  "5": {
+                    "$ref": "#/components/examples/ErrorNoClientSecret"
                   },
-                  "6" : {
-                    "$ref" : "#/components/examples/ErrorInvalidClientSecret"
+                  "6": {
+                    "$ref": "#/components/examples/ErrorInvalidClientSecret"
                   },
-                  "7" : {
-                    "$ref" : "#/components/examples/ErrorInactiveToken"
+                  "7": {
+                    "$ref": "#/components/examples/ErrorInactiveToken"
                   },
-                  "8" : {
-                    "$ref" : "#/components/examples/ErrorPersonalData"
+                  "8": {
+                    "$ref": "#/components/examples/ErrorPersonalData"
                   },
-                  "9" : {
-                    "$ref" : "#/components/examples/ErrorRejectedScope"
+                  "9": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
                   },
                   "10": {
                     "$ref": "#/components/examples/ErrorLibCalOAuthTokenInvalid"
