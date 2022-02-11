@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 import re
 from distutils.util import strtobool
+
 from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -26,8 +27,6 @@ SECRET_KEY = os.environ.get("SECRET_KEY", get_random_secret_key())
 if SECRET_KEY == "" or SECRET_KEY is None:
     SECRET_KEY = get_random_secret_key()
 
-CACHET_TOKEN = os.environ.get("CACHET_TOKEN")
-CACHET_URL = os.environ.get("CACHET_URL")
 # SECURITY WARNING: don't run with debug turned on in production!
 # This value should be set by the UCLAPI_PRODUCTION environment
 # variable anyway. If in production, debug should be false.
@@ -40,7 +39,6 @@ if os.environ.get("UCLAPI_DOMAIN"):
     ALLOWED_HOSTS.append(os.environ.get("UCLAPI_DOMAIN"))
 
 UCLAPI_DOMAIN_CURRENT = os.environ.get("UCLAPI_DOMAIN")
-
 
 # Application definition
 
@@ -152,6 +150,7 @@ if os.environ.get('SENTRY_DSN'):
     from sentry_sdk.integrations.redis import RedisIntegration
     from sentry_sdk.integrations.logging import ignore_logger
 
+
     def remove_token(event, _):
         scrubbers_keys = ['token', 'client_secret', 'X-RateLimit-Remaining', 'X-RateLimit-Limit',
                           'X-RateLimit-Retry-After']
@@ -160,6 +159,7 @@ if os.environ.get('SENTRY_DSN'):
                            re.compile(r"[a-f0-9]{64}")]
         event = recursive_explore(event, scrubbers_keys, scrubbers_regex)
         return event
+
 
     def recursive_explore(var, keys, regex):
         if isinstance(var, list):
@@ -171,6 +171,7 @@ if os.environ.get('SENTRY_DSN'):
             if reg.search(str(var)):
                 var = reg.sub('REDACTED', str(var), 0)
         return var
+
 
     sentry_sdk.init(dsn=os.environ.get('SENTRY_DSN'),
                     environment=os.environ.get('SENTRY_DSN_ENV', 'testing'),
