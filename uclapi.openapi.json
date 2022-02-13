@@ -408,11 +408,13 @@
       "libcal_accessible_only": {
         "name": "accessible_only",
         "in": "query",
-        "description": "Return only acessible seats (i.e. seats with height-adjustable furniture).",
+        "description": "Return only accessible seats (i.e. seats with height-adjustable furniture).",
         "required": false,
-        "example": false,
+        "example": 0,
         "schema": {
-          "type": "boolean"
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
         }
       },
       "libcal_page_index": {
