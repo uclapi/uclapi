@@ -38,7 +38,9 @@ class OccupeyeEndpoint(Endpoint):
     def request(self, url: str):
         headers = {"Authorization": self.bearer_token}
         r = requests.get(url=url, headers=headers)
-        return r.json()
+        if r.ok:
+            return r.json()
+        return None
 
     def request_fragment(self, url: str):
         headers = {"Authorization": self.bearer_token}
