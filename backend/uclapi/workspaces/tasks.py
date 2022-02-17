@@ -1,4 +1,5 @@
 import os
+import logging
 
 import requests
 from celery import shared_task
@@ -10,16 +11,22 @@ from workspaces.occupeye.endpoint import TestEndpoint
 
 @shared_task
 def feed_occupeye_cache(test=False, mini=False):
-    print("Running OccupEye Caching Operation")
-    print("[+] Feeding Cache")
+    logging.basicConfig()
+    logging.getLogger().setLevel(logging.DEBUG)
+
+    logging.info("Running OccupEye Caching Operation")
+    logging.info("[+] Feeding Cache")
     cache = OccupeyeCache(endpoint=TestEndpoint({})) if test else OccupeyeCache()
     cache.feed_cache(full=(not mini))
 
 
 @shared_task
 def feed_occupeye_archive(test=False, delete=False):
-    print("Running OccupEye Archive Operation")
-    print("[+] Fetching Archive")
+    logging.basicConfig()
+    logging.getLogger().setLevel(logging.DEBUG)
+
+    logging.info("Running OccupEye Archive Operation")
+    logging.info("[+] Fetching Archive")
     archive = OccupEyeArchive(endpoint=TestEndpoint({})) if test else OccupEyeArchive()
     if delete:
         archive.reset()
