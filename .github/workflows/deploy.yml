@@ -323,6 +323,8 @@ jobs:
             export SHIB_POSTGRES_USERNAME=$SHIB_POSTGRES_USERNAME
             export SHIB_POSTGRES_PASSWORD=$SHIB_POSTGRES_PASSWORD
             export SHIB_POSTGRES_DATABASE=$SHIB_POSTGRES_DATABASE
+            export CRON_CPU_COUNT=$CRON_CPU_COUNT
+            export CRON_MEMORY_KB=$CRON_MEMORY_KB
             envsubst < docker-compose-tmp-2.yml > docker-compose-tmp-3.yml
             sed -i -E "s/cpus: ([0-9\\.]+)/cpus: '\\1'/" docker-compose-tmp-3.yml
             rm docker-compose-tmp.yml docker-compose-tmp-2.yml docker-compose-production.yml
