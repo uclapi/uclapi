@@ -1,4 +1,4 @@
-from timetable.tasks import update_gencache
+from timetable.tasks import update_gencache_celery
 
 from django.core.management.base import BaseCommand
 
@@ -16,4 +16,4 @@ class Command(BaseCommand):
                             )
 
     def handle(self, *args, **options):
-        update_gencache(options['skip_run_check']).apply()
+        update_gencache_celery(options['skip_run_check'])
