@@ -284,6 +284,7 @@ def update_gencache(skip_run_check):
         print("gencache update job already in progress")
         if not skip_run_check:
             return
+        print("Running anyway")
 
     redis_conn.set(running_key, "True", ex=2700)
 
