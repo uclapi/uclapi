@@ -5,10 +5,9 @@ from __future__ import unicode_literals
 import os
 
 from django.db import migrations
-from jinjasql import JinjaSql
+
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('timetable', '0010_auto_20190220_1835'),
     ]
@@ -22,10 +21,11 @@ class Migration(migrations.Migration):
     with open(path_to_sql, 'r') as sql_file:
         template = sql_file.read()
 
-    j = JinjaSql()
-
-    query_a, _ = j.prepare_query(template, {"bucket_id": "a"})
-    query_b, _ = j.prepare_query(template, {"bucket_id": "b"})
+    # Replace JinjaSQL with manual implementation due to outdated library
+    # has no impact in this regard as all use the sqlsafe keyword, and thus
+    # are not escaped
+    query_a = template.replace("{{ bucket_id | sqlsafe }}", "a")
+    query_b = template.replace("{{ bucket_id | sqlsafe }}", "b")
 
     operations = [
         migrations.RunSQL(
