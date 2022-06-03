@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from binascii import hexlify
 
@@ -57,6 +58,7 @@ class OccupEyeTokenTestCase(TestCase):
 
 class OccupEyeCacheTestCase(TestCase):
     def setUp(self):
+        logging.disable(logging.WARNING)
         self.redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
         self._const = OccupEyeConstants()
         with open(os.path.join(__location__, "tests_cache.json"), encoding="utf-8") as f:
@@ -218,6 +220,7 @@ class OccupEyeCacheTestCase(TestCase):
 
 class OccupEyeApiTestCase(TestCase):
     def setUp(self):
+        logging.disable(logging.WARNING)
         self.redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
         self._consts = OccupEyeConstants()
         self.api = OccupEyeApi()

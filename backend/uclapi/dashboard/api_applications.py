@@ -1,4 +1,6 @@
 import json
+import logging
+
 import redis
 from django.db.models import Count
 
@@ -565,7 +567,7 @@ def most_popular_method(request):
                 t_most_common_counter[m["method"].split("/")[0]] += m["count"]
             else:
                 t_most_common_counter[m["method"].split("/")[0]] = m["count"]
-        print(t_most_common_counter)
+        logging.info(t_most_common_counter)
 
         most_common = [{"method": method, "count": count}
                        for method, count in t_most_common_counter.items()]

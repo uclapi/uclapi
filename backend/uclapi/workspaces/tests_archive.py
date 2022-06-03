@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from datetime import datetime, timedelta
 from unittest.mock import patch
@@ -22,6 +23,8 @@ class OccupEyeArchiveTestCase(TestCase):
            datetime.strptime("2020-01-01T00:00:00+0000", "%Y-%m-%dT%H:%M:%S%z"))
     @patch("workspaces.occupeye.archive.MAX_TIME_DELTA", timedelta(days=7))
     def setUp(self):
+        logging.disable(logging.WARNING)
+
         with open(os.path.join(__location__, "tests_archive_cache.json"), encoding="utf-8") as f:
             self.archive = OccupEyeArchive(endpoint=TestEndpoint(json.load(f)))
         self.archive.reset()
@@ -108,6 +111,9 @@ class OccupEyeArchiveTestCase(TestCase):
 @patch("workspaces.occupeye.archive.MAX_TIME_DELTA", timedelta(days=1))
 class OccupEyeArchiveEdgeTestCase(TestCase):
 
+    def setUp(self):
+        logging.disable(logging.WARNING)
+
     def run_update(self, data, reset=True):
         self.archive = OccupEyeArchive(endpoint=TestEndpoint(data))
         if reset:
@@ -165,6 +171,8 @@ class OccupEyeArchiveViewsTestCase(TestCase):
            datetime.strptime("2020-01-01T00:00:00+0000", "%Y-%m-%dT%H:%M:%S%z"))
     @patch("workspaces.occupeye.archive.MAX_TIME_DELTA", timedelta(days=7))
     def setUp(self):
+        logging.disable(logging.WARNING)
+
         with open(os.path.join(__location__, "tests_archive_cache.json"), encoding="utf-8") as f:
             self.archive = OccupEyeArchive(endpoint=TestEndpoint(json.load(f)))
         self.archive.reset()
@@ -173,9 +181,9 @@ class OccupEyeArchiveViewsTestCase(TestCase):
         self.client = Client()
 
         try:
-            user = User.objects.get(email="develop@ucl.ac.uk")
+            user = User.objects.get(email="develop@ucl.ac.uk", dev_quota=9999999)
         except User.DoesNotExist:
-            user = User()
+            user = User(dev_quota=9999999)
             user.save()
 
         try:

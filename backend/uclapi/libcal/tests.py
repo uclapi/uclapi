@@ -103,7 +103,7 @@ class LibCalRequestForwarderTestCase(APITestCase):
             decode_responses=True
         )
         cls.client: APIClient = APIClient()
-        cls.user_ = User.objects.create(cn="test", employee_id=7357)
+        cls.user_ = User.objects.create(cn="test", employee_id=7357, dev_quota=9999999)
         cls.app = App.objects.create(user=cls.user_, name="An App")
         cls.token: str = "random-token"
         cls.headers: dict = {
@@ -176,7 +176,7 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
         # We prefer client to factory as we want to test if
         # the regex is correct as well.
         cls.client: APIClient = APIClient()
-        cls.user_ = User.objects.create(cn="test", employee_id=7357)
+        cls.user_ = User.objects.create(cn="test", employee_id=7357, dev_quota=9999999)
         cls.app = App.objects.create(user=cls.user_, name="An App")
         cls.token: str = "random-token"
         cls.headers: dict = {

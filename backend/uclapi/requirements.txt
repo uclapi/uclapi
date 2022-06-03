@@ -4,9 +4,9 @@ celery==5.2.7
 django-celery-beat==2.2.1
 ciso8601==2.2.0
 cx-Oracle==8.3.0
-Django==2.2.27
+Django==3.2.13
 deepdiff==5.8.1
-django-cors-headers==3.11.0
+django-cors-headers==3.12.0
 django-dotenv==1.4.2
 django-mock-queries==2.1.7
 django-storages==1.12.3
