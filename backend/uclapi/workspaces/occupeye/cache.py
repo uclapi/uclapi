@@ -1,4 +1,5 @@
 import json
+import logging
 from datetime import datetime, timedelta
 from distutils.util import strtobool
 
@@ -171,7 +172,7 @@ class OccupeyeCache:
         """
         all_sensors_data = self._endpoint.request(self._const.URL_SURVEY_DEVICES_LATEST.format(survey_id))
         if not isinstance(all_sensors_data, list):
-            print("[-] Survey {} has bad sensor data, ignoring...".format(survey_id))
+            logging.info("[-] Survey {} has bad sensor data, ignoring...".format(survey_id))
             return
         pipeline = self._redis.pipeline()
         for sensor_data in all_sensors_data:
@@ -399,9 +400,9 @@ class OccupeyeCache:
 
         survey_ids = self._redis.lrange("occupeye:surveys", 0, self._redis.llen("occupeye:surveys") - 1)
         # Cache all the latest surveys
-        print("[+] Surveys")
+        logging.info("[+] Surveys")
         for survey_id in survey_ids:
-            print("==> Survey ID: " + survey_id)
+            logging.info("==> Survey ID: " + survey_id)
             if full:
                 # Cache a list of every map in the survey
                 self.cache_maps_for_survey(survey_id)
@@ -425,16 +426,16 @@ class OccupeyeCache:
 
             self.cache_all_survey_sensor_states(survey_id)
             self.cache_survey_sensors_max_timestamp(survey_id)
-        print("[+] Summaries")
+        logging.info("[+] Summaries")
         self.cache_common_summaries()
 
-        print("[+] Setting Last-Modified key")
+        logging.info("[+] Setting Last-Modified key")
         last_modified_key = "http:headers:Last-Modified:Workspaces"
 
         current_timestamp = datetime.now(LOCAL_TIMEZONE).isoformat(timespec="seconds")
         self._redis.set(last_modified_key, current_timestamp)
 
-        print("[+] Done")
+        logging.info("[+] Done")
 
     def delete_maps(self, pipeline, survey_id, survey_maps_list_key, survey_maps_data):
         """Delete maps that no longer exist in a survey"""

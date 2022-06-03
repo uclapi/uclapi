@@ -32,7 +32,7 @@ if SECRET_KEY == "" or SECRET_KEY is None:
 # variable anyway. If in production, debug should be false.
 DEBUG = not strtobool(os.environ.get("UCLAPI_PRODUCTION"))
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "testserver"]
 
 # If a domain is specified then make this an allowed host
 if os.environ.get("UCLAPI_DOMAIN"):
@@ -143,6 +143,7 @@ DATABASE_POOL_ARGS = {
 }
 
 DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 if os.environ.get('SENTRY_DSN'):
     import sentry_sdk

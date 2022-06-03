@@ -157,7 +157,7 @@ class PrettyPrintJsonTestCase(SimpleTestCase):
 
 class ManagementCommandsTestCase(TestCase):
     def setUp(self) -> None:
-        self.webhook_app_user = User.objects.create(cn="test", employee_id=7357)
+        self.webhook_app_user = User.objects.create(cn="test", employee_id=7357, dev_quota=9999999)
         self.webhook_app = App.objects.create(user=self.webhook_app_user, name="An app")
         deepdiff_return_values = [{},  # test_trigger_webhooks_no_change
                                   {'iterable_item_added': {1: "yep"}},  # test_trigger_webhooks_one_change_fail_no_call
@@ -328,7 +328,7 @@ class DoesTokenExistTestCase(TestCase):
         self.valid_token = get_temp_token()
 
         # Standard Token data
-        self.user_ = User.objects.create(cn="test", employee_id=7357)
+        self.user_ = User.objects.create(cn="test", employee_id=7357, dev_quota=9999999)
         self.app = App.objects.create(user=self.user_, name="An App")
 
     @booking_objects
@@ -531,7 +531,7 @@ class GetRoomsEndpointTest(TestCase):
         self.factory = APIRequestFactory()
 
         # Standard Token data
-        self.user_ = User.objects.create(cn="test", employee_id=7357)
+        self.user_ = User.objects.create(cn="test", employee_id=7357, dev_quota=9999999)
         self.app = App.objects.create(user=self.user_, name="An App")
 
     # TODO: Github Issue #1155
@@ -558,7 +558,7 @@ class GetBookingEndpointTest(TestCase):
         self.factory = APIRequestFactory()
 
         # Standard Token data
-        self.user_ = User.objects.create(cn="test", employee_id=7357)
+        self.user_ = User.objects.create(cn="test", employee_id=7357, dev_quota=9999999)
         self.app = App.objects.create(user=self.user_, name="An App")
 
     # TODO: Github issue #1155

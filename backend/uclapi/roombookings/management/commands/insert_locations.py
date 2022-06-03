@@ -1,3 +1,5 @@
+import logging
+
 from django.core.management.base import BaseCommand
 from datetime import datetime
 import requests
@@ -163,5 +165,5 @@ class Command(BaseCommand):
                 else:
                     print(site_id)
 
-        print("Total Time taken: ", datetime.now() - starttime)
-        self.stdout.write("All done")
+        logging.info("Total Time taken: ", datetime.now() - starttime)
+        logging.info("All done")
