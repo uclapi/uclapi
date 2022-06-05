@@ -2,7 +2,7 @@ import {
   grey,
   pink,
 } from '@material-ui/core/colors'
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
+import { createTheme, MuiThemeProvider } from '@material-ui/core/styles'
 // Required components
 import rooms from 'Layout/data/room_names.jsx'
 import { AutoCompleteView, Code, Container, Row } from 'Layout/Items.jsx'
@@ -18,7 +18,7 @@ const {
 } = pink
 const white = `#ffffff`
 
-const muiTheme = createMuiTheme({
+const muiTheme = createTheme({
   fontFamily: `Roboto, sans-serif`,
   palette: {
     primary1Color: `#434343`,
