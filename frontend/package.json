@@ -69,7 +69,9 @@
     "transform": {
       "\\.[jt]sx?$": "babel-jest"
     },
-    "transformIgnorePatterns": ["/node_modules/(?!(swagger-client|react-syntax-highlighter|swagger-ui-react)/)"]
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(swagger-client|react-syntax-highlighter|swagger-ui-react)/)"
+    ]
   },
   "dependencies": {
     "@material-ui/core": "^4.12.4",
@@ -81,7 +83,6 @@
     "framer-motion": "^4.1.17",
     "include-media": "^1.4.10",
     "js-cookie": "^3.0.1",
-    "npm-check-updates": "^11.8.5",
     "prop-types": "^15.8.1",
     "qs": "^6.10.3",
     "rc-collapse": "^3.3.0",
