@@ -68,7 +68,8 @@
     "testEnvironment": "jsdom",
     "transform": {
       "\\.[jt]sx?$": "babel-jest"
-    }
+    },
+    "transformIgnorePatterns": ["/node_modules/(?!(swagger-client|react-syntax-highlighter|swagger-ui-react)/)"]
   },
   "dependencies": {
     "@material-ui/core": "^4.12.4",
