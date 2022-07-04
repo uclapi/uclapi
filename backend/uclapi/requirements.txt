@@ -1,5 +1,5 @@
 autopep8==1.6.0
-boto3==1.24.2
+boto3==1.24.22
 celery==5.2.7
 django-celery-beat==2.2.1
 ciso8601==2.2.0
