@@ -47,14 +47,12 @@ services:
       - gencache
       - redis
     env_file:
+      # allow setting of some env variables and fallback
+      # to example file for default values
+      - ./backend/uclapi/.env.docker.example
       - ./backend/uclapi/.env
     environment:
-      - SECRET_KEY=iRlsWf2BF2nnNy1zIsZcun6fZX5GGpk0
-      - SHIBBOLETH_ROOT=http://localhost:8001/auto
-      - UCLAPI_PRODUCTION=False
-      - UCLAPI_DOMAIN=localhost:8000
-      - UCLAPI_RUNNING_ON_AWS_ELB=False
-      - UCLAPI_CALLBACK_ALLOWED_PROTOCOLS=https;http
+      # DB/Redis-specific variables should be fixed
       - DB_UCLAPI_NAME=uclapi
       - DB_UCLAPI_USERNAME=uclapi
       - DB_UCLAPI_PASSWORD=uclapi_test_password
@@ -65,11 +63,8 @@ services:
       - DB_CACHE_PASSWORD=uclapi_gencache_test_password
       - DB_CACHE_HOST=gencache
       - DB_CACHE_PORT=5432
-      - ORACLE_HOME=/opt/oracle/instantclient_12_2
       - REDIS_UCLAPI_HOST=redis
-      - FORBIDDEN_CALLBACK_URLS=uclapi.com;staging.ninja
-      - WHITELISTED_CALLBACK_URLS=https://live-roombookings.uclapi.com/webhook/;https://hackathon.uclapi.com/callback
-      - EVENTLET_NOPATCH=True
+
 
   fakeshibboleth:
     build:
