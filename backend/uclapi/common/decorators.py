@@ -167,7 +167,7 @@ def _check_oauth_token_issues(token_code, client_secret, required_scopes):
                 "The token is invalid as the developer has "
                 "deleted their app."
         })
-        response.status_code = 400
+        response.status_code = 403
         return response
 
     scopes = Scopes()

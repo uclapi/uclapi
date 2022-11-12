@@ -509,7 +509,7 @@ class OAuthTokenCheckerTest(TestCase):
         self.assertTrue(isinstance(result, JsonResponse))
         self.assertEqual(
             result.status_code,
-            400
+            403
         )
         data = json.loads(result.content.decode())
         self.assertFalse(data["ok"])
