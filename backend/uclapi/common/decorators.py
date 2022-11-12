@@ -160,6 +160,16 @@ def _check_oauth_token_issues(token_code, client_secret, required_scopes):
         response.status_code = 400
         return response
 
+    if token.app.deleted:
+        response = JsonResponse({
+            "ok": False,
+            "error":
+                "The token is invalid as the developer has "
+                "deleted their app."
+        })
+        response.status_code = 403
+        return response
+
     scopes = Scopes()
     for s in required_scopes:
         if not scopes.check_scope(token.scope.scope_number, s):
