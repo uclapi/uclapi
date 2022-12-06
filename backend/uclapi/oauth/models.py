@@ -23,7 +23,7 @@ class OAuthToken(models.Model):
     # The app that requested this token to be created
     app = models.ForeignKey('dashboard.App', on_delete=models.CASCADE)
     # The user that this app will gain access to the data for.
-    # Every user that goes through the Shibboleth + OAuth
+    # Every user that goes through the Azure AD + OAuth
     # flow will get set up in the default database to ensure that we can fetch
     # their, for example, eppn for custom queries
     user = models.ForeignKey('dashboard.User', on_delete=models.CASCADE)

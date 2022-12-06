@@ -1,5 +1,6 @@
 import json
 import os
+import requests
 
 import redis
 from django.core import signing
@@ -18,7 +19,7 @@ from dashboard.models import App, User
 from .app_helpers import (
     generate_random_verification_code,
     get_student_by_upi,
-    validate_shibboleth_callback
+    validate_azure_ad_callback
 )
 from .models import OAuthToken
 from .scoping import Scopes
@@ -28,7 +29,7 @@ from common.decorators import uclapi_protected_endpoint, get_var
 from common.helpers import PrettyJsonResponse
 
 
-# The endpoint that creates a Shibboleth login and redirects the user to it
+# The endpoint that creates an Azure AD login and redirects the user to it
 def authorise(request):
     client_id = request.GET.get("client_id", None)
     state = request.GET.get("state", None)
@@ -67,37 +68,55 @@ def authorise(request):
         response.status_code = 400
         return response
 
-    # Sign the app and state pair before heading to Shibboleth to help protect
+    # Sign the app and state pair before heading to AD to help protect
     # against CSRF and XSS attacks
     signer = TimestampSigner()
     data = app.client_id + state
     signed_data = signer.sign(data)
 
-    # Build Shibboleth callback URL
-    url = os.environ.get("SHIBBOLETH_ROOT") + "/Login?target="
-    target = request.build_absolute_uri(
-        "/oauth/shibcallback?appdata={}".format(signed_data)
-    )
+    # Build Azure AD callback URL
+    query = {
+        'client_id': os.environ.get("AZURE_AD_CLIENT_ID"),
+        'response_type': 'code',
+        'redirect_uri': 'https://uclapi.com/oauth/adcallback',
+        'scope': 'openid email profile',
+        'response_mode': 'query',
+        'state': signed_data,
+    }
 
-    if target[4] == ':':  # If using HTTP
-        target = "https" + target[4:]  # Make sure we return on HTTPs
+    url = os.environ.get("AZURE_AD_ROOT") + \
+        "/oauth2/v2.0/authorize?" + urlencode(query)
 
-    target = quote(target)
-    url += target
-
-    # Send the user to Shibboleth to log in
+    # Send the user to AD to log in
     return redirect(url)
+
+
+def exchange_azure_ad_auth_code(code):
+    url = os.environ.get("AZURE_AD_ROOT") + "/oauth2/v2.0/token"
+    body = {
+        'client_id': os.environ.get("AZURE_AD_CLIENT_ID"),
+        'code': code,
+        'redirect_uri': 'https://uclapi.com/oauth/adcallback',
+        'grant_type': 'authorization_code',
+        'client_secret': os.environ.get("AZURE_AD_CLIENT_SECRET"),
+    }
+    response = requests.post(url, data=body)
+    if response.status_code != 200:
+        return None
+
+    return response.json()
 
 
 @csrf_exempt
 @ensure_csrf_cookie
-def shibcallback(request):
-    # Callback from Shib login. Get ALL the meta!
-    appdata_signed = request.GET.get("appdata", None)
+def adcallback(request):
+    # Callback from AD login
+
+    appdata_signed = request.GET.get("state", None)
     if not appdata_signed:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": ("No signed app data returned from Shibboleth."
+            "error": ("No signed app data returned from Azure AD."
                       " Please use the authorise endpoint.")
         })
         response.status_code = 400
@@ -126,14 +145,27 @@ def shibcallback(request):
         response.status_code = 400
         return response
 
+    azure_token_data = exchange_azure_ad_auth_code(
+        request.GET.get("code"))
+
+    if not azure_token_data:
+        response = PrettyJsonResponse({
+            "ok": False,
+            "error": ("Failed to authenticate with Azure AD. Please attempt to log in again. "
+                      "If the issues persist please contact the UCL API "
+                      "Team to rectify this.")
+        })
+        response.status_code = 400
+        return response
+
     client_id = appdata[:33]
     state = appdata[33:]
 
     # We can trust this value because it was extracted from the signed data
-    # string sent via Shibboleth
+    # string sent via Azure AD
     app = App.objects.get(client_id=client_id)
 
-    validation_result = validate_shibboleth_callback(request)
+    validation_result = validate_azure_ad_callback(request)
     if isinstance(validation_result, str):
         response = PrettyJsonResponse({
             "ok": False,
