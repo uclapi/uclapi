@@ -1,13 +1,13 @@
 import os
 import textwrap
 import logging
+import requests
 from binascii import hexlify
 
 from django.db.utils import IntegrityError
 
 import dashboard.models
 from timetable.models import Lock, StudentsA, StudentsB
-from uclapi.settings import SHIB_TEST_USER
 
 
 def generate_user_token():
@@ -36,6 +36,26 @@ def get_student_by_upi(upi):
     return student
 
 
+def handle_azure_ad_callback(code, redirect_uri):
+    url = os.environ.get("AZURE_AD_ROOT") + "/oauth2/v2.0/token"
+    body = {
+        'client_id': os.environ.get("AZURE_AD_CLIENT_ID"),
+        'code': code,
+        'redirect_uri': redirect_uri,
+        'grant_type': 'authorization_code',
+        'client_secret': os.environ.get("AZURE_AD_CLIENT_SECRET"),
+    }
+    response = requests.post(url, data=body)
+
+    if response.status_code != 200:
+        print(response.text)
+        return ("Failed to authenticate with Azure AD. Please attempt to log in again. "
+                "If the issues persist please contact the UCL API "
+                "Team to rectify this.")
+
+    return validate_azure_ad_callback(response.json())
+
+
 def validate_azure_ad_callback(token_data):
     """Validates user attributes returned from Azure AD.
 
@@ -51,7 +71,7 @@ def validate_azure_ad_callback(token_data):
     # To get some of this data, we could decode the JWT, but we need to get at least employee ID which
     # doesn't come in the JWT so we just fetch all the info now
     user_info_result = requests.get(os.environ.get("AZURE_GRAPH_ROOT") +
-                                    '/me?$select=department,surname,givenName,displayName,department,userPrincipalName,employeeId,mail,mailNickname&$expand=transitiveMemberOf($select=displayName,mailNickname,classification,description,groupTypes)',
+                                    '/me?$select=department,surname,givenName,displayName,userPrincipalName,employeeId,mail,mailNickname',
                                     headers={'Authorization': 'Bearer ' + token_data['access_token']})
 
     if user_info_result.status_code != 200:
@@ -65,8 +85,8 @@ def validate_azure_ad_callback(token_data):
     # AD unfortunately restricts $expand to 20 items, so we can't rely on $expand=transitiveMemberOf for the above query. We need to do another one directly for transitiveMemberOf
     # Reference: https://learn.microsoft.com/en-us/graph/known-issues?view=graph-rest-1.0#some-limitations-apply-to-query-parameters
     user_groups_result = requests.get(os.environ.get("AZURE_GRAPH_ROOT") +
-                                    '/me/transitiveMemberOf?$select=displayName,mailNickname,classification,description,groupTypes',
-                                    headers={'Authorization': 'Bearer ' + token_data['access_token']})
+                                      '/me/transitiveMemberOf?$select=displayName,mailNickname,onPremisesSamAccountName',
+                                      headers={'Authorization': 'Bearer ' + token_data['access_token']})
 
     # TODO: do we really want to treat this as an error?
     if user_groups_result.status_code != 200:
@@ -75,7 +95,7 @@ def validate_azure_ad_callback(token_data):
             f"please contact the UCL API Team to rectify this. "
         )
 
-    # AD groups: displayName.startsWith('+=')
+    # Note: any UCL Intranet Groups have a displayName beginning with `+=`
     user_groups = user_groups_result.json()
 
     # Assumed to be non-empty/unique in many parts of UCL API. i.e. grep -nr '\.email' --include \*.py
@@ -88,24 +108,18 @@ def validate_azure_ad_callback(token_data):
 
     department = user_info['department']  # e.g., Dept of Computer Science
     given_name = user_info['givenName']  # e.g. Firstname
-    display_name = 'todo full name'
-    groups = ';'.join(map(lambda g: g['onPremisesSamAccountName'] or g['mailNickname'], user_groups['value'])) # e.g., engscifac-all;compsci-all;schsci-all
+    display_name = user_info['displayName']  # e.g., Firstname Lastname
+
+    # e.g., engscifac-all;compsci-all;schsci-all
+    groups = ';'.join(map(
+        lambda g: g['onPremisesSamAccountName'] or g['mailNickname'],
+        user_groups['value']
+    ))
+
     mail = user_info['mail']  # e.g., firstname.lastname.year@ucl.ac.uk
-    affiliation = ''
-    unscoped_affiliation = ''
+    affiliation = 'TODO'
+    unscoped_affiliation = 'TODO'
     sn = user_info['surname']
-
-    department = request.META.get('HTTP_DEPARTMENT', '')
-    given_name = request.META.get('HTTP_GIVENNAME', '')
-    display_name = request.META.get('HTTP_DISPLAYNAME', '')
-    groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
-    mail = request.META.get('HTTP_MAIL', '')
-    affiliation = request.META.get('HTTP_AFFILIATION', '')
-    unscoped_affiliation = request.META.get('HTTP_UNSCOPED_AFFILIATION', '')
-    sn = request.META.get('HTTP_SN', '')
-
-    if not groups and (department == "Shibtests" or eppn == SHIB_TEST_USER):
-        groups = "shibtests"
 
     # If a user has never used the API before then we need to sign them up
     try:

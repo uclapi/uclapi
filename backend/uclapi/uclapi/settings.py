@@ -235,8 +235,6 @@ with open(fair_use_policy_path, 'r', encoding='utf-8') as fp:
 
 REDIS_UCLAPI_HOST = os.environ.get("REDIS_UCLAPI_HOST", "")
 
-SHIB_TEST_USER = os.environ.get("SHIB_TEST_USER", "")
-
 # Celery Settings
 CELERY_BROKER_URL = 'redis://' + REDIS_UCLAPI_HOST
 CELERY_RESULT_BACKEND = 'redis://' + REDIS_UCLAPI_HOST

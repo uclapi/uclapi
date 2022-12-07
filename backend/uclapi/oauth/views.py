@@ -3,6 +3,7 @@ import os
 import requests
 
 import redis
+from urllib.parse import urlencode
 from django.core import signing
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.signing import TimestampSigner
@@ -19,7 +20,7 @@ from dashboard.models import App, User
 from .app_helpers import (
     generate_random_verification_code,
     get_student_by_upi,
-    validate_azure_ad_callback
+    handle_azure_ad_callback
 )
 from .models import OAuthToken
 from .scoping import Scopes
@@ -78,7 +79,7 @@ def authorise(request):
     query = {
         'client_id': os.environ.get("AZURE_AD_CLIENT_ID"),
         'response_type': 'code',
-        'redirect_uri': 'https://uclapi.com/oauth/adcallback',
+        'redirect_uri': os.environ.get("UCLAPI_DOMAIN") + '/oauth/adcallback',
         'scope': 'openid email profile',
         'response_mode': 'query',
         'state': signed_data,
@@ -91,27 +92,10 @@ def authorise(request):
     return redirect(url)
 
 
-def exchange_azure_ad_auth_code(code):
-    url = os.environ.get("AZURE_AD_ROOT") + "/oauth2/v2.0/token"
-    body = {
-        'client_id': os.environ.get("AZURE_AD_CLIENT_ID"),
-        'code': code,
-        'redirect_uri': 'https://uclapi.com/oauth/adcallback',
-        'grant_type': 'authorization_code',
-        'client_secret': os.environ.get("AZURE_AD_CLIENT_SECRET"),
-    }
-    response = requests.post(url, data=body)
-    if response.status_code != 200:
-        return None
-
-    return response.json()
-
-
 @csrf_exempt
 @ensure_csrf_cookie
 def adcallback(request):
     # Callback from AD login
-
     appdata_signed = request.GET.get("state", None)
     if not appdata_signed:
         response = PrettyJsonResponse({
@@ -145,18 +129,20 @@ def adcallback(request):
         response.status_code = 400
         return response
 
-    azure_token_data = exchange_azure_ad_auth_code(
-        request.GET.get("code"))
+    user_result = handle_azure_ad_callback(
+        request.GET.get("code"),
+        os.environ.get("UCLAPI_DOMAIN") + '/oauth/adcallback'
+    )
 
-    if not azure_token_data:
+    if isinstance(user_result, str):
         response = PrettyJsonResponse({
             "ok": False,
-            "error": ("Failed to authenticate with Azure AD. Please attempt to log in again. "
-                      "If the issues persist please contact the UCL API "
-                      "Team to rectify this.")
+            "error": user_result
         })
         response.status_code = 400
         return response
+    else:
+        user = user_result
 
     client_id = appdata[:33]
     state = appdata[33:]
@@ -164,17 +150,6 @@ def adcallback(request):
     # We can trust this value because it was extracted from the signed data
     # string sent via Azure AD
     app = App.objects.get(client_id=client_id)
-
-    validation_result = validate_azure_ad_callback(request)
-    if isinstance(validation_result, str):
-        response = PrettyJsonResponse({
-            "ok": False,
-            "error": validation_result
-        })
-        response.status_code = 400
-        return response
-    else:
-        user = validation_result
 
     # Log the user into the system using their User ID
     request.session["user_id"] = user.id
@@ -609,20 +584,24 @@ def get_student_number(request, *args, **kwargs):
 
 
 @csrf_exempt
-def settings_shibboleth_callback(request):
+def settings_ad_callback(request):
+    # Callback from AD login
     # should auth user login or signup
     # then redirect to my apps homepage
+    user_result = handle_azure_ad_callback(
+        request.GET.get("code"),
+        request.build_absolute_uri(request.path)
+    )
 
-    validation_result = validate_shibboleth_callback(request)
-    if isinstance(validation_result, str):
+    if isinstance(user_result, str):
         response = PrettyJsonResponse({
             "ok": False,
-            "error": validation_result
+            "error": user_result
         })
         response.status_code = 400
         return response
     else:
-        request.session["user_id"] = validation_result.id
+        request.session["user_id"] = user_result.id
         return redirect(settings)
 
 
@@ -632,13 +611,19 @@ def settings(request):
     try:
         request.session["user_id"]
     except KeyError:
-        # Build Shibboleth callback URL
-        url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
-        param = (request.build_absolute_uri(request.path)
-                 + "user/login.callback")
-        param = quote(param)
-        url = url + param
+        # Build AD callback URL
+        query = {
+            'client_id': os.environ.get("AZURE_AD_CLIENT_ID"),
+            'response_type': 'code',
+            'redirect_uri': request.build_absolute_uri(request.path) + "user/login.callback",
+            'scope': 'openid email profile',
+            'response_mode': 'query',
+        }
 
+        url = os.environ.get("AZURE_AD_ROOT") + \
+            "/oauth2/v2.0/authorize?" + urlencode(query)
+
+        # Send the user to AD to log in
         return redirect(url)
 
     return render(request, 'settings.html')
@@ -658,13 +643,19 @@ def get_settings(request):
     try:
         user_id = request.session["user_id"]
     except KeyError:
-        # Build Shibboleth callback URL
-        url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
-        param = (request.build_absolute_uri(request.path)
-                 + "user/login.callback")
-        param = quote(param)
-        url = url + param
+        # Build AD callback URL
+        query = {
+            'client_id': os.environ.get("AZURE_AD_CLIENT_ID"),
+            'response_type': 'code',
+            'redirect_uri': request.build_absolute_uri(request.path) + "user/login.callback",
+            'scope': 'openid email profile',
+            'response_mode': 'query',
+        }
 
+        url = os.environ.get("AZURE_AD_ROOT") + \
+            "/oauth2/v2.0/authorize?" + urlencode(query)
+
+        # Send the user to AD to log in
         return redirect(url)
 
     user = User.objects.get(id=user_id)
