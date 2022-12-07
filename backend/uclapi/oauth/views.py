@@ -3,7 +3,6 @@ import os
 import requests
 
 import redis
-from urllib.parse import urlencode
 from django.core import signing
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.signing import TimestampSigner
@@ -20,7 +19,8 @@ from dashboard.models import App, User
 from .app_helpers import (
     generate_random_verification_code,
     get_student_by_upi,
-    handle_azure_ad_callback
+    handle_azure_ad_callback,
+    get_azure_ad_authorize_url
 )
 from .models import OAuthToken
 from .scoping import Scopes
@@ -75,21 +75,12 @@ def authorise(request):
     data = app.client_id + state
     signed_data = signer.sign(data)
 
-    # Build Azure AD callback URL
-    query = {
-        'client_id': os.environ.get("AZURE_AD_CLIENT_ID"),
-        'response_type': 'code',
-        'redirect_uri': os.environ.get("UCLAPI_DOMAIN") + '/oauth/adcallback',
-        'scope': 'openid email profile',
-        'response_mode': 'query',
-        'state': signed_data,
-    }
-
-    url = os.environ.get("AZURE_AD_ROOT") + \
-        "/oauth2/v2.0/authorize?" + urlencode(query)
-
     # Send the user to AD to log in
-    return redirect(url)
+    login_url = get_azure_ad_authorize_url(
+        os.environ.get("UCLAPI_DOMAIN") + '/oauth/adcallback',
+        signed_data
+    )
+    return redirect(login_url)
 
 
 @csrf_exempt
@@ -611,20 +602,11 @@ def settings(request):
     try:
         request.session["user_id"]
     except KeyError:
-        # Build AD callback URL
-        query = {
-            'client_id': os.environ.get("AZURE_AD_CLIENT_ID"),
-            'response_type': 'code',
-            'redirect_uri': request.build_absolute_uri(request.path) + "user/login.callback",
-            'scope': 'openid email profile',
-            'response_mode': 'query',
-        }
-
-        url = os.environ.get("AZURE_AD_ROOT") + \
-            "/oauth2/v2.0/authorize?" + urlencode(query)
-
         # Send the user to AD to log in
-        return redirect(url)
+        login_url = get_azure_ad_authorize_url(
+            request.build_absolute_uri(request.path) + "user/login.callback"
+        )
+        return redirect(login_url)
 
     return render(request, 'settings.html')
 
@@ -643,20 +625,12 @@ def get_settings(request):
     try:
         user_id = request.session["user_id"]
     except KeyError:
-        # Build AD callback URL
-        query = {
-            'client_id': os.environ.get("AZURE_AD_CLIENT_ID"),
-            'response_type': 'code',
-            'redirect_uri': request.build_absolute_uri(request.path) + "user/login.callback",
-            'scope': 'openid email profile',
-            'response_mode': 'query',
-        }
-
-        url = os.environ.get("AZURE_AD_ROOT") + \
-            "/oauth2/v2.0/authorize?" + urlencode(query)
-
-        # Send the user to AD to log in
-        return redirect(url)
+        response = PrettyJsonResponse({
+            "success": False,
+            "error": "You are not logged in"
+        })
+        response.status_code = 401
+        return response
 
     user = User.objects.get(id=user_id)
 

@@ -3,6 +3,7 @@ import textwrap
 import logging
 import requests
 from binascii import hexlify
+from urllib.parse import urlencode
 
 from django.db.utils import IntegrityError
 
@@ -34,6 +35,24 @@ def get_student_by_upi(upi):
         qtype2=upi_upper
     )[0]
     return student
+
+
+def get_azure_ad_authorize_url(redirect_uri, state=None):
+    query = {
+        'client_id': os.environ.get("AZURE_AD_CLIENT_ID"),
+        'response_type': 'code',
+        'redirect_uri': redirect_uri,
+        'scope': 'openid email profile',
+        'response_mode': 'query',
+    }
+
+    if state is not None:
+        query['state'] = state
+
+    url = os.environ.get("AZURE_AD_ROOT") + \
+        "/oauth2/v2.0/authorize?" + urlencode(query)
+
+    return url
 
 
 def handle_azure_ad_callback(code, redirect_uri):

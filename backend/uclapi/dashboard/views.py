@@ -1,13 +1,15 @@
 import os
 from distutils.util import strtobool
-from urllib.parse import urlencode
 
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.http import quote
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from uclapi.settings import FAIR_USE_POLICY
-from oauth.app_helpers import handle_azure_ad_callback
+from oauth.app_helpers import (
+    handle_azure_ad_callback,
+    get_azure_ad_authorize_url
+)
 
 from .app_helpers import get_articles, get_temp_token
 from .models import User
@@ -56,22 +58,15 @@ def ad_callback(request):
 
 @ensure_csrf_cookie
 def dashboard(request):
+    # Check whether the user is logged in
     try:
         user_id = request.session["user_id"]
     except KeyError:
-        query = {
-            'client_id': os.environ.get("AZURE_AD_CLIENT_ID"),
-            'response_type': 'code',
-            'redirect_uri': request.build_absolute_uri(request.path) + "user/login.callback",
-            'scope': 'openid email profile',
-            'response_mode': 'query',
-        }
-
-        url = os.environ.get("AZURE_AD_ROOT") + \
-            "/oauth2/v2.0/authorize?" + urlencode(query)
-
         # Send the user to AD to log in
-        return redirect(url)
+        login_url = get_azure_ad_authorize_url(
+            request.build_absolute_uri(request.path) + "user/login.callback"
+        )
+        return redirect(login_url)
 
     user = User.objects.get(id=user_id)
 
