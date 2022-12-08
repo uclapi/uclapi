@@ -42,7 +42,7 @@ def get_azure_ad_authorize_url(redirect_uri, state=None):
         'client_id': os.environ.get("AZURE_AD_CLIENT_ID"),
         'response_type': 'code',
         'redirect_uri': redirect_uri,
-        'scope': 'openid email profile',
+        'scope': 'openid email profile user.read',
         'response_mode': 'query',
     }
 
