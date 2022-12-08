@@ -1,6 +1,5 @@
 import json
 import os
-import requests
 
 import redis
 from django.core import signing

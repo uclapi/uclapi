@@ -1,5 +1,5 @@
 # Production overlay Docker Compose
-version: "3.7" 
+version: "3.7"
 
 services:
   shibpostgres:
@@ -11,30 +11,51 @@ services:
       restart_policy:
         condition: on-failure
 
-  nginx-shib:
-    image: 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-prod-nginx-shib:latest
-    build:
-      args:
-        ENVIRONMENT: production
+  traefik:
+    image: traefik:v2.6
     deploy:
       replicas: 1
       update_config:
         parallelism: 1
-      restart_policy:
-        condition: on-failure
+      restart_policy: on-failure
+    command:
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --certificatesresolvers.leresolver.acme.httpchallenge=true
+      - --certificatesresolvers.leresolver.acme.httpchallenge.entrypoint=web
+      - --certificatesresolvers.leresolver.acme.email=isd-apiteam@ucl.ac.uk
+      - --certificatesresolvers.leresolver.acme.storage=/acme.json
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      - --entrypoints.web.http.redirections.entrypoint.permanent=true
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./storage/acme.json:/acme.json
 
   uclapi:
     image: 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-prod-uclapi:latest
     build:
       args:
         ENVIRONMENT: production
+    labels:
+      - traefik.enable=true
+      - traefik.port=9000
+      - traefik.http.routers.web.tls=true
+      - traefik.http.routers.web.rule=Host(`uclapi.com`)
+      - traefik.http.routers.web.entrypoints=websecure
+      - traefik.http.routers.web.tls.certresolver=leresolver
     deploy:
       replicas: 3
       update_config:
         parallelism: 1
       restart_policy:
         condition: on-failure
-        
+
   cron:
     image: 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-prod-cron:latest
     build:

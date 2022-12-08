@@ -13,32 +13,44 @@ services:
     volumes:
       - shibpostgres_data:/var/lib/postgresql
 
-  nginx-shib:
-    image: localhost:5000/nginx-shib
-    build:
-      context: .
-      dockerfile: nginx.Dockerfile
-      args:
-        POSTGRES_USERNAME: ${SHIB_POSTGRES_USERNAME}
-        POSTGRES_PASSWORD: ${SHIB_POSTGRES_PASSWORD}
-        POSTGRES_DATABASE: ${SHIB_POSTGRES_DATABASE}
-        NGINX_BUILD: latest
-        VERSION: ${UCLAPI_VERSION}
-    depends_on:
-      - shibpostgres
-    volumes:
-      - letsencrypt_config:/etc/letsencrypt/
+  traefik:
+    image: traefik:v2.6
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+      restart_policy: on-failure
+    command:
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --certificatesresolvers.leresolver.acme.httpchallenge=true
+      - --certificatesresolvers.leresolver.acme.httpchallenge.entrypoint=web
+      - --certificatesresolvers.leresolver.acme.email=isd-apiteam@ucl.ac.uk
+      - --certificatesresolvers.leresolver.acme.storage=/acme.json
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      - --entrypoints.web.http.redirections.entrypoint.permanent=true
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./storage/acme.json:/acme.json
 
   uclapi:
     image: localhost:5000/uclapi
     build:
       context: ../../
       dockerfile: docker/deployment/uclapi.Dockerfile
-    ports:
-      - "9000:9000"
+    labels:
+      - traefik.enable=true
+      - traefik.port=9000
+      - traefik.http.routers.web.tls=true
+      - traefik.http.routers.web.rule=Host(`uclapi.com`)
+      - traefik.http.routers.web.entrypoints=websecure
+      - traefik.http.routers.web.tls.certresolver=leresolver
 
   cron:
      image: localhost:5000/cron
