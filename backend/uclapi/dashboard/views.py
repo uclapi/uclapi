@@ -45,7 +45,7 @@ def ad_callback(request):
         response = HttpResponse(
             (
                 "Error 403 - denied. <br>"
-                "The API Dashboard is only accessible to active UCL users."
+                "The API Dashboard is only accessible to current UCL members."
             )
         )
         response.status_code = 403

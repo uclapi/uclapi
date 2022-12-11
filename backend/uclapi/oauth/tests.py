@@ -11,6 +11,7 @@ from django_mock_queries.query import MockModel, MockSet
 from rest_framework.test import APIRequestFactory, APITestCase
 from django.core import signing
 from parameterized import parameterized
+from requests.models import Response
 
 from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse
@@ -20,7 +21,7 @@ from dashboard.models import App, User
 from .app_helpers import generate_random_verification_code
 from .models import OAuthScope, OAuthToken
 from .scoping import Scopes
-from .views import authorise, shibcallback, deauthorise_app
+from .views import authorise, adcallback, deauthorise_app
 
 
 @uclapi_protected_endpoint(personal_data=True, required_scopes=["timetable"])
@@ -33,6 +34,42 @@ def test_timetable_request(request, *args, **kwargs):
 def unsign(data, max_age):
     raise signing.SignatureExpired
 
+
+# https://stackoverflow.com/a/65437794
+def mocked_adcallback_post(*args, **kwargs):
+    response_content = None
+    request_url = args[0].split('?')[0]
+
+    if request_url == os.environ.get("AZURE_AD_ROOT") + "/oauth2/v2.0/token":
+        response_content = json.dumps({
+            'token_type': 'Bearer',
+            'scope': 'Group.Read.All profile openid email User.Read',
+            'expires_in': 4780,
+            'ext_expires_in': 4780,
+            'access_token': 'eyfoo',
+            'id_token': 'eybar'
+        })
+
+    response = Response()
+    response.status_code = 200
+    response._content = str.encode(response_content)
+    return response
+
+def mocked_ad_graph_get(*args, **kwargs):
+    response_content = None
+    request_url = args[0].split('?')[0]
+
+    if request_url == os.environ.get("AZURE_GRAPH_ROOT") + '/me':
+        response_content = json.dumps(kwargs['user_data'])
+
+    elif request_url == os.environ.get("AZURE_GRAPH_ROOT") + '/me/transitiveMemberOf':
+        response_content = json.dumps({
+            'value': kwargs['group_data']
+        })
+    response = Response()
+    response.status_code = 200
+    response._content = str.encode(response_content)
+    return response
 
 class ScopingTestCase(TestCase):
     test_scope_map = {
@@ -419,7 +456,7 @@ class ViewsTestCase(TestCase):
         )
         k = unittest.mock.patch.dict(
             os.environ,
-            {'SHIBBOLETH_ROOT': 'FakeShibDirectory'}
+            {'AZURE_AD_ROOT': 'http://rooturl.com', 'AZURE_AD_CLIENT_ID': 'foo'}
         )
         k.start()
         response = authorise(request)
@@ -428,27 +465,27 @@ class ViewsTestCase(TestCase):
 
     def test_no_signed_data(self):
         request = self.factory.get(
-            '/oauth/shibcallback',
+            '/oauth/adcallback',
             {
             }
         )
-        response = shibcallback(request)
+        response = adcallback(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             content["error"],
-            "No signed app data returned from Shibboleth."
-            " Please use the authorise endpoint."
+            ("No signed app data returned from Azure AD."
+            " Please use the authorise endpoint.")
         )
 
     def test_invalid_signed_data(self):
         request = self.factory.get(
-            '/oauth/shibcallback',
+            '/oauth/adcallback',
             {
-                'appdata': "invalid"
+                'state': "invalid"
             }
         )
-        response = shibcallback(request)
+        response = adcallback(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
@@ -464,12 +501,12 @@ class ViewsTestCase(TestCase):
     )
     def test_expired_signature(self, TimestampSigner):
         request = self.factory.get(
-            '/oauth/shibcallback',
+            '/oauth/adcallback',
             {
-                'appdata': "invalid"
+                'state': "invalid"
             }
         )
-        response = shibcallback(request)
+        response = adcallback(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
@@ -480,7 +517,7 @@ class ViewsTestCase(TestCase):
         )
 
     @parameterized.expand([
-        ('/oauth/shibcallback'),
+        ('/oauth/adcallback'),
         ('/dashboard/user/login.callback'),
         ('/settings/user/login.callback')
     ])
@@ -539,7 +576,7 @@ class ViewsTestCase(TestCase):
             self.assertEqual(response.status_code, 400)
 
     @parameterized.expand([
-        ('/oauth/shibcallback', 200, True),
+        ('/oauth/adcallback', 200, True),
         ('/dashboard/user/login.callback', 302, False),
         ('/settings/user/login.callback', 302, False)
     ])
@@ -564,74 +601,98 @@ class ViewsTestCase(TestCase):
         data = app_.client_id + state
         signed_data = signer.sign(data)
 
+        user_data = {
+            'userPrincipalName': 'eppn',
+            'mailNickname': 'cn',
+            'department': 'department',
+            'givenName': 'givenname',
+            'displayName': 'displayname',
+            'employeeId': 'xxxtest01',
+            'mail': 'mail',
+            'surname': 'sn',
+        }
+
+        group_data = [{'mailNickname': 'uclintranetgroups'}]
+        k = unittest.mock.patch('requests.post', side_effect=mocked_adcallback_post)
+        k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs: mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=group_data))
+        k.start()
+        k2.start()
         response = self.client.get(
             url,
             {
-                'appdata': signed_data
+                'state': signed_data
             },
-            HTTP_EPPN='eppn',
-            HTTP_CN='cn',
-            HTTP_DEPARTMENT='department',
-            HTTP_GIVENNAME='givenname',
-            HTTP_DISPLAYNAME='displayname',
-            HTTP_EMPLOYEEID='xxxtest01',
-            HTTP_UCLINTRANETGROUPS='uclintranetgroups',
-            HTTP_MAIL='mail',
-            HTTP_SN='sn',
+            # TODO how to test Azure AD? user data isn't passed via headers anymore!
+            # mock the AZURE_AD_ROOT/oauth2/v2.0/token URL?
             HTTP_AFFILIATION='affiliation',
             HTTP_UNSCOPED_AFFILIATION='unscoped_affiliation'
         )
+        k.stop()
+        k2.stop()
+
         # Load the new test user from DB
-        test_user_ = User.objects.get(employee_id='xxxtest01')
+        test_user_ = User.objects.get(employee_id=user_data['employeeId'])
         self.assertEqual(response.status_code, expected_code)
         self.assertEqual(self.client.session['user_id'], test_user_.id)
         # Test that all fields were filled in correctly.
-        self.assertEqual(test_user_.email, "eppn")
-        self.assertEqual(test_user_.cn, "cn")
-        self.assertEqual(test_user_.employee_id, "xxxtest01")
+        self.assertEqual(test_user_.email, user_data['userPrincipalName'])
+        self.assertEqual(test_user_.cn, user_data['mailNickname'])
+        self.assertEqual(test_user_.employee_id, user_data['employeeId'])
         self.assertEqual(test_user_.raw_intranet_groups, "uclintranetgroups")
-        self.assertEqual(test_user_.department, "department")
-        self.assertEqual(test_user_.given_name, "givenname")
-        self.assertEqual(test_user_.full_name, "displayname")
-        self.assertEqual(test_user_.mail, "mail")
-        self.assertEqual(test_user_.sn, "sn")
-        self.assertEqual(test_user_.affiliation, "affiliation")
-        self.assertEqual(test_user_.unscoped_affiliation, "unscoped_affiliation")
+        self.assertEqual(test_user_.department, user_data['department'])
+        self.assertEqual(test_user_.given_name, user_data['givenName'])
+        self.assertEqual(test_user_.full_name, user_data['displayName'])
+        self.assertEqual(test_user_.mail, user_data['mail'])
+        self.assertEqual(test_user_.sn, user_data['surname'])
+        # TODO
+        # self.assertEqual(test_user_.affiliation, "affiliation")
+        # self.assertEqual(test_user_.unscoped_affiliation, "unscoped_affiliation")
 
         # Now update all the values.
+        user_data = {
+            'userPrincipalName': 'testxxx@ucl.ac.uk',
+            'mailNickname': 'testxxx',
+            'department': 'Dept of Tests',
+            'givenName': 'Test New Name',
+            'displayName': 'Test User',
+            'employeeId': 'xxxtest01',
+            'mail': 'test.name.01@ucl.ac.uk',
+            'surname': 'Second Name',
+        }
+        group_data = [{'mailNickname': 'ucl-all'}, {'onPremisesSamAccountName': 'ucl-tests-all'}]
+        k = unittest.mock.patch('requests.post', side_effect=mocked_adcallback_post)
+        k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs: mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=group_data))
+        k.start()
+        k2.start()
         response = self.client.get(
             url,
             {
-                'appdata': signed_data
+                'state': signed_data
             },
-            HTTP_EPPN='testxxx@ucl.ac.uk',
-            HTTP_CN='testxxx',
-            HTTP_DEPARTMENT='Dept of Tests',
-            HTTP_GIVENNAME='Test New Name',
-            HTTP_DISPLAYNAME='Test User',
-            HTTP_EMPLOYEEID='xxxtest01',
-            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all',
-            HTTP_MAIL='test.name.01@ucl.ac.uk',
-            HTTP_SN='Second Name',
-            HTTP_AFFILIATION='test@ucl.ac.uk',
-            HTTP_UNSCOPED_AFFILIATION='test'
+            # TODO
+            # HTTP_AFFILIATION='test@ucl.ac.uk',
+            # HTTP_UNSCOPED_AFFILIATION='test'
         )
+        k.stop()
+        k2.stop()
+
         # Reload the test user from DB
         test_user_ = User.objects.get(id=test_user_.id)
         self.assertEqual(response.status_code, expected_code)
         self.assertEqual(self.client.session['user_id'], test_user_.id)
         # Test that all fields were updated correctly.
-        self.assertEqual(test_user_.email, "testxxx@ucl.ac.uk")
-        self.assertEqual(test_user_.cn, "testxxx")
-        self.assertEqual(test_user_.employee_id, "xxxtest01")
+        self.assertEqual(test_user_.email, user_data['userPrincipalName'])
+        self.assertEqual(test_user_.cn, user_data['mailNickname'])
+        self.assertEqual(test_user_.employee_id, user_data['employeeId'])
         self.assertEqual(test_user_.raw_intranet_groups, "ucl-all;ucl-tests-all")
-        self.assertEqual(test_user_.department, "Dept of Tests")
-        self.assertEqual(test_user_.given_name, "Test New Name")
-        self.assertEqual(test_user_.full_name, "Test User")
-        self.assertEqual(test_user_.mail, "test.name.01@ucl.ac.uk")
-        self.assertEqual(test_user_.sn, "Second Name")
-        self.assertEqual(test_user_.affiliation, "test@ucl.ac.uk")
-        self.assertEqual(test_user_.unscoped_affiliation, "test")
+        self.assertEqual(test_user_.department, user_data['department'])
+        self.assertEqual(test_user_.given_name, user_data['givenName'])
+        self.assertEqual(test_user_.full_name, user_data['displayName'])
+        self.assertEqual(test_user_.mail, user_data['mail'])
+        self.assertEqual(test_user_.sn, user_data['surname'])
+        # TODO
+        # self.assertEqual(test_user_.affiliation, "test@ucl.ac.uk")
+        # self.assertEqual(test_user_.unscoped_affiliation, "test")
 
         if initial_data_exists:
             initial_data = json.loads(response.context['initial_data'])
@@ -650,121 +711,13 @@ class ViewsTestCase(TestCase):
             self.assertDictEqual(
                 initial_data['user'],
                 {
-                    "full_name": "Test User",
-                    "cn": "testxxx",
-                    "email": "testxxx@ucl.ac.uk",
-                    "department": "Dept of Tests",
-                    "upi": "xxxtest01"
+                    "full_name": user_data['displayName'],
+                    "cn": user_data['mailNickname'],
+                    "email": user_data['userPrincipalName'],
+                    "department": user_data['department'],
+                    "upi": user_data['employeeId']
                 }
             )
-
-        # Now lets test for when UCL doesn't give us department the department,
-        # givenname and displayname.
-        response = self.client.get(
-            url,
-            {
-                'appdata': signed_data
-            },
-            HTTP_EPPN='testxxx@ucl.ac.uk',
-            HTTP_CN='testxxx',
-            # NOTE: missing HTTP_DEPARTMENT, HTTP_GIVENNAME, HTTP_DISPLAYNAME,
-            # HTTP_MAIL, HTTP_SN, HTTP_AFFILIATION and HTTP_UNSCOPED_AFFILIATION
-            HTTP_EMPLOYEEID='xxxtest01',
-            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
-        )
-        self.assertEqual(response.status_code, expected_code)
-
-        # Reload the test user from DB
-        test_user_ = User.objects.get(id=test_user_.id)
-
-        # If a non-critical HTTP header is not passed, we don't want to
-        # overwrite the previous value with an empty string.
-        self.assertEqual(
-            test_user_.department,
-            "Dept of Tests"
-        )
-        self.assertEqual(
-            test_user_.given_name,
-            "Test New Name"
-        )
-        self.assertEqual(
-            test_user_.full_name,
-            "Test User"
-        )
-        self.assertEqual(
-            test_user_.mail,
-            "test.name.01@ucl.ac.uk"
-        )
-        self.assertEqual(
-            test_user_.sn,
-            "Second Name"
-        )
-        self.assertEqual(
-            test_user_.affiliation,
-            "test@ucl.ac.uk"
-        )
-        self.assertEqual(
-            test_user_.unscoped_affiliation,
-            "test"
-        )
-
-        # Now let's test when critical fields are missing
-        response = self.client.get(
-            url,
-            {
-                'appdata': signed_data
-            },
-            # NOTE: missing critical field eppn
-            HTTP_CN='testxxx',
-            HTTP_EMPLOYEEID='xxxtest01',
-            HTTP_DEPARTMENT='Dept of Tests',
-            HTTP_GIVENNAME='Test New Name',
-            HTTP_DISPLAYNAME='Test User',
-            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all',
-            HTTP_MAIL='test.name.01@ucl.ac.uk',
-            HTTP_SN='Second Name',
-            HTTP_AFFILIATION='test@ucl.ac.uk',
-            HTTP_UNSCOPED_AFFILIATION='test'
-        )
-        self.assertEqual(response.status_code, 400)
-
-        response = self.client.get(
-            url,
-            {
-                'appdata': signed_data
-            },
-            HTTP_EPPN='testxxx@ucl.ac.uk',
-            # NOTE: missing critical field cn
-            HTTP_DEPARTMENT='Dept of Tests',
-            HTTP_GIVENNAME='Test New Name',
-            HTTP_DISPLAYNAME='Test User',
-            HTTP_EMPLOYEEID='xxxtest01',
-            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all',
-            HTTP_MAIL='test.name.01@ucl.ac.uk',
-            HTTP_SN='Second Name',
-            HTTP_AFFILIATION='test@ucl.ac.uk',
-            HTTP_UNSCOPED_AFFILIATION='test'
-        )
-        self.assertEqual(response.status_code, 400)
-
-        response = self.client.get(
-            url,
-            {
-                'appdata': signed_data
-            },
-            HTTP_EPPN='testxxx@ucl.ac.uk',
-            HTTP_CN='testxxx',
-            # NOTE: missing critical field employee_id (aka UPI)
-            HTTP_DEPARTMENT='Dept of Tests',
-            HTTP_GIVENNAME='Test New Name',
-            HTTP_DISPLAYNAME='Test User',
-            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all',
-            HTTP_MAIL='test.name.01@ucl.ac.uk',
-            HTTP_SN='Second Name',
-            HTTP_AFFILIATION='test@ucl.ac.uk',
-            HTTP_UNSCOPED_AFFILIATION='test'
-        )
-        self.assertEqual(response.status_code, 400)
 
     def test_valid_shibcallback_test_account(self):
         dev_user_ = User.objects.create(
@@ -794,7 +747,7 @@ class ViewsTestCase(TestCase):
         signed_data = signer.sign(data)
 
         response = self.client.get(
-            '/oauth/shibcallback',
+            '/oauth/adcallback',
             {
                 'appdata': signed_data
             },
@@ -879,19 +832,29 @@ class ViewsTestCase(TestCase):
         )
         token.save()
 
+        user_data = {
+            'userPrincipalName': 'testxxx@ucl.ac.uk',
+            'mailNickname': 'testxxx',
+            'department': 'Dept of Tests',
+            'givenName': 'Test New Name',
+            'displayName': 'Test User',
+            'employeeId': 'xxxtest01',
+            'mail': 'test.name.01@ucl.ac.uk',
+            'surname': 'Second Name',
+        }
+        group_data = [{'mailNickname': 'ucl-all'}, {'onPremisesSamAccountName': 'ucl-tests-all'}]
+        k = unittest.mock.patch('requests.post', side_effect=mocked_adcallback_post)
+        k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs: mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=group_data))
+        k.start()
+        k2.start()
         response = self.client.get(
-            '/oauth/shibcallback',
+            '/oauth/adcallback',
             {
-                'appdata': signed_data
+                'state': signed_data
             },
-            HTTP_EPPN='testxxx@ucl.ac.uk',
-            HTTP_CN='testxxx',
-            HTTP_DEPARTMENT='Dept of Tests',
-            HTTP_GIVENNAME='Test New Name',
-            HTTP_DISPLAYNAME='Test User',
-            HTTP_EMPLOYEEID='xxxtest01',
-            HTTP_UCLINTRANETGROUPS='ucl-all;ucl-tests-all'
         )
+        k.stop()
+        k2.stop()
         self.assertEqual(response.status_code, 302)
 
     def test_userallow_no_post_data(self):

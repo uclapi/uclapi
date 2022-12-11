@@ -131,7 +131,7 @@ def validate_azure_ad_callback(token_data):
 
     # e.g., engscifac-all;compsci-all;schsci-all
     groups = ';'.join(map(
-        lambda g: g['onPremisesSamAccountName'] or g['mailNickname'],
+        lambda g: g.get('onPremisesSamAccountName') or g['mailNickname'],
         user_groups['value']
     ))
 
