@@ -125,20 +125,21 @@ def validate_azure_ad_callback(token_data):
     # (aka UPI), also unique in the DB
     employee_id = user_info['employeeId']  # e.g., flname12
 
-    department = user_info['department']  # e.g., Dept of Computer Science
-    given_name = user_info['givenName']  # e.g. Firstname
-    display_name = user_info['displayName']  # e.g., Firstname Lastname
+    department = user_info.get('department', '')  # e.g., Dept of Computer Science
+    given_name = user_info.get('givenName', '')  # e.g. Firstname
+    display_name = user_info.get('displayName', '')  # e.g., Firstname Lastname
 
     # e.g., engscifac-all;compsci-all;schsci-all
     groups = ';'.join(map(
         lambda g: g.get('onPremisesSamAccountName') or g['mailNickname'],
-        user_groups['value']
+        user_groups.get('value', [])
     ))
 
-    mail = user_info['mail']  # e.g., firstname.lastname.year@ucl.ac.uk
+    mail = user_info.get('mail', '')  # e.g., firstname.lastname.year@ucl.ac.uk
+    # TODO
     affiliation = 'TODO'
     unscoped_affiliation = 'TODO'
-    sn = user_info['surname']
+    sn = user_info.get('surname', '')
 
     # If a user has never used the API before then we need to sign them up
     try:

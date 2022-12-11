@@ -61,11 +61,9 @@ def mocked_ad_graph_get(*args, **kwargs):
 
     if request_url == os.environ.get("AZURE_GRAPH_ROOT") + '/me':
         response_content = json.dumps(kwargs['user_data'])
-
     elif request_url == os.environ.get("AZURE_GRAPH_ROOT") + '/me/transitiveMemberOf':
-        response_content = json.dumps({
-            'value': kwargs['group_data']
-        })
+        response_content = json.dumps({'value': kwargs['group_data']})
+
     response = Response()
     response.status_code = 200
     response._content = str.encode(response_content)
@@ -522,7 +520,7 @@ class ViewsTestCase(TestCase):
         ('/settings/user/login.callback')
     ])
     def test_invalid_shibcallback_real_account(self, url):
-        """Tests that we gracefully handle invalid Shibboleth headers"""
+        """Tests that we gracefully handle User integrity violations"""
         dev_user_ = User.objects.create(
             email="testdev@ucl.ac.uk",
             cn="test",
@@ -548,10 +546,20 @@ class ViewsTestCase(TestCase):
         )
         data = app_.client_id + state
         signed_data = signer.sign(data)
+
         # Creation of new user should fail as cn has to be unique!
         # The "with" hack is needed when purposefully causing DB integrity
         # violations. @see: https://stackoverflow.com/a/23326971
         with transaction.atomic():
+            user_data = {
+                'userPrincipalName': 'eppn',
+                'mailNickname': test_user.cn,
+                'employeeId': 'newUser',
+            }
+            k = unittest.mock.patch('requests.post', side_effect=mocked_adcallback_post)
+            k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs: mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=[]))
+            k.start()
+            k2.start()
             response = self.client.get(
                 url,
                 {
@@ -562,8 +570,20 @@ class ViewsTestCase(TestCase):
                 HTTP_EMPLOYEEID='newUser',
             )
             self.assertEqual(response.status_code, 400)
+            k.stop()
+            k2.stop()
+
         # This update should fail as cn should be unique
         with transaction.atomic():
+            user_data = {
+                'userPrincipalName': 'eppn',
+                'mailNickname': dev_user_.cn,
+                'employeeId': test_user.employee_id,
+            }
+            k = unittest.mock.patch('requests.post', side_effect=mocked_adcallback_post)
+            k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs: mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=[]))
+            k.start()
+            k2.start()
             response = self.client.get(
                 url,
                 {
@@ -574,6 +594,9 @@ class ViewsTestCase(TestCase):
                 HTTP_EMPLOYEEID=test_user.employee_id,
             )
             self.assertEqual(response.status_code, 400)
+            k.stop()
+            k2.stop()
+
 
     @parameterized.expand([
         ('/oauth/adcallback', 200, True),
