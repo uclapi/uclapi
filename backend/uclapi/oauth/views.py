@@ -505,7 +505,8 @@ def userdata(request, *args, **kwargs):
         "is_student": is_student,
         "ucl_groups": token.user.raw_intranet_groups.split(';'),
         "sn": token.user.sn,
-        "mail": token.user.mail
+        "mail": token.user.mail,
+        "user_types": token.user.user_types.split(';')
     }
 
     return PrettyJsonResponse(

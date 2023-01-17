@@ -90,10 +90,11 @@ def validate_azure_ad_callback(token_data):
     # To get some of this data, we could decode the JWT, but we need to get at least employee ID which
     # doesn't come in the JWT so we just fetch all the info now
     user_info_result = requests.get(os.environ.get("AZURE_GRAPH_ROOT") +
-                                    '/me?$select=department,surname,givenName,displayName,userPrincipalName,employeeId,mail,mailNickname',
+                                    '/me?$select=department,surname,givenName,displayName,userPrincipalName,employeeId,mail,mailNickname,employeeType',
                                     headers={'Authorization': 'Bearer ' + token_data['access_token']})
 
     if user_info_result.status_code != 200:
+        print(user_info_result.text)
         return (
             f"There was an error getting your details from Azure. If the issues persist "
             f"please contact the UCL API Team to rectify this. "
@@ -109,6 +110,7 @@ def validate_azure_ad_callback(token_data):
 
     # TODO: do we really want to treat this as an error?
     if user_groups_result.status_code != 200:
+        print(user_groups_result.text)
         return (
             f"There was an error getting your details from Azure. If the issues persist "
             f"please contact the UCL API Team to rectify this. "
@@ -136,9 +138,10 @@ def validate_azure_ad_callback(token_data):
     ))
 
     mail = user_info.get('mail', '')  # e.g., firstname.lastname.year@ucl.ac.uk
-    # TODO
-    affiliation = 'TODO'
-    unscoped_affiliation = 'TODO'
+
+    # Convert comma-separated-with-space string into semicolon-separated string (for consistency with the groups field)
+    # e.g., Alumnus;Staff;P/G;Honorary
+    user_types = ';'.join(user_info.employee_type.split(', '))
     sn = user_info.get('surname', '')
 
     # If a user has never used the API before then we need to sign them up
@@ -149,8 +152,7 @@ def validate_azure_ad_callback(token_data):
         try:
             user = dashboard.models.User.objects.create(
                 email=eppn, full_name=display_name, given_name=given_name, department=department, cn=cn,
-                raw_intranet_groups=groups, employee_id=employee_id, mail=mail, affiliation=affiliation,
-                unscoped_affiliation=unscoped_affiliation, sn=sn
+                raw_intranet_groups=groups, employee_id=employee_id, mail=mail, user_types=user_types, sn=sn
             )
         except IntegrityError:
             return (
@@ -166,8 +168,7 @@ def validate_azure_ad_callback(token_data):
         user.department = department if department else user.department
         user.raw_intranet_groups = groups if groups else user.raw_intranet_groups
         user.mail = mail if mail else user.mail
-        user.affiliation = affiliation if affiliation else user.affiliation
-        user.unscoped_affiliation = unscoped_affiliation if unscoped_affiliation else user.unscoped_affiliation
+        user.user_types = user_types if user_types else user.user_types
         user.sn = sn if sn else user.sn
         try:
             user.save()

@@ -633,6 +633,7 @@ class ViewsTestCase(TestCase):
             'employeeId': 'xxxtest01',
             'mail': 'mail',
             'surname': 'sn',
+            'user_types': 'U/G'
         }
 
         group_data = [{'mailNickname': 'uclintranetgroups'}]
@@ -645,10 +646,6 @@ class ViewsTestCase(TestCase):
             {
                 'state': signed_data
             },
-            # TODO how to test Azure AD? user data isn't passed via headers anymore!
-            # mock the AZURE_AD_ROOT/oauth2/v2.0/token URL?
-            HTTP_AFFILIATION='affiliation',
-            HTTP_UNSCOPED_AFFILIATION='unscoped_affiliation'
         )
         k.stop()
         k2.stop()
@@ -667,9 +664,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(test_user_.full_name, user_data['displayName'])
         self.assertEqual(test_user_.mail, user_data['mail'])
         self.assertEqual(test_user_.sn, user_data['surname'])
-        # TODO
-        # self.assertEqual(test_user_.affiliation, "affiliation")
-        # self.assertEqual(test_user_.unscoped_affiliation, "unscoped_affiliation")
+        self.assertEqual(test.user_.user_types, user_data['user_types'])
 
         # Now update all the values.
         user_data = {
@@ -681,6 +676,7 @@ class ViewsTestCase(TestCase):
             'employeeId': 'xxxtest01',
             'mail': 'test.name.01@ucl.ac.uk',
             'surname': 'Second Name',
+            'user_types': 'P/G',
         }
         group_data = [{'mailNickname': 'ucl-all'}, {'onPremisesSamAccountName': 'ucl-tests-all'}]
         k = unittest.mock.patch('requests.post', side_effect=mocked_adcallback_post)
@@ -692,9 +688,6 @@ class ViewsTestCase(TestCase):
             {
                 'state': signed_data
             },
-            # TODO
-            # HTTP_AFFILIATION='test@ucl.ac.uk',
-            # HTTP_UNSCOPED_AFFILIATION='test'
         )
         k.stop()
         k2.stop()
@@ -713,9 +706,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(test_user_.full_name, user_data['displayName'])
         self.assertEqual(test_user_.mail, user_data['mail'])
         self.assertEqual(test_user_.sn, user_data['surname'])
-        # TODO
-        # self.assertEqual(test_user_.affiliation, "test@ucl.ac.uk")
-        # self.assertEqual(test_user_.unscoped_affiliation, "test")
+        self.assertEqual(test_user_.user_types, user_data['user_types'])
 
         if initial_data_exists:
             initial_data = json.loads(response.context['initial_data'])

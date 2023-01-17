@@ -25,8 +25,8 @@ class User(models.Model):
     department = models.CharField(max_length=1000)
     employee_id = models.CharField(max_length=100, unique=True)
     raw_intranet_groups = models.CharField(max_length=2000)
-    affiliation = models.CharField(max_length=2000, default='')
-    unscoped_affiliation = models.CharField(max_length=2000, default='')
+    user_types = models.CharField(max_length=200, default='')
+
     # Ideally we'd mandate mail to be unique in the database but as we already have rows in the table, we won't know
     # what value to put in the existing rows during the migration.
     # Note email and mail are very similar... Here's the difference (AFAICT):
