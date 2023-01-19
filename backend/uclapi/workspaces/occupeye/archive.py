@@ -117,7 +117,7 @@ class OccupEyeArchive:
                 logging.info("      [+] Sensor in same location")
                 logging.info(f"      [+] Updating {validate['hardware_id']} -> {sensor['HardwareID']}")
                 logging.info(f"      [+] Updating {validate['survey_device_id']} -> {sensor['SurveyDeviceID']}")
-                obj = Sensors.objects.get(sensor_id=sensor["SensorID"])
+                obj = Sensors.objects.get(sensor_id=sensor["SensorID"], survey_id=survey.survey_id)
 
                 time = datetime.strptime(sensor["TriggerDate"], "%Y-%m-%d")
                 time = time.replace(tzinfo=timezone.utc)
