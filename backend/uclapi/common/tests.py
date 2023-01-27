@@ -495,6 +495,30 @@ class OAuthTokenCheckerTest(TestCase):
             self.valid_oauth_token.token
         )
 
+    def test_deleted_app_valid_token(self):
+        self.valid_oauth_token.active = True
+        self.valid_oauth_token.save()
+        self.valid_app.deleted = True
+        self.valid_app.save()
+
+        result = _check_oauth_token_issues(
+            self.valid_oauth_token.token,
+            self.valid_app.client_secret,
+            ['timetable']
+        )
+        self.assertTrue(isinstance(result, JsonResponse))
+        self.assertEqual(
+            result.status_code,
+            403
+        )
+        data = json.loads(result.content.decode())
+        self.assertFalse(data["ok"])
+        self.assertEqual(
+            data["error"],
+            "The token is invalid as the developer has "
+            "deleted their app."
+        )
+
 
 class LastModifiedHeaderTestCase(TestCase):
     base_redis_key = "http:headers:Last-Modified:"

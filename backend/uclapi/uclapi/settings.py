@@ -13,9 +13,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 import re
 from distutils.util import strtobool
-from django.core.management.utils import get_random_secret_key
 
-import requests
+from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -28,21 +27,18 @@ SECRET_KEY = os.environ.get("SECRET_KEY", get_random_secret_key())
 if SECRET_KEY == "" or SECRET_KEY is None:
     SECRET_KEY = get_random_secret_key()
 
-CACHET_TOKEN = os.environ.get("CACHET_TOKEN")
-CACHET_URL = os.environ.get("CACHET_URL")
 # SECURITY WARNING: don't run with debug turned on in production!
 # This value should be set by the UCLAPI_PRODUCTION environment
 # variable anyway. If in production, debug should be false.
 DEBUG = not strtobool(os.environ.get("UCLAPI_PRODUCTION"))
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "testserver"]
 
 # If a domain is specified then make this an allowed host
 if os.environ.get("UCLAPI_DOMAIN"):
     ALLOWED_HOSTS.append(os.environ.get("UCLAPI_DOMAIN"))
 
 UCLAPI_DOMAIN_CURRENT = os.environ.get("UCLAPI_DOMAIN")
-
 
 # Application definition
 
@@ -64,7 +60,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'workspaces',
     'django_celery_beat',
-    'webpack_loader'
+    'webpack_loader',
+    'libcal',
 ]
 
 MIDDLEWARE = [
@@ -146,12 +143,14 @@ DATABASE_POOL_ARGS = {
 }
 
 DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 if os.environ.get('SENTRY_DSN'):
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
     from sentry_sdk.integrations.redis import RedisIntegration
     from sentry_sdk.integrations.logging import ignore_logger
+
 
     def remove_token(event, _):
         scrubbers_keys = ['token', 'client_secret', 'X-RateLimit-Remaining', 'X-RateLimit-Limit',
@@ -161,6 +160,7 @@ if os.environ.get('SENTRY_DSN'):
                            re.compile(r"[a-f0-9]{64}")]
         event = recursive_explore(event, scrubbers_keys, scrubbers_regex)
         return event
+
 
     def recursive_explore(var, keys, regex):
         if isinstance(var, list):
@@ -172,6 +172,7 @@ if os.environ.get('SENTRY_DSN'):
             if reg.search(str(var)):
                 var = reg.sub('REDACTED', str(var), 0)
         return var
+
 
     sentry_sdk.init(dsn=os.environ.get('SENTRY_DSN'),
                     environment=os.environ.get('SENTRY_DSN_ENV', 'testing'),
@@ -243,7 +244,7 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-ROOMBOOKINGS_SETID = 'LIVE-21-22'
+ROOMBOOKINGS_SETID = 'LIVE-22-23'
 
 # This dictates how many Medium articles we scrape
 MEDIUM_ARTICLE_QUANTITY = 3

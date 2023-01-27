@@ -144,44 +144,6 @@ export default class App extends React.Component {
                 </Column>
               </Container>
               </Panel>
-              <Panel header={`Webhook Settings`} showArrow>
-              <Container noPadding>
-                <Column
-                  width='1-1'
-                  className='settings-section'
-                >
-                  <Field
-                    title="Verification Secret"
-                    content={app.webhook.verification_secret}
-                    canCopy
-                    onRefresh={() => actions.regenVerificationSecret(index)}
-                  />
-                  <Field
-                    title="Webhook URL"
-                    content={app.webhook.url==`` ? `https://` : app.webhook.url}
-                    onSave={(value) => actions.webhook.saveURL(index, value) }
-                  />
-                  <Field
-                    title="'siteid' (optional)"
-                    content={app.webhook.siteid}
-                    onSave={(value) => actions.webhook.saveSiteID(index, value)}
-                  />
-                  <Field
-                    title="'roomid' (optional)"
-                    content={app.webhook.roomid}
-                    onSave={(value) => actions.webhook.saveRoomID(index, value)}
-                  />
-                  <Field
-                    title="Contact (optional)"
-                    content={app.webhook.contact}
-                    onSave={(value) => actions.webhook.saveContact(
-                        index, value
-                      )
-                    }
-                  />
-                </Column>
-              </Container>
-              </Panel>
               <Panel header={`Analytics`} showArrow>
               <Container noPadding>
                 <Column width='1-1'>

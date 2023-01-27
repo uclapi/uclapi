@@ -117,7 +117,7 @@ class OccupEyeArchive:
                 logging.info("      [+] Sensor in same location")
                 logging.info(f"      [+] Updating {validate['hardware_id']} -> {sensor['HardwareID']}")
                 logging.info(f"      [+] Updating {validate['survey_device_id']} -> {sensor['SurveyDeviceID']}")
-                obj = Sensors.objects.get(sensor_id=sensor["SensorID"])
+                obj = Sensors.objects.get(sensor_id=sensor["SensorID"], survey_id=survey.survey_id)
 
                 time = datetime.strptime(sensor["TriggerDate"], "%Y-%m-%d")
                 time = time.replace(tzinfo=timezone.utc)
@@ -151,6 +151,8 @@ class OccupEyeArchive:
         end_datetime = datetime.now().replace(microsecond=0, second=0, minute=0, hour=0)
         for survey in Surveys.objects.all():
             logging.info(f"[+] Updating {survey.survey_id} from {survey.last_updated} to {end_datetime}")
+            sensors_updated = True
+
             for step in self.time_steps(survey.last_updated, end_datetime):
                 start_date = step[0].strftime("%Y-%m-%d")
                 end_date = step[1].strftime("%Y-%m-%d")
@@ -159,6 +161,12 @@ class OccupEyeArchive:
                 updates = 0
                 sensors = self._endpoint.request(
                     self._const.URL_ARCHIVE.format(start_date, end_date, survey.survey_id))
+
+                # If sensors fails to fetch then move onto the next survey
+                if sensors is None:
+                    logging.info("   [+] Request Failed Skipping")
+                    sensors_updated = False
+                    break
 
                 # Sensors where the hardware id or survey device id have changed will have two sets of data
                 # We want to keep the data with the greatest hardware ID or survey device ID
@@ -213,8 +221,10 @@ class OccupEyeArchive:
                 Historical.objects.bulk_create(batch_objects, batch_size=65536, ignore_conflicts=True)
                 logging.info(f"{updates} updates")
 
-            survey.last_updated = end_datetime
-            survey.save()
+            if sensors_updated:
+                survey.last_updated = end_datetime
+                survey.save()
+
         logging.info("[+] Setting Last-Modified key")
         last_modified_key = "http:headers:Last-Modified:Workspaces-Historical"
 

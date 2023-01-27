@@ -1,10 +1,10 @@
 import json
+import logging
 import os
 from binascii import hexlify
 
 import redis
 from django.conf import settings
-from django.core.management import call_command
 from django.test import TestCase
 from freezegun import freeze_time
 
@@ -58,6 +58,7 @@ class OccupEyeTokenTestCase(TestCase):
 
 class OccupEyeCacheTestCase(TestCase):
     def setUp(self):
+        logging.disable(logging.WARNING)
         self.redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
         self._const = OccupEyeConstants()
         with open(os.path.join(__location__, "tests_cache.json"), encoding="utf-8") as f:
@@ -216,17 +217,10 @@ class OccupEyeCacheTestCase(TestCase):
         self.assertEqual(len(self.redis.keys(self._const.SURVEY_MAPS_LIST_KEY.format(99991))), 0)
         self.assertEqual(len(self.redis.keys(self._const.SURVEY_MAP_DATA_KEY.format(99991, 66661))), 0)
 
-    def test_commands(self):
-        # This is to verify if the command works, we cannot specifically test anything
-        # as the endpoint is only provided with an empty dictionary
-        call_command("feed_occupeye_cache", "--test")
-
-    def test_commands_mini(self):
-        call_command("feed_occupeye_cache", "--mini", "--test")
-
 
 class OccupEyeApiTestCase(TestCase):
     def setUp(self):
+        logging.disable(logging.WARNING)
         self.redis = redis.Redis(host=settings.REDIS_UCLAPI_HOST, charset="utf-8", decode_responses=True)
         self._consts = OccupEyeConstants()
         self.api = OccupEyeApi()

@@ -7,7 +7,7 @@ import {
   grey,
   pink,
 } from '@material-ui/core/colors'
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
+import { createTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import { Footer, NavBar } from 'Layout/Items.jsx'
 import React, { useState , useEffect } from 'react'
 
@@ -31,7 +31,7 @@ const {
 const white = `#ffffff`
 const fullBlack = `#000000`
 
-const muiTheme = createMuiTheme({
+const muiTheme = createTheme({
   fontFamily: `Roboto, sans-serif`,
   palette: {
     primary1Color: `#434343`,
