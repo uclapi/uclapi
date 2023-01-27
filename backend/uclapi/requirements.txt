@@ -4,7 +4,7 @@ celery==5.2.7
 django-celery-beat==2.4.0
 ciso8601==2.3.0
 cx-Oracle==8.3.0
-Django==3.2.13
+Django==4.1.5
 deepdiff==6.2.3
 django-cors-headers==3.13.0
 django-dotenv==1.4.2
