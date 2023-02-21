@@ -519,7 +519,7 @@ class ViewsTestCase(TestCase):
         ('/dashboard/user/login.callback'),
         ('/settings/user/login.callback')
     ])
-    def test_invalid_shibcallback_real_account(self, url):
+    def test_invalid_adcallback_real_account(self, url):
         """Tests that we gracefully handle User integrity violations"""
         dev_user_ = User.objects.create(
             email="testdev@ucl.ac.uk",
@@ -565,9 +565,6 @@ class ViewsTestCase(TestCase):
                 {
                     'appdata': signed_data
                 },
-                HTTP_EPPN='eppn',
-                HTTP_CN=test_user.cn,
-                HTTP_EMPLOYEEID='newUser',
             )
             self.assertEqual(response.status_code, 400)
             k.stop()
@@ -589,9 +586,6 @@ class ViewsTestCase(TestCase):
                 {
                     'appdata': signed_data
                 },
-                HTTP_EPPN='eppn',
-                HTTP_CN=dev_user_.cn,
-                HTTP_EMPLOYEEID=test_user.employee_id,
             )
             self.assertEqual(response.status_code, 400)
             k.stop()
@@ -603,7 +597,7 @@ class ViewsTestCase(TestCase):
         ('/dashboard/user/login.callback', 302, False),
         ('/settings/user/login.callback', 302, False)
     ])
-    def test_valid_shibcallback_real_account(self, url, expected_code, initial_data_exists):
+    def test_valid_adcallback_real_account(self, url, expected_code, initial_data_exists):
         dev_user_ = User.objects.create(
             email="testdev@ucl.ac.uk",
             cn="test",
@@ -733,81 +727,7 @@ class ViewsTestCase(TestCase):
                 }
             )
 
-    def test_valid_shibcallback_test_account(self):
-        dev_user_ = User.objects.create(
-            email="testdev@ucl.ac.uk",
-            cn="test",
-            given_name="Test Dev",
-            employee_id='testdev01'
-        )
-        app_ = App.objects.create(
-            user=dev_user_,
-            name="An App",
-            callback_url="www.somecallbackurl.com/callback"
-        )
-        test_user_ = User.objects.create(
-            email="testxxx@ucl.ac.uk",
-            cn="testxxx",
-            given_name="Test User",
-            employee_id='xxxtest01'
-        )
-
-        signer = signing.TimestampSigner()
-        # Generate a random state for testing
-        state = ''.join(
-            random.choices(string.ascii_letters + string.digits, k=32)
-        )
-        data = app_.client_id + state
-        signed_data = signer.sign(data)
-
-        response = self.client.get(
-            '/oauth/adcallback',
-            {
-                'appdata': signed_data
-            },
-            HTTP_EPPN='testxxx@ucl.ac.uk',
-            HTTP_CN='testxxx',
-            HTTP_DEPARTMENT='Shibtests',
-            HTTP_GIVENNAME='Test',
-            HTTP_DISPLAYNAME='Test User',
-            HTTP_EMPLOYEEID='xxxtest01',
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(self.client.session['user_id'], test_user_.id)
-
-        initial_data = json.loads(response.context['initial_data'])
-        self.assertEqual(
-            initial_data['app_name'],
-            app_.name
-        )
-        self.assertEqual(
-            initial_data['client_id'],
-            app_.client_id
-        )
-        self.assertEqual(
-            initial_data['state'],
-            state
-        )
-        self.assertDictEqual(
-            initial_data['user'],
-            {
-                "full_name": "Test User",
-                "cn": "testxxx",
-                "email": "testxxx@ucl.ac.uk",
-                "department": "Shibtests",
-                "upi": "xxxtest01"
-            }
-        )
-
-        # Reload the test user from DB
-        test_user_ = User.objects.get(id=test_user_.id)
-
-        self.assertEqual(
-            test_user_.raw_intranet_groups,
-            "shibtests"
-        )
-
-    def test_auto_accept_shibcallback_real_account(self):
+    def test_auto_accept_adcallback_real_account(self):
         dev_user_ = User.objects.create(
             email="testdev@ucl.ac.uk",
             cn="test",
