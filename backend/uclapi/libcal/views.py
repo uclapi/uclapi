@@ -343,7 +343,6 @@ def reserve(request, *args, **kwargs):
     request.data["email"] = user.mail if user.mail else user.email
     request.data["fname"] = user.given_name
     request.data["lname"] = user.sn
-    print(request.data)
     return _libcal_request_forwarder(
         "/1.1/space/reserve",
         request,
