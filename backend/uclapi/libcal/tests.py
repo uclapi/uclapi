@@ -559,7 +559,7 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
 
     @parameterized.expand([
         ('personal_bookings', 'libcal_read', 'GET', ''),
-        ('reserve', 'libcal_write', 'POST', ''),
+        ('reserve', 'libcal_write', 'POST', 'cs_qQpoVMHk'),
         ('cancel', 'libcal_write', 'POST', 'cs_qQpoVMHk')
     ])
     def test_lack_of_client_secret_rejected(self, m, endpoint, scope, method, bookIds):
