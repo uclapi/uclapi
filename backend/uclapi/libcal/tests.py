@@ -564,6 +564,7 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
     ])
     def test_lack_of_client_secret_rejected(self, m, endpoint, scope, method, bookIds):
         """Tests that we reject an read OAuth token presented without a client secret"""
+        print(m, endpoint, scope, method, bookIds)
         self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, scope)
         self.oauth_token.scope.save()
         if method == 'GET':
@@ -573,7 +574,6 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
             response = self.client.post(
                 f'/libcal/space/{endpoint}', {'token': self.oauth_token.token, 'ids': bookIds})
 
-        print(m, endpoint, scope, method, bookIds)
         print(response)
         print(response.content.decode('utf8'))
 
