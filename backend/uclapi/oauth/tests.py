@@ -658,7 +658,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(test_user_.full_name, user_data['displayName'])
         self.assertEqual(test_user_.mail, user_data['mail'])
         self.assertEqual(test_user_.sn, user_data['surname'])
-        self.assertEqual(test.user_.user_types, user_data['user_types'])
+        self.assertEqual(test_user_.user_types, user_data['user_types'])
 
         # Now update all the values.
         user_data = {
