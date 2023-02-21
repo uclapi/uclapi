@@ -141,7 +141,7 @@ def validate_azure_ad_callback(token_data):
 
     # Convert comma-separated-with-space string into semicolon-separated string (for consistency with the groups field)
     # e.g., Alumnus;Staff;P/G;Honorary
-    user_types = ';'.join(user_info.employee_type.split(', '))
+    user_types = ';'.join(user_info.get('employeeType', '').split(', '))
     sn = user_info.get('surname', '')
 
     # If a user has never used the API before then we need to sign them up
