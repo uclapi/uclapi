@@ -559,7 +559,7 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
 
     @parameterized.expand([
         ('personal_bookings', 'libcal_read', 'GET', ''),
-        ('reserve', 'libcal_write', 'POST', 'cs_qQpoVMHk'),
+        ('reserve', 'libcal_write', 'POST', ''),
         ('cancel', 'libcal_write', 'POST', 'cs_qQpoVMHk')
     ])
     def test_lack_of_client_secret_rejected(self, m, endpoint, scope, method, bookIds):
@@ -572,7 +572,7 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
                 f'/libcal/space/{endpoint}', {'token': self.oauth_token.token, 'ids': bookIds})
         else:
             response = self.client.post(
-                f'/libcal/space/{endpoint}', {'token': self.oauth_token.token, 'ids': bookIds})
+                f'/libcal/space/{endpoint}', {'token': self.oauth_token.token, 'ids': bookIds}, format='json')
 
         print(response)
         print(response.content.decode('utf8'))
