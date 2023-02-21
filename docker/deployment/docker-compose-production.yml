@@ -2,15 +2,6 @@
 version: "3.7"
 
 services:
-  shibpostgres:
-    image: 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-prod-shibpostgres:latest
-    deploy:
-      replicas: 1
-      update_config:
-        parallelism: 1
-      restart_policy:
-        condition: on-failure
-
   traefik:
     image: traefik:v2.6
     deploy:
