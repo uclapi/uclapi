@@ -1123,7 +1123,8 @@ class OAuthUserDataTestCase(APITestCase):
             employee_id="upi",
             raw_intranet_groups="group-all",
             sn="Last",
-            mail="fname.lname.yr.20@ucl.ac.uk"
+            mail="fname.lname.yr.20@ucl.ac.uk",
+            user_types="U/G"
         )
         cls.dev = User.objects.create(email="test@ucl.ac.uk", cn="test", given_name="Test Test")
         cls.app = App.objects.create(user=cls.dev, name="An App")
@@ -1142,7 +1143,8 @@ class OAuthUserDataTestCase(APITestCase):
             "scope_number": 0,
             "ucl_groups": ["group-all"],
             "sn": "Last",
-            "mail": "fname.lname.yr.20@ucl.ac.uk"
+            "mail": "fname.lname.yr.20@ucl.ac.uk",
+            "user_types": ["U/G"]
         }
 
     def test_userdata_non_student(self):

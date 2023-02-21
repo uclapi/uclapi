@@ -83,6 +83,7 @@ jobs:
       UCLAPI_PRODUCTION: False
       UCLAPI_RUNNING_ON_AWS_ELB: False
       WHITELISTED_CALLBACK_URLS: https://live-roombookings.uclapi.com/webhook/;https://hackathon.uclapi.com/callback
+      UCLAPI_DOMAIN: uclapi.com
     services:
       Redis:
         image: redis
