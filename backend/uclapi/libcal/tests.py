@@ -553,7 +553,8 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
         else:
             response = self.client.post(
                 f'/libcal/space/{endpoint}',
-                {'token': self.app.api_token, 'client_secret': self.app.client_secret, 'ids': bookIds}
+                {'token': self.app.api_token, 'client_secret': self.app.client_secret, 'ids': bookIds},
+                format='json'
             )
         self.assertEqual(response.status_code, 400)
 
@@ -564,7 +565,6 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
     ])
     def test_lack_of_client_secret_rejected(self, m, endpoint, scope, method, bookIds):
         """Tests that we reject an read OAuth token presented without a client secret"""
-        print(m, endpoint, scope, method, bookIds)
         self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, scope)
         self.oauth_token.scope.save()
         if method == 'GET':
@@ -573,9 +573,6 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
         else:
             response = self.client.post(
                 f'/libcal/space/{endpoint}', {'token': self.oauth_token.token, 'ids': bookIds}, format='json')
-
-        print(response)
-        print(response.content.decode('utf8'))
 
         self.assertEqual(response.status_code, 400)
 
@@ -595,7 +592,8 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
         else:
             response = self.client.post(
                 f'/libcal/space/{endpoint}',
-                {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, 'ids': bookIds}
+                {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, 'ids': bookIds},
+                format='json'
             )
         self.assertEqual(response.status_code, 400)
 
