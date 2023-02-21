@@ -658,7 +658,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(test_user_.full_name, user_data['displayName'])
         self.assertEqual(test_user_.mail, user_data['mail'])
         self.assertEqual(test_user_.sn, user_data['surname'])
-        self.assertEqual(test_user_.user_types, user_data['user_types'])
+        self.assertEqual(test_user_.user_types, user_data['employeeType'])
 
         # Now update all the values.
         user_data = {
@@ -700,7 +700,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(test_user_.full_name, user_data['displayName'])
         self.assertEqual(test_user_.mail, user_data['mail'])
         self.assertEqual(test_user_.sn, user_data['surname'])
-        self.assertEqual(test_user_.user_types, user_data['user_types'])
+        self.assertEqual(test_user_.user_types, user_data['employeeType'])
 
         if initial_data_exists:
             initial_data = json.loads(response.context['initial_data'])
