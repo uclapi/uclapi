@@ -627,7 +627,7 @@ class ViewsTestCase(TestCase):
             'employeeId': 'xxxtest01',
             'mail': 'mail',
             'surname': 'sn',
-            'user_types': 'U/G'
+            'employeeType': 'U/G'
         }
 
         group_data = [{'mailNickname': 'uclintranetgroups'}]
@@ -670,7 +670,7 @@ class ViewsTestCase(TestCase):
             'employeeId': 'xxxtest01',
             'mail': 'test.name.01@ucl.ac.uk',
             'surname': 'Second Name',
-            'user_types': 'P/G',
+            'employeeType': 'P/G',
         }
         group_data = [{'mailNickname': 'ucl-all'}, {'onPremisesSamAccountName': 'ucl-tests-all'}]
         k = unittest.mock.patch('requests.post', side_effect=mocked_adcallback_post)
