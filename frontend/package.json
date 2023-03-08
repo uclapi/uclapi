@@ -1,6 +1,6 @@
 {
   "name": "api-dashboard",
-  "version": "1.2.3",
+  "version": "1.2.1",
   "description": "Dashboard for the UCL API",
   "homepage": "https://uclapi.com",
   "bugs": {
@@ -79,7 +79,7 @@
     "@sentry/tracing": "^6.19.7",
     "axios": "^0.24.0",
     "buffer": "^6.0.3",
-    "dayjs": "^1.11.3",
+    "dayjs": "^1.11.2",
     "framer-motion": "^4.1.17",
     "include-media": "^1.4.10",
     "js-cookie": "^3.0.1",
@@ -89,14 +89,14 @@
     "react": "^17.0.2",
     "react-autosuggest": "^10.1.0",
     "react-dom": "^17.0.2",
-    "react-icons": "^4.4.0",
+    "react-icons": "^4.3.1",
     "react-modal": "^3.15.1",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^5.3.3",
     "react-syntax-highlighter": "^15.5.0",
     "react-tabs": "^3.2.3",
     "stream-browserify": "^3.0.0",
-    "swagger-ui-react": "^4.12.0",
+    "swagger-ui-react": "^4.11.1",
     "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
@@ -108,7 +108,7 @@
     "@babel/preset-env": "^7.18.2",
     "@babel/preset-react": "^7.17.12",
     "@babel/runtime": "^7.18.3",
-    "@typescript-eslint/parser": "^5.27.1",
+    "@typescript-eslint/parser": "^5.22.0",
     "babel-jest": "^27.5.1",
     "babel-loader": "^8.2.5",
     "babel-plugin-transform-imports": "^2.0.0",
@@ -133,7 +133,7 @@
     "file-loader": "^6.2.0",
     "husky": "^7.0.4",
     "jest": "^27.5.1",
-    "lint-staged": "^12.5.0",
+    "lint-staged": "^12.4.1",
     "mini-css-extract-plugin": "^2.6.0",
     "react-test-renderer": "^17.0.2",
     "sass": "^1.52.1",
@@ -143,9 +143,9 @@
     "stylelint-config-sass-guidelines": "^8.0.0",
     "stylelint-config-standard": "^22.0.0",
     "stylelint-scss": "^3.21.0",
-    "terser-webpack-plugin": "^5.3.3",
+    "terser-webpack-plugin": "^5.3.1",
     "url-loader": "^4.1.1",
-    "webpack": "^5.73.0",
+    "webpack": "^5.72.1",
     "webpack-bundle-tracker": "^1.5.0",
     "webpack-cli": "^4.9.2"
   }
