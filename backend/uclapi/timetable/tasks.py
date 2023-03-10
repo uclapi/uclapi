@@ -280,7 +280,7 @@ def update_gencache(skip_run_check):
         print("gencache update job already in progress")
         if not skip_run_check:
             return
-    
+
     try:
         requests.get(os.environ.get("HEALTHCHECK_GENCACHE") + "/start", timeout=5)
     except requests.exceptions.RequestException:
