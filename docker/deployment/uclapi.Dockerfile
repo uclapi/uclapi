@@ -25,26 +25,26 @@ WORKDIR /web
 COPY ./docker/deployment/non-public/${ENVIRONMENT}/uclapi/uclfw.rules /web/uclfw.rules
 
 RUN apt-get update && \
-    apt-get install -y python3 \
-                       python3-wheel \
-                       python3-setuptools \
-                       libaio1 \
-                       wget \
-                       git \
-                       libpq-dev \
-                       libpq5 \
-                       libpython3-dev \
-                       unzip \
-                       build-essential \
-                       libpcre3 \
-                       libpcre3-dev \
-                       sed \
-                       supervisor \
-                       liblz4-1 &&\
+    apt-get install -y python3=3.8.* \ 
+                       python3-wheel=0.34.* \ 
+                       python3-setuptools=45.2.* \ 
+                       libaio1=0.3.* \ 
+                       wget=1.20.* \ 
+                       git=1:2.25.* \ 
+                       libpq-dev=12.14-* \ 
+                       libpq5=12.14-* \ 
+                       libpython3-dev=3.8.* \ 
+                       unzip=6.0-* \ 
+                       build-essential=12.8ubuntu1.* \ 
+                       libpcre3=2:8.39-* \ 
+                       libpcre3-dev=2:8.39-* \ 
+                       sed=4.7-* \ 
+                       supervisor=4.1.* \ 
+                       liblz4-1=1.9.* &&\ 
     apt-get clean
 
 # Fix up the language / encoding environment variables to stop Pip complaining later
-RUN apt-get install locales && locale-gen en_GB.UTF-8
+RUN apt-get install locales=2.31-* && locale-gen en_GB.UTF-8 
 ENV LANG en_GB.UTF-8
 ENV LANGUAGE en_GB:en
 ENV LC_ALL en_GB.UTF-8
