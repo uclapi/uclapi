@@ -141,7 +141,8 @@ class DashboardTestCase(TestCase):
             self.assertRedirects(
                 res,
                 "http://rooturl.com/oauth2/v2.0/authorize?client_id="
-                "foo&response_type=code&scope=openid%20email%20profile%20user.read&response_mode=query&redirect_uri=http%3A//testserver/dashboard/user/login.callback",
+                "foo&response_type=code&scope=openid%20email%20profile%20user.read&"
+                "response_mode=query&redirect_uri=http%3A//testserver/dashboard/user/login.callback",
                 fetch_redirect_response=False,
             )
 

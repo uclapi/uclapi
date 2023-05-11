@@ -69,6 +69,7 @@ def mocked_ad_graph_get(*args, **kwargs):
     response._content = str.encode(response_content)
     return response
 
+
 class ScopingTestCase(TestCase):
     test_scope_map = {
         "roombookings": (0, "Private room bookings data"),
@@ -473,7 +474,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(
             content["error"],
             ("No signed app data returned from Azure AD."
-            " Please use the authorise endpoint.")
+             " Please use the authorise endpoint.")
         )
 
     def test_invalid_signed_data(self):
@@ -557,7 +558,8 @@ class ViewsTestCase(TestCase):
                 'employeeId': 'newUser',
             }
             k = unittest.mock.patch('requests.post', side_effect=mocked_adcallback_post)
-            k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs: mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=[]))
+            k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs:
+                                     mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=[]))
             k.start()
             k2.start()
             response = self.client.get(
@@ -578,7 +580,8 @@ class ViewsTestCase(TestCase):
                 'employeeId': test_user.employee_id,
             }
             k = unittest.mock.patch('requests.post', side_effect=mocked_adcallback_post)
-            k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs: mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=[]))
+            k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs:
+                                      mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=[]))
             k.start()
             k2.start()
             response = self.client.get(
@@ -632,7 +635,8 @@ class ViewsTestCase(TestCase):
 
         group_data = [{'mailNickname': 'uclintranetgroups'}]
         k = unittest.mock.patch('requests.post', side_effect=mocked_adcallback_post)
-        k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs: mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=group_data))
+        k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs:
+                                 mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=group_data))
         k.start()
         k2.start()
         response = self.client.get(
@@ -674,7 +678,8 @@ class ViewsTestCase(TestCase):
         }
         group_data = [{'mailNickname': 'ucl-all'}, {'onPremisesSamAccountName': 'ucl-tests-all'}]
         k = unittest.mock.patch('requests.post', side_effect=mocked_adcallback_post)
-        k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs: mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=group_data))
+        k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs:
+                                  mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=group_data))
         k.start()
         k2.start()
         response = self.client.get(
@@ -778,7 +783,8 @@ class ViewsTestCase(TestCase):
         }
         group_data = [{'mailNickname': 'ucl-all'}, {'onPremisesSamAccountName': 'ucl-tests-all'}]
         k = unittest.mock.patch('requests.post', side_effect=mocked_adcallback_post)
-        k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs: mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=group_data))
+        k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs:
+                                 mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=group_data))
         k.start()
         k2.start()
         response = self.client.get(

@@ -89,8 +89,9 @@ def validate_azure_ad_callback(token_data):
 
     # To get some of this data, we could decode the JWT, but we need to get at least employee ID which
     # doesn't come in the JWT so we just fetch all the info now
-    user_info_result = requests.get(os.environ.get("AZURE_GRAPH_ROOT") +
-                                    '/me?$select=department,surname,givenName,displayName,userPrincipalName,employeeId,mail,mailNickname,employeeType',
+    user_info_result = requests.get(os.environ.get("AZURE_GRAPH_ROOT")
+                                    + '/me?$select=department,surname,givenName,displayName,'
+                                    + 'userPrincipalName,employeeId,mail,mailNickname,employeeType',
                                     headers={'Authorization': 'Bearer ' + token_data['access_token']})
 
     if user_info_result.status_code != 200:
@@ -102,11 +103,12 @@ def validate_azure_ad_callback(token_data):
 
     user_info = user_info_result.json()
 
-    # AD unfortunately restricts $expand to 20 items, so we can't rely on $expand=transitiveMemberOf for the above query. We need to do another one directly for transitiveMemberOf
-    # Reference: https://learn.microsoft.com/en-us/graph/known-issues?view=graph-rest-1.0#some-limitations-apply-to-query-parameters
-    user_groups_result = requests.get(os.environ.get("AZURE_GRAPH_ROOT") +
-                                      '/me/transitiveMemberOf?$select=displayName,mailNickname,onPremisesSamAccountName',
-                                      headers={'Authorization': 'Bearer ' + token_data['access_token']})
+    # AD unfortunately restricts $expand to 20 items [1], so we can't rely on $expand=transitiveMemberOf for the above query.
+    # We need to do another one directly for transitiveMemberOf
+    # [1]: https://learn.microsoft.com/en-us/graph/known-issues?view=graph-rest-1.0#some-limitations-apply-to-query-parameters #noqa
+    user_groups_result = requests.get(os.environ.get("AZURE_GRAPH_ROOT")
+                                + '/me/transitiveMemberOf?$select=displayName,mailNickname,onPremisesSamAccountName',
+                                headers={'Authorization': 'Bearer ' + token_data['access_token']})
 
     # TODO: do we really want to treat this as an error?
     if user_groups_result.status_code != 200:
