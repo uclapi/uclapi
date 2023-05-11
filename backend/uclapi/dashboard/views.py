@@ -34,14 +34,9 @@ def ad_callback(request):
 
     user = user_result
 
-    # TODO update this for AD
-    groups = user.raw_intranet_groups
-    # Check whether the user is a member of any UCL Intranet Groups.
-    # This is a quick litmus test to determine whether they should have
-    # access to the dashboard.
-    # We deny access to test accounts and alumni, neither of which have
-    # this Shibboleth attribute.
-    if not groups:
+    # Determine whether user should have access to the dashboard.
+    # We deny access to test accounts and alumni
+    if not any(x in user.user_types for x in ['Casual', 'Honorary', 'P/G', 'Staff', 'U/G']):
         response = HttpResponse(
             (
                 "Error 403 - denied. <br>"
