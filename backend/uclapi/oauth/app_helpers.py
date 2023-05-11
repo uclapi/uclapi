@@ -103,12 +103,13 @@ def validate_azure_ad_callback(token_data):
 
     user_info = user_info_result.json()
 
-    # AD unfortunately restricts $expand to 20 items [1], so we can't rely on $expand=transitiveMemberOf for the above query.
-    # We need to do another one directly for transitiveMemberOf
-    # [1]: https://learn.microsoft.com/en-us/graph/known-issues?view=graph-rest-1.0#some-limitations-apply-to-query-parameters #noqa
+    # AD unfortunately restricts $expand to 20 items [1], so we can't rely on $expand=transitiveMemberOf
+    # for the above query. We need to do another one directly for transitiveMemberOf
+    # [1]: https://learn.microsoft.com/en-us/graph/known-issues?view=graph-rest-1.0#some-limitations-apply-to-query-parameters # noqa
     user_groups_result = requests.get(os.environ.get("AZURE_GRAPH_ROOT")
-                                + '/me/transitiveMemberOf?$select=displayName,mailNickname,onPremisesSamAccountName',
-                                headers={'Authorization': 'Bearer ' + token_data['access_token']})
+                                      + '/me/transitiveMemberOf?$select=displayName,mailNickname'
+                                      + ',onPremisesSamAccountName',
+                                      headers={'Authorization': 'Bearer ' + token_data['access_token']})
 
     # TODO: do we really want to treat this as an error?
     if user_groups_result.status_code != 200:
@@ -129,7 +130,8 @@ def validate_azure_ad_callback(token_data):
     # (aka UPI), also unique in the DB
     employee_id = user_info['employeeId']  # e.g., flname12
 
-    department = user_info.get('department', '')  # e.g., Dept of Computer Science
+    # e.g., Dept of Computer Science
+    department = user_info.get('department', '')
     given_name = user_info.get('givenName', '')  # e.g. Firstname
     display_name = user_info.get('displayName', '')  # e.g., Firstname Lastname
 

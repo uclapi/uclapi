@@ -55,6 +55,7 @@ def mocked_adcallback_post(*args, **kwargs):
     response._content = str.encode(response_content)
     return response
 
+
 def mocked_ad_graph_get(*args, **kwargs):
     response_content = None
     request_url = args[0].split('?')[0]
@@ -581,7 +582,7 @@ class ViewsTestCase(TestCase):
             }
             k = unittest.mock.patch('requests.post', side_effect=mocked_adcallback_post)
             k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs:
-                                      mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=[]))
+                                     mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=[]))
             k.start()
             k2.start()
             response = self.client.get(
@@ -593,7 +594,6 @@ class ViewsTestCase(TestCase):
             self.assertEqual(response.status_code, 400)
             k.stop()
             k2.stop()
-
 
     @parameterized.expand([
         ('/oauth/adcallback', 200, True),
@@ -679,7 +679,7 @@ class ViewsTestCase(TestCase):
         group_data = [{'mailNickname': 'ucl-all'}, {'onPremisesSamAccountName': 'ucl-tests-all'}]
         k = unittest.mock.patch('requests.post', side_effect=mocked_adcallback_post)
         k2 = unittest.mock.patch('requests.get', side_effect=lambda *args, **kwargs:
-                                  mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=group_data))
+                                 mocked_ad_graph_get(*args, *kwargs, user_data=user_data, group_data=group_data))
         k.start()
         k2.start()
         response = self.client.get(
