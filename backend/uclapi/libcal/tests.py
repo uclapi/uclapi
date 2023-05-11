@@ -610,7 +610,8 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
             else:
                 response = self.client.post(
                     f'/libcal/space/{endpoint}',
-                    {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, 'ids': bookIds}
+                    {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, 'ids': bookIds},
+                    format='json'
                 )
             self.assertEqual(response.status_code, 400)
 
