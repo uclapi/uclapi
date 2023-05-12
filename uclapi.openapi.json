@@ -2176,11 +2176,11 @@
       },
       "OAuthSecurity": {
         "type": "oauth2",
-        "description": "This API uses OAuth2 with the implicit grant flow. [More info](https://uclapi.com/docs#OAuthSecurity)",
+        "description": "This API uses OAuth2 with the authorization code flow. [More info](https://uclapi.com/docs#OAuthSecurity)",
         "flows": {
           "authorizationCode": {
-            "authorizationUrl": "/authorise",
-            "tokenUrl": "/token",
+            "authorizationUrl": "/oauth/authorise",
+            "tokenUrl": "/oauth/token",
             "scopes": {
               "personal_timetable": "read user's timetable",
               "student_number": "read user's student number",
