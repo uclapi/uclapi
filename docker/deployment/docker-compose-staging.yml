@@ -53,8 +53,8 @@ services:
 
   cron:
     image: 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-staging-cron:latest
-  build:
-    args:
+    build:
+      args:
         ENVIRONMENT: staging
     deploy:
       replicas: 1
