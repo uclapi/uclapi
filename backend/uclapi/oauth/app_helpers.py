@@ -1,13 +1,14 @@
 import os
 import textwrap
 import logging
+import requests
 from binascii import hexlify
+from urllib.parse import urlencode
 
 from django.db.utils import IntegrityError
 
 import dashboard.models
 from timetable.models import Lock, StudentsA, StudentsB
-from uclapi.settings import SHIB_TEST_USER
 
 
 def generate_user_token():
@@ -36,13 +37,46 @@ def get_student_by_upi(upi):
     return student
 
 
-def validate_shibboleth_callback(request):
-    """Validates user attributes returned from Shibboleth.
+def get_azure_ad_authorize_url(redirect_uri, state=None):
+    query = {
+        'client_id': os.environ.get("AZURE_AD_CLIENT_ID"),
+        'response_type': 'code',
+        'redirect_uri': redirect_uri,
+        'scope': 'openid email profile user.read',
+        'response_mode': 'query',
+    }
 
-    Sometimes UCL doesn't give us the expected headers. If a critical header is
-    missing we return a string with the error. If non-critical headers are
-    missing we simply put a placeholder string. If all critical headers are
-    present we return the User.
+    if state is not None:
+        query['state'] = state
+
+    url = os.environ.get("AZURE_AD_ROOT") + \
+        "/oauth2/v2.0/authorize?" + urlencode(query)
+
+    return url
+
+
+def handle_azure_ad_callback(code, redirect_uri):
+    url = os.environ.get("AZURE_AD_ROOT") + "/oauth2/v2.0/token"
+    body = {
+        'client_id': os.environ.get("AZURE_AD_CLIENT_ID"),
+        'code': code,
+        'redirect_uri': redirect_uri,
+        'grant_type': 'authorization_code',
+        'client_secret': os.environ.get("AZURE_AD_CLIENT_SECRET"),
+    }
+    response = requests.post(url, data=body)
+
+    if response.status_code != 200:
+        print(response.text)
+        return ("Failed to authenticate with Azure AD. Please attempt to log in again. "
+                "If the issues persist please contact the UCL API "
+                "Team to rectify this.")
+
+    return validate_azure_ad_callback(response.json())
+
+
+def validate_azure_ad_callback(token_data):
+    """Validates user attributes returned from Azure AD.
 
     If the user doesn't exist in our database we create a new user. If the user
     already exists, we update fields that are are present in the response.
@@ -52,38 +86,67 @@ def validate_shibboleth_callback(request):
     :returns: A valid user derived from the attributes given or an error message.
     :rtype: dashboard.models.User or str
     """
-    try:
-        # Assumed to be non-empty/unique in many parts of UCL API.
-        # i.e. grep -nr '\.email' --include \*.py
-        eppn = request.META['HTTP_EPPN']
-        # We don't really use cn but because it's unique in the DB we can't
-        # really put a place holder value.
-        cn = request.META['HTTP_CN']
-        # (aka UPI), also unique in the DB
-        employee_id = request.META['HTTP_EMPLOYEEID']
-    except KeyError:
-        logging.error("Login failed", extra=request.META)
+
+    # To get some of this data, we could decode the JWT, but we need to get at least employee ID which
+    # doesn't come in the JWT so we just fetch all the info now
+    user_info_result = requests.get(os.environ.get("AZURE_GRAPH_ROOT")
+                                    + '/me?$select=department,surname,givenName,displayName,'
+                                    + 'userPrincipalName,employeeId,mail,mailNickname,employeeType',
+                                    headers={'Authorization': 'Bearer ' + token_data['access_token']})
+
+    if user_info_result.status_code != 200:
+        print(user_info_result.text)
         return (
-            f"UCL has sent incomplete headers. If the issues persist "
+            f"There was an error getting your details from Azure. If the issues persist "
             f"please contact the UCL API Team to rectify this. "
-            f"The missing fields are (space delimited): "
-            f"{'eppn ' if not request.META.get('HTTP_EPPN', None) else ''}"
-            f"{'cn ' if not request.META.get('HTTP_CN', None) else ''}"
-            f"{'employeeid' if not request.META.get('HTTP_EMPLOYEEID', None) else ''}"
         )
 
-    # TODO: log to sentry that fields were missing...
-    department = request.META.get('HTTP_DEPARTMENT', '')
-    given_name = request.META.get('HTTP_GIVENNAME', '')
-    display_name = request.META.get('HTTP_DISPLAYNAME', '')
-    groups = request.META.get('HTTP_UCLINTRANETGROUPS', '')
-    mail = request.META.get('HTTP_MAIL', '')
-    affiliation = request.META.get('HTTP_AFFILIATION', '')
-    unscoped_affiliation = request.META.get('HTTP_UNSCOPED_AFFILIATION', '')
-    sn = request.META.get('HTTP_SN', '')
+    user_info = user_info_result.json()
 
-    if not groups and (department == "Shibtests" or eppn == SHIB_TEST_USER):
-        groups = "shibtests"
+    # AD unfortunately restricts $expand to 20 items [1], so we can't rely on $expand=transitiveMemberOf
+    # for the above query. We need to do another one directly for transitiveMemberOf
+    # [1]: https://learn.microsoft.com/en-us/graph/known-issues?view=graph-rest-1.0#some-limitations-apply-to-query-parameters # noqa
+    user_groups_result = requests.get(os.environ.get("AZURE_GRAPH_ROOT")
+                                      + '/me/transitiveMemberOf?$select=displayName,mailNickname'
+                                      + ',onPremisesSamAccountName',
+                                      headers={'Authorization': 'Bearer ' + token_data['access_token']})
+
+    # TODO: do we really want to treat this as an error?
+    if user_groups_result.status_code != 200:
+        print(user_groups_result.text)
+        return (
+            f"There was an error getting your details from Azure. If the issues persist "
+            f"please contact the UCL API Team to rectify this. "
+        )
+
+    # Note: any UCL Intranet Groups have a displayName beginning with `+=`
+    user_groups = user_groups_result.json()
+
+    # Assumed to be non-empty/unique in many parts of UCL API. i.e. grep -nr '\.email' --include \*.py
+    eppn = user_info['userPrincipalName']  # e.g., zxxxxx@ucl.ac.uk
+    # We don't really use cn but because it's unique in the DB we can't
+    # really put a place holder value.
+    cn = user_info['mailNickname']  # e.g., zxxxxx
+    # (aka UPI), also unique in the DB
+    employee_id = user_info['employeeId']  # e.g., flname12
+
+    # e.g., Dept of Computer Science
+    department = user_info.get('department', '')
+    given_name = user_info.get('givenName', '')  # e.g. Firstname
+    display_name = user_info.get('displayName', '')  # e.g., Firstname Lastname
+
+    # e.g., engscifac-all;compsci-all;schsci-all
+    groups = ';'.join(map(
+        lambda g: g.get('onPremisesSamAccountName') or g['mailNickname'],
+        user_groups.get('value', [])
+    ))
+
+    mail = user_info.get('mail', '')  # e.g., firstname.lastname.year@ucl.ac.uk
+
+    # Convert comma-separated-with-space string into semicolon-separated string (for consistency with the groups field)
+    # e.g., Alumnus;Staff;P/G;Honorary
+    user_types = ';'.join(user_info.get('employeeType', '').split(', '))
+    sn = user_info.get('surname', '')
 
     # If a user has never used the API before then we need to sign them up
     try:
@@ -93,12 +156,11 @@ def validate_shibboleth_callback(request):
         try:
             user = dashboard.models.User.objects.create(
                 email=eppn, full_name=display_name, given_name=given_name, department=department, cn=cn,
-                raw_intranet_groups=groups, employee_id=employee_id, mail=mail, affiliation=affiliation,
-                unscoped_affiliation=unscoped_affiliation, sn=sn
+                raw_intranet_groups=groups, employee_id=employee_id, mail=mail, user_types=user_types, sn=sn
             )
         except IntegrityError:
             return (
-                "UCL has sent incorrect headers causing an integrity violation. If the issues persist"
+                "Microsoft Azure AD has sent incorrect headers causing an integrity violation. If the issues persist"
                 "please contact the UCL API Team to rectify this."
             )
     else:
@@ -110,14 +172,13 @@ def validate_shibboleth_callback(request):
         user.department = department if department else user.department
         user.raw_intranet_groups = groups if groups else user.raw_intranet_groups
         user.mail = mail if mail else user.mail
-        user.affiliation = affiliation if affiliation else user.affiliation
-        user.unscoped_affiliation = unscoped_affiliation if unscoped_affiliation else user.unscoped_affiliation
+        user.user_types = user_types if user_types else user.user_types
         user.sn = sn if sn else user.sn
         try:
             user.save()
         except IntegrityError:
             return (
-                "UCL has sent incorrect headers causing an integrity violation. If the issues persist"
+                "Microsoft Azure AD has sent incorrect headers causing an integrity violation. If the issues persist"
                 "please contact the UCL API Team to rectify this."
             )
 

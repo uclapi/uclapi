@@ -26,7 +26,7 @@ from dashboard.views import (
     custom_page_not_found
 )
 from common.views import ping_view
-from oauth.views import settings, settings_shibboleth_callback, logout
+from oauth.views import settings, settings_ad_callback, logout
 from marketplace.views import marketplace
 
 app_name = "uclapi"
@@ -40,7 +40,7 @@ urlpatterns = [
     path('docs/', documentation),
     path('about/', about),
     path('settings/', settings),
-    path('settings/user/login.callback', settings_shibboleth_callback),
+    path('settings/user/login.callback', settings_ad_callback),
     path('logout/', logout),
     path('warning/', warning),
     path('marketplace/', marketplace),
