@@ -76,7 +76,7 @@ def authorise(request):
 
     # Send the user to AD to log in
     login_url = get_azure_ad_authorize_url(
-        os.environ.get("UCLAPI_DOMAIN") + '/oauth/adcallback',
+        request.build_absolute_uri("/") + '/oauth/adcallback',
         signed_data
     )
     return redirect(login_url)
@@ -121,7 +121,7 @@ def adcallback(request):
 
     user_result = handle_azure_ad_callback(
         request.GET.get("code"),
-        os.environ.get("UCLAPI_DOMAIN") + '/oauth/adcallback'
+        request.build_absolute_uri("/") + '/oauth/adcallback'
     )
 
     if isinstance(user_result, str):
