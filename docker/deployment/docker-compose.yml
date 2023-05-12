@@ -1,18 +1,6 @@
 version: "3.7"  # Requires Docker 18.06.0+
 
 services:
-  shibpostgres:
-    image: localhost:5000/shibpostgres
-    build:
-      context: .
-      dockerfile: shibpostgres.Dockerfile
-    environment:
-      POSTGRES_USER: ${SHIB_POSTGRES_USERNAME}
-      POSTGRES_PASSWORD: ${SHIB_POSTGRES_PASSWORD}
-      POSTGRES_DB: ${SHIB_POSTGRES_DATABASE}
-    volumes:
-      - shibpostgres_data:/var/lib/postgresql
-
   traefik:
     image: traefik:v2.6
     deploy:
