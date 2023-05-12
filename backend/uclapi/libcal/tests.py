@@ -553,7 +553,8 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
         else:
             response = self.client.post(
                 f'/libcal/space/{endpoint}',
-                {'token': self.app.api_token, 'client_secret': self.app.client_secret, 'ids': bookIds}
+                {'token': self.app.api_token, 'client_secret': self.app.client_secret, 'ids': bookIds},
+                format='json'
             )
         self.assertEqual(response.status_code, 400)
 
@@ -571,7 +572,8 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
                 f'/libcal/space/{endpoint}', {'token': self.oauth_token.token, 'ids': bookIds})
         else:
             response = self.client.post(
-                f'/libcal/space/{endpoint}', {'token': self.oauth_token.token, 'ids': bookIds})
+                f'/libcal/space/{endpoint}', {'token': self.oauth_token.token, 'ids': bookIds}, format='json')
+
         self.assertEqual(response.status_code, 400)
 
     @parameterized.expand([
@@ -590,7 +592,8 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
         else:
             response = self.client.post(
                 f'/libcal/space/{endpoint}',
-                {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, 'ids': bookIds}
+                {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, 'ids': bookIds},
+                format='json'
             )
         self.assertEqual(response.status_code, 400)
 
@@ -607,7 +610,8 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
             else:
                 response = self.client.post(
                     f'/libcal/space/{endpoint}',
-                    {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, 'ids': bookIds}
+                    {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, 'ids': bookIds},
+                    format='json'
                 )
             self.assertEqual(response.status_code, 400)
 

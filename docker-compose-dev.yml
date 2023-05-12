@@ -3,7 +3,7 @@ version: '3.7'
 services:
   db:
     image: postgres:11.1
-    restart: always
+    restart: on-failure
     environment:
         POSTGRES_USER: uclapi
         POSTGRES_PASSWORD: uclapi_test_password
@@ -14,10 +14,10 @@ services:
       - type: volume
         source: uclapi-db
         target: /var/lib/postgresql/data
-        
+
   gencache:
     image: postgres:11.1
-    restart: always
+    restart: on-failure
     environment:
         POSTGRES_USER: uclapi_gencache
         POSTGRES_PASSWORD: uclapi_gencache_test_password
@@ -28,10 +28,10 @@ services:
       - type: volume
         source: uclapi-gencache
         target: /var/lib/postgresql/data
-        
-  redis: 
+
+  redis:
     image: redis:alpine
-    restart: always
+    restart: on-failure
     command: ["redis-server", "--appendonly", "yes"]
     ports:
       - "6379:6379"
@@ -39,34 +39,6 @@ services:
       - type: volume
         source: uclapi-redis
         target: /data
-        
-  fakeshibboleth:
-    build:
-      context: .
-      dockerfile: docker/fakeshibboleth.Dockerfile
-      args:
-        AUTO_EPPN: develop@ucl.ac.uk
-        AUTO_UCLINTRANETGROUPS: ucl-all;ucl-ug;schsci-all
-        AUTO_CN: develop
-        AUTO_DEPARTMENT: Dept of API Development
-        AUTO_GIVENNAME: UCL API
-        AUTO_DISPLAYNAME: UCL API Developer
-        AUTO_EMPLOYEEID: uclapi1
-        AUTO_AFFILIATION: member@ucl.ac.uk;student@ucl.ac.uk
-        AUTO_MAIL: ucl.api.developer@ucl.ac.uk
-        AUTO_SN: Developer
-        AUTO_UNSCOPED_AFFILIATION: student;member
-    ports:
-      - "8001:8001"
-  oauth-test:
-    build:
-      context: .
-      dockerfile: docker/oauth-test.Dockerfile
-      args:
-        UCLAPI_CLIENT_ID: '1105308584328350.9460393713696551'
-        UCLAPI_CLIENT_SECRET: 251e9f9553bb3b86829c18bf795844d977dedf569b24a70e4d4e753958fcc2f3
-    ports:
-      - "8002:8002"
 
 volumes:
   uclapi-db:

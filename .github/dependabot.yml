@@ -3,6 +3,7 @@ version: 2
 updates:
 - package-ecosystem: "pip"
   directory: "/backend/uclapi"
+  rebase-strategy: "disabled"
   schedule:
     interval: "weekly"
     day: "monday"

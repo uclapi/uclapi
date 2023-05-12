@@ -18,7 +18,8 @@ from dashboard.models import App, User
 from .app_helpers import (
     generate_random_verification_code,
     get_student_by_upi,
-    validate_shibboleth_callback
+    handle_azure_ad_callback,
+    get_azure_ad_authorize_url
 )
 from .models import OAuthToken
 from .scoping import Scopes
@@ -28,7 +29,7 @@ from common.decorators import uclapi_protected_endpoint, get_var
 from common.helpers import PrettyJsonResponse
 
 
-# The endpoint that creates a Shibboleth login and redirects the user to it
+# The endpoint that creates an Azure AD login and redirects the user to it
 def authorise(request):
     client_id = request.GET.get("client_id", None)
     state = request.GET.get("state", None)
@@ -67,37 +68,29 @@ def authorise(request):
         response.status_code = 400
         return response
 
-    # Sign the app and state pair before heading to Shibboleth to help protect
+    # Sign the app and state pair before heading to AD to help protect
     # against CSRF and XSS attacks
     signer = TimestampSigner()
     data = app.client_id + state
     signed_data = signer.sign(data)
 
-    # Build Shibboleth callback URL
-    url = os.environ.get("SHIBBOLETH_ROOT") + "/Login?target="
-    target = request.build_absolute_uri(
-        "/oauth/shibcallback?appdata={}".format(signed_data)
+    # Send the user to AD to log in
+    login_url = get_azure_ad_authorize_url(
+        request.build_absolute_uri("/") + 'oauth/adcallback',
+        signed_data
     )
-
-    if target[4] == ':':  # If using HTTP
-        target = "https" + target[4:]  # Make sure we return on HTTPs
-
-    target = quote(target)
-    url += target
-
-    # Send the user to Shibboleth to log in
-    return redirect(url)
+    return redirect(login_url)
 
 
 @csrf_exempt
 @ensure_csrf_cookie
-def shibcallback(request):
-    # Callback from Shib login. Get ALL the meta!
-    appdata_signed = request.GET.get("appdata", None)
+def adcallback(request):
+    # Callback from AD login
+    appdata_signed = request.GET.get("state", None)
     if not appdata_signed:
         response = PrettyJsonResponse({
             "ok": False,
-            "error": ("No signed app data returned from Shibboleth."
+            "error": ("No signed app data returned from Azure AD."
                       " Please use the authorise endpoint.")
         })
         response.status_code = 400
@@ -126,23 +119,27 @@ def shibcallback(request):
         response.status_code = 400
         return response
 
-    client_id = appdata[:33]
-    state = appdata[33:]
+    user_result = handle_azure_ad_callback(
+        request.GET.get("code"),
+        request.build_absolute_uri("/") + 'oauth/adcallback'
+    )
 
-    # We can trust this value because it was extracted from the signed data
-    # string sent via Shibboleth
-    app = App.objects.get(client_id=client_id)
-
-    validation_result = validate_shibboleth_callback(request)
-    if isinstance(validation_result, str):
+    if isinstance(user_result, str):
         response = PrettyJsonResponse({
             "ok": False,
-            "error": validation_result
+            "error": user_result
         })
         response.status_code = 400
         return response
     else:
-        user = validation_result
+        user = user_result
+
+    client_id = appdata[:33]
+    state = appdata[33:]
+
+    # We can trust this value because it was extracted from the signed data
+    # string sent via Azure AD
+    app = App.objects.get(client_id=client_id)
 
     # Log the user into the system using their User ID
     request.session["user_id"] = user.id
@@ -508,7 +505,8 @@ def userdata(request, *args, **kwargs):
         "is_student": is_student,
         "ucl_groups": token.user.raw_intranet_groups.split(';'),
         "sn": token.user.sn,
-        "mail": token.user.mail
+        "mail": token.user.mail,
+        "user_types": token.user.user_types.split(';')
     }
 
     return PrettyJsonResponse(
@@ -577,20 +575,24 @@ def get_student_number(request, *args, **kwargs):
 
 
 @csrf_exempt
-def settings_shibboleth_callback(request):
+def settings_ad_callback(request):
+    # Callback from AD login
     # should auth user login or signup
     # then redirect to my apps homepage
+    user_result = handle_azure_ad_callback(
+        request.GET.get("code"),
+        request.build_absolute_uri(request.path)
+    )
 
-    validation_result = validate_shibboleth_callback(request)
-    if isinstance(validation_result, str):
+    if isinstance(user_result, str):
         response = PrettyJsonResponse({
             "ok": False,
-            "error": validation_result
+            "error": user_result
         })
         response.status_code = 400
         return response
     else:
-        request.session["user_id"] = validation_result.id
+        request.session["user_id"] = user_result.id
         return redirect(settings)
 
 
@@ -600,14 +602,11 @@ def settings(request):
     try:
         request.session["user_id"]
     except KeyError:
-        # Build Shibboleth callback URL
-        url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
-        param = (request.build_absolute_uri(request.path)
-                 + "user/login.callback")
-        param = quote(param)
-        url = url + param
-
-        return redirect(url)
+        # Send the user to AD to log in
+        login_url = get_azure_ad_authorize_url(
+            request.build_absolute_uri(request.path) + "user/login.callback"
+        )
+        return redirect(login_url)
 
     return render(request, 'settings.html')
 
@@ -626,14 +625,12 @@ def get_settings(request):
     try:
         user_id = request.session["user_id"]
     except KeyError:
-        # Build Shibboleth callback URL
-        url = os.environ["SHIBBOLETH_ROOT"] + "/Login?target="
-        param = (request.build_absolute_uri(request.path)
-                 + "user/login.callback")
-        param = quote(param)
-        url = url + param
-
-        return redirect(url)
+        response = PrettyJsonResponse({
+            "success": False,
+            "error": "You are not logged in"
+        })
+        response.status_code = 401
+        return response
 
     user = User.objects.get(id=user_id)
 
