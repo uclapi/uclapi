@@ -239,7 +239,7 @@ a {
 .image-button:hover,
 .uclapi-card-clicked-alternate:hover { background-color: $color-grey-lighter; }
 
-.emphasis-button, {
+.emphasis-button {
   background-color: lighten($primary-highlight-color, 10%);
   color: black;
 }

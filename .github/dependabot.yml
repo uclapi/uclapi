@@ -3,13 +3,12 @@ version: 2
 updates:
 - package-ecosystem: "pip"
   directory: "/backend/uclapi"
+  rebase-strategy: "disabled"
   schedule:
     interval: "weekly"
     day: "monday"
     time: "08:00"
     timezone: "Europe/London"
   open-pull-requests-limit: 25
-  reviewers:
-    - "uclapi/ucl-api-team"
   allow: 
     - dependency-type: "direct"
