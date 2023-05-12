@@ -1,4 +1,4 @@
-# UCL API ![build](https://img.shields.io/github/workflow/status/uclapi/uclapi/CI?label=build) ![staging](https://img.shields.io/github/workflow/status/uclapi/uclapi/CD?label=staging) [![codecov](https://codecov.io/gh/uclapi/uclapi/branch/master/graph/badge.svg)](https://codecov.io/gh/uclapi/uclapi)
+# UCL API ![build](https://img.shields.io/github/actions/workflow/status/uclapi/uclapi/workflow.yml?label=build) ![staging](https://img.shields.io/github/actions/workflow/status/uclapi/uclapi/workflow.yml?label=staging) [![codecov](https://codecov.io/gh/uclapi/uclapi/branch/master/graph/badge.svg)](https://codecov.io/gh/uclapi/uclapi)
 
 ## What is the UCL API?
 UCL API started as a **student-built** platform for **student developers** to improve the **student experience** of everyone at UCL. We now also have our own end-user facing applications in addition to this, such as UCL Assistant, our rival app to UCL GO.

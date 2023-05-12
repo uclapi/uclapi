@@ -102,7 +102,7 @@ jobs:
           cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
           cd ./backend/uclapi && \
           python ./manage.py migrate --settings=uclapi.settings_mocked
-      
+
       - name: Run tests
         run: |
           cd ./backend/uclapi && \
@@ -133,7 +133,7 @@ jobs:
 
   collect-statics:
     name: Collect statics
-    needs: 
+    needs:
       - build
       - test-backend
       - test-frontend
@@ -142,12 +142,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.7'
-      
+
       - name: Cache Python
         uses: actions/cache@v2
         with:
@@ -185,7 +185,7 @@ jobs:
 
   build-containers:
     name: Build containers
-    needs: 
+    needs:
       - test-backend
       - test-frontend
     runs-on: ubuntu-latest
@@ -262,10 +262,10 @@ jobs:
         with:
           name: container-id.txt
           path: container-id.txt
-    
+
   deploy:
     name: Deploy
-    needs: 
+    needs:
       - collect-statics
       - build-containers
     runs-on: ubuntu-latest
@@ -287,7 +287,7 @@ jobs:
           echo "$FILES" | base64 --decode > compressed.zip && \
           unzip -qq compressed.zip && \
           rm compressed.zip
-      
+
       - name: Copy docker compose configuration
         uses: appleboy/scp-action@v0.1.1
         with:
@@ -297,7 +297,7 @@ jobs:
           source: "docker/deployment/docker-compose.yml,docker/deployment/docker-compose-production.yml"
           target: "~"
           strip_components: 2
-      
+
       - name: Docker compose up
         uses: appleboy/ssh-action@v0.1.4
         env:
@@ -330,7 +330,7 @@ jobs:
             rm docker-compose-tmp.yml docker-compose-tmp-2.yml docker-compose-production.yml
             mv -f docker-compose-tmp-3.yml docker-compose.yml
             docker stack deploy -c docker-compose.yml --with-registry-auth uclapi
-  
+
       - name: Create Sentry release
         uses: getsentry/action-release@v1.1.6
         env:
@@ -341,4 +341,9 @@ jobs:
           environment: production
           version: "${{ steps.version.outputs.content }}"
 
-
+      - name: Repository Dispatch (JS SDK)
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.JS_SDK_REPO_DEPLOY_PRIVATE_KEY }}
+          event-type: new-release
+          client-payload: '{"version": "${{ steps.version.outputs.content }}", "sha": "${{ github.sha }}"}'
