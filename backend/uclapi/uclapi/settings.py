@@ -76,12 +76,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-if DEBUG:
-    MIDDLEWARE.append(
-        'dashboard.middleware.fake_shibboleth_middleware'
-        '.FakeShibbolethMiddleWare'
-    )
-
 ROOT_URLCONF = 'uclapi.urls'
 
 TEMPLATES = [
@@ -234,8 +228,6 @@ with open(fair_use_policy_path, 'r', encoding='utf-8') as fp:
     FAIR_USE_POLICY = list(fp)
 
 REDIS_UCLAPI_HOST = os.environ.get("REDIS_UCLAPI_HOST", "")
-
-SHIB_TEST_USER = os.environ.get("SHIB_TEST_USER", "")
 
 # Celery Settings
 CELERY_BROKER_URL = 'redis://' + REDIS_UCLAPI_HOST
