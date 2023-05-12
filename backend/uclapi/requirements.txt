@@ -19,7 +19,7 @@ flake8==5.0.4
 gevent==22.10.2
 gunicorn==20.1.0
 greenlet==2.0.1
-hiredis==2.1.1
+hiredis==2.2.3
 lxml==4.9.2
 parameterized==0.8.1
 pycodestyle==2.9.0
