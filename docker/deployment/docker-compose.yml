@@ -50,5 +50,3 @@ services:
 volumes:
   letsencrypt_config:
     driver: local
-  shibpostgres_data:
-    driver: local
