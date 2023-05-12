@@ -2170,7 +2170,7 @@
       },
       "OAuthToken": {
         "type": "apiKey",
-        "description": "This API requires you to pass your OAuth2 token as a query parameter called 'token'. Use the /authorize and /oauth/token endpoints to authorize a user and get this token.",
+        "description": "This API requires you to pass your OAuth2 token as a query parameter called 'token'. Use the /authorise and /oauth/token endpoints to authorize a user and get this token.",
         "name": "token",
         "in": "query"
       },
