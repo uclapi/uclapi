@@ -40,6 +40,11 @@ if os.environ.get("UCLAPI_DOMAIN"):
 
 UCLAPI_DOMAIN_CURRENT = os.environ.get("UCLAPI_DOMAIN")
 
+# Tell Django to listen to the X-FORWARDED headers from Traefik
+# https://stackoverflow.com/questions/62047354/build-absolute-uri-with-https-behind-reverse-proxy
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Application definition
 
 INSTALLED_APPS = [
