@@ -342,8 +342,9 @@ jobs:
           version: "${{ steps.version.outputs.content }}"
 
       - name: Repository Dispatch (JS SDK)
-        uses: peter-evans/repository-dispatch@v1
+        uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.JS_SDK_REPO_DEPLOY_PRIVATE_KEY }}
           event-type: new-release
+          repository: uclapi/uclapi-js-sdk
           client-payload: '{"version": "${{ steps.version.outputs.content }}", "sha": "${{ github.sha }}"}'
