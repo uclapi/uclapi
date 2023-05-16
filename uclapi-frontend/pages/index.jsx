@@ -13,46 +13,44 @@ import {
 import Collapse, { Panel } from 'rc-collapse'
 import React from "react";
 import Image from 'next/image'
+import withSession from '@/lib/withSession.jsx'
 
 import styles from '../styles/Home.module.scss'
+
+export const getServerSideProps = (
+  context
+) => ({ props: { host: context.req.headers.host || null } });
 
 class HomePage extends React.Component {
 
   constructor(props) {
     super(props)
-
-    let loggedIn = false
     if (typeof window !== 'undefined') {
-      if (window.initialData?.logged_in === `True`) { loggedIn = true }
-
       this.state = {
         articles: window.initialData?.medium_articles,
         host: window.location.hostname,
-        loggedIn: loggedIn,
+        loggedIn: !!props.session,
       }
     } else {
-      this.state = {}
+      this.state = {
+        loggedIn: !!props.session,
+      }
     }
   }
 
   render() {
     const iconsize = 200
-    const { host, articles, loggedIn } = this.state
+    const { articles, loggedIn } = this.state
 
-    let startLabel = `START BUILDING`
-
-    if (loggedIn) {
-      startLabel = `DASHBOARD`
-    }
+    const startLabel = loggedIn ? 'DASHBOARD': `START BUILDING`
 
     return (
       <>
-
         <NavBar isScroll={false} />
 
         {/* Staging banner */}
 
-        {host == `staging.ninja` && (
+        {this.props.host == `staging.ninja` && (
           <Container isPadded styling='warning-red'>
             <Row width='9-10' horizontalAlignment={`center`} >
               <TextView
@@ -407,4 +405,4 @@ class HomePage extends React.Component {
   }
 }
 
-export default HomePage
+export default withSession(HomePage)

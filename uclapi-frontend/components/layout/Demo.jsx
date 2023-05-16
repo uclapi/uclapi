@@ -8,8 +8,6 @@ import rooms from './data/room_names.jsx'
 import { AutoCompleteView, Code, Container, Row } from './Items.jsx'
 import React from "react";
 
-
-
 const {
   100: grey100,
 } = grey
@@ -30,38 +28,34 @@ const muiTheme = createTheme({
   },
 })
 
-
-export default class Demo extends React.Component {
+class Demo extends React.Component {
   constructor(props) {
-    super(props)
-
-    const l = typeof location === 'undefined' ? {} : location;
-    const rootURL = (
-      l.protocol
-      + `//` + l.hostname
-      + (l.port ? `:` + l.port : ``)
-    )
-    const now = new Date()
-
-    this.DEBUGGING = false
-
+    super(props);
+    const now = new Date();
+    this.DEBUGGING = false;
     this.state = {
       response: ``,
       params: {
         // 'token': window.initialData.temp_token,
-        'date': now.toISOString().substring(0, 10).replace(/-/g, ``),
-        'results_per_page': `1`,
+        date: now.toISOString().substring(0, 10).replace(/-/g, ``),
+        results_per_page: `1`,
       },
-      rootURL,
-    }
+      rootURL: '',
+    };
+  }
+
+  componentDidMount() {
+    this.setState({
+      rootURL:
+        window.location.protocol +
+        "//" +
+        window.location.hostname +
+        (window.location.port ? ":" + window.location.port : "")
+    });
   }
 
   render() {
-    const {
-      rootURL,
-      params,
-      response,
-    } = this.state
+    const { rootURL, params, response } = this.state;
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <Container
@@ -70,55 +64,67 @@ export default class Demo extends React.Component {
           isPaddedBottom
           heading="Try out the API"
         >
-          <Row width='2-3' horizontalAlignment='center'>
+          <Row width="2-3" horizontalAlignment="center">
             <AutoCompleteView suggestions={rooms} onSubmit={this.makeRequest} />
           </Row>
 
-          <Container height='20px' noPadding />
+          <Container height="20px" noPadding />
 
-          <Row width='2-3' horizontalAlignment='center'>
-            <Code url={`${rootURL}/roombookings/bookings`} params={params} type={`request`} />
+          <Row width="2-3" horizontalAlignment="center">
+            <Code
+              url={`${rootURL}/roombookings/bookings`}
+              params={params}
+              type={`request`}
+            />
           </Row>
 
           {response ? (
-            <Row width='2-3' horizontalAlignment='center'>
+            <Row width="2-3" horizontalAlignment="center">
               <Code response={response} type={`response`} />
             </Row>
           ) : null}
         </Container>
       </MuiThemeProvider>
-    )
+    );
   }
 
   makeRequest = (roomName) => {
-    const now = new Date()
-    const { rootURL } = this.state
+    const now = new Date();
+    const { rootURL } = this.state;
 
     if (this.DEBUGGING) {
-      console.log(`DEBUG: Looking for room bookings in the room: ` + roomName)
+      console.log(`DEBUG: Looking for room bookings in the room: ` + roomName);
     }
 
     this.setState({
       params: {
-        'token': window.initialData.temp_token,
-        'date': now.toISOString().substring(0, 10).replace(/-/g, ``),
-        'results_per_page': `1`,
-        'roomName': roomName,
+        token: window.initialData.temp_token,
+        date: now.toISOString().substring(0, 10).replace(/-/g, ``),
+        results_per_page: `1`,
+        roomName: roomName,
       },
-    })
+    });
 
     // TODO:
     // Need to create development environment in package.json
-    const url = `${rootURL}/roombookings/bookings?token=` + window.initialData.temp_token
-      + `&roomname=` + roomName + `&date=` + now.toISOString().substring(0, 10).replace(/-/g, ``)
+    const url =
+      `${rootURL}/roombookings/bookings?token=` +
+      window.initialData.temp_token +
+      `&roomname=` +
+      roomName +
+      `&date=` +
+      now.toISOString().substring(0, 10).replace(/-/g, ``);
 
-    fetch(url).then(response => {
-      return response.json()
-    }).then((data) => {
-      this.setState({
-        response: JSON.stringify(data, null, 4),
+    fetch(url)
+      .then((response) => {
+        return response.json();
       })
-    })
-  }
-
+      .then((data) => {
+        this.setState({
+          response: JSON.stringify(data, null, 4),
+        });
+      });
+  };
 }
+
+export default Demo

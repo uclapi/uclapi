@@ -11,20 +11,20 @@ import App from '@/components/dashboard/App.jsx'
 import Api from '../lib/Api'
 import '@/styles/Dashboard.module.scss'
 import React from "react";
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from "./api/auth/[...nextauth]";
+import withSession from '@/lib/withSession'
+
+export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  return { props: { session } };
+}
 
 class Dashboard extends React.Component {
-
   constructor(props) {
     super(props)
-
     this.state = {
-      data: {
-        name: ``,
-        cn: ``,
-        department: ``,
-        intranet_groups: ``,
-        apps: [],
-      },
+      data: { apps: [] },
       view: `default`,
       toDelete: -1,
     }
@@ -35,7 +35,9 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { data: { name, cn, apps }, view, toDelete } = this.state
+    const name = this.props.session.user.name;
+    const cn = this.props.session.user.email.split('@')[0]
+    const { data: {  apps }, view, toDelete } = this.state
 
     const actions = {
       regenToken: this.regenToken,
@@ -290,4 +292,4 @@ class Dashboard extends React.Component {
   }
 }
 
-export default Dashboard
+export default withSession(Dashboard)
