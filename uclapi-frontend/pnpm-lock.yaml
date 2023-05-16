@@ -10,6 +10,7 @@ specifiers:
   axios: ^1.4.0
   eslint: 8.40.0
   eslint-config-next: 13.4.2
+  fast-xml-parser: ^4.2.2
   framer-motion: ^10.12.11
   include-media: ^2.0.0
   js-cookie: ^3.0.5
@@ -38,6 +39,7 @@ dependencies:
   axios: 1.4.0
   eslint: 8.40.0
   eslint-config-next: 13.4.2_3qfatcekpgbllh6uk5ivyhkbxq
+  fast-xml-parser: 4.2.2
   framer-motion: 10.12.11_biqbaboplfbrettd7655fr4n2y
   include-media: 2.0.0
   js-cookie: 3.0.5
@@ -1419,6 +1421,13 @@ packages:
 
   /fast-levenshtein/2.0.6:
     resolution: {integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==}
+    dev: false
+
+  /fast-xml-parser/4.2.2:
+    resolution: {integrity: sha512-DLzIPtQqmvmdq3VUKR7T6omPK/VCRNqgFlGtbESfyhcH2R4I8EzK1/K6E8PkRCK2EabWrUHK32NjYRbEFnnz0Q==}
+    hasBin: true
+    dependencies:
+      strnum: 1.0.5
     dev: false
 
   /fastq/1.15.0:
@@ -2987,6 +2996,10 @@ packages:
   /strip-json-comments/3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
+    dev: false
+
+  /strnum/1.0.5:
+    resolution: {integrity: sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==}
     dev: false
 
   /styled-jsx/5.1.1_react@18.2.0:

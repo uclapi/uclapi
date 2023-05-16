@@ -7,6 +7,9 @@ const nextConfig = {
     "swagger-client",
     "swagger-ui-react",
   ],
+  images: {
+    remotePatterns: [{ hostname: '*.medium.com'}]
+  },
 };
 
 module.exports = nextConfig
