@@ -557,6 +557,10 @@ input[type='checkbox']:checked + span {
   &:hover {
     background-color: $primary-highlight-color;
   }
+
+  img {
+    margin: auto;
+  }
 }
 
 .bottom-app-column {

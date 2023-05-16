@@ -1,4 +1,3 @@
-/* eslint-disable security/detect-object-injection */
 export function getRequest(url, params, isDemo = false) {
   // Setup the pythoncode code segment
   let pythoncode = `import requests\n`+`\n`+`params = {\n`

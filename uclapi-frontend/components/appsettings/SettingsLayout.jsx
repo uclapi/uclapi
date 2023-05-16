@@ -6,6 +6,7 @@ import {
 } from '@/components/layout/Items.jsx'
 import React, { useCallback , useState } from 'react'
 import Api from '../../lib/Api'
+import Image from 'next/image'
 
 const styles = {
   noPadding: {

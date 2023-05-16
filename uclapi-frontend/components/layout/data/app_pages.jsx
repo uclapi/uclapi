@@ -363,12 +363,10 @@ export const allApps = {
     "logolight": '/marketplace/uclcssa/logolight.png',
     "logodark": '/marketplace/uclcssa/logodark.png',
     "detailedDescription": uclcssadescription,
-    // eslint-disable-next-line no-secrets/no-secrets
     "developerContact": `https://mp.weixin.qq.com/s/ndkYgEFwlATvIIcHONG2uA`,
     "links": [
       {
         "name": `WeChat`,
-        // eslint-disable-next-line no-secrets/no-secrets
         "link": `https://mp.weixin.qq.com/s/uij8Z05hB7aKJm0Ln0SI8g`,
       },
       {
@@ -403,7 +401,6 @@ export const allApps = {
     "logolight": '/marketplace/unikomet/logo.png',
     "logodark": '/marketplace/unikomet/logo.png',
     "detailedDescription": unikometdescription,
-    // eslint-disable-next-line no-secrets/no-secrets
     "developerContact": `https://unikomet.com/contact`,
     "links": [
       {
