@@ -21,6 +21,8 @@ from .app_helpers import (
     handle_azure_ad_callback,
     get_azure_ad_authorize_url
 )
+
+from dashboard.app_helpers import get_session_user_cn
 from .models import OAuthToken
 from .scoping import Scopes
 
@@ -611,7 +613,7 @@ def settings(request):
     return render(request, 'settings.html')
 
 
-@ensure_csrf_cookie
+@csrf_exempt
 def get_settings(request):
     if request.method != "GET":
         response = PrettyJsonResponse({
@@ -623,7 +625,7 @@ def get_settings(request):
 
     # Check whether the user is logged in
     try:
-        user_id = request.session["user_id"]
+        user_cn = get_session_user_cn(request)
     except KeyError:
         response = PrettyJsonResponse({
             "success": False,
@@ -632,7 +634,7 @@ def get_settings(request):
         response.status_code = 401
         return response
 
-    user = User.objects.get(id=user_id)
+    user = User.objects.get(cn=user_cn)
 
     tokens = OAuthToken.objects.filter(user=user)
 
@@ -667,10 +669,11 @@ def get_settings(request):
     return PrettyJsonResponse(initial_data_dict)
 
 
-@ensure_csrf_cookie
+@csrf_exempt
 def deauthorise_app(request):
     # Find which user is requesting to deauthorise an app
-    user = User.objects.get(id=request.session["user_id"])
+    user_cn = get_session_user_cn(request)
+    user = User.objects.get(cn=user_cn)
 
     # Find the app that the user wants to deauthorise
     client_id = request.GET.get("client_id", None)
