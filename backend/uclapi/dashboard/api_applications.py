@@ -7,6 +7,7 @@ from django.db.models import Count
 from django.http import JsonResponse
 from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.datetime_safe import datetime
+from django.views.decorators.csrf import csrf_exempt
 
 from oauth.models import OAuthToken
 from oauth.scoping import Scopes
@@ -23,6 +24,7 @@ def get_user_by_cn(user_cn):
     return user
 
 
+@csrf_exempt
 def create_app(request):
     if request.method != "POST":
         response = PrettyJsonResponse({
@@ -78,6 +80,7 @@ def create_app(request):
     })
 
 
+@csrf_exempt
 def rename_app(request):
     if request.method != "POST":
         response = PrettyJsonResponse({
@@ -121,6 +124,7 @@ def rename_app(request):
         })
 
 
+@csrf_exempt
 def regenerate_app_token(request):
     if request.method != "POST":
         response = PrettyJsonResponse({
@@ -167,6 +171,7 @@ def regenerate_app_token(request):
         })
 
 
+@csrf_exempt
 def delete_app(request):
     if request.method != "POST":
         response = PrettyJsonResponse({
@@ -215,6 +220,7 @@ def delete_app(request):
         })
 
 
+@csrf_exempt
 def set_callback_url(request):
     if request.method != "POST":
         response = PrettyJsonResponse({
@@ -291,6 +297,7 @@ def set_callback_url(request):
     })
 
 
+@csrf_exempt
 def update_scopes(request):
     if request.method != "POST":
         response = PrettyJsonResponse({
