@@ -13,6 +13,11 @@ import redis
 import textwrap
 import validators
 
+import json
+from jose import jwe
+from Crypto.Protocol.KDF import HKDF  # pip install pycryptodome
+from Crypto.Hash import SHA256
+
 NOT_HTTPS = 1
 NOT_VALID = 2
 URL_BLACKLISTED = 3
@@ -133,3 +138,23 @@ def generate_secret():
     dashed = '-'.join(textwrap.wrap(key, 15))
 
     return dashed
+
+# https://github.com/jackrdye/Decrypt-NextAuth-JWE-getToken/blob/main/Decrypt-NextAuth-JWE-Python.py
+def get_session_user_upi(req):
+    cookie_name = '__Secure-next-auth.session-token' if os.environ['UCLAPI_PRODUCTION'] else 'next-auth.session-token'
+    jet = req.COOKIES[cookie_name]
+    if not jet:
+        return None
+
+    jet_decryption_key = HKDF(
+        master=os.environ['DASHBOARD_JWT_KEY'].encode(),
+        key_len=32,
+        salt="".encode(),
+        hashmod=SHA256,
+        num_keys=1,
+        context=str.encode("NextAuth.js Generated Encryption Key")
+    )
+    payload_string = jwe.decrypt(jet, jet_decryption_key).decode()
+
+    payload = json.loads(payload_string)
+    return payload['user']['upi']

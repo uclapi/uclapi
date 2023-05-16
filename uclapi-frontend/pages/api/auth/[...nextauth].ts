@@ -38,6 +38,7 @@ export const authOptions = {
           id: profile.cn,
           name: profile.full_name,
           email: profile.email,
+          upi: profile.upi,
           image: "",
         };
       },
