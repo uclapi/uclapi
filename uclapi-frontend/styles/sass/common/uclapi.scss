@@ -1,0 +1,689 @@
+/**
+  UCL API WEBSITE STYLES
+  As of July 2019
+
+  Hopefully these stylings bring together
+  the amazing work of previous developers
+  and make it so that the horrendous task
+  of interacting with css is removed.
+
+  Table of contents:
+
+  - Setup
+  - Color Scheme
+  - Sizings
+  - Text
+  - Alignments
+  - Containers
+  - Buttons
+  - Transitions
+  - Cards
+  - Code Segments
+  - RC-Collapse
+  - Input Forms
+  - Auto complete forms
+  - Code View
+  - Social Media Button Stylings
+  - Sizings
+  - Overlays
+
+**/
+
+/** Setup **/
+@import '../core.scss';
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
+
+html,
+button,
+input,
+select,
+textarea {
+  font-family: 'Source Sans Pro', 'Roboto', sans-serif;
+}
+
+.app,
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+html,
+body {
+  background-color: $color-white;
+  margin: 0;
+}
+
+/** Row Colours **/
+
+.splash-parallax {
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-image: url('/home-page/splash_screen.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-shadow: inset 0 0 10px $color-black-transparent-04;
+
+  /* Full height */
+  height: 100%;
+}
+
+.team-parallax {
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-image: url('/team/teambg.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-shadow: inset 0 0 10px $color-black-transparent-04;
+
+  /* Full height */
+  height: 100%;
+}
+
+.primary-highlight { background-color: $primary-highlight-color; }
+.primary { background-color: $primary-color; }
+
+.secondary { background-color: $secondary-color; }
+.warning-red { background-color: $color-red; }
+.market-green { background-color: $color-green-market; }
+.transparent { background-color: $color-white-transparent-0; }
+
+/** Text **/
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $color-white;
+  font-family: 'Source Sans Pro', 'Roboto', sans-serif;
+}
+
+p,
+h1,
+h2,
+h3,
+h4 {
+  margin-top: 0;
+}
+
+h5 {
+  font-weight: normal;
+}
+
+h1 {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  margin-top: 0;
+  text-shadow: 0 0 5px $color-black-transparent-045;
+}
+
+.justified-text {
+  text-align: justify;
+}
+
+.centered-text {
+  text-align: center;
+}
+
+a {
+  color: $color-white;
+  text-decoration-color: $color-white;
+
+  &:hover {
+    color: $color-grey-light;
+  }
+}
+
+.alt-text {
+  color: lighten($primary-highlight-color, 10%);
+  text-decoration-color: $color-grey-dark;
+
+  &:hover {
+    color: lighten($primary-highlight-color, 20%);
+  }
+}
+
+/** Alignments **/
+
+.full-screen {
+  height: 100%;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+  text-align: center;
+}
+
+.column,
+.column-always-inline {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 2%;
+  text-align: center;
+}
+
+.column {
+  @include media('<=phone') {
+    flex-direction: column;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    width: 100% !important;
+  }
+}
+
+.center-x {
+  margin: auto;
+  position: relative;
+}
+
+.vertical-align {
+  position: absolute;
+  width: inherit;
+}
+
+.no-vertical-align {
+  position: relative;
+  width: 100%;
+}
+
+.center-y {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.bottom-y {
+  bottom: 50px;
+}
+
+/** Containers **/
+
+.container {
+  height: auto;
+  position: relative;
+  width: 100%;
+}
+
+.vertical-padding {
+  padding: 50px 0;
+}
+
+/** Buttons **/
+.circular-button { border-radius: 25%; }
+
+.default-button {
+  background-color: $color-grey-dark;
+  color: $color-white;
+}
+
+.default-button:hover,
+.uclapi-card-clicked-default:hover { background-color: $color-grey-mid; }
+
+.alternate-button,
+.image-button {
+  background-color: $color-white;
+  color: $color-black;
+}
+
+.alternate-button:hover,
+.image-button:hover,
+.uclapi-card-clicked-alternate:hover { background-color: $color-grey-lighter; }
+
+.emphasis-button {
+  background-color: lighten($primary-highlight-color, 10%);
+  color: black;
+}
+.emphasis-button:hover { background-color: lighten($primary-highlight-color, 20%); }
+
+.remove-button {
+  background-color: $color-remove;
+  color: $color-white;
+}
+.remove-button:hover { background-color: $color-remove-highlight; }
+
+/** Transitions **/
+
+.default-transition {
+  transition-duration: 200ms;
+  transition-timing-function: linear;
+}
+.background-color-transition { transition-property: background-color; }
+.color-transition { transition-property: color; }
+
+/** Cards **/
+
+.uclapi-card {
+  border-radius: 10px;
+  display: inline-block;
+  height: auto;
+  min-height: fit-content;
+  overflow: hidden;
+  padding: 2%;
+  width: 100%;
+
+  .animate-image {
+    filter: brightness(75%);
+    transition: 0.5s linear;
+  }
+
+  &:hover .animate-image {
+    filter: grayscale(50%) blur(1px);
+    transform: scale(1.15);
+  }
+}
+
+.uclapi-card-default {
+  background-color: $color-grey-dark;
+}
+
+.uclapi-card-wrap-around {
+  background-color: $color-black-transparent-0;
+  display: flex;
+  float: left;
+  margin: 0;
+  padding: 0;
+}
+
+.uclapi-card-full-screen {
+  display: block;
+  float: unset;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.uclapi-card-alternate {
+  background-color: $color-white;
+}
+
+.uclapi-card-emphasis {
+  background-color: $primary-color;
+
+  &:hover {
+    background-color: $primary-highlight-color;
+  }
+}
+
+.uclapi-card-shadow {
+  box-shadow: 0 4px 8px 0 $color-black-transparent-02;
+}
+
+.invisible-marker {
+  position: fixed;
+  visibility: hidden;
+  width: inherit;
+}
+
+.clickable {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/** Update cards and columns when the size approaches phone screen size **/
+@media only screen and (max-width: 540px) {
+  .mobile-friendly {
+    min-width: 90%;
+    padding: 0;
+  }
+}
+
+/** Code Segments **/
+
+/** RC Collapse **/
+
+.rc-collapse {
+  background-color: $secondary-color;
+  border-radius: 1rem;
+  box-shadow: 0 4px 8px 0 $color-black-transparent-02;
+  color: $color-white;
+
+  @media screen and (max-width: $break-small) {
+    font-size: 18px;
+  }
+
+  > .rc-collapse-item {
+    > .rc-collapse-header {
+      color: $color-white;
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 38px;
+      outline: 0;
+      padding: 10px 40px;
+      text-indent: 0;
+    }
+  }
+
+  > .rc-collapse-item:first-child {
+    border-top: 0;
+  }
+
+  > .rc-collapse-item-disabled > .rc-collapse-header {
+    background-color: $primary-color;
+    color: $color-white;
+    cursor: not-allowed;
+  }
+}
+
+.rc-collapse-anim-active {
+  transition: height 0.2s ease-out;
+}
+
+.rc-collapse-content {
+  overflow: hidden;
+  padding: 0 40px;
+
+  > .rc-collapse-content-box {
+    border-top: 1px dotted $color-white-transparent-0455;
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: white;
+    font-size: 14px;
+    text-align: justify;
+  }
+}
+
+.rc-collapse-content-inactive {
+  display: none;
+}
+
+.rc-collapse-item:last-child > .rc-collapse-content {
+  border-radius: 0 0 3px 3px;
+}
+
+/** Input Forms **/
+
+input {
+  background-color: $primary-highlight-color;
+  border: 0;
+  color: $color-white;
+  float: left;
+  margin: 30px 0 0;
+  padding: 15px 0;
+  text-align: center;
+  width: 100%;
+}
+
+input::placeholder {
+  color: $color-white;
+}
+
+input:focus {
+  outline: none;
+}
+
+input[type='checkbox'] {
+  display: none;
+}
+
+input[type='checkbox'] + span {
+  background: white left top no-repeat;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: inline-block;
+  height: 12px;
+  margin: -1px 0 0;
+  margin-right: 4px;
+  position: relative;
+  top: -1px;
+  transition-duration: 200ms;
+  transition-property: all;
+  vertical-align: middle;
+  width: 12px;
+}
+
+input[type='checkbox']:checked + span {
+  background: lighten($primary-highlight-color, 10%) left top no-repeat;
+}
+
+.title-holder {
+  padding: 2% 2% 0;
+}
+
+.settings-collapse {
+  padding: 0 2%;
+
+  .rc-collapse {
+    box-shadow: unset;
+
+    .rc-collapse-content {
+      border-bottom: 1px dotted rgba(255, 255, 255, 0.455);
+      padding: 0 0 25px;
+
+      .rc-collapse-content-box {
+        border-top: unset;
+      }
+    }
+
+    .rc-collapse-item {
+      .rc-collapse-header {
+        border-bottom: 1px dotted rgba(255, 255, 255, 0.455);
+        padding: 10px 0;
+        text-align: left;
+      }
+    }
+  }
+}
+
+.icon-wrapper {
+  align-items: center;
+  background-color: $primary-color;
+  border-radius: 12px;
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  display: flex;
+  flex: 0 0 45px;
+  float: right;
+  height: 45px;
+  margin: 5px;
+  transition: background-color 0.2s;
+  width: 45px;
+
+  &:hover {
+    background-color: $primary-highlight-color;
+  }
+}
+
+.bottom-app-column {
+  justify-content: unset;
+  padding: 2% 0;
+
+  @include media('<=phone') {
+    justify-content: center;
+  }
+
+  .dates-holder {
+    padding: 3px 0 0 2%;
+  }
+
+  .remove-button {
+    margin: 0;
+  }
+}
+
+/** For Autocomplete forms **/
+
+ul {
+  border-radius: 10px;
+  margin: 0;
+  padding-left: 0;
+}
+
+li {
+  float: left;
+  list-style-type: none;
+  margin: 0;
+  width: 100%;
+}
+
+/** Code View styling **/
+
+/* stylelint-disable-next-line selector-class-pattern */
+.react-autosuggest__container {
+  width: 100%;
+}
+
+pre {
+  margin: 0;
+}
+
+.react-tabs {
+  margin-top: 30px;
+  width: 100%;
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+.react-tabs__tab-panel {
+  display: flex;
+  width: 100%;
+
+  .inner-tab {
+    width: 100%;
+  }
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+.react-tabs__tab-list {
+  ul {
+    overflow: hidden;
+  }
+
+  li {
+    color: $color-white;
+    cursor: pointer;
+    display: inline-block;
+    float: left;
+    list-style-type: none;
+    margin: 0;
+    margin-right: 5px;
+    padding: 10px 50px;
+    text-align: left;
+    transition-duration: 200ms;
+    transition-property: background-color;
+    transition-timing-function: linear;
+    width: 100%;
+  }
+}
+
+.unselected-tab {
+  background-color: $primary-highlight-color;
+}
+
+.selected-tab {
+  background-color: $primary-color;
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+.react-tabs__tab-list li:hover {
+  background-color: $primary-color;
+}
+
+@media screen and (max-width: 700px) {
+  /* stylelint-disable-next-line selector-class-pattern */
+  .react-tabs__tab-list li {
+    text-align: left;
+    width: 100%;
+  }
+
+  input {
+    padding: 20px 2%;
+    width: 96%;
+  }
+}
+
+/** Social Media Icons **/
+
+.social-media-holder {
+  margin: 0 auto;
+  width: 210px;
+}
+
+div.uclapi-card-facebook,
+div.uclapi-card-github,
+div.uclapi-card-twitter {
+  border-radius: 40px;
+  float: left;
+  margin: 0 5px;
+  padding: 20px;
+  transition-duration: 0.5s;
+  transition-property: background-color;
+  transition-timing-function: ease-out;
+}
+
+div.uclapi-card-facebook {
+  background-color: $color-facebook;
+
+  &:hover {
+    background-color: lighten($color-facebook, 15%);
+  }
+}
+
+div.uclapi-card-twitter {
+  background-color: $color-twitter;
+
+  &:hover {
+    background-color: lighten($color-twitter, 15%);
+  }
+}
+
+div.uclapi-card-github {
+  background-color: $color-black;
+
+  &:hover {
+    background-color: lighten($color-black, 20%);
+  }
+}
+
+/** Carousels **/
+
+/** Sizing **/
+
+.mobile,
+.tablet,
+.default,
+.none {
+  display: none;
+}
+
+@media screen and (min-width: 1130px) {
+  .default {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 1130px) and (min-width: 700px) {
+  .tablet {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .mobile {
+    display: block;
+  }
+}
+
+/** Overlays **/
+
+.modal {
+  left: 20vw;
+  padding: 0;
+  position: absolute;
+  right: 20vw;
+  top: 25%;
+}
+
+.confirm-box-container {
+  padding: 15px 0;
+}

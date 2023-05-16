@@ -1,0 +1,68 @@
+@import './helpers';
+@import './core.scss';
+
+$text-color: #4c555a;
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: $color-white;
+  color: $text-color;
+  font-family: 'Source Sans Pro', sans-serif;
+  margin: 0;
+}
+
+h1 {
+  font-family: 'Roboto', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+h2 {
+  color: #333;
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+p {
+  font-size: 16px;
+  line-height: 26px;
+}
+
+li {
+  list-style-type: initial;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input {
+  color: $text-color;
+  font-family: 'Source Sans Pro', 'Roboto', sans-serif;
+}
+
+input::placeholder {
+  color: $text-color;
+}
+
+a {
+  color: $text-color;
+  text-decoration: underline dotted;
+
+  &:hover {
+    color: darken($text-color, 20%);
+  }
+}

@@ -1,0 +1,137 @@
+@import './helpers';
+
+$primary-color: #eaedf1;
+$primary-dark-color: #313537;
+$secondary-color: #f4f4f4;
+$accent-color: #8d6e63;
+$highlight-color: #b18453;
+
+$break-small: 600px;
+
+h1 {
+  font-size: 42px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 28px;
+  font-weight: 400;
+  margin: 20px auto;
+  max-width: 900px;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 400;
+  margin: 20px auto;
+  max-width: 1000px;
+}
+
+.log-in-layout {
+  background: $primary-color;
+  padding-top: 20%;
+  text-align: center;
+
+  a {
+    margin-right: 20px;
+  }
+
+  h1 {
+    color: $primary-dark-color;
+  }
+}
+
+.settings-holder {
+  background: $primary-color;
+  margin-top: 100px;
+  text-align: center;
+}
+
+.settings-form {
+  margin: auto;
+  max-width: 600px;
+  position: relative;
+  width: 50%;
+}
+
+.settings-title {
+  width: 100%;
+
+  h2 {
+    color: $primary-dark-color;
+    font-size: 17px;
+    margin: 10px auto;
+    text-align: left;
+  }
+}
+
+.card-settings {
+  @include box-shadow(2);
+
+  background-color: white;
+  border-radius: 3px;
+  padding: 10px 20px;
+  width: 100%;
+
+  h3 {
+    color: #666;
+    font-size: 12px;
+    margin: 0;
+    padding: 0 0 2px;
+    text-align: left;
+  }
+}
+
+.profile-card {
+  padding: 9px 0;
+  width: 100%;
+}
+
+.auth-app {
+  height: 36px;
+  padding: 5px 0;
+  width: 100%;
+}
+
+.app-information {
+  float: left;
+  height: 30px;
+  position: relative;
+  top: 3px;
+
+  h3 {
+    color: #666;
+    font-size: 12px;
+    margin: 0;
+    padding: 0 0 2px;
+    text-align: left;
+  }
+}
+
+.app-permission-box {
+  display: inline-block;
+  float: right;
+  height: 36px;
+  position: relative;
+
+  h3 {
+    color: #666;
+    font-size: 12px;
+    margin: 0;
+    padding: 0 0 2px;
+    text-align: left;
+  }
+}
+
+/* For mobile screens */
+@media screen and (max-width: $break-small) {
+  .settings-form {
+    width: 80%;
+  }
+
+  .card-settings {
+    padding: 5px;
+  }
+}

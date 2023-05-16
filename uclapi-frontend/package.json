@@ -1,0 +1,40 @@
+{
+  "name": "uclapi-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.12.4",
+    "@sentry/react": "^7.52.1",
+    "@sentry/tracing": "^7.52.1",
+    "@types/node": "20.1.4",
+    "@types/react": "18.2.6",
+    "@types/react-dom": "18.2.4",
+    "axios": "^1.4.0",
+    "eslint": "8.40.0",
+    "eslint-config-next": "13.4.2",
+    "framer-motion": "^10.12.11",
+    "include-media": "^2.0.0",
+    "js-cookie": "^3.0.5",
+    "next": "13.4.2",
+    "qs": "^6.11.2",
+    "rc-collapse": "^3.6.0",
+    "react": "18.2.0",
+    "react-autosuggest": "^10.1.0",
+    "react-dom": "18.2.0",
+    "react-icons": "^4.8.0",
+    "react-modal": "^3.16.1",
+    "react-responsive-carousel": "^3.2.23",
+    "react-syntax-highlighter": "^15.5.0",
+    "react-tabs": "^6.0.1",
+    "typescript": "5.0.4"
+  },
+  "devDependencies": {
+    "sass": "^1.62.1"
+  }
+}
