@@ -13,38 +13,19 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf.urls import include
+from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
-from dashboard.views import (
-    documentation,
-    home,
-    about,
-    warning,
-    error_404_view,
-    error_500_view,
-    custom_page_not_found
-)
 from common.views import ping_view
-from oauth.views import settings, settings_ad_callback, logout
-from marketplace.views import marketplace
+from oauth.views import logout
+from dashboard.views import DevelopmentNextjsProxyView
 
 app_name = "uclapi"
 
-handler404 = error_404_view
-handler500 = error_500_view
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('dashboard/', include('dashboard.urls')),
-    path('docs/', documentation),
-    path('about/', about),
-    path('settings/', settings),
-    path('settings/user/login.callback', settings_ad_callback),
+    path('dashboard/api/', include('dashboard.urls')),
     path('logout/', logout),
-    path('warning/', warning),
-    path('marketplace/', marketplace),
-    path('marketplace/<id>/', marketplace),
     path('roombookings/', include('roombookings.urls')),
     path('oauth/', include('oauth.urls')),
     path('timetable/', include('timetable.urls')),
@@ -53,7 +34,5 @@ urlpatterns = [
     path('workspaces/', include('workspaces.urls')),
     path('libcal/', include('libcal.urls')),
     path('ping/', ping_view),
-    path('', include('dashboard.urls')),
-    path('404/', custom_page_not_found),
-    path('500/', error_500_view)
+    url('^(?P<path>.*)$', DevelopmentNextjsProxyView.as_view()),
 ]

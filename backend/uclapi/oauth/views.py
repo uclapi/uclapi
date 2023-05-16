@@ -575,44 +575,6 @@ def get_student_number(request, *args, **kwargs):
         custom_header_data=kwargs
     )
 
-
-@csrf_exempt
-def settings_ad_callback(request):
-    # Callback from AD login
-    # should auth user login or signup
-    # then redirect to my apps homepage
-    user_result = handle_azure_ad_callback(
-        request.GET.get("code"),
-        request.build_absolute_uri(request.path)
-    )
-
-    if isinstance(user_result, str):
-        response = PrettyJsonResponse({
-            "ok": False,
-            "error": user_result
-        })
-        response.status_code = 400
-        return response
-    else:
-        request.session["user_id"] = user_result.id
-        return redirect(settings)
-
-
-@ensure_csrf_cookie
-def settings(request):
-    # Check whether the user is logged in
-    try:
-        request.session["user_id"]
-    except KeyError:
-        # Send the user to AD to log in
-        login_url = get_azure_ad_authorize_url(
-            request.build_absolute_uri(request.path) + "user/login.callback"
-        )
-        return redirect(login_url)
-
-    return render(request, 'settings.html')
-
-
 @csrf_exempt
 def get_settings(request):
     if request.method != "GET":

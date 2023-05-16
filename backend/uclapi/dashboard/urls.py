@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 
 from dashboard.api_applications import (
     create_app, delete_app, regenerate_app_token, rename_app, set_callback_url,
@@ -10,24 +10,21 @@ from dashboard.api_applications import (
 from . import views, webhook_views
 
 urlpatterns = [
-    url(r'api/analytics/total$', number_of_requests),
-    url(r'api/analytics/quota$', quota_remaining),
-    url(r'api/analytics/services$', most_popular_service),
-    url(r'api/analytics/methods$', most_popular_method),
-    url(r'api/analytics/oauth/total$', users_per_app),
-    url(r'api/analytics/oauth/total_by_dept$', users_per_app_by_dept),
-    url(r'api/apps/$', get_apps),
-    url(r'api/create/$', create_app),
-    url(r'api/rename/$', rename_app),
-    url(r'api/regen/$', regenerate_app_token),
-    url(r'api/delete/$', delete_app),
-    url(r'api/setcallbackurl/$', set_callback_url),
-    url(r'api/updatescopes/$', update_scopes),
-    url(r'^user/login.callback', views.ad_callback),
-    url(r'api/webhook/edit/$', webhook_views.edit_webhook),
-    url(
-        r'api/webhook/refreshsecret/$',
+    path('analytics/total', number_of_requests),
+    path('analytics/quota', quota_remaining),
+    path('analytics/services', most_popular_service),
+    path('analytics/methods', most_popular_method),
+    path('analytics/oauth/total', users_per_app),
+    path('analytics/oauth/total_by_dept', users_per_app_by_dept),
+    path('apps', get_apps),
+    path('create', create_app),
+    path('rename', rename_app),
+    path('regen', regenerate_app_token),
+    path('delete', delete_app),
+    path('setcallbackurl', set_callback_url),
+    path('updatescopes', update_scopes),
+    path('webhook/edit', webhook_views.edit_webhook),
+    path('webhook/refreshsecret',
         webhook_views.refresh_verification_secret
     ),
-    url(r'^(?P<path>.*)$', views.DevelopmentNextjsProxyView.as_view())
 ]

@@ -8,7 +8,6 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from revproxy.views import ProxyView
 from uclapi.settings import FAIR_USE_POLICY
 from oauth.app_helpers import (
-    handle_azure_ad_callback,
     get_azure_ad_authorize_url
 )
 
@@ -19,41 +18,6 @@ from .tasks import add_user_to_mailing_list_task
 
 class DevelopmentNextjsProxyView(ProxyView):
     upstream = 'http://localhost:3000'
-
-@csrf_exempt
-def ad_callback(request):
-    # Callback from AD login
-    # should auth user login or signup
-    # then redirect to dashboard homepage
-    user_result = handle_azure_ad_callback(
-        request.GET.get("code"),
-        request.build_absolute_uri(request.path)
-    )
-
-    if isinstance(user_result, str):
-        response = HttpResponse(
-            "Error 400 - Bad Request. <br>" + user_result)
-        response.status_code = 400
-        return response
-
-    user = user_result
-
-    # Determine whether user should have access to the dashboard.
-    # We deny access to test accounts and alumni
-    if not any(x in user.user_types for x in ['Casual', 'Honorary', 'P/G', 'Staff', 'U/G']):
-        response = HttpResponse(
-            (
-                "Error 403 - denied. <br>"
-                "The API Dashboard is only accessible to current UCL members."
-            )
-        )
-        response.status_code = 403
-        return response
-
-    request.session["user_id"] = user.id
-    add_user_to_mailing_list_task.delay(user.email, user.full_name)
-    return redirect(dashboard)
-
 
 @ensure_csrf_cookie
 def dashboard(request):
@@ -93,52 +57,3 @@ def dashboard(request):
             })
 
     return render(request, 'dashboard.html')
-
-
-@ensure_csrf_cookie
-def about(request):
-    return render(request, 'about.html')
-
-
-@ensure_csrf_cookie
-def home(request):
-    logged_in = True
-
-    try:
-        request.session["user_id"]
-    except KeyError:
-        logged_in = False
-
-    articles = get_articles()
-    token = get_temp_token()
-
-    return render(request, 'index.html', {
-        'initial_data': {
-            'temp_token': token,
-            'logged_in': str(logged_in),
-            'medium_articles': articles
-        }
-    })
-
-
-@ensure_csrf_cookie
-def documentation(request):
-    return render(request, 'documentation.html')
-
-
-@ensure_csrf_cookie
-def warning(request):
-    return render(request, 'warning.html')
-
-
-@ensure_csrf_cookie
-def error_404_view(request, exception):
-    return render(request, '404.html', status=404)
-
-
-def error_500_view(request):
-    return render(request, '500.html', status=500)
-
-
-def custom_page_not_found(request):
-    return error_404_view(request, None)
