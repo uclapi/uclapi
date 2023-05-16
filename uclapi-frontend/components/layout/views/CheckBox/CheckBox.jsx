@@ -1,7 +1,7 @@
 import { checkedIcon, uncheckedIcon } from '@/components/layout/Icons.jsx'
 import { Container } from '@/components/layout/Items.jsx'
 import React, { useCallback } from 'react'
-import './CheckBox.module.scss'
+import styles from './CheckBox.module.scss'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -25,7 +25,7 @@ const CheckBox = ({
 
   return (
     <Container
-      className="checkbox"
+      className={styles.checkbox}
       height={`55px`}
       onClick={toggleCheck}
       noPadding

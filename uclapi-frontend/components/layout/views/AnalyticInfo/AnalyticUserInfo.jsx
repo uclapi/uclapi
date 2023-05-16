@@ -1,6 +1,6 @@
 import { Container, AnalyticInfo } from '@/components/layout/Items.jsx'
 import React  from 'react'
-import './AnalyticInfo.module.scss'
+import styles from './AnalyticInfo.module.scss'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -18,9 +18,9 @@ const AnalyticUserInfo = ({
     <Container noPadding>
       <AnalyticInfo analytic='users' value={users} />
       {users > 0 && (
-        <Container className="analytic-info-row" noPadding>
+        <Container className={styles.analyticInfoRow} noPadding>
           <div>Users by dept.</div>
-          <div className='analytic-user-dept'>
+          <div className={styles.analyticUserDept}>
             {usersPerDept.map((dept, index) =>
               <AnalyticInfo
                 key={index}

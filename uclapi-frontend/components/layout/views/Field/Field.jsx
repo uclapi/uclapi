@@ -8,7 +8,7 @@ import {
 import { Container } from '@/components/layout/Items.jsx'
 import React from "react";
 
-import './Field.module.scss'
+import styles from './Field.module.scss'
 
 /**
 A generic field that is styled to fit in with the dashboard,
@@ -34,7 +34,7 @@ style
 export default class Field extends React.Component {
 
   constructor(props) {
-    super(props)
+    super(props);
 
     const fieldRef = React.createRef()
     const { content } = this.props
@@ -143,22 +143,23 @@ export default class Field extends React.Component {
       isEditing,
     } = this.state
 
+    console.log('ADAD', styles);
     const state = this.doesExist(onSave) ? (
-      isEditing ? `editing` : `not-editing`
-    ) : `uneditable`
+      isEditing ? styles.editing : styles.notEditing
+    ) : styles.uneditable
 
     return (
     <>
       <Container
-        className={[`field-container`, state].join(` `)}
+        className={[styles.fieldContainer, state].join(` `)}
         onClick={this.toggleEditing}
         noPadding
       >
-        <div className="field-label">{title}</div>
+        <div className={styles.fieldLabel}>{title}</div>
 
         <input ref={fieldRef}
           type="text"
-          className={[`field-input`, state].join(` `)}
+          className={[styles.fieldInput, state].join(` `)}
           readOnly={!isEditing}
           // eslint-disable-next-line react/jsx-no-bind
           onChange={isEditing ? () => { this.save(false) } : null }

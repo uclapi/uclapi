@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
 // Stylings
-import { styles } from '@/components/layout/data/dashboard_styles.jsx'
+import { styles as dashboardStyles } from '@/components/layout/data/dashboard_styles.jsx'
 // Components
 import {
   Button, CheckBox, AnalyticInfo, AnalyticUserInfo,
@@ -9,7 +9,7 @@ import {
 // External dependencies
 import Collapse, { Panel } from 'rc-collapse'
 import React from "react";
-
+import styles from '@/styles/Dashboard.module.scss'
 import AccordionIcon from './AccordionIcon.jsx'
 
 /**
@@ -88,7 +88,7 @@ export default class App extends React.Component {
         <Container noPadding>
           <Column
             width='1-1'
-            className="settings-collapse"
+            className={`settings-collapse`}
             noPadding
           >
             <Collapse expandIcon={AccordionIcon}>
@@ -96,7 +96,7 @@ export default class App extends React.Component {
               <Container noPadding>
                 <Column
                   width='1-1'
-                  className='settings-section'
+                  className={styles.settingsSection}
                 >
                   <TextView text={`OAuth Credentials: `}
                     heading={4}
@@ -125,7 +125,7 @@ export default class App extends React.Component {
               <Container noPadding>
                 <Column
                   width='1-1'
-                  className='settings-section'
+                  className={styles.settingsSection}
                 >
                   <TextView text={`OAuth Scopes`}
                     heading={4}
@@ -181,13 +181,13 @@ export default class App extends React.Component {
                 <TextView text={`Created: ` + created + ` ago`}
                   heading={5}
                   align="left"
-                  style={styles.dates}
+                  style={dashboardStyles.dates}
                   color="white"
                 />
                 <TextView text={`Updated: ` + updated + ` ago`}
                   heading={5}
                   align="left"
-                  style={styles.dates}
+                  style={dashboardStyles.dates}
                   color="white"
                 />
               </Column>

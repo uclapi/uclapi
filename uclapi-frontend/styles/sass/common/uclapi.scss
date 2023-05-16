@@ -31,6 +31,7 @@
 
 /** Setup **/
 @import '../core.scss';
+@import '../helpers.scss';
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
 
 html,
@@ -41,7 +42,7 @@ textarea {
   font-family: 'Source Sans Pro', 'Roboto', sans-serif;
 }
 
-.app,
+#__next,
 html,
 body {
   height: 100%;
@@ -52,6 +53,94 @@ html,
 body {
   background-color: $color-white;
   margin: 0;
+}
+
+.app-holder,
+.settings-collapse {
+  .rc-collapse {
+    background-color: $color-grey-dark;
+    flex: 0 0 100%;
+    box-shadow: unset;
+
+    .rc-collapse-header {
+      color: white;
+      font-family: 'Source Sans Pro', 'Roboto', sans-serif;
+    }
+
+    .rc-collapse-content {
+      padding: 0;
+    }
+
+    .rc-collapse-content>.rc-collapse-content-box {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.settings-collapse {
+  padding: 0 2%;
+
+  .rc-collapse {
+    box-shadow: unset;
+
+    .rc-collapse-content {
+      border-bottom: 1px dotted rgba(255, 255, 255, 0.455);
+      padding: 0 0 25px;
+
+      .rc-collapse-content-box {
+        border-top: unset;
+      }
+    }
+
+    .rc-collapse-item {
+      .rc-collapse-header {
+        border-bottom: 1px dotted rgba(255, 255, 255, 0.455);
+        padding: 10px 0;
+        text-align: left;
+      }
+    }
+  }
+}
+
+.container.splash-parallax {
+  >.no-vertical-align {
+    >.row>.column {
+      flex-wrap: unset;
+
+      >h1,
+      >h3 {
+        text-align: left;
+      }
+    }
+  }
+}
+
+.centered {
+  text-align: center;
+}
+
+.navbar {
+  @include box-shadow(1);
+
+  align-items: center;
+  background-color: white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+  display: flex;
+  height: $navbar-height;
+  position: fixed;
+  top: 0;
+  width: 100%;
+
+  img {
+    height: $navbar-height - 15px;
+    margin-left: 25px;
+  }
+
+  .logo-text {
+    display: inline;
+    font-size: 2em;
+    margin: 10px;
+  }
 }
 
 /** Row Colours **/
@@ -449,31 +538,6 @@ input[type='checkbox']:checked + span {
 
 .title-holder {
   padding: 2% 2% 0;
-}
-
-.settings-collapse {
-  padding: 0 2%;
-
-  .rc-collapse {
-    box-shadow: unset;
-
-    .rc-collapse-content {
-      border-bottom: 1px dotted rgba(255, 255, 255, 0.455);
-      padding: 0 0 25px;
-
-      .rc-collapse-content-box {
-        border-top: unset;
-      }
-    }
-
-    .rc-collapse-item {
-      .rc-collapse-header {
-        border-bottom: 1px dotted rgba(255, 255, 255, 0.455);
-        padding: 10px 0;
-        text-align: left;
-      }
-    }
-  }
 }
 
 .icon-wrapper {

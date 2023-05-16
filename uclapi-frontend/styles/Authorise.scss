@@ -4,34 +4,6 @@
 .authorise-page {
   font-family: "Roboto", "Calibri", Helvetica, sans-serif;
 
-  .centered {
-    text-align: center;
-  }
-
-  .navbar {
-    @include box-shadow(1);
-
-    align-items: center;
-    background-color: white;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.14);
-    display: flex;
-    height: $navbar-height;
-    position: fixed;
-    top: 0;
-    width: 100%;
-
-    img {
-      height: $navbar-height - 15px;
-      margin-left: 25px;
-    }
-
-    .logo-text {
-      display: inline;
-      font-size: 2em;
-      margin: 10px;
-    }
-  }
-
   > .content {
     margin: 0 auto;
     margin-top: calc(#{$navbar-height} + 1rem);

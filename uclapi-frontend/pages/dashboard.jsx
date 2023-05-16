@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-bind */
-import { styles } from '@/components/layout/data/dashboard_styles.jsx'
+import { styles as dashboardStyles } from '@/components/layout/data/dashboard_styles.jsx'
 import {
   Button, CardView, Column, ConfirmBox,
   Container, Footer, NavBar, Row, TextView,
@@ -9,7 +9,7 @@ import Modal from 'react-modal'
 // UI App Component
 import App from '@/components/dashboard/App.jsx'
 import Api from '../lib/Api'
-import '@/styles/Dashboard.module.scss'
+import styles from '@/styles/Dashboard.module.scss'
 import React from "react";
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from "./api/auth/[...nextauth]";
@@ -61,7 +61,7 @@ class Dashboard extends React.Component {
           onRequestClose={() => this.setState({ view: `default` })}
           className="modal"
           overlayClassName="overlay"
-          style={styles.modal}
+          style={dashboardStyles.modal}
         >
           <ConfirmBox
             text="Enter the name of your new project"
@@ -77,7 +77,7 @@ class Dashboard extends React.Component {
           onRequestClose={() => this.setState({ view: `default` })}
           className="modal"
           overlayClassName="overlay"
-          style={styles.modal}
+          style={dashboardStyles.modal}
         >
           {toDelete !== -1 ? (
             <ConfirmBox
@@ -108,7 +108,7 @@ class Dashboard extends React.Component {
               <h1>Welcome, {name}</h1>
               <h3>username: {cn}</h3>
 
-              <div className="app-holder" style={styles.appHolder}>
+              <div className={`${styles.appHolder} app-holder`} style={dashboardStyles.appHolder}>
                 {apps.length === 0 ? (
                   <CardView width='1-1' type='default' noPadding>
                     <Row noPadding>
@@ -126,7 +126,7 @@ class Dashboard extends React.Component {
                           }
                           heading={2}
                           align={`center`}
-                          style={styles.noPadding}
+                          style={dashboardStyles.noPadding}
                         />
                       </Column>
                     </Row>

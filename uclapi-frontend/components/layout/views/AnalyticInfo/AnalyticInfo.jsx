@@ -1,6 +1,6 @@
 import { Container } from '@/components/layout/Items.jsx'
 import React  from 'react'
-import './AnalyticInfo.module.scss'
+import styles from './AnalyticInfo.module.scss'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -23,11 +23,11 @@ const AnalyticInfo = ({
 }) => {
   return (
     <Container
-      className="analytic-info-row"
+      className={styles.analyticInfoRow}
       noPadding
     >
       <div>{getFriendlyText(analytic)}</div>
-      <p className='analytic-number'>{value}</p>
+      <p>{value}</p>
     </Container>
   )
 }

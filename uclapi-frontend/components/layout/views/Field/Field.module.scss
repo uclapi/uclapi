@@ -2,9 +2,9 @@
 
 $field-height: 4rem;
 
-.container.field-container {
+.fieldContainer {
   &.editing,
-  &.not-editing,
+  &.notEditing,
   &.uneditable {
     margin: -1px 0 0 0;
     display: flex;
@@ -13,7 +13,7 @@ $field-height: 4rem;
     width: 100%;
   }
 
-  &.not-editing {
+  &.notEditing {
     cursor: pointer;
 
     &:hover {
@@ -26,9 +26,9 @@ $field-height: 4rem;
     cursor: unset;
   }
 
-  > input.field-input {
+  input.fieldInput {
     &.editing,
-    &.not-editing,
+    &.notEditing,
     &.uneditable {
       background-color: transparent;
       color: white;
@@ -40,10 +40,10 @@ $field-height: 4rem;
 
     &.editing { cursor: unset; }
     &.uneditable { cursor: unset; }
-    &.not-editing { cursor: pointer; }
+    &.notEditing { cursor: pointer; }
   }
 
-  > .field-label {
+  .fieldLabel {
     color: $color-grey-lighter;
     font-size: small;
     text-transform: uppercase;
@@ -52,7 +52,7 @@ $field-height: 4rem;
     top: 8px;
   }
 
-  & + .container.field-container {
+  & + .fieldContainer {
     border-top: 1px solid $color-grey-light;
   }
 }

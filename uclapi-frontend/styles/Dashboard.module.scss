@@ -1,93 +1,27 @@
 @import "./sass/core.scss";
 @import './sass/helpers';
 
-.app {
-  padding-top: 1rem;
+.appHolder {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 
-  .centered {
-    text-align: center;
+  @include media('<=phone') {
+    width: 100vw;
+    margin-left: -2rem;
+    border-radius: 0;
   }
 
-  .navbar {
-    @include box-shadow(1);
-
-    align-items: center;
-    background-color: white;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.14);
-    display: flex;
-    height: $navbar-height;
-    position: fixed;
-    top: 0;
-    width: 100%;
-
-    img {
-      height: $navbar-height - 15px;
-      margin-left: 25px;
-    }
-
-    .logo-text {
-      display: inline;
-      font-size: 2em;
-      margin: 10px;
-    }
+  > .rc-collapse + .rc-collapse {
+    margin-top: 1rem;
   }
 
-  > .container.splash-parallax {
-    > .no-vertical-align {
-      > .row > .column {
-        flex-wrap: unset;
+  .settingsSection {
+    justify-content: unset;
+    padding: 0;
 
-        > h1,
-        > h3 {
-          text-align: left;
-        }
-      }
-    }
-  }
-
-  .app-holder,
-  .settings-collapse {
-    .rc-collapse {
-      background-color: $color-grey-dark;
-      flex: 0 0 100%;
-
-      .rc-collapse-header {
-        color: white;
-        font-family: 'Source Sans Pro', 'Roboto', sans-serif;
-      }
-
-      .rc-collapse-content {
-        padding: 0;
-      }
-
-      .rc-collapse-content > .rc-collapse-content-box {
-        margin-bottom: 0;
-      }
-    }
-  }
-
-  .app-holder {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-
-    @include media('<=phone') {
-      width: 100vw;
-      margin-left: -2rem;
-      border-radius: 0;
-    }
-
-    > .rc-collapse + .rc-collapse {
-      margin-top: 1rem;
-    }
-
-    .settings-section {
-      justify-content: unset;
-      padding: 0;
-
-      h4 {
-        margin: 10px 0;
-      }
+    h4 {
+      margin: 10px 0;
     }
   }
 }
