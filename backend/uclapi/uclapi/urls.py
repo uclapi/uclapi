@@ -53,7 +53,7 @@ urlpatterns = [
     path('workspaces/', include('workspaces.urls')),
     path('libcal/', include('libcal.urls')),
     path('ping/', ping_view),
-    path('', home),
+    path('', include('dashboard.urls')),
     path('404/', custom_page_not_found),
     path('500/', error_500_view)
 ]

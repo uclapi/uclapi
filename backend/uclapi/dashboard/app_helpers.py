@@ -140,13 +140,13 @@ def generate_secret():
     return dashed
 
 # https://github.com/jackrdye/Decrypt-NextAuth-JWE-getToken/blob/main/Decrypt-NextAuth-JWE-Python.py
-def get_session_user_upi(req):
-    cookie_name = '__Secure-next-auth.session-token' if os.environ['UCLAPI_PRODUCTION'] else 'next-auth.session-token'
-    jet = req.COOKIES[cookie_name]
-    if not jet:
+def get_session_user_cn(req):
+    cookie_name = 'next-auth.session-token' if DEBUG else '__Secure-next-auth.session-token'
+    raw_jwe = req.COOKIES[cookie_name]
+    if not raw_jwe:
         return None
 
-    jet_decryption_key = HKDF(
+    jwe_decryption_key = HKDF(
         master=os.environ['DASHBOARD_JWT_KEY'].encode(),
         key_len=32,
         salt="".encode(),
@@ -154,7 +154,7 @@ def get_session_user_upi(req):
         num_keys=1,
         context=str.encode("NextAuth.js Generated Encryption Key")
     )
-    payload_string = jwe.decrypt(jet, jet_decryption_key).decode()
 
+    payload_string = jwe.decrypt(raw_jwe, jwe_decryption_key).decode()
     payload = json.loads(payload_string)
-    return payload['user']['upi']
+    return payload['sub']

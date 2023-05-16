@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.http import quote
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from revproxy.views import ProxyView
 from uclapi.settings import FAIR_USE_POLICY
 from oauth.app_helpers import (
     handle_azure_ad_callback,
@@ -15,6 +16,9 @@ from .app_helpers import get_articles, get_temp_token
 from .models import User
 from .tasks import add_user_to_mailing_list_task
 
+
+class DevelopmentNextjsProxyView(ProxyView):
+    upstream = 'http://localhost:3000'
 
 @csrf_exempt
 def ad_callback(request):

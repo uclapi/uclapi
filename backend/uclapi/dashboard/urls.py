@@ -10,7 +10,6 @@ from dashboard.api_applications import (
 from . import views, webhook_views
 
 urlpatterns = [
-    url(r'^$', views.dashboard),
     url(r'api/analytics/total$', number_of_requests),
     url(r'api/analytics/quota$', quota_remaining),
     url(r'api/analytics/services$', most_popular_service),
@@ -29,5 +28,6 @@ urlpatterns = [
     url(
         r'api/webhook/refreshsecret/$',
         webhook_views.refresh_verification_secret
-    )
+    ),
+    url(r'^(?P<path>.*)$', views.DevelopmentNextjsProxyView.as_view())
 ]

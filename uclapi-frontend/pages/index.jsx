@@ -51,7 +51,6 @@ class HomePage extends React.Component {
   }
 
   render() {
-    console.log('a', this.props.articles)
     const iconsize = 200;
 
     const startLabel = !!this.props.session ? "DASHBOARD" : `START BUILDING`;

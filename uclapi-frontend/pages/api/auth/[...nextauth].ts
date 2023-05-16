@@ -15,7 +15,6 @@ export const authOptions = {
     {
       id: "uclapi",
       name: "UCL API",
-      // params: { grant_type: "authorization_code" },
       type: "oauth",
       authorization: "https://staging.ninja/oauth/authorise",
       token: {
@@ -60,8 +59,10 @@ export const authOptions = {
       return token;
     },
     signIn: async ({ profile }) => {
-      return profile.user_types.some(x => ['Casual', 'Honorary', 'P/G', 'Staff', 'U/G'].includes(x));
-    }
+      return profile.user_types.some((x) =>
+        ["Casual", "Honorary", "P/G", "Staff", "U/G"].includes(x)
+      );
+    },
   },
   session: {
     maxAge: 24 * 60 * 60, // One day idle session expiry

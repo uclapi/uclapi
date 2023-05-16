@@ -13,13 +13,13 @@ from oauth.scoping import Scopes
 from common.helpers import PrettyJsonResponse
 from uclapi.settings import REDIS_UCLAPI_HOST
 
-from .app_helpers import (is_url_unsafe, get_session_user_upi, NOT_HTTPS,
+from .app_helpers import (is_url_unsafe, get_session_user_cn, NOT_HTTPS,
                           NOT_VALID, URL_BLACKLISTED, NOT_PUBLIC)
 from .models import App, User, APICall
 
 
-def get_user_by_upi(user_upi):
-    user = User.objects.get(employee_id=user_upi)
+def get_user_by_cn(user_cn):
+    user = User.objects.get(cn=user_cn)
     return user
 
 
@@ -34,7 +34,7 @@ def create_app(request):
 
     try:
         name = request.POST["name"]
-        user_upi =  get_session_user_upi(request)
+        user_upi =  get_session_user_cn(request)
     except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
@@ -43,7 +43,7 @@ def create_app(request):
         response.status_code = 400
         return response
 
-    user = get_user_by_upi(user_upi)
+    user = get_user_by_cn(user_upi)
 
     new_app = App(name=name, user=user)
     new_app.save()
@@ -90,7 +90,7 @@ def rename_app(request):
     try:
         app_id = request.POST["app_id"]
         new_name = request.POST["new_name"]
-        user_upi = get_session_user_upi(request)
+        user_upi = get_session_user_cn(request)
     except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
@@ -99,7 +99,7 @@ def rename_app(request):
         response.status_code = 400
         return response
 
-    user = get_user_by_upi(user_upi)
+    user = get_user_by_cn(user_upi)
 
     apps = App.objects.filter(id=app_id, user=user, deleted=False)
     if len(apps) == 0:
@@ -132,7 +132,7 @@ def regenerate_app_token(request):
 
     try:
         app_id = request.POST["app_id"]
-        user_upi = get_session_user_upi(request)
+        user_upi = get_session_user_cn(request)
     except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
@@ -141,7 +141,7 @@ def regenerate_app_token(request):
         response.status_code = 400
         return response
 
-    user = get_user_by_upi(user_upi)
+    user = get_user_by_cn(user_upi)
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
@@ -178,7 +178,7 @@ def delete_app(request):
 
     try:
         app_id = request.POST["app_id"]
-        user_upi = get_session_user_upi(request)
+        user_upi = get_session_user_cn(request)
     except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
@@ -187,7 +187,7 @@ def delete_app(request):
         response.status_code = 400
         return response
 
-    user = get_user_by_upi(user_upi)
+    user = get_user_by_cn(user_upi)
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
@@ -234,7 +234,7 @@ def set_callback_url(request):
         return response
 
     try:
-        user_upi = get_session_user_upi(request)
+        user_upi = get_session_user_cn(request)
     except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
@@ -270,7 +270,7 @@ def set_callback_url(request):
         response.status_code = 400
         return response
 
-    user = get_user_by_upi(user_upi)
+    user = get_user_by_cn(user_upi)
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
@@ -311,7 +311,7 @@ def update_scopes(request):
         return response
 
     try:
-        user_upi = get_session_user_upi(request)
+        user_upi = get_session_user_cn(request)
     except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
@@ -340,7 +340,7 @@ def update_scopes(request):
         response.status_code = 400
         return response
 
-    user = get_user_by_upi(user_upi)
+    user = get_user_by_cn(user_upi)
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
@@ -424,7 +424,7 @@ def get_apps(request):
         response.status_code = 400
         return response
     try:
-        user_upi = get_session_user_upi(request)
+        user_upi = get_session_user_cn(request)
     except (KeyError, AttributeError):
         response = PrettyJsonResponse({
             "success": False,
@@ -433,7 +433,7 @@ def get_apps(request):
         response.status_code = 400
         return response
 
-    user = get_user_by_upi(user_upi)
+    user = get_user_by_cn(user_upi)
 
     user_meta = {
         "name": user.full_name,
