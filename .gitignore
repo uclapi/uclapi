@@ -126,15 +126,6 @@ dump.rdb
 
 # Private files
 /scripts/uclfw.rules
-/scripts/shibboleth/attribute-map.xml
-/scripts/shibboleth/attribute-policy.xml
-/scripts/shibboleth/idp-ucl-metadata.xml
-/scripts/shibboleth/shibboleth2.prod.xml
-/scripts/shibboleth/shibboleth2.staging.xml
-/scripts/shibboleth/sp-cert.prod.pem
-/scripts/shibboleth/sp-cert.staging.pem
-/scripts/shibboleth/sp-key.prod.pem
-/scripts/shibboleth/sp-key.staging.pem
 /deployment_production.sh
 /deployment_staging.sh
 

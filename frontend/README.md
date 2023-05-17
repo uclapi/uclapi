@@ -46,7 +46,7 @@ $ npm run profile
 ```
 
 ## View
-To see the dashboard you must start the django server and fake shibboleth app (see backend readme) then navigate to [localhost:8000/dashboard](localhost:8000/dashboard). The static files are served up by the Django server.
+To see the dashboard you must start the django server (see backend readme) then navigate to [localhost:8000/dashboard](localhost:8000/dashboard). The static files are served up by the Django server.
 
 ## Things to note
 

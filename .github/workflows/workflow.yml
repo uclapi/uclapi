@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
-      
+
       - name: Cache NodeJS
         uses: actions/cache@v2
         with:
@@ -37,7 +37,7 @@ jobs:
           cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
           cd ./frontend/ && \
           npm ci
-      
+
       - name: Get version
         id: version
         uses: juliangruber/read-file-action@v1
@@ -118,7 +118,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.7'
-      
+
       - name: Cache Python
         uses: actions/cache@v2
         with:
@@ -126,7 +126,7 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-    
+
       - name: Install Oracle Instant Client
         run: ./.github/workflows/scripts/setup-oracle.sh
 
@@ -142,7 +142,7 @@ jobs:
           cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
           cd ./backend/uclapi && \
           python ./manage.py migrate --settings=uclapi.settings_mocked
-      
+
       - name: Run tests
         run: |
           cd ./backend/uclapi && \
@@ -164,7 +164,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
-      
+
       - name: Cache NodeJS
         uses: actions/cache@v2
         with:
@@ -192,7 +192,7 @@ jobs:
 
   collect-statics:
     name: Collect statics
-    needs: 
+    needs:
       - build
       - test-backend
       - test-frontend
@@ -202,12 +202,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.7'
-      
+
       - name: Cache Python
         uses: actions/cache@v2
         with:
@@ -245,7 +245,7 @@ jobs:
 
   build-containers:
     name: Build containers
-    needs: 
+    needs:
       - test-backend
       - test-frontend
     runs-on: ubuntu-latest
@@ -287,9 +287,6 @@ jobs:
 
       - name: Build containers
         env:
-          SHIB_POSTGRES_USERNAME: ${{ secrets.SHIB_POSTGRES_USERNAME }}
-          SHIB_POSTGRES_PASSWORD: ${{ secrets.SHIB_POSTGRES_PASSWORD }}
-          SHIB_POSTGRES_DATABASE: ${{ secrets.SHIB_POSTGRES_DATABASE }}
           CRON_CPU_COUNT: 1
           CRON_MEMORY_KB: 2048000
           ENVIRONMENT: staging
@@ -315,10 +312,10 @@ jobs:
         with:
           name: container-id.txt
           path: container-id.txt
-    
+
   deploy:
     name: Deploy
-    needs: 
+    needs:
       - collect-statics
       - build-containers
     runs-on: ubuntu-latest
@@ -341,7 +338,7 @@ jobs:
           echo "$FILES" | base64 --decode > compressed.zip && \
           unzip -qq compressed.zip && \
           rm compressed.zip
-      
+
       - name: Copy docker compose configuration
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -351,13 +348,10 @@ jobs:
           source: "docker/deployment/docker-compose.yml,docker/deployment/docker-compose-staging.yml"
           target: "~"
           strip_components: 2
-      
+
       - name: Docker compose up
         uses: appleboy/ssh-action@v0.1.10
         env:
-          SHIB_POSTGRES_USERNAME: ${{ secrets.SHIB_POSTGRES_USERNAME }}
-          SHIB_POSTGRES_PASSWORD: ${{ secrets.SHIB_POSTGRES_PASSWORD }}
-          SHIB_POSTGRES_DATABASE: ${{ secrets.SHIB_POSTGRES_DATABASE }}
           ENVIRONMENT: staging
           VERSION: ${{ steps.version.outputs.content }}
           SHA: ${{ github.sha }}
@@ -367,7 +361,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key_path: key.pem
-          envs: SHIB_POSTGRES_USERNAME,SHIB_POSTGRES_PASSWORD,SHIB_POSTGRES_DATABASE,ENVIRONMENT,REGISTRY,VERSION,SHA,CRON_CPU_COUNT,CRON_MEMORY_KB
+          envs: ENVIRONMENT,REGISTRY,VERSION,SHA,CRON_CPU_COUNT,CRON_MEMORY_KB
           script_stop: true
           script: |
             aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin $REGISTRY
@@ -377,14 +371,11 @@ jobs:
             envsubst < docker-compose-staging.yml > docker-compose-tmp.yml
             sed -i "s/:version/:$VERSION/g" docker-compose-tmp.yml
             cat docker-compose-tmp.yml | yq e '(.services[] | select(.depends_on | tag == "!!map")).depends_on |= (. | keys)' - > docker-compose-tmp-2.yml
-            export SHIB_POSTGRES_USERNAME=$SHIB_POSTGRES_USERNAME
-            export SHIB_POSTGRES_PASSWORD=$SHIB_POSTGRES_PASSWORD
-            export SHIB_POSTGRES_DATABASE=$SHIB_POSTGRES_DATABASE
             sed -i -E "s/cpus: ([0-9\\.]+)/cpus: '\\1'/" docker-compose-tmp-2.yml
             rm docker-compose-tmp.yml docker-compose-staging.yml
             mv -f docker-compose-tmp-2.yml docker-compose.yml
             docker stack deploy -c docker-compose.yml --with-registry-auth uclapi
-  
+
       - name: Create Sentry release
         uses: getsentry/action-release@v1.1.6
         env:

@@ -231,9 +231,6 @@ jobs:
 
       - name: Build containers
         env:
-          SHIB_POSTGRES_USERNAME: ${{ secrets.SHIB_POSTGRES_USERNAME }}
-          SHIB_POSTGRES_PASSWORD: ${{ secrets.SHIB_POSTGRES_PASSWORD }}
-          SHIB_POSTGRES_DATABASE: ${{ secrets.SHIB_POSTGRES_DATABASE }}
           CRON_CPU_COUNT: 1
           CRON_MEMORY_KB: 2048000
           ENVIRONMENT: production
@@ -298,9 +295,6 @@ jobs:
       - name: Docker compose up
         uses: appleboy/ssh-action@v0.1.10
         env:
-          SHIB_POSTGRES_USERNAME: ${{ secrets.SHIB_POSTGRES_USERNAME }}
-          SHIB_POSTGRES_PASSWORD: ${{ secrets.SHIB_POSTGRES_PASSWORD }}
-          SHIB_POSTGRES_DATABASE: ${{ secrets.SHIB_POSTGRES_DATABASE }}
           ENVIRONMENT: production
           VERSION: ${{ steps.version.outputs.content }}
           CRON_CPU_COUNT: 1
@@ -309,7 +303,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key_path: key.pem
-          envs: SHIB_POSTGRES_USERNAME,SHIB_POSTGRES_PASSWORD,SHIB_POSTGRES_DATABASE,ENVIRONMENT,REGISTRY,VERSION,CRON_CPU_COUNT,CRON_MEMORY_KB
+          envs: ENVIRONMENT,REGISTRY,VERSION,CRON_CPU_COUNT,CRON_MEMORY_KB
           script_stop: true
           script: |
             aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin $REGISTRY
@@ -319,9 +313,6 @@ jobs:
             envsubst < docker-compose-production.yml > docker-compose-tmp.yml
             sed -i "s/:version/:$VERSION/g" docker-compose-tmp.yml
             cat docker-compose-tmp.yml | yq e '(.services[] | select(.depends_on | tag == "!!map")).depends_on |= (. | keys)' - > docker-compose-tmp-2.yml
-            export SHIB_POSTGRES_USERNAME=$SHIB_POSTGRES_USERNAME
-            export SHIB_POSTGRES_PASSWORD=$SHIB_POSTGRES_PASSWORD
-            export SHIB_POSTGRES_DATABASE=$SHIB_POSTGRES_DATABASE
             sed -i -E "s/cpus: ([0-9\\.]+)/cpus: '\\1'/" docker-compose-tmp-2.yml
             rm docker-compose-tmp.yml docker-compose-production.yml
             mv -f docker-compose-tmp-2.yml docker-compose.yml
