@@ -351,7 +351,7 @@ jobs:
           rm compressed.zip
       
       - name: Copy docker compose configuration
-        uses: appleboy/scp-action@v0.1.1
+        uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -361,7 +361,7 @@ jobs:
           strip_components: 2
       
       - name: Docker compose up
-        uses: appleboy/ssh-action@v0.1.4
+        uses: appleboy/ssh-action@v0.1.10
         env:
           SHIB_POSTGRES_USERNAME: ${{ secrets.SHIB_POSTGRES_USERNAME }}
           SHIB_POSTGRES_PASSWORD: ${{ secrets.SHIB_POSTGRES_PASSWORD }}
