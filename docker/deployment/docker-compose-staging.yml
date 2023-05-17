@@ -38,9 +38,6 @@ services:
         ENVIRONMENT: staging
       context: ../../
       dockerfile: docker/deployment/uclapi.Dockerfile
-      tags:
-        - 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-staging-uclapi:latest
-        - 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-staging-uclapi:version
     deploy:
       replicas: 2
       update_config:
@@ -63,9 +60,6 @@ services:
         ENVIRONMENT: staging
       context: ../../
       dockerfile: docker/deployment/cron.Dockerfile
-      tags:
-        - 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-staging-cron:latest
-        - 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-staging-cron:version
     deploy:
       replicas: 1
       update_config:

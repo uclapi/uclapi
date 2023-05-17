@@ -36,6 +36,8 @@ services:
     build:
       args:
         ENVIRONMENT: production
+      context: ../../
+      dockerfile: docker/deployment/uclapi.Dockerfile
     deploy:
       replicas: 3
       update_config:
@@ -56,6 +58,8 @@ services:
     build:
       args:
         ENVIRONMENT: production
+      context: ../../
+      dockerfile: docker/deployment/cron.Dockerfile
     deploy:
       replicas: 1
       update_config:
