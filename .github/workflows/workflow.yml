@@ -297,7 +297,7 @@ jobs:
         run: |
           cd docker/deployment && \
           sed -i "s/:version/:${{ steps.version.outputs.content }}-${GITHUB_SHA}/g" docker-compose-staging.yml && \
-          docker compose docker-compose-staging.yml build
+          docker compose -f docker-compose-staging.yml build
 
       - name: Push containers
         env:
