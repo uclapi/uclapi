@@ -235,7 +235,7 @@ jobs:
           CRON_MEMORY_KB: 2048000
         run: |
           cd docker/deployment && \
-          docker-compose -f docker-compose.yml -f docker-compose-production.yml pull
+          docker compose -f docker-compose.yml -f docker-compose-production.yml pull
 
       - name: Build containers
         env:
@@ -249,7 +249,7 @@ jobs:
         run: |
           cd docker/deployment && \
           sed -i "s/:latest/:${{ steps.version.outputs.content }}/g" docker-compose-production.yml && \
-          docker-compose -f docker-compose.yml -f docker-compose-production.yml build --parallel
+          docker compose -f docker-compose.yml -f docker-compose-production.yml build --parallel
 
       - name: Push containers
         env:
@@ -257,7 +257,7 @@ jobs:
           CRON_MEMORY_KB: 2048000
         run: |
           cd docker/deployment && \
-          docker-compose -f docker-compose.yml -f docker-compose-production.yml push
+          docker compose -f docker-compose.yml -f docker-compose-production.yml push
 
       - name: Create artifact
         run: echo ${{ steps.version.outputs.content }} > container-id.txt
@@ -322,15 +322,15 @@ jobs:
           script: |
             aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin $REGISTRY
             if ((`df -h /dev/root | awk '(NR > 1) {print substr($5, 1, length($5)-1)}'` < 5)); then docker system prune -f; fi
-            docker-compose -f docker-compose.yml -f docker-compose-production.yml config --no-interpolate > docker-compose-tmp.yml
-            sed -i "s/:latest/:$VERSION/g" docker-compose-tmp.yml
-            cat docker-compose-tmp.yml | yq e '(.services[] | select(.depends_on | tag == "!!map")).depends_on |= (. | keys)' - > docker-compose-tmp-2.yml
+            export CRON_CPU_COUNT=$CRON_CPU_COUNT
+            export CRON_MEMORY_KB=$CRON_MEMORY_KB
+            envsubst < docker-compose-production.yml > docker-compose-tmp.yml
+            docker compose -f docker-compose.yml -f docker-compose-tmp.yml config --no-interpolate > docker-compose-tmp-2.yml
+            sed -i "s/:latest/:$VERSION/g" docker-compose-tmp-2.yml
+            cat docker-compose-tmp-2.yml | yq e '(.services[] | select(.depends_on | tag == "!!map")).depends_on |= (. | keys)' - > docker-compose-tmp-3.yml
             export SHIB_POSTGRES_USERNAME=$SHIB_POSTGRES_USERNAME
             export SHIB_POSTGRES_PASSWORD=$SHIB_POSTGRES_PASSWORD
             export SHIB_POSTGRES_DATABASE=$SHIB_POSTGRES_DATABASE
-            export CRON_CPU_COUNT=$CRON_CPU_COUNT
-            export CRON_MEMORY_KB=$CRON_MEMORY_KB
-            envsubst < docker-compose-tmp-2.yml > docker-compose-tmp-3.yml
             sed -i -E "s/cpus: ([0-9\\.]+)/cpus: '\\1'/" docker-compose-tmp-3.yml
             rm docker-compose-tmp.yml docker-compose-tmp-2.yml docker-compose-production.yml
             mv -f docker-compose-tmp-3.yml docker-compose.yml
