@@ -37,7 +37,8 @@ services:
       args:
         ENVIRONMENT: staging
       tags:
-        - uclapi-staging-uclapi:latest
+        - 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-staging-uclapi:latest
+        - 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-staging-uclapi:version
     deploy:
       replicas: 2
       update_config:
@@ -59,7 +60,8 @@ services:
       args:
         ENVIRONMENT: staging
       tags:
-        - uclapi-staging-cron:latest
+        - 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-staging-cron:latest
+        - 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-staging-cron:version
     deploy:
       replicas: 1
       update_config:

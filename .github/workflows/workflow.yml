@@ -296,7 +296,7 @@ jobs:
           UCLAPI_VERSION: "${{ steps.version.outputs.content }}-${{ github.sha }}"
         run: |
           cd docker/deployment && \
-          sed -i "s/:latest/:${{ steps.version.outputs.content }}-${GITHUB_SHA}/g" docker-compose-staging.yml && \
+          sed -i "s/:version/:${{ steps.version.outputs.content }}-${GITHUB_SHA}/g" docker-compose-staging.yml && \
           docker compose -f docker-compose-staging.yml build --parallel
 
       - name: Push containers
