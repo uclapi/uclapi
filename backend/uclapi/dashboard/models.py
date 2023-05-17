@@ -24,7 +24,7 @@ class User(models.Model):
     cn = models.CharField(max_length=100, unique=True)
     department = models.CharField(max_length=1000)
     employee_id = models.CharField(max_length=100, unique=True)
-    raw_intranet_groups = models.CharField(max_length=2000)
+    raw_intranet_groups = models.TextField()
 
     # Possible values: Alumnus, Applicant, Casual, Honorary, P/G, Staff, U/G, Visitor
     user_types = models.CharField(max_length=200, default='')
