@@ -297,7 +297,7 @@ jobs:
         run: |
           cd docker/deployment && \
           sed -i "s/:version/:${{ steps.version.outputs.content }}-${GITHUB_SHA}/g" docker-compose-staging.yml && \
-          docker compose -f docker-compose-staging.yml build --parallel
+          docker compose -f docker-compose.yml -f docker-compose-staging.yml build --parallel
 
       - name: Push containers
         env:
@@ -305,7 +305,7 @@ jobs:
           CRON_MEMORY_KB: 2048000
         run: |
           cd docker/deployment && \
-          docker compose -f docker-compose-staging.yml push :latest
+          docker compose -f docker-compose-staging.yml push
 
       - name: Create artifact
         run: echo ${{ steps.version.outputs.content }}-${GITHUB_SHA} > container-id.txt
