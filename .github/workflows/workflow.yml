@@ -285,14 +285,6 @@ jobs:
           rm compressed.zip && \
           echo "UCLAPI_VERSION=$UCLAPI_VERSION" >> uclapi/uclapi.env
 
-      - name: Pull layers
-        env:
-          CRON_CPU_COUNT: 1
-          CRON_MEMORY_KB: 2048000
-        run: |
-          cd docker/deployment && \
-          docker compose -f docker-compose.yml -f docker-compose-staging.yml pull
-
       - name: Build containers
         env:
           SHIB_POSTGRES_USERNAME: ${{ secrets.SHIB_POSTGRES_USERNAME }}
