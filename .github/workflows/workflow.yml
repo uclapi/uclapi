@@ -297,7 +297,7 @@ jobs:
         run: |
           cd docker/deployment && \
           sed -i "s/:version/:${{ steps.version.outputs.content }}-${GITHUB_SHA}/g" docker-compose-staging.yml && \
-          docker compose -f docker-compose.yml -f docker-compose-staging.yml build --parallel
+          docker compose docker-compose-staging.yml build
 
       - name: Push containers
         env:
@@ -375,6 +375,7 @@ jobs:
             export CRON_CPU_COUNT=$CRON_CPU_COUNT
             export CRON_MEMORY_KB=$CRON_MEMORY_KB
             envsubst < docker-compose-staging.yml > docker-compose-tmp.yml
+            sed -i "s/:version/:$VERSION/g" docker-compose-tmp.yml
             cat docker-compose-tmp.yml | yq e '(.services[] | select(.depends_on | tag == "!!map")).depends_on |= (. | keys)' - > docker-compose-tmp-2.yml
             export SHIB_POSTGRES_USERNAME=$SHIB_POSTGRES_USERNAME
             export SHIB_POSTGRES_PASSWORD=$SHIB_POSTGRES_PASSWORD
