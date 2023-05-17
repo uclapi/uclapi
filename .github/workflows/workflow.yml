@@ -297,7 +297,7 @@ jobs:
         run: |
           cd docker/deployment && \
           sed -i "s/:latest/:${{ steps.version.outputs.content }}-${GITHUB_SHA}/g" docker-compose-staging.yml && \
-          docker compose -f docker-compose.yml -f docker-compose-staging.yml build --parallel
+          docker compose -f docker-compose-staging.yml build --parallel
 
       - name: Push containers
         env:
@@ -305,7 +305,7 @@ jobs:
           CRON_MEMORY_KB: 2048000
         run: |
           cd docker/deployment && \
-          docker compose -f docker-compose.yml -f docker-compose-staging.yml push
+          docker compose -f docker-compose-staging.yml push :latest
 
       - name: Create artifact
         run: echo ${{ steps.version.outputs.content }}-${GITHUB_SHA} > container-id.txt
@@ -375,15 +375,13 @@ jobs:
             export CRON_CPU_COUNT=$CRON_CPU_COUNT
             export CRON_MEMORY_KB=$CRON_MEMORY_KB
             envsubst < docker-compose-staging.yml > docker-compose-tmp.yml
-            docker compose -f docker-compose.yml -f docker-compose-tmp.yml config --no-interpolate > docker-compose-tmp-2.yml
-            sed -i "s/:latest/:$VERSION/g" docker-compose-tmp-2.yml
-            cat docker-compose-tmp-2.yml | yq e '(.services[] | select(.depends_on | tag == "!!map")).depends_on |= (. | keys)' - > docker-compose-tmp-3.yml
+            cat docker-compose-tmp.yml | yq e '(.services[] | select(.depends_on | tag == "!!map")).depends_on |= (. | keys)' - > docker-compose-tmp-2.yml
             export SHIB_POSTGRES_USERNAME=$SHIB_POSTGRES_USERNAME
             export SHIB_POSTGRES_PASSWORD=$SHIB_POSTGRES_PASSWORD
             export SHIB_POSTGRES_DATABASE=$SHIB_POSTGRES_DATABASE
-            sed -i -E "s/cpus: ([0-9\\.]+)/cpus: '\\1'/" docker-compose-tmp-3.yml
-            rm docker-compose-tmp.yml docker-compose-tmp-2.yml docker-compose-staging.yml
-            mv -f docker-compose-tmp-3.yml docker-compose.yml
+            sed -i -E "s/cpus: ([0-9\\.]+)/cpus: '\\1'/" docker-compose-tmp-2.yml
+            rm docker-compose-tmp.yml docker-compose-staging.yml
+            mv -f docker-compose-tmp-2.yml docker-compose.yml
             docker stack deploy -c docker-compose.yml --with-registry-auth uclapi
   
       - name: Create Sentry release

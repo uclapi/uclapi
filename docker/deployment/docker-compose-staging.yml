@@ -36,6 +36,8 @@ services:
     build:
       args:
         ENVIRONMENT: staging
+      tags:
+        - uclapi-staging-uclapi:latest
     deploy:
       replicas: 2
       update_config:
@@ -56,6 +58,8 @@ services:
     build:
       args:
         ENVIRONMENT: staging
+      tags:
+        - uclapi-staging-cron:latest
     deploy:
       replicas: 1
       update_config:
