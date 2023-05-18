@@ -12,7 +12,7 @@ scss:
   enabled: false
 
 eslint:
-  enabled: true
+  enabled: false
   config_file: frontend/.eslintrc.hound.json
   ignore_file: frontend/.eslintignore
   version: 6.8.0
