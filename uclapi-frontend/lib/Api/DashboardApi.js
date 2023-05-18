@@ -14,11 +14,11 @@ class DashboardApi {
     baseURL: `/dashboard/api`,
     withCredentials: true,
     headers: {
-      'Content-Type': `application/x-www-form-urlencoded`,
+      'Content-Type': `application/json`,
     },
   })
 
-  static post = (url, body) => DashboardApi.req.post(url, qs.stringify(body))
+  static post = (url, body) => DashboardApi.req.post(url, JSON.stringify(body))
   static get = (url) => DashboardApi.req.get(url)
 
   static regenToken = async (appId) => {
@@ -28,7 +28,12 @@ class DashboardApi {
 
   static acceptAup = async () => {
     const { data } = await DashboardApi.post('/accept-aup/')
-    return data?.success
+    if (!data.success) {
+      throw new Error(
+        "There was an error accepting the Acceptable Use Policy. Please try again later or contact us if the issue persists"
+      )
+    }
+    return true
   }
 
   static addNewProject = async (name) => {

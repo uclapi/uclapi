@@ -228,10 +228,11 @@ class Dashboard extends React.Component {
   })
 
   acceptAup = async () => {
-    if (await Api.dashboard.acceptAup()) {
+    try {
+      await Api.dashboard.acceptAup()
       this.setState({ view: `add-project` })
-    } else {
-      window.alert('There was an error accepting the Acceptable Use Policy. Please try again later or contact us if the issue persists')
+    } catch (error) {
+      window.alert(error.message)
     }
   }
 
