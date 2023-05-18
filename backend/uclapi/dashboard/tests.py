@@ -128,13 +128,30 @@ class DashboardTestCase(TestCase):
         App.objects.create(user=u,
                            **DashboardTestCase.TEST_APP)
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": u.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": u.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
 
-    def test_post_agreement(self):
-        res = self.client.post('/accept-aup/')
+    def test_post_agreement_no_session(self):
+        res = self.client.post(
+            '/accept-aup/', {'accept': True}, content_type='application/json')
+        content = json.loads(res.content.decode())
+        self.assertFalse(content["success"])
+        u = User.objects.get(cn=self.TEST_USER["cn"])
+        self.assertTrue(u.agreement, False)
+
+    def test_post_agreement_no_body(self):
+        res = self.client.post(
+            '/accept-aup/', {}, content_type='application/json')
+        content = json.loads(res.content.decode())
+        self.assertFalse(content["success"])
+        u = User.objects.get(cn=self.TEST_USER["cn"])
+        self.assertTrue(u.agreement, False)
+
+    def test_post_agreement_success(self):
+        res = self.client.post(
+            '/accept-aup/', {'accept': True}, content_type='application/json')
         content = json.loads(res.content.decode())
         self.assertTrue(content["success"])
-        u = User.objects.get(id=self.client.session['user_id'])
+        u = User.objects.get(cn=self.TEST_USER["cn"])
         self.assertTrue(u.agreement, True)
 
     def test_unsafe_urls(self):
@@ -402,6 +419,7 @@ class VerifyOwnershipTestCase(TestCase):
         )
 
 
+@patch.dict(os.environ, {"DASHBOARD_JWT_KEY": DASHBOARD_MOCK_JWT_KEY})
 class RefreshVerifcationSecretViewTests(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
@@ -444,7 +462,8 @@ class RefreshVerifcationSecretViewTests(TestCase):
             },
             content_type='application/json'
         )
-        request.session = {'user_id': self.user1.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": self.user1.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = refresh_verification_secret(request)
 
         content = json.loads(response.content.decode())
@@ -466,7 +485,8 @@ class RefreshVerifcationSecretViewTests(TestCase):
             },
             content_type='application/json'
         )
-        request.session = {'user_id': self.user1.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": self.user1.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = refresh_verification_secret(request)
 
         content = json.loads(response.content.decode())
@@ -518,7 +538,8 @@ def no_app_post_request(self, url, view, user_):
         },
         content_type='application/json'
     )
-    request.session = {'user_id': user_.id}
+    self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+        {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
     response = view(request)
     content = json.loads(response.content.decode())
     self.assertEqual(response.status_code, 400)
@@ -600,7 +621,7 @@ class ApiApplicationsTestCase(TestCase):
             content_type='application/json'
         )
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = create_app(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 403)
@@ -629,7 +650,7 @@ class ApiApplicationsTestCase(TestCase):
             content_type='application/json'
         )
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = create_app(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 200)
@@ -660,7 +681,7 @@ class ApiApplicationsTestCase(TestCase):
             content_type='application/json'
         )
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = rename_app(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -687,7 +708,7 @@ class ApiApplicationsTestCase(TestCase):
             content_type='application/json'
         )
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         self.assertTrue(len(App.objects.filter(
             name="test_app",
             user=user_,
@@ -729,7 +750,7 @@ class ApiApplicationsTestCase(TestCase):
             content_type='application/json'
         )
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         self.assertTrue(len(App.objects.filter(
             name="An App",
             user=user_,
@@ -763,7 +784,7 @@ class ApiApplicationsTestCase(TestCase):
             content_type='application/json'
         )
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = regenerate_app_token(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 200)
@@ -820,7 +841,7 @@ class ApiApplicationsTestCase(TestCase):
             content_type='application/json'
         )
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -845,7 +866,7 @@ class ApiApplicationsTestCase(TestCase):
             content_type='application/json'
         )
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -870,7 +891,7 @@ class ApiApplicationsTestCase(TestCase):
             content_type='application/json'
         )
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -892,7 +913,7 @@ class ApiApplicationsTestCase(TestCase):
             content_type='application/json'
         )
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -919,7 +940,7 @@ class ApiApplicationsTestCase(TestCase):
             content_type='application/json'
         )
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 200)
@@ -971,7 +992,7 @@ class ApiApplicationsTestCase(TestCase):
             content_type='application/json'
         )
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = update_scopes(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -998,7 +1019,7 @@ class ApiApplicationsTestCase(TestCase):
             content_type='application/json'
         )
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = update_scopes(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -1025,7 +1046,7 @@ class ApiApplicationsTestCase(TestCase):
             content_type='application/json'
         )
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = update_scopes(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -1050,7 +1071,7 @@ class ApiApplicationsTestCase(TestCase):
             content_type='application/json'
         )
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = update_scopes(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -1076,7 +1097,7 @@ class ApiApplicationsTestCase(TestCase):
             content_type='application/json'
         )
         self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         self.assertEqual(app_.scope.scope_number, 0)
         response = update_scopes(request)
         content = json.loads(response.content.decode())

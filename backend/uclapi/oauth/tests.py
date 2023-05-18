@@ -999,7 +999,7 @@ class DeleteAToken(TestCase):
             }
         )
         request.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
 
         token_id = oauth_token.token
         deauthorise_app(request)
@@ -1015,7 +1015,7 @@ class DeleteAToken(TestCase):
             }
         )
         request.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": '99999999999'}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": '99999999999'}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         with self.assertRaises(User.DoesNotExist):
             deauthorise_app(request)
 
@@ -1033,7 +1033,7 @@ class DeleteAToken(TestCase):
             }
         )
         request.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": '99999999999'}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
 
         response = deauthorise_app(request)
         self.assertEqual(response.status_code, 400)
@@ -1060,7 +1060,7 @@ class DeleteAToken(TestCase):
             }
         )
         request.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
 
         response = deauthorise_app(request)
         self.assertEqual(response.status_code, 400)
@@ -1088,7 +1088,7 @@ class DeleteAToken(TestCase):
         )
 
         request.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
 
         response = deauthorise_app(request)
         self.assertEqual(response.status_code, 400)
