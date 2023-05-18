@@ -34,7 +34,7 @@ jobs:
 
       - name: Install frontend dependencies
         run: |
-          cd ./frontend && pnpm install --frozen-lockfile
+          cd ./uclapi-frontend && pnpm install --frozen-lockfile
 
       - name: Get version
         id: version
@@ -47,9 +47,9 @@ jobs:
           UCLAPI_VERSION: "${{ steps.version.outputs.content }}-${{ github.sha }}"
         run: |
           sudo apt-get install jq -y
-          jq ".version=\"$UCLAPI_VERSION\"" ./frontend/package.json > /tmp/package.json
+          jq ".version=\"$UCLAPI_VERSION\"" ./uclapi-frontend/package.json > /tmp/package.json
           jq ".info.version=\"$UCLAPI_VERSION\"" ./uclapi.openapi.json > /tmp/uclapi.openapi.json
-          mv /tmp/package.json ./frontend/package.json
+          mv /tmp/package.json ./uclapi-frontend/package.json
           mv /tmp/uclapi.openapi.json ./uclapi.openapi.json
 
       - name: Build frontend
@@ -57,7 +57,7 @@ jobs:
           SENTRY_DSN_REACT: ${{ secrets.SENTRY_DSN_REACT }}
           SENTRY_DSN_ENV: staging
         run: |
-          cd ./frontend && pnpm build
+          cd ./uclapi-frontend && pnpm build
 
   test-backend:
     name: Run backend tests
@@ -163,11 +163,11 @@ jobs:
 
       - name: Install frontend dependencies
         run: |
-          cd ./frontend/ && pnpm install --frozen-lockfile
+          cd ./uclapi-frontend/ && pnpm install --frozen-lockfile
 
       - name: Run frontend tests
         run: |
-          cd ./frontend && pnpm test
+          cd ./uclapi-frontend && pnpm test
 
       # TODO: add coverage to frontend
       # - name: Upload coverage to Codecov
