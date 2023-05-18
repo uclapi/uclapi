@@ -588,15 +588,14 @@ def get_settings(request):
     # Check whether the user is logged in
     try:
         user_cn = get_session_user_cn(request)
-    except KeyError:
+        user = User.objects.get(cn=user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "error": "You are not logged in"
         })
         response.status_code = 401
         return response
-
-    user = User.objects.get(cn=user_cn)
 
     tokens = OAuthToken.objects.filter(user=user)
 
@@ -634,8 +633,16 @@ def get_settings(request):
 @csrf_exempt
 def deauthorise_app(request):
     # Find which user is requesting to deauthorise an app
-    user_cn = get_session_user_cn(request)
-    user = User.objects.get(cn=user_cn)
+    try:
+        user_cn = get_session_user_cn(request)
+        user = User.objects.get(cn=user_cn)
+    except (KeyError, User.DoesNotExist):
+        response = PrettyJsonResponse({
+            "success": False,
+            "error": "You are not logged in"
+        })
+        response.status_code = 401
+        return response
 
     # Find the app that the user wants to deauthorise
     client_id = request.GET.get("client_id", None)
