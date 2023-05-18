@@ -34,8 +34,9 @@ def accept_aup(request):
         return response
 
     try:
-        user_upi =  get_session_user_cn(request)
-    except (KeyError, AttributeError):
+        user_cn =  get_session_user_cn(request)
+        user = get_user_by_cn(user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have name or user."
@@ -43,7 +44,6 @@ def accept_aup(request):
         response.status_code = 400
         return response
 
-    user = get_user_by_cn(user_upi)
     user.agreement = True
     user.save()
 
@@ -63,16 +63,15 @@ def create_app(request):
 
     try:
         name = request.POST["name"]
-        user_upi =  get_session_user_cn(request)
-    except (KeyError, AttributeError):
+        user_cn = get_session_user_cn(request)
+        user = get_user_by_cn(user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have name or user."
         })
         response.status_code = 400
         return response
-
-    user = get_user_by_cn(user_upi)
 
     if not user.agreement:
         response = PrettyJsonResponse({
@@ -128,16 +127,15 @@ def rename_app(request):
     try:
         app_id = request.POST["app_id"]
         new_name = request.POST["new_name"]
-        user_upi = get_session_user_cn(request)
-    except (KeyError, AttributeError):
+        user_cn = get_session_user_cn(request)
+        user = get_user_by_cn(user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have app_id/new_name"
         })
         response.status_code = 400
         return response
-
-    user = get_user_by_cn(user_upi)
 
     apps = App.objects.filter(id=app_id, user=user, deleted=False)
     if len(apps) == 0:
@@ -171,16 +169,15 @@ def regenerate_app_token(request):
 
     try:
         app_id = request.POST["app_id"]
-        user_upi = get_session_user_cn(request)
-    except (KeyError, AttributeError):
+        user_cn = get_session_user_cn(request)
+        user = get_user_by_cn(user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have an app_id."
         })
         response.status_code = 400
         return response
-
-    user = get_user_by_cn(user_upi)
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
@@ -218,16 +215,15 @@ def delete_app(request):
 
     try:
         app_id = request.POST["app_id"]
-        user_upi = get_session_user_cn(request)
-    except (KeyError, AttributeError):
+        user_cn =  get_session_user_cn(request)
+        user = get_user_by_cn(user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have an app_id."
         })
         response.status_code = 400
         return response
-
-    user = get_user_by_cn(user_upi)
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
@@ -275,8 +271,9 @@ def set_callback_url(request):
         return response
 
     try:
-        user_upi = get_session_user_cn(request)
-    except (KeyError, AttributeError):
+        user_cn = get_session_user_cn(request)
+        user = get_user_by_cn(user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "message": "User ID not set in session. Please log in again."
@@ -310,8 +307,6 @@ def set_callback_url(request):
         })
         response.status_code = 400
         return response
-
-    user = get_user_by_cn(user_upi)
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
@@ -353,8 +348,9 @@ def update_scopes(request):
         return response
 
     try:
-        user_upi = get_session_user_cn(request)
-    except (KeyError, AttributeError):
+        user_cn = get_session_user_cn(request)
+        user = get_user_by_cn(user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "message": "User ID not set in session. Please log in again."
@@ -381,8 +377,6 @@ def update_scopes(request):
         })
         response.status_code = 400
         return response
-
-    user = get_user_by_cn(user_upi)
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:

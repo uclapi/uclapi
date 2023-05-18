@@ -143,8 +143,6 @@ def generate_secret():
 def get_session_user_cn(req):
     cookie_name = 'next-auth.session-token' if DEBUG else '__Secure-next-auth.session-token'
     raw_jwe = req.COOKIES[cookie_name]
-    if not raw_jwe:
-        return None
 
     jwe_decryption_key = HKDF(
         master=os.environ['DASHBOARD_JWT_KEY'].encode(),
