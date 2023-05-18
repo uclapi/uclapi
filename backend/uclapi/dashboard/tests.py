@@ -146,21 +146,12 @@ class DashboardTestCase(TestCase):
                 fetch_redirect_response=False,
             )
 
-    def test_get_agreement(self):
-        res = self.client.get('/dashboard/')
-        self.assertTemplateUsed(res, "agreement.html")
-
     def test_post_agreement(self):
-        res = self.client.post('/dashboard/')
-        self.assertTemplateUsed(res, "agreement.html")
-        self.assertContains(res, "You must agree to the fair use policy")
-
-        res = self.client.post('/dashboard/', {'agreement': 'some rubbish'})
-        self.assertTemplateUsed(res, "agreement.html")
-        self.assertContains(res, "You must agree to the fair use policy")
-
-        res = self.client.post('/dashboard/', {'agreement': 'True'})
-        self.assertTemplateUsed(res, "dashboard.html")
+        res = self.client.post('/accept-aup/')
+        content = json.loads(res.content.decode())
+        self.assertTrue(content["success"])
+        u = User.objects.get(id=self.client.session['user_id'])
+        self.assertTrue(u.agreement, True)
 
     def test_unsafe_urls(self):
         assert is_url_unsafe("ftp://test.com")
@@ -610,11 +601,38 @@ class ApiApplicationsTestCase(TestCase):
 
     # Start of create_app section
 
-    def test_app_creation_success(self):
+    def test_app_creation_aup_failure(self):
         user_ = User.objects.create(
             email="test@ucl.ac.uk",
             cn="test",
             given_name="Test Test"
+        )
+
+        request = self.factory.post(
+            '/api/create/',
+            {
+                "name": "test_app"
+            }
+        )
+        request.session = {'user_id': user_.id}
+        response = create_app(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            content["message"],
+            "You have not yet agreed to the UCL API Acceptable Use Policy"
+        )
+        self.assertTrue(len(App.objects.filter(
+            name="test_app",
+            user=user_,
+            deleted=False)) == 0)
+
+    def test_app_creation_success(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test",
+            agreement=True
         )
 
         request = self.factory.post(
