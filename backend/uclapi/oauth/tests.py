@@ -3,10 +3,12 @@ import os
 import random
 import string
 import unittest.mock
+import jwt
 
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import transaction
 from django.test import Client, TestCase
+from django.http.cookie import SimpleCookie
 from django_mock_queries.query import MockModel, MockSet
 from rest_framework.test import APIRequestFactory, APITestCase
 from django.core import signing
@@ -23,6 +25,9 @@ from .models import OAuthScope, OAuthToken
 from .scoping import Scopes
 from .views import authorise, adcallback, deauthorise_app
 
+
+JWT_COOKIE_NAME = 'next-auth.session-token'
+DASHBOARD_MOCK_JWT_KEY = 'foo'
 
 @uclapi_protected_endpoint(personal_data=True, required_scopes=["timetable"])
 def test_timetable_request(request, *args, **kwargs):
@@ -518,8 +523,6 @@ class ViewsTestCase(TestCase):
 
     @parameterized.expand([
         ('/oauth/adcallback'),
-        ('/dashboard/user/login.callback'),
-        ('/settings/user/login.callback')
     ])
     def test_invalid_adcallback_real_account(self, url):
         """Tests that we gracefully handle User integrity violations"""
@@ -597,8 +600,6 @@ class ViewsTestCase(TestCase):
 
     @parameterized.expand([
         ('/oauth/adcallback', 200, True),
-        ('/dashboard/user/login.callback', 302, False),
-        ('/settings/user/login.callback', 302, False)
     ])
     def test_valid_adcallback_real_account(self, url, expected_code, initial_data_exists):
         dev_user_ = User.objects.create(
@@ -966,6 +967,7 @@ class AppHelpersTestCase(TestCase):
         self.assertEqual(len(code), 86)
 
 
+@patch.dict(os.environ, {"DASHBOARD_JWT_KEY": DASHBOARD_MOCK_JWT_KEY})
 class DeleteAToken(TestCase):
     def setUp(self):
         mock_status_code = unittest.mock.Mock()
@@ -996,7 +998,8 @@ class DeleteAToken(TestCase):
                 'client_id': app_.client_id
             }
         )
-        request.session = {'user_id': user_.id}
+        request.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
 
         token_id = oauth_token.token
         deauthorise_app(request)
@@ -1011,7 +1014,8 @@ class DeleteAToken(TestCase):
                 'client_id': '1234.1234'
             }
         )
-        request.session = {'user_id': 999999999}
+        request.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": '99999999999'}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         with self.assertRaises(User.DoesNotExist):
             deauthorise_app(request)
 
@@ -1028,7 +1032,8 @@ class DeleteAToken(TestCase):
                 'token': 'uclapi-123456'
             }
         )
-        request.session = {'user_id': user_.id}
+        request.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": '99999999999'}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
 
         response = deauthorise_app(request)
         self.assertEqual(response.status_code, 400)
@@ -1054,7 +1059,8 @@ class DeleteAToken(TestCase):
                 'client_id': '404_not_found'
             }
         )
-        request.session = {'user_id': user_.id}
+        request.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
 
         response = deauthorise_app(request)
         self.assertEqual(response.status_code, 400)
@@ -1081,7 +1087,8 @@ class DeleteAToken(TestCase):
             }
         )
 
-        request.session = {'user_id': user_.id}
+        request.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
 
         response = deauthorise_app(request)
         self.assertEqual(response.status_code, 400)
