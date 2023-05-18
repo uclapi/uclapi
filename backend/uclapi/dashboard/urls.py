@@ -7,7 +7,7 @@ from dashboard.api_applications import (
     get_apps, accept_aup
 )
 
-from . import views, webhook_views
+from . import webhook_views
 
 urlpatterns = [
     path('analytics/total', number_of_requests),
