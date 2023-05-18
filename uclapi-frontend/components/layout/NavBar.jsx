@@ -157,7 +157,7 @@ class NavBar extends React.Component {
         variants={toast}
       >
         <a href={`/`}>
-          <Image src={'/simpleAPILogoWhite.svg'} width={100} height={20} />
+          <Image src={'/simpleAPILogoWhite.svg'} width={45} height={20} />
         </a>
         <a href={`/`} style={{ textDecoration: `none` }} >
           <div className="logo-text-white">

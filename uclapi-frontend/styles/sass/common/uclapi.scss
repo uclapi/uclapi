@@ -102,6 +102,10 @@ body {
   }
 }
 
+.rc-collapse+.rc-collapse {
+  margin-top: 1rem;
+}
+
 .container.splash-parallax {
   >.no-vertical-align {
     >.row>.column {
