@@ -19,6 +19,7 @@ from django.urls import path
 from common.views import ping_view
 from oauth.views import logout
 from dashboard.views import DevelopmentNextjsProxyView
+from settings import DEBUG
 
 app_name = "uclapi"
 
@@ -34,5 +35,11 @@ urlpatterns = [
     path('workspaces/', include('workspaces.urls')),
     path('libcal/', include('libcal.urls')),
     path('ping/', ping_view),
-    url('^(?P<path>.*)$', DevelopmentNextjsProxyView.as_view()),
 ]
+
+# In development mode, use Django to proxy all other routes to the next.js frontend
+# In production, Traefik handles this for us (prevents load on Django)
+if DEBUG:
+    urlpatterns.append(
+        url('^(?P<path>.*)$', DevelopmentNextjsProxyView.as_view()),
+    )
