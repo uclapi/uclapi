@@ -8,6 +8,8 @@ from django.http import JsonResponse
 from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.datetime_safe import datetime
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import parser_classes
+from rest_framework.parsers import JSONParser
 
 from oauth.models import OAuthToken
 from oauth.scoping import Scopes
@@ -23,12 +25,21 @@ def get_user_by_cn(user_cn):
     user = User.objects.get(cn=user_cn)
     return user
 
+@parser_classes(JSONParser)
 @csrf_exempt
 def accept_aup(request):
-    if request.method != "POST":
+    if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
         response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
+        })
+        response.status_code = 400
+        return response
+
+    if request.data['accept'] != True:
+        response = PrettyJsonResponse({
+            "success": False,
+            "error": "You must accept the AUP"
         })
         response.status_code = 400
         return response
@@ -51,9 +62,11 @@ def accept_aup(request):
         "success": True,
     })
 
+
+@parser_classes(JSONParser)
 @csrf_exempt
 def create_app(request):
-    if request.method != "POST":
+    if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
         response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
@@ -62,7 +75,7 @@ def create_app(request):
         return response
 
     try:
-        name = request.POST["name"]
+        name = request.data["name"]
         user_cn = get_session_user_cn(request)
         user = get_user_by_cn(user_cn)
     except (KeyError, User.DoesNotExist):
@@ -114,9 +127,10 @@ def create_app(request):
     })
 
 
+@parser_classes(JSONParser)
 @csrf_exempt
 def rename_app(request):
-    if request.method != "POST":
+    if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
         response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
@@ -125,8 +139,8 @@ def rename_app(request):
         return response
 
     try:
-        app_id = request.POST["app_id"]
-        new_name = request.POST["new_name"]
+        app_id = request.data["app_id"]
+        new_name = request.data["new_name"]
         user_cn = get_session_user_cn(request)
         user = get_user_by_cn(user_cn)
     except (KeyError, User.DoesNotExist):
@@ -157,9 +171,10 @@ def rename_app(request):
         })
 
 
+@parser_classes(JSONParser)
 @csrf_exempt
 def regenerate_app_token(request):
-    if request.method != "POST":
+    if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
         response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
@@ -168,7 +183,7 @@ def regenerate_app_token(request):
         return response
 
     try:
-        app_id = request.POST["app_id"]
+        app_id = request.data["app_id"]
         user_cn = get_session_user_cn(request)
         user = get_user_by_cn(user_cn)
     except (KeyError, User.DoesNotExist):
@@ -203,9 +218,10 @@ def regenerate_app_token(request):
         })
 
 
+@parser_classes(JSONParser)
 @csrf_exempt
 def delete_app(request):
-    if request.method != "POST":
+    if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
         response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
@@ -214,7 +230,7 @@ def delete_app(request):
         return response
 
     try:
-        app_id = request.POST["app_id"]
+        app_id = request.data["app_id"]
         user_cn =  get_session_user_cn(request)
         user = get_user_by_cn(user_cn)
     except (KeyError, User.DoesNotExist):
@@ -251,9 +267,10 @@ def delete_app(request):
         })
 
 
+@parser_classes(JSONParser)
 @csrf_exempt
 def set_callback_url(request):
-    if request.method != "POST":
+    if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
         response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
@@ -261,7 +278,7 @@ def set_callback_url(request):
         response.status_code = 400
         return response
     try:
-        app_id = request.POST["app_id"]
+        app_id = request.data["app_id"]
     except KeyError:
         response = PrettyJsonResponse({
             "success": False,
@@ -282,7 +299,7 @@ def set_callback_url(request):
         return response
 
     try:
-        new_callback_url = request.POST["callback_url"]
+        new_callback_url = request.data["callback_url"]
     except KeyError:
         response = PrettyJsonResponse({
             "success": False,
@@ -327,9 +344,10 @@ def set_callback_url(request):
     })
 
 
+@parser_classes(JSONParser)
 @csrf_exempt
 def update_scopes(request):
-    if request.method != "POST":
+    if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
         response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
@@ -338,7 +356,7 @@ def update_scopes(request):
         return response
 
     try:
-        app_id = request.POST["app_id"]
+        app_id = request.data["app_id"]
     except KeyError:
         response = PrettyJsonResponse({
             "success": False,
@@ -359,7 +377,7 @@ def update_scopes(request):
         return response
 
     try:
-        scopes_json = request.POST["scopes"]
+        scopes_json = request.data["scopes"]
     except KeyError:
         response = PrettyJsonResponse({
             "success": False,
