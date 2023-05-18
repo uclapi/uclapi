@@ -25,7 +25,5 @@ urlpatterns = [
     path('setcallbackurl', set_callback_url),
     path('updatescopes', update_scopes),
     path('webhook/edit', webhook_views.edit_webhook),
-    path('webhook/refreshsecret',
-        webhook_views.refresh_verification_secret
-    ),
+    path('webhook/refreshsecret', webhook_views.refresh_verification_secret),
 ]

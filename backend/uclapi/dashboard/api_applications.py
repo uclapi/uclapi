@@ -25,6 +25,7 @@ def get_user_by_cn(user_cn):
     user = User.objects.get(cn=user_cn)
     return user
 
+
 @parser_classes(JSONParser)
 @csrf_exempt
 def accept_aup(request):
@@ -36,7 +37,7 @@ def accept_aup(request):
         response.status_code = 400
         return response
 
-    if request.data['accept'] != True:
+    if request.data['accept'] is not True:
         response = PrettyJsonResponse({
             "success": False,
             "error": "You must accept the AUP"
@@ -45,7 +46,7 @@ def accept_aup(request):
         return response
 
     try:
-        user_cn =  get_session_user_cn(request)
+        user_cn = get_session_user_cn(request)
         user = get_user_by_cn(user_cn)
     except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
@@ -231,7 +232,7 @@ def delete_app(request):
 
     try:
         app_id = request.data["app_id"]
-        user_cn =  get_session_user_cn(request)
+        user_cn = get_session_user_cn(request)
         user = get_user_by_cn(user_cn)
     except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({

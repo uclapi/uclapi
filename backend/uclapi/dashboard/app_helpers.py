@@ -139,6 +139,7 @@ def generate_secret():
 
     return dashed
 
+
 # https://github.com/jackrdye/Decrypt-NextAuth-JWE-getToken/blob/main/Decrypt-NextAuth-JWE-Python.py
 def get_session_user_cn(req):
     cookie_name = 'next-auth.session-token' if DEBUG else '__Secure-next-auth.session-token'

@@ -1,7 +1,6 @@
 import os
 import json
 from unittest.mock import patch
-from unittest import mock
 
 from django.test import RequestFactory, TestCase
 from django.http.cookie import SimpleCookie
@@ -527,6 +526,7 @@ def no_app_post_request(self, url, view, user_):
         content["message"],
         "App does not exist."
     )
+
 
 @patch.dict(os.environ, {"DASHBOARD_JWT_KEY": DASHBOARD_MOCK_JWT_KEY})
 class ApiApplicationsTestCase(TestCase):
