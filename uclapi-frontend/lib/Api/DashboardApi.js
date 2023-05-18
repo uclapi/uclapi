@@ -2,13 +2,19 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import qs from 'qs'
 
+export class MissingAUPAgreementError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = this.constructor.name;
+  }
+}
+
 class DashboardApi {
   static req = axios.create({
     baseURL: `/dashboard/api`,
     withCredentials: true,
     headers: {
       'Content-Type': `application/x-www-form-urlencoded`,
-      'X-CSRFToken': Cookies.get(`csrftoken`),
     },
   })
 
@@ -20,9 +26,21 @@ class DashboardApi {
     return token
   }
 
+  static acceptAup = async () => {
+    const { data } = await DashboardApi.post('/accept-aup/')
+    return data?.success
+  }
+
   static addNewProject = async (name) => {
-    const { data: { app } } = await DashboardApi.post(`/create/`, { name })
-    return app
+    try {
+      const { data: { app } } = await DashboardApi.post(`/create/`, { name })
+      return app
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        throw new MissingAUPAgreementError()
+      }
+      throw err;
+    }
   }
 
   static deleteProject = async (appId) => {

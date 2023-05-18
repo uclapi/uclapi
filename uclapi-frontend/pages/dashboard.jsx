@@ -8,12 +8,14 @@ import {
 import Modal from 'react-modal'
 // UI App Component
 import App from '@/components/dashboard/App.jsx'
+import AcceptableUsePolicy from '@/components/dashboard/AcceptableUsePolicy.jsx'
 import Api from '../lib/Api'
 import styles from '@/styles/Dashboard.module.scss'
 import React from "react";
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from "./api/auth/[...nextauth]";
 import withSession from '@/lib/withSession'
+import { MissingAUPAgreementError } from '../lib/Api/DashboardApi';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -49,11 +51,42 @@ class Dashboard extends React.Component {
       addNewProject: this.addNewProject,
       deleteProject: this.deleteProject,
       deleteConfirm: this.deleteConfirm,
+      acceptAup: this.acceptAup,
     }
 
     return (
       <>
         <NavBar isScroll={false} />
+
+        <Modal
+          isOpen={view === `accept-aup`}
+          contentLabel="UCL API Acceptable Use Policy"
+          onRequestClose={() => this.setState({ view: `default` })}
+          className="modal"
+          preventScroll={false}
+          overlayClassName="overlay"
+          style={dashboardStyles.modal}
+        >
+          <CardView width="1-1" type="default" noPadding>
+            {view === `accept-aup` && <AcceptableUsePolicy />}
+            <Button
+              type={`alternate`}
+              onClick={() => actions.acceptAup()}
+              fakeLink
+              style={{ cursor: `pointer` }}
+            >
+              I agree
+            </Button>
+            <Button
+              type={`remove`}
+              onClick={() => this.setState({ view: `default` })}
+              fakeLink
+              style={{ cursor: `pointer` }}
+            >
+              Cancel
+            </Button>
+          </CardView>
+        </Modal>
 
         <Modal
           isOpen={view == `add-project`}
@@ -65,8 +98,12 @@ class Dashboard extends React.Component {
         >
           <ConfirmBox
             text="Enter the name of your new project"
-            success={(value) => { actions.addNewProject(value) }}
-            fail={() => { this.setState({ view: `default` }) }}
+            success={(value) => {
+              actions.addNewProject(value);
+            }}
+            fail={() => {
+              this.setState({ view: `default` });
+            }}
             shouldCheckValue={false}
           />
         </Modal>
@@ -168,21 +205,35 @@ class Dashboard extends React.Component {
   }
 
   addNewProject = async (name) => {
-    const newApp = await Api.dashboard.addNewProject(name)
-    const { data } = this.state
-    this.setState({
-      view: `default`,
-      data: {
-        ...data,
-        apps: [...data.apps, newApp],
-      },
-    })
+    try {
+      const newApp = await Api.dashboard.addNewProject(name)
+      const { data } = this.state
+      this.setState({
+        view: `default`,
+        data: {
+          ...data,
+          apps: [...data.apps, newApp],
+        },
+      })
+    } catch (err) {
+      if (err instanceof MissingAUPAgreementError) {
+        this.setState({ view: 'accept-aup' })
+      }
+    }
   }
 
   deleteConfirm = (index) => this.setState({
     view: `delete-project`,
     toDelete: index,
   })
+
+  acceptAup = async () => {
+    if (await Api.dashboard.acceptAup()) {
+      this.setState({ view: `add-project` })
+    } else {
+      window.alert('There was an error accepting the Acceptable Use Policy. Please try again later or contact us if the issue persists')
+    }
+  }
 
   deleteProject = async (index) => {
     const { data } = this.state

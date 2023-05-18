@@ -23,6 +23,33 @@ def get_user_by_cn(user_cn):
     user = User.objects.get(cn=user_cn)
     return user
 
+@csrf_exempt
+def accept_aup(request):
+    if request.method != "POST":
+        response = PrettyJsonResponse({
+            "success": False,
+            "error": "Request is not of method POST"
+        })
+        response.status_code = 400
+        return response
+
+    try:
+        user_upi =  get_session_user_cn(request)
+    except (KeyError, AttributeError):
+        response = PrettyJsonResponse({
+            "success": False,
+            "message": "Request does not have name or user."
+        })
+        response.status_code = 400
+        return response
+
+    user = get_user_by_cn(user_upi)
+    user.agreement = True
+    user.save()
+
+    return PrettyJsonResponse({
+        "success": True,
+    })
 
 @csrf_exempt
 def create_app(request):
@@ -46,6 +73,14 @@ def create_app(request):
         return response
 
     user = get_user_by_cn(user_upi)
+
+    if not user.agreement:
+        response = PrettyJsonResponse({
+            "success": False,
+            "message": "You have not yet agreed to the UCL API Acceptable Use Policy"
+        })
+        response.status_code = 403
+        return response
 
     new_app = App(name=name, user=user)
     new_app.save()
