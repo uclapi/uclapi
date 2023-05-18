@@ -19,7 +19,7 @@ from django.urls import path
 from common.views import ping_view
 from oauth.views import logout
 from dashboard.views import DevelopmentNextjsProxyView
-from settings import DEBUG
+from .settings import DEBUG
 
 app_name = "uclapi"
 
