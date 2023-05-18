@@ -22,7 +22,7 @@ from .webhook_views import (
 )
 from dashboard.api_applications import (
     create_app, delete_app, regenerate_app_token, rename_app, set_callback_url,
-    update_scopes, get_user_by_id, number_of_requests, quota_remaining,
+    update_scopes, get_user_by_cn, number_of_requests, quota_remaining,
     users_per_app, users_per_app_by_dept, most_popular_service,
     most_popular_method
 )
@@ -557,7 +557,7 @@ class ApiApplicationsTestCase(TestCase):
             cn="test",
             given_name="Test Test"
         )
-        self.assertEqual(get_user_by_id(user_.id), user_)
+        self.assertEqual(get_user_by_cn(user_.cn), user_)
 
     def test_get_request_rejected(self):
         for url in self.functions:

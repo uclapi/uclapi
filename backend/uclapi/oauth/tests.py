@@ -967,7 +967,7 @@ class AppHelpersTestCase(TestCase):
         self.assertEqual(len(code), 86)
 
 
-@patch.dict(os.environ, {"DASHBOARD_JWT_KEY": DASHBOARD_MOCK_JWT_KEY})
+@unittest.mock.patch.dict(os.environ, {"DASHBOARD_JWT_KEY": DASHBOARD_MOCK_JWT_KEY})
 class DeleteAToken(TestCase):
     def setUp(self):
         mock_status_code = unittest.mock.Mock()
