@@ -1,11 +1,15 @@
+import os
 import json
 from unittest.mock import patch
+from unittest import mock
 
 from django.test import RequestFactory, TestCase
+from django.http.cookie import SimpleCookie
 from django.utils.datetime_safe import datetime
 from rest_framework.test import APIRequestFactory
 from django.conf import settings
 import redis
+import jwt
 
 from common.decorators import throttle_api_call
 from oauth.models import OAuthToken, OAuthScope
@@ -24,6 +28,8 @@ from dashboard.api_applications import (
     most_popular_method
 )
 
+JWT_COOKIE_NAME = 'next-auth.session-token'
+DASHBOARD_MOCK_JWT_KEY = 'foo'
 
 class MediumArticleScraperTestCase(TestCase):
     def test_articles_retrieved(self):
@@ -103,6 +109,7 @@ class MediumArticleScraperTestCase(TestCase):
         self.assertEqual(articles, medium_article_iterator)
 
 
+@patch.dict(os.environ, {"DASHBOARD_JWT_KEY": DASHBOARD_MOCK_JWT_KEY})
 class DashboardTestCase(TestCase):
 
     TEST_USER = dict(
@@ -121,30 +128,8 @@ class DashboardTestCase(TestCase):
         u = User.objects.create(**DashboardTestCase.TEST_USER)
         App.objects.create(user=u,
                            **DashboardTestCase.TEST_APP)
-        session = self.client.session
-        session["user_id"] = u.id
-        session.save()
-
-    def test_id_not_set(self):
-        with patch.dict(
-            'os.environ', {
-                "AZURE_AD_ROOT": "http://rooturl.com",
-                "AZURE_AD_CLIENT_ID": "foo",
-                "UCLAPI_DOMAIN": "http://testserver"
-            }
-        ):
-            session = self.client.session
-            session.pop("user_id")
-            session.save()
-
-            res = self.client.get('/dashboard/')
-            self.assertRedirects(
-                res,
-                "http://rooturl.com/oauth2/v2.0/authorize?client_id="
-                "foo&response_type=code&scope=openid%20email%20profile%20user.read&"
-                "response_mode=query&redirect_uri=http%3A//testserver/dashboard/user/login.callback",
-                fetch_redirect_response=False,
-            )
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": u.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
 
     def test_post_agreement(self):
         res = self.client.post('/accept-aup/')
@@ -163,9 +148,6 @@ class DashboardTestCase(TestCase):
         assert not is_url_unsafe("https://uclapiexample.com/callback")
 
     def test_get_apps(self):
-        session = self.client.session
-        session.save()
-
         res = self.client.get('/dashboard/api/apps/')
         self.assertEqual(res.status_code, 200)
 
@@ -442,7 +424,7 @@ class RefreshVerifcationSecretViewTests(TestCase):
         self.assertEqual(content["message"], "Request is not of method POST")
 
     def test_refresh_verification_secret_POST_missing_parameters(self):
-        request = self.factory.post('/')
+        request = self.factory.post('/', '', content_type='application/json')
         response = refresh_verification_secret(request)
 
         content = json.loads(response.content.decode())
@@ -460,7 +442,8 @@ class RefreshVerifcationSecretViewTests(TestCase):
             '/',
             {
                 'app_id': self.app2.id
-            }
+            },
+            content_type='application/json'
         )
         request.session = {'user_id': self.user1.id}
         response = refresh_verification_secret(request)
@@ -477,12 +460,12 @@ class RefreshVerifcationSecretViewTests(TestCase):
     def test_refresh_verification_secret_POST_success(
         self
     ):
-
         request = self.factory.post(
             '/',
             {
                 'app_id': self.app1.id
-            }
+            },
+            content_type='application/json'
         )
         request.session = {'user_id': self.user1.id}
         response = refresh_verification_secret(request)
@@ -514,7 +497,8 @@ def empty_post_request_only(self, url, view, error):
     request = self.factory.post(
         url,
         {
-        }
+        },
+        content_type='application/json'
     )
 
     response = view(request)
@@ -527,13 +511,13 @@ def empty_post_request_only(self, url, view, error):
 
 
 def no_app_post_request(self, url, view, user_):
-
     request = self.factory.post(
         url,
         {
             "new_name": "test_app",
             "app_id": 1
-        }
+        },
+        content_type='application/json'
     )
     request.session = {'user_id': user_.id}
     response = view(request)
@@ -544,7 +528,7 @@ def no_app_post_request(self, url, view, user_):
         "App does not exist."
     )
 
-
+@patch.dict(os.environ, {"DASHBOARD_JWT_KEY": DASHBOARD_MOCK_JWT_KEY})
 class ApiApplicationsTestCase(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
@@ -612,9 +596,11 @@ class ApiApplicationsTestCase(TestCase):
             '/api/create/',
             {
                 "name": "test_app"
-            }
+            },
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = create_app(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 403)
@@ -639,9 +625,11 @@ class ApiApplicationsTestCase(TestCase):
             '/api/create/',
             {
                 "name": "test_app"
-            }
+            },
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = create_app(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 200)
@@ -668,9 +656,11 @@ class ApiApplicationsTestCase(TestCase):
             {
                 "new_name": "test_app",
                 "app_id": 1
-            }
+            },
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = rename_app(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -693,9 +683,11 @@ class ApiApplicationsTestCase(TestCase):
             {
                 "new_name": "test_app",
                 "app_id": app_.id
-            }
+            },
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         self.assertTrue(len(App.objects.filter(
             name="test_app",
             user=user_,
@@ -733,9 +725,11 @@ class ApiApplicationsTestCase(TestCase):
             '/api/delete/',
             {
                 "app_id": app_.id
-            }
+            },
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         self.assertTrue(len(App.objects.filter(
             name="An App",
             user=user_,
@@ -765,9 +759,11 @@ class ApiApplicationsTestCase(TestCase):
             '/api/regen/',
             {
                 "app_id": app_.id
-            }
+            },
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = regenerate_app_token(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 200)
@@ -796,7 +792,8 @@ class ApiApplicationsTestCase(TestCase):
             '/api/setcallbackurl/',
             {
                 "app_id": app_.id,
-            }
+            },
+            content_type='application/json'
         )
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
@@ -819,9 +816,11 @@ class ApiApplicationsTestCase(TestCase):
             '/api/setcallbackurl/',
             {
                 "app_id": app_.id,
-            }
+            },
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -842,9 +841,11 @@ class ApiApplicationsTestCase(TestCase):
             {
                 "app_id": 100000000000001,
                 "callback_url": "https://testcall.com"
-            }
+            },
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -865,9 +866,11 @@ class ApiApplicationsTestCase(TestCase):
             {
                 "app_id": app_.id,
                 "callback_url": "NotReallyAURL"
-            }
+            },
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -885,9 +888,11 @@ class ApiApplicationsTestCase(TestCase):
             {
                 "app_id": app_.id,
                 "callback_url": "https://a"
-            }
+            },
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -910,9 +915,11 @@ class ApiApplicationsTestCase(TestCase):
             {
                 "app_id": app_.id,
                 "callback_url": "https://testcall.com"
-            }
+            },
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 200)
@@ -936,7 +943,8 @@ class ApiApplicationsTestCase(TestCase):
             '/api/updatescopes/',
             {
                 "app_id": app_.id,
-            }
+            },
+            content_type='application/json'
         )
         response = update_scopes(request)
         content = json.loads(response.content.decode())
@@ -959,9 +967,11 @@ class ApiApplicationsTestCase(TestCase):
             '/api/updatescopes/',
             {
                 "app_id": app_.id,
-            }
+            },
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = update_scopes(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -984,9 +994,11 @@ class ApiApplicationsTestCase(TestCase):
             {
                 "app_id": app_.id,
                 "scopes": 5
-            }
+            },
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = update_scopes(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -1009,9 +1021,11 @@ class ApiApplicationsTestCase(TestCase):
             {
                 "app_id": app_.id,
                 "scopes": "{}{}"
-            }
+            },
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = update_scopes(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -1032,9 +1046,11 @@ class ApiApplicationsTestCase(TestCase):
             {
                 "app_id": 100000000000001,
                 "scopes": "{}"
-            }
+            },
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         response = update_scopes(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -1056,9 +1072,11 @@ class ApiApplicationsTestCase(TestCase):
                 "app_id": app_.id,
                 "scopes": '[{"checked":true, "name":"timetable"}, \
                            {"checked":false, "name":"student_number"}]'
-            }
+            },
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        self.client.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
+            {"sub": user_.cn}, os.environ('DASHBOARD_JWT_KEY'), algorithm="HS256")})
         self.assertEqual(app_.scope.scope_number, 0)
         response = update_scopes(request)
         content = json.loads(response.content.decode())
