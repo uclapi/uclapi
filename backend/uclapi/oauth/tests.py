@@ -659,7 +659,8 @@ class ViewsTestCase(TestCase):
         self.assertEqual(test_user_.raw_intranet_groups, "uclintranetgroups")
         self.assertEqual(test_user_.department, user_data['department'])
         self.assertEqual(test_user_.given_name, user_data['givenName'])
-        self.assertEqual(test_user_.full_name, user_data['displayName'])
+        self.assertEqual(test_user_.full_name,
+                         user_data['givenName'] + ' ' + user_data['surname'])
         self.assertEqual(test_user_.mail, user_data['mail'])
         self.assertEqual(test_user_.sn, user_data['surname'])
         self.assertEqual(test_user_.user_types, user_data['employeeType'])
@@ -702,7 +703,8 @@ class ViewsTestCase(TestCase):
         self.assertEqual(test_user_.raw_intranet_groups, "ucl-all;ucl-tests-all")
         self.assertEqual(test_user_.department, user_data['department'])
         self.assertEqual(test_user_.given_name, user_data['givenName'])
-        self.assertEqual(test_user_.full_name, user_data['displayName'])
+        self.assertEqual(test_user_.full_name,
+                         user_data['givenName'] + ' ' + user_data['surname'])
         self.assertEqual(test_user_.mail, user_data['mail'])
         self.assertEqual(test_user_.sn, user_data['surname'])
         self.assertEqual(test_user_.user_types, user_data['employeeType'])
@@ -724,7 +726,7 @@ class ViewsTestCase(TestCase):
             self.assertDictEqual(
                 initial_data['user'],
                 {
-                    "full_name": user_data['displayName'],
+                    "full_name": user_data['givenName'] + ' ' + user_data['surname'],
                     "cn": user_data['mailNickname'],
                     "email": user_data['userPrincipalName'],
                     "department": user_data['department'],

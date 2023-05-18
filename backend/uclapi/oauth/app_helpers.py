@@ -133,7 +133,10 @@ def validate_azure_ad_callback(token_data):
     # e.g., Dept of Computer Science
     department = user_info.get('department', '')
     given_name = user_info.get('givenName', '')  # e.g. Firstname
-    display_name = user_info.get('displayName', '')  # e.g., Firstname Lastname
+    sn = user_info.get('surname', '')
+
+    # Concatenate firstname and last name. Azure AD returns displayName as "Surname, Forename" which we don't want
+    display_name = given_name + ' ' + sn
 
     # e.g., engscifac-all;compsci-all;schsci-all
     groups = ';'.join(map(
@@ -146,7 +149,6 @@ def validate_azure_ad_callback(token_data):
     # Convert comma-separated-with-space string into semicolon-separated string (for consistency with the groups field)
     # e.g., Alumnus;Staff;P/G;Honorary
     user_types = ';'.join(user_info.get('employeeType', '').split(', '))
-    sn = user_info.get('surname', '')
 
     # If a user has never used the API before then we need to sign them up
     try:
