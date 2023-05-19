@@ -1,16 +1,24 @@
-
-import { NavBar } from "@/components/layout/Items.jsx"
-import SwaggerUI from "swagger-ui-react"
-import "swagger-ui-react/swagger-ui.css"
-import spec from "@/uclapi.openapi.json"
+import { NavBar } from "@/components/layout/Items.jsx";
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 
 function Documentation() {
+  const [loaded, setLoaded] = useState(false)
+  useEffect(() => {
+    import("openapi-explorer/dist/es/openapi-explorer.js").then(() => setLoaded(true));
+  }, []);
+
   return (
-    <div className='vertical-padding'>
+    <div className="vertical-padding">
       <NavBar isScroll={false} />
-      <SwaggerUI spec={spec} />
+      {loaded &&
+        <openapi-explorer
+          server-url="https://uclapi.com"
+          spec-url="/uclapi.openapi.json"
+        />
+      }
     </div>
-  )
+  );
 }
 
-export default Documentation
+export default dynamic(() => Promise.resolve(Documentation), { ssr: false });
