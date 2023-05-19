@@ -16,14 +16,23 @@ from oauth.scoping import Scopes
 from common.helpers import PrettyJsonResponse
 from uclapi.settings import REDIS_UCLAPI_HOST
 
-from .app_helpers import (is_url_unsafe, get_session_user_cn, NOT_HTTPS,
-                          NOT_VALID, URL_BLACKLISTED, NOT_PUBLIC)
+from .app_helpers import (is_url_unsafe, get_session_user_cn, get_temp_token,
+                          NOT_HTTPS, NOT_VALID, URL_BLACKLISTED, NOT_PUBLIC)
 from .models import App, User, APICall
 
 
 def get_user_by_cn(user_cn):
     user = User.objects.get(cn=user_cn)
     return user
+
+
+@api_view(['GET'])
+@csrf_exempt
+def generate_temp_token(request):
+    return PrettyJsonResponse({
+        "success": True,
+        "token": get_temp_token()
+    })
 
 
 @api_view(['POST'])

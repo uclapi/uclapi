@@ -509,7 +509,6 @@ class RefreshVerifcationSecretViewTests(TestCase):
         response = refresh_verification_secret(request)
 
         content = json.loads(response.content.decode())
-        print(content)
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(content["ok"])

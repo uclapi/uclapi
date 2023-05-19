@@ -4,7 +4,7 @@ from dashboard.api_applications import (
     create_app, delete_app, regenerate_app_token, rename_app, set_callback_url,
     update_scopes, number_of_requests, quota_remaining, most_popular_service,
     most_popular_method, users_per_app, users_per_app_by_dept,
-    get_apps, accept_aup
+    get_apps, accept_aup, generate_temp_token
 )
 
 from . import webhook_views
@@ -23,6 +23,7 @@ urlpatterns = [
     path('regen', regenerate_app_token),
     path('delete', delete_app),
     path('setcallbackurl', set_callback_url),
+    path('temptoken', generate_temp_token),
     path('updatescopes', update_scopes),
     path('webhook/edit', webhook_views.edit_webhook),
     path('webhook/refreshsecret', webhook_views.refresh_verification_secret),

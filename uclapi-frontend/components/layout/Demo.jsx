@@ -36,7 +36,7 @@ class Demo extends React.Component {
     this.state = {
       response: ``,
       params: {
-        // 'token': window.initialData.temp_token,
+        token: props.tempToken,
         date: now.toISOString().substring(0, 10).replace(/-/g, ``),
         results_per_page: `1`,
       },
@@ -44,14 +44,20 @@ class Demo extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.setState({
+  async componentDidMount() {
+    const token = await fetch(`/dashboard/api/temptoken`, {
+      headers: { Authorization: process.env.TEMP_TOKEN_SECRET }
+    }).then(res => res.json()).then(res => res.token);
+    console.log('mount', token)
+
+    this.setState((old) => ({
+      params: { ...old.params, token },
       rootURL:
         window.location.protocol +
         "//" +
         window.location.hostname +
-        (window.location.port ? ":" + window.location.port : "")
-    });
+        (window.location.port ? ":" + window.location.port : ""),
+    }));
   }
 
   render() {
@@ -96,20 +102,19 @@ class Demo extends React.Component {
       console.log(`DEBUG: Looking for room bookings in the room: ` + roomName);
     }
 
-    this.setState({
+    this.setState(old => ({
       params: {
-        token: window.initialData.temp_token,
+        ...old.params,
         date: now.toISOString().substring(0, 10).replace(/-/g, ``),
-        results_per_page: `1`,
-        roomName: roomName,
+        roomName,
       },
-    });
+    }));
 
     // TODO:
     // Need to create development environment in package.json
     const url =
       `${rootURL}/roombookings/bookings?token=` +
-      window.initialData.temp_token +
+      this.state.params.token +
       `&roomname=` +
       roomName +
       `&date=` +
