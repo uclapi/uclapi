@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.datetime_safe import datetime
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import parser_classes
+from rest_framework.decorators import parser_classes, api_view
 from rest_framework.parsers import JSONParser
 
 from oauth.models import OAuthToken
@@ -26,7 +26,8 @@ def get_user_by_cn(user_cn):
     return user
 
 
-@parser_classes(JSONParser)
+@api_view(['POST'])
+@parser_classes([JSONParser])
 @csrf_exempt
 def accept_aup(request):
     if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
@@ -37,12 +38,12 @@ def accept_aup(request):
         response.status_code = 400
         return response
 
-    if request.data['accept'] is not True:
+    if request.data.get('accept', None) is not True:
         response = PrettyJsonResponse({
             "success": False,
             "error": "You must accept the AUP"
         })
-        response.status_code = 400
+        response.status_code = 403
         return response
 
     try:
@@ -64,7 +65,8 @@ def accept_aup(request):
     })
 
 
-@parser_classes(JSONParser)
+@api_view(['POST'])
+@parser_classes([JSONParser])
 @csrf_exempt
 def create_app(request):
     if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
@@ -128,7 +130,8 @@ def create_app(request):
     })
 
 
-@parser_classes(JSONParser)
+@api_view(['POST'])
+@parser_classes([JSONParser])
 @csrf_exempt
 def rename_app(request):
     if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
@@ -172,7 +175,8 @@ def rename_app(request):
         })
 
 
-@parser_classes(JSONParser)
+@api_view(['POST'])
+@parser_classes([JSONParser])
 @csrf_exempt
 def regenerate_app_token(request):
     if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
@@ -219,7 +223,8 @@ def regenerate_app_token(request):
         })
 
 
-@parser_classes(JSONParser)
+@api_view(['POST'])
+@parser_classes([JSONParser])
 @csrf_exempt
 def delete_app(request):
     if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
@@ -268,7 +273,8 @@ def delete_app(request):
         })
 
 
-@parser_classes(JSONParser)
+@api_view(['POST'])
+@parser_classes([JSONParser])
 @csrf_exempt
 def set_callback_url(request):
     if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
@@ -345,7 +351,8 @@ def set_callback_url(request):
     })
 
 
-@parser_classes(JSONParser)
+@api_view(['POST'])
+@parser_classes([JSONParser])
 @csrf_exempt
 def update_scopes(request):
     if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
@@ -389,10 +396,10 @@ def update_scopes(request):
 
     try:
         scopes = json.loads(scopes_json)
-    except ValueError:
+    except (ValueError, TypeError):
         response = PrettyJsonResponse({
             "success": False,
-            "message": "Invalid scope data that could not be parsed."
+            "message": "Invalid scope data that could not be iterated."
         })
         response.status_code = 400
         return response
@@ -479,16 +486,15 @@ def get_apps(request):
         response.status_code = 400
         return response
     try:
-        user_upi = get_session_user_cn(request)
-    except (KeyError, AttributeError):
+        user_cn = get_session_user_cn(request)
+        user = get_user_by_cn(user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "message": "User ID not set in session. Please log in again."
         })
         response.status_code = 400
         return response
-
-    user = get_user_by_cn(user_upi)
 
     user_meta = {
         "name": user.full_name,

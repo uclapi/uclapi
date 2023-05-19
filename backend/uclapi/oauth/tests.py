@@ -3,17 +3,19 @@ import os
 import random
 import string
 import unittest.mock
-import jwt
 
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import transaction
 from django.test import Client, TestCase
-from django.http.cookie import SimpleCookie
 from django_mock_queries.query import MockModel, MockSet
 from rest_framework.test import APIRequestFactory, APITestCase
 from django.core import signing
 from parameterized import parameterized
 from requests.models import Response
+
+from jose import jwe
+from Crypto.Protocol.KDF import HKDF
+from Crypto.Hash import SHA256
 
 from common.decorators import uclapi_protected_endpoint
 from common.helpers import PrettyJsonResponse as JsonResponse
@@ -28,6 +30,20 @@ from .views import authorise, adcallback, deauthorise_app
 
 JWT_COOKIE_NAME = 'next-auth.session-token'
 DASHBOARD_MOCK_JWT_KEY = 'foo'
+JWE_DECRYPTION_KEY = HKDF(
+    master=DASHBOARD_MOCK_JWT_KEY.encode(),
+    key_len=32,
+    salt="".encode(),
+    hashmod=SHA256,
+    num_keys=1,
+    context=str.encode("NextAuth.js Generated Encryption Key")
+)
+
+
+def generate_jwt(cn):
+    return jwe.encrypt(
+        json.dumps({"sub": cn}), JWE_DECRYPTION_KEY, algorithm="dir", encryption='A256GCM').decode()
+
 
 @uclapi_protected_endpoint(personal_data=True, required_scopes=["timetable"])
 def test_timetable_request(request, *args, **kwargs):
@@ -998,8 +1014,7 @@ class DeleteAToken(TestCase):
                 'client_id': app_.client_id
             }
         )
-        request.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
 
         token_id = oauth_token.token
         deauthorise_app(request)
@@ -1014,10 +1029,16 @@ class DeleteAToken(TestCase):
                 'client_id': '1234.1234'
             }
         )
-        request.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": '99999999999'}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
-        with self.assertRaises(User.DoesNotExist):
-            deauthorise_app(request)
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt('999999')
+        response = deauthorise_app(request)
+        self.assertEqual(response.status_code, 401)
+        content = json.loads(response.content.decode())
+        self.assertFalse(content["success"])
+        self.assertEqual(
+            content["error"],
+            "You are not logged in"
+        )
+
 
     def test_deauthorise_no_client_id(self):
         user_ = User.objects.create(
@@ -1032,8 +1053,7 @@ class DeleteAToken(TestCase):
                 'token': 'uclapi-123456'
             }
         )
-        request.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
 
         response = deauthorise_app(request)
         self.assertEqual(response.status_code, 400)
@@ -1059,8 +1079,7 @@ class DeleteAToken(TestCase):
                 'client_id': '404_not_found'
             }
         )
-        request.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
 
         response = deauthorise_app(request)
         self.assertEqual(response.status_code, 400)
@@ -1087,8 +1106,7 @@ class DeleteAToken(TestCase):
             }
         )
 
-        request.cookies = SimpleCookie({JWT_COOKIE_NAME: jwt.encode(
-            {"sub": user_.cn}, os.environ.get('DASHBOARD_JWT_KEY'), algorithm="HS256")})
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
 
         response = deauthorise_app(request)
         self.assertEqual(response.status_code, 400)

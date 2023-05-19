@@ -17,6 +17,7 @@ import json
 from jose import jwe
 from Crypto.Protocol.KDF import HKDF  # pip install pycryptodome
 from Crypto.Hash import SHA256
+import base64
 
 NOT_HTTPS = 1
 NOT_VALID = 2
