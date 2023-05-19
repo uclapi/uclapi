@@ -46,10 +46,10 @@ npm start
 ```
 
 ### Give it a go!
-If those commands work you should be able to navigate to `http://localhost:8000/dashboard` in your browser, which will let you log in via Fake Shibboleth running on `http://localhost:8001`. If so, then you're up and running!
+If those commands work you should be able to navigate to `http://localhost:8000/dashboard` in your browser, which will let you log in via Azure AD. If so, then you're up and running!
 
 ## Testing
-We're an amazing project, so obviously we have tests :sparkles:. Make sure you have the requirements installed in your virtual environment (and you have activated it) , `cd` into `backend/uclapi` and then run :  
+We're an amazing project, so obviously we have tests :sparkles:. Make sure you have the requirements installed in your virtual environment (and you have activated it) , `cd` into `backend/uclapi` and then run :
 `python manage.py test --settings=uclapi.settings_mocked`
 
 ## Linting
