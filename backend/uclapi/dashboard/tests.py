@@ -2,8 +2,7 @@ import os
 import json
 from unittest.mock import patch
 
-from django.test import Client, TestCase
-from django.http.cookie import SimpleCookie
+from django.test import TestCase
 from django.utils.datetime_safe import datetime
 from rest_framework.test import APIRequestFactory
 from django.conf import settings
