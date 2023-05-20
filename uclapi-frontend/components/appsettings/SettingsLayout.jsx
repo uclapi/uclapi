@@ -2,7 +2,7 @@
 import {
   CardView, Column,
   Container, ImageView,
-  Row, TextView,
+  Row,
 } from '@/components/layout/Items.jsx'
 import React, { useCallback , useState } from 'react'
 import Api from '../../lib/Api'
@@ -13,6 +13,7 @@ const styles = {
   noPadding: {
     marginBottom: 0,
     marginLeft: 0,
+    textAlign: 'left'
   },
   title: {
     marginLeft: 0,
@@ -70,12 +71,9 @@ const SettingsLayout = ({
 
         {/* Personal account details*/}
 
-        <TextView
-          text={`Account`}
-          heading={1}
-          align={`left`}
-          style={styles.title}
-        />
+        <h1 style={styles.title}>
+          Account
+        </h1>
 
         <CardView width='1-1' type='default' noPadding style={{ padding: 0 }}>
           <Container noPadding>
@@ -88,18 +86,8 @@ const SettingsLayout = ({
                 style={{ padding: cardPadding }}
                 noPadding
               >
-                <TextView
-                  text={fullname}
-                  heading={2}
-                  align={`left`}
-                  style={styles.noPadding}
-                />
-                <TextView
-                  text={department}
-                  heading={4}
-                  align={`left`}
-                  style={styles.noPadding}
-                />
+                <h2 style={styles.noPadding}>{fullname}</h2>
+                <h4 style={styles.noPadding}>{department}</h4>
               </CardView>
               <CardView
                 width='4-10'
@@ -123,12 +111,9 @@ const SettingsLayout = ({
           </Container>
         </CardView>
 
-        <TextView
-          text={`Permissions`}
-          heading={1}
-          align={`left`}
-          style={styles.title}
-        />
+        <h1 style={styles.title}>
+          Permissions
+        </h1>
 
         {/* Authorised app details */}
 
@@ -160,29 +145,23 @@ const SettingsLayout = ({
                   />
                 </Column>
                 <Column width="1-2" alignItems="column">
-                  <TextView
-                    text="No authorised apps yet. Try UCL Assistant?"
-                    heading="2"
-                    align="left"
-                  />
-                  <TextView
-                    text={`UCL Assistant is a productivity app for `
-                      + `students and staff at UCL. `
-                      + `It has been designed by students to be as `
-                      + `reliable and user friendly as possible.`}
-                    align="left"
-                    heading="5"
-                  />
-                  <TextView
-                    text={`The app has many different features but one `
-                      + `of our favourites is `
-                      + `the ability to view your timetable in a weekly `
-                      + `view. The app highlights your current commitments `
-                      + `to save you time as you rush about University. `
-                      + `Check it out below!`}
-                    align="left"
-                    heading="5"
-                  />
+                  <h2>
+                    No authorised apps yet. Try UCL Assistant?
+                  </h2>
+                  <p className='description'>
+                    UCL Assistant is a productivity app for
+                    students and staff at UCL.
+                    It has been designed by students to be as
+                    reliable and user friendly as possible.
+                  </p>
+                  <p className='description'>
+                    The app has many different features but one
+                    of our favourites is
+                    the ability to view your timetable in a weekly
+                    view. The app highlights your current commitments
+                    to save you time as you rush about University.
+                    Check it out below!
+                  </p>
                   <Button href={`/marketplace/uclassistant`}>
                     Download
                   </Button>
@@ -214,16 +193,12 @@ const SettingsLayout = ({
                             style={{ padding: cardPadding }}
                             noPadding
                           >
-                            <TextView text={app.app.name.toUpperCase()}
-                              heading={2}
-                              align={`left`}
-                              style={styles.noPadding}
-                            />
-                            <TextView text={app.app.creator.name}
-                              heading={4}
-                              align={`left`}
-                              style={styles.noPadding}
-                            />
+                            <h2 style={styles.noPadding}>
+                              {app.app.name.toUpperCase()}
+                            </h2>
+                            <h4 style={styles.noPadding}>
+                              {app.app.creator.name}
+                            </h4>
                           </CardView>
                           <CardView
                             width='1-2'

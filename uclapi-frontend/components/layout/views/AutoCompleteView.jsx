@@ -2,7 +2,7 @@
 // remove this ^ when ready to add prop-types
 import React from "react";
 
-import { CardView, Container, Row, TextView } from '@/components/layout/Items.jsx'
+import { CardView, Container, Row } from '@/components/layout/Items.jsx'
 
 import Autosuggest from 'react-autosuggest'
 
@@ -28,14 +28,14 @@ const renderSuggestion = suggestion => (
           paddingTop: `10px`,
         }}
       >
-        <TextView align="center"
-          text={suggestion}
-          heading={5}
+        <p
           style={{
             margin: `0`,
             padding: 0,
           }}
-        />
+        >
+          {suggestion}
+        </p>
       </CardView>
     </Row>
   </Container>

@@ -2,7 +2,7 @@
 // Components
 import {
   CardView, Column,
-  Container, Field, Row, TextView,
+  Container, Field, Row,
 } from '@/components/layout/Items.jsx'
 import { Button } from 'rsuite';
 import React from "react";
@@ -89,11 +89,9 @@ export default class ConfirmBox extends React.Component {
               width="8-10"
               horizontalAlignment="center"
             >
-              <TextView
-                heading="3"
-                align="left"
-                text={text}
-              />
+              <h3>
+                {text}
+              </h3>
               <Field
                 title={`Click to edit`}
                 content={value}

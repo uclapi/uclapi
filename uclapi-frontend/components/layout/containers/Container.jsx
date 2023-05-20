@@ -5,7 +5,7 @@
 // Row for heading
 import React from "react";
 
-import { Row, TextView } from '@/components/layout/Items.jsx'
+import { Row } from '@/components/layout/Items.jsx'
 
 
 /**
@@ -59,7 +59,7 @@ export default class Container extends React.Component {
       <div className={className} style={style} onClick={onClick}>
         {heading ? (
           <Row width='1-1' horizontalAlignment='center' maxWidth='1000px' minWidth='300px'>
-            <TextView text={heading} heading={1} align={`center`} style={{ margin: `5px auto` }} />
+            <h1 style={{ margin: `5px auto` }}>{heading}</h1>
           </Row>
         ) : null }
 
