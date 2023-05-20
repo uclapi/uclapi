@@ -1,3 +1,4 @@
+import "rsuite/dist/rsuite-no-reset.min.css";
 import "@/styles/sass/common/uclapi.scss";
 import "@/styles/sass/navbar.scss";
 import "../lib/ErrorReporting";
