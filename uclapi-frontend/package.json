@@ -10,10 +10,6 @@
     "test": "echo TODO"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@mui/material": "^5.13.4",
-    "@mui/styles": "^5.13.2",
     "@sentry/react": "^7.52.1",
     "@sentry/tracing": "^7.52.1",
     "@types/node": "20.1.4",
