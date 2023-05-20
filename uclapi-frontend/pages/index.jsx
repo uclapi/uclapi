@@ -10,7 +10,7 @@ import {
   Row,
   TextView,
 } from '@/components/layout/Items.jsx'
-import Collapse, { Panel } from 'rc-collapse'
+import { Panel, PanelGroup } from 'rsuite'
 import React from "react";
 import Image from 'next/image'
 import withSession from '@/lib/withSession.jsx'
@@ -375,18 +375,16 @@ class HomePage extends React.Component {
           heading="Frequently asked questions"
         >
           <Row width="2-3" horizontalAlignment="center" alignItems="column">
-            <Collapse>
-              {FAQ.map(({ question, answer }) => (
-                <Panel
-                  openAnimation={{}}
-                  key={question}
+            <PanelGroup accordion>
+              {FAQ.map(({ question, answer }, i) => (
+                <Panel className={styles.faq}
+                  eventKey={i}
                   header={question}
-                  showArrow
                 >
                   {answer}
                 </Panel>
               ))}
-            </Collapse>
+            </PanelGroup>
           </Row>
         </Container>
 

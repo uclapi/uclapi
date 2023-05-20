@@ -30,7 +30,6 @@
     "next-auth": "^4.22.1",
     "openapi-explorer": "^1.0.544",
     "qs": "^6.11.2",
-    "rc-collapse": "^3.6.0",
     "react": "18.2.0",
     "react-autosuggest": "^10.1.0",
     "react-dom": "18.2.0",
@@ -39,6 +38,7 @@
     "react-responsive-carousel": "^3.2.23",
     "react-syntax-highlighter": "^15.5.0",
     "react-tabs": "^6.0.1",
+    "rsuite": "^5.34.0",
     "typescript": "5.0.4"
   },
   "devDependencies": {

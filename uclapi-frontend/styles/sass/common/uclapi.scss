@@ -19,7 +19,6 @@
   - Transitions
   - Cards
   - Code Segments
-  - RC-Collapse
   - Input Forms
   - Auto complete forms
   - Code View
@@ -55,54 +54,57 @@ body {
   margin: 0;
 }
 
-.app-holder,
-.settings-collapse {
-  .rc-collapse {
-    background-color: $color-grey-dark;
-    flex: 0 0 100%;
-    box-shadow: unset;
+.rs-panel-collapsible {
+  background-color: #313537;
+  border-radius: 1rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2);
+  color: #fff;
 
-    .rc-collapse-header {
-      color: white;
-      font-family: 'Source Sans Pro', 'Roboto', sans-serif;
-    }
-
-    .rc-collapse-content {
-      padding: 0;
-    }
-
-    .rc-collapse-content>.rc-collapse-content-box {
-      margin-bottom: 0;
-    }
+  .rs-panel-title {
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
   }
+
 }
 
-.settings-collapse {
-  padding: 0 2%;
+.rs-panel-group-accordion {
+  &.multi-wrapper {
+    .rs-panel-body {
+      padding: 20px 0;
+    }
+  }
 
-  .rc-collapse {
-    box-shadow: unset;
+  &.narrow {
+    width: 100%;
+    font-size: smaller;
 
-    .rc-collapse-content {
-      border-bottom: 1px dotted rgba(255, 255, 255, 0.455);
-      padding: 0 0 25px;
-
-      .rc-collapse-content-box {
-        border-top: unset;
-      }
+    .rs-panel+.rs-panel:before {
+      border: none;
     }
 
-    .rc-collapse-item {
-      .rc-collapse-header {
-        border-bottom: 1px dotted rgba(255, 255, 255, 0.455);
+    .rs-panel-collapsible {
+      .rs-panel-header {
         padding: 10px 0;
-        text-align: left;
+        .rs-panel-title {
+          border-bottom: 1px solid #ccc;
+          width: 100%;
+          display: block;
+          padding-bottom: 10px;
+        }
+      }
+
+      .rs-panel-body {
+        padding: 0;
+        p {
+          font-size: 14px;
+        }
       }
     }
   }
 }
 
-.rc-collapse+.rc-collapse {
+.rs-panel-group-accordion+.rs-panel-group-accordion {
   margin-top: 1rem;
 }
 
@@ -430,70 +432,6 @@ a {
 }
 
 /** Code Segments **/
-
-/** RC Collapse **/
-
-.rc-collapse {
-  background-color: $secondary-color;
-  border-radius: 1rem;
-  box-shadow: 0 4px 8px 0 $color-black-transparent-02;
-  color: $color-white;
-
-  @media screen and (max-width: $break-small) {
-    font-size: 18px;
-  }
-
-  > .rc-collapse-item {
-    > .rc-collapse-header {
-      color: $color-white;
-      cursor: pointer;
-      font-size: 20px;
-      font-weight: 600;
-      line-height: 38px;
-      outline: 0;
-      padding: 10px 40px;
-      text-indent: 0;
-    }
-  }
-
-  > .rc-collapse-item:first-child {
-    border-top: 0;
-  }
-
-  > .rc-collapse-item-disabled > .rc-collapse-header {
-    background-color: $primary-color;
-    color: $color-white;
-    cursor: not-allowed;
-  }
-}
-
-.rc-collapse-anim-active {
-  transition: height 0.2s ease-out;
-}
-
-.rc-collapse-content {
-  overflow: hidden;
-  padding: 0 40px;
-
-  > .rc-collapse-content-box {
-    border-top: 1px dotted $color-white-transparent-0455;
-    margin-bottom: 16px;
-  }
-
-  p {
-    color: white;
-    font-size: 14px;
-    text-align: justify;
-  }
-}
-
-.rc-collapse-content-inactive {
-  display: none;
-}
-
-.rc-collapse-item:last-child > .rc-collapse-content {
-  border-radius: 0 0 3px 3px;
-}
 
 /** Input Forms **/
 
