@@ -1,5 +1,4 @@
 import {
-  Button,
   Column,
   Container,
   ImageView,
@@ -7,6 +6,7 @@ import {
   TextView,
 } from '@/components/layout/Items.jsx'
 import Image from 'next/image'
+import { Button } from 'rsuite'
 
 // import '@/styles/common/uclapi.scss'
 // import '@/styles/navbar.scss'
@@ -45,7 +45,7 @@ const Warning = ({ title, content }) => (
               />
             )
             : content}
-          <Button link={`/`} centred>
+          <Button href={`/`} className='grey-btn'>
             Home
           </Button>
         </Column>

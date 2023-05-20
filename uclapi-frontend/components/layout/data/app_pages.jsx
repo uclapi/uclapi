@@ -1,6 +1,6 @@
 // Common Components
-import { Button, TextView } from '@/components/layout/Items.jsx'
-
+import {  TextView } from '@/components/layout/Items.jsx'
+import { Button } from 'rsuite'
 import { Carousel } from "react-responsive-carousel"
 
 // Application config
@@ -32,12 +32,9 @@ const roombuddydescription = (
       text={`Want to contribute to room buddy?
     Submit a pull request:`}
     />
-    <Button type={`alternate`}
-      style={{
-        'margin': `auto`,
-        'display': `flex`,
-      }}
-      link={`https://github.com/uclapi/ucl-assistant-app`}
+    <Button
+      style={{'margin': `auto`,'display': `flex`, width: '110px'}}
+      href={`https://github.com/uclapi/ucl-assistant-app`}
     >
       VISIT GITHUB
     </Button>
@@ -96,13 +93,9 @@ const uclassistantdescription = (
     suggestions or even some new code to improve
      the app? We welcome it:`}
     />
-    <Button type={`alternate`}
-      isCentered
-      style={{
-        'margin': `auto`,
-        'display': `flex`,
-      }}
-      link={`https://github.com/uclapi/ucl-assistant-app`}
+    <Button
+      style={{'margin': `auto`,'display': `flex`, width: '110px'}}
+      href={`https://github.com/uclapi/ucl-assistant-app`}
     >
       VISIT GITHUB
     </Button>
@@ -282,14 +275,10 @@ const unikometdescription = (
       text={`Made with love 💖 by and for
     students`}
     />
-    {/* <Button type={`alternate`}
-      isCentered
+    {/* <Button
       text={`VISIT GITHUB`}
-      style={{
-        'margin': `auto`,
-        'display': `flex`,
-      }}
-      link={`https://github.com/uclapi/ucl-assistant-app`}
+      style={{'margin': `auto`,'display': `flex`, width: '110px'}}
+      href={`https://github.com/uclapi/ucl-assistant-app`}
     /> */}
   </div>
 )

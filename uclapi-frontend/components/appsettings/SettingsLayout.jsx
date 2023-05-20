@@ -1,12 +1,13 @@
 
 import {
-  Button, CardView, Column,
+  CardView, Column,
   Container, ImageView,
   Row, TextView,
 } from '@/components/layout/Items.jsx'
 import React, { useCallback , useState } from 'react'
 import Api from '../../lib/Api'
 import Image from 'next/image'
+import {Button} from 'rsuite'
 
 const styles = {
   noPadding: {
@@ -109,8 +110,7 @@ const SettingsLayout = ({
                 style={{ padding: cardPadding }}
               >
                 <Button
-                  type="alternate"
-                  link={`/logout`}
+                  href={`/logout`}
                   style={{
                     float: `right`,
                     cursor: `pointer`,
@@ -183,15 +183,7 @@ const SettingsLayout = ({
                     align="left"
                     heading="5"
                   />
-                  <Button
-                    type="alternate"
-                    link={`/marketplace/uclassistant`}
-                    centred
-                    containerStyles={{
-                      marginTop: `20px`,
-                      marginBottom: 0,
-                    }}
-                  >
+                  <Button href={`/marketplace/uclassistant`}>
                     Download
                   </Button>
                 </Column>
@@ -242,7 +234,6 @@ const SettingsLayout = ({
                             noPadding
                           >
                             <Button
-                              type="alternate"
                               onClick={handleChange(app.app.client_id, i)}
                               style={{
                                 cursor: `pointer`,
