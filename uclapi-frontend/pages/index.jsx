@@ -6,7 +6,6 @@ import {
   Container,
   Demo,
   Footer,
-  NavBar,
   Row,
   TextView,
 } from '@/components/layout/Items.jsx'
@@ -57,10 +56,7 @@ class HomePage extends React.Component {
 
     return (
       <>
-        <NavBar isScroll={false} />
-
         {/* Staging banner */}
-
         {this.props.host == `staging.ninja` && (
           <Container isPadded styling="warning-red">
             <Row width="9-10" horizontalAlignment={`center`}>

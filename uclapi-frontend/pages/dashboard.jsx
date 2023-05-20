@@ -2,7 +2,7 @@
 import { styles as dashboardStyles } from '@/components/layout/data/dashboard_styles.jsx'
 import {
   Button, CardView, Column, ConfirmBox,
-  Container, Footer, NavBar, Row, TextView,
+  Container, Footer, Row, TextView,
 } from '@/components/layout/Items.jsx'
 
 import Modal from 'react-modal'
@@ -56,8 +56,6 @@ class Dashboard extends React.Component {
 
     return (
       <>
-        <NavBar isScroll={false} />
-
         <Modal
           isOpen={view === `accept-aup`}
           contentLabel="UCL API Acceptable Use Policy"
