@@ -15,7 +15,6 @@
   - Text
   - Alignments
   - Containers
-  - Buttons
   - Transitions
   - Cards
   - Code Segments
@@ -106,6 +105,15 @@ body {
 
 .rs-panel-group-accordion+.rs-panel-group-accordion {
   margin-top: 1rem;
+}
+
+.grey-btn {
+  background-color: $color-grey-dark;
+  color: $color-white;
+}
+
+.rs-btn + .rs-btn {
+  margin-left: 10px;
 }
 
 .container.splash-parallax {
@@ -313,39 +321,6 @@ a {
   padding: 50px 0;
 }
 
-/** Buttons **/
-.circular-button { border-radius: 25%; }
-
-.default-button {
-  background-color: $color-grey-dark;
-  color: $color-white;
-}
-
-.default-button:hover,
-.uclapi-card-clicked-default:hover { background-color: $color-grey-mid; }
-
-.alternate-button,
-.image-button {
-  background-color: $color-white;
-  color: $color-black;
-}
-
-.alternate-button:hover,
-.image-button:hover,
-.uclapi-card-clicked-alternate:hover { background-color: $color-grey-lighter; }
-
-.emphasis-button {
-  background-color: lighten($primary-highlight-color, 10%);
-  color: black;
-}
-.emphasis-button:hover { background-color: lighten($primary-highlight-color, 20%); }
-
-.remove-button {
-  background-color: $color-remove;
-  color: $color-white;
-}
-.remove-button:hover { background-color: $color-remove-highlight; }
-
 /** Transitions **/
 
 .default-transition {
@@ -515,10 +490,6 @@ input[type='checkbox']:checked + span {
 
   .dates-holder {
     padding: 3px 0 0 2%;
-  }
-
-  .remove-button {
-    margin: 0;
   }
 }
 

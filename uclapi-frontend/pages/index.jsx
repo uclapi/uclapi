@@ -1,6 +1,5 @@
 import { endpoints, FAQ } from '@/components/layout/data/homepage_constants.jsx'
 import {
-  Button,
   CardView,
   Column,
   Container,
@@ -8,7 +7,7 @@ import {
   Row,
   TextView,
 } from '@/components/layout/Items.jsx'
-import { Panel, PanelGroup } from 'rsuite'
+import { Panel, PanelGroup, Button } from 'rsuite'
 import React from "react";
 import Image from 'next/image'
 import withSession from '@/lib/withSession.jsx'
@@ -99,8 +98,8 @@ class HomePage extends React.Component {
             />
 
             <Row width="1-1" horizontalAlignment="center" alignItems="row">
-              <Button link={`/dashboard`}>{startLabel}</Button>
-              <Button link={`/docs`} type={`alternate`}>
+              <Button size='lg' className='grey-btn' href={`/dashboard`}>{startLabel}</Button>
+              <Button size='lg' href={`/docs`}>
                 DOCS
               </Button>
             </Row>
@@ -352,10 +351,10 @@ class HomePage extends React.Component {
               />
 
               <Row width="1-1" horizontalAlignment="center" alignItems="row">
-                <Button link={`/marketplace`} type="alternate">
+                <Button size='lg' href={`/marketplace`}>
                   MARKETPLACE
                 </Button>
-                <Button link={`/marketplace/uclassistant`} type="alternate">
+                <Button size='lg' href={`/marketplace/uclassistant`}>
                   UCL ASSISTANT
                 </Button>
               </Row>

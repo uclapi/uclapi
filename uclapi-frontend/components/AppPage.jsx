@@ -7,9 +7,10 @@
 import { allApps } from '@/components/layout/data/app_pages.jsx'
 // Common Components
 import {
-  Button, CardView, Column, Container, ImageView,
+  CardView, Column, Container, ImageView,
   Row, TextView,
 } from '@/components/layout/Items.jsx'
+import { Button } from 'rsuite';
 import React from 'react';
 // Standard React imports
 
@@ -141,10 +142,8 @@ export class AppPage extends React.Component {
                           horizontalAlignment='center'
                         >
                           <Button
-                            link={x.link}
-                            type={`alternate`}
+                            href={x.link}
                             key={key}
-                            centred
                             style={{ width: `100px` }}
                           >
                             {x.name}
@@ -204,13 +203,13 @@ export class AppPage extends React.Component {
                             style={{ minHeight: `unset` }}
                           >
                             <Button
-                              link={x.link}
-                              type={`alternate`}
+                              href={x.link}
                               key={key}
                               style={{
                                 margin: `0`,
                                 width: `75px`,
                               }}
+                              size='lg'
                             >
                               {x.name}
                             </Button>

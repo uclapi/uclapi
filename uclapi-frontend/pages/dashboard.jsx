@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
 import { styles as dashboardStyles } from '@/components/layout/data/dashboard_styles.jsx'
 import {
-  Button, CardView, Column, ConfirmBox,
+  CardView, Column, ConfirmBox,
   Container, Row, TextView,
 } from '@/components/layout/Items.jsx'
 
@@ -16,6 +16,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from "./api/auth/[...nextauth]";
 import withSession from '@/lib/withSession'
 import { MissingAUPAgreementError } from '../lib/Api/DashboardApi';
+import { Button } from 'rsuite'
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -68,18 +69,14 @@ class Dashboard extends React.Component {
           <CardView width="1-1" type="default" noPadding>
             {view === `accept-aup` && <AcceptableUsePolicy />}
             <Button
-              type={`alternate`}
               onClick={() => actions.acceptAup()}
-              fakeLink
-              style={{ cursor: `pointer` }}
             >
               I agree
             </Button>
             <Button
-              type={`remove`}
+              color='red'
+              appearance='primary'
               onClick={() => this.setState({ view: `default` })}
-              fakeLink
-              style={{ cursor: `pointer` }}
             >
               Cancel
             </Button>
@@ -179,14 +176,13 @@ class Dashboard extends React.Component {
           </Row>
           <Row width='1-1'>
             <Button
-              type={`default`}
+              className='grey-btn'
               style={{
-                cursor: `pointer`,
                 borderRadius: `10px`,
                 padding: `20px 25px`,
+                margin: `auto`
               }}
               onClick={() => { this.setState({ view: `add-project` }) }}
-              centred
             >
               +
             </Button>

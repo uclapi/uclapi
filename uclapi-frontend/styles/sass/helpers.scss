@@ -90,20 +90,6 @@
   padding: 15px;
 }
 
-.button-error {
-  background: rgb(202, 60, 60); /* this is a maroon */
-  color: white;
-}
-
-.button-primary-inverted {
-  background-color: white;
-  color: #0078e7;
-
-  &:hover {
-    background-image: none;
-  }
-}
-
 .flex-centre {
   align-items: center;
   display: flex;
@@ -140,11 +126,6 @@
   position: fixed;
   right: 0;
   top: 0;
-}
-
-.pure-form button[type=button],
-.pure-form button[type=submit] {
-  margin: 0.7em 0 0;
 }
 
 .round-button {

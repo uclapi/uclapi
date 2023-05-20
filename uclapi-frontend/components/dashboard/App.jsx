@@ -3,11 +3,11 @@
 import { styles as dashboardStyles } from '@/components/layout/data/dashboard_styles.jsx'
 // Components
 import {
-  Button, CheckBox, AnalyticInfo, AnalyticUserInfo,
+  CheckBox, AnalyticInfo, AnalyticUserInfo,
   Column, Container, Field, Row, TextView,
 } from '@/components/layout/Items.jsx'
 // External dependencies
-import { Panel, PanelGroup } from "rsuite";
+import {Button, Panel, PanelGroup } from "rsuite";
 
 import React from "react";
 import styles from '@/styles/Dashboard.module.scss'
@@ -192,10 +192,9 @@ export default class App extends React.Component {
                 </Column>
 
                 <Button
-                  type={`remove`}
+                  color='red'
+                  appearance='primary'
                   onClick={() => { actions.deleteConfirm(index) }}
-                  fakeLink
-                  style={{ cursor: `pointer` }}
                 >
                   Delete
                 </Button>
