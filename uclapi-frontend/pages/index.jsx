@@ -5,7 +5,6 @@ import {
   Column,
   Container,
   Demo,
-  Footer,
   Row,
   TextView,
 } from '@/components/layout/Items.jsx'
@@ -383,8 +382,6 @@ class HomePage extends React.Component {
             </PanelGroup>
           </Row>
         </Container>
-
-        <Footer />
       </>
     );
   }

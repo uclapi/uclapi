@@ -2,7 +2,7 @@
 import { current, previous } from '@/components/layout/data/team_members.jsx'
 // Common Components
 import {
-  CardView, Column, Container, Footer,
+  CardView, Column, Container,
   Row, TextView,
 } from '@/components/layout/Items.jsx'
 import PropTypes from 'prop-types'
@@ -112,9 +112,6 @@ class AboutPage extends React.Component {
             {previous.map(x => member(x))}
           </Row>
         </Container>
-
-        <Footer />
-
       </>
     )
   }
