@@ -4,7 +4,7 @@ import {
   pink,
 } from '@mui/material/colors'
 import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material/styles'
-import { Footer, NavBar } from '@/components/layout/Items.jsx'
+import { Footer } from '@/components/layout/Items.jsx'
 import React, { useState , useEffect } from 'react'
 
 import LogInLayout from '@/components/appsettings/LogInLayout.jsx'
@@ -72,13 +72,11 @@ const AppSettings = () => {
 
   if (status !== `ONLINE`) {
     return <MuiThemeProvider theme={muiTheme}>
-      <NavBar isScroll={false} />
       <LogInLayout url={url} />
       <Footer />
     </MuiThemeProvider>
   } else {
     return <MuiThemeProvider theme={muiTheme}>
-      <NavBar isScroll={false} />
       <SettingsLayout
         fullname={fullname}
         department={department}

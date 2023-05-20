@@ -4,7 +4,6 @@ import {
   Container,
   Footer,
   ImageView,
-  NavBar,
   Row,
   TextView,
 } from '@/components/layout/Items.jsx'
@@ -15,10 +14,7 @@ import Image from 'next/image'
 
 const Warning = ({ title, content }) => (
   <>
-    <NavBar isScroll={false} />
-
     {/* Warning message */}
-
     <Container styling="splash-parallax" height="600px">
       <Row
         width="2-3"

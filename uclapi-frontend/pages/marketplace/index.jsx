@@ -10,7 +10,7 @@ import { allApps } from '@/components/layout/data/app_pages.jsx'
 // Common Components
 import {
   CardView, Container, Footer, ImageView,
-  NavBar, Row, TextView,
+  Row, TextView,
 } from '@/components/layout/Items.jsx'
 // Standard React imports
 import React from 'react'
@@ -49,9 +49,6 @@ class Marketplace extends React.Component {
 
     return (
       <>
-
-        <NavBar isScroll={false} />
-
         <Container
           height='300px'
           style={{ margin: `60px 0 0 0` }}

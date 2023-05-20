@@ -2,7 +2,7 @@
 import { current, previous } from '@/components/layout/data/team_members.jsx'
 // Common Components
 import {
-  CardView, Column, Container, Footer, NavBar,
+  CardView, Column, Container, Footer,
   Row, TextView,
 } from '@/components/layout/Items.jsx'
 import PropTypes from 'prop-types'
@@ -64,8 +64,6 @@ class AboutPage extends React.Component {
   render() {
     return (
       <>
-        <NavBar isScroll={false} />
-
         {/* About us - Landing page */}
 
         <Container height='600px' styling='team-parallax'>

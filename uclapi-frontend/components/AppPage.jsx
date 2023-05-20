@@ -8,7 +8,7 @@ import { allApps } from '@/components/layout/data/app_pages.jsx'
 // Common Components
 import {
   Button, CardView, Column, Container, Footer, ImageView,
-  NavBar, Row, TextView,
+  Row, TextView,
 } from '@/components/layout/Items.jsx'
 import React from 'react';
 // Standard React imports
@@ -93,8 +93,6 @@ export class AppPage extends React.Component {
 
     return (
       <>
-        <NavBar isScroll={false} />
-
         <Container styling='splash-parallax'>
           <Row
             width={isMobile ? `9-10` : `2-3`}

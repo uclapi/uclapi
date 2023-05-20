@@ -1,4 +1,3 @@
-import { NavBar } from "@/components/layout/Items.jsx";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
@@ -10,7 +9,6 @@ function Documentation() {
 
   return (
     <div className="vertical-padding">
-      <NavBar isScroll={false} />
       {loaded &&
         <openapi-explorer
           server-url="https://uclapi.com"
