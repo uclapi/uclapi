@@ -2,7 +2,6 @@ import {
   Button,
   Column,
   Container,
-  Footer,
   ImageView,
   Row,
   TextView,
@@ -52,7 +51,6 @@ const Warning = ({ title, content }) => (
         </Column>
       </Row>
     </Container>
-    <Footer />
   </>
 )
 

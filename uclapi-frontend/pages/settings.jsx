@@ -4,7 +4,6 @@ import {
   pink,
 } from '@material-ui/core/colors'
 import { createTheme, MuiThemeProvider } from '@material-ui/core/styles'
-import { Footer } from '@/components/layout/Items.jsx'
 import React, { useState , useEffect } from 'react'
 
 import LogInLayout from '@/components/appsettings/LogInLayout.jsx'
@@ -73,7 +72,6 @@ const AppSettings = () => {
   if (status !== `ONLINE`) {
     return <MuiThemeProvider theme={muiTheme}>
       <LogInLayout url={url} />
-      <Footer />
     </MuiThemeProvider>
   } else {
     return <MuiThemeProvider theme={muiTheme}>
@@ -82,7 +80,6 @@ const AppSettings = () => {
         department={department}
         authorised_apps={apps}
       />
-      <Footer />
     </MuiThemeProvider>
   }
 }

@@ -9,7 +9,7 @@ import "@/styles/Marketplace.module.scss"
 import { allApps } from '@/components/layout/data/app_pages.jsx'
 // Common Components
 import {
-  CardView, Container, Footer, ImageView,
+  CardView, Container, ImageView,
   Row, TextView,
 } from '@/components/layout/Items.jsx'
 // Standard React imports
@@ -168,9 +168,6 @@ class Marketplace extends React.Component {
             })}
           </Row>
         </Container>
-
-        <Footer />
-
       </>
     )
   }

@@ -7,7 +7,7 @@
 import { allApps } from '@/components/layout/data/app_pages.jsx'
 // Common Components
 import {
-  Button, CardView, Column, Container, Footer, ImageView,
+  Button, CardView, Column, Container, ImageView,
   Row, TextView,
 } from '@/components/layout/Items.jsx'
 import React from 'react';
@@ -259,9 +259,6 @@ export class AppPage extends React.Component {
             </CardView>
           </Row>
         </Container>
-
-        <Footer />
-
       </>
     )
   }
