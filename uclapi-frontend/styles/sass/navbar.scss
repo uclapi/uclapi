@@ -1,6 +1,31 @@
 @import './helpers';
 @import './core.scss';
 
+.navbar {
+  @include box-shadow(1);
+
+  align-items: center;
+  background-color: white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+  display: flex;
+  height: $navbar-height;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  text-align: center;
+
+  img {
+    height: $navbar-height - 15px;
+    margin-left: 25px;
+  }
+
+  .logo-text {
+    display: inline;
+    font-size: 2em;
+    margin: 10px;
+  }
+}
+
 .navbar-extras {
   .link-titles-menu {
     background-color: #313537;
