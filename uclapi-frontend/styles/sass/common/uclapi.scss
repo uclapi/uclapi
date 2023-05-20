@@ -116,6 +116,11 @@ body {
   margin-left: 10px;
 }
 
+.description {
+  font-size: 0.9em;
+  text-align: justify;
+}
+
 .container.splash-parallax {
   >.no-vertical-align {
     >.row>.column {
@@ -495,17 +500,19 @@ input[type='checkbox']:checked + span {
 
 /** For Autocomplete forms **/
 
-ul {
-  border-radius: 10px;
-  margin: 0;
-  padding-left: 0;
-}
+.react-autosuggest__suggestions-list {
+  ul {
+    border-radius: 10px;
+    margin: 0;
+    padding-left: 0;
+  }
 
-li {
-  float: left;
-  list-style-type: none;
-  margin: 0;
-  width: 100%;
+  li {
+    float: left;
+    list-style-type: none;
+    margin: 0;
+    width: 100%;
+  }
 }
 
 /** Code View styling **/

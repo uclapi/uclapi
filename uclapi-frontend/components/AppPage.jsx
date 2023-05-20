@@ -8,7 +8,7 @@ import { allApps } from '@/components/layout/data/app_pages.jsx'
 // Common Components
 import {
   CardView, Column, Container, ImageView,
-  Row, TextView,
+  Row,
 } from '@/components/layout/Items.jsx'
 import { Button } from 'rsuite';
 import React from 'react';
@@ -122,7 +122,7 @@ export class AppPage extends React.Component {
                       description={name + `logo`}
                       centred
                     />
-                    <TextView text={name} heading={2} />
+                    <h2>{name}</h2>
                   </CardView>
                 </Container>
                 <Container styling='transparent'
@@ -186,8 +186,8 @@ export class AppPage extends React.Component {
                           flexDirection: `column`,
                         }}
                       >
-                        <TextView text={name} heading={2} align="left" />
-                        <TextView text={description} heading={5} align="left" />
+                        <h2>{name}</h2>
+                        <p>{description}</p>
                       </Column>
                       <Column
                         width='fit-content'

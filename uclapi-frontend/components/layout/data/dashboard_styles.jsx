@@ -11,8 +11,10 @@ export const styles = {
     fontWeight: `100`,
   },
   dates: {
-    color: `#000`,
+    color: `#fff`,
     margin: `0`,
+    marginLeft: `-15px`,
+    fontSize: `0.8em`,
   },
   appHolder: {
   },

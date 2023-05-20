@@ -4,7 +4,7 @@ import { styles as dashboardStyles } from '@/components/layout/data/dashboard_st
 // Components
 import {
   CheckBox, AnalyticInfo, AnalyticUserInfo,
-  Column, Container, Field, Row, TextView,
+  Column, Container, Field, Row,
 } from '@/components/layout/Items.jsx'
 // External dependencies
 import {Button, Panel, PanelGroup } from "rsuite";
@@ -96,11 +96,10 @@ export default class App extends React.Component {
                     <Column
                       width='1-1'
                       className={styles.settingsSection}
-                    >
-                      <TextView text={`OAuth Credentials: `}
-                        heading={4}
-                        align={`left`}
-                      />
+                      >
+                      <h3>
+                        OAuth Credentials:
+                      </h3>
                       <Field
                         title="Client ID"
                         content={app.oauth.client_id}
@@ -126,10 +125,7 @@ export default class App extends React.Component {
                       width='1-1'
                       className={styles.settingsSection}
                     >
-                      <TextView text={`OAuth Scopes`}
-                        heading={4}
-                        align={`left`}
-                      />
+                      <h4>OAuth Scopes:</h4>
                       {app.oauth.scopes.map( (scope, scope_index) =>
                         <CheckBox
                           key={scope_index}
@@ -165,41 +161,29 @@ export default class App extends React.Component {
             </Column>
           </Container>
           <Container noPadding>
-            <Row width="1-1">
+            <Column
+              width="1-1"
+              className="bottom-app-column"
+              keepInline
+            >
               <Column
-                width="1-1"
-                className="bottom-app-column"
+                width="165px"
+                alignItems="column"
+                className="dates-holder default tablet"
                 keepInline
               >
-                <Column
-                  width="165px"
-                  alignItems="column"
-                  className="dates-holder default tablet"
-                  keepInline
-                >
-                  <TextView text={`Created: ` + created + ` ago`}
-                    heading={5}
-                    align="left"
-                    style={dashboardStyles.dates}
-                    color="white"
-                  />
-                  <TextView text={`Updated: ` + updated + ` ago`}
-                    heading={5}
-                    align="left"
-                    style={dashboardStyles.dates}
-                    color="white"
-                  />
-                </Column>
-
-                <Button
-                  color='red'
-                  appearance='primary'
-                  onClick={() => { actions.deleteConfirm(index) }}
-                >
-                  Delete
-                </Button>
+                <p style={dashboardStyles.dates}>Created: {created} ago</p>
+                <p style={dashboardStyles.dates}>Updated: {updated} ago</p>
               </Column>
-            </Row>
+
+              <Button
+                color='red'
+                appearance='primary'
+                onClick={() => { actions.deleteConfirm(index) }}
+              >
+                Delete
+              </Button>
+            </Column>
           </Container>
         </Container>
         </Panel>

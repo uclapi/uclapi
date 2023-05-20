@@ -2,7 +2,7 @@
 import { styles as dashboardStyles } from '@/components/layout/data/dashboard_styles.jsx'
 import {
   CardView, Column, ConfirmBox,
-  Container, Row, TextView,
+  Container, Row,
 } from '@/components/layout/Items.jsx'
 
 import Modal from 'react-modal'
@@ -143,25 +143,9 @@ class Dashboard extends React.Component {
               <div className={`${styles.appHolder} app-holder`} style={dashboardStyles.appHolder}>
                 {apps.length === 0 ? (
                   <CardView width='1-1' type='default' noPadding>
-                    <Row noPadding>
-                      <Column width='1-1'
-                        horizontalAlignment='center'
-                        style={{
-                          paddingTop: 30,
-                          paddingBottom: 20,
-                        }}
-                      >
-                        <TextView
-                          text={
-                            `You haven't created any apps yet, ` +
-                            `click below to get started!`
-                          }
-                          heading={2}
-                          align={`center`}
-                          style={dashboardStyles.noPadding}
-                        />
-                      </Column>
-                    </Row>
+                    <h2>
+                      You haven't created any apps yet, click below to get started!
+                    </h2>
                   </CardView>
                 ) : apps.map((app, index) => (
                   <App
