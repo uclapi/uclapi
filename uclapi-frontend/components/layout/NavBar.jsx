@@ -151,7 +151,7 @@ class NavBar extends React.Component {
     const { isVisible, isSmall, isMenuHidden } = this.state
     return <div className="navbar-extras">
       <motion.div
-        className="navbarconsistent centered"
+        className="navbarconsistent"
         initial="hidden"
         animate={isVisible ? `shown` : `hidden`}
         variants={toast}
