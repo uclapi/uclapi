@@ -24,7 +24,6 @@ specifiers:
   react-modal: ^3.16.1
   react-responsive-carousel: ^3.2.23
   react-syntax-highlighter: ^15.5.0
-  react-tabs: ^6.0.1
   rsuite: ^5.34.0
   sass: ^1.62.1
   typescript: 5.0.4
@@ -52,7 +51,6 @@ dependencies:
   react-modal: 3.16.1_biqbaboplfbrettd7655fr4n2y
   react-responsive-carousel: 3.2.23
   react-syntax-highlighter: 15.5.0_react@18.2.0
-  react-tabs: 6.0.1_react@18.2.0
   rsuite: 5.34.0_biqbaboplfbrettd7655fr4n2y
   typescript: 5.0.4
 
@@ -834,11 +832,6 @@ packages:
 
   /client-only/0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
-    dev: false
-
-  /clsx/1.2.1:
-    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
-    engines: {node: '>=6'}
     dev: false
 
   /color-convert/2.0.1:
@@ -2814,16 +2807,6 @@ packages:
       prismjs: 1.29.0
       react: 18.2.0
       refractor: 3.6.0
-    dev: false
-
-  /react-tabs/6.0.1_react@18.2.0:
-    resolution: {integrity: sha512-XE5D/iCcwUsr06wf6fWrjA/HbUaj3G2+6NMVJygZuKALHkWYp+D3ZPcG2VctuaOHHzMU48eSOuxwBALBnuXldA==}
-    peerDependencies:
-      react: ^18.0.0
-    dependencies:
-      clsx: 1.2.1
-      prop-types: 15.8.1
-      react: 18.2.0
     dev: false
 
   /react-use-set/1.0.0_react@18.2.0:
