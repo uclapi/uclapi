@@ -53,6 +53,12 @@ body {
   margin: 0;
 }
 
+*,
+:after,
+:before {
+  box-sizing: content-box;
+}
+
 .rs-panel-collapsible {
   background-color: #313537;
   border-radius: 1rem;
