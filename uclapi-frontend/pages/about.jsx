@@ -1,5 +1,5 @@
 // Team descriptions
-import { current, previous } from '@/components/layout/data/team_members.jsx'
+import { current, previous } from '@/data/team_members'
 // Common Components
 import {
   CardView, Column, Container,

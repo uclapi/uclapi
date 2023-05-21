@@ -1,4 +1,4 @@
-import { endpoints, FAQ } from '@/components/layout/data/homepage_constants.jsx'
+import { endpoints, FAQ } from '@/data/homepage_constants'
 import {
   CardView,
   Column,

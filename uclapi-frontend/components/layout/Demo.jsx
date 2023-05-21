@@ -1,4 +1,4 @@
-import rooms from './data/room_names.jsx'
+import rooms from '../../data/room_names'
 import { CardView, Code, Container, Row } from './Items.jsx'
 import React from "react";
 import { AutoComplete } from 'rsuite';
@@ -24,7 +24,6 @@ class Demo extends React.Component {
     const token = await fetch(`/dashboard/api/temptoken`, {
       headers: { Authorization: process.env.TEMP_TOKEN_SECRET }
     }).then(res => res.json()).then(res => res.token);
-    console.log('mount', token)
 
     this.setState((old) => ({
       params: { ...old.params, token },

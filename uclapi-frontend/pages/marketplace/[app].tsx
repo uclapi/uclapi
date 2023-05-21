@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { allApps } from "@/components/layout/data/app_pages.jsx";
+import { allApps } from "@/data/app_pages.jsx";
 
 // Import page that displays a singular app
 import { AppPage } from '@/components/AppPage.jsx'

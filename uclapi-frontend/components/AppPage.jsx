@@ -4,7 +4,7 @@
 
 // Styles
 // Grab titles and descriptions of app
-import { allApps } from '@/components/layout/data/app_pages.jsx'
+import { allApps } from '@/data/app_pages.jsx'
 // Common Components
 import {
   CardView, Column, Container,

@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
 // Stylings
-import { styles as dashboardStyles } from '@/components/layout/data/dashboard_styles.jsx'
+import { styles as dashboardStyles } from '@/data/dashboard_styles'
 // Components
 import {
   CheckBox, AnalyticInfo, AnalyticUserInfo,
