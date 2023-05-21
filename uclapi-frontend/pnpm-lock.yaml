@@ -22,7 +22,7 @@ specifiers:
   react-dom: 18.2.0
   react-icons: ^4.8.0
   react-modal: ^3.16.1
-  react-responsive-carousel: ^3.2.23
+  react-multi-carousel: ^2.8.3
   react-syntax-highlighter: ^15.5.0
   rsuite: ^5.34.0
   sass: ^1.62.1
@@ -49,7 +49,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   react-icons: 4.8.0_react@18.2.0
   react-modal: 3.16.1_biqbaboplfbrettd7655fr4n2y
-  react-responsive-carousel: 3.2.23
+  react-multi-carousel: 2.8.3
   react-syntax-highlighter: 15.5.0_react@18.2.0
   rsuite: 5.34.0_biqbaboplfbrettd7655fr4n2y
   typescript: 5.0.4
@@ -2746,13 +2746,6 @@ packages:
       scheduler: 0.23.0
     dev: false
 
-  /react-easy-swipe/0.0.21:
-    resolution: {integrity: sha512-OeR2jAxdoqUMHIn/nS9fgreI5hSpgGoL5ezdal4+oO7YSSgJR8ga+PkYGJrSrJ9MKlPcQjMQXnketrD7WNmNsg==}
-    engines: {node: '>= 6'}
-    dependencies:
-      prop-types: 15.8.1
-    dev: false
-
   /react-icons/4.8.0_react@18.2.0:
     resolution: {integrity: sha512-N6+kOLcihDiAnj5Czu637waJqSnwlMNROzVZMhfX68V/9bu9qHaMIJC4UdozWoOk57gahFCNHwVvWzm0MTzRjg==}
     peerDependencies:
@@ -2788,12 +2781,9 @@ packages:
       warning: 4.0.3
     dev: false
 
-  /react-responsive-carousel/3.2.23:
-    resolution: {integrity: sha512-pqJLsBaKHWJhw/ItODgbVoziR2z4lpcJg+YwmRlSk4rKH32VE633mAtZZ9kDXjy4wFO+pgUZmDKPsPe1fPmHCg==}
-    dependencies:
-      classnames: 2.3.2
-      prop-types: 15.8.1
-      react-easy-swipe: 0.0.21
+  /react-multi-carousel/2.8.3:
+    resolution: {integrity: sha512-wpHwq9Y/ydX+5yxpW8250jMOtg8NuBVlFrDTuS5/MdN0uD0zFIHxVbXhzzc4WFeQl6bn9ZLo8Fef2Ik5aBRgmw==}
+    engines: {node: '>=8'}
     dev: false
 
   /react-syntax-highlighter/15.5.0_react@18.2.0:
