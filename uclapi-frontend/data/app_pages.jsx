@@ -1,6 +1,5 @@
 // Common Components
 import { Button } from 'rsuite'
-import { Carousel } from "react-responsive-carousel"
 
 // Application config
 const roombuddydescription = (
@@ -212,49 +211,6 @@ const unikometdescription = (
       <li>🚀 A platform for giving student cohorts a voice!</li>
     </ul>
 
-    <div className="default tablet">
-      <Carousel
-        showThumbs={false}
-        showArrows
-        showIndicators
-        showStatus
-        infiniteLoop
-      >
-        <div key={`unikomet-desktop-image-1`}>
-          <img
-            src={'/marketplace/unikomet/desktop_screenshot_1.png'}
-            width="100%"
-            height="auto"
-          />
-          <p className="legend">{`Search`}</p>
-        </div>
-        <div key={`unikomet-desktop-image-2`}>
-          <img
-            src={'/marketplace/unikomet/desktop_screenshot_2.png'}
-            width="100%"
-            height="auto"
-          />
-          <p className="legend">{`Rate`}</p>
-        </div>
-        <div key={`unikomet-desktop-image-3`}>
-          <img
-            src={'/marketplace/unikomet/desktop_screenshot_3.png'}
-            width="100%"
-            height="auto"
-          />
-          <p className="legend">{`View Reviews`}</p>
-        </div>
-        <div key={`unikomet-desktop-image-4`}>
-          <img
-            src={'/marketplace/unikomet/desktop_screenshot_4.png'}
-            width="100%"
-            height="auto"
-          />
-          <p className="legend">{`Sort by department`}</p>
-        </div>
-      </Carousel>
-    </div>
-
     <br />
     <p className='description'>
       We believe Unikomet can be very helpful for many students, from those
@@ -327,7 +283,7 @@ export const allApps = {
       },
       {
         name: `Find study spaces`,
-        img: '/uclassistant/screenshot_3.png',
+        img: '/marketplace/uclassistant/screenshot_3.png',
       },
     ],
   },
