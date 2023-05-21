@@ -1,4 +1,4 @@
-import * as RequestGenerator from '@/components/layout/data/RequestGenerator.jsx'
+import * as RequestGenerator from '@/data/RequestGenerator'
 import React, { useState } from 'react'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import { androidstudio } from 'react-syntax-highlighter/dist/cjs/styles/hljs'

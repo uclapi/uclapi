@@ -1,6 +1,3 @@
-// React
-
-
 export const endpoints = [
   {
     name: `/oauth`,
