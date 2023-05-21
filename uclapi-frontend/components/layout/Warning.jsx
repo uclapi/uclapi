@@ -1,7 +1,6 @@
 import {
   Column,
   Container,
-  ImageView,
   Row,
 } from '@/components/layout/Items.jsx'
 import Image from 'next/image'

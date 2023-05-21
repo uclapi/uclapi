@@ -7,7 +7,7 @@
 import { allApps } from '@/components/layout/data/app_pages.jsx'
 // Common Components
 import {
-  CardView, Column, Container, ImageView,
+  CardView, Column, Container,
   Row,
 } from '@/components/layout/Items.jsx'
 import { Button } from 'rsuite';
@@ -17,6 +17,7 @@ import React from 'react';
 // External carousel dependency
 import { Carousel } from "react-responsive-carousel"
 import "react-responsive-carousel/lib/styles/carousel.min.css"
+import Image from 'next/image';
 
 
 export class AppPage extends React.Component {
@@ -86,7 +87,7 @@ export class AppPage extends React.Component {
     const isMobile = sizing == `mobile`
 
     const contentWidth = isMobile ? `9-10` : `2-3`
-    const iconsize = isMobile ? `50px` : `100px`
+    const iconsize = isMobile ? 50 : 100
 
     const screenshotwidth = isMobile ? `162px` : `216px`
     const screenshotheight = isMobile ? `258px` : `384px`
@@ -115,12 +116,10 @@ export class AppPage extends React.Component {
                     style={{ padding: `10px 0` }}
                     noPadding
                   >
-                    <ImageView
+                    <Image
                       src={logodark}
                       width={iconsize}
                       height={iconsize}
-                      description={name + `logo`}
-                      centred
                     />
                     <h2>{name}</h2>
                   </CardView>
@@ -164,16 +163,14 @@ export class AppPage extends React.Component {
                     >
                       <Column
                         width='fit-content'
-                        minWidth={iconsize}
+                        minWidth={`${iconsize}px`}
                         typeOfInline='grid'
                         horizontalAlignment='left'
                       >
-                        <ImageView
+                        <Image
                           src={logodark}
                           width={iconsize}
                           height={iconsize}
-                          description={name + `logo`}
-                          centred
                           style={{ 'margin': `0 auto 0 0` }}
                         />
                       </Column>
