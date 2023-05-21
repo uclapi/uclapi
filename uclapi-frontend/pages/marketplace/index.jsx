@@ -25,14 +25,13 @@ class Marketplace extends React.Component {
 
     // Set up the 'featured' apps section
     const featuredApps = []
-    featuredApps.push(allApps[`unikomet`])
+    featuredApps.push(allApps[`uclassistant`]);
 
     // Segregate into groups of applications if needed
     const appsToRender = []
-    appsToRender.push(allApps[`uclroombuddy`])
-    appsToRender.push(allApps[`uclassistant`])
-    appsToRender.push(allApps[`uclcssa`])
     appsToRender.push(allApps[`unikomet`])
+    appsToRender.push(allApps[`uclcssa`])
+    appsToRender.push(allApps[`uclassistant`])
 
     this.state = {
       'featuredApps': featuredApps,
