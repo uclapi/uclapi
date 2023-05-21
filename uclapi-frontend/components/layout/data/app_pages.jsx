@@ -147,21 +147,21 @@ const uclcssadescription = (
     <p className='description'>
       The question and answer section answers
       common questions such as:
-      <ul>
-        <li>
-          What is there to do on the weekend in London?
-        </li>
-        <li>
-          What good restraunts are there in London?
-        </li>
-        <li>
-          What are the best locations in London to rent for students?
-        </li>
-        <li>
-          And much more!
-        </li>
-      </ul>
     </p>
+    <ul className="description" style={{color: 'white'}}>
+      <li>
+        What is there to do on the weekend in London?
+      </li>
+      <li>
+        What good restraunts are there in London?
+      </li>
+      <li>
+        What are the best locations in London to rent for students?
+      </li>
+      <li>
+        And much more!
+      </li>
+    </ul>
 
     <h2 style={{ "textDecoration": `underline` }}>
       Memes
