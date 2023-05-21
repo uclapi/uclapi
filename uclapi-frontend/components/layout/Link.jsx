@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from "react";
+import { default as NextLink } from "next/link";
 
 import { motion } from 'framer-motion'
 
@@ -41,7 +42,7 @@ class Link extends React.Component {
 
         if (this.props.isSmall) {
             return (
-                <a href={link}>
+                <NextLink href={link}>
                     <div className="link-to-page"
                       style={{ borderBottom: `solid #ffffff29 2px`,
                                padding: `10px 0 10px 0` }}
@@ -51,7 +52,7 @@ class Link extends React.Component {
                         <img style={{ paddingLeft: `5px`}} src={src} />
                         <h1 style={{ border: `none`}} >{name}</h1>
                     </div>
-                </a>
+                </NextLink>
             )
         } else {
             return (
@@ -59,9 +60,9 @@ class Link extends React.Component {
                     <motion.div className="bounce-image" transition={bounceTransition} animate={hover ? {y: [`0%`, `-50%`]} : {y: `0%`}}>
                         <img src={src} />
                     </motion.div>
-                    <a href={link}>
+                    <NextLink href={link}>
                         <h1>{name}</h1>
-                    </a>
+                    </NextLink>
                 </div>
             )
         }
