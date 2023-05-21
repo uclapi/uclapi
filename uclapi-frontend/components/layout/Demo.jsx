@@ -1,6 +1,7 @@
 import rooms from './data/room_names.jsx'
-import { AutoCompleteView, Code, Container, Row } from './Items.jsx'
+import { CardView, Code, Container, Row } from './Items.jsx'
 import React from "react";
+import { AutoComplete } from 'rsuite';
 
 
 class Demo extends React.Component {
@@ -45,10 +46,30 @@ class Demo extends React.Component {
         heading="Try out the API"
       >
         <Row width="2-3" horizontalAlignment="center">
-          <AutoCompleteView suggestions={rooms} onSubmit={this.makeRequest} />
+          <AutoComplete
+            style={{ width: "100%" }}
+            size="lg"
+            block
+            data={rooms}
+            onChange={this.makeRequest}
+            placeholder='e.g., Darwin Building B05'
+            renderMenuItem={(text) => {
+              return (
+                <CardView
+                  width="1-1"
+                  type="emphasis"
+                  fakeLink
+                  noShadow
+                  style={{width: "100%"}}
+                >
+                  <p style={{margin: `0`,padding: 0,}}>
+                    {text}
+                  </p>
+                </CardView>
+              );
+            }}
+          />
         </Row>
-
-        <Container height="20px" noPadding />
 
         <Row width="2-3" horizontalAlignment="center">
           <Code
