@@ -9,11 +9,12 @@ import styles from "@/styles/Marketplace.module.scss"
 import { allApps } from '@/components/layout/data/app_pages.jsx'
 // Common Components
 import {
-  CardView, Container, ImageView,
+  CardView, Container,
   Row
 } from '@/components/layout/Items.jsx'
 // Standard React imports
 import React from 'react'
+import Image from "next/image";
 
 class Marketplace extends React.Component {
   constructor(props) {
@@ -40,7 +41,7 @@ class Marketplace extends React.Component {
   }
 
   render() {
-    const iconsize = `100px`
+    const iconsize = 100
     // const logosize = `150px`
     const {
       featuredApps,
@@ -88,12 +89,11 @@ class Marketplace extends React.Component {
                     horizontalAlignment='center'
                     alignItems='column'
                   >
-                    <ImageView
+                    <Image
                       src={app.logolight}
                       width={iconsize}
                       height={iconsize}
-                      margin="20px 0"
-                      centred
+                      style={{margin: '20px auto'}}
                     />
                     <h2>{app.name}</h2>
                     <p>{app.description}</p>
@@ -129,12 +129,11 @@ class Marketplace extends React.Component {
                     horizontalAlignment="center"
                     alignItems="column"
                   >
-                    <ImageView
+                    <Image
                       src={app.logolight}
                       width={iconsize}
                       height={iconsize}
-                      margin="20px 0"
-                      centred
+                      style={{margin:'20px auto'}}
                     />
                     <h2 className={styles.app}>{app.name}</h2>
                     <p className={styles.app}>

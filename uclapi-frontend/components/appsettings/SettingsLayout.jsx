@@ -1,7 +1,7 @@
 
 import {
   CardView, Column,
-  Container, ImageView,
+  Container,
   Row,
 } from '@/components/layout/Items.jsx'
 import React, { useCallback , useState } from 'react'
