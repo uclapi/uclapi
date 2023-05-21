@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import { androidstudio } from 'react-syntax-highlighter/dist/cjs/styles/hljs'
 import { Nav } from 'rsuite';
-import styles from '@/styles/Code.module.scss'
+import styles from './Code.module.scss'
 
 /**
 REQUIRED ATTRIBUTES:
