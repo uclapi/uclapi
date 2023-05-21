@@ -107,6 +107,44 @@ body {
   margin-top: 1rem;
 }
 
+.rs-picker-menu {
+  background-color: transparent;
+}
+
+.rs-auto-complete {
+  input::placeholder {
+    color: white;
+  }
+
+  input {
+    background-color: #3498db;
+    border: 0;
+    color: #fff;
+    float: left;
+    margin: 30px 0 0;
+    padding: 15px 0;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+.rs-auto-complete-item {
+  padding: 0;
+  margin: 0;
+
+  &:hover {
+    background-color: inherit;
+  }
+
+  .column {
+    padding: 0;
+  }
+
+  .uclapi-card {
+    border-radius: 0;
+  }
+}
+
 .grey-btn {
   background-color: $color-grey-dark;
   color: $color-white;
@@ -458,29 +496,7 @@ input[type='checkbox']:checked + span {
   }
 }
 
-/** For Autocomplete forms **/
-
-.react-autosuggest__suggestions-list {
-  ul {
-    border-radius: 10px;
-    margin: 0;
-    padding-left: 0;
-  }
-
-  li {
-    float: left;
-    list-style-type: none;
-    margin: 0;
-    width: 100%;
-  }
-}
-
 /** Code View styling **/
-
-/* stylelint-disable-next-line selector-class-pattern */
-.react-autosuggest__container {
-  width: 100%;
-}
 
 pre {
   margin: 0;

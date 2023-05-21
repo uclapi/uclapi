@@ -6,7 +6,6 @@ import Row from './containers/Row.jsx'
 import Demo from './Demo.jsx'
 import Footer from './Footer.jsx'
 import NavBar from './NavBar.jsx'
-import AutoCompleteView from './views/AutoCompleteView.jsx'
 import CardView from './views/CardView.jsx'
 import CheckBox from './views/CheckBox'
 import Code from './views/Code'
@@ -26,7 +25,6 @@ export {
   Demo,
   NavBar,
   Footer,
-  AutoCompleteView,
   Field,
   CheckBox,
   ConfirmBox,
