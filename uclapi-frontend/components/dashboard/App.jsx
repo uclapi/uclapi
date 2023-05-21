@@ -11,7 +11,6 @@ import {Button, Panel, PanelGroup } from "rsuite";
 
 import React from "react";
 import styles from '@/styles/Dashboard.module.scss'
-import AccordionIcon from './AccordionIcon.jsx'
 
 /**
   UI Definition of the app, all of the "actions" should be passed in from
