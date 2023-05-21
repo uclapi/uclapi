@@ -1,6 +1,4 @@
 /* eslint-disable react/jsx-no-bind */
-// Stylings
-import { styles as dashboardStyles } from '@/data/dashboard_styles'
 // Components
 import {
   CheckBox, AnalyticInfo, AnalyticUserInfo,
@@ -171,8 +169,8 @@ export default class App extends React.Component {
                 className="dates-holder default tablet"
                 keepInline
               >
-                <p style={dashboardStyles.dates}>Created: {created} ago</p>
-                <p style={dashboardStyles.dates}>Updated: {updated} ago</p>
+                <p style={styles.dates}>Created: {created} ago</p>
+                <p style={styles.dates}>Updated: {updated} ago</p>
               </Column>
 
               <Button

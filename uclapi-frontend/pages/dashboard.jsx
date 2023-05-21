@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-no-bind */
-import { styles as dashboardStyles } from '@/data/dashboard_styles'
 import {
   CardView, Column, ConfirmBox,
   Container, Row,
@@ -64,7 +63,6 @@ class Dashboard extends React.Component {
           className="modal"
           preventScroll={false}
           overlayClassName="overlay"
-          style={dashboardStyles.modal}
         >
           <CardView width="1-1" type="default" noPadding>
             {view === `accept-aup` && <AcceptableUsePolicy />}
@@ -89,7 +87,6 @@ class Dashboard extends React.Component {
           onRequestClose={() => this.setState({ view: `default` })}
           className="modal"
           overlayClassName="overlay"
-          style={dashboardStyles.modal}
         >
           <ConfirmBox
             text="Enter the name of your new project"
@@ -109,7 +106,6 @@ class Dashboard extends React.Component {
           onRequestClose={() => this.setState({ view: `default` })}
           className="modal"
           overlayClassName="overlay"
-          style={dashboardStyles.modal}
         >
           {toDelete !== -1 ? (
             <ConfirmBox
@@ -140,7 +136,7 @@ class Dashboard extends React.Component {
               <h1>Welcome, {name}</h1>
               <h3>username: {cn}</h3>
 
-              <div className={`${styles.appHolder} app-holder`} style={dashboardStyles.appHolder}>
+              <div className={`${styles.appHolder} app-holder`}>
                 {apps.length === 0 ? (
                   <CardView width='1-1' type='default' noPadding>
                     <h2>

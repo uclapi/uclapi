@@ -588,6 +588,15 @@ div.uclapi-card-github {
   position: absolute;
   right: 20vw;
   top: 25%;
+
+  .content {
+    top: 25%;
+    bottom: auto;
+    padding: 0;
+    height: fit-content;
+    background: none;
+    border: none;
+  }
 }
 
 .confirm-box-container {
