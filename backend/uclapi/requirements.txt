@@ -8,7 +8,7 @@ Django==3.2.13
 deepdiff==6.3.0
 django-cors-headers==4.0.0
 django-dotenv==1.4.2
-django-mock-queries==2.1.7
+django-mock-queries==2.2.0
 django-storages==1.13.2
 djangorestframework==3.14.0
 django-postgrespool2==2.0.5
