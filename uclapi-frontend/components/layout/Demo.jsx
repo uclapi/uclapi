@@ -1,32 +1,8 @@
-import {
-  grey,
-  pink,
-} from '@mui/material/colors'
-import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material/styles'
-// Required components
-import rooms from './data/room_names.jsx'
-import { AutoCompleteView, Code, Container, Row } from './Items.jsx'
+import rooms from '../../data/room_names'
+import { CardView, Code, Container, Row } from './Items.jsx'
 import React from "react";
+import { AutoComplete } from 'rsuite';
 
-const {
-  100: grey100,
-} = grey
-const {
-  A200: pinkA200,
-} = pink
-const white = `#ffffff`
-
-const muiTheme = createTheme({
-  fontFamily: `Roboto, sans-serif`,
-  palette: {
-    primary1Color: `#434343`,
-    primary3Color: grey100,
-    accent1Color: pinkA200,
-    textColor: white,
-    alternateTextColor: white,
-    canvasColor: `#434343`,
-  },
-})
 
 class Demo extends React.Component {
   constructor(props) {
@@ -48,7 +24,6 @@ class Demo extends React.Component {
     const token = await fetch(`/dashboard/api/temptoken`, {
       headers: { Authorization: process.env.TEMP_TOKEN_SECRET }
     }).then(res => res.json()).then(res => res.token);
-    console.log('mount', token)
 
     this.setState((old) => ({
       params: { ...old.params, token },
@@ -63,34 +38,52 @@ class Demo extends React.Component {
   render() {
     const { rootURL, params, response } = this.state;
     return (
-      <MuiThemeProvider theme={muiTheme}>
-        <Container
-          styling={`secondary`}
-          height={`fit-content`}
-          isPaddedBottom
-          heading="Try out the API"
-        >
+      <Container
+        styling={`secondary`}
+        height={`fit-content`}
+        isPaddedBottom
+        heading="Try out the API"
+      >
+        <Row width="2-3" horizontalAlignment="center">
+          <AutoComplete
+            style={{ width: "100%" }}
+            size="lg"
+            block
+            data={rooms}
+            onChange={this.makeRequest}
+            placeholder='e.g., Darwin Building B05'
+            renderMenuItem={(text) => {
+              return (
+                <CardView
+                  width="1-1"
+                  type="emphasis"
+                  fakeLink
+                  noShadow
+                  style={{width: "100%"}}
+                >
+                  <p style={{margin: `0`,padding: 0,}}>
+                    {text}
+                  </p>
+                </CardView>
+              );
+            }}
+          />
+        </Row>
+
+        <Row width="2-3" horizontalAlignment="center">
+          <Code
+            url={`${rootURL}/roombookings/bookings`}
+            params={params}
+            type={`request`}
+          />
+        </Row>
+
+        {response ? (
           <Row width="2-3" horizontalAlignment="center">
-            <AutoCompleteView suggestions={rooms} onSubmit={this.makeRequest} />
+            <Code response={response} type={`response`} />
           </Row>
-
-          <Container height="20px" noPadding />
-
-          <Row width="2-3" horizontalAlignment="center">
-            <Code
-              url={`${rootURL}/roombookings/bookings`}
-              params={params}
-              type={`request`}
-            />
-          </Row>
-
-          {response ? (
-            <Row width="2-3" horizontalAlignment="center">
-              <Code response={response} type={`response`} />
-            </Row>
-          ) : null}
-        </Container>
-      </MuiThemeProvider>
+        ) : null}
+      </Container>
     );
   }
 

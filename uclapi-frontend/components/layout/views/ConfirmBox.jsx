@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
 // Components
 import {
-  Button, CardView, Column,
-  Container, Field, Row, TextView,
+  CardView, Column,
+  Container, Field, Row,
 } from '@/components/layout/Items.jsx'
+import { Button } from 'rsuite';
 import React from "react";
 
 
@@ -88,11 +89,9 @@ export default class ConfirmBox extends React.Component {
               width="8-10"
               horizontalAlignment="center"
             >
-              <TextView
-                heading="3"
-                align="left"
-                text={text}
-              />
+              <h3>
+                {text}
+              </h3>
               <Field
                 title={`Click to edit`}
                 content={value}
@@ -104,18 +103,16 @@ export default class ConfirmBox extends React.Component {
                 keepInline
               >
                 <Button
-                  type={`alternate`}
+                  size='lg'
                   onClick={this.success}
-                  fakeLink
-                  style={{ cursor: `pointer` }}
                 >
                   Submit
                 </Button>
                 <Button
-                  type={`remove`}
+                  size='lg'
+                  color='red'
+                  appearance='primary'
                   onClick={fail}
-                  fakeLink
-                  style={{ cursor: `pointer` }}
                 >
                   Cancel
                 </Button>

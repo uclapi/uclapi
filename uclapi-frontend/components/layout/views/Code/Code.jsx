@@ -1,9 +1,9 @@
-import * as RequestGenerator from '@/components/layout/data/RequestGenerator.jsx'
-import React, { useCallback, useState } from 'react'
+import * as RequestGenerator from '@/data/RequestGenerator'
+import React, { useState } from 'react'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import { androidstudio } from 'react-syntax-highlighter/dist/cjs/styles/hljs'
-import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
-
+import { Nav } from 'rsuite';
+import styles from './Code.module.scss'
 
 /**
 REQUIRED ATTRIBUTES:
@@ -53,36 +53,44 @@ const Code = ({
   response,
 }) => {
   const [tabIndex, setTabIndex] = useState(0)
-  const onSelect = useCallback((i) => setTabIndex(i))
-
   const langs = getLanguages(languages, type, url, params, response)
 
   return (
-    <Tabs selectedIndex={tabIndex} onSelect={onSelect}>
-      <TabList>
-        {langs.map(({ name }, index) => (
-          <Tab className={index == tabIndex ? `selected-tab` : `unselected-tab`} key={`tab-${name}`}>
-            {name}
-          </Tab>
-        ))}
-      </TabList>
-      {langs.map(({ name, code }) => (
-        <TabPanel key={`TabPanel-${name}`}>
-          <div
-            className='default-transition background-color-transition inner-tab'
-            style={{ 'textAlign': `left` }}
+    <>
+      <Nav
+        className={styles.languageTabsWrapper}
+        style={{ width: "100%" }}
+        activeKey={tabIndex}
+        onSelect={setTabIndex}
+      >
+        {langs.map(({ name }) => (
+          <Nav.Item
+            key={`lang-${name}`}
+            className={`${styles.languageTab} ${
+              tabIndex === name ? styles.selected : ""
+            }`}
+            eventKey={name}
           >
-            <SyntaxHighlighter
-              language={name}
-              style={androidstudio}
+            {name}
+          </Nav.Item>
+        ))}
+      </Nav>
+      {langs.map(
+        ({ name, code }) =>
+          tabIndex === name && (
+            <div
+              key={`code-${name}`}
+              className="default-transition background-color-transition inner-tab"
+              style={{ textAlign: `left`, width: "100%" }}
             >
-              {code}
-            </SyntaxHighlighter>
-          </div>
-        </TabPanel>
-      ))}
-    </Tabs>
-  )
+              <SyntaxHighlighter language={name} style={androidstudio}>
+                {code}
+              </SyntaxHighlighter>
+            </div>
+          )
+      )}
+    </>
+  );
 }
 
 export default Code

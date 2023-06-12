@@ -1,8 +1,7 @@
 /* eslint-disable react/jsx-no-bind */
-import { styles as dashboardStyles } from '@/components/layout/data/dashboard_styles.jsx'
 import {
-  Button, CardView, Column, ConfirmBox,
-  Container, Footer, NavBar, Row, TextView,
+  CardView, Column, ConfirmBox,
+  Container, Row,
 } from '@/components/layout/Items.jsx'
 
 import Modal from 'react-modal'
@@ -16,6 +15,8 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from "./api/auth/[...nextauth]";
 import withSession from '@/lib/withSession'
 import { MissingAUPAgreementError } from '../lib/Api/DashboardApi';
+import { Button } from 'rsuite'
+import Head from 'next/head';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -56,8 +57,9 @@ class Dashboard extends React.Component {
 
     return (
       <>
-        <NavBar isScroll={false} />
-
+        <Head>
+          Dashboard - UCL API
+        </Head>
         <Modal
           isOpen={view === `accept-aup`}
           contentLabel="UCL API Acceptable Use Policy"
@@ -65,23 +67,18 @@ class Dashboard extends React.Component {
           className="modal"
           preventScroll={false}
           overlayClassName="overlay"
-          style={dashboardStyles.modal}
         >
           <CardView width="1-1" type="default" noPadding>
             {view === `accept-aup` && <AcceptableUsePolicy />}
             <Button
-              type={`alternate`}
               onClick={() => actions.acceptAup()}
-              fakeLink
-              style={{ cursor: `pointer` }}
             >
               I agree
             </Button>
             <Button
-              type={`remove`}
+              color='red'
+              appearance='primary'
               onClick={() => this.setState({ view: `default` })}
-              fakeLink
-              style={{ cursor: `pointer` }}
             >
               Cancel
             </Button>
@@ -94,7 +91,6 @@ class Dashboard extends React.Component {
           onRequestClose={() => this.setState({ view: `default` })}
           className="modal"
           overlayClassName="overlay"
-          style={dashboardStyles.modal}
         >
           <ConfirmBox
             text="Enter the name of your new project"
@@ -114,7 +110,6 @@ class Dashboard extends React.Component {
           onRequestClose={() => this.setState({ view: `default` })}
           className="modal"
           overlayClassName="overlay"
-          style={dashboardStyles.modal}
         >
           {toDelete !== -1 ? (
             <ConfirmBox
@@ -145,28 +140,12 @@ class Dashboard extends React.Component {
               <h1>Welcome, {name}</h1>
               <h3>username: {cn}</h3>
 
-              <div className={`${styles.appHolder} app-holder`} style={dashboardStyles.appHolder}>
+              <div className={`${styles.appHolder} app-holder`}>
                 {apps.length === 0 ? (
                   <CardView width='1-1' type='default' noPadding>
-                    <Row noPadding>
-                      <Column width='1-1'
-                        horizontalAlignment='center'
-                        style={{
-                          paddingTop: 30,
-                          paddingBottom: 20,
-                        }}
-                      >
-                        <TextView
-                          text={
-                            `You haven't created any apps yet, ` +
-                            `click below to get started!`
-                          }
-                          heading={2}
-                          align={`center`}
-                          style={dashboardStyles.noPadding}
-                        />
-                      </Column>
-                    </Row>
+                    <h2>
+                      You haven&apos;t created any apps yet, click below to get started!
+                    </h2>
                   </CardView>
                 ) : apps.map((app, index) => (
                   <App
@@ -181,20 +160,18 @@ class Dashboard extends React.Component {
           </Row>
           <Row width='1-1'>
             <Button
-              type={`default`}
+              className='grey-btn'
               style={{
-                cursor: `pointer`,
                 borderRadius: `10px`,
                 padding: `20px 25px`,
+                margin: `auto`
               }}
               onClick={() => { this.setState({ view: `add-project` }) }}
-              centred
             >
               +
             </Button>
         </Row>
         </Container>
-        <Footer />
       </>
     )
   }

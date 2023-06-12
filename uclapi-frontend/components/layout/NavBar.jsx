@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import Link from './Link.jsx'
 import React from "react";
 import Image from 'next/image'
+import {default as NextLink} from 'next/link'
 
 
 const links = [
@@ -151,19 +152,19 @@ class NavBar extends React.Component {
     const { isVisible, isSmall, isMenuHidden } = this.state
     return <div className="navbar-extras">
       <motion.div
-        className="navbarconsistent centered"
+        className="navbarconsistent"
         initial="hidden"
         animate={isVisible ? `shown` : `hidden`}
         variants={toast}
       >
-        <a href={`/`}>
+        <NextLink href={`/`}>
           <Image src={'/simpleAPILogoWhite.svg'} width={45} height={20} />
-        </a>
-        <a href={`/`} style={{ textDecoration: `none` }} >
+        </NextLink>
+        <NextLink href={`/`} style={{ textDecoration: `none` }} >
           <div className="logo-text-white">
             UCL API
           </div>
-        </a>
+        </NextLink>
 
         <div className="link-titles">
           {!isSmall ? (

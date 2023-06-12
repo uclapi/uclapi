@@ -1,24 +1,17 @@
 import {
-  Button,
   Column,
   Container,
-  Footer,
-  ImageView,
-  NavBar,
   Row,
-  TextView,
 } from '@/components/layout/Items.jsx'
 import Image from 'next/image'
+import { Button } from 'rsuite'
 
 // import '@/styles/common/uclapi.scss'
 // import '@/styles/navbar.scss'
 
 const Warning = ({ title, content }) => (
   <>
-    <NavBar isScroll={false} />
-
     {/* Warning message */}
-
     <Container styling="splash-parallax" height="600px">
       <Row
         width="2-3"
@@ -28,35 +21,26 @@ const Warning = ({ title, content }) => (
 
         <Column width="1-2" className="default">
           <Image
-            src={'/warning/warning/svg'}
+            src={'/warning/warning.svg'}
             width={367}
             height={405}
             description="large exclamation point, warning!"
           />
         </Column>
 
-        <Column width="1-2" alignItems="column">
-          <TextView
-            heading="1"
-            text={title}
-            align="left"
-          />
+        <Column width="1-2" alignItems="column" style={{textAlign: 'left'}}>
+          <h1>
+            {title}
+          </h1>
           {typeof content === `string`
-            ? (
-              <TextView
-                heading="3"
-                text={content}
-                align="left"
-              />
-            )
+            ? (<h3>{content}</h3>)
             : content}
-          <Button link={`/`} centred>
+          <Button href={`/`} className='grey-btn'>
             Home
           </Button>
         </Column>
       </Row>
     </Container>
-    <Footer />
   </>
 )
 

@@ -2,18 +2,18 @@
 // remove this ^ when ready to add prop-types
 
 
-import "react-responsive-carousel/lib/styles/carousel.min.css"
-import "@/styles/Marketplace.module.scss"
+import styles from "@/styles/Marketplace.module.scss"
 
 // Grab titles and descriptions of app
-import { allApps } from '@/components/layout/data/app_pages.jsx'
+import { allApps } from '@/data/app_pages.jsx'
 // Common Components
 import {
-  CardView, Container, Footer, ImageView,
-  NavBar, Row, TextView,
+  CardView, Container,
+  Row
 } from '@/components/layout/Items.jsx'
 // Standard React imports
 import React from 'react'
+import Image from "next/image";
 
 class Marketplace extends React.Component {
   constructor(props) {
@@ -24,14 +24,13 @@ class Marketplace extends React.Component {
 
     // Set up the 'featured' apps section
     const featuredApps = []
-    featuredApps.push(allApps[`unikomet`])
+    featuredApps.push(allApps[`uclassistant`]);
 
     // Segregate into groups of applications if needed
     const appsToRender = []
-    appsToRender.push(allApps[`uclroombuddy`])
-    appsToRender.push(allApps[`uclassistant`])
-    appsToRender.push(allApps[`uclcssa`])
     appsToRender.push(allApps[`unikomet`])
+    appsToRender.push(allApps[`uclcssa`])
+    appsToRender.push(allApps[`uclassistant`])
 
     this.state = {
       'featuredApps': featuredApps,
@@ -40,7 +39,7 @@ class Marketplace extends React.Component {
   }
 
   render() {
-    const iconsize = `100px`
+    const iconsize = 100
     // const logosize = `150px`
     const {
       featuredApps,
@@ -49,9 +48,6 @@ class Marketplace extends React.Component {
 
     return (
       <>
-
-        <NavBar isScroll={false} />
-
         <Container
           height='300px'
           style={{ margin: `60px 0 0 0` }}
@@ -64,12 +60,8 @@ class Marketplace extends React.Component {
             verticalAlignment='center'
             alignItems='column'
           >
-            <TextView text={`UCL Marketplace`} heading={1} align={`center`} />
-            <TextView
-              text={`Apps that use UCL API`}
-              heading={2}
-              align={`center`}
-            />
+            <h1>UCL Marketplace</h1>
+            <h2>Apps that use UCL API</h2>
           </Row>
         </Container>
 
@@ -95,25 +87,14 @@ class Marketplace extends React.Component {
                     horizontalAlignment='center'
                     alignItems='column'
                   >
-                    <ImageView
+                    <Image
                       src={app.logolight}
                       width={iconsize}
                       height={iconsize}
-                      margin="20px 0"
-                      centred
+                      style={{margin: '20px auto'}}
                     />
-                    <TextView
-                      text={app.name}
-                      heading={2}
-                      align={`center`}
-                      color={`white`}
-                    />
-                    <TextView
-                      text={app.description}
-                      heading={5}
-                      align={`center`}
-                      color={`white`}
-                    />
+                    <h2>{app.name}</h2>
+                    <p>{app.description}</p>
                   </Row>
                 </CardView>
               )
@@ -142,38 +123,26 @@ class Marketplace extends React.Component {
                   }}
                 >
                   <Row
-                    width='9-10'
-                    horizontalAlignment='center'
-                    alignItems='column'
+                    width="9-10"
+                    horizontalAlignment="center"
+                    alignItems="column"
                   >
-                    <ImageView
+                    <Image
                       src={app.logolight}
                       width={iconsize}
                       height={iconsize}
-                      margin="20px 0"
-                      centred
+                      style={{margin:'20px auto'}}
                     />
-                    <TextView
-                      text={app.name}
-                      heading={2}
-                      align={`center`}
-                      color={`black`}
-                    />
-                    <TextView
-                      text={app.description}
-                      heading={5}
-                      align={`center`}
-                      color={`black`}
-                    />
+                    <h2 className={styles.app}>{app.name}</h2>
+                    <p className={styles.app}>
+                      {app.description}
+                    </p>
                   </Row>
                 </CardView>
-              )
+              );
             })}
           </Row>
         </Container>
-
-        <Footer />
-
       </>
     )
   }

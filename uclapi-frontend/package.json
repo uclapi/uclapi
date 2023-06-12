@@ -10,10 +10,6 @@
     "test": "echo TODO"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@mui/material": "^5.13.4",
-    "@mui/styles": "^5.13.2",
     "@sentry/react": "^7.52.1",
     "@sentry/tracing": "^7.52.1",
     "@types/node": "20.1.4",
@@ -30,15 +26,13 @@
     "next-auth": "^4.22.1",
     "openapi-explorer": "^1.0.544",
     "qs": "^6.11.2",
-    "rc-collapse": "^3.6.0",
     "react": "18.2.0",
-    "react-autosuggest": "^10.1.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.8.0",
     "react-modal": "^3.16.1",
-    "react-responsive-carousel": "^3.2.23",
+    "react-multi-carousel": "^2.8.3",
     "react-syntax-highlighter": "^15.5.0",
-    "react-tabs": "^6.0.1",
+    "rsuite": "^5.34.0",
     "typescript": "5.0.4"
   },
   "devDependencies": {
