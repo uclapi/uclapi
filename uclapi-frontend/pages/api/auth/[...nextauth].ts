@@ -16,16 +16,16 @@ export const authOptions = {
       id: "uclapi",
       name: "UCL API",
       type: "oauth",
-      authorization: "https://staging.ninja/oauth/authorise",
+      authorization: `https://${process.env.UCLAPI_DOMAIN}/oauth/authorise`,
       token: {
-        url: "https://staging.ninja/oauth/token",
+        url: `https://${process.env.UCLAPI_DOMAIN}/oauth/token`,
         async request(context) {
           const tokens = await makeTokenRequest(context);
           return { tokens };
         },
       },
       userinfo: {
-        url: "https://staging.ninja/oauth/user/data",
+        url: `https://${process.env.UCLAPI_DOMAIN}/oauth/user/data`,
         async request(context) {
           return await makeUserInfoRequest(context);
         },
