@@ -69,6 +69,9 @@ INSTALLED_APPS = [
     'libcal',
 ]
 
+if DEBUG:
+    INSTALLED_APPS.append('revproxy')
+
 MIDDLEWARE = [
     'common.middleware.health_check_middleware.HealthCheckMiddleware',
     'django.middleware.security.SecurityMiddleware',

@@ -1,0 +1,30 @@
+@import "./sass/core.scss";
+@import './sass/helpers';
+
+.appHolder {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  @include media('<=phone') {
+    width: 100vw;
+    margin-left: -2rem;
+    border-radius: 0;
+  }
+
+  .settingsSection {
+    justify-content: unset;
+    padding: 0;
+
+    h4 {
+      margin: 10px 0;
+    }
+  }
+}
+
+.aup {
+  height: 50vh;
+  overflow-y: scroll;
+  text-align: left;
+  padding: 10px;
+}

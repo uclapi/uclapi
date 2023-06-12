@@ -1,0 +1,63 @@
+import {
+  Button,
+  Column,
+  Container,
+  Footer,
+  ImageView,
+  NavBar,
+  Row,
+  TextView,
+} from '@/components/layout/Items.jsx'
+import Image from 'next/image'
+
+// import '@/styles/common/uclapi.scss'
+// import '@/styles/navbar.scss'
+
+const Warning = ({ title, content }) => (
+  <>
+    <NavBar isScroll={false} />
+
+    {/* Warning message */}
+
+    <Container styling="splash-parallax" height="600px">
+      <Row
+        width="2-3"
+        horizontalAlignment="center"
+        verticalAlignment="center"
+      >
+
+        <Column width="1-2" className="default">
+          <Image
+            src={'/warning/warning/svg'}
+            width={367}
+            height={405}
+            description="large exclamation point, warning!"
+          />
+        </Column>
+
+        <Column width="1-2" alignItems="column">
+          <TextView
+            heading="1"
+            text={title}
+            align="left"
+          />
+          {typeof content === `string`
+            ? (
+              <TextView
+                heading="3"
+                text={content}
+                align="left"
+              />
+            )
+            : content}
+          <Button link={`/`} centred>
+            Home
+          </Button>
+        </Column>
+      </Row>
+    </Container>
+    <Footer />
+  </>
+)
+
+export default Warning
