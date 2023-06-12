@@ -11,8 +11,11 @@ function Documentation() {
   return (
     <>
       <Head>
-        Documentation - UCL API
+        <title>
+          Documentation - UCL API
+        </title>
       </Head>
+      
       <div className="vertical-padding">
         {loaded &&
           <openapi-explorer

@@ -61,7 +61,9 @@ class AboutPage extends React.Component {
     return (
       <>
         <Head>
-          About Us - UCL API
+          <title>
+            About Us - UCL API
+          </title>
         </Head>
 
         {/* About us - Landing page */}

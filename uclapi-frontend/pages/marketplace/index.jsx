@@ -14,6 +14,7 @@ import {
 // Standard React imports
 import React from 'react'
 import Image from "next/image";
+import Head from "next/head";
 
 class Marketplace extends React.Component {
   constructor(props) {
@@ -48,6 +49,12 @@ class Marketplace extends React.Component {
 
     return (
       <>
+        <Head>
+          <title>
+            Marketplace - UCL API
+          </title>
+        </Head>
+
         <Container
           height='300px'
           style={{ margin: `60px 0 0 0` }}

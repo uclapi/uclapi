@@ -55,7 +55,9 @@ class HomePage extends React.Component {
     return (
       <>
         <Head>
-          UCL API
+          <title>
+            UCL API
+          </title>
         </Head>
 
         {/* Staging banner */}

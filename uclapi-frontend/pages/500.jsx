@@ -5,7 +5,9 @@ import Head from 'next/head';
 const InternalServerErrorPage = () => (
   <>
     <Head>
-      Error 500 - UCL API
+      <title>
+        Error 500 - UCL API
+      </title>
     </Head>
 
     <Warning

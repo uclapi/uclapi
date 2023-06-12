@@ -6,7 +6,9 @@ import Head from 'next/head';
 const NotFoundPage = () => (
   <>
     <Head>
-      Error 404 - UCL API
+      <title>
+        Error 404 - UCL API
+      </title>
     </Head>
 
     <Warning

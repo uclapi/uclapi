@@ -47,7 +47,9 @@ const AppSettings = () => {
   return (
     <>
       <Head>
-        Settings - UCL API
+        <title>
+          Settings - UCL API
+        </title>
       </Head>
 
       <Container

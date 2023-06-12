@@ -58,8 +58,11 @@ class Dashboard extends React.Component {
     return (
       <>
         <Head>
-          Dashboard - UCL API
+          <title>
+            Dashboard - UCL API
+          </title>
         </Head>
+
         <Modal
           isOpen={view === `accept-aup`}
           contentLabel="UCL API Acceptable Use Policy"
