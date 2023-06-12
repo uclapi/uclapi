@@ -1,8 +1,8 @@
 import {
   grey,
   pink,
-} from '@material-ui/core/colors'
-import { createTheme, MuiThemeProvider } from '@material-ui/core/styles'
+} from '@mui/material/colors'
+import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material/styles'
 // Required components
 import rooms from './data/room_names.jsx'
 import { AutoCompleteView, Code, Container, Row } from './Items.jsx'
@@ -63,7 +63,7 @@ class Demo extends React.Component {
   render() {
     const { rootURL, params, response } = this.state;
     return (
-      <MuiThemeProvider muiTheme={muiTheme}>
+      <MuiThemeProvider theme={muiTheme}>
         <Container
           styling={`secondary`}
           height={`fit-content`}

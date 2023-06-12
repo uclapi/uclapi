@@ -2,8 +2,8 @@ import {
   cyan,
   grey,
   pink,
-} from '@material-ui/core/colors'
-import { createTheme, MuiThemeProvider } from '@material-ui/core/styles'
+} from '@mui/material/colors'
+import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material/styles'
 import { Footer, NavBar } from '@/components/layout/Items.jsx'
 import React, { useState , useEffect } from 'react'
 
