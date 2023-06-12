@@ -139,10 +139,14 @@ def validate_azure_ad_callback(token_data):
     display_name = given_name + ' ' + sn
 
     # e.g., engscifac-all;compsci-all;schsci-all
-    groups = ';'.join(map(
-        lambda g: g.get('onPremisesSamAccountName') or g['mailNickname'],
+    group_names = map(
+        lambda g: g.get('onPremisesSamAccountName') or g.get('mailNickname'),
         user_groups.get('value', [])
-    ))
+    )
+
+    # Some groups don't have either of the above field names,
+    # e.g., #microsoft.graph.directoryRole -- we don't want these
+    groups = ';'.join([name for name in group_names if name is not None])
 
     mail = user_info.get('mail', '')  # e.g., firstname.lastname.year@ucl.ac.uk
 
