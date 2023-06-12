@@ -4,6 +4,8 @@ import Link from './Link.jsx'
 import React from "react";
 import Image from 'next/image'
 import {default as NextLink} from 'next/link'
+import { signIn } from 'next-auth/react';
+import withSession from '@/lib/withSession.jsx';
 
 
 const links = [
@@ -11,6 +13,7 @@ const links = [
     name: `settings`,
     link: `/settings`,
     src: '/navbar/settings.svg',
+    requiresAuth: true,
   },
   {
     name: `about`,
@@ -31,6 +34,7 @@ const links = [
     name: `dashboard`,
     link: `/dashboard`,
     src: '/navbar/dashboard.svg',
+    requiresAuth: true,
   },
 ]
 
@@ -54,7 +58,6 @@ class NavBar extends React.Component {
 
   constructor(props) {
     super(props)
-
     this.DEBUGGING = false
 
     const { isScroll } = this.props
@@ -150,55 +153,70 @@ class NavBar extends React.Component {
 
   render() {
     const { isVisible, isSmall, isMenuHidden } = this.state
-    return <div className="navbar-extras">
-      <motion.div
-        className="navbarconsistent"
-        initial="hidden"
-        animate={isVisible ? `shown` : `hidden`}
-        variants={toast}
-      >
-        <NextLink href={`/`}>
-          <Image src={'/simpleAPILogoWhite.svg'} width={45} height={20} />
-        </NextLink>
-        <NextLink href={`/`} style={{ textDecoration: `none` }} >
-          <div className="logo-text-white">
-            UCL API
-          </div>
-        </NextLink>
+    return (
+      <div className="navbar-extras">
+        <motion.div
+          className="navbarconsistent"
+          initial="hidden"
+          animate={isVisible ? `shown` : `hidden`}
+          variants={toast}
+        >
+          <NextLink href={`/`}>
+            <Image src={"/simpleAPILogoWhite.svg"} width={45} height={20} />
+          </NextLink>
+          <NextLink href={`/`} style={{ textDecoration: `none` }}>
+            <div className="logo-text-white">UCL API</div>
+          </NextLink>
 
-        <div className="link-titles">
-          {!isSmall ? (
-            links.map(
-              (s) => (
+          <div className="link-titles">
+            {!isSmall ? (
+              links.map((s) => (
                 <Link
                   key={s.name}
                   name={s.name}
                   src={s.src}
                   link={s.link}
+                  {...(s.requiresAuth && !this.props.session) && {
+                    onClick: () => signIn('uclapi')
+                  }}
                 />
-              )
-            )
-          ) : (
+              ))
+            ) : (
               <div className="menu-icon">
-                <Image src={'/navbar/menu.svg'} height={50} width={50} onClick={this.toggleMenu} />
+                <Image
+                  src={"/navbar/menu.svg"}
+                  height={50}
+                  width={50}
+                  onClick={this.toggleMenu}
+                />
               </div>
             )}
-        </div>
-      </motion.div>
-      {isSmall ? (
-        <motion.div
-          className="link-titles-menu"
-          initial="hidden"
-          animate={isMenuHidden ? `hidden` : `shown`}
-          variants={slideDown}
-        >
-          {[...links].reverse().map((s, key) => (
-            <Link key={key} name={s.name} src={s.src} link={s.link} isSmall />
-          ))}
+          </div>
         </motion.div>
-      ) : null}
-    </div>
+        {isSmall ? (
+          <motion.div
+            className="link-titles-menu"
+            initial="hidden"
+            animate={isMenuHidden ? `hidden` : `shown`}
+            variants={slideDown}
+          >
+            {[...links].reverse().map((s, key) => (
+              <Link
+                key={key}
+                name={s.name}
+                src={s.src}
+                link={s.link}
+                isSmall
+                {...(s.requiresAuth && !this.props.session) && {
+                  onClick: () => signIn('uclapi')
+                }}
+              />
+            ))}
+          </motion.div>
+        ) : null}
+      </div>
+    );
   }
 }
 
-export default NavBar
+export default withSession(NavBar)

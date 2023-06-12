@@ -143,7 +143,6 @@ export default class Field extends React.Component {
       isEditing,
     } = this.state
 
-    console.log('ADAD', styles);
     const state = this.doesExist(onSave) ? (
       isEditing ? styles.editing : styles.notEditing
     ) : styles.uneditable

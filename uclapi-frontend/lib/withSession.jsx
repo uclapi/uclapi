@@ -4,7 +4,6 @@ import { useSession } from "next-auth/react";
 // eslint-disable-next-line react/display-name
 const withSession = (Component) => (props) => {
   const session = useSession();
-  console.log('Session', session)
 
   // if the component has a render property, we are good
   if (Component.prototype.render) {
