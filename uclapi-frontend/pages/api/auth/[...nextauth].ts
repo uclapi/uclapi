@@ -16,16 +16,16 @@ export const authOptions = {
       id: "uclapi",
       name: "UCL API",
       type: "oauth",
-      authorization: `https://${process.env.UCLAPI_DOMAIN}/oauth/authorise`,
+      authorization: `${process.env.UCLAPI_DOMAIN}/oauth/authorise`,
       token: {
-        url: `https://${process.env.UCLAPI_DOMAIN}/oauth/token`,
+        url: `${process.env.UCLAPI_DOMAIN}/oauth/token`,
         async request(context) {
           const tokens = await makeTokenRequest(context);
           return { tokens };
         },
       },
       userinfo: {
-        url: `https://${process.env.UCLAPI_DOMAIN}/oauth/user/data`,
+        url: `${process.env.UCLAPI_DOMAIN}/oauth/user/data`,
         async request(context) {
           return await makeUserInfoRequest(context);
         },
