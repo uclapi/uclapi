@@ -2,7 +2,6 @@
 // remove this ^ when ready to add prop-types
 
 
-import "react-responsive-carousel/lib/styles/carousel.min.css"
 import styles from "@/styles/Marketplace.module.scss"
 
 // Grab titles and descriptions of app

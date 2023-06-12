@@ -141,7 +141,7 @@ class HomePage extends React.Component {
               <h2>Enable Developers</h2>
               <p className='description'>
                 We want the API to be able to support any idea, no matter how
-                big, that improves students' lives. We are always open to
+                big, that improves students&apos; lives. We are always open to
                 suggestions for new endpoints and functionality so we can enable
                 a greater range of applications to be developed. We cannot wait
                 to see what you will develop!
@@ -299,7 +299,7 @@ class HomePage extends React.Component {
           <Row width="2-3" horizontalAlignment="center" alignItems="column">
             <PanelGroup accordion>
               {FAQ.map(({ question, answer }, i) => (
-                <Panel className={styles.faq} eventKey={i} header={question}>
+                <Panel className={styles.faq} eventKey={i} header={question} key={`question-${i}`}>
                   {answer}
                 </Panel>
               ))}

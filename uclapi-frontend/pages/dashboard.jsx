@@ -140,7 +140,7 @@ class Dashboard extends React.Component {
                 {apps.length === 0 ? (
                   <CardView width='1-1' type='default' noPadding>
                     <h2>
-                      You haven't created any apps yet, click below to get started!
+                      You haven&apos;t created any apps yet, click below to get started!
                     </h2>
                   </CardView>
                 ) : apps.map((app, index) => (

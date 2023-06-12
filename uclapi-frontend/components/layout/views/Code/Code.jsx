@@ -65,6 +65,7 @@ const Code = ({
       >
         {langs.map(({ name }) => (
           <Nav.Item
+            key={`lang-${name}`}
             className={`${styles.languageTab} ${
               tabIndex === name ? styles.selected : ""
             }`}
@@ -78,6 +79,7 @@ const Code = ({
         ({ name, code }) =>
           tabIndex === name && (
             <div
+              key={`code-${name}`}
               className="default-transition background-color-transition inner-tab"
               style={{ textAlign: `left`, width: "100%" }}
             >
