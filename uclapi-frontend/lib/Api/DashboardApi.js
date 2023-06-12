@@ -22,12 +22,12 @@ class DashboardApi {
   static get = (url) => DashboardApi.req.get(url)
 
   static regenToken = async (appId) => {
-    const { data: { app: { token } } } = await DashboardApi.post(`/regen/`, { app_id: appId })
+    const { data: { app: { token } } } = await DashboardApi.post(`/regen`, { app_id: appId })
     return token
   }
 
   static acceptAup = async () => {
-    const { data } = await DashboardApi.post('/accept-aup/')
+    const { data } = await DashboardApi.post('/accept-aup')
     if (!data.success) {
       throw new Error(
         "There was an error accepting the Acceptable Use Policy. Please try again later or contact us if the issue persists"
@@ -38,7 +38,7 @@ class DashboardApi {
 
   static addNewProject = async (name) => {
     try {
-      const { data: { app } } = await DashboardApi.post(`/create/`, { name })
+      const { data: { app } } = await DashboardApi.post(`/create`, { name })
       return app
     } catch (err) {
       if (err.response && err.response.status === 403) {
@@ -49,7 +49,7 @@ class DashboardApi {
   }
 
   static deleteProject = async (appId) => {
-    const { data } = await DashboardApi.post(`/delete/`, { app_id: appId })
+    const { data } = await DashboardApi.post(`/delete`, { app_id: appId })
     return data
   }
 
@@ -62,7 +62,7 @@ class DashboardApi {
   }
 
   static saveOAuthCallback = async (appId, url) => {
-    const { data: { success, message } } = await DashboardApi.post(`/setcallbackurl/`, {
+    const { data: { success, message } } = await DashboardApi.post(`/setcallbackurl`, {
       app_id: appId,
       callback_url: url,
     })
@@ -73,7 +73,7 @@ class DashboardApi {
   }
 
   static setScope = async (appId, scopes) => {
-    const { data } = await DashboardApi.post(`/updatescopes/`, {
+    const { data } = await DashboardApi.post(`/updatescopes`, {
       app_id: appId,
       scopes,
     })
@@ -81,7 +81,7 @@ class DashboardApi {
   }
 
   static getData = async () => {
-    const { data } = await DashboardApi.get(`/apps/`)
+    const { data } = await DashboardApi.get(`/apps`)
     return data
   }
 }
