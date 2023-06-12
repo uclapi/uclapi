@@ -242,7 +242,7 @@ jobs:
           unzip -qq compressed.zip && \
           rm compressed.zip && \
           echo "UCLAPI_VERSION=$UCLAPI_VERSION" >> uclapi/uclapi.env && \
-          echo "UCLAPI_VERSION=$UCLAPI_VERSION" >> uclapi/uclapi-web.env && \
+          echo "UCLAPI_VERSION=$UCLAPI_VERSION" >> uclapi/uclapi-web.env
 
       - name: Build containers
         env:
