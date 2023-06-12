@@ -16,6 +16,7 @@ import { authOptions } from "./api/auth/[...nextauth]";
 import withSession from '@/lib/withSession'
 import { MissingAUPAgreementError } from '../lib/Api/DashboardApi';
 import { Button } from 'rsuite'
+import Head from 'next/head';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -56,6 +57,9 @@ class Dashboard extends React.Component {
 
     return (
       <>
+        <Head>
+          Dashboard - UCL API
+        </Head>
         <Modal
           isOpen={view === `accept-aup`}
           contentLabel="UCL API Acceptable Use Policy"

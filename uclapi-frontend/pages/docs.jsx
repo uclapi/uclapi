@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import Head from "next/head";
 
 function Documentation() {
   const [loaded, setLoaded] = useState(false)
@@ -8,14 +9,19 @@ function Documentation() {
   }, []);
 
   return (
-    <div className="vertical-padding">
-      {loaded &&
-        <openapi-explorer
-          server-url="https://uclapi.com"
-          spec-url="/uclapi.openapi.json"
-        />
-      }
-    </div>
+    <>
+      <Head>
+        Documentation - UCL API
+      </Head>
+      <div className="vertical-padding">
+        {loaded &&
+          <openapi-explorer
+            server-url="https://uclapi.com"
+            spec-url="/uclapi.openapi.json"
+          />
+        }
+      </div>
+    </>
   );
 }
 

@@ -13,6 +13,7 @@ import withSession from '@/lib/withSession.jsx'
 const { XMLParser } = require("fast-xml-parser");
 
 import styles from '../styles/Home.module.scss'
+import Head from 'next/head';
 
 export const getStaticProps = async (context) => {
   const mediumBlogFeedXml = await fetch('https://medium.com/feed/ucl-api').then(res => res.text());
@@ -53,8 +54,12 @@ class HomePage extends React.Component {
 
     return (
       <>
+        <Head>
+          UCL API
+        </Head>
+
         {/* Staging banner */}
-        {this.props.host == `staging.ninja` && (
+        {this.state?.host == `staging.ninja` && (
           <Container isPadded styling="warning-red">
             <Row width="9-10" horizontalAlignment={`center`}>
               <h1>

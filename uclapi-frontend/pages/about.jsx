@@ -7,6 +7,7 @@ import {
 } from '@/components/layout/Items.jsx'
 import PropTypes from 'prop-types'
 import React from 'react';
+import Head from 'next/head';
 
 
 
@@ -59,6 +60,10 @@ class AboutPage extends React.Component {
   render() {
     return (
       <>
+        <Head>
+          About Us - UCL API
+        </Head>
+
         {/* About us - Landing page */}
 
         <Container height='600px' styling='team-parallax'>

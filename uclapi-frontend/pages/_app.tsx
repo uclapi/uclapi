@@ -5,16 +5,22 @@ import "../lib/ErrorReporting";
 import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import { NavBar,Footer } from '@/components/layout/Items.jsx'
+import Head from "next/head";
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) {
   return (
-    <SessionProvider session={session}>
-      <NavBar isScroll={false} />
-      <Component {...pageProps} />
-      <Footer />
-    </SessionProvider>
+    <>
+      <Head>
+        <link rel='shortcut-icon' href='/favicon.ico' />
+      </Head>
+      <SessionProvider session={session}>
+        <NavBar isScroll={false} />
+        <Component {...pageProps} />
+        <Footer />
+      </SessionProvider>
+    </>
   );
 }
