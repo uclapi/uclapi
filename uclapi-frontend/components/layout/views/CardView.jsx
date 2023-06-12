@@ -4,9 +4,8 @@ import React from "react";
 
 // React
 // Column for sizing
-import { Column } from '@/components/layout/Items.jsx'
+import { Column } from "@/components/layout/Items.jsx";
 import Link from "next/link";
-
 
 /**
 REQUIRED ATTRIBUTES:
@@ -24,30 +23,45 @@ this.props.keepInline (don't snap to a column when in mobile view)
 **/
 
 export default class CardView extends React.Component {
-
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.DEFAULT_WIDTH = 0
-    this.DEBUGGING = false
+    this.DEFAULT_WIDTH = 0;
+    this.DEBUGGING = false;
 
-    this.cardRef = React.createRef()
+    this.cardRef = React.createRef();
 
     this.state = {
       containerWidth: -1,
-      className: ``,
+      className: "",
       style: {},
       containerStyle: {},
-    }
+    };
   }
 
   render() {
-    const { className, style, containerStyle } = this.state
-    const { children, link, fakeLink, type, width, minWidth = `unset`, keepInline } = this.props
+    const { className, style, containerStyle } = this.state;
+    const {
+      children,
+      link,
+      fakeLink,
+      type,
+      width,
+      minWidth = "unset",
+      keepInline,
+    } = this.props;
 
-    if (this.DEBUGGING) { console.log(`DEBUG: CardView rendered with the following styles: ` + type + ` and class: ` + className) }
+    if (this.DEBUGGING) {
+      console.log(
+        "DEBUG: CardView rendered with the following styles: " +
+          type +
+          " and class: " +
+          className
+      );
+    }
 
-    const doesLinkRoute = (typeof link != `undefined`) && (typeof fakeLink == `undefined`)
+    const doesLinkRoute =
+      typeof link != "undefined" && typeof fakeLink == "undefined";
 
     // RENDER METHOD
     if (doesLinkRoute) {
@@ -62,7 +76,7 @@ export default class CardView extends React.Component {
             {children}
           </Link>
         </Column>
-      )
+      );
     } else {
       return (
         <Column width={width} style={containerStyle} keepInline={keepInline}>
@@ -70,28 +84,38 @@ export default class CardView extends React.Component {
             {children}
           </div>
         </Column>
-      )
+      );
     }
   }
 
   refresh = () => {
-    const { style: propsStyle, link, fakeLink, noShadow, type, noPadding, containerStyle: propsContainerStyle } = this.props
-    const styling = typeof type === `undefined` ? `default` : type
+    const {
+      style: propsStyle,
+      link,
+      fakeLink,
+      noShadow,
+      type,
+      noPadding,
+      containerStyle: propsContainerStyle,
+    } = this.props;
+    const styling = typeof type === "undefined" ? "default" : type;
 
-    let className = `uclapi-card uclapi-card-` + styling
+    let className = "uclapi-card uclapi-card-" + styling;
     const style = {
       ...propsStyle,
-    }
+    };
     let containerStyle = {
       ...propsContainerStyle,
-    }
+    };
     // LINK
     if (link || fakeLink) {
-      className += ` default-transition background-color-transition clickable uclapi-card-clicked-` + styling
+      className +=
+        " default-transition background-color-transition clickable uclapi-card-clicked-" +
+        styling;
     }
     // ADD SHADOW AS DEFAULT
-    if (typeof noShadow === `undefined` && styling != `no-bg`) {
-      className += ` uclapi-card-shadow`
+    if (typeof noShadow === "undefined" && styling != "no-bg") {
+      className += " uclapi-card-shadow";
     }
     // NO PADDING
     if (noPadding) {
@@ -99,7 +123,7 @@ export default class CardView extends React.Component {
         ...containerStyle,
         margin: 0,
         padding: 0,
-      }
+      };
     }
 
     // Set the stylings and class
@@ -107,10 +131,10 @@ export default class CardView extends React.Component {
       className: className,
       style: style,
       containerStyle: containerStyle,
-    })
-  }
+    });
+  };
 
   componentDidMount() {
-    this.refresh()
+    this.refresh();
   }
 }

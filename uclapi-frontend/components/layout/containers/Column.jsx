@@ -3,7 +3,6 @@
 
 import React from "react";
 
-
 /**
 
 REQUIRED ATTRIBUTES:
@@ -17,115 +16,119 @@ this.props.className (additional class identifiers)
 
 **/
 export default class Column extends React.Component {
-
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.UNSET_ERROR_WIDTH = `0px`
-    this.DEBUGGING = true
-    this.HORIZONTAL_PADDING = 2 + 2
+    this.UNSET_ERROR_WIDTH = "0px";
+    this.DEBUGGING = true;
+    this.HORIZONTAL_PADDING = 2 + 2;
 
-    if (typeof this.props.width == `undefined`) { console.log(`EXCEPTION: Column.constructor: no width defined`) }
+    if (typeof this.props.width == "undefined") {
+      console.log("EXCEPTION: Column.constructor: no width defined");
+    }
 
     this.state = {
       style: {},
-      verticalAlignment: `no-vertical-align`,
-    }
+      verticalAlignment: "no-vertical-align",
+    };
   }
 
   render() {
-    const { style } = this.state
-    const { children, className = ``, keepInline } = this.props
+    const { style } = this.state;
+    const { children, className = "", keepInline } = this.props;
 
-    const baseClass = keepInline ? `column-always-inline` : `column`
+    const baseClass = keepInline ? "column-always-inline" : "column";
 
     return (
-      <div className={baseClass + ` ` + className} style={style} >
+      <div className={baseClass + " " + className} style={style}>
         {children}
       </div>
-    )
+    );
   }
 
   refresh = () => {
-    const { style: propsStyle } = this.props
-    let style = { ...propsStyle }
+    const { style: propsStyle } = this.props;
+    let style = { ...propsStyle };
 
-    style = this.setTheme(style)
+    style = this.setTheme(style);
 
-    this.setState({ style: { ...style } })
-  }
+    this.setState({ style: { ...style } });
+  };
 
   componentDidUpdate(prevProps) {
     for (const index in prevProps) {
       if (prevProps[index] !== this.props[index]) {
-        this.refresh()
+        this.refresh();
       }
     }
   }
 
   componentDidMount() {
-    this.refresh()
+    this.refresh();
   }
 
   setTheme = (style) => {
-
-    const { alignItems } = this.props
+    const { alignItems } = this.props;
 
     // REQUIRED ATTRIBUTES
     // Set the width and padding of the column
-    style = this.setColumnWidthAndPadding(style)
+    style = this.setColumnWidthAndPadding(style);
 
-    if(alignItems) {
+    if (alignItems) {
       style = {
         ...style,
         flexDirection: alignItems,
-      }
+      };
     }
 
-    return style
-  }
+    return style;
+  };
 
   getColumnWidth = () => {
-    const { width } = this.props
-    if (typeof width == `undefined`) { console.log(`EXCEPTION: no width set for column so setting column width to 0`); return 0 }
-
-    // In case the width is not of the form "x-y"
-    if(!width.includes(`-`)) {
-      return width
+    const { width } = this.props;
+    if (typeof width == "undefined") {
+      console.log(
+        "EXCEPTION: no width set for column so setting column width to 0"
+      );
+      return 0;
     }
 
-    const buffer = width.split(`-`)
+    // In case the width is not of the form "x-y"
+    if (!width.includes("-")) {
+      return width;
+    }
 
-    const fraction = buffer[0] / buffer[1]
+    const buffer = width.split("-");
 
-    const paddingSpace = 0
+    const fraction = buffer[0] / buffer[1];
 
-    const spaceForColumns = 100 - paddingSpace
+    const paddingSpace = 0;
 
-    const percentage = spaceForColumns * fraction
-    return percentage + `%`
-  }
+    const spaceForColumns = 100 - paddingSpace;
+
+    const percentage = spaceForColumns * fraction;
+    return percentage + "%";
+  };
 
   setColumnWidthAndPadding = (style) => {
     style = {
       ...style,
       width: this.getColumnWidth(),
-    }
+    };
 
     if (this.props.maxWidth) {
       style = {
         ...style,
         maxWidth: this.props.maxWidth,
-      }
+      };
     }
     if (this.props.minWidth) {
       style = {
         ...style,
         minWidth: this.props.minWidth,
-      }
+      };
     }
 
-    return style
-  }
-
+    return style;
+  };
 }

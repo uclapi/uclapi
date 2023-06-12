@@ -1,6 +1,6 @@
-import { Container } from '@/components/layout/Items.jsx'
-import React  from 'react'
-import styles from './AnalyticInfo.module.scss'
+import { Container } from "@/components/layout/Items.jsx";
+import React from "react";
+import styles from "./AnalyticInfo.module.scss";
 
 /**
 REQUIRED ATTRIBUTES:
@@ -10,26 +10,24 @@ this.props.value (value for this analytic data point)
 
 const getFriendlyText = (key) => {
   switch (key) {
-    case `remaining_quota`: return `Remaining Quota`
-    case `requests`: return `Requests`
-    case `users`: return `Users`
-    default: return key
+    case "remaining_quota":
+      return "Remaining Quota";
+    case "requests":
+      return "Requests";
+    case "users":
+      return "Users";
+    default:
+      return key;
   }
-}
+};
 
-const AnalyticInfo = ({
-  analytic,
-  value,
-}) => {
+const AnalyticInfo = ({ analytic, value }) => {
   return (
-    <Container
-      className={styles.analyticInfoRow}
-      noPadding
-    >
+    <Container className={styles.analyticInfoRow} noPadding>
       <div>{getFriendlyText(analytic)}</div>
       <p>{value}</p>
     </Container>
-  )
-}
+  );
+};
 
-export default AnalyticInfo
+export default AnalyticInfo;

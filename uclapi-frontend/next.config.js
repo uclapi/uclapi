@@ -8,11 +8,11 @@ const nextConfig = {
     "swagger-ui-react",
   ],
   images: {
-    remotePatterns: [{ hostname: '*.medium.com'}]
+    remotePatterns: [{ hostname: "*.medium.com" }],
   },
   typescript: {
-    ignoreBuildErrors: true
-  }
+    ignoreBuildErrors: true,
+  },
 };
 
-module.exports = nextConfig
+module.exports = nextConfig;

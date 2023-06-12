@@ -39,14 +39,14 @@ export const endpoints = [
     description: `View analytics and stats about your app or API service`,
     link: `/docs#operations-tag-Analytics`,
   },
-]
+];
 
-const linkclass = `alt-text color-transition default-transition`
+const linkclass = `alt-text color-transition default-transition`;
 
 export const FAQ = [
   {
-    'question': `What is UCL API?`,
-    'answer': (
+    question: `What is UCL API?`,
+    answer: (
       <>
         <p>
           UCL API is a platform for interacting with data that is usually
@@ -60,32 +60,32 @@ export const FAQ = [
           <a className={linkclass} href="https://www.ucl.ac.uk/isd/">
             Information Services Division (ISD)
           </a>
-          . This means that all of the features in UCL API
-          have been developed by
-          students and are aimed at students such as yourself, so jump right in!
-      </p>
+          . This means that all of the features in UCL API have been developed
+          by students and are aimed at students such as yourself, so jump right
+          in!
+        </p>
       </>
     ),
   },
   {
-    'question': `Do I need to be from UCL to use the UCL API?`,
-    'answer': (
+    question: `Do I need to be from UCL to use the UCL API?`,
+    answer: (
       <p>
         You need to be affiliated with UCL because authentication (for both
-       developers &amp; end users) is done via the UCL login system.
+        developers &amp; end users) is done via the UCL login system.
       </p>
     ),
   },
   {
-    'question': `How do I get involved?`,
-    'answer': (
+    question: `How do I get involved?`,
+    answer: (
       <p>
         UCL API is open source. Our source code is available on&nbsp;
         <a className={linkclass} href="https://github.com/uclapi/uclapi">
           a public Github repository
         </a>
-        &nbsp;for anybody to clone and inspect.
-        Find an bug? Feel free to open an&nbsp;
+        &nbsp;for anybody to clone and inspect. Find an bug? Feel free to open
+        an&nbsp;
         <a className={linkclass} href="https://github.com/uclapi/uclapi/issues">
           Issue
         </a>
@@ -93,22 +93,19 @@ export const FAQ = [
         <a className={linkclass} href="https://github.com/uclapi/uclapi/pulls">
           Pull Request
         </a>
-        &nbsp;with a proposed fix!
-        We also have annual hiring windows to recruit more
-        students as others graduate, so keep an
-        eye on our social media accounts.
+        &nbsp;with a proposed fix! We also have annual hiring windows to recruit
+        more students as others graduate, so keep an eye on our social media
+        accounts.
       </p>
     ),
   },
   {
-    'question': `Does this cost anything?`,
-    'answer': (
-      <p>UCL API is and always will be completely free to use.</p>
-    ),
+    question: `Does this cost anything?`,
+    answer: <p>UCL API is and always will be completely free to use.</p>,
   },
   {
-    'question': `Who owns the Intellectual Property (IP) of what I build?`,
-    'answer': (
+    question: `Who owns the Intellectual Property (IP) of what I build?`,
+    answer: (
       <p>
         You do! We have no claim on your IP. However, we do request you include
         a shoutout somewhere. This helps raise awareness of UCL API and the vast
@@ -120,9 +117,9 @@ export const FAQ = [
       </p>
     ),
   },
-]
+];
 
 export default {
   FAQ,
   endpoints,
-}
+};

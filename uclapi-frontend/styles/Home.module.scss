@@ -13,7 +13,7 @@
   margin: auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, 495px);
-  @include media('<=tablet') {
+  @include media("<=tablet") {
     display: block;
   }
 }

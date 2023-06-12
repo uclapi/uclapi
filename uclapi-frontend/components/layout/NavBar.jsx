@@ -1,170 +1,179 @@
-import PropTypes from 'prop-types'
-import { motion } from 'framer-motion'
-import Link from './Link.jsx'
+import PropTypes from "prop-types";
+import { motion } from "framer-motion";
+import Link from "./Link.jsx";
 import React from "react";
-import Image from 'next/image'
-import {default as NextLink} from 'next/link'
-import { signIn } from 'next-auth/react';
-import withSession from '@/lib/withSession.jsx';
-
+import Image from "next/image";
+import { default as NextLink } from "next/link";
+import { signIn } from "next-auth/react";
+import withSession from "@/lib/withSession.jsx";
 
 const links = [
   {
-    name: `settings`,
-    link: `/settings`,
-    src: '/navbar/settings.svg',
+    name: "settings",
+    link: "/settings",
+    src: "/navbar/settings.svg",
     requiresAuth: true,
   },
   {
-    name: `about`,
-    link: `/about`,
-    src: '/navbar/about.svg',
+    name: "about",
+    link: "/about",
+    src: "/navbar/about.svg",
   },
   {
-    name: `marketplace`,
-    link: `/marketplace`,
-    src: '/navbar/market.svg',
+    name: "marketplace",
+    link: "/marketplace",
+    src: "/navbar/market.svg",
   },
   {
-    name: `documentation`,
-    link: `/docs`,
-    src: '/navbar/docs.svg',
+    name: "documentation",
+    link: "/docs",
+    src: "/navbar/docs.svg",
   },
   {
-    name: `dashboard`,
-    link: `/dashboard`,
-    src: '/navbar/dashboard.svg',
+    name: "dashboard",
+    link: "/dashboard",
+    src: "/navbar/dashboard.svg",
     requiresAuth: true,
   },
-]
+];
 
-const maxScreen = 1030
-const menuSize = 189
-const navbarHeight = 60
+const maxScreen = 1030;
+const menuSize = 189;
+const navbarHeight = 60;
 
 const toast = {
-  hidden: { top: `-` + navbarHeight + `px` },
+  hidden: { top: "-" + navbarHeight + "px" },
   shown: { top: 0 },
-}
+};
 const slideDown = {
-  shown: { height: menuSize + `px` },
+  shown: { height: menuSize + "px" },
   hidden: { height: 0 },
-}
+};
 
 class NavBar extends React.Component {
   static propTypes = {
     isScroll: PropTypes.bool,
-  }
+  };
 
   constructor(props) {
-    super(props)
-    this.DEBUGGING = false
+    super(props);
+    this.DEBUGGING = false;
 
-    const { isScroll } = this.props
+    const { isScroll } = this.props;
 
     this.state = {
       isVisible: !isScroll,
       isSmall: false,
       isMenuHidden: true,
-    }
+    };
   }
 
   toggleMenu = () => {
-    if (this.DEBUGGING) { console.log(`Menu button clicked...`) }
+    if (this.DEBUGGING) {
+      console.log("Menu button clicked...");
+    }
 
-    const { isMenuHidden } = this.state
+    const { isMenuHidden } = this.state;
     this.setState({
       isMenuHidden: !isMenuHidden,
-    })
-  }
+    });
+  };
 
   handleClick = (event) => {
     if (this.DEBUGGING) {
-      console.log(`Click event...`)
-      console.log(event)
+      console.log("Click event...");
+      console.log(event);
     }
 
     if (event.clientY > menuSize + navbarHeight) {
-      if (this.DEBUGGING) { console.log(`Attempting to close menu...`) }
-      this.forceClose()
+      if (this.DEBUGGING) {
+        console.log("Attempting to close menu...");
+      }
+      this.forceClose();
     }
-  }
+  };
 
   forceClose = () => {
-    const { isMenuHidden } = this.state
+    const { isMenuHidden } = this.state;
 
     if (!isMenuHidden) {
-      if (this.DEBUGGING) { console.log(`Closing menu...`) }
+      if (this.DEBUGGING) {
+        console.log("Closing menu...");
+      }
 
       this.setState({
         isMenuHidden: true,
-      })
+      });
     }
-  }
+  };
 
   updateDimensions = () => {
     if (window.innerWidth < maxScreen) {
       this.setState({
         isSmall: true,
         isMenuHidden: true,
-      })
+      });
     } else {
       this.setState({
         isSmall: false,
         isMenuHidden: true,
-      })
+      });
     }
-  }
+  };
 
   componentDidMount() {
-    const { isScroll } = this.props
-    if (isScroll) { window.addEventListener(`scroll`, this.updateNavBar) }
-    window.addEventListener(`resize`, this.updateDimensions)
-    window.addEventListener(`click`, this.handleClick)
+    const { isScroll } = this.props;
+    if (isScroll) {
+      window.addEventListener("scroll", this.updateNavBar);
+    }
+    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("click", this.handleClick);
 
-    this.updateDimensions()
+    this.updateDimensions();
     this.setState({
       isMenuHidden: true,
-    })
+    });
   }
 
   componentWillUnmount() {
-    const { isScroll } = this.props
-    if (isScroll) { window.removeEventListener(`scroll`, this.updateNavBar) }
-    window.removeEventListener(`click`, this.handleClick)
+    const { isScroll } = this.props;
+    if (isScroll) {
+      window.removeEventListener("scroll", this.updateNavBar);
+    }
+    window.removeEventListener("click", this.handleClick);
   }
 
   updateNavBar = () => {
-    const scrollTop = window.scrollY
-    const { isVisible } = this.state
+    const scrollTop = window.scrollY;
+    const { isVisible } = this.state;
 
     if (scrollTop <= navbarHeight && isVisible) {
       this.setState({
         isVisible: false,
         isMenuHidden: true,
-      })
+      });
     } else if (scrollTop >= navbarHeight && !isVisible) {
       this.setState({
         isVisible: true,
         isMenuHidden: true,
-      })
+      });
     }
-  }
+  };
 
   render() {
-    const { isVisible, isSmall, isMenuHidden } = this.state
+    const { isVisible, isSmall, isMenuHidden } = this.state;
     return (
       <div className="navbar-extras">
         <motion.div
           className="navbarconsistent"
           initial="hidden"
-          animate={isVisible ? `shown` : `hidden`}
+          animate={isVisible ? "shown" : "hidden"}
           variants={toast}
         >
-          <NextLink href={`/`}>
+          <NextLink href={"/"}>
             <Image src={"/simpleAPILogoWhite.svg"} width={45} height={20} />
           </NextLink>
-          <NextLink href={`/`} style={{ textDecoration: `none` }}>
+          <NextLink href={"/"} style={{ textDecoration: "none" }}>
             <div className="logo-text-white">UCL API</div>
           </NextLink>
 
@@ -176,9 +185,10 @@ class NavBar extends React.Component {
                   name={s.name}
                   src={s.src}
                   link={s.link}
-                  {...(s.requiresAuth && !this.props.session) && {
-                    onClick: () => signIn('uclapi')
-                  }}
+                  {...(s.requiresAuth &&
+                    !this.props.session && {
+                      onClick: () => signIn("uclapi"),
+                    })}
                 />
               ))
             ) : (
@@ -197,7 +207,7 @@ class NavBar extends React.Component {
           <motion.div
             className="link-titles-menu"
             initial="hidden"
-            animate={isMenuHidden ? `hidden` : `shown`}
+            animate={isMenuHidden ? "hidden" : "shown"}
             variants={slideDown}
           >
             {[...links].reverse().map((s, key) => (
@@ -207,9 +217,10 @@ class NavBar extends React.Component {
                 src={s.src}
                 link={s.link}
                 isSmall
-                {...(s.requiresAuth && !this.props.session) && {
-                  onClick: () => signIn('uclapi')
-                }}
+                {...(s.requiresAuth &&
+                  !this.props.session && {
+                    onClick: () => signIn("uclapi"),
+                  })}
               />
             ))}
           </motion.div>
@@ -219,4 +230,4 @@ class NavBar extends React.Component {
   }
 }
 
-export default withSession(NavBar)
+export default withSession(NavBar);

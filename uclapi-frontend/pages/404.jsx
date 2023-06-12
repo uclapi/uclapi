@@ -1,14 +1,10 @@
-import Warning from '@/components/layout/Warning.jsx'
-import Head from 'next/head';
-
-
+import Warning from "@/components/layout/Warning.jsx";
+import Head from "next/head";
 
 const NotFoundPage = () => (
   <>
     <Head>
-      <title>
-        Error 404 - UCL API
-      </title>
+      <title>Error 404 - UCL API</title>
     </Head>
 
     <Warning
@@ -16,6 +12,6 @@ const NotFoundPage = () => (
       content="Oops we cannot seem to find that page! Please click below to go back to the front page:"
     />
   </>
-)
+);
 
-export default NotFoundPage
+export default NotFoundPage;

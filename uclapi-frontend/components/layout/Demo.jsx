@@ -1,8 +1,7 @@
-import rooms from '../../data/room_names'
-import { CardView, Code, Container, Row } from './Items.jsx'
+import rooms from "../../data/room_names";
+import { CardView, Code, Container, Row } from "./Items.jsx";
 import React from "react";
-import { AutoComplete } from 'rsuite';
-
+import { AutoComplete } from "rsuite";
 
 class Demo extends React.Component {
   constructor(props) {
@@ -10,20 +9,22 @@ class Demo extends React.Component {
     const now = new Date();
     this.DEBUGGING = false;
     this.state = {
-      response: ``,
+      response: "",
       params: {
         token: props.tempToken,
-        date: now.toISOString().substring(0, 10).replace(/-/g, ``),
-        results_per_page: `1`,
+        date: now.toISOString().substring(0, 10).replace(/-/g, ""),
+        results_per_page: "1",
       },
-      rootURL: '',
+      rootURL: "",
     };
   }
 
   async componentDidMount() {
-    const token = await fetch(`/dashboard/api/temptoken`, {
-      headers: { Authorization: process.env.TEMP_TOKEN_SECRET }
-    }).then(res => res.json()).then(res => res.token);
+    const token = await fetch("/dashboard/api/temptoken", {
+      headers: { Authorization: process.env.TEMP_TOKEN_SECRET },
+    })
+      .then((res) => res.json())
+      .then((res) => res.token);
 
     this.setState((old) => ({
       params: { ...old.params, token },
@@ -39,8 +40,8 @@ class Demo extends React.Component {
     const { rootURL, params, response } = this.state;
     return (
       <Container
-        styling={`secondary`}
-        height={`fit-content`}
+        styling={"secondary"}
+        height={"fit-content"}
         isPaddedBottom
         heading="Try out the API"
       >
@@ -51,7 +52,7 @@ class Demo extends React.Component {
             block
             data={rooms}
             onChange={this.makeRequest}
-            placeholder='e.g., Darwin Building B05'
+            placeholder="e.g., Darwin Building B05"
             renderMenuItem={(text) => {
               return (
                 <CardView
@@ -59,11 +60,9 @@ class Demo extends React.Component {
                   type="emphasis"
                   fakeLink
                   noShadow
-                  style={{width: "100%"}}
+                  style={{ width: "100%" }}
                 >
-                  <p style={{margin: `0`,padding: 0,}}>
-                    {text}
-                  </p>
+                  <p style={{ margin: "0", padding: 0 }}>{text}</p>
                 </CardView>
               );
             }}
@@ -74,13 +73,13 @@ class Demo extends React.Component {
           <Code
             url={`${rootURL}/roombookings/bookings`}
             params={params}
-            type={`request`}
+            type={"request"}
           />
         </Row>
 
         {response ? (
           <Row width="2-3" horizontalAlignment="center">
-            <Code response={response} type={`response`} />
+            <Code response={response} type={"response"} />
           </Row>
         ) : null}
       </Container>
@@ -92,13 +91,13 @@ class Demo extends React.Component {
     const { rootURL } = this.state;
 
     if (this.DEBUGGING) {
-      console.log(`DEBUG: Looking for room bookings in the room: ` + roomName);
+      console.log("DEBUG: Looking for room bookings in the room: " + roomName);
     }
 
-    this.setState(old => ({
+    this.setState((old) => ({
       params: {
         ...old.params,
-        date: now.toISOString().substring(0, 10).replace(/-/g, ``),
+        date: now.toISOString().substring(0, 10).replace(/-/g, ""),
         roomName,
       },
     }));
@@ -108,10 +107,10 @@ class Demo extends React.Component {
     const url =
       `${rootURL}/roombookings/bookings?token=` +
       this.state.params.token +
-      `&roomname=` +
+      "&roomname=" +
       roomName +
-      `&date=` +
-      now.toISOString().substring(0, 10).replace(/-/g, ``);
+      "&date=" +
+      now.toISOString().substring(0, 10).replace(/-/g, "");
 
     fetch(url)
       .then((response) => {
@@ -125,4 +124,4 @@ class Demo extends React.Component {
   };
 }
 
-export default Demo
+export default Demo;

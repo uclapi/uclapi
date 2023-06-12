@@ -2,15 +2,15 @@
 import React from "react";
 import { default as NextLink } from "next/link";
 
-import { motion } from 'framer-motion'
+import { motion } from "framer-motion";
 
 const bounceTransition = {
-    y: {
-        type: `spring`,
-        stiffness: 100,
-        duration: 0.4,
-    },
-}
+  y: {
+    type: "spring",
+    stiffness: 100,
+    duration: 0.4,
+  },
+};
 
 class Link extends React.Component {
   constructor(props) {
@@ -45,21 +45,21 @@ class Link extends React.Component {
         <div
           className="link-to-page"
           style={{
-            borderBottom: `solid #ffffff29 2px`,
-            padding: `10px 0 10px 0`,
+            borderBottom: "solid #ffffff29 2px",
+            padding: "10px 0 10px 0",
           }}
           onMouseEnter={this.onMouseEnterHandler}
           onMouseLeave={this.onMouseLeaveHandler}
         >
           {this.props.onClick ? (
             <div onClick={this.props.onClick}>
-              <img style={{ paddingLeft: `5px` }} src={src} />
-              <h1 style={{ border: `none` }}>{name}</h1>
+              <img style={{ paddingLeft: "5px" }} src={src} />
+              <h1 style={{ border: "none" }}>{name}</h1>
             </div>
           ) : (
             <NextLink href={link}>
-              <img style={{ paddingLeft: `5px` }} src={src} />
-              <h1 style={{ border: `none` }}>{name}</h1>
+              <img style={{ paddingLeft: "5px" }} src={src} />
+              <h1 style={{ border: "none" }}>{name}</h1>
             </NextLink>
           )}
         </div>
@@ -74,7 +74,7 @@ class Link extends React.Component {
           <motion.div
             className="bounce-image"
             transition={bounceTransition}
-            animate={hover ? { y: [`0%`, `-50%`] } : { y: `0%` }}
+            animate={hover ? { y: ["0%", "-50%"] } : { y: "0%" }}
           >
             <img src={src} />
           </motion.div>
@@ -91,4 +91,4 @@ class Link extends React.Component {
   }
 }
 
-export default Link
+export default Link;

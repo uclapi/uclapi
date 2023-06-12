@@ -1,7 +1,11 @@
-@import 'include-media/dist/_include-media.scss';
+@import "include-media/dist/_include-media.scss";
 
 $break-small: 780px;
-$breakpoints: (phone: 768px, tablet: 992px, desktop: 1200px);
+$breakpoints: (
+  phone: 768px,
+  tablet: 992px,
+  desktop: 1200px,
+);
 
 $navbar-height: 60px;
 

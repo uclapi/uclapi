@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import Image from "next/image";
 
 /**
 These are the rounded icons at the end of fields. Can change everything except
@@ -10,12 +10,13 @@ onClick default: null,
 style default: styles.button
 **/
 
-const logosize = 20
+const logosize = 20;
 
-const Icon = ({ image = null, description = ``, onClick = () => {} }) => (
-  <div className='icon-wrapper' onClick={onClick}>
+const Icon = ({ image = null, description = "", onClick = () => {} }) => (
+  <div className="icon-wrapper" onClick={onClick}>
     {image && (
-      <Image src={image}
+      <Image
+        src={image}
         width={logosize}
         height={logosize}
         description={description}
@@ -23,6 +24,6 @@ const Icon = ({ image = null, description = ``, onClick = () => {} }) => (
       />
     )}
   </div>
-)
+);
 
-export default Icon
+export default Icon;

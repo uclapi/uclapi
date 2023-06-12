@@ -73,5 +73,5 @@ export const authOptions = {
  * NextAuth.js configuration. See https://next-auth.js.org/configuration/initialization for details.
  * We use a custom OAuth provider to point NextAuth.js towards UCL API's OAuth system.
  * We also use NextAuth.js callbacks to ensure only Engineering users can login, and to grant admin privileges.
-*/
+ */
 export default NextAuth(authOptions);

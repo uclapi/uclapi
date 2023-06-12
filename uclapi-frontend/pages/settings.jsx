@@ -13,63 +13,64 @@ import Head from "next/head";
 
 const AppSettings = () => {
   const [data, setData] = useState({
-    fullname: ``,
-    department: ``,
+    fullname: "",
+    department: "",
     apps: [],
-  })
+  });
 
   const fetchSettings = () =>
-    Api.settings.getSettings().then(data => setData(data))
+    Api.settings.getSettings().then((data) => setData(data));
 
   useEffect(() => {
-    fetchSettings()
-  }, [])
+    fetchSettings();
+  }, []);
 
-  const { fullname, department, apps: authorisedApps } = data
-  const appCount = authorisedApps.filter(app => app.active).length
-  const isApps = appCount === 0
+  const { fullname, department, apps: authorisedApps } = data;
+  const appCount = authorisedApps.filter((app) => app.active).length;
+  const isApps = appCount === 0;
 
-  const cardPadding = `30px`
+  const cardPadding = "30px";
 
   const deauthoriseApp = useCallback(async (clientId) => {
-    await Api.settings.deauthoriseApp(clientId).then(() => fetchSettings())
-  }, [])
+    await Api.settings.deauthoriseApp(clientId).then(() => fetchSettings());
+  }, []);
 
-  const handleChange = useCallback((client_id, index) => () => {
-    const deauthoriseConfirmation = `Are you sure you want to deauthorise `
-      + authorisedApps[index].app.name + `? It will probably stop working and `
-      + `you'll need to re-authenticate with it again if you want to use it`
-    if (confirm(deauthoriseConfirmation)) {
-      deauthoriseApp(client_id)
-    }
-  }, [deauthoriseApp, authorisedApps])
+  const handleChange = useCallback(
+    (client_id, index) => () => {
+      const deauthoriseConfirmation =
+        "Are you sure you want to deauthorise " +
+        authorisedApps[index].app.name +
+        "? It will probably stop working and " +
+        "you'll need to re-authenticate with it again if you want to use it";
+      if (confirm(deauthoriseConfirmation)) {
+        deauthoriseApp(client_id);
+      }
+    },
+    [deauthoriseApp, authorisedApps]
+  );
 
   return (
     <>
       <Head>
-        <title>
-          Settings - UCL API
-        </title>
+        <title>Settings - UCL API</title>
       </Head>
 
       <Container
-        height='fit-content'
-        styling='splash-parallax'
-        style={{ minHeight: `100vh` }}
+        height="fit-content"
+        styling="splash-parallax"
+        style={{ minHeight: "100vh" }}
       >
         <Row
-          width='9-10'
-          horizontalAlignment='center'
-          style={{ marginTop: `50px` }}
+          width="9-10"
+          horizontalAlignment="center"
+          style={{ marginTop: "50px" }}
         >
-          <h1 className={styles.title}>
-            Account
-          </h1>
-          <CardView width='1-1' type='default' noPadding style={{ padding: 0 }}>
+          <h1 className={styles.title}>Account</h1>
+          <CardView width="1-1" type="default" noPadding style={{ padding: 0 }}>
             <Container noPadding>
-              <Row width='1-1' horizontalAlignment='center' >
+              <Row width="1-1" horizontalAlignment="center">
                 <CardView
-                  width='6-10'
+                  width="6-10"
                   type="transparent"
                   noShadow
                   keepInline
@@ -80,7 +81,7 @@ const AppSettings = () => {
                   <h4 className={styles.noPadding}>{department}</h4>
                 </CardView>
                 <CardView
-                  width='4-10'
+                  width="4-10"
                   type="transparent"
                   noShadow
                   keepInline
@@ -88,10 +89,10 @@ const AppSettings = () => {
                   style={{ padding: cardPadding }}
                 >
                   <Button
-                    href={`/logout`}
+                    href={"/logout"}
                     style={{
-                      float: `right`,
-                      cursor: `pointer`,
+                      float: "right",
+                      cursor: "pointer",
                     }}
                   >
                     Logout
@@ -101,21 +102,13 @@ const AppSettings = () => {
             </Container>
           </CardView>
 
-          <h1 className={styles.title}>
-            Permissions
-          </h1>
-          <CardView
-            width='1-1'
-            type='default'
-            noPadding
-            style={{ padding: 0 }}
-          >
+          <h1 className={styles.title}>Permissions</h1>
+          <CardView width="1-1" type="default" noPadding style={{ padding: 0 }}>
             {isApps ? (
-              <Container
-                noPadding
-              >
-                <Row width='1-1'
-                  horizontalAlignment='center'
+              <Container noPadding>
+                <Row
+                  width="1-1"
+                  horizontalAlignment="center"
                   style={{
                     paddingTop: 20,
                     paddingBottom: 20,
@@ -123,94 +116,89 @@ const AppSettings = () => {
                 >
                   <Column width="1-2" className="default">
                     <Image
-                      src={'/home-page/uclassistantmarket.png'}
+                      src={"/home-page/uclassistantmarket.png"}
                       width={367}
                       height={405}
                     />
                   </Column>
                   <Column width="1-2" alignItems="column">
-                    <h2>
-                      No authorised apps yet. Try UCL Assistant?
-                    </h2>
-                    <p className='description'>
-                      UCL Assistant is a productivity app for
-                      students and staff at UCL.
-                      It has been designed by students to be as
-                      reliable and user friendly as possible.
+                    <h2>No authorised apps yet. Try UCL Assistant?</h2>
+                    <p className="description">
+                      UCL Assistant is a productivity app for students and staff
+                      at UCL. It has been designed by students to be as reliable
+                      and user friendly as possible.
                     </p>
-                    <p className='description'>
-                      The app has many different features but one
-                      of our favourites is
-                      the ability to view your timetable in a weekly
-                      view. The app highlights your current commitments
-                      to save you time as you rush about University.
-                      Check it out below!
+                    <p className="description">
+                      The app has many different features but one of our
+                      favourites is the ability to view your timetable in a
+                      weekly view. The app highlights your current commitments
+                      to save you time as you rush about University. Check it
+                      out below!
                     </p>
-                    <Button href={`/marketplace/uclassistant`}>
-                      Download
-                    </Button>
+                    <Button href={"/marketplace/uclassistant"}>Download</Button>
                   </Column>
                 </Row>
               </Container>
             ) : (
-                <Container noPadding>
-                  <Row width='1-1'
-                    horizontalAlignment='center'
-                    style={{
-                      paddingTop: 20,
-                      paddingBottom: 20,
-                    }}
-                    alignItems="column"
-                  >
-                    {authorisedApps.map((app, i) =>
-                      <>
-                        {app.active ? (
-                          <Row width="1-1">
-                            <CardView
-                              width='1-2'
-                              type="transparent"
-                              noShadow
-                              keepInline
-                              style={{ padding: cardPadding }}
-                              noPadding
+              <Container noPadding>
+                <Row
+                  width="1-1"
+                  horizontalAlignment="center"
+                  style={{
+                    paddingTop: 20,
+                    paddingBottom: 20,
+                  }}
+                  alignItems="column"
+                >
+                  {authorisedApps.map((app, i) => (
+                    <>
+                      {app.active ? (
+                        <Row width="1-1">
+                          <CardView
+                            width="1-2"
+                            type="transparent"
+                            noShadow
+                            keepInline
+                            style={{ padding: cardPadding }}
+                            noPadding
+                          >
+                            <h2 className={styles.noPadding}>
+                              {app.app.name.toUpperCase()}
+                            </h2>
+                            <h4 className={styles.noPadding}>
+                              {app.app.creator.name}
+                            </h4>
+                          </CardView>
+                          <CardView
+                            width="1-2"
+                            type="transparent"
+                            noShadow
+                            keepInline
+                            style={{ padding: cardPadding }}
+                            noPadding
+                          >
+                            <Button
+                              onClick={handleChange(app.app.client_id, i)}
+                              style={{
+                                cursor: "pointer",
+                                float: "right",
+                              }}
                             >
-                              <h2 className={styles.noPadding}>
-                                {app.app.name.toUpperCase()}
-                              </h2>
-                              <h4 className={styles.noPadding}>
-                                {app.app.creator.name}
-                              </h4>
-                            </CardView>
-                            <CardView
-                              width='1-2'
-                              type="transparent"
-                              noShadow
-                              keepInline
-                              style={{ padding: cardPadding }}
-                              noPadding
-                            >
-                              <Button
-                                onClick={handleChange(app.app.client_id, i)}
-                                style={{
-                                  cursor: `pointer`,
-                                  float: `right`,
-                                }}
-                              >
-                                Revoke Permissions
-                              </Button>
-                            </CardView>
-                          </Row>
-                        ) : null}
-                      </>
-                    )}
-                  </Row>
-                </Container>
-              )}
+                              Revoke Permissions
+                            </Button>
+                          </CardView>
+                        </Row>
+                      ) : null}
+                    </>
+                  ))}
+                </Row>
+              </Container>
+            )}
           </CardView>
         </Row>
       </Container>
     </>
-  )
-}
+  );
+};
 
-export default AppSettings
+export default AppSettings;

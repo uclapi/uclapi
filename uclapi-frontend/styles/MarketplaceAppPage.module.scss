@@ -6,7 +6,7 @@
   margin: auto;
 
   .logo {
-    @include media('<=phone') {
+    @include media("<=phone") {
       width: 75px;
       height: 75px;
     }
@@ -25,7 +25,7 @@
     width: 100%;
     margin: 1em auto;
 
-    @include media('<=phone') {
+    @include media("<=phone") {
       flex-direction: column;
       align-items: center;
       row-gap: 10px;
@@ -42,12 +42,12 @@
     width: 90%;
     margin: auto;
 
-    @include media('<=phone') {
+    @include media("<=phone") {
       width: 60%;
     }
   }
 
-  @include media('<=phone') {
+  @include media("<=phone") {
     width: 90%;
   }
 }

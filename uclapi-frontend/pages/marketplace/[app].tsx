@@ -23,7 +23,7 @@ export async function getStaticProps(context) {
 
 export default function MarketplaceApp() {
   const router = useRouter();
-  const { app:appId } = router.query;
+  const { app: appId } = router.query;
   const app = allApps[appId];
   const {
     logodark,
@@ -32,17 +32,15 @@ export default function MarketplaceApp() {
     screenshots,
     detailedDescription,
     links,
-  } = app
+  } = app;
 
   return (
     <>
       <Head>
-        <title>
-          {name} - UCL API Marketplace
-        </title>
+        <title>{name} - UCL API Marketplace</title>
       </Head>
 
-      <Container styling="splash-parallax" style={{ margin: `60px 0 0 0` }}>
+      <Container styling="splash-parallax" style={{ margin: "60px 0 0 0" }}>
         <div className={styles.appWrapper}>
           <div className={styles.titleWrapper}>
             <Image
@@ -59,7 +57,7 @@ export default function MarketplaceApp() {
               {links.map((x, key) => (
                 <Container height="50px" noPadding key={key}>
                   <Row width="2-3" horizontalAlignment="center">
-                    <Button href={x.link} key={key} style={{ width: `100px` }}>
+                    <Button href={x.link} key={key} style={{ width: "100px" }}>
                       {x.name}
                     </Button>
                   </Row>
@@ -68,7 +66,7 @@ export default function MarketplaceApp() {
             </div>
           </div>
 
-          <CardView width="1-1" noPadding style={{ padding: `20px 0` }}>
+          <CardView width="1-1" noPadding style={{ padding: "20px 0" }}>
             <div className={styles.carouselWrapper}>
               <Carousel
                 responsive={{

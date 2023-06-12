@@ -1,7 +1,7 @@
-import { checkedIcon, uncheckedIcon } from '@/components/layout/Icons.jsx'
-import { Container } from '@/components/layout/Items.jsx'
-import React, { useCallback } from 'react'
-import styles from './CheckBox.module.scss'
+import { checkedIcon, uncheckedIcon } from "@/components/layout/Icons.jsx";
+import { Container } from "@/components/layout/Items.jsx";
+import React, { useCallback } from "react";
+import styles from "./CheckBox.module.scss";
 
 /**
 REQUIRED ATTRIBUTES:
@@ -13,35 +13,26 @@ OPTIONAL ATTRIBUTES:
 this.props.style
 **/
 
-const CheckBox = ({
-  text,
-  isChecked = false,
-  onClick = () => {},
-}) => {
+const CheckBox = ({ text, isChecked = false, onClick = () => {} }) => {
   const toggleCheck = useCallback(
     () => onClick(!isChecked),
     [isChecked, onClick]
-  )
+  );
 
   return (
     <Container
       className={styles.checkbox}
-      height={`55px`}
+      height={"55px"}
       onClick={toggleCheck}
       noPadding
     >
       <div className="field-label">{text}</div>
 
-      <p>
-        My app requires access to the user&apos;s {text.toLowerCase()}.
-      </p>
+      <p>My app requires access to the user&apos;s {text.toLowerCase()}.</p>
 
-      {
-        isChecked ? (checkedIcon()) : (uncheckedIcon())
-      }
+      {isChecked ? checkedIcon() : uncheckedIcon()}
+    </Container>
+  );
+};
 
-  </Container>
-  )
-}
-
-export default CheckBox
+export default CheckBox;

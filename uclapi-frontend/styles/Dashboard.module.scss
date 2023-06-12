@@ -1,12 +1,12 @@
 @import "./sass/core.scss";
-@import './sass/helpers';
+@import "./sass/helpers";
 
 .appHolder {
   display: flex;
   flex-direction: column;
   width: 100%;
 
-  @include media('<=phone') {
+  @include media("<=phone") {
     width: 100vw;
     margin-left: -2rem;
     border-radius: 0;

@@ -4,11 +4,11 @@ import {
   editIcon,
   refreshIcon,
   saveIcon,
-} from '@/components/layout/Icons.jsx'
-import { Container } from '@/components/layout/Items.jsx'
+} from "@/components/layout/Icons.jsx";
+import { Container } from "@/components/layout/Items.jsx";
 import React from "react";
 
-import styles from './Field.module.scss'
+import styles from "./Field.module.scss";
 
 /**
 A generic field that is styled to fit in with the dashboard,
@@ -30,158 +30,162 @@ style
 
 **/
 
-
 export default class Field extends React.Component {
-
   constructor(props) {
     super(props);
 
-    const fieldRef = React.createRef()
-    const { content } = this.props
+    const fieldRef = React.createRef();
+    const { content } = this.props;
 
-    this.DEBUGGING=true
+    this.DEBUGGING = true;
 
     this.state = {
       value: content,
       fieldRef: fieldRef,
       isSaved: true,
       isEditing: false,
-    }
+    };
   }
 
   componentDidUpdate(prevProps) {
-    const { content } = this.props
+    const { content } = this.props;
     // If this is an uneditable field then the value needs to
     // be updated when the parent changes the content
-    if(content !== prevProps.content) {
-      this.setState({value: content})
+    if (content !== prevProps.content) {
+      this.setState({ value: content });
     }
   }
 
   onKeyDown = (event) => {
     // 'keypress' event misbehaves on mobile so we track
     // 'Enter' key via 'keydown' event
-    if (event.key === `Enter`) {
-      event.preventDefault()
-      event.stopPropagation()
-      this.save(true)
+    if (event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
+      this.save(true);
     }
-  }
+  };
 
   save = (shouldPersist) => {
-    const { onSave } = this.props
-    const { fieldRef } = this.state
+    const { onSave } = this.props;
+    const { fieldRef } = this.state;
 
-    const newValue = fieldRef.current.value
+    const newValue = fieldRef.current.value;
 
-    if(this.DEBUGGING) { console.log(`new value: ` + newValue) }
+    if (this.DEBUGGING) {
+      console.log("new value: " + newValue);
+    }
 
     // Call the save button action passed in via the props
-    if(shouldPersist) {
-      onSave(newValue)
-      this.setState({ isEditing: false })
+    if (shouldPersist) {
+      onSave(newValue);
+      this.setState({ isEditing: false });
     }
 
     this.setState({
       value: newValue,
       isSaved: shouldPersist,
-    })
-  }
+    });
+  };
 
   toggleEditing = () => {
-    const { onSave } = this.props
-    const { isEditing, fieldRef } = this.state
+    const { onSave } = this.props;
+    const { isEditing, fieldRef } = this.state;
 
-    if(this.doesExist(onSave)) {
-      if(isEditing) {
-        this.cancel()
+    if (this.doesExist(onSave)) {
+      if (isEditing) {
+        this.cancel();
       } else {
-        this.setState({ isEditing: !isEditing })
-        fieldRef.current.focus()
+        this.setState({ isEditing: !isEditing });
+        fieldRef.current.focus();
       }
     }
-  }
+  };
 
   cancel = () => {
-    const { content } = this.props
+    const { content } = this.props;
 
     this.setState({
       isEditing: false,
       value: content,
       isSaved: true,
-    })
-  }
+    });
+  };
 
   doesExist = (variable) => {
-    return typeof variable !== `undefined`
-  }
+    return typeof variable !== "undefined";
+  };
 
   copy = () => {
-    const { fieldRef } = this.state
+    const { fieldRef } = this.state;
 
-      if(this.DEBUGGING) { console.log(`Copy to clipboard`) }
+    if (this.DEBUGGING) {
+      console.log("Copy to clipboard");
+    }
 
-      fieldRef.current.select()
+    fieldRef.current.select();
 
-      try {
-        document.execCommand(`copy`)
-      } catch (err) {
-        alert(`Error: please press Ctrl/Cmd+C to copy`)
-      }
-  }
+    try {
+      document.execCommand("copy");
+    } catch (err) {
+      alert("Error: please press Ctrl/Cmd+C to copy");
+    }
+  };
 
   render() {
-    const {
-      onSave,
-      onRefresh,
-      title,
-      canCopy,
-    } = this.props
-    const {
-      fieldRef,
-      value,
-      isEditing,
-    } = this.state
+    const { onSave, onRefresh, title, canCopy } = this.props;
+    const { fieldRef, value, isEditing } = this.state;
 
-    const state = this.doesExist(onSave) ? (
-      isEditing ? styles.editing : styles.notEditing
-    ) : styles.uneditable
+    const state = this.doesExist(onSave)
+      ? isEditing
+        ? styles.editing
+        : styles.notEditing
+      : styles.uneditable;
 
     return (
-    <>
-      <Container
-        className={[styles.fieldContainer, state].join(` `)}
-        onClick={this.toggleEditing}
-        noPadding
-      >
-        <div className={styles.fieldLabel}>{title}</div>
+      <>
+        <Container
+          className={[styles.fieldContainer, state].join(" ")}
+          onClick={this.toggleEditing}
+          noPadding
+        >
+          <div className={styles.fieldLabel}>{title}</div>
 
-        <input ref={fieldRef}
-          type="text"
-          className={[styles.fieldInput, state].join(` `)}
-          readOnly={!isEditing}
-          // eslint-disable-next-line react/jsx-no-bind
-          onChange={isEditing ? () => { this.save(false) } : null }
-          onKeyDown={this.onKeyDown}
-          value={value}
-        />
+          <input
+            ref={fieldRef}
+            type="text"
+            className={[styles.fieldInput, state].join(" ")}
+            readOnly={!isEditing}
+            // eslint-disable-next-line react/jsx-no-bind
+            onChange={
+              isEditing
+                ? () => {
+                    this.save(false);
+                  }
+                : null
+            }
+            onKeyDown={this.onKeyDown}
+            value={value}
+          />
 
-        {canCopy ? copyIcon(() => { this.copy() }) : null}
+          {canCopy
+            ? copyIcon(() => {
+                this.copy();
+              })
+            : null}
 
-        {this.doesExist(onSave) && isEditing
-          ? saveIcon( () => { this.save(true) } )
-          : null}
-        {this.doesExist(onSave) && isEditing
-          ? cancelIcon(this.cancel)
-          : null}
-        {this.doesExist(onSave) && !isEditing
-          ? editIcon(this.toggleEditing)
-          : null}
-        {this.doesExist(onRefresh)
-          ? refreshIcon(onRefresh)
-          : null}
-      </Container>
-    </>
-    )
+          {this.doesExist(onSave) && isEditing
+            ? saveIcon(() => {
+                this.save(true);
+              })
+            : null}
+          {this.doesExist(onSave) && isEditing ? cancelIcon(this.cancel) : null}
+          {this.doesExist(onSave) && !isEditing
+            ? editIcon(this.toggleEditing)
+            : null}
+          {this.doesExist(onRefresh) ? refreshIcon(onRefresh) : null}
+        </Container>
+      </>
+    );
   }
 }

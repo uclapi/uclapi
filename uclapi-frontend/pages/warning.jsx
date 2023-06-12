@@ -4,9 +4,7 @@ import Head from "next/head";
 const WarningPage = () => (
   <>
     <Head>
-      <title>
-        Warning - UCL API
-      </title>
+      <title>Warning - UCL API</title>
     </Head>
 
     <Warning

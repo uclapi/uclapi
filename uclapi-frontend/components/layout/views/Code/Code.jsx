@@ -1,9 +1,9 @@
-import * as RequestGenerator from '@/data/RequestGenerator'
-import React, { useState } from 'react'
-import SyntaxHighlighter from 'react-syntax-highlighter'
-import { androidstudio } from 'react-syntax-highlighter/dist/cjs/styles/hljs'
-import { Nav } from 'rsuite';
-import styles from './Code.module.scss'
+import * as RequestGenerator from "@/data/RequestGenerator";
+import React, { useState } from "react";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { androidstudio } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { Nav } from "rsuite";
+import styles from "./Code.module.scss";
 
 /**
 REQUIRED ATTRIBUTES:
@@ -21,39 +21,37 @@ OPTIONAL ATTRIBUTES:
 const getResponse = (response) => {
   return [
     {
-      'name': `response`,
-      'code': response,
+      name: "response",
+      code: response,
     },
-  ]
-}
+  ];
+};
 
 const getLanguages = (languages, type, url, params, response) => {
-  let result = []
+  let result = [];
 
   // type is 'request' - Use request generator to generate what to show
-  if (type == `request`) { result = RequestGenerator.getRequest(url, params, true) }
+  if (type == "request") {
+    result = RequestGenerator.getRequest(url, params, true);
+  }
   // type is 'real-response' - Use the passed response
-  if (type == `response`) { result = getResponse(response) }
+  if (type == "response") {
+    result = getResponse(response);
+  }
   // type is raw-examples - Use the passed examples
-  if (type == `raw-examples`) {
+  if (type == "raw-examples") {
     result = Object.keys(languages).map((l) => ({
       name: l,
       code: languages[l],
-    }))
+    }));
   }
 
-  return result
-}
+  return result;
+};
 
-const Code = ({
-  languages,
-  type,
-  url,
-  params,
-  response,
-}) => {
-  const [tabIndex, setTabIndex] = useState(0)
-  const langs = getLanguages(languages, type, url, params, response)
+const Code = ({ languages, type, url, params, response }) => {
+  const [tabIndex, setTabIndex] = useState(0);
+  const langs = getLanguages(languages, type, url, params, response);
 
   return (
     <>
@@ -81,7 +79,7 @@ const Code = ({
             <div
               key={`code-${name}`}
               className="default-transition background-color-transition inner-tab"
-              style={{ textAlign: `left`, width: "100%" }}
+              style={{ textAlign: "left", width: "100%" }}
             >
               <SyntaxHighlighter language={name} style={androidstudio}>
                 {code}
@@ -91,6 +89,6 @@ const Code = ({
       )}
     </>
   );
-}
+};
 
-export default Code
+export default Code;

@@ -1,3 +1,5 @@
 .next
 node_modules
 .env
+uclapi.openapi.json
+pnpm-lock.yaml

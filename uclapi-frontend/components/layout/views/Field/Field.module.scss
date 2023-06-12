@@ -1,4 +1,4 @@
-@import '@/styles/sass/core.scss';
+@import "@/styles/sass/core.scss";
 
 $field-height: 4rem;
 
@@ -38,9 +38,15 @@ $field-height: 4rem;
       height: $field-height;
     }
 
-    &.editing { cursor: unset; }
-    &.uneditable { cursor: unset; }
-    &.notEditing { cursor: pointer; }
+    &.editing {
+      cursor: unset;
+    }
+    &.uneditable {
+      cursor: unset;
+    }
+    &.notEditing {
+      cursor: pointer;
+    }
   }
 
   .fieldLabel {
