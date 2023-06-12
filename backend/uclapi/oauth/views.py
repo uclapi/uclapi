@@ -174,13 +174,11 @@ def adcallback(request):
         "signed_data": response_data_signed
     }
 
-    initial_data = json.dumps(page_data, cls=DjangoJSONEncoder)
-
     try:
         token = OAuthToken.objects.get(app=app, user=user)
     except OAuthToken.DoesNotExist:
         return render(request, 'permissions.html', {
-            'initial_data': initial_data
+            'initial_data': page_data
         })
 
     if token.scope.scopeIsEqual(app.scope) and token.active:
@@ -213,7 +211,7 @@ def adcallback(request):
         )
     else:
         return render(request, 'permissions.html', {
-            'initial_data': initial_data
+            'initial_data': page_data
         })
 
 

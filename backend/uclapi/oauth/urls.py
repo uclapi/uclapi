@@ -3,8 +3,8 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'authorise/$', views.authorise),
-    url(r'authorize/$', views.authorise),
+    url(r'authorise$', views.authorise),
+    url(r'authorize$', views.authorise),
     url(r'adcallback', views.adcallback),
     url(r'token$', views.token),
     url(r'tokens/scopes$', views.scope_map),
