@@ -727,7 +727,7 @@ class ViewsTestCase(TestCase):
         self.assertEqual(test_user_.user_types, user_data['employeeType'])
 
         if initial_data_exists:
-            initial_data = json.loads(response.context['initial_data'])
+            initial_data = response.context['initial_data']
             self.assertEqual(
                 initial_data['app_name'],
                 app_.name
