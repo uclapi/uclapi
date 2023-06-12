@@ -5,6 +5,7 @@ import React from "react";
 // React
 // Column for sizing
 import { Column } from '@/components/layout/Items.jsx'
+import Link from "next/link";
 
 
 /**
@@ -57,9 +58,9 @@ export default class CardView extends React.Component {
           style={containerStyle}
           keepInline={keepInline}
         >
-          <a className={className} href={link} style={style}>
+          <Link className={className} href={link} style={style}>
             {children}
-          </a>
+          </Link>
         </Column>
       )
     } else {

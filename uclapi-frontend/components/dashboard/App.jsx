@@ -169,8 +169,8 @@ export default class App extends React.Component {
                 className="dates-holder default tablet"
                 keepInline
               >
-                <p style={styles.dates}>Created: {created} ago</p>
-                <p style={styles.dates}>Updated: {updated} ago</p>
+                <p className={styles.dates}>Created: {created} ago</p>
+                <p className={styles.dates}>Updated: {updated} ago</p>
               </Column>
 
               <Button
