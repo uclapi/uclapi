@@ -44,5 +44,8 @@
   "devDependencies": {
     "encoding": "^0.1.13",
     "sass": "^1.62.1"
+  },
+  "overrides": {
+    "react": "18.2.0"
   }
 }
