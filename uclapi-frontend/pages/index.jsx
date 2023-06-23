@@ -62,7 +62,7 @@ class HomePage extends React.Component {
 
         {/* Staging banner */}
         {this.state?.host == "staging.ninja" && (
-          <Container isPadded styling="warning-red" style={{marginTop: '50px'}}>
+          <Container isPadded styling="warning-red" style={{marginTop: "50px"}}>
             <Row width="9-10" horizontalAlignment={"center"}>
               <h1>
                 Warning! This is our bleeding-edge staging environment.
