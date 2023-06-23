@@ -48,14 +48,14 @@ export const FAQ = [
     question: `What is UCL API?`,
     answer: (
       <>
-        <p>
+        <p className="description">
           UCL API is a platform for interacting with data that is usually
           difficult to obtain or hidden in internal UCL systems. The aim is to
           enable student developers to develop tools for other UCL students to
           enrich their lives at UCL. Almost every API returns JSON which is
           simple to parse and interpret in most modern programming languages.
         </p>
-        <p>
+        <p className="description">
           It is student-built platform, backed and supported by UCL&apos;s&nbsp;
           <a className={linkclass} href="https://www.ucl.ac.uk/isd/">
             Information Services Division (ISD)
@@ -70,7 +70,7 @@ export const FAQ = [
   {
     question: `Do I need to be from UCL to use the UCL API?`,
     answer: (
-      <p>
+      <p className="description">
         You need to be affiliated with UCL because authentication (for both
         developers &amp; end users) is done via the UCL login system.
       </p>
@@ -79,7 +79,7 @@ export const FAQ = [
   {
     question: `How do I get involved?`,
     answer: (
-      <p>
+      <p className="description">
         UCL API is open source. Our source code is available on&nbsp;
         <a className={linkclass} href="https://github.com/uclapi/uclapi">
           a public Github repository
@@ -101,12 +101,12 @@ export const FAQ = [
   },
   {
     question: `Does this cost anything?`,
-    answer: <p>UCL API is and always will be completely free to use.</p>,
+    answer: <p className="description">UCL API is and always will be completely free to use.</p>,
   },
   {
     question: `Who owns the Intellectual Property (IP) of what I build?`,
     answer: (
-      <p>
+      <p className="description">
         You do! We have no claim on your IP. However, we do request you include
         a shoutout somewhere. This helps raise awareness of UCL API and the vast
         amount of data available. It may not always be possible to include this

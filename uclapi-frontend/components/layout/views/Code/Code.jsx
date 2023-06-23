@@ -50,7 +50,7 @@ const getLanguages = (languages, type, url, params, response) => {
 };
 
 const Code = ({ languages, type, url, params, response }) => {
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState("python");
   const langs = getLanguages(languages, type, url, params, response);
 
   return (

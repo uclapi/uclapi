@@ -62,7 +62,7 @@ class HomePage extends React.Component {
 
         {/* Staging banner */}
         {this.state?.host == "staging.ninja" && (
-          <Container isPadded styling="warning-red">
+          <Container isPadded styling="warning-red" style={{marginTop: '50px'}}>
             <Row width="9-10" horizontalAlignment={"center"}>
               <h1>
                 Warning! This is our bleeding-edge staging environment.
@@ -124,6 +124,7 @@ class HomePage extends React.Component {
                 src={"/home-page/star.svg"}
                 width={iconsize}
                 height={iconsize}
+                className={styles.apiDescImage}
               />
             </Column>
             <Column width="1-3">
@@ -140,6 +141,7 @@ class HomePage extends React.Component {
                 src={"/home-page/docs.svg"}
                 width={iconsize}
                 height={iconsize}
+                className={styles.apiDescImage}
               />
             </Column>
             <Column width="1-3">
@@ -155,6 +157,7 @@ class HomePage extends React.Component {
                 src={"/home-page/heart.svg"}
                 width={iconsize}
                 height={iconsize}
+                className={styles.apiDescImage}
               />
             </Column>
           </Row>
