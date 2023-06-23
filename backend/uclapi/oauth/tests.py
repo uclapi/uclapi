@@ -318,7 +318,7 @@ class OAuthTokenCheckDecoratorTestCase(TestCase):
         response = test_timetable_request(request)
         content = json.loads(response.content.decode())
 
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 403)
         self.assertFalse(content["ok"])
         self.assertEqual(
             content["error"],
