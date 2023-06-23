@@ -2240,6 +2240,21 @@
               }
             }
           },
+          "403": {
+            "description": "Permission error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                },
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
+                  }
+                }
+              }
+            }
+          },
           "400": {
             "description": "Request error",
             "content": {
@@ -2271,9 +2286,6 @@
                   },
                   "8": {
                     "$ref": "#/components/examples/ErrorPersonalData"
-                  },
-                  "9": {
-                    "$ref": "#/components/examples/ErrorRejectedScope"
                   }
                 }
               }
