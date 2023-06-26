@@ -31,7 +31,7 @@ class DashboardApi {
   };
 
   static acceptAup = async () => {
-    const { data } = await DashboardApi.post("/accept-aup");
+    const { data } = await DashboardApi.post("/accept-aup", { accept: true });
     if (!data.success) {
       throw new Error(
         "There was an error accepting the Acceptable Use Policy. Please try again later or contact us if the issue persists"
