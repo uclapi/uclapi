@@ -10,6 +10,7 @@ import Image from "next/image";
 import { Button } from "rsuite";
 import styles from "@/styles/Settings.module.scss";
 import Head from "next/head";
+import { signOut } from "next-auth/react"
 
 const AppSettings = () => {
   const [data, setData] = useState({
@@ -89,7 +90,7 @@ const AppSettings = () => {
                   style={{ padding: cardPadding }}
                 >
                   <Button
-                    href={"/logout"}
+                    onClick={() => signOut({ callbackUrl: "/" })}
                     style={{
                       float: "right",
                       cursor: "pointer",
