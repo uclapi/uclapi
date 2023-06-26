@@ -687,13 +687,3 @@ def deauthorise_app(request):
     response.status_code = 200
     return response
 
-
-@ensure_csrf_cookie
-def logout(request):
-    try:
-        del request.session['user_id']
-    except KeyError:
-        pass
-
-    response = redirect('/warning', )
-    return response

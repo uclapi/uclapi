@@ -17,7 +17,6 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
 from common.views import ping_view
-from oauth.views import logout
 from dashboard.views import DevelopmentNextjsProxyView
 from .settings import DEBUG
 
@@ -26,7 +25,6 @@ app_name = "uclapi"
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dashboard/api/', include('dashboard.urls')),
-    path('logout/', logout),
     path('roombookings/', include('roombookings.urls')),
     path('oauth/', include('oauth.urls')),
     path('timetable/', include('timetable.urls')),
