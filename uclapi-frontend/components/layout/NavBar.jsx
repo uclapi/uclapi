@@ -187,7 +187,7 @@ class NavBar extends React.Component {
                   link={s.link}
                   {...(s.requiresAuth &&
                     !this.props.session && {
-                      onClick: () => signIn("uclapi"),
+                      onClick: () => signIn("uclapi", { callbackUrl: s.link }),
                     })}
                 />
               ))
@@ -219,7 +219,7 @@ class NavBar extends React.Component {
                 isSmall
                 {...(s.requiresAuth &&
                   !this.props.session && {
-                    onClick: () => signIn("uclapi"),
+                    onClick: () => signIn("uclapi", { callbackUrl: s.link }),
                   })}
               />
             ))}
