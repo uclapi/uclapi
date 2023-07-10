@@ -33,7 +33,7 @@ redis==4.5.5
 requests==2.30.0
 requests-futures==1.0.0
 Sphinx==4.3.0
-SQLAlchemy==1.4.46
+SQLAlchemy==2.0.18
 tqdm==4.65.0
 validators==0.20.0
 requests-mock==1.10.0
