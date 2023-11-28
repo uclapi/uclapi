@@ -8,7 +8,7 @@
       "email": "isd.apiteam@ucl.ac.uk",
       "url": "https://uclapi.com"
     },
-    "version": "1.4.6",
+    "version": "1.4.7",
     "termsOfService": "https://github.com/uclapi/uclapi/blob/master/backend/uclapi/uclapi/UCLAPIAcceptableUsePolicy.txt",
     "license": {
       "url": "https://github.com/uclapi/uclapi/blob/master/LICENSE",
