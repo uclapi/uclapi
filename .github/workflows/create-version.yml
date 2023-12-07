@@ -7,7 +7,7 @@ on:
         description: 'Version number'
         required: true
         default: '1.0.0'
-  
+
 jobs:
   version:
     name: Update version number
@@ -22,9 +22,9 @@ jobs:
         run: |
           sudo apt-get install jq -y
           echo -n $UCLAPI_VERSION > version
-          jq ".version=\"$UCLAPI_VERSION\"" ./frontend/package.json > /tmp/package.json
+          jq ".version=\"$UCLAPI_VERSION\"" ./uclapi-frontend/package.json > /tmp/package.json
           jq ".info.version=\"$UCLAPI_VERSION\"" ./uclapi.openapi.json > /tmp/uclapi.openapi.json
-          mv /tmp/package.json ./frontend/package.json
+          mv /tmp/package.json ./uclapi-frontend/package.json
           mv /tmp/uclapi.openapi.json ./uclapi.openapi.json
 
       - name: Create commits
@@ -43,4 +43,3 @@ jobs:
           title: "Release v${{ github.event.inputs.version }}"
           delete-branch: true
           branch: "releases/${{ github.event.inputs.version }}"
-          

@@ -21,6 +21,8 @@ from .app_helpers import (
     handle_azure_ad_callback,
     get_azure_ad_authorize_url
 )
+
+from dashboard.app_helpers import get_session_user_cn
 from .models import OAuthToken
 from .scoping import Scopes
 
@@ -172,13 +174,11 @@ def adcallback(request):
         "signed_data": response_data_signed
     }
 
-    initial_data = json.dumps(page_data, cls=DjangoJSONEncoder)
-
     try:
         token = OAuthToken.objects.get(app=app, user=user)
     except OAuthToken.DoesNotExist:
         return render(request, 'permissions.html', {
-            'initial_data': initial_data
+            'initial_data': page_data
         })
 
     if token.scope.scopeIsEqual(app.scope) and token.active:
@@ -211,7 +211,7 @@ def adcallback(request):
         )
     else:
         return render(request, 'permissions.html', {
-            'initial_data': initial_data
+            'initial_data': page_data
         })
 
 
@@ -573,45 +573,7 @@ def get_student_number(request, *args, **kwargs):
         custom_header_data=kwargs
     )
 
-
 @csrf_exempt
-def settings_ad_callback(request):
-    # Callback from AD login
-    # should auth user login or signup
-    # then redirect to my apps homepage
-    user_result = handle_azure_ad_callback(
-        request.GET.get("code"),
-        request.build_absolute_uri(request.path)
-    )
-
-    if isinstance(user_result, str):
-        response = PrettyJsonResponse({
-            "ok": False,
-            "error": user_result
-        })
-        response.status_code = 400
-        return response
-    else:
-        request.session["user_id"] = user_result.id
-        return redirect(settings)
-
-
-@ensure_csrf_cookie
-def settings(request):
-    # Check whether the user is logged in
-    try:
-        request.session["user_id"]
-    except KeyError:
-        # Send the user to AD to log in
-        login_url = get_azure_ad_authorize_url(
-            request.build_absolute_uri(request.path) + "user/login.callback"
-        )
-        return redirect(login_url)
-
-    return render(request, 'settings.html')
-
-
-@ensure_csrf_cookie
 def get_settings(request):
     if request.method != "GET":
         response = PrettyJsonResponse({
@@ -623,16 +585,15 @@ def get_settings(request):
 
     # Check whether the user is logged in
     try:
-        user_id = request.session["user_id"]
-    except KeyError:
+        user_cn = get_session_user_cn(request)
+        user = User.objects.get(cn=user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "error": "You are not logged in"
         })
         response.status_code = 401
         return response
-
-    user = User.objects.get(id=user_id)
 
     tokens = OAuthToken.objects.filter(user=user)
 
@@ -667,10 +628,19 @@ def get_settings(request):
     return PrettyJsonResponse(initial_data_dict)
 
 
-@ensure_csrf_cookie
+@csrf_exempt
 def deauthorise_app(request):
     # Find which user is requesting to deauthorise an app
-    user = User.objects.get(id=request.session["user_id"])
+    try:
+        user_cn = get_session_user_cn(request)
+        user = User.objects.get(cn=user_cn)
+    except (KeyError, User.DoesNotExist):
+        response = PrettyJsonResponse({
+            "success": False,
+            "error": "You are not logged in"
+        })
+        response.status_code = 401
+        return response
 
     # Find the app that the user wants to deauthorise
     client_id = request.GET.get("client_id", None)
@@ -717,13 +687,3 @@ def deauthorise_app(request):
     response.status_code = 200
     return response
 
-
-@ensure_csrf_cookie
-def logout(request):
-    try:
-        del request.session['user_id']
-    except KeyError:
-        pass
-
-    response = redirect('/warning', )
-    return response

@@ -1,25 +1,118 @@
-{% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html>
-
 <head>
-
   <title>UCL API Authorisation</title>
-
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-  {% render_bundle 'authorise' 'css' %}
+  <style>
+      body {
+        font-family: "Roboto","Calibri",Helvetica,sans-serif;
+      }
+      .navbar {
+        align-items: center;
+        display: flex;
+        height: 60px;
+        position: fixed;
+        top: 0;
+      }
+      .logo-text {
+        font-size: 2em;
+        margin: 10px;
+      }
+      img {
+        height: 45px;
+        margin-left: 25px;
+      }
+      .content {
+        margin: 0 auto;
+        margin-top: calc(60px + 1rem);
+        max-width: 700px;
+        border: 1px solid black;
+        padding: 1rem 2rem;
+      }
+      ul li {
+        line-height: 150%;
+      }
+      hr {
+        margin: 1rem 0;
+      }
+      .authorise-buttons {
+        display: flex;
+        flex-direction: row;
+      }
+      button {
+        border-radius: 2px;
+        display: inline-block;
+        padding: 10px 20px;
+        text-decoration: none;
+        width: fit-content;
+        cursor: pointer;
+        border: none;
+      }
+      .authorise-button {
+        background-color: #313537;
+        color: white;
+        margin-right: 1rem;
+      }
+
+  </style>
 </head>
 
-
 <body>
+  <div class="navbar">
+    <img src="/simpleAPILogoBlack.svg" />
+    <div class="logo-text">
+      <div>UCL API</div>
+    </div>
+  </div>
+  <div class="content">
+    <h2 class="card-title">
+      Authorise <strong>{{initial_data.app_name}}</strong> to connect to your UCL Account
+    </h2>
+    <div className="details">
+      <p className="creator">Created by <u>{{initial_data.creator}}</u></p>
+      <hr />
+      <p className="will-have-access">
+        <strong>{{initial_data.app_name}}</strong> will have access to:
+      </p>
+      <ul>
+        <li>Your Name ({{initial_data.user.full_name}})</li>
+        <li>Your Email Address ({{initial_data.user.email}})</li>
+        <li>Your Department ({{initial_data.user.department}})</li>
+        <li>Your UPI ({{initial_data.user.upi}})</li>
+        {% for scope in initial_data.scopes %}
+          <li>{{scope.description}}</li>
+        {% endfor %}
+      </ul>
+    </div>
 
-  <script>
-    window.initialData = {{ initial_data | safe }};
-  </script>
-  <div class="app"></div>
-  {% render_bundle 'vendors' 'js' %}
-  {% render_bundle 'authorise' 'js' %}
+    <div class="authorise-buttons">
+      <form method="post" action="/oauth/user/allow">
+        <button type="submit" class="authorise-button">
+          Authorise {{initial_data.app_name}}
+        </button>
+        {% csrf_token %}
+        <input type="hidden" name="signed_app_data" value='{{initial_data.signed_data}}' />
+      </form>
+
+      <form method="post" action="/oauth/user/deny">
+        <button type="submit">Deny</button>
+        {% csrf_token %}
+        <input type="hidden" name="signed_app_data" value='{{initial_data.signed_data}}' />
+      </form>
+    </div>
+
+    <hr />
+    <div class="bottom-message">
+      <p>
+        <strong>{{initial_data.app_name}}</strong> can only access the data shown above.
+      </p>
+      <p>
+        Have a question? Contact us:
+        <a href="mailto:isd.apiteam@ucl.ac.uk">isd.apiteam@ucl.ac.uk</a>.
+      </p>
+    </div>
+  </div>
 </body>
 
 </html>
