@@ -179,7 +179,7 @@ def _check_oauth_token_issues(token_code, client_secret, required_scopes):
                     "The token provided does not have "
                     "permission to access this data."
             })
-            response.status_code = 400
+            response.status_code = 403
             return response
 
     # Return the token as there are no issues

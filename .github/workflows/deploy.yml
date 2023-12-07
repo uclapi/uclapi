@@ -10,7 +10,7 @@ env:
 jobs:
   build:
     name: Build frontend
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     environment: Production
     steps:
       - name: Checkout code
@@ -19,13 +19,32 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '18'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install frontend dependencies
         run: |
-          cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
-          cd ./frontend/ && \
-          npm ci
+          cd ./uclapi-frontend && pnpm install --frozen-lockfile
 
       - name: Build frontend
         env:
@@ -35,18 +54,11 @@ jobs:
           SENTRY_DSN_REACT: ${{ secrets.SENTRY_DSN_REACT }}
           SENTRY_DSN_ENV: production
         run: |
-          cd ./frontend && \
-          npm run build
-
-      - name: Upload frontend
-        uses: actions/upload-artifact@master
-        with:
-          name: frontend-build
-          path: ./backend/uclapi/static
+          cd ./uclapi-frontend && pnpm build
 
   test-backend:
     name: Run backend tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       DB_UCLAPI_HOST: localhost
       DB_UCLAPI_PASSWORD: supersecure
@@ -56,6 +68,11 @@ jobs:
       UCLAPI_PRODUCTION: False
       UCLAPI_RUNNING_ON_AWS_ELB: False
       WHITELISTED_CALLBACK_URLS: https://live-roombookings.uclapi.com/webhook/;https://hackathon.uclapi.com/callback
+      UCLAPI_DOMAIN: uclapi.com
+      AZURE_AD_ROOT: https://login.microsoftonline.com/directory_tenant_id
+      AZURE_AD_CLIENT_ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      AZURE_AD_CLIENT_SECRET: aaa
+      AZURE_GRAPH_ROOT: https://graph.microsoft.com/v1.0/
     services:
       Redis:
         image: redis
@@ -85,7 +102,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.7'
+          python-version: '3.8.10'
 
       - name: Install Oracle Instant Client
         run: ./.github/workflows/scripts/setup-oracle.sh
@@ -110,7 +127,7 @@ jobs:
 
   test-frontend:
     name: Run frontend tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -118,18 +135,36 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '18'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install frontend dependencies
         run: |
-          cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
-          cd ./frontend/ && \
-          npm ci
+          cd ./uclapi-frontend/ && pnpm install --frozen-lockfile
 
       - name: Run frontend tests
         run: |
-          cd ./frontend && \
-          npm test
+          cd ./uclapi-frontend && pnpm test
 
   collect-statics:
     name: Collect statics
@@ -137,7 +172,7 @@ jobs:
       - build
       - test-backend
       - test-frontend
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     environment: Production
     steps:
       - name: Checkout code
@@ -146,7 +181,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.7'
+          python-version: '3.8.10'
 
       - name: Cache Python
         uses: actions/cache@v2
@@ -161,12 +196,6 @@ jobs:
           python -m pip install --upgrade pip && \
           cd ./backend/uclapi && \
           pip install -r requirements.txt
-
-      - name: Download frontend
-        uses: actions/download-artifact@v2
-        with:
-          name: frontend-build
-          path: ./backend/uclapi/static
 
       - name: Collect statics to S3
         env:
@@ -188,7 +217,7 @@ jobs:
     needs:
       - test-backend
       - test-frontend
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     environment: Production
     steps:
       - name: Checkout code
@@ -223,28 +252,18 @@ jobs:
           unzip -qq compressed.zip && \
           rm compressed.zip && \
           echo "UCLAPI_VERSION=$UCLAPI_VERSION" >> uclapi/uclapi.env
-
-      - name: Pull layers
-        env:
-          CRON_CPU_COUNT: 1
-          CRON_MEMORY_KB: 2048000
-        run: |
-          cd docker/deployment && \
-          docker-compose -f docker-compose.yml -f docker-compose-production.yml pull
+          echo "UCLAPI_VERSION=$UCLAPI_VERSION" >> uclapi/uclapi-web.env
 
       - name: Build containers
         env:
-          SHIB_POSTGRES_USERNAME: ${{ secrets.SHIB_POSTGRES_USERNAME }}
-          SHIB_POSTGRES_PASSWORD: ${{ secrets.SHIB_POSTGRES_PASSWORD }}
-          SHIB_POSTGRES_DATABASE: ${{ secrets.SHIB_POSTGRES_DATABASE }}
           CRON_CPU_COUNT: 1
           CRON_MEMORY_KB: 2048000
           ENVIRONMENT: production
           UCLAPI_VERSION: "${{ steps.version.outputs.content }}"
         run: |
           cd docker/deployment && \
-          sed -i "s/:latest/:${{ steps.version.outputs.content }}/g" docker-compose-production.yml && \
-          docker-compose -f docker-compose.yml -f docker-compose-production.yml build --parallel
+          sed -i "s/:version/:${{ steps.version.outputs.content }}/g" docker-compose-production.yml && \
+          docker compose -f docker-compose-production.yml build
 
       - name: Push containers
         env:
@@ -252,7 +271,7 @@ jobs:
           CRON_MEMORY_KB: 2048000
         run: |
           cd docker/deployment && \
-          docker-compose -f docker-compose.yml -f docker-compose-production.yml push
+          docker compose -f docker-compose-production.yml push
 
       - name: Create artifact
         run: echo ${{ steps.version.outputs.content }} > container-id.txt
@@ -268,7 +287,7 @@ jobs:
     needs:
       - collect-statics
       - build-containers
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     environment: Production
     steps:
       - name: Checkout code
@@ -289,7 +308,7 @@ jobs:
           rm compressed.zip
 
       - name: Copy docker compose configuration
-        uses: appleboy/scp-action@v0.1.1
+        uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -299,11 +318,8 @@ jobs:
           strip_components: 2
 
       - name: Docker compose up
-        uses: appleboy/ssh-action@v0.1.4
+        uses: appleboy/ssh-action@v0.1.10
         env:
-          SHIB_POSTGRES_USERNAME: ${{ secrets.SHIB_POSTGRES_USERNAME }}
-          SHIB_POSTGRES_PASSWORD: ${{ secrets.SHIB_POSTGRES_PASSWORD }}
-          SHIB_POSTGRES_DATABASE: ${{ secrets.SHIB_POSTGRES_DATABASE }}
           ENVIRONMENT: production
           VERSION: ${{ steps.version.outputs.content }}
           CRON_CPU_COUNT: 1
@@ -312,23 +328,19 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key_path: key.pem
-          envs: SHIB_POSTGRES_USERNAME,SHIB_POSTGRES_PASSWORD,SHIB_POSTGRES_DATABASE,ENVIRONMENT,REGISTRY,VERSION,CRON_CPU_COUNT,CRON_MEMORY_KB
+          envs: ENVIRONMENT,REGISTRY,VERSION,CRON_CPU_COUNT,CRON_MEMORY_KB
           script_stop: true
           script: |
             aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin $REGISTRY
             if ((`df -h /dev/root | awk '(NR > 1) {print substr($5, 1, length($5)-1)}'` < 5)); then docker system prune -f; fi
-            docker-compose -f docker-compose.yml -f docker-compose-production.yml config --no-interpolate > docker-compose-tmp.yml
-            sed -i "s/:latest/:$VERSION/g" docker-compose-tmp.yml
-            cat docker-compose-tmp.yml | yq e '(.services[] | select(.depends_on | tag == "!!map")).depends_on |= (. | keys)' - > docker-compose-tmp-2.yml
-            export SHIB_POSTGRES_USERNAME=$SHIB_POSTGRES_USERNAME
-            export SHIB_POSTGRES_PASSWORD=$SHIB_POSTGRES_PASSWORD
-            export SHIB_POSTGRES_DATABASE=$SHIB_POSTGRES_DATABASE
             export CRON_CPU_COUNT=$CRON_CPU_COUNT
             export CRON_MEMORY_KB=$CRON_MEMORY_KB
-            envsubst < docker-compose-tmp-2.yml > docker-compose-tmp-3.yml
-            sed -i -E "s/cpus: ([0-9\\.]+)/cpus: '\\1'/" docker-compose-tmp-3.yml
-            rm docker-compose-tmp.yml docker-compose-tmp-2.yml docker-compose-production.yml
-            mv -f docker-compose-tmp-3.yml docker-compose.yml
+            envsubst < docker-compose-production.yml > docker-compose-tmp.yml
+            sed -i "s/:version/:$VERSION/g" docker-compose-tmp.yml
+            cat docker-compose-tmp.yml | yq e '(.services[] | select(.depends_on | tag == "!!map")).depends_on |= (. | keys)' - > docker-compose-tmp-2.yml
+            sed -i -E "s/cpus: ([0-9\\.]+)/cpus: '\\1'/" docker-compose-tmp-2.yml
+            rm docker-compose-tmp.yml docker-compose-production.yml
+            mv -f docker-compose-tmp-2.yml docker-compose.yml
             docker stack deploy -c docker-compose.yml --with-registry-auth uclapi
 
       - name: Create Sentry release
@@ -342,8 +354,9 @@ jobs:
           version: "${{ steps.version.outputs.content }}"
 
       - name: Repository Dispatch (JS SDK)
-        uses: peter-evans/repository-dispatch@v1
+        uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.JS_SDK_REPO_DEPLOY_PRIVATE_KEY }}
           event-type: new-release
+          repository: uclapi/uclapi-js-sdk
           client-payload: '{"version": "${{ steps.version.outputs.content }}", "sha": "${{ github.sha }}"}'

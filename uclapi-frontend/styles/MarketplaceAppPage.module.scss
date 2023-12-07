@@ -1,0 +1,53 @@
+@import "./sass/core.scss";
+
+.appWrapper {
+  width: 66%;
+  max-width: 1000px;
+  margin: auto;
+
+  .logo {
+    @include media("<=phone") {
+      width: 75px;
+      height: 75px;
+    }
+  }
+
+  .description {
+    width: 90%;
+    max-width: 600px;
+    margin: auto;
+  }
+
+  .titleWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100%;
+    margin: 1em auto;
+
+    @include media("<=phone") {
+      flex-direction: column;
+      align-items: center;
+      row-gap: 10px;
+      text-align: center;
+
+      .links {
+        display: flex;
+        flex-direction: row;
+      }
+    }
+  }
+
+  .carouselWrapper {
+    width: 90%;
+    margin: auto;
+
+    @include media("<=phone") {
+      width: 60%;
+    }
+  }
+
+  @include media("<=phone") {
+    width: 90%;
+  }
+}

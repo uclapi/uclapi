@@ -69,6 +69,9 @@ INSTALLED_APPS = [
     'libcal',
 ]
 
+if DEBUG:
+    INSTALLED_APPS.append('revproxy')
+
 MIDDLEWARE = [
     'common.middleware.health_check_middleware.HealthCheckMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -241,7 +244,7 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-ROOMBOOKINGS_SETID = 'LIVE-22-23'
+ROOMBOOKINGS_SETID = 'LIVE-23-24'
 
 # This dictates how many Medium articles we scrape
 MEDIUM_ARTICLE_QUANTITY = 3
