@@ -36,6 +36,8 @@ services:
     build:
       args:
         ENVIRONMENT: production
+      context: ../../
+      dockerfile: docker/deployment/uclapi.Dockerfile
     deploy:
       replicas: 3
       update_config:
@@ -45,17 +47,19 @@ services:
       labels:
         - traefik.enable=true
         - traefik.port=9000
-        - traefik.http.services.web.loadbalancer.server.port=9000
-        - traefik.http.routers.web.tls=true
-        - traefik.http.routers.web.rule=Host(`uclapi.com`)
-        - traefik.http.routers.web.entrypoints=websecure
-        - traefik.http.routers.web.tls.certresolver=leresolver
+        - traefik.http.services.api.loadbalancer.server.port=9000
+        - traefik.http.routers.api.tls=true
+        - traefik.http.routers.api.rule=Host(`uclapi.com`) && PathPrefix(`/admin`, `/dashboard/api`, `/roombookings`, `/oauth`, `/timetable`, `/search`, `/resources`, `/workspaces`, `/libcal`, `/ping`)
+        - traefik.http.routers.api.entrypoints=websecure
+        - traefik.http.routers.api.tls.certresolver=leresolver
 
   cron:
     image: 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-prod-cron:latest
     build:
       args:
         ENVIRONMENT: production
+      context: ../../
+      dockerfile: docker/deployment/cron.Dockerfile
     deploy:
       replicas: 1
       update_config:
@@ -64,5 +68,27 @@ services:
         condition: on-failure
       resources:
         limits:
-          cpus: ${CRON_CPU_COUNT}
-          memory: ${CRON_MEMORY_KB}K
+          cpus: "${CRON_CPU_COUNT}"
+          memory: "${CRON_MEMORY_KB}K"
+
+  uclapi_web:
+    image: 236848092535.dkr.ecr.eu-west-2.amazonaws.com/uclapi-prod-web:latest
+    build:
+      args:
+        ENVIRONMENT: production
+      context: ../../
+      dockerfile: docker/deployment/uclapi-web.Dockerfile
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+      restart_policy:
+        condition: on-failure
+      labels:
+        - traefik.enable=true
+        - traefik.port=3000
+        - traefik.http.services.web.loadbalancer.server.port=3000
+        - traefik.http.routers.web.tls=true
+        - traefik.http.routers.web.rule=Host(`uclapi.com`) && !PathPrefix(`/admin`, `/dashboard/api`, `/roombookings`, `/oauth`, `/timetable`, `/search`, `/resources`, `/workspaces`, `/libcal`, `/ping`)
+        - traefik.http.routers.web.entrypoints=websecure
+        - traefik.http.routers.web.tls.certresolver=leresolver

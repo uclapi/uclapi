@@ -8,7 +8,7 @@
       "email": "isd.apiteam@ucl.ac.uk",
       "url": "https://uclapi.com"
     },
-    "version": "1.2.3",
+    "version": "1.4.7",
     "termsOfService": "https://github.com/uclapi/uclapi/blob/master/backend/uclapi/uclapi/UCLAPIAcceptableUsePolicy.txt",
     "license": {
       "url": "https://github.com/uclapi/uclapi/blob/master/LICENSE",
@@ -2240,6 +2240,21 @@
               }
             }
           },
+          "403": {
+            "description": "Permission error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                },
+                "examples": {
+                  "1": {
+                    "$ref": "#/components/examples/ErrorRejectedScope"
+                  }
+                }
+              }
+            }
+          },
           "400": {
             "description": "Request error",
             "content": {
@@ -2271,9 +2286,6 @@
                   },
                   "8": {
                     "$ref": "#/components/examples/ErrorPersonalData"
-                  },
-                  "9": {
-                    "$ref": "#/components/examples/ErrorRejectedScope"
                   }
                 }
               }

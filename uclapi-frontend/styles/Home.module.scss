@@ -1,0 +1,23 @@
+@import "./sass/core.scss";
+
+.faq {
+  text-align: left;
+}
+
+.centerAlign {
+  text-align: center;
+}
+
+.apiEndpointsWrapper {
+  max-width: 1000px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 495px);
+  @include media("<=tablet") {
+    display: block;
+  }
+}
+
+.apiDescImage {
+  margin: auto;
+}
