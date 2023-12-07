@@ -10,6 +10,8 @@ from django.db.utils import IntegrityError
 import dashboard.models
 from timetable.models import Lock, StudentsA, StudentsB
 
+from sentry_sdk import capture_exception
+
 
 def generate_user_token():
     key = hexlify(os.urandom(30)).decode()
@@ -133,22 +135,27 @@ def validate_azure_ad_callback(token_data):
     # e.g., Dept of Computer Science
     department = user_info.get('department', '')
     given_name = user_info.get('givenName', '')  # e.g. Firstname
-    sn = user_info.get('surname', '')
+    sn = user_info.get('surname') or ''  # Some accounts e.g., 'Equity & Inclusion Officer' don't have surnames
 
     # Concatenate firstname and last name. Azure AD returns displayName as "Surname, Forename" which we don't want
-    display_name = given_name + ' ' + sn
+    display_name = given_name + (f' {sn}' if sn else '')
 
     # e.g., engscifac-all;compsci-all;schsci-all
-    groups = ';'.join(map(
-        lambda g: g.get('onPremisesSamAccountName') or g['mailNickname'],
+    group_names = map(
+        lambda g: g.get('onPremisesSamAccountName') or g.get('mailNickname'),
         user_groups.get('value', [])
-    ))
+    )
+
+    # Some groups don't have either of the above field names,
+    # e.g., #microsoft.graph.directoryRole -- we don't want these
+    groups = ';'.join([name for name in group_names if name is not None])
 
     mail = user_info.get('mail', '')  # e.g., firstname.lastname.year@ucl.ac.uk
 
     # Convert comma-separated-with-space string into semicolon-separated string (for consistency with the groups field)
     # e.g., Alumnus;Staff;P/G;Honorary
-    user_types = ';'.join(user_info.get('employeeType', '').split(', '))
+    employee_type = user_info.get('employeeType') or ''
+    user_types = ';'.join(employee_type.split(', '))
 
     # If a user has never used the API before then we need to sign them up
     try:
@@ -160,7 +167,8 @@ def validate_azure_ad_callback(token_data):
                 email=eppn, full_name=display_name, given_name=given_name, department=department, cn=cn,
                 raw_intranet_groups=groups, employee_id=employee_id, mail=mail, user_types=user_types, sn=sn
             )
-        except IntegrityError:
+        except IntegrityError as err:
+            capture_exception(err)
             return (
                 "Microsoft Azure AD has sent incorrect headers causing an integrity violation. If the issues persist"
                 "please contact the UCL API Team to rectify this."
@@ -178,7 +186,8 @@ def validate_azure_ad_callback(token_data):
         user.sn = sn if sn else user.sn
         try:
             user.save()
-        except IntegrityError:
+        except IntegrityError as err:
+            capture_exception(err)
             return (
                 "Microsoft Azure AD has sent incorrect headers causing an integrity violation. If the issues persist"
                 "please contact the UCL API Team to rectify this."

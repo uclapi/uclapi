@@ -1,11 +1,16 @@
+import os
 import json
 from unittest.mock import patch
 
-from django.test import RequestFactory, TestCase
+from django.test import TestCase
 from django.utils.datetime_safe import datetime
 from rest_framework.test import APIRequestFactory
 from django.conf import settings
 import redis
+
+from jose import jwe
+from Crypto.Protocol.KDF import HKDF
+from Crypto.Hash import SHA256
 
 from common.decorators import throttle_api_call
 from oauth.models import OAuthToken, OAuthScope
@@ -19,10 +24,26 @@ from .webhook_views import (
 )
 from dashboard.api_applications import (
     create_app, delete_app, regenerate_app_token, rename_app, set_callback_url,
-    update_scopes, get_user_by_id, number_of_requests, quota_remaining,
+    update_scopes, get_user_by_cn, number_of_requests, quota_remaining,
     users_per_app, users_per_app_by_dept, most_popular_service,
     most_popular_method
 )
+
+JWT_COOKIE_NAME = 'next-auth.session-token'
+DASHBOARD_MOCK_JWT_KEY = 'foo'
+JWE_DECRYPTION_KEY = HKDF(
+    master=DASHBOARD_MOCK_JWT_KEY.encode(),
+    key_len=32,
+    salt="".encode(),
+    hashmod=SHA256,
+    num_keys=1,
+    context=str.encode("NextAuth.js Generated Encryption Key")
+)
+
+
+def generate_jwt(cn):
+    return jwe.encrypt(
+        json.dumps({"sub": cn}), JWE_DECRYPTION_KEY, algorithm="dir", encryption='A256GCM').decode()
 
 
 class MediumArticleScraperTestCase(TestCase):
@@ -103,6 +124,7 @@ class MediumArticleScraperTestCase(TestCase):
         self.assertEqual(articles, medium_article_iterator)
 
 
+@patch.dict(os.environ, {"DASHBOARD_JWT_KEY": DASHBOARD_MOCK_JWT_KEY})
 class DashboardTestCase(TestCase):
 
     TEST_USER = dict(
@@ -121,46 +143,32 @@ class DashboardTestCase(TestCase):
         u = User.objects.create(**DashboardTestCase.TEST_USER)
         App.objects.create(user=u,
                            **DashboardTestCase.TEST_APP)
-        session = self.client.session
-        session["user_id"] = u.id
-        session.save()
 
-    def test_id_not_set(self):
-        with patch.dict(
-            'os.environ', {
-                "AZURE_AD_ROOT": "http://rooturl.com",
-                "AZURE_AD_CLIENT_ID": "foo",
-                "UCLAPI_DOMAIN": "http://testserver"
-            }
-        ):
-            session = self.client.session
-            session.pop("user_id")
-            session.save()
+    def test_post_agreement_no_session(self):
+        res = self.client.post(
+            '/dashboard/api/accept-aup', {'accept': True}, content_type='application/json')
+        content = json.loads(res.content.decode())
+        self.assertFalse(content["success"])
+        u = User.objects.get(cn=self.TEST_USER["cn"])
+        self.assertFalse(u.agreement)
 
-            res = self.client.get('/dashboard/')
-            self.assertRedirects(
-                res,
-                "http://rooturl.com/oauth2/v2.0/authorize?client_id="
-                "foo&response_type=code&scope=openid%20email%20profile%20user.read&"
-                "response_mode=query&redirect_uri=http%3A//testserver/dashboard/user/login.callback",
-                fetch_redirect_response=False,
-            )
+    def test_post_agreement_no_body(self):
+        self.client.cookies.load({JWT_COOKIE_NAME: generate_jwt(self.TEST_USER['cn'])})
+        res = self.client.post(
+            '/dashboard/api/accept-aup', {}, content_type='application/json')
+        content = json.loads(res.content.decode())
+        self.assertFalse(content["success"])
+        u = User.objects.get(cn=self.TEST_USER["cn"])
+        self.assertFalse(u.agreement)
 
-    def test_get_agreement(self):
-        res = self.client.get('/dashboard/')
-        self.assertTemplateUsed(res, "agreement.html")
-
-    def test_post_agreement(self):
-        res = self.client.post('/dashboard/')
-        self.assertTemplateUsed(res, "agreement.html")
-        self.assertContains(res, "You must agree to the fair use policy")
-
-        res = self.client.post('/dashboard/', {'agreement': 'some rubbish'})
-        self.assertTemplateUsed(res, "agreement.html")
-        self.assertContains(res, "You must agree to the fair use policy")
-
-        res = self.client.post('/dashboard/', {'agreement': 'True'})
-        self.assertTemplateUsed(res, "dashboard.html")
+    def test_post_agreement_success(self):
+        self.client.cookies.load({JWT_COOKIE_NAME: generate_jwt(self.TEST_USER['cn'])})
+        res = self.client.post(
+            '/dashboard/api/accept-aup', {'accept': True}, content_type='application/json')
+        content = json.loads(res.content.decode())
+        self.assertTrue(content["success"])
+        u = User.objects.get(cn=self.TEST_USER["cn"])
+        self.assertTrue(u.agreement)
 
     def test_unsafe_urls(self):
         assert is_url_unsafe("ftp://test.com")
@@ -171,11 +179,13 @@ class DashboardTestCase(TestCase):
         assert not is_url_unsafe("https://mytestapp.com/callback")
         assert not is_url_unsafe("https://uclapiexample.com/callback")
 
-    def test_get_apps(self):
-        session = self.client.session
-        session.save()
+    def test_get_apps_no_session(self):
+        res = self.client.get('/dashboard/api/apps')
+        self.assertEqual(res.status_code, 400)
 
-        res = self.client.get('/dashboard/api/apps/')
+    def test_get_apps(self):
+        self.client.cookies.load({JWT_COOKIE_NAME: generate_jwt(self.TEST_USER['cn'])})
+        res = self.client.get('/dashboard/api/apps')
         self.assertEqual(res.status_code, 200)
 
         content = json.loads(res.content.decode())
@@ -301,6 +311,7 @@ class UserOwnsAppTestCase(TestCase):
         self.assertTrue(user_owns_app(self.user1.id, self.app1.id))
 
 
+@patch.dict(os.environ, {"DASHBOARD_JWT_KEY": DASHBOARD_MOCK_JWT_KEY})
 class WebHookRequestViewTests(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
@@ -311,8 +322,8 @@ class WebHookRequestViewTests(TestCase):
         self.user2 = User.objects.create(cn="test2", employee_id=2)
         self.app2 = App.objects.create(user=self.user2, name="Another App")
 
-    def test_edit_webhook_GET(self):
-        request = self.factory.get('/')
+    def test_edit_webhook_no_content_type(self):
+        request = self.factory.post('/', {})
         response = edit_webhook(request)
 
         content = json.loads(response.content.decode())
@@ -322,7 +333,7 @@ class WebHookRequestViewTests(TestCase):
         self.assertEqual(content["message"], "Request is not of method POST")
 
     def test_edit_webhook_POST_missing_parameters(self):
-        request = self.factory.post('/')
+        request = self.factory.post('/', json.dumps({}), content_type='application/json')
         response = edit_webhook(request)
 
         content = json.loads(response.content.decode())
@@ -333,18 +344,18 @@ class WebHookRequestViewTests(TestCase):
             content["message"],
             "Request is missing parameters. Should have app_id"
             ", url, siteid, roomid, contact"
-            " as well as a sessionid cookie"
         )
 
     def test_edit_webhook_POST_user_does_not_own_app(self):
         request = self.factory.post(
             '/',
-            {
+            json.dumps({
                 'app_id': self.app2.id, 'siteid': 1, 'roomid': 1,
                 'contact': 1, 'url': 1
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': self.user1.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(self.user1.cn)
         response = edit_webhook(request)
 
         content = json.loads(response.content.decode())
@@ -361,15 +372,15 @@ class WebHookRequestViewTests(TestCase):
     def test_edit_webhook_POST_ownership_verification_fail(
         self
     ):
-
         request = self.factory.post(
             '/',
-            {
+            json.dumps({
                 'app_id': self.app1.id, 'siteid': 2, 'roomid': 2,
                 'contact': 2, 'url': "http://new"
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': self.user1.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(self.user1.cn)
         response = edit_webhook(request)
 
         content = json.loads(response.content.decode())
@@ -430,6 +441,7 @@ class VerifyOwnershipTestCase(TestCase):
         )
 
 
+@patch.dict(os.environ, {"DASHBOARD_JWT_KEY": DASHBOARD_MOCK_JWT_KEY})
 class RefreshVerifcationSecretViewTests(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
@@ -440,8 +452,8 @@ class RefreshVerifcationSecretViewTests(TestCase):
         self.user2 = User.objects.create(cn="test2", employee_id=2)
         self.app2 = App.objects.create(user=self.user2, name="Another App")
 
-    def test_refresh_verification_secret_GET(self):
-        request = self.factory.get('/')
+    def test_refresh_verification_secret_no_content_type(self):
+        request = self.factory.post('/', {})
         response = refresh_verification_secret(request)
 
         content = json.loads(response.content.decode())
@@ -451,7 +463,7 @@ class RefreshVerifcationSecretViewTests(TestCase):
         self.assertEqual(content["message"], "Request is not of method POST")
 
     def test_refresh_verification_secret_POST_missing_parameters(self):
-        request = self.factory.post('/')
+        request = self.factory.post('/', json.dumps({}), content_type='application/json')
         response = refresh_verification_secret(request)
 
         content = json.loads(response.content.decode())
@@ -461,17 +473,17 @@ class RefreshVerifcationSecretViewTests(TestCase):
         self.assertEqual(
             content["message"],
             "Request is missing parameters. Should have app_id"
-            " as well as a sessionid cookie"
         )
 
     def test_refresh_verification_secret_POST_user_does_not_own_app(self):
         request = self.factory.post(
             '/',
-            {
+            json.dumps({
                 'app_id': self.app2.id
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': self.user1.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(self.user1.cn)
         response = refresh_verification_secret(request)
 
         content = json.loads(response.content.decode())
@@ -486,14 +498,14 @@ class RefreshVerifcationSecretViewTests(TestCase):
     def test_refresh_verification_secret_POST_success(
         self
     ):
-
         request = self.factory.post(
             '/',
-            {
+            json.dumps({
                 'app_id': self.app1.id
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': self.user1.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(self.user1.cn)
         response = refresh_verification_secret(request)
 
         content = json.loads(response.content.decode())
@@ -503,8 +515,8 @@ class RefreshVerifcationSecretViewTests(TestCase):
         self.assertTrue("new_secret" in content.keys())
 
 
-def post_request_only(self, url, view):
-    request = self.factory.get(
+def application_json_request_only(self, url, view):
+    request = self.factory.post(
         url,
         {
         }
@@ -522,8 +534,8 @@ def post_request_only(self, url, view):
 def empty_post_request_only(self, url, view, error):
     request = self.factory.post(
         url,
-        {
-        }
+        json.dumps({}),
+        content_type='application/json'
     )
 
     response = view(request)
@@ -536,15 +548,15 @@ def empty_post_request_only(self, url, view, error):
 
 
 def no_app_post_request(self, url, view, user_):
-
     request = self.factory.post(
         url,
-        {
+        json.dumps({
             "new_name": "test_app",
             "app_id": 1
-        }
+        }),
+        content_type='application/json'
     )
-    request.session = {'user_id': user_.id}
+    request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
     response = view(request)
     content = json.loads(response.content.decode())
     self.assertEqual(response.status_code, 400)
@@ -554,6 +566,7 @@ def no_app_post_request(self, url, view, user_):
     )
 
 
+@patch.dict(os.environ, {"DASHBOARD_JWT_KEY": DASHBOARD_MOCK_JWT_KEY})
 class ApiApplicationsTestCase(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
@@ -582,11 +595,11 @@ class ApiApplicationsTestCase(TestCase):
             cn="test",
             given_name="Test Test"
         )
-        self.assertEqual(get_user_by_id(user_.id), user_)
+        self.assertEqual(get_user_by_cn(user_.cn), user_)
 
-    def test_get_request_rejected(self):
+    def test_content_type_required(self):
         for url in self.functions:
-            post_request_only(self, url, self.functions[url][0])
+            application_json_request_only(self, url, self.functions[url][0])
 
     def test_missing_parameters(self):
         for url in self.functions:
@@ -610,7 +623,7 @@ class ApiApplicationsTestCase(TestCase):
 
     # Start of create_app section
 
-    def test_app_creation_success(self):
+    def test_app_creation_aup_failure(self):
         user_ = User.objects.create(
             email="test@ucl.ac.uk",
             cn="test",
@@ -619,11 +632,40 @@ class ApiApplicationsTestCase(TestCase):
 
         request = self.factory.post(
             '/api/create/',
-            {
+            json.dumps({
                 "name": "test_app"
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
+        response = create_app(request)
+        content = json.loads(response.content.decode())
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            content["message"],
+            "You have not yet agreed to the UCL API Acceptable Use Policy"
+        )
+        self.assertTrue(len(App.objects.filter(
+            name="test_app",
+            user=user_,
+            deleted=False)) == 0)
+
+    def test_app_creation_success(self):
+        user_ = User.objects.create(
+            email="test@ucl.ac.uk",
+            cn="test",
+            given_name="Test Test",
+            agreement=True
+        )
+
+        request = self.factory.post(
+            '/api/create/',
+            json.dumps({
+                "name": "test_app"
+            }),
+            content_type='application/json'
+        )
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
         response = create_app(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 200)
@@ -647,12 +689,13 @@ class ApiApplicationsTestCase(TestCase):
 
         request = self.factory.post(
             '/api/rename/',
-            {
+            json.dumps({
                 "new_name": "test_app",
                 "app_id": 1
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
         response = rename_app(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -672,12 +715,13 @@ class ApiApplicationsTestCase(TestCase):
 
         request = self.factory.post(
             '/api/rename/',
-            {
+            json.dumps({
                 "new_name": "test_app",
                 "app_id": app_.id
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
         self.assertTrue(len(App.objects.filter(
             name="test_app",
             user=user_,
@@ -713,11 +757,12 @@ class ApiApplicationsTestCase(TestCase):
 
         request = self.factory.post(
             '/api/delete/',
-            {
+            json.dumps({
                 "app_id": app_.id
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
         self.assertTrue(len(App.objects.filter(
             name="An App",
             user=user_,
@@ -745,11 +790,12 @@ class ApiApplicationsTestCase(TestCase):
 
         request = self.factory.post(
             '/api/regen/',
-            {
+            json.dumps({
                 "app_id": app_.id
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
         response = regenerate_app_token(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 200)
@@ -776,9 +822,10 @@ class ApiApplicationsTestCase(TestCase):
 
         request = self.factory.post(
             '/api/setcallbackurl/',
-            {
+            json.dumps({
                 "app_id": app_.id,
-            }
+            }),
+            content_type='application/json'
         )
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
@@ -799,11 +846,12 @@ class ApiApplicationsTestCase(TestCase):
 
         request = self.factory.post(
             '/api/setcallbackurl/',
-            {
+            json.dumps({
                 "app_id": app_.id,
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -821,12 +869,13 @@ class ApiApplicationsTestCase(TestCase):
 
         request = self.factory.post(
             '/api/setcallbackurl/',
-            {
+            json.dumps({
                 "app_id": 100000000000001,
                 "callback_url": "https://testcall.com"
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -844,12 +893,13 @@ class ApiApplicationsTestCase(TestCase):
         app_ = App.objects.create(user=user_, name="An App")
         request = self.factory.post(
             '/api/setcallbackurl/',
-            {
+            json.dumps({
                 "app_id": app_.id,
                 "callback_url": "NotReallyAURL"
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -864,12 +914,13 @@ class ApiApplicationsTestCase(TestCase):
         app_ = App.objects.create(user=user_, name="An App")
         request = self.factory.post(
             '/api/setcallbackurl/',
-            {
+            json.dumps({
                 "app_id": app_.id,
                 "callback_url": "https://a"
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -889,12 +940,13 @@ class ApiApplicationsTestCase(TestCase):
 
         request = self.factory.post(
             '/api/setcallbackurl/',
-            {
+            json.dumps({
                 "app_id": app_.id,
                 "callback_url": "https://testcall.com"
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
         response = set_callback_url(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 200)
@@ -916,9 +968,10 @@ class ApiApplicationsTestCase(TestCase):
 
         request = self.factory.post(
             '/api/updatescopes/',
-            {
+            json.dumps({
                 "app_id": app_.id,
-            }
+            }),
+            content_type='application/json'
         )
         response = update_scopes(request)
         content = json.loads(response.content.decode())
@@ -939,11 +992,12 @@ class ApiApplicationsTestCase(TestCase):
 
         request = self.factory.post(
             '/api/updatescopes/',
-            {
+            json.dumps({
                 "app_id": app_.id,
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
         response = update_scopes(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -963,12 +1017,13 @@ class ApiApplicationsTestCase(TestCase):
 
         request = self.factory.post(
             '/api/updatescopes/',
-            {
+            json.dumps({
                 "app_id": app_.id,
                 "scopes": 5
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
         response = update_scopes(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -988,18 +1043,19 @@ class ApiApplicationsTestCase(TestCase):
 
         request = self.factory.post(
             '/api/updatescopes/',
-            {
+            json.dumps({
                 "app_id": app_.id,
                 "scopes": "{}{}"
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
         response = update_scopes(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             content["message"],
-            "Invalid scope data that could not be parsed."
+            "Invalid scope data that could not be iterated."
         )
 
     def test_change_scopes_app_does_not_exist(self):
@@ -1011,12 +1067,13 @@ class ApiApplicationsTestCase(TestCase):
 
         request = self.factory.post(
             '/api/updatescopes/',
-            {
+            json.dumps({
                 "app_id": 100000000000001,
                 "scopes": "{}"
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
         response = update_scopes(request)
         content = json.loads(response.content.decode())
         self.assertEqual(response.status_code, 400)
@@ -1034,13 +1091,14 @@ class ApiApplicationsTestCase(TestCase):
         app_ = App.objects.create(user=user_, name="An App")
         request = self.factory.post(
             '/api/updatescopes/',
-            {
+            json.dumps({
                 "app_id": app_.id,
                 "scopes": '[{"checked":true, "name":"timetable"}, \
                            {"checked":false, "name":"student_number"}]'
-            }
+            }),
+            content_type='application/json'
         )
-        request.session = {'user_id': user_.id}
+        request.COOKIES[JWT_COOKIE_NAME] = generate_jwt(user_.cn)
         self.assertEqual(app_.scope.scope_number, 0)
         response = update_scopes(request)
         content = json.loads(response.content.decode())

@@ -10,20 +10,27 @@ Create a ridiculously simple, documentation first, and comprehensive API around 
 Read on more to find out how to setup and build the API. From here you can start writing your own changes and submitting them. See our [Contribution Guide](CONTRIBUTING.md) to learn more about how you can contribute.
 
 ## Setup in 10 Minutes
-For this setup to work you need to have docker, git, python (3.7), and node + npm installed. If you would like the old setup guide (without docker) that can be found [here](README_SETUP.md), it also contains some advanced information for maintainers. This guide has been tested to work on Windows (we recommend PowerShell Core), Linux, and MacOS.
+For this setup to work you need to have docker, git, python (3.7), and node + pnpm installed. If you would like the old setup guide (without docker) that can be found [here](README_SETUP.md), it also contains some advanced information for maintainers. This guide has been tested to work on Windows (we recommend PowerShell Core), Linux, and MacOS.
 
-Clone uclapi to a local directory
+Clone uclapi to a local directory:
 ```bash
 git clone https://github.com/uclapi/uclapi.git
 cd uclapi
 ```
 
-Then start the development docker compose file
+Then start the development docker compose file:
 ```bash
 docker-compose -f docker-compose-dev.yml up
 ```
 
-In the meantime you can create your Python virtual environment (you may need to write `python` instead of `python3`)
+And setup the frontend:
+```bash
+cd uclapi-frontend
+pnpm install
+pnpm start
+```
+
+And setup your Python virtual environment & Django (you may need to write `python` instead of `python3`):
 ```bash
 cd backend/uclapi
 cp .env.docker.example .env
@@ -36,13 +43,10 @@ source ./venv/bin/activate
 
 # Then
 pip install -r requirements.txt
-```
 
-And setup the frontned
-```bash
-cd frontend
-npm install
-npm start
+# Finally, start the Django web server:
+cd backend/uclapi
+python3 manage.py runserver
 ```
 
 ### Give it a go!

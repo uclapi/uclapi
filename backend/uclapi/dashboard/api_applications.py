@@ -7,24 +7,78 @@ from django.db.models import Count
 from django.http import JsonResponse
 from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.datetime_safe import datetime
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import parser_classes, api_view
+from rest_framework.parsers import JSONParser
 
 from oauth.models import OAuthToken
 from oauth.scoping import Scopes
 from common.helpers import PrettyJsonResponse
 from uclapi.settings import REDIS_UCLAPI_HOST
 
-from .app_helpers import (is_url_unsafe, NOT_HTTPS,
-                          NOT_VALID, URL_BLACKLISTED, NOT_PUBLIC)
+from .app_helpers import (is_url_unsafe, get_session_user_cn, get_temp_token,
+                          NOT_HTTPS, NOT_VALID, URL_BLACKLISTED, NOT_PUBLIC)
 from .models import App, User, APICall
 
 
-def get_user_by_id(user_id):
-    user = User.objects.get(id=user_id)
+def get_user_by_cn(user_cn):
+    user = User.objects.get(cn=user_cn)
     return user
 
 
+@api_view(['GET'])
+@csrf_exempt
+def generate_temp_token(request):
+    return PrettyJsonResponse({
+        "success": True,
+        "token": get_temp_token()
+    })
+
+
+@api_view(['POST'])
+@parser_classes([JSONParser])
+@csrf_exempt
+def accept_aup(request):
+    if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
+        response = PrettyJsonResponse({
+            "success": False,
+            "error": "Request is not of method POST"
+        })
+        response.status_code = 400
+        return response
+
+    if request.data.get('accept', None) is not True:
+        response = PrettyJsonResponse({
+            "success": False,
+            "error": "You must accept the AUP"
+        })
+        response.status_code = 403
+        return response
+
+    try:
+        user_cn = get_session_user_cn(request)
+        user = get_user_by_cn(user_cn)
+    except (KeyError, User.DoesNotExist):
+        response = PrettyJsonResponse({
+            "success": False,
+            "message": "Request does not have name or user."
+        })
+        response.status_code = 400
+        return response
+
+    user.agreement = True
+    user.save()
+
+    return PrettyJsonResponse({
+        "success": True,
+    })
+
+
+@api_view(['POST'])
+@parser_classes([JSONParser])
+@csrf_exempt
 def create_app(request):
-    if request.method != "POST":
+    if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
         response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
@@ -33,9 +87,10 @@ def create_app(request):
         return response
 
     try:
-        name = request.POST["name"]
-        user_id = request.session["user_id"]
-    except (KeyError, AttributeError):
+        name = request.data["name"]
+        user_cn = get_session_user_cn(request)
+        user = get_user_by_cn(user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have name or user."
@@ -43,7 +98,13 @@ def create_app(request):
         response.status_code = 400
         return response
 
-    user = get_user_by_id(user_id)
+    if not user.agreement:
+        response = PrettyJsonResponse({
+            "success": False,
+            "message": "You have not yet agreed to the UCL API Acceptable Use Policy"
+        })
+        response.status_code = 403
+        return response
 
     new_app = App(name=name, user=user)
     new_app.save()
@@ -78,8 +139,11 @@ def create_app(request):
     })
 
 
+@api_view(['POST'])
+@parser_classes([JSONParser])
+@csrf_exempt
 def rename_app(request):
-    if request.method != "POST":
+    if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
         response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
@@ -88,18 +152,17 @@ def rename_app(request):
         return response
 
     try:
-        app_id = request.POST["app_id"]
-        new_name = request.POST["new_name"]
-        user_id = request.session["user_id"]
-    except (KeyError, AttributeError):
+        app_id = request.data["app_id"]
+        new_name = request.data["new_name"]
+        user_cn = get_session_user_cn(request)
+        user = get_user_by_cn(user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have app_id/new_name"
         })
         response.status_code = 400
         return response
-
-    user = get_user_by_id(user_id)
 
     apps = App.objects.filter(id=app_id, user=user, deleted=False)
     if len(apps) == 0:
@@ -121,8 +184,11 @@ def rename_app(request):
         })
 
 
+@api_view(['POST'])
+@parser_classes([JSONParser])
+@csrf_exempt
 def regenerate_app_token(request):
-    if request.method != "POST":
+    if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
         response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
@@ -131,17 +197,16 @@ def regenerate_app_token(request):
         return response
 
     try:
-        app_id = request.POST["app_id"]
-        user_id = request.session["user_id"]
-    except (KeyError, AttributeError):
+        app_id = request.data["app_id"]
+        user_cn = get_session_user_cn(request)
+        user = get_user_by_cn(user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have an app_id."
         })
         response.status_code = 400
         return response
-
-    user = get_user_by_id(user_id)
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
@@ -167,8 +232,11 @@ def regenerate_app_token(request):
         })
 
 
+@api_view(['POST'])
+@parser_classes([JSONParser])
+@csrf_exempt
 def delete_app(request):
-    if request.method != "POST":
+    if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
         response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
@@ -177,17 +245,16 @@ def delete_app(request):
         return response
 
     try:
-        app_id = request.POST["app_id"]
-        user_id = request.session["user_id"]
-    except (KeyError, AttributeError):
+        app_id = request.data["app_id"]
+        user_cn = get_session_user_cn(request)
+        user = get_user_by_cn(user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "message": "Request does not have an app_id."
         })
         response.status_code = 400
         return response
-
-    user = get_user_by_id(user_id)
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
@@ -215,8 +282,11 @@ def delete_app(request):
         })
 
 
+@api_view(['POST'])
+@parser_classes([JSONParser])
+@csrf_exempt
 def set_callback_url(request):
-    if request.method != "POST":
+    if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
         response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
@@ -224,7 +294,7 @@ def set_callback_url(request):
         response.status_code = 400
         return response
     try:
-        app_id = request.POST["app_id"]
+        app_id = request.data["app_id"]
     except KeyError:
         response = PrettyJsonResponse({
             "success": False,
@@ -234,8 +304,9 @@ def set_callback_url(request):
         return response
 
     try:
-        user_id = request.session["user_id"]
-    except (KeyError, AttributeError):
+        user_cn = get_session_user_cn(request)
+        user = get_user_by_cn(user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "message": "User ID not set in session. Please log in again."
@@ -244,7 +315,7 @@ def set_callback_url(request):
         return response
 
     try:
-        new_callback_url = request.POST["callback_url"]
+        new_callback_url = request.data["callback_url"]
     except KeyError:
         response = PrettyJsonResponse({
             "success": False,
@@ -270,8 +341,6 @@ def set_callback_url(request):
         response.status_code = 400
         return response
 
-    user = get_user_by_id(user_id)
-
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
         response = PrettyJsonResponse({
@@ -291,8 +360,11 @@ def set_callback_url(request):
     })
 
 
+@api_view(['POST'])
+@parser_classes([JSONParser])
+@csrf_exempt
 def update_scopes(request):
-    if request.method != "POST":
+    if request.method != "POST" or request.headers['Content-Type'] != 'application/json':
         response = PrettyJsonResponse({
             "success": False,
             "error": "Request is not of method POST"
@@ -301,7 +373,7 @@ def update_scopes(request):
         return response
 
     try:
-        app_id = request.POST["app_id"]
+        app_id = request.data["app_id"]
     except KeyError:
         response = PrettyJsonResponse({
             "success": False,
@@ -311,8 +383,9 @@ def update_scopes(request):
         return response
 
     try:
-        user_id = request.session["user_id"]
-    except (KeyError, AttributeError):
+        user_cn = get_session_user_cn(request)
+        user = get_user_by_cn(user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "message": "User ID not set in session. Please log in again."
@@ -321,7 +394,7 @@ def update_scopes(request):
         return response
 
     try:
-        scopes_json = request.POST["scopes"]
+        scopes_json = request.data["scopes"]
     except KeyError:
         response = PrettyJsonResponse({
             "success": False,
@@ -332,15 +405,13 @@ def update_scopes(request):
 
     try:
         scopes = json.loads(scopes_json)
-    except ValueError:
+    except (ValueError, TypeError):
         response = PrettyJsonResponse({
             "success": False,
-            "message": "Invalid scope data that could not be parsed."
+            "message": "Invalid scope data that could not be iterated."
         })
         response.status_code = 400
         return response
-
-    user = get_user_by_id(user_id)
 
     apps = App.objects.filter(id=app_id, user=user)
     if len(apps) == 0:
@@ -424,16 +495,15 @@ def get_apps(request):
         response.status_code = 400
         return response
     try:
-        user_id = request.session["user_id"]
-    except (KeyError, AttributeError):
+        user_cn = get_session_user_cn(request)
+        user = get_user_by_cn(user_cn)
+    except (KeyError, User.DoesNotExist):
         response = PrettyJsonResponse({
             "success": False,
             "message": "User ID not set in session. Please log in again."
         })
         response.status_code = 400
         return response
-
-    user = get_user_by_id(user_id)
 
     user_meta = {
         "name": user.full_name,

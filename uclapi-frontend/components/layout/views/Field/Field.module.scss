@@ -1,0 +1,64 @@
+@import "@/styles/sass/core.scss";
+
+$field-height: 4rem;
+
+.fieldContainer {
+  &.editing,
+  &.notEditing,
+  &.uneditable {
+    margin: -1px 0 0 0;
+    display: flex;
+    height: $field-height;
+    transition: background-color 0.2s;
+    width: 100%;
+  }
+
+  &.notEditing {
+    cursor: pointer;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &.uneditable,
+  &.editing {
+    cursor: unset;
+  }
+
+  input.fieldInput {
+    &.editing,
+    &.notEditing,
+    &.uneditable {
+      background-color: transparent;
+      color: white;
+      margin: unset;
+      padding: 8px 15px;
+      text-align: left;
+      height: $field-height;
+    }
+
+    &.editing {
+      cursor: unset;
+    }
+    &.uneditable {
+      cursor: unset;
+    }
+    &.notEditing {
+      cursor: pointer;
+    }
+  }
+
+  .fieldLabel {
+    color: $color-grey-lighter;
+    font-size: small;
+    text-transform: uppercase;
+    left: 15px;
+    position: absolute;
+    top: 8px;
+  }
+
+  & + .fieldContainer {
+    border-top: 1px solid $color-grey-light;
+  }
+}
