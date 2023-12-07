@@ -91,14 +91,14 @@
         <button type="submit" class="authorise-button">
           Authorise {{initial_data.app_name}}
         </button>
+        {% csrf_token %}
         <input type="hidden" name="signed_app_data" value='{{initial_data.signed_data}}' />
-        <input type="hidden" name="csrfmiddlewaretoken" value="{{request.COOKIES.csrftoken}}" />
       </form>
 
       <form method="post" action="/oauth/user/deny">
-        <button>Deny</button>
+        <button type="submit">Deny</button>
+        {% csrf_token %}
         <input type="hidden" name="signed_app_data" value='{{initial_data.signed_data}}' />
-        <input type="hidden" name="csrfmiddlewaretoken" value="{{request.COOKIES.csrftoken}}" />
       </form>
     </div>
 
