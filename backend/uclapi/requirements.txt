@@ -1,6 +1,6 @@
 autopep8==2.0.2
 boto3==1.26.133
-celery==5.2.7
+celery==5.3.6
 django-celery-beat==2.5.0
 ciso8601==2.3.0
 cx-Oracle==8.3.0
@@ -15,7 +15,7 @@ django-postgrespool2==2.0.5
 django-filter==23.2
 eventlet==0.30.2
 freezegun==1.2.2
-flake8==5.0.4
+flake8==6.0.0
 gevent==22.10.2
 gunicorn==21.2.0
 greenlet==2.0.2
