@@ -15,14 +15,14 @@ django-postgrespool2==2.0.5
 django-filter==23.2
 eventlet==0.30.2
 freezegun==1.2.2
-flake8==5.0.4
+flake8==6.0.0
 gevent==22.10.2
 gunicorn==21.2.0
 greenlet==2.0.2
 hiredis==2.2.3
 lxml==4.9.3
 parameterized==0.9.0
-pycodestyle==2.9.0
+pycodestyle==2.10.0
 pycryptodome==3.18.0
 psycopg2-binary==2.9.7
 python-dateutil==2.8.2
