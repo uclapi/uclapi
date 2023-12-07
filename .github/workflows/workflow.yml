@@ -14,7 +14,7 @@ env:
 jobs:
   build:
     name: Build frontend
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -74,7 +74,7 @@ jobs:
 
   test-backend:
     name: Run backend tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       DB_UCLAPI_HOST: localhost
       DB_UCLAPI_PASSWORD: supersecure
@@ -118,7 +118,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.7'
+          python-version: '3.8.10'
 
       - name: Cache Python
         uses: actions/cache@v2
@@ -156,7 +156,7 @@ jobs:
 
   test-frontend:
     name: Run frontend tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -206,7 +206,7 @@ jobs:
     needs:
       - test-backend
       - test-frontend
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     environment: Staging
     if: github.ref == 'refs/heads/master'
     steps:
@@ -276,7 +276,7 @@ jobs:
     name: Deploy
     needs:
       - build-containers
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     environment: Staging
     if: github.ref == 'refs/heads/master'
     steps:
