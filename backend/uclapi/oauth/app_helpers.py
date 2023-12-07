@@ -10,6 +10,8 @@ from django.db.utils import IntegrityError
 import dashboard.models
 from timetable.models import Lock, StudentsA, StudentsB
 
+from sentry_sdk import capture_exception
+
 
 def generate_user_token():
     key = hexlify(os.urandom(30)).decode()
@@ -165,7 +167,8 @@ def validate_azure_ad_callback(token_data):
                 email=eppn, full_name=display_name, given_name=given_name, department=department, cn=cn,
                 raw_intranet_groups=groups, employee_id=employee_id, mail=mail, user_types=user_types, sn=sn
             )
-        except IntegrityError:
+        except IntegrityError as err:
+            capture_exception(err)
             return (
                 "Microsoft Azure AD has sent incorrect headers causing an integrity violation. If the issues persist"
                 "please contact the UCL API Team to rectify this."
@@ -183,7 +186,8 @@ def validate_azure_ad_callback(token_data):
         user.sn = sn if sn else user.sn
         try:
             user.save()
-        except IntegrityError:
+        except IntegrityError as err:
+            capture_exception(err)
             return (
                 "Microsoft Azure AD has sent incorrect headers causing an integrity violation. If the issues persist"
                 "please contact the UCL API Team to rectify this."
