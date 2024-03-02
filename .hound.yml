@@ -4,15 +4,7 @@ flake8:
   enabled: true
   config_file: backend/uclapi/.flake8.ini
 
-stylelint:
-  enabled: true
-  config_file: frontend/.stylelintrc.yml
-
-scss:
-  enabled: false
-
 eslint:
   enabled: true
-  config_file: frontend/.eslintrc.hound.json
-  ignore_file: frontend/.eslintignore
-  version: 6.8.0
+  config_file: uclapi-frontend/.eslintrc.json
+  ignore_file: frontend/.prettierignore

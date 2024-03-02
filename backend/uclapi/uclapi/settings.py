@@ -32,13 +32,18 @@ if SECRET_KEY == "" or SECRET_KEY is None:
 # variable anyway. If in production, debug should be false.
 DEBUG = not strtobool(os.environ.get("UCLAPI_PRODUCTION"))
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "testserver"]
 
 # If a domain is specified then make this an allowed host
 if os.environ.get("UCLAPI_DOMAIN"):
     ALLOWED_HOSTS.append(os.environ.get("UCLAPI_DOMAIN"))
 
 UCLAPI_DOMAIN_CURRENT = os.environ.get("UCLAPI_DOMAIN")
+
+# Tell Django to listen to the X-FORWARDED headers from Traefik
+# https://stackoverflow.com/questions/62047354/build-absolute-uri-with-https-behind-reverse-proxy
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
@@ -64,6 +69,9 @@ INSTALLED_APPS = [
     'libcal',
 ]
 
+if DEBUG:
+    INSTALLED_APPS.append('revproxy')
+
 MIDDLEWARE = [
     'common.middleware.health_check_middleware.HealthCheckMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -75,12 +83,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-if DEBUG:
-    MIDDLEWARE.append(
-        'dashboard.middleware.fake_shibboleth_middleware'
-        '.FakeShibbolethMiddleWare'
-    )
 
 ROOT_URLCONF = 'uclapi.urls'
 
@@ -143,6 +145,7 @@ DATABASE_POOL_ARGS = {
 }
 
 DATABASE_ROUTERS = ['uclapi.dbrouters.ModelRouter']
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 if os.environ.get('SENTRY_DSN'):
     import sentry_sdk
@@ -234,8 +237,6 @@ with open(fair_use_policy_path, 'r', encoding='utf-8') as fp:
 
 REDIS_UCLAPI_HOST = os.environ.get("REDIS_UCLAPI_HOST", "")
 
-SHIB_TEST_USER = os.environ.get("SHIB_TEST_USER", "")
-
 # Celery Settings
 CELERY_BROKER_URL = 'redis://' + REDIS_UCLAPI_HOST
 CELERY_RESULT_BACKEND = 'redis://' + REDIS_UCLAPI_HOST
@@ -243,7 +244,7 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-ROOMBOOKINGS_SETID = 'LIVE-21-22'
+ROOMBOOKINGS_SETID = 'LIVE-23-24'
 
 # This dictates how many Medium articles we scrape
 MEDIUM_ARTICLE_QUANTITY = 3

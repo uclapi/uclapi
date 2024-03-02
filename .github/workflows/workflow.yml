@@ -14,7 +14,7 @@ env:
 jobs:
   build:
     name: Build frontend
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -22,22 +22,33 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
-      
-      - name: Cache NodeJS
-        uses: actions/cache@v2
+          node-version: '18'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        id: pnpm-install
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          version: 7
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install frontend dependencies
         run: |
-          cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
-          cd ./frontend/ && \
-          npm ci
-      
+          cd ./uclapi-frontend && pnpm install --frozen-lockfile
+
       - name: Get version
         id: version
         uses: juliangruber/read-file-action@v1
@@ -49,31 +60,21 @@ jobs:
           UCLAPI_VERSION: "${{ steps.version.outputs.content }}-${{ github.sha }}"
         run: |
           sudo apt-get install jq -y
-          jq ".version=\"$UCLAPI_VERSION\"" ./frontend/package.json > /tmp/package.json
+          jq ".version=\"$UCLAPI_VERSION\"" ./uclapi-frontend/package.json > /tmp/package.json
           jq ".info.version=\"$UCLAPI_VERSION\"" ./uclapi.openapi.json > /tmp/uclapi.openapi.json
-          mv /tmp/package.json ./frontend/package.json
+          mv /tmp/package.json ./uclapi-frontend/package.json
           mv /tmp/uclapi.openapi.json ./uclapi.openapi.json
 
       - name: Build frontend
         env:
-          AWS_S3_BUCKET_NAME: uclapi-static-staging
-          AWS_S3_BUCKET_PATH: static/
-          AWS_S3_STATICS: True
           SENTRY_DSN_REACT: ${{ secrets.SENTRY_DSN_REACT }}
           SENTRY_DSN_ENV: staging
         run: |
-          cd ./frontend && \
-          npm run build
-
-      - name: Upload frontend
-        uses: actions/upload-artifact@master
-        with:
-          name: frontend-build
-          path: ./backend/uclapi/static
+          cd ./uclapi-frontend && pnpm build
 
   test-backend:
     name: Run backend tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       DB_UCLAPI_HOST: localhost
       DB_UCLAPI_PASSWORD: supersecure
@@ -83,6 +84,11 @@ jobs:
       UCLAPI_PRODUCTION: False
       UCLAPI_RUNNING_ON_AWS_ELB: False
       WHITELISTED_CALLBACK_URLS: https://live-roombookings.uclapi.com/webhook/;https://hackathon.uclapi.com/callback
+      UCLAPI_DOMAIN: uclapi.com
+      AZURE_AD_ROOT: https://login.microsoftonline.com/directory_tenant_id
+      AZURE_AD_CLIENT_ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      AZURE_AD_CLIENT_SECRET: aaa
+      AZURE_GRAPH_ROOT: https://graph.microsoft.com/v1.0/
     services:
       Redis:
         image: redis
@@ -112,8 +118,8 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.7'
-      
+          python-version: '3.8.10'
+
       - name: Cache Python
         uses: actions/cache@v2
         with:
@@ -121,7 +127,7 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-    
+
       - name: Install Oracle Instant Client
         run: ./.github/workflows/scripts/setup-oracle.sh
 
@@ -137,7 +143,7 @@ jobs:
           cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
           cd ./backend/uclapi && \
           python ./manage.py migrate --settings=uclapi.settings_mocked
-      
+
       - name: Run tests
         run: |
           cd ./backend/uclapi && \
@@ -150,7 +156,7 @@ jobs:
 
   test-frontend:
     name: Run frontend tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -158,26 +164,36 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
-      
-      - name: Cache NodeJS
-        uses: actions/cache@v2
+          node-version: '18'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        id: pnpm-install
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          version: 7
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install frontend dependencies
         run: |
-          cp ./backend/uclapi/webpack-stats.sample.json ./backend/uclapi/static/webpack-stats.json && \
-          cd ./frontend/ && \
-          npm ci
+          cd ./uclapi-frontend/ && pnpm install --frozen-lockfile
 
       - name: Run frontend tests
         run: |
-          cd ./frontend && \
-          npm test
+          cd ./uclapi-frontend && pnpm test
 
       # TODO: add coverage to frontend
       # - name: Upload coverage to Codecov
@@ -185,65 +201,12 @@ jobs:
       #   with:
       #     fail_ci_if_error: true
 
-  collect-statics:
-    name: Collect statics
-    needs: 
-      - build
-      - test-backend
-      - test-frontend
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-    environment: Staging
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.7'
-      
-      - name: Cache Python
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Install Python dependencies
-        run: |
-          python -m pip install --upgrade pip && \
-          cd ./backend/uclapi && \
-          pip install -r requirements.txt
-
-      - name: Download frontend
-        uses: actions/download-artifact@v2
-        with:
-          name: frontend-build
-          path: ./backend/uclapi/static
-
-      - name: Collect statics to S3
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_S3_BUCKET_NAME: uclapi-static-staging
-          AWS_S3_BUCKET_PATH: static/
-          AWS_S3_REGION: eu-west-2
-          AWS_S3_STATICS_CREDENTIALS_ENABLED: True
-          AWS_S3_STATICS: True
-          UCLAPI_PRODUCTION: True
-          UCLAPI_RUNNING_ON_AWS_ELB: False
-        run: |
-          cd ./backend/uclapi && \
-          ./manage.py collectstatic --noinput
-
   build-containers:
     name: Build containers
-    needs: 
+    needs:
       - test-backend
       - test-frontend
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     environment: Staging
     if: github.ref == 'refs/heads/master'
     steps:
@@ -278,29 +241,19 @@ jobs:
           echo "$FILES" | base64 --decode > compressed.zip && \
           unzip -qq compressed.zip && \
           rm compressed.zip && \
-          echo "UCLAPI_VERSION=$UCLAPI_VERSION" >> uclapi/uclapi.env
-
-      - name: Pull layers
-        env:
-          CRON_CPU_COUNT: 1
-          CRON_MEMORY_KB: 2048000
-        run: |
-          cd docker/deployment && \
-          docker-compose -f docker-compose.yml -f docker-compose-staging.yml pull
+          echo "UCLAPI_VERSION=$UCLAPI_VERSION" >> uclapi/uclapi.env && \
+          echo "UCLAPI_VERSION=$UCLAPI_VERSION" >> uclapi/uclapi-web.env
 
       - name: Build containers
         env:
-          SHIB_POSTGRES_USERNAME: ${{ secrets.SHIB_POSTGRES_USERNAME }}
-          SHIB_POSTGRES_PASSWORD: ${{ secrets.SHIB_POSTGRES_PASSWORD }}
-          SHIB_POSTGRES_DATABASE: ${{ secrets.SHIB_POSTGRES_DATABASE }}
           CRON_CPU_COUNT: 1
           CRON_MEMORY_KB: 2048000
           ENVIRONMENT: staging
           UCLAPI_VERSION: "${{ steps.version.outputs.content }}-${{ github.sha }}"
         run: |
           cd docker/deployment && \
-          sed -i "s/:latest/:${{ steps.version.outputs.content }}-${GITHUB_SHA}/g" docker-compose-staging.yml && \
-          docker-compose -f docker-compose.yml -f docker-compose-staging.yml build --parallel
+          sed -i "s/:version/:${{ steps.version.outputs.content }}-${GITHUB_SHA}/g" docker-compose-staging.yml && \
+          docker compose -f docker-compose-staging.yml build
 
       - name: Push containers
         env:
@@ -308,7 +261,7 @@ jobs:
           CRON_MEMORY_KB: 2048000
         run: |
           cd docker/deployment && \
-          docker-compose -f docker-compose.yml -f docker-compose-staging.yml push
+          docker compose -f docker-compose-staging.yml push
 
       - name: Create artifact
         run: echo ${{ steps.version.outputs.content }}-${GITHUB_SHA} > container-id.txt
@@ -318,13 +271,12 @@ jobs:
         with:
           name: container-id.txt
           path: container-id.txt
-    
+
   deploy:
     name: Deploy
-    needs: 
-      - collect-statics
+    needs:
       - build-containers
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     environment: Staging
     if: github.ref == 'refs/heads/master'
     steps:
@@ -344,9 +296,9 @@ jobs:
           echo "$FILES" | base64 --decode > compressed.zip && \
           unzip -qq compressed.zip && \
           rm compressed.zip
-      
+
       - name: Copy docker compose configuration
-        uses: appleboy/scp-action@v0.1.1
+        uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -354,13 +306,10 @@ jobs:
           source: "docker/deployment/docker-compose.yml,docker/deployment/docker-compose-staging.yml"
           target: "~"
           strip_components: 2
-      
+
       - name: Docker compose up
-        uses: appleboy/ssh-action@v0.1.4
+        uses: appleboy/ssh-action@v0.1.10
         env:
-          SHIB_POSTGRES_USERNAME: ${{ secrets.SHIB_POSTGRES_USERNAME }}
-          SHIB_POSTGRES_PASSWORD: ${{ secrets.SHIB_POSTGRES_PASSWORD }}
-          SHIB_POSTGRES_DATABASE: ${{ secrets.SHIB_POSTGRES_DATABASE }}
           ENVIRONMENT: staging
           VERSION: ${{ steps.version.outputs.content }}
           SHA: ${{ github.sha }}
@@ -370,25 +319,21 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key_path: key.pem
-          envs: SHIB_POSTGRES_USERNAME,SHIB_POSTGRES_PASSWORD,SHIB_POSTGRES_DATABASE,ENVIRONMENT,REGISTRY,VERSION,SHA,CRON_CPU_COUNT,CRON_MEMORY_KB
+          envs: ENVIRONMENT,REGISTRY,VERSION,SHA,CRON_CPU_COUNT,CRON_MEMORY_KB
           script_stop: true
           script: |
             aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin $REGISTRY
             if ((`df -h /dev/root | awk '(NR > 1) {print substr($5, 1, length($5)-1)}'` < 5)); then docker system prune -f; fi
-            docker-compose -f docker-compose.yml -f docker-compose-staging.yml config --no-interpolate > docker-compose-tmp.yml
-            sed -i "s/:latest/:$VERSION-$SHA/g" docker-compose-tmp.yml
-            cat docker-compose-tmp.yml | yq e '(.services[] | select(.depends_on | tag == "!!map")).depends_on |= (. | keys)' - > docker-compose-tmp-2.yml
-            export SHIB_POSTGRES_USERNAME=$SHIB_POSTGRES_USERNAME
-            export SHIB_POSTGRES_PASSWORD=$SHIB_POSTGRES_PASSWORD
-            export SHIB_POSTGRES_DATABASE=$SHIB_POSTGRES_DATABASE
             export CRON_CPU_COUNT=$CRON_CPU_COUNT
             export CRON_MEMORY_KB=$CRON_MEMORY_KB
-            envsubst < docker-compose-tmp-2.yml > docker-compose-tmp-3.yml
-            sed -i -E "s/cpus: ([0-9\\.]+)/cpus: '\\1'/" docker-compose-tmp-3.yml
-            rm docker-compose-tmp.yml docker-compose-tmp-2.yml docker-compose-staging.yml
-            mv -f docker-compose-tmp-3.yml docker-compose.yml
+            envsubst < docker-compose-staging.yml > docker-compose-tmp.yml
+            sed -i "s/:version/:$VERSION/g" docker-compose-tmp.yml
+            cat docker-compose-tmp.yml | yq e '(.services[] | select(.depends_on | tag == "!!map")).depends_on |= (. | keys)' - > docker-compose-tmp-2.yml
+            sed -i -E "s/cpus: ([0-9\\.]+)/cpus: '\\1'/" docker-compose-tmp-2.yml
+            rm docker-compose-tmp.yml docker-compose-staging.yml
+            mv -f docker-compose-tmp-2.yml docker-compose.yml
             docker stack deploy -c docker-compose.yml --with-registry-auth uclapi
-  
+
       - name: Create Sentry release
         uses: getsentry/action-release@v1.1.6
         env:

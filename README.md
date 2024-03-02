@@ -1,4 +1,4 @@
-# UCL API ![build](https://img.shields.io/github/workflow/status/uclapi/uclapi/CI?label=build) ![staging](https://img.shields.io/github/workflow/status/uclapi/uclapi/CD?label=staging) [![codecov](https://codecov.io/gh/uclapi/uclapi/branch/master/graph/badge.svg)](https://codecov.io/gh/uclapi/uclapi)
+# UCL API ![build](https://img.shields.io/github/actions/workflow/status/uclapi/uclapi/workflow.yml?label=build) ![staging](https://img.shields.io/github/actions/workflow/status/uclapi/uclapi/workflow.yml?label=staging) [![codecov](https://codecov.io/gh/uclapi/uclapi/branch/master/graph/badge.svg)](https://codecov.io/gh/uclapi/uclapi)
 
 ## What is the UCL API?
 UCL API started as a **student-built** platform for **student developers** to improve the **student experience** of everyone at UCL. We now also have our own end-user facing applications in addition to this, such as UCL Assistant, our rival app to UCL GO.
@@ -10,20 +10,27 @@ Create a ridiculously simple, documentation first, and comprehensive API around 
 Read on more to find out how to setup and build the API. From here you can start writing your own changes and submitting them. See our [Contribution Guide](CONTRIBUTING.md) to learn more about how you can contribute.
 
 ## Setup in 10 Minutes
-For this setup to work you need to have docker, git, python (3.7), and node + npm installed. If you would like the old setup guide (without docker) that can be found [here](README_SETUP.md), it also contains some advanced information for maintainers. This guide has been tested to work on Windows (we recommend PowerShell Core), Linux, and MacOS.
+For this setup to work you need to have docker, git, python (3.7), and node + pnpm installed. If you would like the old setup guide (without docker) that can be found [here](README_SETUP.md), it also contains some advanced information for maintainers. This guide has been tested to work on Windows (we recommend PowerShell Core), Linux, and MacOS.
 
-Clone uclapi to a local directory
+Clone uclapi to a local directory:
 ```bash
 git clone https://github.com/uclapi/uclapi.git
 cd uclapi
 ```
 
-Then start the development docker compose file
+Then start the development docker compose file:
 ```bash
 docker-compose -f docker-compose-dev.yml up
 ```
 
-In the meantime you can create your Python virtual environment (you may need to write `python` instead of `python3`)
+And setup the frontend:
+```bash
+cd uclapi-frontend
+pnpm install
+pnpm start
+```
+
+And setup your Python virtual environment & Django (you may need to write `python` instead of `python3`):
 ```bash
 cd backend/uclapi
 cp .env.docker.example .env
@@ -36,20 +43,17 @@ source ./venv/bin/activate
 
 # Then
 pip install -r requirements.txt
-```
 
-And setup the frontned
-```bash
-cd frontend
-npm install
-npm start
+# Finally, start the Django web server:
+cd backend/uclapi
+python3 manage.py runserver
 ```
 
 ### Give it a go!
-If those commands work you should be able to navigate to `http://localhost:8000/dashboard` in your browser, which will let you log in via Fake Shibboleth running on `http://localhost:8001`. If so, then you're up and running!
+If those commands work you should be able to navigate to `http://localhost:8000/dashboard` in your browser, which will let you log in via Azure AD. If so, then you're up and running!
 
 ## Testing
-We're an amazing project, so obviously we have tests :sparkles:. Make sure you have the requirements installed in your virtual environment (and you have activated it) , `cd` into `backend/uclapi` and then run :  
+We're an amazing project, so obviously we have tests :sparkles:. Make sure you have the requirements installed in your virtual environment (and you have activated it) , `cd` into `backend/uclapi` and then run :
 `python manage.py test --settings=uclapi.settings_mocked`
 
 ## Linting

@@ -27,7 +27,7 @@ from dashboard.models import App, User
 class ViewTesting(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
-        self.user_ = User.objects.create(cn="test", employee_id=7357)
+        self.user_ = User.objects.create(cn="test", employee_id=7357, dev_quota=9999999)
         self.app = App.objects.create(user=self.user_, name="An App")
 
     def test_module_timetable_no_id(self):

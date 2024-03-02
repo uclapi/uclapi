@@ -103,7 +103,7 @@ class LibCalRequestForwarderTestCase(APITestCase):
             decode_responses=True
         )
         cls.client: APIClient = APIClient()
-        cls.user_ = User.objects.create(cn="test", employee_id=7357)
+        cls.user_ = User.objects.create(cn="test", employee_id=7357, dev_quota=9999999)
         cls.app = App.objects.create(user=cls.user_, name="An App")
         cls.token: str = "random-token"
         cls.headers: dict = {
@@ -176,7 +176,7 @@ class LibcalNonPersonalEndpointsTestCase(APITestCase):
         # We prefer client to factory as we want to test if
         # the regex is correct as well.
         cls.client: APIClient = APIClient()
-        cls.user_ = User.objects.create(cn="test", employee_id=7357)
+        cls.user_ = User.objects.create(cn="test", employee_id=7357, dev_quota=9999999)
         cls.app = App.objects.create(user=cls.user_, name="An App")
         cls.token: str = "random-token"
         cls.headers: dict = {
@@ -552,8 +552,9 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
             )
         else:
             response = self.client.post(
-                f'/libcal/space/{endpoint}',
-                {'token': self.app.api_token, 'client_secret': self.app.client_secret, 'ids': bookIds}
+                (f'/libcal/space/{endpoint}?token={self.app.api_token}'
+                 f'&client_secret={self.app.client_secret}&ids={bookIds}'),
+                format='json'
             )
         self.assertEqual(response.status_code, 400)
 
@@ -571,7 +572,8 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
                 f'/libcal/space/{endpoint}', {'token': self.oauth_token.token, 'ids': bookIds})
         else:
             response = self.client.post(
-                f'/libcal/space/{endpoint}', {'token': self.oauth_token.token, 'ids': bookIds})
+                f'/libcal/space/{endpoint}?token={self.oauth_token.token}&ids={bookIds}', format='json')
+
         self.assertEqual(response.status_code, 400)
 
     @parameterized.expand([
@@ -589,10 +591,11 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
             )
         else:
             response = self.client.post(
-                f'/libcal/space/{endpoint}',
-                {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, 'ids': bookIds}
+                (f'/libcal/space/{endpoint}?token={self.oauth_token.token}'
+                 f'&client_secret={self.app.client_secret}&ids={bookIds}'),
+                format='json'
             )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 403)
 
         for scope in self.scopes_class.SCOPE_MAP:
             if scope == correct_scope:
@@ -606,13 +609,16 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
                 )
             else:
                 response = self.client.post(
-                    f'/libcal/space/{endpoint}',
-                    {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, 'ids': bookIds}
+                    (f'/libcal/space/{endpoint}?token={self.oauth_token.token}'
+                     f'&client_secret={self.app.client_secret}&ids={bookIds}'),
+                    format='json'
                 )
-            self.assertEqual(response.status_code, 400)
+            self.assertEqual(response.status_code, 403)
 
     def test_lack_of_email_caught(self, m):
         """Tests that we error out when the email is empty"""
+        self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, 'libcal_read')
+        self.oauth_token.scope.save()
         self.user.mail = ''
         self.user.email = ''
         self.user.save()
@@ -730,6 +736,8 @@ class LibcalPersonalEndpointsTestCase(APITestCase):
         ('formAnswers', -1)
     ])
     def test_serializer_invalid_input(self, m, key, value):
+        self.oauth_token.scope.scope_number = self.scopes_class.add_scope(0, 'libcal_read')
+        self.oauth_token.scope.save()
         response = self.client.get(
             '/libcal/space/personal_bookings',
             {'token': self.oauth_token.token, 'client_secret': self.app.client_secret, underscore(key): value}
