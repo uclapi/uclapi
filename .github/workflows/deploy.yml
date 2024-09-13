@@ -277,7 +277,7 @@ jobs:
         run: echo ${{ steps.version.outputs.content }} > container-id.txt
 
       - name: Upload container id
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: container-id.txt
           path: container-id.txt
