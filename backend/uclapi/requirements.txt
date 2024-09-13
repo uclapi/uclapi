@@ -38,7 +38,7 @@ SQLAlchemy==1.4.46
 tqdm==4.65.0
 validators==0.20.0
 requests-mock==1.11.0
-cryptography==42.0.5
+cryptography==43.0.1
 # Contains fix for Cookie max-age bug https://github.com/jazzband/django-revproxy/issues/161
 git+https://github.com/slaxor505/django-revproxy@51cc819
 git+https://github.com/uclapi/django-webpack-loader@master#egg=django-webpack-loader
