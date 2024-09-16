@@ -28,7 +28,7 @@ pycryptodome==3.18.0
 psycopg2-binary==2.9.7
 python-dateutil==2.8.2
 python-jose==3.3.0
-pytz==2023.3
+pytz==2024.2
 requests-futures==1.0.1
 redis==4.6.0
 requests==2.31.0
