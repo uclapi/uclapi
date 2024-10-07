@@ -32,7 +32,7 @@ pytz==2023.3
 requests-futures==1.0.1
 redis==4.6.0
 requests==2.31.0
-sentry-sdk==1.29.2
+sentry-sdk==2.15.0
 Sphinx==4.3.0
 SQLAlchemy==1.4.46
 tqdm==4.65.0
