@@ -2,7 +2,7 @@ autopep8==2.0.2
 boto3==1.28.20
 celery==5.3.6
 django-celery-beat==2.5.0
-ciso8601==2.3.0
+ciso8601==2.3.1
 cx-Oracle==8.3.0
 django-cors-headers==4.2.0
 Django==3.2.23
@@ -24,7 +24,7 @@ hiredis==2.2.3
 lxml==4.9.3
 parameterized==0.9.0
 pycodestyle==2.11.0
-pycryptodome==3.18.0
+pycryptodome==3.21.0
 psycopg2-binary==2.9.7
 python-dateutil==2.8.2
 python-jose==3.3.0
