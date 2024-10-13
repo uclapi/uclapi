@@ -150,7 +150,9 @@ jobs:
           coverage run --source='.' --omit='*migrations*' manage.py test --settings=uclapi.settings_mocked
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1.5.2
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           fail_ci_if_error: true
 
@@ -267,7 +269,7 @@ jobs:
         run: echo ${{ steps.version.outputs.content }}-${GITHUB_SHA} > container-id.txt
 
       - name: Upload container id
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: container-id.txt
           path: container-id.txt

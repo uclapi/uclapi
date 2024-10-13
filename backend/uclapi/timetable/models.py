@@ -83,6 +83,8 @@ class Students(models.Model):
     ema = models.CharField(max_length=1, null=True)
     emaid = models.TextField(max_length=12, null=True)
     dob = models.DateField(null=True)
+    field1 = models.CharField(max_length=55, null=True)
+    field2 = models.CharField(max_length=55, null=True)
 
     class Meta:
         managed = False
@@ -134,6 +136,8 @@ class StudentsA(models.Model):
     ema = models.CharField(max_length=1, null=True)
     emaid = models.TextField(max_length=12, null=True)
     dob = models.DateField(null=True, blank=True)
+    field1 = models.CharField(max_length=55, null=True)
+    field2 = models.CharField(max_length=55, null=True)
 
     class Meta:
         _DATABASE = 'gencache'
@@ -183,6 +187,8 @@ class StudentsB(models.Model):
     ema = models.CharField(max_length=1, null=True)
     emaid = models.TextField(max_length=12, null=True)
     dob = models.DateField(null=True, blank=True)
+    field1 = models.CharField(max_length=55, null=True)
+    field2 = models.CharField(max_length=55, null=True)
 
     class Meta:
         _DATABASE = 'gencache'
