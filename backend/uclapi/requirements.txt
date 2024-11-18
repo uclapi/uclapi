@@ -36,7 +36,7 @@ requests==2.32.2
 Sphinx==4.3.0
 SQLAlchemy==1.4.46
 tqdm==4.65.0
-validators==0.20.0
+validators==0.34.0
 requests-mock==1.11.0
 cryptography==43.0.1
 # Contains fix for Cookie max-age bug https://github.com/jazzband/django-revproxy/issues/161
