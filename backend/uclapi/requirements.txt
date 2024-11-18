@@ -17,7 +17,7 @@ dnspython==2.4.2
 eventlet==0.33.3
 freezegun==1.2.2
 flake8==6.1.0
-gevent==23.9.0
+gevent==24.11.1
 gunicorn==21.2.0
 greenlet==2.0.2
 hiredis==2.2.3
