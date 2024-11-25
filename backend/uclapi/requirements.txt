@@ -30,7 +30,7 @@ python-dateutil==2.8.2
 python-jose==3.3.0
 pytz==2024.2
 requests-futures==1.0.1
-redis==4.6.0
+redis==5.2.0
 sentry-sdk==2.8.0
 requests==2.32.2
 Sphinx==4.3.0
