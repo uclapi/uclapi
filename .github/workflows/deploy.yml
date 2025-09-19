@@ -102,7 +102,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8.10'
+          python-version: '3.8.18'
 
       - name: Install Oracle Instant Client
         run: ./.github/workflows/scripts/setup-oracle.sh
