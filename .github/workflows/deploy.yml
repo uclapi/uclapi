@@ -10,7 +10,7 @@ env:
 jobs:
   build:
     name: Build frontend
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     environment: Production
     steps:
       - name: Checkout code
@@ -58,7 +58,7 @@ jobs:
 
   test-backend:
     name: Run backend tests
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     env:
       DB_UCLAPI_HOST: localhost
       DB_UCLAPI_PASSWORD: supersecure
@@ -127,7 +127,7 @@ jobs:
 
   test-frontend:
     name: Run frontend tests
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -172,7 +172,7 @@ jobs:
       - build
       - test-backend
       - test-frontend
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     environment: Production
     steps:
       - name: Checkout code
@@ -217,7 +217,7 @@ jobs:
     needs:
       - test-backend
       - test-frontend
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     environment: Production
     steps:
       - name: Checkout code
@@ -287,7 +287,7 @@ jobs:
     needs:
       - collect-statics
       - build-containers
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     environment: Production
     steps:
       - name: Checkout code
