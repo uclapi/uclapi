@@ -52,7 +52,7 @@ ENV LC_ALL en_GB.UTF-8
 # Install the latest version of Pip from the repo
 # Using ADD means that when the installation script changes remotely the container will
 # rebuild from this stage. Otherwise, it should progress.
-ADD https://bootstrap.pypa.io/get-pip.py get-pip.py
+ADD https://bootstrap.pypa.io/pip/3.8/get-pip.py get-pip.py
 RUN python3 get-pip.py
 
 # Install Oracle. This does the following:
