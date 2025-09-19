@@ -10,7 +10,7 @@ env:
 jobs:
   build:
     name: Build frontend
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     environment: Production
     steps:
       - name: Checkout code
@@ -58,7 +58,7 @@ jobs:
 
   test-backend:
     name: Run backend tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       DB_UCLAPI_HOST: localhost
       DB_UCLAPI_PASSWORD: supersecure
@@ -102,7 +102,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8.10'
+          python-version: '3.8.18'
 
       - name: Install Oracle Instant Client
         run: ./.github/workflows/scripts/setup-oracle.sh
@@ -127,7 +127,7 @@ jobs:
 
   test-frontend:
     name: Run frontend tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -172,7 +172,7 @@ jobs:
       - build
       - test-backend
       - test-frontend
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     environment: Production
     steps:
       - name: Checkout code
@@ -184,7 +184,7 @@ jobs:
           python-version: '3.8.10'
 
       - name: Cache Python
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -217,7 +217,7 @@ jobs:
     needs:
       - test-backend
       - test-frontend
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     environment: Production
     steps:
       - name: Checkout code
@@ -287,7 +287,7 @@ jobs:
     needs:
       - collect-statics
       - build-containers
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     environment: Production
     steps:
       - name: Checkout code
