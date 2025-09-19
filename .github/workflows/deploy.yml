@@ -184,7 +184,7 @@ jobs:
           python-version: '3.8.10'
 
       - name: Cache Python
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
