@@ -315,7 +315,18 @@ def uclapi_protected_endpoint(
                     raise UclApiIncorrectDecoratorUsageException
 
             # In any case, a token should be provided
-            token_code = get_var(request, 'token')
+            if 'HTTP_AUTHORIZATION' in request.META:
+                token_code = request.META['HTTP_AUTHORIZATION']
+
+                # To remove the starting BEARER or AUTHENTICATION if provided
+                if ' ' in token_code:
+                    token_code = token_code.split(' ')[1]
+
+                # If multiple tokens provided, for example client_secret
+                if ',' in token_code:
+                    token_code = token_code.split(',')[0]
+            else:
+                token_code = get_var(request, 'token')
             if token_code is None:
                 response = JsonResponse({
                     "ok": False,
@@ -326,7 +337,23 @@ def uclapi_protected_endpoint(
 
             if token_code.startswith('uclapi-user-'):
                 # The token is an OAuth token, so apply OAuth logic
-                client_secret = get_var(request, 'client_secret')
+
+                if 'HTTP_AUTHORIZATION' in request.META:
+                    client_secret = request.META['HTTP_AUTHORIZATION']
+
+                    # To remove the starting BEARER or AUTHENTICATION if provided
+                    if ' ' in token_code:
+                        client_secret = client_secret.split(' ')[1]
+
+                    # Check if the bearer contains the client_secret
+                    if ',' in token_code:
+                        client_secret = client_secret.split(',')[1]
+                    else:
+                        # If not provided assume it is provided in the query
+                        client_secret = get_var(request, 'client_secret')
+                else:
+                    client_secret = get_var(request, 'client_secret')
+
                 if client_secret is None:
                     response = JsonResponse({
                         "ok": False,
