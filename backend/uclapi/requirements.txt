@@ -34,7 +34,7 @@ redis==4.6.0
 sentry-sdk==2.8.0
 requests==2.32.2
 Sphinx==4.3.0
-SQLAlchemy==1.4.46
+SQLAlchemy==2.0.19
 tqdm==4.65.0
 validators==0.20.0
 requests-mock==1.11.0
