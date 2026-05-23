@@ -15,7 +15,7 @@ django-postgrespool2==2.0.5
 django-filter==23.2
 dnspython==2.4.2
 eventlet==0.33.3
-freezegun==1.2.2
+freezegun==1.5.1
 flake8==6.1.0
 gevent==23.9.0
 gunicorn==21.2.0
